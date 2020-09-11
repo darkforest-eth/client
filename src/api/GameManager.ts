@@ -351,9 +351,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     this.minerManager.on(
       MinerManagerEvent.DiscoveredNewChunk,
       (chunk: ExploredChunkData, miningTimeMillis: number) => {
-        for (const planetLocation of chunk.planetLocations) {
-          this.planetHelper.addPlanetLocation(planetLocation);
-        }
+        this.addNewChunk(chunk);
         this.hashRate =
           chunk.chunkFootprint.sideLength ** 2 / (miningTimeMillis / 1000);
         this.emit(GameManagerEvent.DiscoveredNewChunk);
@@ -688,6 +686,14 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     ];
 
     this.ethereumAPI.upgradePlanet(upgradeArgs);
+    return this;
+  }
+
+  addNewChunk(chunk: ExploredChunkData): GameManager {
+    this.localStorageManager.updateChunk(chunk, false);
+    for (const planetLocation of chunk.planetLocations) {
+      this.planetHelper.addPlanetLocation(planetLocation);
+    }
     return this;
   }
 }

@@ -113,7 +113,6 @@ class MinerManager extends EventEmitter {
   ): Promise<void> {
     const discoveredLoc = exploredChunk.chunkFootprint;
     const chunkKey = this.chunkLocationToKey(discoveredLoc, jobId);
-    this.minedChunksStore.updateChunk(exploredChunk);
     const miningTimeMillis = Date.now() - this.exploringChunkStart[chunkKey];
     this.emit(
       MinerManagerEvent.DiscoveredNewChunk,
