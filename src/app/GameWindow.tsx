@@ -33,46 +33,7 @@ import TwitterBroadcastPane from './TwitterBroadcastPane';
 import MapSharePane from './GameWindowPanes/MapSharePane';
 import ZoomPane from './GameWindowPanes/ZoomPane';
 import Tooltip from './GameWindowPanes/Tooltip';
-import {
-  SilverTooltipPane,
-  PopulationTooltipPane,
-  RangeTooltipPane,
-  ModalHelpTooltipPane,
-  ModalPlanetDetailsTooltipPane,
-  ModalPlanetDexTooltipPane,
-  ModalUpgradeDetailsTooltipPane,
-  ModalLeaderboardTooltipPane,
-  ModalTwitterVerificationTooltipPane,
-  ModalTwitterBroadcastTooltipPane,
-  SelectedSilverTooltipPane,
-  SelectedPopulationTooltipPane,
-  RankTooltipPane,
-  ScoreTooltipTooltipPane,
-  TwitterHandleTooltipPane,
-  MiningPauseTooltipPane,
-  MiningTargetTooltipPane,
-  HashesPerSecTooltipPane,
-  CurrentMiningTooltipPane,
-  MinPopTooltipPane,
-  Time90TooltipPane,
-  Time50TooltipPane,
-  BonusTooltipPane,
-  PopGrowthTooltipPane,
-  SilverGrowthTooltipPane,
-  SilverCapTooltipPane,
-  SilverMaxTooltipPane,
-  PiratesTooltipPane,
-  UpgradesTooltipPane,
-  BonusPopCapTooltipPane,
-  PlanetRankTooltipPane,
-  BonusPopGroTooltipPane,
-  BonusSilCapTooltipPane,
-  BonusSilGroTooltipPane,
-  BonusRangeTooltipPane,
-  MaxLevelTooltipPane,
-  SilverProdTooltipPane,
-  ClownTooltipPane,
-} from './GameWindowPanes/TooltipPanes';
+import * as TP from './GameWindowPanes/TooltipPanes';
 
 export const enum GameWindowZIndex {
   Toggler = 3,
@@ -158,53 +119,53 @@ export default function GameWindow() {
   return (
     <WindowWrapper>
       <Tooltip>
-        <SilverTooltipPane />
-        <PopulationTooltipPane />
-        <RangeTooltipPane />
+        <TP.SilverTooltipPane />
+        <TP.PopulationTooltipPane />
+        <TP.RangeTooltipPane />
 
-        <SelectedSilverTooltipPane selected={selected} />
-        <SelectedPopulationTooltipPane selected={selected} />
+        <TP.SelectedSilverTooltipPane selected={selected} />
+        <TP.SelectedPopulationTooltipPane selected={selected} />
 
-        <RankTooltipPane />
-        <ScoreTooltipTooltipPane />
-        <TwitterHandleTooltipPane />
-        <MiningPauseTooltipPane />
-        <MiningTargetTooltipPane />
-        <BonusTooltipPane />
-        <PlanetRankTooltipPane selected={selected} />
+        <TP.RankTooltipPane />
+        <TP.ScoreTooltipTooltipPane />
+        <TP.TwitterHandleTooltipPane />
+        <TP.MiningPauseTooltipPane />
+        <TP.MiningTargetTooltipPane />
+        <TP.BonusTooltipPane />
+        <TP.PlanetRankTooltipPane selected={selected} />
 
-        <HashesPerSecTooltipPane />
-        <CurrentMiningTooltipPane />
+        <TP.HashesPerSecTooltipPane />
+        <TP.CurrentMiningTooltipPane />
 
-        <PiratesTooltipPane />
-        <UpgradesTooltipPane />
+        <TP.PiratesTooltipPane />
+        <TP.UpgradesTooltipPane />
 
-        <BonusPopCapTooltipPane />
-        <BonusPopGroTooltipPane />
-        <BonusSilCapTooltipPane selected={selected} />
-        <BonusSilGroTooltipPane selected={selected} />
-        <BonusRangeTooltipPane />
-        <MaxLevelTooltipPane />
-        <SilverProdTooltipPane />
+        <TP.BonusPopCapTooltipPane />
+        <TP.BonusPopGroTooltipPane />
+        <TP.BonusSilCapTooltipPane selected={selected} />
+        <TP.BonusSilGroTooltipPane selected={selected} />
+        <TP.BonusRangeTooltipPane />
+        <TP.MaxLevelTooltipPane />
+        <TP.SilverProdTooltipPane />
 
-        <ClownTooltipPane selected={selected} />
+        <TP.ClownTooltipPane selected={selected} />
 
-        <MinPopTooltipPane />
-        <Time50TooltipPane />
-        <Time90TooltipPane />
+        <TP.MinPopTooltipPane />
+        <TP.Time50TooltipPane />
+        <TP.Time90TooltipPane />
 
-        <PopGrowthTooltipPane />
-        <SilverGrowthTooltipPane />
-        <SilverCapTooltipPane />
-        <SilverMaxTooltipPane />
+        <TP.PopGrowthTooltipPane />
+        <TP.SilverGrowthTooltipPane />
+        <TP.SilverCapTooltipPane />
+        <TP.SilverMaxTooltipPane />
 
-        <ModalHelpTooltipPane />
-        <ModalPlanetDetailsTooltipPane />
-        <ModalLeaderboardTooltipPane />
-        <ModalPlanetDexTooltipPane />
-        <ModalUpgradeDetailsTooltipPane />
-        <ModalTwitterVerificationTooltipPane />
-        <ModalTwitterBroadcastTooltipPane />
+        <TP.ModalHelpTooltipPane />
+        <TP.ModalPlanetDetailsTooltipPane />
+        <TP.ModalLeaderboardTooltipPane />
+        <TP.ModalPlanetDexTooltipPane />
+        <TP.ModalUpgradeDetailsTooltipPane />
+        <TP.ModalTwitterVerificationTooltipPane />
+        <TP.ModalTwitterBroadcastTooltipPane />
       </Tooltip>
 
       {/* modals */}
