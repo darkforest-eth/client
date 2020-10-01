@@ -63,14 +63,11 @@ export enum GameManagerEvent {
 }
 import TerminalEmitter, { TerminalTextStyle } from '../utils/TerminalEmitter';
 import { getAllTwitters, verifyTwitterHandle } from './UtilityServerAPI';
-<<<<<<< HEAD
 import EthereumAccountManager from './EthereumAccountManager';
 import { getRandomActionId } from '../utils/Utils';
 import NotificationManager from '../utils/NotificationManager';
 import { deriveChunkSize, parseCoresInput } from '../utils/cores';
-=======
 import { CORES_TO_USE } from '../utils/constants';
->>>>>>> moved some things around to handle alternate mining origination points
 
 class GameManager extends EventEmitter implements AbstractGameManager {
   private readonly account: EthAddress | null;
@@ -115,7 +112,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     localStorageManager: LocalStorageManager,
     snarkHelper: SnarkHelper,
     homeCoords: WorldCoords | null,
-    useMockHash: boolean,
+    useMockHash: boolean
   ) {
     super();
 
@@ -383,8 +380,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       myPattern,
       this.worldRadius,
       this.planetRarity,
-      this.useMockHash,
-      CORES_TO_USE
+      this.useMockHash
     );
 
     this.minerManager.on(
