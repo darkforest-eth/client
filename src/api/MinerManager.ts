@@ -10,6 +10,7 @@ import { MiningPattern } from '../utils/MiningPatterns';
 import perlin from '../miner/perlin';
 import { ChunkStore } from '../_types/darkforest/api/LocalStorageManagerTypes';
 import { getChunkKey } from '../utils/ChunkUtils';
+import { parseCoresInput } from '../utils/cores';
 
 export enum MinerManagerEvent {
   DiscoveredNewChunk = 'DiscoveredNewChunk',
@@ -73,7 +74,7 @@ class MinerManager extends EventEmitter {
     this.workers = [];
     this.useMockHash = useMockHash;
     if (useMockHash) {
-      this.cores = 1;
+      this.cores = parseCoresInput(window.localStorage.getItem('CORES_TO_USE'));
     }
   }
 

@@ -1,0 +1,17 @@
+const DEFAULT_CORES = 1;
+
+const isValidCores = (cores: number) => 
+  cores <= 16 && cores > 0
+
+export const parseCoresInput = (cores: any) => {
+  if (!cores || cores === null) return DEFAULT_CORES;
+
+  if (typeof(cores) === 'string') {
+    const intCores = parseInt(cores)
+    return isValidCores(intCores) ? intCores : DEFAULT_CORES
+  } else if (typeof(cores) === 'number') {
+    if (!isValidCores(cores)) return DEFAULT_CORES;
+    return cores;
+  }
+  return DEFAULT_CORES
+} 
