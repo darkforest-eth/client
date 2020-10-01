@@ -19,4 +19,4 @@ export const parseCoresInput = (cores: any) => {
     return cores;
   }
   return DEFAULT_CORES
-} 
+}

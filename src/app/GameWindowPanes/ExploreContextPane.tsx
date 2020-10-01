@@ -11,10 +11,10 @@ import WindowManager, {
 } from '../../utils/WindowManager';
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
-import { MIN_CHUNK_SIZE } from '../../utils/constants';
 import { WorldCoords } from '../../utils/Coordinates';
 import { SpiralPattern } from '../../utils/MiningPatterns';
 import { TargetIcon, PauseIcon, PlayIcon } from '../Icons';
+import { DERIVED_CHUNK_SIZE } from '../../utils/constants';
 import { IconButton } from './ModalPane';
 import { TooltipTrigger } from './Tooltip';
 import TutorialManager, { TutorialState } from '../../utils/TutorialManager';
@@ -57,7 +57,7 @@ export function ExploreContextPane() {
     };
 
     const updatePattern = (worldCoords: WorldCoords) => {
-      const newpattern = new SpiralPattern(worldCoords, MIN_CHUNK_SIZE);
+      const newpattern = new SpiralPattern(worldCoords, DERIVED_CHUNK_SIZE);
       uiManager?.setMiningPattern(newpattern);
       setPattern(newpattern);
 

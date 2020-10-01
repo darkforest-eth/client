@@ -11,6 +11,7 @@ import perlin from '../miner/perlin';
 import { ChunkStore } from '../_types/darkforest/api/LocalStorageManagerTypes';
 import { getChunkKey } from '../utils/ChunkUtils';
 import { parseCoresInput } from '../utils/cores';
+import { CORES_TO_USE } from '../utils/constants';
 
 export enum MinerManagerEvent {
   DiscoveredNewChunk = 'DiscoveredNewChunk',
@@ -48,8 +49,7 @@ class MinerManager extends EventEmitter {
   private workers: Worker[];
   private worldRadius: number;
   private readonly planetRarity: number;
-  private cores = 1;
-  // chunks we're exploring
+  private cores = CORES_TO_USE;
   private exploringChunk: { [chunkKey: string]: ExploredChunkData } = {};
   // when we started exploring this chunk
   private exploringChunkStart: { [chunkKey: string]: number } = {};

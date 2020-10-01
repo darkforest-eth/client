@@ -17,7 +17,11 @@ import {
   SpaceType,
 } from '../_types/global/GlobalTypes';
 import LocalStorageManager from './LocalStorageManager';
-import { MIN_CHUNK_SIZE } from '../utils/constants';
+import {
+  LOCATION_ID_UB,
+  MAX_CHUNK_SIZE,
+  DERIVED_CHUNK_SIZE
+} from '../utils/constants';
 import mimcHash from '../miner/mimc';
 import ContractsAPI from './ContractsAPI';
 import MinerManager, {
@@ -59,10 +63,14 @@ export enum GameManagerEvent {
 }
 import TerminalEmitter, { TerminalTextStyle } from '../utils/TerminalEmitter';
 import { getAllTwitters, verifyTwitterHandle } from './UtilityServerAPI';
+<<<<<<< HEAD
 import EthereumAccountManager from './EthereumAccountManager';
 import { getRandomActionId } from '../utils/Utils';
 import NotificationManager from '../utils/NotificationManager';
 import { deriveChunkSize, parseCoresInput } from '../utils/cores';
+=======
+import { CORES_TO_USE } from '../utils/constants';
+>>>>>>> moved some things around to handle alternate mining origination points
 
 class GameManager extends EventEmitter implements AbstractGameManager {
   private readonly account: EthAddress | null;
@@ -108,7 +116,6 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     snarkHelper: SnarkHelper,
     homeCoords: WorldCoords | null,
     useMockHash: boolean,
-    cores: number
   ) {
     super();
 
@@ -133,7 +140,6 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     this.localStorageManager = localStorageManager;
     this.snarkHelper = snarkHelper;
     this.useMockHash = useMockHash;
-    this.cores = cores;
 
     this.balanceInterval = setInterval(() => {
       if (this.account) {
@@ -177,7 +183,6 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       account
     );
     const localStorageManager = await LocalStorageManager.create(account);
-    const cores = parseCoresInput(window.localStorage.getItem('CORES_TO_USE'));;
     const homeCoords = await localStorageManager.getHomeCoords();
     const snarkHelper = SnarkHelper.create(useMockHash);
 
@@ -217,8 +222,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       localStorageManager,
       snarkHelper,
       homeCoords,
-      useMockHash,
-      cores
+      useMockHash
     );
 
     // get twitter handles
@@ -371,7 +375,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
   private initMiningManager(homeCoords: WorldCoords): void {
     const myPattern: MiningPattern = new SpiralPattern(
       homeCoords,
-      this.useMockHash ? MAX_CHUNK_SIZE : deriveChunkSize(this.cores)
+      this.useMockHash ? MAX_CHUNK_SIZE : DERIVED_CHUNK_SIZE
     );
 
     this.minerManager = MinerManager.create(
@@ -380,7 +384,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       this.worldRadius,
       this.planetRarity,
       this.useMockHash,
-      this.cores
+      CORES_TO_USE
     );
 
     this.minerManager.on(
