@@ -62,7 +62,7 @@ class MinerManager extends EventEmitter {
     miningPattern: MiningPattern,
     worldRadius: number,
     planetRarity: number,
-    useMockHash: boolean,
+    useMockHash: boolean
   ) {
     super();
 

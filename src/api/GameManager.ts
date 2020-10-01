@@ -81,8 +81,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
   private readonly planetHelper: PlanetHelper;
 
   private readonly useMockHash: boolean;
-  private readonly cores: number;
-
+  
   private minerManager?: MinerManager;
   private hashRate: number;
 
