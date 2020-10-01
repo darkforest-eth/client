@@ -15,8 +15,7 @@ export const parseCoresInput = (cores: any) => {
     const intCores = parseInt(cores)
     return isValidCores(intCores) ? intCores : DEFAULT_CORES
   } else if (typeof(cores) === 'number') {
-    if (!isValidCores(cores)) return DEFAULT_CORES;
-    return cores;
+    return isValidCores(cores) ? cores : DEFAULT_CORES;
   }
   return DEFAULT_CORES
 }
