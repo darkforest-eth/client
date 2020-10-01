@@ -62,6 +62,7 @@ import { getAllTwitters, verifyTwitterHandle } from './UtilityServerAPI';
 import EthereumAccountManager from './EthereumAccountManager';
 import { getRandomActionId } from '../utils/Utils';
 import NotificationManager from '../utils/NotificationManager';
+import { deriveChunkSize, parseCoresInput } from '../utils/cores';
 
 class GameManager extends EventEmitter implements AbstractGameManager {
   private readonly account: EthAddress | null;
@@ -75,6 +76,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
   private readonly planetHelper: PlanetHelper;
 
   private readonly useMockHash: boolean;
+  private readonly cores: number;
 
   private minerManager?: MinerManager;
   private hashRate: number;
@@ -105,7 +107,8 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     localStorageManager: LocalStorageManager,
     snarkHelper: SnarkHelper,
     homeCoords: WorldCoords | null,
-    useMockHash: boolean
+    useMockHash: boolean,
+    cores: number
   ) {
     super();
 
@@ -130,6 +133,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     this.localStorageManager = localStorageManager;
     this.snarkHelper = snarkHelper;
     this.useMockHash = useMockHash;
+    this.cores = cores;
 
     this.balanceInterval = setInterval(() => {
       if (this.account) {
@@ -173,6 +177,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       account
     );
     const localStorageManager = await LocalStorageManager.create(account);
+    const cores = parseCoresInput(window.localStorage.getItem('CORES_TO_USE'));;
     const homeCoords = await localStorageManager.getHomeCoords();
     const snarkHelper = SnarkHelper.create(useMockHash);
 
@@ -212,7 +217,8 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       localStorageManager,
       snarkHelper,
       homeCoords,
-      useMockHash
+      useMockHash,
+      cores
     );
 
     // get twitter handles
@@ -365,7 +371,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
   private initMiningManager(homeCoords: WorldCoords): void {
     const myPattern: MiningPattern = new SpiralPattern(
       homeCoords,
-      MIN_CHUNK_SIZE
+      this.useMockHash ? MAX_CHUNK_SIZE : deriveChunkSize(this.cores)
     );
 
     this.minerManager = MinerManager.create(
@@ -373,7 +379,8 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       myPattern,
       this.worldRadius,
       this.planetRarity,
-      this.useMockHash
+      this.useMockHash,
+      this.cores
     );
 
     this.minerManager.on(

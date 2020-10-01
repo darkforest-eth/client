@@ -62,7 +62,8 @@ class MinerManager extends EventEmitter {
     miningPattern: MiningPattern,
     worldRadius: number,
     planetRarity: number,
-    useMockHash: boolean
+    useMockHash: boolean,
+    cores: number
   ) {
     super();
 
@@ -73,8 +74,9 @@ class MinerManager extends EventEmitter {
     // this.cores = navigator.hardwareConcurrency;
     this.workers = [];
     this.useMockHash = useMockHash;
+    this.cores = cores;
     if (useMockHash) {
-      this.cores = parseCoresInput(window.localStorage.getItem('CORES_TO_USE'));
+      this.cores = 1;
     }
   }
 
@@ -100,14 +102,16 @@ class MinerManager extends EventEmitter {
     miningPattern: MiningPattern,
     worldRadius: number,
     planetRarity: number,
-    useMockHash = false
+    useMockHash = false,
+    cores: number
   ): MinerManager {
     const minerManager = new MinerManager(
       chunkStore,
       miningPattern,
       worldRadius,
       planetRarity,
-      useMockHash
+      useMockHash,
+      cores
     );
     _.range(minerManager.cores).forEach((i) => minerManager.initWorker(i));
 

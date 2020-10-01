@@ -1,7 +1,12 @@
+import { MIN_CHUNK_SIZE, MAX_CHUNK_SIZE } from './constants'
+
 const DEFAULT_CORES = 1;
 
 const isValidCores = (cores: number) => 
   cores <= 16 && cores > 0
+
+export const deriveChunkSize = (cores: number) =>
+  Math.min(MAX_CHUNK_SIZE, cores * MIN_CHUNK_SIZE)
 
 export const parseCoresInput = (cores: any) => {
   if (!cores || cores === null) return DEFAULT_CORES;
