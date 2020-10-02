@@ -41,7 +41,7 @@ function TutorialPaneContent({
   } else if (tutorialState === TutorialState.HomePlanet) {
     return (
       <div>
-        Welcome to the universe. You've initialized with 100 energy on your home
+        Welcome to the universe. You've initialized with 50 energy on your home
         planet, in a NEBULA.
         <br />
         <br />
