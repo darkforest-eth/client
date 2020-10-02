@@ -486,11 +486,11 @@ export class PlanetHelper {
       }
     }
 
-    if (spaceType === SpaceType.NEBULA && ret > PlanetLevel.YellowStar) {
-      ret = PlanetLevel.YellowStar;
+    if (spaceType === SpaceType.NEBULA && ret > PlanetLevel.WhiteDwarf) {
+      ret = PlanetLevel.WhiteDwarf;
     }
-    if (spaceType === SpaceType.SPACE && ret > PlanetLevel.BlueStar) {
-      ret = PlanetLevel.BlueStar;
+    if (spaceType === SpaceType.SPACE && ret > PlanetLevel.YellowStar) {
+      ret = PlanetLevel.YellowStar;
     }
 
     return ret;
