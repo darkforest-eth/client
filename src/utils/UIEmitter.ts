@@ -14,12 +14,19 @@ export enum UIEmitterEvent {
   CanvasScroll = 'CanvasScroll',
 
   WorldMouseDown = 'WorldMouseDown',
+  WorldMouseClick = 'WorldMouseClick',
   WorldMouseMove = 'WorldMouseMove',
   WorldMouseUp = 'WorldMouseUp',
   WorldMouseOut = 'WorldMouseOut',
 
   ZoomIn = 'ZoomIn',
   ZoomOut = 'ZoomOut',
+
+  ContextChange = 'ContextChange',
+
+  SendInitiated = 'SendInitiated',
+  SendCancelled = 'SendCanelled',
+  SendCompleted = 'SendCompleted',
 }
 
 class UIEmitter extends EventEmitter {

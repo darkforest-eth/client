@@ -25,12 +25,3 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
-
-/* media queries */
-/* TODO we should technically use sass or something for this but idk how */
-@media (max-width: 660px) {
-  .terminal-wrapper {
-    width: 100%;
-    padding: 1.5em 2em;
-  }
-}

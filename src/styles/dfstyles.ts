@@ -1,3 +1,5 @@
+import { css } from 'styled-components';
+
 const dfstyles = {
   colors: {
     text: '#ffffff',
@@ -36,20 +38,20 @@ const dfstyles = {
   game: {
     terminalWidth: '240pt',
     fontSize: '12pt',
-    canvasbg: '#050023',
+    canvasbg: '#100544',
     rangecolors: {
       dash: '#9691bf',
-      dashpop: '#f5c082',
-      colorpop: '#080330',
+      dashenergy: '#f5c082',
+      colorenergy: '#080330',
       color100: '#050228',
       color50: '#050233',
       color25: '#050238',
     },
     bonuscolors: {
-      popCap: 'hsl(360, 73%, 70%)',
-      silGro: 'hsl(290, 73%, 70%)',
-      silCap: 'hsl(231, 73%, 70%)',
-      popGro: 'hsl(136, 73%, 70%)',
+      energyCap: 'hsl(360, 73%, 70%)',
+      speed: 'hsl(290, 73%, 70%)',
+      def: 'hsl(231, 73%, 70%)',
+      energyGro: 'hsl(136, 73%, 70%)',
       range: 'hsl(50, 73%, 70%)',
     },
     toolbarHeight: '12em',
@@ -59,6 +61,18 @@ const dfstyles = {
       active: 'filter: brightness(80%)',
       animProps: 'ease-in-out infinite alternate-reverse',
     },
+  },
+
+  prefabs: {
+    // https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting
+    noselect: css`
+      -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+      -khtml-user-select: none; /* Konqueror HTML */
+      -moz-user-select: none; /* Old versions of Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+      user-select: none;
+    `,
   },
 };
 export default dfstyles;

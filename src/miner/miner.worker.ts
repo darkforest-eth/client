@@ -49,9 +49,14 @@ const exploreChunk = (
       }
     }
   }
+  const chunkCenter = {
+    x: chunkFootprint.bottomLeft.x + chunkFootprint.sideLength / 2,
+    y: chunkFootprint.bottomLeft.y + chunkFootprint.sideLength / 2,
+  };
   const chunkData: ExploredChunkData = {
     chunkFootprint,
     planetLocations,
+    perlin: perlin(chunkCenter, false),
   };
   ctx.postMessage(JSON.stringify([chunkData, jobId]));
 };

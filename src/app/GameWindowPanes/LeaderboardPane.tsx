@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ModalPane, ModalHook, ModalName } from './ModalPane';
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
-import { EthAddress, Planet } from '../../_types/global/GlobalTypes';
+import { EthAddress, Planet, Player } from '../../_types/global/GlobalTypes';
 import { Sub } from '../../components/Text';
 import dfstyles from '../../styles/dfstyles';
 import { PlanetThumb, PlanetLink } from './PlanetDexPane';
@@ -78,15 +78,62 @@ type ScoreboardEntry = {
   sortedPlanets: Planet[];
 };
 
-export default function LeaderboardPane({
-  hook,
-  setScore,
-  setRank,
-}: {
-  hook: ModalHook;
-  setScore: (x: number) => void;
-  setRank: (x: number) => void;
-}) {
+function calculateScoreboard(
+  players: Player[],
+  planets: Planet[]
+): ScoreboardEntry[] {
+  const scoreboardMap: Record<EthAddress, ScoreboardEntry> = [];
+  for (const player of players) {
+    scoreboardMap[player.address] = {
+      playerId: player.address,
+      score: 0,
+      sortedPlanets: [],
+    };
+    if (player.twitter) {
+      scoreboardMap[player.address].twitter = player.twitter;
+    }
+  }
+  for (const planet of planets) {
+    const owner = planet.owner;
+    if (scoreboardMap[owner]) {
+      scoreboardMap[owner].sortedPlanets.push(planet);
+    }
+  }
+  for (const player of players) {
+    const entry: ScoreboardEntry = scoreboardMap[player.address];
+    entry.sortedPlanets.sort((a, b) => b.energyCap - a.energyCap);
+    const nPlanets = entry.sortedPlanets.length;
+    for (let i = 0; i < nPlanets; i += 1) {
+      const planet = entry.sortedPlanets[i];
+      entry.score += (planet.silverSpent + planet.silver) / 10; // silver spent or held on this planet
+      if (i < 10) {
+        entry.score += planet.energyCap;
+      }
+    }
+  }
+  const entries: ScoreboardEntry[] = Object.values(scoreboardMap);
+  entries.sort((a, b) => b.score - a.score);
+
+  return entries;
+}
+
+// as [rank, score]
+export function calculateRankAndScore(
+  players: Player[],
+  planets: Planet[],
+  account: EthAddress
+): [number, number] {
+  const entries = calculateScoreboard(players, planets);
+  for (let i = 0; i < entries.length; i++) {
+    if (entries[i].playerId === account) {
+      return [i + 1, entries[i].score];
+    }
+  }
+
+  return [-1, -1];
+}
+
+export function LeaderboardPane({ hook }: { hook: ModalHook }) {
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
   const [scoreboard, setScoreboard] = useState<ScoreboardEntry[]>([]);
 
@@ -102,47 +149,11 @@ export default function LeaderboardPane({
     if (uiManager) {
       const players = uiManager.getAllPlayers();
       const planets = uiManager.getAllOwnedPlanets();
-      const scoreboardMap: Record<EthAddress, ScoreboardEntry> = [];
-      for (const player of players) {
-        scoreboardMap[player.address] = {
-          playerId: player.address,
-          score: 0,
-          sortedPlanets: [],
-        };
-        if (player.twitter) {
-          scoreboardMap[player.address].twitter = player.twitter;
-        }
-      }
-      for (const planet of planets) {
-        const owner = planet.owner;
-        if (scoreboardMap[owner]) {
-          scoreboardMap[owner].sortedPlanets.push(planet);
-        }
-      }
-      for (const player of players) {
-        const entry: ScoreboardEntry = scoreboardMap[player.address];
-        entry.sortedPlanets.sort((a, b) => b.populationCap - a.populationCap);
-        const nPlanets = entry.sortedPlanets.length;
-        for (let i = 0; i < nPlanets; i += 1) {
-          const planet = entry.sortedPlanets[i];
-          entry.score += (planet.silverSpent + planet.silver) / 10; // silver spent or held on this planet
-          if (i < 10) {
-            entry.score += planet.populationCap;
-          }
-        }
-      }
-      const entries: ScoreboardEntry[] = Object.values(scoreboardMap);
-      entries.sort((a, b) => b.score - a.score);
-      setScoreboard(entries);
+      const entries = calculateScoreboard(players, planets);
 
-      for (let i = 0; i < entries.length; i++) {
-        if (entries[i].playerId === account) {
-          setScore(entries[i].score);
-          setRank(i + 1);
-        }
-      }
+      setScoreboard(entries);
     }
-  }, [uiManager, visible, account, setScore, setRank]);
+  }, [uiManager, visible, account]);
 
   return (
     <ModalPane hook={hook} title='Leaderboard' name={ModalName.Leaderboard}>
@@ -159,11 +170,11 @@ export default function LeaderboardPane({
               <u>Top Planets</u>
             </Sub>
           </span>
-          <span>
+          {/* <span>
             <Sub>
               <u>Score</u>
             </Sub>
-          </span>
+          </span> */}
         </div>
         {scoreboard.map((entry, idx) => (
           <div
@@ -196,7 +207,7 @@ export default function LeaderboardPane({
                 </span>
               ))}
             </span>
-            <span>{Math.floor(entry.score)}</span>
+            {/* <span>{Math.floor(entry.score)}</span> */}
           </div>
         ))}
       </LeaderboardWrapper>

@@ -8,32 +8,48 @@ import {
   LocationId,
   Planet,
   ExploredChunkData,
-  PlanetType,
   PlanetResource,
 } from '../../_types/global/GlobalTypes';
-import { hasOwner, moveShipsDecay, bonusFromHex } from '../../utils/Utils';
+import {
+  hasOwner,
+  moveShipsDecay,
+  bonusFromHex,
+  getPlanetRank,
+  formatNumber,
+} from '../../utils/Utils';
 import autoBind from 'auto-bind';
-import { PlanetColorInfo } from '../../_types/darkforest/app/board/utils/UtilsTypes';
+import { PlanetCosmeticInfo } from '../../_types/darkforest/app/board/utils/UtilsTypes';
 import { addToChunkMap } from '../../utils/ChunkUtils';
 import dfstyles from '../../styles/dfstyles';
 import { getPlanetColors, getOwnerColor } from '../../utils/ProcgenUtils';
 import { emptyAddress } from '../../utils/CheckedTypeUtils';
+import { hatFromType, HatType } from '../../utils/Hats';
 
 class CanvasRenderer {
   static instance: CanvasRenderer | null;
 
   // cached for faster rendering
-  planetToHue: Record<LocationId, PlanetColorInfo>;
+  planetToCosmetic: Record<LocationId, PlanetCosmeticInfo>;
 
-  renderableChunkMap: Map<string, ExploredChunkData>;
+  zone0ChunkMap: Map<string, ExploredChunkData>;
+  zone1ChunkMap: Map<string, ExploredChunkData>;
+  zone2ChunkMap: Map<string, ExploredChunkData>;
 
   canvasRef: RefObject<HTMLCanvasElement>;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   frameRequestId: number;
   gameUIManager: GameUIManager;
+  perlinThreshold1: number;
+  perlinThreshold2: number;
 
-  private constructor(canvas: HTMLCanvasElement, gameUIManager: GameUIManager) {
+  imgPattern: CanvasPattern | null;
+
+  private constructor(
+    canvas: HTMLCanvasElement,
+    gameUIManager: GameUIManager,
+    image: HTMLImageElement
+  ) {
     this.canvas = canvas;
     const ctx = this.canvas.getContext('2d');
     if (!ctx) {
@@ -42,8 +58,14 @@ class CanvasRenderer {
     this.ctx = ctx;
 
     this.gameUIManager = gameUIManager;
-    this.planetToHue = {};
-    this.renderableChunkMap = new Map<string, ExploredChunkData>();
+    this.perlinThreshold1 = gameUIManager.getPerlinThresholds()[0];
+    this.perlinThreshold2 = gameUIManager.getPerlinThresholds()[1];
+    this.planetToCosmetic = {};
+    this.zone0ChunkMap = new Map<string, ExploredChunkData>();
+    this.zone1ChunkMap = new Map<string, ExploredChunkData>();
+    this.zone2ChunkMap = new Map<string, ExploredChunkData>();
+
+    this.imgPattern = ctx.createPattern(image, 'repeat');
 
     this.frame();
     autoBind(this);
@@ -66,8 +88,12 @@ class CanvasRenderer {
     CanvasRenderer.instance = null;
   }
 
-  static initialize(canvas: HTMLCanvasElement, gameUIManager: GameUIManager) {
-    const canvasRenderer = new CanvasRenderer(canvas, gameUIManager);
+  static initialize(
+    canvas: HTMLCanvasElement,
+    gameUIManager: GameUIManager,
+    image: HTMLImageElement
+  ) {
+    const canvasRenderer = new CanvasRenderer(canvas, gameUIManager, image);
     CanvasRenderer.instance = canvasRenderer;
 
     return canvasRenderer;
@@ -77,11 +103,21 @@ class CanvasRenderer {
     const viewport = Viewport.getInstance();
 
     const exploredChunks = this.gameUIManager.getExploredChunks();
-    this.renderableChunkMap = new Map<string, ExploredChunkData>();
+    this.zone0ChunkMap = new Map<string, ExploredChunkData>();
+    this.zone1ChunkMap = new Map<string, ExploredChunkData>();
+    this.zone2ChunkMap = new Map<string, ExploredChunkData>();
     let planetLocations: Location[] = [];
     for (const exploredChunk of exploredChunks) {
       if (viewport.intersectsViewport(exploredChunk)) {
-        addToChunkMap(this.renderableChunkMap, exploredChunk, false);
+        let chunkMap: Map<string, ExploredChunkData>;
+        if (exploredChunk.perlin < this.perlinThreshold1) {
+          chunkMap = this.zone0ChunkMap;
+        } else if (exploredChunk.perlin < this.perlinThreshold2) {
+          chunkMap = this.zone1ChunkMap;
+        } else {
+          chunkMap = this.zone2ChunkMap;
+        }
+        addToChunkMap(chunkMap, exploredChunk, false);
         for (const planetLocation of exploredChunk.planetLocations) {
           planetLocations.push(planetLocation);
         }
@@ -102,7 +138,11 @@ class CanvasRenderer {
     });
 
     this.drawCleanBoard();
-    this.drawKnownChunks(this.renderableChunkMap.values());
+    this.drawKnownChunks([
+      this.zone0ChunkMap.values(),
+      this.zone1ChunkMap.values(),
+      this.zone2ChunkMap.values(),
+    ]);
 
     this.drawSelectedRangeRing();
     this.drawVoyages();
@@ -113,7 +153,33 @@ class CanvasRenderer {
     this.drawMousePath();
     this.drawBorders();
 
+    this.drawMiner();
+
     this.frameRequestId = window.requestAnimationFrame(this.frame.bind(this));
+  }
+
+  private drawMiner() {
+    const minerLoc = this.gameUIManager.getMinerLocation();
+    if (minerLoc === null) return;
+
+    const viewport = Viewport.getInstance();
+    const loc = viewport.worldToCanvasCoords(minerLoc);
+
+    const { ctx } = this;
+
+    ctx.save();
+    ctx.translate(loc.x, loc.y);
+    ctx.scale(1 / 16, 1 / 16);
+
+    const path = new Path2D(
+      'M512 224h-50.462c-13.82-89.12-84.418-159.718-173.538-173.538v-50.462h-64v50.462c-89.12 13.82-159.718 84.418-173.538 173.538h-50.462v64h50.462c13.82 89.12 84.418 159.718 173.538 173.538v50.462h64v-50.462c89.12-13.82 159.718-84.418 173.538-173.538h50.462v-64zM396.411 224h-49.881c-9.642-27.275-31.255-48.889-58.53-58.53v-49.881c53.757 12.245 96.166 54.655 108.411 108.411zM256 288c-17.673 0-32-14.327-32-32s14.327-32 32-32c17.673 0 32 14.327 32 32s-14.327 32-32 32zM224 115.589v49.881c-27.275 9.641-48.889 31.255-58.53 58.53h-49.881c12.245-53.756 54.655-96.166 108.411-108.411zM115.589 288h49.881c9.641 27.275 31.255 48.889 58.53 58.53v49.881c-53.756-12.245-96.166-54.654-108.411-108.411zM288 396.411v-49.881c27.275-9.642 48.889-31.255 58.53-58.53h49.881c-12.245 53.757-54.654 96.166-108.411 108.411z'
+    );
+    ctx.translate(-256, -256);
+
+    ctx.fillStyle = 'white';
+    ctx.fill(path);
+
+    ctx.restore();
   }
 
   private drawCleanBoard() {
@@ -124,19 +190,38 @@ class CanvasRenderer {
     this.ctx.fillRect(0, 0, viewport.viewportWidth, viewport.viewportHeight);
   }
 
-  private drawKnownChunks(knownChunks: Iterable<ExploredChunkData>) {
-    for (const chunk of knownChunks) {
-      const chunkLoc = chunk.chunkFootprint;
-      const center = {
-        x: chunkLoc.bottomLeft.x + chunkLoc.sideLength / 2,
-        y: chunkLoc.bottomLeft.y + chunkLoc.sideLength / 2,
-      };
-      this.drawRectWithCenter(
-        center,
-        chunkLoc.sideLength,
-        chunkLoc.sideLength,
-        dfstyles.game.canvasbg
-      );
+  private drawKnownChunks(
+    knownChunksInterables: Iterable<ExploredChunkData>[]
+  ) {
+    if (!this.imgPattern) {
+      console.error('error loading image pattern!');
+      return;
+    }
+
+    for (const knownChunks of knownChunksInterables) {
+      for (const chunk of knownChunks) {
+        const chunkLoc = chunk.chunkFootprint;
+        const center = {
+          x: chunkLoc.bottomLeft.x + chunkLoc.sideLength / 2,
+          y: chunkLoc.bottomLeft.y + chunkLoc.sideLength / 2,
+        };
+        const p = chunk.perlin;
+
+        let fill: CanvasPattern | string = 'black';
+
+        if (p < this.perlinThreshold1) {
+          fill = '#303080';
+        } else if (p < this.perlinThreshold2) {
+          fill = '#202060';
+        }
+
+        this.drawRectWithCenter(
+          center,
+          chunkLoc.sideLength,
+          chunkLoc.sideLength,
+          fill
+        );
+      }
     }
   }
 
@@ -147,62 +232,35 @@ class CanvasRenderer {
   }
 
   private drawPlanetAtLocation(location: Location) {
-    const planetLevel = this.gameUIManager.getPlanetDetailLevel(location.hash);
-    if (
-      planetLevel === null ||
-      planetLevel < this.gameUIManager.getDetailLevel()
-    ) {
+    const uiManager = this.gameUIManager;
+    const planetLevel = uiManager.getPlanetDetailLevel(location.hash);
+    if (planetLevel === null || planetLevel < uiManager.getDetailLevel()) {
       return; // so we don't call getPlanetWithLocation, which triggers updates every second
     }
-    const planet = this.gameUIManager.getPlanetWithLocation(location);
+    const planet = uiManager.getPlanetWithId(location.hash);
     if (!planet) {
       return null;
     }
 
-    const population = planet ? Math.ceil(planet.population) : 0;
+    const energy = planet ? Math.ceil(planet.energy) : 0;
 
     const silver = planet ? Math.floor(planet.silver) : 0;
     const center = { x: location.coords.x, y: location.coords.y };
 
-    const radius = this.gameUIManager.getRadiusOfPlanetLevel(
-      planet.planetLevel
-    );
+    const radius = uiManager.getRadiusOfPlanetLevel(planet.planetLevel);
 
-    if (!this.planetToHue[planet.locationId]) {
-      this.planetToHue[planet.locationId] = getPlanetColors(planet);
+    if (!this.planetToCosmetic[planet.locationId]) {
+      this.planetToCosmetic[planet.locationId] = getPlanetColors(planet);
     }
-    const colors = this.planetToHue[planet.locationId];
-
-    let color = colors.previewColor;
-    if (planet.planetType === PlanetType.TRADING_POST) {
-      color = 'gray';
-      this.drawText('TP', 15, center, 'red');
-      this.drawText(
-        planet.population.toString(),
-        15,
-        { x: center.x, y: center.y + 15 },
-        'red'
-      );
-    }
-
-    // const colorIndex = [
-    //   colors.secondaryColor,
-    //   colors.baseColor2,
-    //   colors.secondaryColor2,
-    //   colors.baseColor3,
-    //   colors.secondaryColor3,
-    // ];
-    // const offset = colors.baseHue % colorIndex.length;
+    const colors = this.planetToCosmetic[planet.locationId];
 
     const myRotation = (-40 + (colors.baseHue % 80)) * (Math.PI / 180);
 
-    // this.ctx.rotate(myRotation);
-
     /* draw ring back */
-    const totalSilverLevel =
-      planet.planetResource === PlanetResource.SILVER ? 1 : 0;
-    //(planet.silverGrowth !== 0 ? 1 : 0) + planet.level[2] + planet.level[3];
-    for (let i = 0; i < totalSilverLevel; i++)
+    const numRings = getPlanetRank(planet);
+    // const numRings = 2;
+
+    for (let i = 0; i < numRings; i++)
       this.drawHalfRingWithCenter(
         center,
         radius,
@@ -215,18 +273,21 @@ class CanvasRenderer {
 
     /* draw planet */
 
+    // hp bar 1
+    this.ctx.globalAlpha = 0.7;
     if (hasOwner(planet)) {
-      if (this.gameUIManager.isOwnedByMe(planet)) {
-        this.drawLoopWithCenter(center, radius * 1.2, 2, 'blue');
+      if (uiManager.isOwnedByMe(planet)) {
+        this.drawLoopWithCenter(center, radius * 1.2, 1, 'white');
       } else {
-        this.drawLoopWithCenter(center, radius * 1.2, 2, getOwnerColor(planet));
+        this.drawLoopWithCenter(center, radius * 1.2, 1, getOwnerColor(planet));
       }
     }
+    this.ctx.globalAlpha = 1.0;
 
-    this.drawCircleWithCenter(center, radius, color);
+    this.drawPlanetBody(center, radius, planet);
 
     /* draw ring front */
-    for (let i = 0; i < totalSilverLevel; i++)
+    for (let i = 0; i < numRings; i++)
       this.drawHalfRingWithCenter(
         center,
         radius,
@@ -239,48 +300,130 @@ class CanvasRenderer {
 
     this.drawAsteroidBelt(center, radius, planet);
 
-    const current = this.gameUIManager.getDetailLevel();
-    const det = this.gameUIManager.getPlanetDetailLevel(planet.locationId);
+    const hatLevel = planet.hatLevel;
+    // const hatLevel = planetRandomInt(planet.locationId)() % 5;
+
+    if (hatLevel > 0) {
+      const hatScale = 1.65 ** (hatLevel - 1);
+
+      this.drawHat(
+        colors.hatType,
+        // HatType.Squid,
+        512,
+        512,
+        center,
+        1.2 * radius * hatScale,
+        1.2 * radius * hatScale,
+        radius,
+        myRotation,
+        colors.backgroundColor,
+        colors.previewColor
+      );
+    }
+
+    // draw text
+    const current = uiManager.getDetailLevel();
+    const det = uiManager.getPlanetDetailLevel(planet.locationId);
     if (det === null) return;
     if (det > current + 1) {
-      if (hasOwner(planet) && population > 0) {
-        let popString = population.toString();
-        let lockedPop = 0;
+      const fromPlanet = uiManager.getMouseDownPlanet();
+      const fromCoords = uiManager.getMouseDownCoords();
+      const toPlanet = uiManager.getHoveringOverPlanet();
+      const toCoords = uiManager.getHoveringOverCoords();
+      const moveHereInProgress =
+        fromPlanet &&
+        fromCoords &&
+        toPlanet &&
+        toCoords &&
+        fromPlanet.locationId !== toPlanet.locationId &&
+        toPlanet.locationId === planet.locationId;
+      if (moveHereInProgress || (hasOwner(planet) && energy > 0)) {
+        let energyString = energy.toString();
+        let lockedEnergy = 0;
         for (const unconfirmedMove of planet.unconfirmedDepartures) {
-          lockedPop += unconfirmedMove.forces;
+          lockedEnergy += unconfirmedMove.forces;
         }
-        if (lockedPop > 0) {
-          popString += ` (-${Math.floor(lockedPop)})`;
+        if (lockedEnergy > 0) {
+          energyString += ` (-${Math.floor(lockedEnergy)})`;
+        }
+
+        // typescript complains if we just copy moveHereInProgress here :(
+        if (
+          fromPlanet &&
+          fromCoords &&
+          toPlanet &&
+          toCoords &&
+          fromPlanet.locationId !== toPlanet.locationId &&
+          toPlanet.locationId === planet.locationId
+        ) {
+          // user is click-dragging to this planet
+
+          let effectiveEnergy = fromPlanet.energy;
+          for (const unconfirmedMove of fromPlanet.unconfirmedDepartures) {
+            effectiveEnergy -= unconfirmedMove.forces;
+          }
+          const shipsMoved =
+            (uiManager.getForcesSending(fromPlanet.locationId) / 100) *
+            effectiveEnergy;
+
+          const dist = Math.sqrt(
+            (fromCoords.x - toCoords.x) ** 2 + (fromCoords.y - toCoords.y) ** 2
+          );
+
+          const myAtk: number = moveShipsDecay(shipsMoved, fromPlanet, dist);
+          if (uiManager.isOwnedByMe(planet) || planet.energy === 0) {
+            energyString += ` (+${Math.floor(myAtk)})`;
+          } else {
+            energyString += ` (-${Math.floor(
+              (myAtk * 100) / toPlanet.defense
+            )})`;
+          }
         }
         this.drawText(
-          popString,
+          energyString,
           15,
           {
             x: center.x,
             y: center.y - 1.1 * radius - (planet.owner ? 0.75 : 0.25),
           },
-          this.gameUIManager.isOwnedByMe(planet)
-            ? 'white'
-            : getOwnerColor(planet)
+          uiManager.isOwnedByMe(planet) ? 'white' : getOwnerColor(planet)
         );
-      } else if (!hasOwner(planet) && population > 0) {
-        const current = this.gameUIManager.getDetailLevel();
-        const det = this.gameUIManager.getPlanetDetailLevel(planet.locationId);
+        // hp bar 2
+        if (uiManager.isOwnedByMe(planet)) {
+          this.drawArcWithCenter(
+            center,
+            radius * 1.2,
+            3,
+            (planet.energy / planet.energyCap) * 100,
+            'white'
+          );
+        } else {
+          this.drawArcWithCenter(
+            center,
+            radius * 1.2,
+            3,
+            (planet.energy / planet.energyCap) * 100,
+            getOwnerColor(planet)
+          );
+        }
+      } else if (!hasOwner(planet) && energy > 0) {
+        const current = uiManager.getDetailLevel();
+        const det = uiManager.getPlanetDetailLevel(planet.locationId);
         if (det === null) return;
         if (det > current) {
           this.drawText(
-            population.toString(),
+            formatNumber(energy),
             15,
             {
               x: center.x,
               y: center.y - 1.1 * radius - (planet.owner ? 0.75 : 0.25),
             },
-            '#444455'
+            '#996666'
           );
         }
       }
 
-      if (hasOwner(planet) && (planet.silverGrowth > 0 || planet.silver > 0)) {
+      if (planet.silverGrowth > 0 || planet.silver > 0) {
         this.drawText(
           silver.toString(),
           15,
@@ -325,32 +468,52 @@ class CanvasRenderer {
     const fromLoc = this.gameUIManager.getLocationOfPlanet(voyage.fromPlanet);
     const fromPlanet = this.gameUIManager.getPlanetWithId(voyage.fromPlanet);
     const toLoc = this.gameUIManager.getLocationOfPlanet(voyage.toPlanet);
-    if (!fromPlanet || !fromLoc || !toLoc) {
+    if (!fromPlanet || !toLoc) {
+      // not enough info to draw anything
       return;
+    } else if (!fromLoc && fromPlanet && toLoc) {
+      // can draw a red ring around dest, but don't know source location
+      const myMove = voyage.player === this.gameUIManager.getAccount();
+      const now = Date.now() / 1000;
+      const timeLeft = voyage.arrivalTime - now;
+      const radius = (timeLeft * fromPlanet.speed) / 100;
+      this.drawLoopWithCenter(
+        toLoc.coords,
+        radius,
+        2,
+        myMove ? 'blue' : 'red',
+        true
+      );
+      this.drawText(`${Math.floor(timeLeft)}s`, 15, {
+        x: toLoc.coords.x,
+        y: toLoc.coords.y + radius * 1.1,
+      });
+    } else if (fromLoc && fromPlanet && toLoc) {
+      // know source and destination locations
+
+      const myMove = voyage.player === this.gameUIManager.getAccount();
+      const now = Date.now() / 1000;
+      let proportion =
+        (now - voyage.departureTime) /
+        (voyage.arrivalTime - voyage.departureTime);
+      proportion = Math.max(proportion, 0.01);
+      proportion = Math.min(proportion, 0.99);
+
+      const shipsLocationX =
+        (1 - proportion) * fromLoc.coords.x + proportion * toLoc.coords.x;
+      const shipsLocationY =
+        (1 - proportion) * fromLoc.coords.y + proportion * toLoc.coords.y;
+      const shipsLocation = { x: shipsLocationX, y: shipsLocationY };
+
+      this.drawCircleWithCenter(shipsLocation, 1, myMove ? 'blue' : 'red');
+      const timeLeftSeconds = Math.floor(voyage.arrivalTime - now);
+      this.drawText(
+        `${timeLeftSeconds.toString()}s`,
+        15,
+        { x: shipsLocationX, y: shipsLocationY - 1.1 },
+        'white'
+      );
     }
-
-    const myMove = voyage.player === this.gameUIManager.getAccount();
-    const now = Date.now() / 1000;
-    let proportion =
-      (now - voyage.departureTime) /
-      (voyage.arrivalTime - voyage.departureTime);
-    proportion = Math.max(proportion, 0.01);
-    proportion = Math.min(proportion, 0.99);
-
-    const shipsLocationX =
-      (1 - proportion) * fromLoc.coords.x + proportion * toLoc.coords.x;
-    const shipsLocationY =
-      (1 - proportion) * fromLoc.coords.y + proportion * toLoc.coords.y;
-    const shipsLocation = { x: shipsLocationX, y: shipsLocationY };
-
-    this.drawCircleWithCenter(shipsLocation, 1, myMove ? 'blue' : 'red');
-    const timeLeftSeconds = Math.floor(voyage.arrivalTime - now);
-    this.drawText(
-      `${timeLeftSeconds.toString()}s`,
-      15,
-      { x: shipsLocationX, y: shipsLocationY - 1.1 },
-      'white'
-    );
   }
 
   private drawVoyagePath(
@@ -452,24 +615,29 @@ class CanvasRenderer {
     if (selected.owner === emptyAddress) return;
 
     const forcesSending = uiManager.getForcesSending(selected.locationId); // [0, 100]
-    const scaled =
-      (forcesSending * selected.population) / selected.populationCap;
+    const totalForces = (forcesSending / 100) * selected.energy;
+
+    const scaled = (forcesSending * selected.energy) / selected.energyCap;
     let ratio = Math.log(scaled / 5) / Math.log(2);
     ratio = Math.max(ratio, 0);
 
-    this.drawLoopWithCenter(
-      { x, y },
-      ratio * selected.range, // log_2 (25/5)
-      1,
-      dfstyles.game.rangecolors.dashpop,
-      true
-    );
-    this.drawText(
-      `${forcesSending}%`,
-      15,
-      { x, y: y + ratio * selected.range },
-      dfstyles.game.rangecolors.dashpop
-    );
+    const rOrange = ratio * selected.range;
+
+    if (rOrange > 1) {
+      this.drawLoopWithCenter(
+        { x, y },
+        rOrange, // log_2 (25/5)
+        1,
+        dfstyles.game.rangecolors.dashenergy,
+        true
+      );
+      this.drawText(
+        `${formatNumber(totalForces)}`,
+        15,
+        { x, y: y + rOrange },
+        dfstyles.game.rangecolors.dashenergy
+      );
+    }
   }
 
   private drawSelectedRect() {
@@ -493,30 +661,38 @@ class CanvasRenderer {
 
   private drawMousePath() {
     const uiManager = this.gameUIManager;
-    const from = uiManager.getMouseDownCoords();
-    const to = uiManager.getHoveringOverCoords();
+    const mouseDownPlanet = uiManager.getMouseDownPlanet();
+    const loc = mouseDownPlanet
+      ? uiManager.getLocationOfPlanet(mouseDownPlanet.locationId)
+      : null;
 
-    if (from && to) {
+    const to: WorldCoords | null = uiManager.getHoveringOverCoords();
+
+    if (mouseDownPlanet && loc && to) {
+      const from: WorldCoords | null = loc.coords;
+
       const myPlanet = uiManager.isOverOwnPlanet(from);
       if (myPlanet && to !== from) {
         this.drawLine(from, to, 2);
-        let effectivePopulation = myPlanet.population;
+        let effectiveEnergy = myPlanet.energy;
         for (const unconfirmedMove of myPlanet.unconfirmedDepartures) {
-          effectivePopulation -= unconfirmedMove.forces;
+          effectiveEnergy -= unconfirmedMove.forces;
         }
         const shipsMoved =
           (uiManager.getForcesSending(myPlanet.locationId) / 100) *
-          effectivePopulation;
+          effectiveEnergy;
 
         const dist = Math.sqrt((from.x - to.x) ** 2 + (from.y - to.y) ** 2);
 
         const myAtk: number = moveShipsDecay(shipsMoved, myPlanet, dist);
-        this.drawText(
-          `Fleet: ${Math.round(myAtk)}`,
-          15,
-          { x: to.x, y: to.y },
-          myAtk > 0 ? 'white' : 'red'
-        );
+        if (!uiManager.getHoveringOverPlanet()) {
+          this.drawText(
+            `Energy: ${Math.round(myAtk)}`,
+            15,
+            { x: to.x, y: to.y },
+            myAtk > 0 ? 'white' : 'red'
+          );
+        }
       }
     }
   }
@@ -526,24 +702,95 @@ class CanvasRenderer {
     this.drawLoopWithCenter({ x: 0, y: 0 }, radius, 2, 'white');
   }
 
-  private drawRectWithCenter(
+  private drawHat(
+    hatType: HatType,
+    pathHeight: number,
+    pathWidth: number,
     center: WorldCoords,
     width: number,
     height: number,
-    color = 'white'
+    radius: number,
+    rotation: number,
+    fill1: string | CanvasPattern = 'white',
+    fill2: string | CanvasPattern = 'red'
   ) {
+    const { ctx } = this;
+    const viewport = Viewport.getInstance();
+    const hat = hatFromType(hatType);
+
+    const trueCenter = viewport.worldToCanvasCoords(center);
+    const trueRadius = viewport.worldToCanvasDist(radius);
+    const trueWidth = viewport.worldToCanvasDist(width);
+    const trueHeight = viewport.worldToCanvasDist(height);
+
+    ctx.save();
+
+    // move to planet center
+    ctx.translate(trueCenter.x, trueCenter.y);
+
+    // extrude out to outside
+    ctx.rotate(rotation);
+    ctx.translate(0, -trueRadius - trueHeight / 4);
+
+    // move to svg center
+    ctx.scale(trueWidth / pathWidth, trueHeight / pathHeight);
+    ctx.translate(-pathWidth / 2, -pathHeight / 2);
+
+    ctx.fillStyle = fill1;
+    for (const pathStr of hat.bottomLayer) {
+      ctx.fill(new Path2D(pathStr));
+    }
+
+    ctx.fillStyle = fill2;
+    for (const pathStr of hat.topLayer) {
+      ctx.fill(new Path2D(pathStr));
+    }
+
+    ctx.restore();
+  }
+
+  private drawRectWithCenter(
+    center: WorldCoords,
+    width: number, // TODO we should label w/h with world vs canvas coords
+    height: number,
+    fill: string | CanvasPattern = 'white'
+  ) {
+    const { ctx } = this;
     const viewport = Viewport.getInstance();
 
     const centerCanvasCoords = viewport.worldToCanvasCoords(center);
     const widthCanvasCoords = viewport.worldToCanvasDist(width);
     const heightCanvasCoords = viewport.worldToCanvasDist(height);
-    this.ctx.fillStyle = color;
-    this.ctx.fillRect(
-      Math.floor(centerCanvasCoords.x - widthCanvasCoords / 2),
-      Math.floor(centerCanvasCoords.y - heightCanvasCoords / 2),
-      widthCanvasCoords,
-      heightCanvasCoords
-    );
+
+    if (typeof fill === 'string') {
+      ctx.fillStyle = fill;
+      ctx.fillRect(
+        Math.floor(centerCanvasCoords.x - widthCanvasCoords / 2),
+        Math.floor(centerCanvasCoords.y - heightCanvasCoords / 2),
+        widthCanvasCoords,
+        heightCanvasCoords
+      );
+    } else {
+      ctx.fillStyle = fill;
+
+      const vCenter = viewport.centerWorldCoords;
+
+      const offX = viewport.worldToCanvasDist(vCenter.x);
+      const offY = -viewport.worldToCanvasDist(vCenter.y);
+
+      ctx.save();
+      ctx.translate(-offX, -offY);
+
+      ctx.globalCompositeOperation = 'overlay';
+      ctx.fillRect(
+        Math.floor(centerCanvasCoords.x - widthCanvasCoords / 2) + offX,
+        Math.floor(centerCanvasCoords.y - heightCanvasCoords / 2) + offY,
+        widthCanvasCoords,
+        heightCanvasCoords
+      );
+
+      ctx.restore();
+    }
   }
 
   private drawAsteroidBelt(
@@ -551,6 +798,7 @@ class CanvasRenderer {
     radius: number,
     planet: Planet
   ) {
+    const { ctx } = this;
     const planetDetailLevel = this.gameUIManager.getPlanetDetailLevel(
       planet.locationId
     );
@@ -565,59 +813,66 @@ class CanvasRenderer {
     const orbit = viewport.worldToCanvasDist(1.2 * radius) + r;
 
     const [
-      popCapBonus,
-      popGroBonus,
-      silCapBonus,
-      silGroBonus,
+      energyCapBonus,
+      energyGroBonus,
       rangeBonus,
+      speedBonus,
+      defBonus,
     ] = bonusFromHex(planet.locationId);
 
-    this.ctx.save();
-    this.ctx.translate(centerCanvasCoords.x, centerCanvasCoords.y);
+    ctx.save();
+    ctx.translate(centerCanvasCoords.x, centerCanvasCoords.y);
 
     const angle = Date.now() * 0.001;
-    const f = (t) => ({
-      x: Math.cos(angle + t),
-      y: Math.sin(angle + t),
-    });
 
-    if (popCapBonus) {
-      const { x, y } = f(0);
-      this.ctx.fillStyle = dfstyles.game.bonuscolors.popCap;
-      this.ctx.beginPath();
-      this.ctx.arc(orbit * x, orbit * y, r, 0, 2 * Math.PI);
-      this.ctx.fill();
+    const drawAsteroid = (t: number, color: string) => {
+      const theta = t + angle;
+      const x = Math.cos(theta);
+      const y = Math.sin(theta);
+
+      const clip = (tt) => tt % (Math.PI * 2);
+
+      ctx.lineWidth = r;
+
+      for (let i = 1; i <= 8; i++) {
+        ctx.globalAlpha = 0.04;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, orbit, clip(theta - 0.1 * i), clip(theta));
+
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        ctx.strokeStyle = 'white';
+        ctx.stroke();
+        ctx.stroke();
+      }
+
+      ctx.globalAlpha = 1;
+
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.arc(orbit * x, orbit * y, r, 0, 2 * Math.PI);
+      ctx.fill();
+    };
+
+    const delT = 1.0;
+    if (energyCapBonus) {
+      drawAsteroid(0 * delT, dfstyles.game.bonuscolors.energyCap);
     }
-    if (popGroBonus) {
-      const { x, y } = f(1);
-      this.ctx.fillStyle = dfstyles.game.bonuscolors.popGro;
-      this.ctx.beginPath();
-      this.ctx.arc(orbit * x, orbit * y, r, 0, 2 * Math.PI);
-      this.ctx.fill();
+    if (energyGroBonus) {
+      drawAsteroid(1 * delT, dfstyles.game.bonuscolors.energyGro);
     }
-    if (silCapBonus) {
-      const { x, y } = f(2);
-      this.ctx.fillStyle = dfstyles.game.bonuscolors.silCap;
-      this.ctx.beginPath();
-      this.ctx.arc(orbit * x, orbit * y, r, 0, 2 * Math.PI);
-      this.ctx.fill();
+    if (speedBonus) {
+      drawAsteroid(2 * delT, dfstyles.game.bonuscolors.speed);
     }
-    if (silGroBonus) {
-      const { x, y } = f(3);
-      this.ctx.fillStyle = dfstyles.game.bonuscolors.silGro;
-      this.ctx.beginPath();
-      this.ctx.arc(orbit * x, orbit * y, r, 0, 2 * Math.PI);
-      this.ctx.fill();
+    if (defBonus) {
+      drawAsteroid(3 * delT, dfstyles.game.bonuscolors.def);
     }
     if (rangeBonus) {
-      const { x, y } = f(4);
-      this.ctx.fillStyle = dfstyles.game.bonuscolors.range;
-      this.ctx.beginPath();
-      this.ctx.arc(orbit * x, orbit * y, r, 0, 2 * Math.PI);
-      this.ctx.fill();
+      drawAsteroid(4 * delT, dfstyles.game.bonuscolors.range);
     }
 
-    this.ctx.restore();
+    ctx.restore();
   }
 
   private drawRectBorderWithCenter(
@@ -663,6 +918,50 @@ class CanvasRenderer {
       false
     );
     this.ctx.fill();
+  }
+
+  private drawPlanetBody(
+    centerRaw: WorldCoords,
+    radiusRaw: number,
+    planet: Planet
+  ) {
+    const { ctx } = this;
+    const viewport = Viewport.getInstance();
+
+    const center = viewport.worldToCanvasCoords(centerRaw);
+    const radius = viewport.worldToCanvasDist(radiusRaw);
+
+    ctx.save();
+    ctx.translate(center.x, center.y);
+
+    const colors = this.planetToCosmetic[planet.locationId];
+    if (planet.planetResource === PlanetResource.NONE) {
+      ctx.fillStyle = colors.previewColor;
+
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+      ctx.fill();
+    } else {
+      // silver-producing
+
+      for (let i = 0; i < 5; i++) {
+        const t = (i * (Math.PI * 2)) / 5 + Date.now() * 0.0003;
+
+        ctx.fillStyle = colors.asteroidColor;
+        ctx.beginPath();
+        ctx.arc(
+          radius * 0.6 * Math.cos(t),
+          radius * 0.6 * Math.sin(t),
+          radius * 0.3,
+          0,
+          2 * Math.PI
+        );
+
+        ctx.fill();
+      }
+    }
+
+    ctx.restore();
   }
 
   private drawHalfRingWithCenter(
@@ -718,6 +1017,17 @@ class CanvasRenderer {
     color = 'white',
     dotted = false
   ) {
+    this.drawArcWithCenter(center, radius, width, 100, color, dotted);
+  }
+
+  private drawArcWithCenter(
+    center: WorldCoords,
+    radius: number,
+    width: number,
+    percent: number,
+    color = 'white',
+    dotted = false
+  ) {
     const viewport = Viewport.getInstance();
 
     const centerCanvasCoords = viewport.worldToCanvasCoords(center);
@@ -731,8 +1041,8 @@ class CanvasRenderer {
       centerCanvasCoords.x,
       centerCanvasCoords.y,
       radiusCanvasCoords,
-      0,
-      2 * Math.PI,
+      1.5 * Math.PI,
+      1.5 * Math.PI + (2 * Math.PI * percent) / 100,
       false
     );
 

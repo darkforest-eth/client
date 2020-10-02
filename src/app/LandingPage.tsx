@@ -270,7 +270,7 @@ export default function LandingPage() {
               <tbody>
                 <TRow>
                   <td>
-                    <HideSmall>dfv</HideSmall>0.1
+                    <HideSmall>v</HideSmall>0.1
                   </td>
                   <td>
                     02/22/<HideSmall>20</HideSmall>20
@@ -279,12 +279,25 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>dfv</HideSmall>0.2
+                    <HideSmall>v</HideSmall>0.2
                   </td>
                   <td>
                     06/24/<HideSmall>20</HideSmall>20
                   </td>
                   <td>Nate Foss</td>
+                </TRow>
+                <TRow>
+                  <td>
+                    <HideSmall>v</HideSmall>0.3
+                  </td>
+                  <td>
+                    08/07/<HideSmall>20</HideSmall>20
+                  </td>
+                  <td>
+                    <a href='https://twitter.com/hideandcleanse'>
+                      @HideAndCleanse
+                    </a>
+                  </td>
                 </TRow>
               </tbody>
             </table>

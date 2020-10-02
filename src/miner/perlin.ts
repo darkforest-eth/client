@@ -196,13 +196,11 @@ const valueAt = (p: Vector, scale: Fraction) => {
 
 const MAX_PERLIN_VALUE = 32;
 
-const perlin: (p: IntegerVector) => number = (p) => {
-  return 16;
-
+function perlin(p: IntegerVector, floor = true): number {
   const fractionalP = { x: new Fraction(p.x), y: new Fraction(p.y) };
   let ret = new Fraction(0);
-  for (let i = 11; i < 14; i += 1) {
-    // we want 2048, 4096, 8192.
+  for (let i = 12; i < 15; i += 1) {
+    // we want 4096, 8192. 16384
     ret = ret.add(valueAt(fractionalP, new Fraction(2 ** i)));
   }
 
@@ -210,11 +208,11 @@ const perlin: (p: IntegerVector) => number = (p) => {
   runningLCM = updateLCM(runningLCM, BigInt(ret.d));
 
   ret = ret.mul(MAX_PERLIN_VALUE / 2);
-  ret = ret.floor();
+  if (floor) ret = ret.floor();
   ret = ret.add(MAX_PERLIN_VALUE / 2);
 
   const out = ret.valueOf();
-  return out;
-};
+  return Math.floor(out * 100) / 100;
+}
 
 export default perlin;

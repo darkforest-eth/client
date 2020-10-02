@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import dfstyles from '../styles/dfstyles';
-import { UpgradeBranch, Planet } from '../_types/global/GlobalTypes';
+import { UpgradeBranchName, Planet } from '../_types/global/GlobalTypes';
 import { getPlanetRank, isFullRank } from '../utils/Utils';
 
 const SVGWrapper = styled.span`
@@ -91,28 +91,28 @@ export const SilverGrowthIcon = () => (
   </SVGWrapper>
 );
 
-const PopulationGrowthSVG = () => (
+const EnergyGrowthSVG = () => (
   <DefaultSVG>
-    <path d='M384 385.306v-26.39c35.249-19.864 64-69.386 64-118.916 0-79.529 0-144-96-144s-96 64.471-96 144c0 49.53 28.751 99.052 64 118.916v26.39c-108.551 8.874-192 62.21-192 126.694h448c0-64.484-83.449-117.82-192-126.694z'></path>
-    <path d='M163.598 397.664c27.655-18.075 62.040-31.818 99.894-40.207-7.527-8.892-14.354-18.811-20.246-29.51-15.207-27.617-23.246-58.029-23.246-87.947 0-43.021 0-83.655 15.3-116.881 14.853-32.252 41.564-52.248 79.611-59.744-8.457-38.24-30.97-63.375-90.911-63.375-96 0-96 64.471-96 144 0 49.53 28.751 99.052 64 118.916v26.39c-108.551 8.874-192 62.21-192 126.694h139.503c7.259-6.455 15.298-12.586 24.095-18.336z'></path>
+    <path d='M251.6,164.4L416,0l-75,210H234.8L251.6,164.4z M407.4,224L284.2,343.4L224,512l288-288H407.4z' />
+    <path d='M288,0L0,288h176L96,512l288-288H208L288,0z' />
   </DefaultSVG>
 );
 
-export const PopulationGrowthIcon = () => (
+export const EnergyGrowthIcon = () => (
   <SVGWrapper>
-    <PopulationGrowthSVG />
+    <EnergyGrowthSVG />
   </SVGWrapper>
 );
 
-const PopulationSVG = () => (
+const EnergySVG = () => (
   <DefaultSVG>
-    <path d='M288 353.306v-26.39c35.249-19.864 64-69.386 64-118.916 0-79.529 0-144-96-144s-96 64.471-96 144c0 49.53 28.751 99.052 64 118.916v26.39c-108.551 8.874-192 62.21-192 126.694h448c0-64.484-83.449-117.82-192-126.694z'></path>
+    <path fill='#000' d='M352 0l-288 288h176l-80 224 288-288h-176z'></path>
   </DefaultSVG>
 );
 
-export const PopulationIcon = () => (
+export const EnergyIcon = () => (
   <SVGWrapper>
-    <PopulationSVG />
+    <EnergySVG />
   </SVGWrapper>
 );
 
@@ -405,6 +405,112 @@ export const ShareIcon = () => (
   </SVGWrapper>
 );
 
+const LockSVG = () => {
+  return (
+    <DefaultSVG>
+      <path
+        fill='#000'
+        d='M448 192h-32v-160c0-17.6-14.4-32-32-32h-256c-17.6 0-32 14.4-32 32v160h-32c-17.602 0-32 14.4-32 32v256c0 17.6 14.398 32 32 32h384c17.6 0 32-14.4 32-32v-256c0-17.6-14.4-32-32-32zM288 416h-64l13.92-69.6c-8.404-5.766-13.92-15.437-13.92-26.4 0-17.673 14.327-32 32-32s32 14.327 32 32c0 10.963-5.516 20.634-13.92 26.4l13.92 69.6zM352 192h-192v-128h192v128z'
+      ></path>
+    </DefaultSVG>
+  );
+};
+
+export const LockIcon = () => {
+  return (
+    <SVGWrapper>
+      <LockSVG />
+    </SVGWrapper>
+  );
+};
+
+const SpeedSVG = () => {
+  return (
+    <DefaultSVG>
+      <path d='M256 432v-160l-160 160v-352l160 160v-160l176 176z'></path>
+    </DefaultSVG>
+  );
+};
+
+export const SpeedIcon = () => {
+  return (
+    <SVGWrapper>
+      <SpeedSVG />
+    </SVGWrapper>
+  );
+};
+
+const DefenseSVG = () => {
+  return (
+    <DefaultSVG>
+      <path d='M256.002 52.45l143.999 78.545-0.001 109.005c0 30.499-3.754 57.092-11.477 81.299-7.434 23.303-18.396 43.816-33.511 62.711-22.371 27.964-53.256 51.74-99.011 76.004-45.753-24.263-76.644-48.042-99.013-76.004-15.116-18.896-26.078-39.408-33.512-62.711-7.722-24.207-11.476-50.8-11.476-81.299v-109.004l144.002-78.546zM256.003 0c-2.637 0-5.274 0.651-7.663 1.954l-176.002 96c-5.14 2.803-8.338 8.191-8.338 14.046v128c0 70.394 18.156 127.308 55.506 173.995 29.182 36.478 69.072 66.183 129.34 96.315 2.252 1.126 4.704 1.689 7.155 1.689s4.903-0.563 7.155-1.689c60.267-30.134 100.155-59.839 129.337-96.315 37.351-46.687 55.507-103.601 55.507-173.995l0.001-128c0-5.855-3.198-11.243-8.338-14.046l-175.999-96c-2.387-1.303-5.024-1.954-7.661-1.954v0z'></path>
+      <path d='M160 159.491v80.509c0 25.472 3.011 47.293 9.206 66.711 5.618 17.608 13.882 33.085 25.265 47.313 14.589 18.237 34.038 34.408 61.531 50.927 27.492-16.518 46.939-32.688 61.53-50.927 11.382-14.228 19.646-29.704 25.263-47.313 6.194-19.418 9.205-41.239 9.205-66.711l0.001-80.51-95.999-52.363-96.002 52.364z'></path>
+    </DefaultSVG>
+  );
+};
+
+export const DefenseIcon = () => {
+  return (
+    <SVGWrapper>
+      <DefenseSVG />
+    </SVGWrapper>
+  );
+};
+
+const HatSVG = () => {
+  return (
+    <DefaultSVG>
+      <path d='M416 248.575v-104.575c0-26.51-71.635-48-160-48s-160 21.49-160 48v104.575c-58.519 20.526-96 52.058-96 87.425 0 61.855 114.615 112 256 112s256-50.145 256-112c0-35.367-37.48-66.899-96-87.425zM416 336c0 26.51-71.635 48-160 48s-160-21.49-160-48v-64c0 26.51 71.635 48 160 48s160-21.49 160-48v64z'></path>
+    </DefaultSVG>
+  );
+};
+
+export const HatIcon = () => {
+  return (
+    <SVGWrapper>
+      <HatSVG />
+    </SVGWrapper>
+  );
+};
+
+const EthSVG = () => {
+  return (
+    <svg
+      version='1.1'
+      xmlns='http://www.w3.org/2000/svg'
+      width='1024'
+      height='1024'
+      viewBox='0 0 1024 1024'
+    >
+      <path d='M509.611 766.72l-314.197-185.6 314.155 442.88 314.453-442.88-314.539 185.6zM514.389 0l-314.283 521.515 314.24 185.771 314.24-185.6z'></path>
+    </svg>
+  );
+};
+
+export const EthIcon = () => {
+  return (
+    <SVGWrapper>
+      <EthSVG />
+    </SVGWrapper>
+  );
+};
+
+const SettingsSVG = () => {
+  return (
+    <DefaultSVG>
+      <path d='M466.895 305.125c-26.863-46.527-10.708-106.152 36.076-133.244l-50.313-87.146c-14.375 8.427-31.088 13.259-48.923 13.259-53.768 0-97.354-43.873-97.354-97.995h-100.629c0.133 16.705-4.037 33.641-12.979 49.126-26.862 46.528-86.578 62.351-133.431 35.379l-50.312 87.146c14.485 8.236 27.025 20.294 35.943 35.739 26.819 46.454 10.756 105.96-35.854 133.112l50.313 87.146c14.325-8.348 30.958-13.127 48.7-13.127 53.598 0 97.072 43.596 97.35 97.479h100.627c-0.043-16.537 4.136-33.285 12.983-48.609 26.818-46.453 86.388-62.297 133.207-35.506l50.313-87.145c-14.39-8.233-26.846-20.249-35.717-35.614zM256 359.666c-57.254 0-103.668-46.412-103.668-103.667 0-57.254 46.413-103.667 103.668-103.667s103.666 46.413 103.666 103.667c-0.001 57.255-46.412 103.667-103.666 103.667z'></path>
+    </DefaultSVG>
+  );
+};
+
+export const SettingsIcon = () => {
+  return (
+    <SVGWrapper>
+      <SettingsSVG />
+    </SVGWrapper>
+  );
+};
+
 export const RankIcon = ({ planet }: { planet: Planet | null }) => {
   const rank = getPlanetRank(planet);
   if (isFullRank(planet)) return <FullRankIcon />;
@@ -415,7 +521,7 @@ export const RankIcon = ({ planet }: { planet: Planet | null }) => {
 };
 
 export const BranchIcon = ({ branch }: { branch: number }) => {
-  if (branch === UpgradeBranch.Population) return <PopulationIcon />;
-  else if (branch === UpgradeBranch.Silver) return <SilverIcon />;
+  if (branch === UpgradeBranchName.Range) return <EnergyIcon />;
+  else if (branch === UpgradeBranchName.Defense) return <SilverIcon />;
   else return <RangeIcon />;
 };

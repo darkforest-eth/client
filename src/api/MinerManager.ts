@@ -6,29 +6,58 @@ import {
 import Worker from 'worker-loader!../miner/miner.worker';
 import { EventEmitter } from 'events';
 import _ from 'lodash';
-import LocalStorageManager from './LocalStorageManager';
 import { MiningPattern } from '../utils/MiningPatterns';
+import perlin from '../miner/perlin';
+import { ChunkStore } from '../_types/darkforest/api/LocalStorageManagerTypes';
+import { getChunkKey } from '../utils/ChunkUtils';
 
 export enum MinerManagerEvent {
   DiscoveredNewChunk = 'DiscoveredNewChunk',
 }
 
+export class HomePlanetMinerChunkStore implements ChunkStore {
+  private perlinThreshold: number;
+  private minedChunkKeys: Set<string>;
+
+  constructor(perlinThreshold: number) {
+    this.perlinThreshold = perlinThreshold;
+    this.minedChunkKeys = new Set<string>();
+  }
+
+  addChunk(exploredChunk: ExploredChunkData) {
+    this.minedChunkKeys.add(getChunkKey(exploredChunk.chunkFootprint));
+  }
+
+  hasMinedChunk(chunkFootprint: ChunkFootprint) {
+    // return true if this chunk mined, or if perlin value >= threshold
+    if (this.minedChunkKeys.has(getChunkKey(chunkFootprint))) return true;
+    const center = {
+      x: chunkFootprint.bottomLeft.x + chunkFootprint.sideLength / 2,
+      y: chunkFootprint.bottomLeft.y + chunkFootprint.sideLength / 2,
+    };
+    if (perlin(center, false) >= this.perlinThreshold) return true;
+    return false;
+  }
+}
+
 class MinerManager extends EventEmitter {
-  private readonly minedChunksStore: LocalStorageManager;
+  private readonly minedChunksStore: ChunkStore;
   private isExploring = false;
   private miningPattern: MiningPattern;
   private workers: Worker[];
   private worldRadius: number;
   private readonly planetRarity: number;
   private cores = 1;
+  // chunks we're exploring
   private exploringChunk: { [chunkKey: string]: ExploredChunkData } = {};
+  // when we started exploring this chunk
   private exploringChunkStart: { [chunkKey: string]: number } = {};
   private minersComplete: { [chunkKey: string]: number } = {};
   private currentJobId = 0;
   private useMockHash;
 
   private constructor(
-    minedChunksStore: LocalStorageManager,
+    minedChunksStore: ChunkStore,
     miningPattern: MiningPattern,
     worldRadius: number,
     planetRarity: number,
@@ -66,7 +95,7 @@ class MinerManager extends EventEmitter {
   }
 
   static create(
-    chunkStore: LocalStorageManager,
+    chunkStore: ChunkStore,
     miningPattern: MiningPattern,
     worldRadius: number,
     planetRarity: number,
@@ -133,9 +162,15 @@ class MinerManager extends EventEmitter {
       (nextChunk: ChunkFootprint | null) => {
         if (!!nextChunk) {
           const nextChunkKey = this.chunkLocationToKey(nextChunk, jobId);
+          const center = {
+            x: nextChunk.bottomLeft.x + nextChunk.sideLength / 2,
+            y: nextChunk.bottomLeft.y + nextChunk.sideLength / 2,
+          };
+          const centerPerlin = perlin(center, false);
           this.exploringChunk[nextChunkKey] = {
             chunkFootprint: nextChunk,
             planetLocations: [],
+            perlin: centerPerlin,
           };
           this.exploringChunkStart[nextChunkKey] = Date.now();
           this.minersComplete[nextChunkKey] = 0;
@@ -157,6 +192,23 @@ class MinerManager extends EventEmitter {
 
   public stopExplore(): void {
     this.isExploring = false;
+  }
+
+  public getCurrentlyExploringChunk(): ChunkFootprint | null {
+    if (!this.isExploring) {
+      return null;
+    }
+    const keys = Object.keys(this.exploringChunk);
+    for (const key of keys) {
+      const res = this.chunkKeyToLocation(key);
+      if (res) {
+        const [chunkLocation, jobId] = res;
+        if (jobId === this.currentJobId) {
+          return chunkLocation;
+        }
+      }
+    }
+    return null;
   }
 
   public setRadius(radius: number): void {
@@ -237,7 +289,28 @@ class MinerManager extends EventEmitter {
     const x = chunkLocation.bottomLeft.x;
     const y = chunkLocation.bottomLeft.y;
     const sideLength = chunkLocation.sideLength;
-    return `${x}-${y}-${sideLength}-${jobId}`;
+    return `${x},${y},${sideLength},${jobId}`;
+  }
+
+  private chunkKeyToLocation(
+    chunkKey: string
+  ): [ChunkFootprint, number] | null {
+    // returns chunk footprint and job id
+    try {
+      const [x, y, sideLength, jobId] = chunkKey
+        .split(',')
+        .map((v) => parseInt(v));
+      return [
+        {
+          bottomLeft: { x, y },
+          sideLength,
+        },
+        jobId,
+      ];
+    } catch (e) {
+      console.error(`error while deserializing miner chunk key: ${e}`);
+      return null;
+    }
   }
 }
 

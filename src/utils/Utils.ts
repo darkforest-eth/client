@@ -1,77 +1,24 @@
 import * as bigInt from 'big-integer';
 import { BigInteger } from 'big-integer';
-import { Witness } from 'snarkjs';
 import {
   Planet,
   LocationId,
   Bonus,
-  PlanetClass,
   EthAddress,
+  PlanetResource,
+  SpaceType,
   UpgradeState,
 } from '../_types/global/GlobalTypes';
 import { address, emptyAddress } from './CheckedTypeUtils';
 import _ from 'lodash';
-import { useState, useCallback } from 'react';
 import TerminalEmitter from './TerminalEmitter';
+import {
+  UnconfirmedBuyHat,
+  UnconfirmedMove,
+  UnconfirmedUpgrade,
+} from '../_types/darkforest/api/ContractsAPITypes';
 
-//https://stackoverflow.com/questions/53215285/how-can-i-force-component-to-re-render-with-hooks-in-react
-export function useForceUpdate() {
-  const [, setTick] = useState(0);
-  const update = useCallback(() => {
-    setTick((tick) => tick + 1);
-  }, []);
-  return update;
-}
-
-// largely taken from websnark/tools/buildwitness.js, and typed by us (see src/@types/snarkjs)
-
-interface DataViewWithOffset {
-  dataView: DataView;
-  offset: number;
-}
-
-function _writeUint32(h: DataViewWithOffset, val: number): void {
-  h.dataView.setUint32(h.offset, val, true);
-  h.offset += 4;
-}
-
-function _writeBigInt(h: DataViewWithOffset, bi: BigInteger): void {
-  for (let i = 0; i < 8; i++) {
-    const v = bigInt(bi)
-      .shiftRight(i * 32)
-      .and(0xffffffff)
-      .toJSNumber();
-    _writeUint32(h, v);
-  }
-}
-
-function _calculateBuffLen(witness: Witness): number {
-  let size = 0;
-
-  // beta2, delta2
-  size += witness.length * 32;
-
-  return size;
-}
-
-export const witnessObjToBuffer: (witness: Witness) => ArrayBuffer = (
-  witness
-) => {
-  const buffLen: number = _calculateBuffLen(witness);
-
-  const buff = new ArrayBuffer(buffLen);
-
-  const h: DataViewWithOffset = {
-    dataView: new DataView(buff),
-    offset: 0,
-  };
-
-  for (let i = 0; i < witness.length; i++) {
-    _writeBigInt(h, witness[i]);
-  }
-
-  return buff;
-};
+export const ONE_DAY = 24 * 60 * 60 * 1000;
 
 type NestedBigIntArray = (BigInteger | string | NestedBigIntArray)[];
 
@@ -88,6 +35,36 @@ export const hexifyBigIntNestedArray = (arr: NestedBigIntArray) => {
       }
     }
   });
+};
+
+// these are the things we care about refreshing on a loop
+export type PlanetStatsInfo = {
+  energy: number;
+  silver: number;
+  hatLevel: number;
+  upgradeState: UpgradeState;
+  unconfirmedDepartures: UnconfirmedMove[];
+  unconfirmedUpgrades: UnconfirmedUpgrade[];
+  unconfirmedBuyhats: UnconfirmedBuyHat[];
+};
+
+// this function exists because Object.assign() and _.clone() seem to be slow
+// i suspect they also copy prototypes etc somehow?
+export const copyPlanetStats = (
+  planet: Planet | null
+): PlanetStatsInfo | null => {
+  if (planet === null) return null;
+  else {
+    return {
+      energy: planet.energy,
+      silver: planet.silver,
+      hatLevel: planet.hatLevel,
+      upgradeState: planet.upgradeState,
+      unconfirmedDepartures: planet.unconfirmedDepartures,
+      unconfirmedUpgrades: planet.unconfirmedUpgrades,
+      unconfirmedBuyhats: planet.unconfirmedBuyHats,
+    };
+  }
 };
 
 // color utils
@@ -116,7 +93,7 @@ export const getOwnerColor: (planet: Planet) => string = (planet) => {
 };
 
 export const formatNumber = (num: number): string => {
-  if (num < 100) return `${num.toFixed(2)}`;
+  if (num < 1000) return `${num.toFixed(0)}`;
 
   const suffixes = ['', 'K', 'M', 'B', 'T', 'q', 'Q'];
   let log000 = 0;
@@ -126,7 +103,21 @@ export const formatNumber = (num: number): string => {
     log000++;
   }
 
-  return `${rem.toFixed(2)}${suffixes[log000]}`;
+  if (log000 === 0) return `${Math.floor(num)}`;
+
+  if (rem < 10) return `${rem.toFixed(2)}${suffixes[log000]}`;
+  else if (rem < 100) return `${rem.toFixed(1)}${suffixes[log000]}`;
+  /*rem < 1000*/ else return `${rem.toFixed(0)}${suffixes[log000]}`;
+};
+
+export const getRandomActionId = () => {
+  const hex = '0123456789abcdef';
+
+  let ret = '';
+  for (let i = 0; i < 10; i += 1) {
+    ret += hex[Math.floor(hex.length * Math.random())];
+  }
+  return ret;
 };
 
 export const seededRandom = (s: number) => {
@@ -134,31 +125,18 @@ export const seededRandom = (s: number) => {
   return x - Math.floor(x);
 };
 
-export const getFormatProp = (planet: Planet | null, prop: string): string => {
+export const getFormatProp = (
+  planet: Planet | PlanetStatsInfo | null,
+  prop: string
+): string => {
   if (!planet) return '0';
   if (prop === 'silverGrowth') return formatNumber(planet[prop] * 60);
   else return formatNumber(planet[prop]);
 };
 
-export const getPlanetClass = (planet: Planet | null): PlanetClass => {
-  if (!planet) return PlanetClass.None;
-
-  let count = 0;
-  let main = PlanetClass.None;
-  for (let i = 0; i < 3; i++) {
-    if (planet.upgradeState[i] > 2) {
-      main = i;
-      count++;
-    }
-  }
-
-  if (count > 1) console.error('upgrade stat is invalid!');
-  return main;
-};
-
 export const getPlanetRank = (planet: Planet | null): number => {
   if (!planet) return 0;
-  return Math.max(...planet.upgradeState);
+  return planet.upgradeState.reduce((a, b) => a + b);
 };
 
 export const getPlanetShortHash = (planet: Planet | null): string => {
@@ -170,20 +148,22 @@ export const getPlayerShortHash = (address: EthAddress): string => {
   return address.substring(0, 6);
 };
 
-const compStates = (a: UpgradeState, b: UpgradeState): boolean => {
-  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
-};
-
 export const isFullRank = (planet: Planet | null): boolean => {
   if (!planet) return true;
-  else
-    return (
-      compStates(planet.upgradeState, [2, 2, 4]) ||
-      compStates(planet.upgradeState, [2, 4, 2]) ||
-      compStates(planet.upgradeState, [4, 2, 2])
-    );
+  const rank = getPlanetRank(planet);
+  if (planet.spaceType === SpaceType.NEBULA) return rank >= 3;
+  else if (planet.spaceType === SpaceType.SPACE) return rank >= 4;
+  else return rank >= 5;
 };
 
+export const planetCanUpgrade = (planet: Planet | null) => {
+  return (
+    planet &&
+    !isFullRank(planet) &&
+    planet.planetLevel !== 0 &&
+    planet.planetResource !== PlanetResource.SILVER
+  );
+};
 //https://stackoverflow.com/questions/32589197/how-can-i-capitalize-the-first-letter-of-each-word-in-a-string-using-javascript/45620677#45620677
 export const titleCase = (title) =>
   title
@@ -207,7 +187,7 @@ export const moveShipsDecay = (
   dist: number
 ) => {
   const scale = (1 / 2) ** (dist / fromPlanet.range);
-  let ret = scale * shipsMoved - 0.05 * fromPlanet.populationCap;
+  let ret = scale * shipsMoved - 0.05 * fromPlanet.energyCap;
   if (ret < 0) ret = 0;
 
   return ret;
@@ -225,11 +205,16 @@ export const getBytesFromHex = (
 export const bonusFromHex = (hex: LocationId): Bonus => {
   const bonuses = Array(5).fill(false) as Bonus;
 
-  for (let i = 0; i < 5; i++) {
-    bonuses[i] = getBytesFromHex(hex, 11 + i, 12 + i).lesser(16);
+  for (let i = 0; i < bonuses.length; i++) {
+    bonuses[i] = getBytesFromHex(hex, 9 + i, 10 + i).lesser(16);
   }
 
   return bonuses;
+};
+
+export const planetHasBonus = (planet: Planet | null): boolean => {
+  if (!planet) return false;
+  return bonusFromHex(planet.locationId).reduce((a, b) => a || b);
 };
 
 export const hasOwner = (planet: Planet) => {
@@ -258,7 +243,8 @@ export const aggregateBulkGetter = async <T>(
               Math.floor(((soFar + querySize) * 20) / total)
           ) {
             // print every 5%
-            const percent = Math.floor(((soFar + querySize) * 20) / total) * 5;
+            let percent = Math.floor(((soFar + querySize) * 20) / total) * 5;
+            percent = Math.min(percent, 100);
             terminalEmitter.print(`${percent}%... `);
           }
           soFar += querySize;
@@ -278,3 +264,10 @@ export const aggregateBulkGetter = async <T>(
   }
   return _.flatten(unflattenedResults);
 };
+
+export const isFirefox = () => navigator.userAgent.indexOf('Firefox') > 0;
+
+export const isChrome = () => /Google Inc/.test(navigator.vendor);
+
+export const isBrave = async () =>
+  !!((navigator as any).brave && (await (navigator as any).brave.isBrave())); // eslint-disable-line @typescript-eslint/no-explicit-any

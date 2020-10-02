@@ -4,7 +4,7 @@ import GameUIManagerContext from '../board/GameUIManagerContext';
 import GameUIManager from '../board/GameUIManager';
 import { Green, Sub, White, Red } from '../../components/Text';
 import styled from 'styled-components';
-import { Btn } from '../GameWindowComponents';
+import { Btn } from '../GameWindowComponents/GameWindowComponents';
 import dfstyles from '../../styles/dfstyles';
 
 const TwitterWrapper = styled.div`
@@ -49,7 +49,7 @@ const TwitterWrapper = styled.div`
     }
   }
 `;
-export default function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
+export function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
   const [twitter, setTwitter] = useState<string | null>(null);
   const [twitterInput, setTwitterInput] = useState<string>('');
@@ -64,7 +64,7 @@ export default function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
   const onTweetClick = async () => {
     if (uiManager) {
       const tweetText = await uiManager.generateVerificationTweet(twitterInput);
-      const str = `I'm verifying my Dark Forest account on @darkforest_eth (https://zkga.me): ${tweetText}`;
+      const str = `Verifying my @darkforest_eth v0.4 account (https://zkga.me): ${tweetText}`;
       window.open(
         `https://twitter.com/intent/tweet?hashtags=darkforest&text=${encodeURI(
           str
@@ -93,7 +93,7 @@ export default function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
     <ModalPane
       hook={hook}
       title='Twitter Verification'
-      name={ModalName.TwitterVerification}
+      name={ModalName.TwitterVerify}
     >
       <TwitterWrapper>
         <div className='row'>

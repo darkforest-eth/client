@@ -1,10 +1,14 @@
-// web3 injected types, from metamask
 import { WorldCoords } from '../../utils/Coordinates';
 import {
+  UnconfirmedBuyHat,
   UnconfirmedMove,
   UnconfirmedUpgrade,
-} from '../darkforest/api/EthereumAPITypes';
+} from '../darkforest/api/ContractsAPITypes';
 import { EventEmitter } from 'events';
+import TerminalEmitter from '../../utils/TerminalEmitter';
+import AbstractGameManager from '../../api/AbstractGameManager';
+import AbstractUIManager from '../../app/board/AbstractUIManager';
+import { Dispatch, SetStateAction } from 'react';
 
 interface WindowEthereumObject extends EventEmitter {
   enable: () => void;
@@ -13,6 +17,8 @@ interface WindowEthereumObject extends EventEmitter {
 export interface Web3Object {
   currentProvider: Record<string, unknown>;
 }
+
+export type Hook<T> = [T, Dispatch<SetStateAction<T>>];
 
 export enum PlanetLevel {
   Asteroid,
@@ -27,51 +33,41 @@ export enum PlanetLevel {
   MIN = PlanetLevel.Asteroid,
 }
 
-export enum PlanetType {
-  PLANET,
-  TRADING_POST,
-  MAX = PlanetType.TRADING_POST,
-  MIN = PlanetType.PLANET,
-}
-
-export enum PlanetVariant {
-  One,
-  Two,
-  MIN = PlanetVariant.One,
-}
-
 export enum PlanetResource {
   NONE,
   SILVER,
 }
 
 export enum SpaceType {
-  SafeSpace,
-  DeepSpace,
+  NEBULA,
+  SPACE,
+  DEEP_SPACE,
 }
-
-export type EnergyData = {
-  energy: number;
-  lastUpdated: number;
-};
 
 declare global {
   interface Window {
     // gameManager: any;
     // mimcHash: any;
-    ethereum: WindowEthereumObject;
-    // from websnark's function injected into window
-    genZKSnarkProof: (
-      witness: ArrayBuffer,
-      provingKey: ArrayBuffer
-    ) => Promise<WebsnarkProof>;
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    snarkjs: any;
+
+    // TODO: these three should eventually live in some sort of `DFTerminal` namespace
+    // instead of global
+    df?: AbstractGameManager;
+    uiManager?: AbstractUIManager;
+    terminal?: TerminalEmitter;
   }
 }
 
-export interface WebsnarkProof {
+export interface SnarkJSProof {
   pi_a: [string, string, string];
   pi_b: [[string, string], [string, string], [string, string]];
   pi_c: [string, string, string];
+}
+
+export interface SnarkJSProofAndSignals {
+  proof: SnarkJSProof;
+  publicSignals: string[];
 }
 
 export type LocationId = string & {
@@ -95,73 +91,63 @@ export interface Location {
 }
 
 export type Bonus = [boolean, boolean, boolean, boolean, boolean];
-export type Defaults = [number, number, number, number, number];
-
-export type ResourceData = {
-  stats: Defaults;
-  resourceType: PlanetResource;
-};
-
 export enum StatIdx {
-  PopCap,
-  PopGro,
-  ResCap,
-  ResGro,
+  EnergyCap,
+  EnergyGro,
   Range,
+  Speed,
+  Defense,
 }
 
 export type Upgrade = {
-  popCapMultiplier: number;
-  popGroMultiplier: number;
-  silverCapMultiplier: number;
-  silverGroMultiplier: number;
-  silverMaxMultiplier: number;
+  energyCapMultiplier: number;
+  energyGroMultiplier: number;
   rangeMultiplier: number;
-  silverCostMultiplier: number;
+  speedMultiplier: number;
+  defMultiplier: number;
 };
 export type UpgradeState = [number, number, number];
-export const enum UpgradeBranch {
-  Silver = 0,
-  Population = 1,
-  Range = 2,
-}
-export enum PlanetClass {
-  None = -1,
-  Population = 0,
-  Silver = 1,
-  Range = 2,
+export const enum UpgradeBranchName {
+  Defense = 0,
+  Range = 1,
+  Speed = 2,
 }
 
 export interface Planet {
   locationId: LocationId;
+  perlin: number;
+  spaceType: SpaceType;
   owner: EthAddress; // should never be null; all unclaimed planets should have 0 address
+  hatLevel: number;
 
   planetLevel: PlanetLevel;
-  planetType: PlanetType;
   planetResource: PlanetResource;
 
-  populationCap: number;
-  populationGrowth: number;
+  energyCap: number;
+  energyGrowth: number;
 
   silverCap: number;
   silverGrowth: number;
 
   range: number;
+  defense: number;
+  speed: number;
 
-  silverMax: number;
-
-  population: number;
+  energy: number;
   silver: number;
 
   // metadata stuff
   isInitialized?: boolean; // TODO consider making these non-optional
-  version?: number;
+  createdAt?: number;
   lastUpdated: number;
   upgradeState: UpgradeState;
 
   unconfirmedDepartures: UnconfirmedMove[];
   unconfirmedUpgrades: UnconfirmedUpgrade[];
+  unconfirmedBuyHats: UnconfirmedBuyHat[];
   silverSpent: number;
+
+  pulledFromContract: boolean;
 }
 /*
 export interface QueuedArrival {
@@ -183,7 +169,7 @@ export type QueuedArrival = {
   player: EthAddress;
   fromPlanet: LocationId;
   toPlanet: LocationId;
-  popArriving: number;
+  energyArriving: number;
   silverMoved: number;
   departureTime: number;
   arrivalTime: number;
@@ -232,6 +218,7 @@ export interface ChunkFootprint {
 export class ExploredChunkData {
   chunkFootprint: ChunkFootprint;
   planetLocations: Location[];
+  perlin: number; // approximate avg perlin value. used for rendering
 }
 
 export interface MinerWorkerMessage {

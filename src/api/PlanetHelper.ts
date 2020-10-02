@@ -9,27 +9,31 @@ import {
   QueuedArrival,
   ArrivalWithTimer,
   VoyageContractData,
-  Defaults,
   PlanetLevel,
-  PlanetVariant,
-  PlanetType,
   PlanetResource,
   SpaceType,
-  ResourceData,
+  EthAddress,
 } from '../_types/global/GlobalTypes';
 import {
   ContractConstants,
+  UnconfirmedBuyHat,
   UnconfirmedMove,
   UnconfirmedTx,
   UnconfirmedUpgrade,
-} from '../_types/darkforest/api/EthereumAPITypes';
+} from '../_types/darkforest/api/ContractsAPITypes';
 import bigInt from 'big-integer';
 import _ from 'lodash';
 import { WorldCoords } from '../utils/Coordinates';
 import { emptyAddress } from '../utils/CheckedTypeUtils';
 import { hasOwner, getBytesFromHex, bonusFromHex } from '../utils/Utils';
 import LocalStorageManager from './LocalStorageManager';
-import { isUnconfirmedMove, isUnconfirmedUpgrade } from './EthereumAPI';
+import {
+  contractPrecision,
+  isUnconfirmedBuyHat,
+  isUnconfirmedMove,
+  isUnconfirmedUpgrade,
+} from './ContractsAPI';
+import NotificationManager from '../utils/NotificationManager';
 
 interface MemoizedCoordHashes {
   [x: number]: { [y: number]: Location };
@@ -44,12 +48,11 @@ export class PlanetHelper {
   private readonly coordsToLocation: MemoizedCoordHashes;
   private readonly unconfirmedMoves: Record<string, UnconfirmedMove>;
   private readonly unconfirmedUpgrades: Record<string, UnconfirmedUpgrade>;
+  private readonly unconfirmedBuyHats: Record<string, UnconfirmedBuyHat>;
 
   private readonly endTimeSeconds: number;
 
-  private get timeFactorPercentage(): number {
-    return this.contractConstants.timeFactorPercentage;
-  }
+  private address: EthAddress | null;
 
   constructor(
     planets: PlanetMap,
@@ -57,8 +60,10 @@ export class PlanetHelper {
     unprocessedArrivals: VoyageContractData,
     unprocessedPlanetArrivalIds: PlanetVoyageIdMap,
     contractConstants: ContractConstants,
-    endTimeSeconds: number
+    endTimeSeconds: number,
+    address: EthAddress | null
   ) {
+    this.address = address;
     this.planets = planets;
     this.contractConstants = contractConstants;
     this.coordsToLocation = {};
@@ -98,6 +103,7 @@ export class PlanetHelper {
     this.planetArrivalIds = planetArrivalIds;
     this.unconfirmedMoves = {};
     this.unconfirmedUpgrades = {};
+    this.unconfirmedBuyHats = {};
 
     // set interval to update all planets every 120s
     setInterval(() => {
@@ -112,14 +118,16 @@ export class PlanetHelper {
     }, 120000);
   }
 
-  // only returns planets in contract
+  // get planet by ID - must be in contract or known chunks
   public getPlanetWithId(planetId: LocationId): Planet | null {
     const planet = this.planets[planetId];
     if (planet) {
       this.updatePlanetIfStale(planet);
       return planet;
     }
-    return null;
+    const loc = this.getLocationOfPlanet(planetId);
+    if (!loc) return null;
+    return this.getPlanetWithLocation(loc);
   }
 
   // returns null if this planet is neither in contract nor in known chunks
@@ -138,9 +146,6 @@ export class PlanetHelper {
     const planet = this.planets[planetId];
     if (planet) {
       let detailLevel = planet.planetLevel;
-      if (planet.planetType === PlanetType.TRADING_POST) {
-        detailLevel += 10;
-      }
       if (hasOwner(planet)) {
         detailLevel += 1;
       }
@@ -157,11 +162,14 @@ export class PlanetHelper {
     // does not modify unconfirmed departures or upgrades
     // that is handled by onTxConfirm
     if (this.planets[planet.locationId]) {
-      const { unconfirmedDepartures, unconfirmedUpgrades } = this.planets[
-        planet.locationId
-      ];
+      const {
+        unconfirmedDepartures,
+        unconfirmedUpgrades,
+        unconfirmedBuyHats,
+      } = this.planets[planet.locationId];
       planet.unconfirmedDepartures = unconfirmedDepartures;
       planet.unconfirmedUpgrades = unconfirmedUpgrades;
+      planet.unconfirmedBuyHats = unconfirmedBuyHats;
     }
     this.planets[planet.locationId] = planet;
     this.clearOldArrivals(planet);
@@ -232,29 +240,37 @@ export class PlanetHelper {
     return Object.values(this.arrivals).map((awt) => awt.arrivalData);
   }
 
-  public onTxSubmit(unconfirmedTx: UnconfirmedTx) {
-    if (isUnconfirmedMove(unconfirmedTx)) {
-      this.unconfirmedMoves[unconfirmedTx.txHash] = unconfirmedTx;
-      const planet = this.getPlanetWithId(unconfirmedTx.from);
+  public onTxInit(initializedTx: UnconfirmedTx) {
+    if (isUnconfirmedMove(initializedTx)) {
+      this.unconfirmedMoves[initializedTx.actionId] = initializedTx;
+      const planet = this.getPlanetWithId(initializedTx.from);
       if (planet) {
-        planet.unconfirmedDepartures.push(unconfirmedTx);
+        planet.unconfirmedDepartures.push(initializedTx);
       }
-    } else if (isUnconfirmedUpgrade(unconfirmedTx)) {
-      this.unconfirmedUpgrades[unconfirmedTx.txHash] = unconfirmedTx;
-      const planet = this.getPlanetWithId(unconfirmedTx.locationId);
+    } else if (isUnconfirmedUpgrade(initializedTx)) {
+      this.unconfirmedUpgrades[initializedTx.actionId] = initializedTx;
+      const planet = this.getPlanetWithId(initializedTx.locationId);
       if (planet) {
-        planet.unconfirmedUpgrades.push(unconfirmedTx);
+        planet.unconfirmedUpgrades.push(initializedTx);
+      }
+    } else if (isUnconfirmedBuyHat(initializedTx)) {
+      this.unconfirmedBuyHats[initializedTx.actionId] = initializedTx;
+      const planet = this.getPlanetWithId(initializedTx.locationId);
+      if (planet) {
+        planet.unconfirmedBuyHats.push(initializedTx);
       }
     }
   }
 
-  public onTxConfirm(unconfirmedTx: UnconfirmedTx) {
+  public clearUnconfirmedTx(unconfirmedTx: UnconfirmedTx) {
     if (isUnconfirmedMove(unconfirmedTx)) {
       const planet = this.getPlanetWithId(unconfirmedTx.from);
       if (planet) {
         let removeIdx = -1;
         for (let i = 0; i < planet.unconfirmedDepartures.length; i += 1) {
-          if (planet.unconfirmedDepartures[i].txHash === unconfirmedTx.txHash) {
+          if (
+            planet.unconfirmedDepartures[i].actionId === unconfirmedTx.actionId
+          ) {
             removeIdx = i;
             break;
           }
@@ -263,13 +279,15 @@ export class PlanetHelper {
           planet.unconfirmedDepartures.splice(removeIdx, 1);
         }
       }
-      delete this.unconfirmedMoves[unconfirmedTx.txHash];
+      delete this.unconfirmedMoves[unconfirmedTx.actionId];
     } else if (isUnconfirmedUpgrade(unconfirmedTx)) {
       const planet = this.getPlanetWithId(unconfirmedTx.locationId);
       if (planet) {
         let removeIdx = -1;
         for (let i = 0; i < planet.unconfirmedUpgrades.length; i += 1) {
-          if (planet.unconfirmedUpgrades[i].txHash === unconfirmedTx.txHash) {
+          if (
+            planet.unconfirmedUpgrades[i].actionId === unconfirmedTx.actionId
+          ) {
             removeIdx = i;
             break;
           }
@@ -278,7 +296,24 @@ export class PlanetHelper {
           planet.unconfirmedUpgrades.splice(removeIdx, 1);
         }
       }
-      delete this.unconfirmedUpgrades[unconfirmedTx.txHash];
+      delete this.unconfirmedUpgrades[unconfirmedTx.actionId];
+    } else if (isUnconfirmedBuyHat(unconfirmedTx)) {
+      const planet = this.getPlanetWithId(unconfirmedTx.locationId);
+      if (planet) {
+        let removeIdx = -1;
+        for (let i = 0; i < planet.unconfirmedBuyHats.length; i += 1) {
+          if (
+            planet.unconfirmedBuyHats[i].actionId === unconfirmedTx.actionId
+          ) {
+            removeIdx = i;
+            break;
+          }
+        }
+        if (removeIdx > -1) {
+          planet.unconfirmedBuyHats.splice(removeIdx, 1);
+        }
+      }
+      delete this.unconfirmedBuyHats[unconfirmedTx.actionId];
     }
   }
 
@@ -290,12 +325,6 @@ export class PlanetHelper {
     return Object.values(this.unconfirmedUpgrades);
   }
 
-  public perlinToSpace(perlin: number): SpaceType {
-    if (perlin >= this.contractConstants.PERLIN_THRESHOLD) {
-      return SpaceType.DeepSpace;
-    } else return SpaceType.SafeSpace;
-  }
-
   private arrive(
     fromPlanet: Planet,
     toPlanet: Planet,
@@ -303,33 +332,45 @@ export class PlanetHelper {
   ): void {
     // this function optimistically simulates an arrival
 
-    // update toPlanet population and silver right before arrival
+    // update toPlanet energy and silver right before arrival
     this.updatePlanetToTime(toPlanet, arrival.arrivalTime * 1000);
 
-    // apply population
+    // apply energy
 
-    const { popArriving: shipsMoved } = arrival;
+    const { energyArriving: shipsMoved } = arrival;
 
     if (arrival.player !== toPlanet.owner) {
       // attacking enemy - includes emptyAddress
 
-      if (toPlanet.population > shipsMoved) {
+      if (
+        toPlanet.energy >
+        Math.floor((shipsMoved * contractPrecision * 100) / toPlanet.defense) /
+          contractPrecision
+      ) {
         // attack reduces target planet's garrison but doesn't conquer it
-        toPlanet.population -= shipsMoved;
+        toPlanet.energy -=
+          Math.floor(
+            (shipsMoved * contractPrecision * 100) / toPlanet.defense
+          ) / contractPrecision;
       } else {
         // conquers planet
         toPlanet.owner = arrival.player;
-        toPlanet.population = shipsMoved - toPlanet.population;
+        toPlanet.energy =
+          shipsMoved -
+          Math.floor(
+            (toPlanet.energy * contractPrecision * toPlanet.defense) / 100
+          ) /
+            contractPrecision;
         this.updateScore(toPlanet.locationId);
       }
     } else {
       // moving between my own planets
-      toPlanet.population += shipsMoved;
+      toPlanet.energy += shipsMoved;
     }
 
     // apply silver
-    if (toPlanet.silver + arrival.silverMoved > toPlanet.silverMax) {
-      toPlanet.silver = toPlanet.silverMax;
+    if (toPlanet.silver + arrival.silverMoved > toPlanet.silverCap) {
+      toPlanet.silver = toPlanet.silverCap;
     } else {
       toPlanet.silver += arrival.silverMoved;
     }
@@ -367,7 +408,17 @@ export class PlanetHelper {
               this.planets[arrival.toPlanet],
               arrival
             );
+
+            const notifManager = NotificationManager.getInstance();
+            const toPlanet = this.planets[arrival.toPlanet];
+            if (
+              this.planetCanUpgrade(toPlanet) &&
+              toPlanet.owner === this.address
+            ) {
+              notifManager.planetCanUpgrade(toPlanet);
+            }
           }, arrival.arrivalTime * 1000 - Date.now());
+
           const arrivalWithTimer = {
             arrivalData: arrival,
             timer: applyFutureArrival,
@@ -407,63 +458,22 @@ export class PlanetHelper {
       // console.error('tried to update planet to a past time');
       return;
     }
-    const oldPop = planet.population;
-    const newPop = this.getPopulationAtTime(planet, safeEndMillis);
-    if (newPop < planet.populationCap / 2) {
-      // no silver mined
-    } else if (oldPop > planet.populationCap / 2) {
-      // silver was mining the whole time
-      const startTimeMillis = planet.lastUpdated * 1000;
-      planet.silver = this.getSilverOverTime(
-        planet,
-        startTimeMillis,
-        safeEndMillis
-      );
-    } else {
-      // find the point where silver started being mined
-      const startTimeMillis = this.getPopulationCurveMidpoint(planet) * 1000;
-      planet.silver = this.getSilverOverTime(
-        planet,
-        startTimeMillis,
-        safeEndMillis
-      );
-    }
-    planet.population = newPop;
+    planet.silver = this.getSilverOverTime(
+      planet,
+      planet.lastUpdated * 1000,
+      safeEndMillis
+    );
+    planet.energy = this.getEnergyAtTime(planet, safeEndMillis);
     planet.lastUpdated = safeEndMillis / 1000;
-  }
-
-  // we can make 'hex' a locationId as opposed to a string, since that's what it is internally
-
-  // no-op
-  private planetVariantFromHex(hex: LocationId): PlanetVariant {
-    const _varByte = getBytesFromHex(hex, 9, 10);
-
-    const ret = PlanetVariant.MIN;
-    return ret;
-  }
-
-  public planetTypeFromHexPerlin(hex: LocationId, perlin: number): PlanetType {
-    return PlanetType.PLANET;
-
-    const { TRADING_POST_RARITY: tradingPostRarity } = this.contractConstants;
-    const typeBytes = Number(getBytesFromHex(hex, 7, 9));
-
-    let ret = PlanetType.PLANET;
-    if (
-      bigInt(typeBytes * tradingPostRarity).lesser(65536) &&
-      this.perlinToSpace(perlin) === SpaceType.DeepSpace
-    ) {
-      ret = PlanetType.TRADING_POST;
-    }
-
-    return ret;
   }
 
   public planetLevelFromHexPerlin(
     hex: LocationId,
-    _perlin: number
+    perlin: number
   ): PlanetLevel {
     const { planetLevelThresholds: planetLevelFreq } = this.contractConstants;
+
+    const spaceType = this.spaceTypeFromPerlin(perlin);
 
     const levelBigInt = getBytesFromHex(hex, 4, 7);
 
@@ -476,152 +486,169 @@ export class PlanetHelper {
       }
     }
 
-    /* 
-    if (
-      this.perlinToSpace(perlin) === SpaceType.SafeSpace &&
-      ret > PlanetLevel.YellowStar
-    ) {
+    if (spaceType === SpaceType.NEBULA && ret > PlanetLevel.YellowStar) {
       ret = PlanetLevel.YellowStar;
     }
-    */
+    if (spaceType === SpaceType.SPACE && ret > PlanetLevel.BlueStar) {
+      ret = PlanetLevel.BlueStar;
+    }
 
     return ret;
   }
 
-  private defaultResourceDataFromHexPerlin(
+  spaceTypeFromPerlin(perlin: number): SpaceType {
+    if (perlin < this.contractConstants.PERLIN_THRESHOLD_1) {
+      return SpaceType.NEBULA;
+    } else if (perlin < this.contractConstants.PERLIN_THRESHOLD_2) {
+      return SpaceType.SPACE;
+    } else {
+      return SpaceType.DEEP_SPACE;
+    }
+  }
+
+  private getSilverNeeded(planet: Planet): number {
+    const totalLevel = planet.upgradeState.reduce((a, b) => a + b);
+    return (totalLevel + 1) * 0.2 * planet.silverCap;
+  }
+
+  private planetCanUpgrade(planet: Planet): boolean {
+    return (
+      planet.planetLevel !== 0 &&
+      planet.planetResource !== PlanetResource.SILVER &&
+      planet.silver >= this.getSilverNeeded(planet)
+    );
+  }
+
+  private planetResourceFromHexPerlin(
     hex: LocationId,
     perlin: number
-  ): ResourceData {
-    const {
-      defaultPopulationCap,
-      defaultPopulationGrowth,
-      defaultSilverCap,
-      defaultSilverGrowth,
-      defaultRange,
-      SILVER_RARITY: silverRarity,
-    } = this.contractConstants;
-
+  ): PlanetResource {
+    // level must be sufficient - too low level planets have 0 silver growth
     const planetLevel = this.planetLevelFromHexPerlin(hex, perlin);
-    const planetType = this.planetTypeFromHexPerlin(hex, perlin);
+    const silverGrowth = this.contractConstants.defaultSilverGrowth[
+      planetLevel
+    ];
 
-    let resType = PlanetResource.NONE;
-    const silverByte = Number(getBytesFromHex(hex, 10, 11));
+    // silverbyte must be under 256/rarity
+    const silverRarity1 = this.contractConstants.SILVER_RARITY_1;
+    const silverRarity2 = this.contractConstants.SILVER_RARITY_2;
+    const silverRarity3 = this.contractConstants.SILVER_RARITY_3;
+    const silverByte = Number(getBytesFromHex(hex, 8, 9));
 
-    if (bigInt(silverByte * silverRarity).lesser(256)) {
-      resType = PlanetResource.SILVER;
+    if (silverGrowth > 0) {
+      const spaceType = this.spaceTypeFromPerlin(perlin);
+      if (spaceType === SpaceType.NEBULA && silverByte * silverRarity1 < 256) {
+        return PlanetResource.SILVER;
+      }
+      if (spaceType === SpaceType.SPACE && silverByte * silverRarity2 < 256) {
+        return PlanetResource.SILVER;
+      }
+      if (
+        spaceType === SpaceType.DEEP_SPACE &&
+        silverByte * silverRarity3 < 256
+      ) {
+        return PlanetResource.SILVER;
+      }
     }
-
-    // calculate default stats
-    let myLevel = planetLevel;
-    if (planetType === PlanetType.TRADING_POST) {
-      myLevel = PlanetLevel.YellowStar;
-    }
-
-    let popCap = defaultPopulationCap[myLevel];
-    let popGro = defaultPopulationGrowth[myLevel];
-
-    let silCap = defaultSilverCap[myLevel];
-    let silGro = defaultSilverGrowth[myLevel];
-
-    let range = defaultRange[myLevel];
-
-    if (
-      planetType !== PlanetType.TRADING_POST &&
-      this.perlinToSpace(perlin) === SpaceType.DeepSpace
-    ) {
-      popCap = Math.floor(popCap * 1.5);
-      popGro = Math.floor(popGro * 1.5);
-      silCap = Math.floor(silCap * 1.5);
-      silGro = Math.floor(silGro * 1.5);
-      range = Math.floor(range * 1.5);
-    }
-
-    // also, this case
-    if (silGro === 0) {
-      resType = PlanetResource.NONE;
-    }
-
-    const defaults: Defaults = [popCap, popGro, silCap, silGro, range];
-
-    return {
-      stats: defaults,
-      resourceType: resType,
-    };
+    return PlanetResource.NONE;
   }
 
-  private defaultBarbariansFromHexPerlin(
-    hex: LocationId,
-    perlin: number
-  ): number {
-    const {
-      TRADING_POST_BARBARIANS: tradingPostBarbarians,
-      defaultBarbarianPercentage: defaultBarbarians,
-    } = this.contractConstants;
-    const type = this.planetTypeFromHexPerlin(hex, perlin);
-    const level = this.planetLevelFromHexPerlin(hex, perlin);
-
-    if (type === PlanetType.TRADING_POST) return tradingPostBarbarians;
-    else return defaultBarbarians[level];
-  }
-
-  // imitates contract newPlanet, but doesn't take population (currently never needs to)
+  // imitates contract newPlanet
   private defaultPlanetFromLocation(location: Location): Planet {
-    const { defaultSilverMax: defaultMaxSilver } = this.contractConstants;
     const { perlin } = location;
     const hex = location.hash;
-
     const planetLevel = this.planetLevelFromHexPerlin(hex, perlin);
-    const planetType = this.planetTypeFromHexPerlin(hex, perlin);
-
-    const resourceData = this.defaultResourceDataFromHexPerlin(hex, perlin);
-    const defaults = resourceData.stats;
-    const planetResource = resourceData.resourceType;
-
-    let [popCap, popGro, resCap, resGro, range] = defaults;
-
-    if (planetResource === PlanetResource.NONE) {
-      resGro = 0;
-    }
+    const planetResource = this.planetResourceFromHexPerlin(hex, perlin);
+    const spaceType = this.spaceTypeFromPerlin(perlin);
+    const isSilverMine = planetResource === PlanetResource.SILVER;
 
     const [
-      popCapBonus,
-      popGroBonus,
-      resCapBonus,
-      resGroBonus,
+      energyCapBonus,
+      energyGroBonus,
       rangeBonus,
+      speedBonus,
+      defBonus,
     ] = bonusFromHex(hex);
 
-    popCap *= popCapBonus ? 2 : 1;
-    popGro *= popGroBonus ? 2 : 1;
-    resGro *= resGroBonus ? 2 : 1;
-    resCap *= resCapBonus ? 2 : 1;
+    let energyCap = this.contractConstants.defaultPopulationCap[planetLevel];
+    let energyGro = this.contractConstants.defaultPopulationGrowth[planetLevel];
+    let range = this.contractConstants.defaultRange[planetLevel];
+    let speed = this.contractConstants.defaultSpeed[planetLevel];
+    let defense = this.contractConstants.defaultDefense[planetLevel];
+    let silCap = this.contractConstants.defaultSilverCap[planetLevel];
+    energyCap *= energyCapBonus ? 2 : 1;
+    energyGro *= energyGroBonus ? 2 : 1;
     range *= rangeBonus ? 2 : 1;
+    speed *= speedBonus ? 2 : 1;
+    defense *= defBonus ? 2 : 1;
 
-    const silverMax = defaultMaxSilver[planetLevel];
+    let silGro = 0;
 
-    const defaultBarb = this.defaultBarbariansFromHexPerlin(hex, perlin);
-    const barbarians = (popCap * defaultBarb) / 100;
+    if (isSilverMine) {
+      silGro = this.contractConstants.defaultSilverGrowth[planetLevel];
+      silCap *= 2;
+
+      energyCap /= 2;
+      energyGro /= 2;
+      defense /= 2;
+    }
+
+    if (spaceType === SpaceType.DEEP_SPACE) {
+      range *= 1.5;
+      speed *= 1.5;
+      energyCap *= 1.5;
+      energyGro *= 1.5;
+      silCap *= 1.5;
+      silGro *= 1.5;
+
+      defense *= 0.25;
+    } else if (spaceType === SpaceType.SPACE) {
+      range *= 1.25;
+      speed *= 1.25;
+      energyCap *= 1.25;
+      energyGro *= 1.25;
+      silCap *= 1.25;
+      silGro *= 1.25;
+
+      defense *= 0.5;
+    }
+
+    let barbarians =
+      (energyCap *
+        this.contractConstants.defaultBarbarianPercentage[planetLevel]) /
+      100;
+    // increase barbarians
+    if (spaceType === SpaceType.DEEP_SPACE) barbarians *= 4;
+    else if (spaceType === SpaceType.SPACE) barbarians *= 2;
+
+    const silver = isSilverMine ? silCap / 2 : 0;
+
+    speed *= this.contractConstants.TIME_FACTOR_HUNDREDTHS / 100;
+    energyGro *= this.contractConstants.TIME_FACTOR_HUNDREDTHS / 100;
+    silGro *= this.contractConstants.TIME_FACTOR_HUNDREDTHS / 100;
 
     return {
       locationId: hex,
+      perlin,
+      spaceType,
       owner: emptyAddress,
+      hatLevel: 0,
 
       planetLevel,
-      planetType,
       planetResource, // None or Silver
 
-      populationCap: popCap,
-      populationGrowth: popGro,
+      energyCap: energyCap,
+      energyGrowth: energyGro,
 
-      silverCap: resCap,
-      silverGrowth: resGro,
+      silverCap: silCap,
+      silverGrowth: silGro,
 
       range,
+      speed,
+      defense,
 
-      silverMax,
-
-      population: barbarians,
-      silver: 0,
+      energy: barbarians,
+      silver,
 
       lastUpdated: Math.floor(Date.now() / 1000),
 
@@ -629,7 +656,10 @@ export class PlanetHelper {
 
       unconfirmedDepartures: [],
       unconfirmedUpgrades: [],
+      unconfirmedBuyHats: [],
       silverSpent: 0,
+
+      pulledFromContract: false,
     };
   }
 
@@ -640,38 +670,29 @@ export class PlanetHelper {
     }
   }
 
-  private getPopulationAtTime(planet: Planet, atTimeMillis: number): number {
-    if (planet.population === 0) {
+  private getEnergyAtTime(planet: Planet, atTimeMillis: number): number {
+    if (planet.energy === 0) {
       return 0;
     }
     if (!hasOwner(planet)) {
-      return planet.population;
+      return planet.energy;
     }
-    const timeElapsed =
-      (atTimeMillis / 1000 - planet.lastUpdated) *
-      (this.timeFactorPercentage / 100);
+    const timeElapsed = atTimeMillis / 1000 - planet.lastUpdated;
     const denominator =
-      Math.exp(
-        (-4 * planet.populationGrowth * timeElapsed) / planet.populationCap
-      ) *
-        (planet.populationCap / planet.population - 1) +
+      Math.exp((-4 * planet.energyGrowth * timeElapsed) / planet.energyCap) *
+        (planet.energyCap / planet.energy - 1) +
       1;
-    return planet.populationCap / denominator;
-  }
-
-  private getPopulationCurveMidpoint(planet: Planet): number {
-    // returns timestamp in seconds
-    return this.getPopulationCurveAtPercent(planet, 50);
+    return planet.energyCap / denominator;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public getPopulationCurveAtPercent(planet: Planet, percent: number): number {
-    // returns timestamp (seconds) that planet will reach percent% of popcap
+  public getEnergyCurveAtPercent(planet: Planet, percent: number): number {
+    // returns timestamp (seconds) that planet will reach percent% of energycap
     // time may be in the past
-    const p1 = (percent / 100) * planet.populationCap;
-    const c = planet.populationCap;
-    const p0 = planet.population;
-    const g = planet.populationGrowth;
+    const p1 = (percent / 100) * planet.energyCap;
+    const c = planet.energyCap;
+    const p0 = planet.energy;
+    const g = planet.energyGrowth;
     const t0 = planet.lastUpdated;
 
     const t1 = (c / (4 * g)) * Math.log((p1 * (c - p0)) / (p0 * (c - p1))) + t0;
@@ -699,11 +720,6 @@ export class PlanetHelper {
       return null;
     }
     let timeToTarget = 0;
-    if (planet.population < planet.populationCap / 2) {
-      timeToTarget +=
-        this.getPopulationCurveAtPercent(planet, 50) - planet.lastUpdated;
-    }
-    // console.log(silverDiff, planet.silverGrowth);
     timeToTarget += silverDiff / planet.silverGrowth;
     return planet.lastUpdated + timeToTarget;
   }
@@ -714,40 +730,31 @@ export class PlanetHelper {
     endTimeMillis: number
   ): number {
     if (!hasOwner(planet)) {
-      return 0;
-    }
-    const silverGrowth =
-      planet.planetResource === PlanetResource.SILVER ? planet.silverGrowth : 0;
-    const silverCap =
-      planet.planetResource === PlanetResource.SILVER ? planet.silverCap : 0;
-
-    if (planet.silver > planet.silverMax) {
-      console.error('hey u hacked something (silver > silverMax)');
-      return (planet.silver = planet.silverMax);
-    }
-    if (planet.silver > silverCap) {
       return planet.silver;
     }
-    const timeElapsed =
-      (endTimeMillis / 1000 - startTimeMillis / 1000) *
-      (this.timeFactorPercentage / 100);
 
-    return Math.min(timeElapsed * silverGrowth + planet.silver, silverCap);
+    if (planet.silver > planet.silverCap) {
+      return planet.silverCap;
+    }
+    const timeElapsed = endTimeMillis / 1000 - startTimeMillis / 1000;
+
+    return Math.min(
+      timeElapsed * planet.silverGrowth + planet.silver,
+      planet.silverCap
+    );
   }
 
   private calculateSilverSpent(planet: Planet): number {
-    const upgradeFactor = this.contractConstants.defaultSilverCap[
-      planet.planetLevel
-    ];
-    let silverSpent = 0;
-    for (let i = 0; i < 3; i += 1) {
-      for (let j = 0; j < planet.upgradeState[i]; j += 1) {
-        silverSpent +=
-          (this.contractConstants.upgrades[i][j].silverCapMultiplier / 100) *
-          upgradeFactor;
-      }
+    const upgradeCosts = [20, 40, 60, 80, 100];
+    let totalUpgrades = 0;
+    for (let i = 0; i < planet.upgradeState.length; i++) {
+      totalUpgrades += planet.upgradeState[i];
     }
-    return silverSpent;
+    let totalUpgradeCostPercent = 0;
+    for (let i = 0; i < totalUpgrades; i++) {
+      totalUpgradeCostPercent += upgradeCosts[i];
+    }
+    return (totalUpgradeCostPercent / 100) * planet.silverCap;
   }
 
   private updateScore(planetId: LocationId) {

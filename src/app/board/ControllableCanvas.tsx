@@ -21,15 +21,19 @@ export default function ControllableCanvas() {
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const imgRef = useRef<HTMLImageElement | null>(null);
+
   const uiEmitter: UIEmitter = UIEmitter.getInstance();
   const gameUIManager = useContext<GameUIManager | null>(GameUIManagerContext);
 
   const windowManager = WindowManager.getInstance();
   const [targeting, setTargeting] = useState<boolean>(false);
 
+  const [loaded, setLoaded] = useState<boolean>(false);
+
   useEffect(() => {
     const updateTargeting = (newstate) => {
-      setTargeting(newstate === CursorState.Targeting);
+      setTargeting(newstate === CursorState.TargetingExplorer);
     };
     windowManager.on(WindowManagerEvent.StateChanged, updateTargeting);
     return () => {
@@ -61,43 +65,43 @@ export default function ControllableCanvas() {
   ]);
 
   useEffect(() => {
-    if (gameUIManager) {
-      function onResize() {
-        doResize();
-        uiEmitter.emit(UIEmitterEvent.WindowResize);
-      }
+    if (!imgRef || !gameUIManager || !loaded) return;
 
-      function onWheel(e: WheelEvent) {
-        e.preventDefault();
-        const { deltaY } = e;
-        uiEmitter.emit(UIEmitterEvent.CanvasScroll, deltaY);
-      }
-
-      const canvas = canvasRef.current;
-      if (!canvas) {
-        console.error('');
-        return () => {};
-      }
-
-      Viewport.initialize(gameUIManager, 250, canvas);
-
-      CanvasRenderer.initialize(canvas, gameUIManager);
-      // We can't attach the wheel event onto the canvas due to:
-      // https://www.chromestatus.com/features/6662647093133312
-      canvas.addEventListener('wheel', onWheel);
-      window.addEventListener('resize', onResize);
-
-      uiEmitter.on(UIEmitterEvent.UIChange, doResize);
-
-      return () => {
-        Viewport.destroyInstance();
-        CanvasRenderer.destroyInstance();
-        canvas.removeEventListener('wheel', onWheel);
-        window.removeEventListener('resize', onResize);
-        uiEmitter.removeListener(UIEmitterEvent.UIChange, doResize);
-      };
+    function onResize() {
+      doResize();
+      uiEmitter.emit(UIEmitterEvent.WindowResize);
     }
-  }, [gameUIManager, uiEmitter, doResize]);
+
+    function onWheel(e: WheelEvent) {
+      e.preventDefault();
+      const { deltaY } = e;
+      uiEmitter.emit(UIEmitterEvent.CanvasScroll, deltaY);
+    }
+
+    const canvas = canvasRef.current;
+    const img = imgRef.current;
+    if (!canvas || !img) {
+      console.error('');
+      return () => {};
+    }
+
+    Viewport.initialize(gameUIManager, 250, canvas);
+    CanvasRenderer.initialize(canvas, gameUIManager, img);
+    // We can't attach the wheel event onto the canvas due to:
+    // https://www.chromestatus.com/features/6662647093133312
+    canvas.addEventListener('wheel', onWheel);
+    window.addEventListener('resize', onResize);
+
+    uiEmitter.on(UIEmitterEvent.UIChange, doResize);
+
+    return () => {
+      Viewport.destroyInstance();
+      CanvasRenderer.destroyInstance();
+      canvas.removeEventListener('wheel', onWheel);
+      window.removeEventListener('resize', onResize);
+      uiEmitter.removeListener(UIEmitterEvent.UIChange, doResize);
+    };
+  }, [gameUIManager, uiEmitter, doResize, imgRef, loaded]);
 
   if (!gameUIManager) {
     console.error('GameUIManager context is null');
@@ -125,6 +129,12 @@ export default function ControllableCanvas() {
         cursor: targeting ? 'crosshair' : undefined,
       }}
     >
+      <img
+        ref={imgRef}
+        src='/public/img/texture.jpg'
+        style={{ position: 'absolute', left: '-1000px', top: '-1000px' }}
+        onLoad={() => setLoaded(true)}
+      />
       <canvas
         style={{
           width: '100%',

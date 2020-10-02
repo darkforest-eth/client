@@ -45,6 +45,7 @@ export const toLSMChunk = (chunk: ExploredChunkData) => {
     y: chunkLocation.bottomLeft.y,
     s: chunkLocation.sideLength,
     l: lsmLocs,
+    p: chunk.perlin,
   };
   return ret;
 };
@@ -64,6 +65,7 @@ export const toExploredChunk = (chunk: LSMChunkData) => {
       sideLength: chunk.s,
     },
     planetLocations: planetLocs,
+    perlin: chunk.p,
   };
   return ret;
 };
@@ -128,6 +130,7 @@ export const addToChunkMap = (
       sideLength,
     },
     planetLocations: includePlanets ? [...chunk.planetLocations] : [],
+    perlin: chunk.perlin,
   };
   while (!maxChunkSize || sideLength < maxChunkSize) {
     const siblingLocs = getSiblingLocations(chunkToAdd.chunkFootprint);
@@ -141,6 +144,7 @@ export const addToChunkMap = (
     if (!siblingsMined) break;
     sideLength *= 2;
     let planetLocations: Location[] = chunkToAdd.planetLocations;
+    let newPerlin = chunkToAdd.perlin / 4;
     for (const siblingLoc of siblingLocs) {
       const siblingKey = getChunkKey(siblingLoc);
       const sibling = map.get(siblingKey);
@@ -149,8 +153,11 @@ export const addToChunkMap = (
       } else {
         map.delete(siblingKey);
       }
-      if (includePlanets && sibling) {
-        planetLocations = planetLocations.concat(sibling.planetLocations);
+      if (sibling) {
+        if (includePlanets) {
+          planetLocations = planetLocations.concat(sibling.planetLocations);
+        }
+        newPerlin += sibling.perlin / 4;
       }
     }
     const chunkFootprint = getChunkOfSideLength(
@@ -160,6 +167,7 @@ export const addToChunkMap = (
     chunkToAdd = {
       chunkFootprint,
       planetLocations,
+      perlin: Math.floor(newPerlin * 1000) / 1000,
     };
   }
   if (onAdd !== undefined) {

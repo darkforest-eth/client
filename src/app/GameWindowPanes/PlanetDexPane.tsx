@@ -1,16 +1,27 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ModalPane, ModalHook, ModalName } from './ModalPane';
+import {
+  ModalPane,
+  ModalHook,
+  ModalName,
+  ModalPlanetDexIcon,
+} from './ModalPane';
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
 import { Planet, PlanetResource } from '../../_types/global/GlobalTypes';
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
-import { SidebarPane } from '../GameWindowComponents';
+import { SidebarPane } from '../GameWindowComponents/GameWindowComponents';
 import { Sub, Space } from '../../components/Text';
-import { getPlanetShortHash, formatNumber } from '../../utils/Utils';
+import {
+  getPlanetShortHash,
+  formatNumber,
+  getPlanetRank,
+} from '../../utils/Utils';
 import dfstyles from '../../styles/dfstyles';
 import { getPlanetName, getPlanetColors } from '../../utils/ProcgenUtils';
 import _ from 'lodash';
+import { SelectedContext } from '../GameWindow';
+import { SilverIcon } from '../Icons';
 
 const DexWrapperSmall = styled.div`
   max-height: 12em;
@@ -104,7 +115,7 @@ const DexRow = styled.div`
       margin-right: 1em;
       width: 3em;
     }
-    // pop, silver
+    // energy, silver
     &:nth-child(5) {
       width: 4.5em;
     }
@@ -175,6 +186,12 @@ const _PlanetThumb = styled.div`
   }
 `;
 
+const ColorIcon = styled.span<{ color: string }>`
+  path {
+    fill: ${({ color }) => color} !important;
+  }
+`;
+
 export function PlanetThumb({ planet }: { planet: Planet }) {
   const radius = 5 + 3 * planet.planetLevel;
   // const radius = 5 + 3 * PlanetLevel.MAX;
@@ -182,6 +199,16 @@ export function PlanetThumb({ planet }: { planet: Planet }) {
 
   const ringW = radius * 1.5;
   const ringH = Math.max(2, ringW / 7);
+
+  if (planet.planetResource === PlanetResource.SILVER) {
+    return (
+      <_PlanetThumb>
+        <ColorIcon color={baseColor}>
+          <SilverIcon />
+        </ColorIcon>
+      </_PlanetThumb>
+    );
+  }
 
   return (
     <_PlanetThumb>
@@ -201,10 +228,7 @@ export function PlanetThumb({ planet }: { planet: Planet }) {
             width: ringW + 'px',
             height: ringH + 'px',
             borderRadius: ringW * 2 + 'px',
-            background:
-              planet.planetResource === PlanetResource.SILVER
-                ? backgroundColor
-                : 'none',
+            background: getPlanetRank(planet) > 0 ? backgroundColor : 'none',
           }}
         ></span>
       </span>
@@ -213,7 +237,7 @@ export function PlanetThumb({ planet }: { planet: Planet }) {
 }
 
 const getPlanetScore = (planet: Planet, rank: number) => {
-  const baseScore = rank < 10 ? planet.populationCap : 0;
+  const baseScore = rank < 10 ? planet.energyCap : 0;
   const totalSilver = planet.silverSpent + planet.silver;
   return baseScore + totalSilver / 10;
 };
@@ -242,7 +266,7 @@ function DexEntry({
         <span>
           <Sub>lv</Sub> {planet.planetLevel}
         </span>
-        <span>{formatNumber(planet.population)}</span>
+        <span>{formatNumber(planet.energy)}</span>
         <span>{formatNumber(planet.silver)}</span>
         <span>
           {formatNumber(score)}
@@ -278,24 +302,21 @@ export function PlanetLink({
 enum Columns {
   Name = 0,
   Level = 1,
-  Pop = 2,
+  Energy = 2,
   Silver = 3,
   Points = 4,
 }
 
-export default function PlanetDexPane({
+export function PlanetDexPane({
   hook,
   small,
-  selected,
-  _updater: tick,
 }: {
   small?: boolean;
-  selected: Planet | null;
   hook: ModalHook;
-  _updater: number;
 }) {
   const [visible, _setVisible] = hook;
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
+  const selected = useContext<Planet | null>(SelectedContext);
 
   const [sortBy, setSortBy] = useState<Columns>(Columns.Points);
 
@@ -309,8 +330,8 @@ export default function PlanetDexPane({
     return nameA.localeCompare(nameB);
   };
 
-  const popFn = (a: [Planet, number], b: [Planet, number]): number => {
-    return b[0].population - a[0].population;
+  const energyFn = (a: [Planet, number], b: [Planet, number]): number => {
+    return b[0].energy - a[0].energy;
   };
 
   const silverFn = (a: [Planet, number], b: [Planet, number]): number => {
@@ -323,7 +344,7 @@ export default function PlanetDexPane({
 
   const sortingFn = (a: [Planet, number], b: [Planet, number]): number => {
     const [scoreA, scoreB] = [getPlanetScore(...a), getPlanetScore(...b)];
-    const myFn = [nameFn, levelFn, popFn, silverFn, scoreFn][sortBy];
+    const myFn = [nameFn, levelFn, energyFn, silverFn, scoreFn][sortBy];
     if (scoreA !== scoreB) return myFn(a, b);
 
     if (!uiManager) return 0;
@@ -351,22 +372,34 @@ export default function PlanetDexPane({
   }, [visible, uiManager]);
 
   useEffect(() => {
-    if (tick % 5 !== 0) return;
     if (!uiManager) return;
-    const myAddr = uiManager.getAccount();
-    if (!myAddr) return;
-    const ownedPlanets = uiManager
-      .getAllOwnedPlanets()
-      .filter((planet) => planet.owner === myAddr);
-    setPlanets(ownedPlanets);
-  }, [tick, uiManager]);
+
+    const refreshPlanets = () => {
+      if (!uiManager) return;
+      const myAddr = uiManager.getAccount();
+      if (!myAddr) return;
+      const ownedPlanets = uiManager
+        .getAllOwnedPlanets()
+        .filter((planet) => planet.owner === myAddr);
+      setPlanets(ownedPlanets);
+    };
+
+    const intervalId = setInterval(refreshPlanets, 10000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [uiManager]);
 
   if (small)
     return (
-      <SidebarPane title='Planet List'>
+      <SidebarPane
+        title='Planet List'
+        headerItems={<ModalPlanetDexIcon hook={hook} />}
+      >
         <DexWrapperSmall>
           {planets
-            .sort((a, b) => b.populationCap - a.populationCap)
+            .sort((a, b) => b.energyCap - a.energyCap)
             .map((planet, i) => [planet, i]) // pass the index
             .sort(sortingFn) // sort using planet + index
             .map(([planet, i]: [Planet, number]) => (
@@ -403,10 +436,10 @@ export default function PlanetDexPane({
             Level
           </span>
           <span
-            className={sortBy === Columns.Pop ? 'selected' : ''}
-            onClick={() => setSortBy(Columns.Pop)}
+            className={sortBy === Columns.Energy ? 'selected' : ''}
+            onClick={() => setSortBy(Columns.Energy)}
           >
-            Pop.
+            Energy
           </span>
           <span
             className={sortBy === Columns.Silver ? 'selected' : ''}
@@ -422,7 +455,7 @@ export default function PlanetDexPane({
           </span>
         </DexRow>
         {planets
-          .sort((a, b) => b.populationCap - a.populationCap)
+          .sort((a, b) => b.energyCap - a.energyCap)
           .map((planet, i) => [planet, i]) // pass the index
           .sort(sortingFn) // sort using planet + index
           .map(([planet, i]: [Planet, number]) => (

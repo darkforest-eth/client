@@ -6,6 +6,11 @@ import { Link as ReactRouterLink } from 'react-router-dom';
 import styled from 'styled-components';
 import dfstyles from '../styles/dfstyles';
 import _ from 'lodash';
+import { SubmittedTx } from '../_types/darkforest/api/ContractsAPITypes';
+import Viewport from '../app/board/Viewport';
+import { getPlanetName } from '../utils/ProcgenUtils';
+import { Planet, ExploredChunkData } from '../_types/global/GlobalTypes';
+import { BLOCK_EXPLORER_URL } from '../utils/constants';
 
 interface TextProps {
   children: React.ReactNode;
@@ -163,7 +168,13 @@ export function Space({ length }: { length: number }) {
 
 export const Tab = () => <Space length={4} />;
 
-export const Prompt = () => (
+export const BashPrompt = () => (
+  <span>
+    <Green>{'$'}</Green>{' '}
+  </span>
+);
+
+export const JSPrompt = () => (
   <span>
     <Blue>{'>'}</Blue>{' '}
   </span>
@@ -197,3 +208,58 @@ export const BasicLink = styled.u`
     cursor: pointer;
   }
 `;
+
+export function TxLink({ tx }: { tx: SubmittedTx }) {
+  return (
+    <>
+      <u>
+        <a onClick={() => window.open(`${BLOCK_EXPLORER_URL}/tx/${tx.txHash}`)}>
+          View {tx.txHash.substring(0, 7)} on block explorer
+        </a>
+      </u>
+      .
+    </>
+  );
+}
+
+export function CenterPlanetLink({
+  planet,
+  children,
+}: {
+  planet: Planet;
+  children: React.ReactNode;
+}) {
+  return (
+    <a>
+      <u onClick={() => Viewport.getInstance().centerPlanet(planet)}>
+        {children}
+      </u>
+    </a>
+  );
+}
+
+export function PlanetNameLink({ planet }: { planet: Planet }) {
+  return (
+    <CenterPlanetLink planet={planet}>{getPlanetName(planet)}</CenterPlanetLink>
+  );
+}
+
+export function CenterChunkLink({
+  chunk,
+  children,
+}: {
+  chunk: ExploredChunkData;
+  children: React.ReactNode;
+}) {
+  return (
+    <a>
+      <u onClick={() => Viewport.getInstance().centerChunk(chunk)}>
+        {children}
+      </u>
+    </a>
+  );
+}
+
+export function FAQ04Link({ children }: { children: React.ReactNode }) {
+  return <a href={'https://blog.zkga.me/df-04-faq'}>{children} </a>;
+}

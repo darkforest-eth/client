@@ -1,5 +1,5 @@
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
-import { WorldCoords, CanvasCoords } from '../../utils/Coordinates';
+import { WorldCoords, CanvasCoords, distL2 } from '../../utils/Coordinates';
 import autoBind from 'auto-bind';
 import AbstractUIManager from './AbstractUIManager';
 import { ExploredChunkData, Planet } from '../../_types/global/GlobalTypes';
@@ -24,6 +24,8 @@ class Viewport {
   isFirefox: boolean;
 
   gameUIManager: AbstractUIManager;
+
+  mousedownCoords: CanvasCoords | null = null;
 
   private constructor(
     gameUIManager: AbstractUIManager,
@@ -123,6 +125,14 @@ class Viewport {
     this.centerWorldCoords = { x, y };
   }
 
+  centerChunk(chunk: ExploredChunkData): void {
+    const { bottomLeft, sideLength } = chunk.chunkFootprint;
+    this.centerWorldCoords = {
+      x: bottomLeft.x + sideLength / 2,
+      y: bottomLeft.y + sideLength / 2,
+    };
+  }
+
   zoomIn(): void {
     this.onScroll(-300, true);
   }
@@ -133,6 +143,8 @@ class Viewport {
 
   // Event handlers
   onMouseDown(canvasCoords: CanvasCoords) {
+    this.mousedownCoords = canvasCoords;
+
     const uiManager = this.gameUIManager;
     const uiEmitter = UIEmitter.getInstance();
 
@@ -164,6 +176,14 @@ class Viewport {
     const uiEmitter = UIEmitter.getInstance();
 
     const worldCoords = this.canvasToWorldCoords(canvasCoords);
+    if (
+      this.mousedownCoords &&
+      distL2(canvasCoords, this.mousedownCoords) < 3
+    ) {
+      uiEmitter.emit(UIEmitterEvent.WorldMouseClick, worldCoords);
+    }
+
+    this.mousedownCoords = null;
     uiEmitter.emit(UIEmitterEvent.WorldMouseUp, worldCoords);
     this.isPanning = false;
     this.mouseLastCoords = canvasCoords;

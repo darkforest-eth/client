@@ -2,8 +2,8 @@ import React from 'react';
 import { ModalName, ModalPane, ModalHook } from './ModalPane';
 import styled from 'styled-components';
 import dfstyles from '../../styles/dfstyles';
-import { White, Blue } from '../../components/Text';
-import { TargetIcon } from '../Icons';
+import { White } from '../../components/Text';
+import TutorialManager from '../../utils/TutorialManager';
 
 const HelpWrapper = styled.div`
   width: 36em;
@@ -29,134 +29,72 @@ const HelpWrapper = styled.div`
       margin: 0 1em;
     }
   }
+
+  & a {
+    text-decoration: underline;
+    cursor: pointer;
+  }
 `;
 
 const BlueBG = styled.span`
   background: ${dfstyles.colors.dfblue};
   color: ${dfstyles.colors.text};
 `;
-export default function HelpPane({ hook }: { hook: ModalHook }) {
+export function HelpPane({ hook }: { hook: ModalHook }) {
   return (
     <ModalPane hook={hook} title='Help' name={ModalName.Help}>
       <HelpWrapper>
-        <p className='title'>Tooltips</p>
+        <p className='title'>Tutorial</p>
         <p>
-          Hold down <White>SHIFT</White> and hover over anything that is
-          highlighted <BlueBG>Blue</BlueBG> to learn more about it!
+          <a onClick={() => TutorialManager.getInstance().reset()}>
+            Reset Tutorial
+          </a>
         </p>
-        <p className='title'>Welcome to Dark Forest v0.3!</p>
+        <p className='title'>FAQ and Troubleshooting</p>
         <p>
-          This playtest will run from <White>08/08/2020</White> to{' '}
-          <White>08/15/2020</White>.
+          <a onClick={() => window.open('https://blog.zkga.me/df-04-faq')}>
+            FAQ
+          </a>
         </p>
+        <p></p>
+        <p className='title'>Welcome to Dark Forest v0.4!</p>
         <p>
           This window gives additional information about the game. When you are
           done reading, click the <White>X</White> in the upper-right corner to
           close this window.
         </p>
-        <p>(Scroll down to read more!)</p>
         <p>
           You can reopen this window anytime by clicking the question mark icon
-          on the <White>Menu Bar</White>.
+          on the <White>Menu Bar</White>, in the top left.
         </p>
-        <p className='title'>Patch Notes: 08/11/20</p>
-        <ul>
-          <li>
-            <Blue>You can now view tooltips!</Blue> Hold <White>SHIFT</White> to
-            see more.
-          </li>
-          <li>
-            Added <White>planet badges</White> to <White>Planet Info</White> and{' '}
-            <White>Planet Details</White>. These show helpful information about
-            planets - you'll also get more the rarer your planet is!
-          </li>
-          <li>
-            Made the 'L' in 'Lv' capital on <White>Upgrade Details</White>
-          </li>
-          <li>
-            Fixed an issue where population would sometimes render as negative
-            on <White>Manage Fleets</White>.
-          </li>
-          <li>
-            Client will cap move transactions at 98% of silver/population - this
-            fixes an issue where transactions would revert if your browser's
-            Date.now() was out of sync.
-          </li>
-          <li>
-            Silver Growth is now shown as per minute, rather than per second.
-          </li>
-          <li>
-            Added text to <White>Range Rings</White> in order to clarify how
-            they show maximum range of sending forces from a planet at certain
-            population levels.
-          </li>
-          <li>
-            Made small planets no longer render text at large zoom levels. This
-            should improve performance on large maps.
-          </li>
-          <li>Disabled upgrade button on fully-upgraded planets.</li>
-        </ul>
-
-        <p className='title'>Getting Started</p>
-        <p>
-          You will primarily play the game through the{' '}
-          <White>Game Screen</White>, behind this window. Clicking planets will
-          allow you to select them. Additional info about these planets can be
-          seen on the <White>Toolbar</White>, at the bottom of the screen.
-        </p>
-        <p>
-          Additional windows can be opened from the <White>Menu Bar</White> on
-          the top-left. The <White>Terminal</White> can be found on the
-          right-side of the screen, and will log your game actions.
-        </p>
-        <p>
-          You can move this window by clicking and dragging on the{' '}
-          <White>
-            <u>Help</u>
-          </White>{' '}
-          label at the top of the window.
-        </p>
+        <p></p>
         <p className='title'>The Universe</p>
         <p>
           Dark Forest is a vast universe, obfuscated by zero-knowledge
-          cryptography. Your <White>Miner</White> explores the universe,
+          cryptography. Your <White>Explorer</White> explores the universe,
           searching for <White>Planets</White> and other players.
         </p>
         <p>
-          All planets produce <White>Population</White>. You can move population
-          from planets you own to new planets to conquer them.
+          All planets produce <White>Energy</White>. You can move energy from
+          planets you own to new planets to conquer them.
         </p>
         <p>
-          Planets with rings also produce <White>Silver</White>, once they reach
-          50% of their maximum population. Silver can be moved between planets,
+          Also scattered through the universe are <White>Asteroid Fields</White>
+          , which produce <White>Silver</White>. Silver can be sent to planets
           and can be spent on <White>Upgrades</White>. Producing and spending
           silver increases your score.
         </p>
+        <p>
+          If you need help, click "Reset Tutorial" above, or check out the FAQ.
+          You can also hold down <White>SHIFT</White> and hover over anything
+          that is highlighted <BlueBG>Blue</BlueBG> to learn more about it!
+        </p>
         <p className='title'>Prizes and Scoring</p>
         <p>
-          Dark Forest v0.3 will end on 8/15/2020. At that time, the top 15
-          highest-scoring players will be awarded prizes from a pool of 1024
-          DAI. Your score is determined by the value of your largest 10 planets,
-          plus the silver you've produced and spent during the game.
-        </p>
-        <p className='title'>Controls</p>
-        <p>
-          <White>Click</White> on a planet to select it.
-        </p>
-        <p>
-          <White>Click and Drag</White> from one planet to another to move
-          forces.
-        </p>
-        <p>
-          <White>Click</White> the{' '}
-          <White>
-            <TargetIcon /> Icon
-          </White>{' '}
-          in the{' '}
-          <White>
-            <u>Mining</u>
-          </White>{' '}
-          sidebar window to move your miner.
+          A snapshot of scores will be taken on 10/12/2020. At that time, the
+          top 15 highest-scoring players will be awarded prizes from a pool of
+          1024 DAI. Your score is determined by the value of your largest 10
+          planets, plus the silver you've produced and spent during the game.
         </p>
       </HelpWrapper>
     </ModalPane>

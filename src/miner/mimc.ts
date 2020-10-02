@@ -5,6 +5,8 @@ export const p = bigInt(
   '21888242871839275222246405745257275088548364400416034343698204186575808495617'
 );
 
+const KEY = 3;
+
 const c = [
   '0',
   '7120861356467848435263064379192047478074060781135320967663101236819528304084',
@@ -262,7 +264,7 @@ function mimcSponge(
   nOutputs: number,
   rounds: number
 ): BigInteger[] {
-  const state = new FeistelState(rounds, bigInt(0));
+  const state = new FeistelState(rounds, bigInt(KEY));
   for (const elt of inputs) {
     state.inject(elt);
     state.mix();

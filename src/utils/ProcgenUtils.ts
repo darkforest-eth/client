@@ -1,12 +1,7 @@
 import { Planet, EthAddress, LocationId } from '../_types/global/GlobalTypes';
 import * as bigInt from 'big-integer';
-import { PlanetColorInfo } from '../_types/darkforest/app/board/utils/UtilsTypes';
-import {
-  getPlanetRank,
-  getPlanetClass,
-  seededRandom,
-  titleCase,
-} from './Utils';
+import { PlanetCosmeticInfo } from '../_types/darkforest/app/board/utils/UtilsTypes';
+import { getPlanetRank, seededRandom, titleCase } from './Utils';
 import _ from 'lodash';
 import Noise from './Noise';
 import {
@@ -19,6 +14,8 @@ import {
 
 import tracery from './tracery';
 import { baseEngModifiers } from './tracery-modifiers';
+import { hatTypeFromHash, HatType } from './Hats';
+import { emptyAddress } from './CheckedTypeUtils';
 
 export const hslStr: (h: number, s: number, l: number) => string = (
   h,
@@ -40,6 +37,7 @@ export const getPlayerColor: (player: EthAddress) => string = (player) => {
 };
 
 export const getOwnerColor: (planet: Planet) => string = (planet) => {
+  if (planet.owner === emptyAddress) return '#996666';
   return planet.owner ? getPlayerColor(planet.owner) : 'hsl(0,1%,50%)';
 };
 
@@ -50,7 +48,7 @@ export type PixelCoords = {
 
 type NoiseFn = (coords: PixelCoords) => number;
 type NoiseClosure = (loc: LocationId) => NoiseFn;
-// returns a deterministic seeded perlin for a given planet loc
+// returns a deterministic seeded perlin (-1, 1) for a given planet loc
 export const planetPerlin: NoiseClosure = (loc: LocationId) => {
   const realHash = loc.substring(4, loc.length);
 
@@ -86,7 +84,7 @@ export const planetRandomInt: RandomClosure = (loc: LocationId) => {
   return () => Math.floor(rand() * 2 ** 24);
 };
 
-const grayColors: PlanetColorInfo = {
+const grayColors: PlanetCosmeticInfo = {
   baseHue: 0,
   baseColor: '#888',
   baseColor2: '#888',
@@ -96,16 +94,19 @@ const grayColors: PlanetColorInfo = {
   secondaryColor3: '#888',
   backgroundColor: '#888',
   previewColor: '#888',
+  asteroidColor: '#888',
+  // ultra ultra hacky, but we're doing this since it's cached in the renderer
+  hatType: HatType.GraduationCap,
 };
 
-export const getPlanetColors: (planet: Planet | null) => PlanetColorInfo = (
+export const getPlanetColors: (planet: Planet | null) => PlanetCosmeticInfo = (
   planet
 ) => {
   if (!planet) return grayColors;
   const baseHue = hashToHue(planet.locationId);
   const baseColor = hslStr(baseHue % 360, 70, 60);
 
-  const colors: PlanetColorInfo = {
+  const colors: PlanetCosmeticInfo = {
     baseHue,
     baseColor,
     baseColor2: hslStr(baseHue % 360, 70, 70),
@@ -115,6 +116,8 @@ export const getPlanetColors: (planet: Planet | null) => PlanetColorInfo = (
     secondaryColor3: hslStr(baseHue % 360, 60, 50),
     backgroundColor: hslStr((baseHue + 180) % 360, 70, 60),
     previewColor: baseColor,
+    asteroidColor: hslStr(baseHue % 360, 40, 40),
+    hatType: hatTypeFromHash(planet.locationId),
   };
 
   return colors;
@@ -122,10 +125,8 @@ export const getPlanetColors: (planet: Planet | null) => PlanetColorInfo = (
 
 export const getPlanetTitle = (planet: Planet | null) => {
   if (!planet) return 'Unknown';
-  const { upgradeState: u } = planet;
 
   const myRank = getPlanetRank(planet);
-  const myClass = getPlanetClass(planet);
 
   let ret = 'Planet';
 
@@ -134,27 +135,11 @@ export const getPlanetTitle = (planet: Planet | null) => {
   } else if (myRank === 2) {
     ret = 'Colony';
   } else if (myRank === 3) {
-    ret = ['Market', 'Barracks', 'Spaceport'][myClass];
+    ret = 'Spaceport';
   } else if (myRank === 4) {
-    ret = ['DeFi Exchange', 'Stronghold', 'Warp Gate'][myClass];
-  }
-  // singles
-  if (u[0] > 0 && u[1] === 0 && u[2] === 0) {
-    ret = 'Economic ' + ret;
-  } else if (u[0] === 0 && u[1] > 0 && u[2] === 0) {
-    ret = 'Industrial ' + ret;
-  } else if (u[0] === 0 && u[1] === 0 && u[2] > 0) {
-    ret = 'Wayfaring ' + ret;
-  }
-  // doubles / triple
-  else if (u[0] > 0 && u[1] > 0 && u[2] === 0) {
-    ret = 'Mercantile ' + ret;
-  } else if (u[0] > 0 && u[1] === 0 && u[2] > 0) {
-    ret = 'Voyaging ' + ret;
-  } else if (u[0] === 0 && u[1] > 0 && u[2] > 0) {
-    ret = 'Enterprising ' + ret;
-  } else if (u[0] > 0 && u[1] > 0 && u[2] > 0) {
-    ret = 'Daring ' + ret;
+    ret = 'Stronghold';
+  } else if (myRank === 5) {
+    ret = 'Galactic Stronghold';
   }
 
   return ret;
@@ -172,14 +157,14 @@ export const getPlanetName = (planet: Planet | null): string => {
 export const getPlanetTagline = (planet: Planet | null): string => {
   if (!planet) return 'The empty unknown';
 
-  if (getPlanetName(planet) === 'Clown Town') return `A town of clowns...`;
+  if (getPlanetName(planet) === 'Clown Town') return `A town of clowns`;
 
   const randInt = planetRandomInt(planet.locationId);
   const adj1 = planetTagAdj[randInt() % planetTagAdj.length];
   const adj2 = planetTagAdj[randInt() % planetTagAdj.length];
   const noun = planetTagNoun[randInt() % planetTagNoun.length];
 
-  return `${adj1}, ${adj2} ${noun}`;
+  return `A ${adj1}, ${adj2} ${noun}`;
 };
 
 // this one doesn't mention the name
@@ -242,19 +227,17 @@ export const getPlanetQuote = (planet: Planet | null): QuoteData => {
     };
 
   const myRank = getPlanetRank(planet);
-  const myClass = getPlanetClass(planet);
 
   if (myRank === 0) {
     return {
       quote:
-        'Man cannot discover new oceans unless he has the courage to lose sight of the shore.',
-      author: 'Andre Gide',
+        'A beginning is the time for taking the most delicate care that the balances are correct.',
+      author: 'Frank Herbert',
     };
   } else if (myRank === 1) {
     return {
-      quote:
-        'Equipped with his five senses, man explores the universe around him and calls the adventure Science.',
-      author: 'Edwin Hubble',
+      quote: 'All civilizations become either spacefaring or extinct.',
+      author: 'Carl Sagan',
     };
   } else if (myRank === 2) {
     return {
@@ -263,35 +246,22 @@ export const getPlanetQuote = (planet: Planet | null): QuoteData => {
       author: 'Liu Cixin',
     };
   } else if (myRank === 3) {
-    return [
-      {
-        quote:
-          'Opportunity is missed by most people because it is dressed in overalls and looks like work.',
-        author: 'Thomas Edison',
-      },
-      {
-        quote:
-          'People make mistakes in life through believing too much, but they have a damned dull time if they believe too little.',
-        author: 'James Hilton',
-      },
-      {
-        quote:
-          "I'm sure the universe is full of intelligent life. It's just been too intelligent to come here.",
-        author: 'Arthur C. Clarke',
-      },
-    ][myClass];
+    return {
+      quote: "Nature can't evolve a species that hasn't the will to survive.",
+      author: 'Orson Scott Card',
+    };
   } else if (myRank === 4) {
-    return [
-      { quote: 'Money often costs too much.', author: 'Ralph Waldo Emerson' },
-      {
-        quote: "I think there's just one kind of folks. Folks.",
-        author: 'Harper Lee',
-      },
-      {
-        quote: 'All civilizations become either spacefaring or extinct.',
-        author: 'Carl Sagan',
-      },
-    ][myClass];
+    return {
+      quote:
+        'Man cannot discover new oceans unless he has the courage to lose sight of the shore.',
+      author: 'Andre Gide',
+    };
+  } else if (myRank === 5) {
+    return {
+      quote:
+        'Each moment and everywhere, civilizations rise and fall, much as the stars are born and die. Time devours all.',
+      author: 'Ken Liu',
+    };
   }
 
   return {

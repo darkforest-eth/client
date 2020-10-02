@@ -24,8 +24,8 @@ export enum WindowManagerEvent {
 
 export enum CursorState {
   Normal,
-  Asking,
-  Targeting,
+  TargetingExplorer,
+  TargetingForces,
 }
 
 export enum TooltipName {
@@ -33,23 +33,21 @@ export enum TooltipName {
   SilverGrowth,
   SilverCap,
   Silver,
-  SilverMax,
-  Population,
-  PopulationGrowth,
+  Energy,
+  EnergyGrowth,
   Range,
   TwitterHandle,
   Bonus,
-  MinPop,
+  MinEnergy,
   Time50,
   Time90,
-  PopGrowth,
   Pirates,
   Upgrades,
   PlanetRank,
   MaxLevel,
 
   SelectedSilver,
-  SelectedPopulation,
+  SelectedEnergy,
   Rank,
   Score,
   MiningPause,
@@ -58,13 +56,16 @@ export enum TooltipName {
   CurrentMining,
   SilverProd,
 
-  BonusPopCap,
-  BonusPopGro,
-  BonusSilCap,
-  BonusSilGro,
+  BonusEnergyCap,
+  BonusEnergyGro,
   BonusRange,
+  BonusSpeed,
+  BonusDefense,
 
   Clowntown,
+
+  Defense,
+  Speed,
 
   // note that we actually add ModalName to ModalHelp, and that everything after
   // is not referenced directly. for this reason the relative ordring matters.
@@ -173,7 +174,7 @@ class WindowManager extends EventEmitter {
   }
 
   acceptInputForTarget(input: WorldCoords) {
-    if (this.cursorState !== CursorState.Targeting) return;
+    if (this.cursorState !== CursorState.TargetingExplorer) return;
     this.emit(WindowManagerEvent.MiningCoordsUpdate, input);
     this.setCursorState(CursorState.Normal);
   }

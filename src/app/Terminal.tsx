@@ -9,7 +9,8 @@ import TerminalEmitter, {
 import _ from 'lodash';
 import {
   Green,
-  Prompt,
+  BashPrompt,
+  JSPrompt,
   Blue,
   Sub,
   White,
@@ -17,6 +18,8 @@ import {
   Invisible,
   BasicLink,
 } from '../components/Text';
+import { isFirefox } from '../utils/Utils';
+import { TerminalPromptType } from '../_types/darkforest/app/board/utils/TerminalTypes';
 
 const TerminalContainer = styled.div`
   height: 100%;
@@ -73,6 +76,7 @@ export const shellProps = defaultTypistProps;
 // };
 
 const ENTER_KEY_CODE = 13;
+const UP_ARROW_KEY_CODE = 38;
 
 type FragmentHook = [number, (fn: (x: number) => number) => void];
 function TerminalFragment({
@@ -117,14 +121,22 @@ function TerminalFragment({
 
 export default function Terminal() {
   const ref = useRef(document.createElement('div'));
-  const inputRef = useRef(document.createElement('input'));
+  const inputRef = useRef(document.createElement('textarea'));
+  const heightMeasureRef = useRef(document.createElement('textarea'));
 
+  const [prompt, setPrompt] = useState<TerminalPromptType>(
+    TerminalPromptType.BASH
+  );
   const [fragments, setFragments] = useState<FragmentData[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(true);
+  const [alwaysFocusInput, setAlwaysFocusInput] = useState<boolean>(true);
   const [userInputEnabled, setUserInputEnabled] = useState<boolean>(false);
   const [inputText, setInputText] = useState<string>('');
   const fragmentHook = useState<number>(0);
   const [fragmentNo, _setFragmentNo] = fragmentHook;
+  const [inputHeight, setInputHeight] = useState<number>(1);
+
+  const [previousInput, setPreviousInput] = useState<string>('');
 
   const [skipAllTyping, setSkipAllTyping] = useState<boolean>(false);
 
@@ -145,7 +157,8 @@ export default function Terminal() {
     style: TerminalTextStyle = TerminalTextStyle.Default,
     skipTyping = false,
     onClick: (() => void) | undefined = undefined,
-    typistProps: TypistProps | undefined = undefined
+    typistProps: TypistProps | undefined = undefined,
+    recordAsInput: string | null = null
   ) => {
     setFragments((fragments) => {
       let fragment: React.ReactNode;
@@ -186,6 +199,9 @@ export default function Terminal() {
         default:
           fragment = <Sub>{innerFragment}</Sub>;
       }
+      if (recordAsInput !== null) {
+        setPreviousInput(recordAsInput);
+      }
       return _.concat(fragments, [
         {
           fragment,
@@ -196,20 +212,42 @@ export default function Terminal() {
     });
   };
 
-  const doEnter = (e) => {
+  const onKeyUp = (e) => {
     (async () => {
-      if (e.keyCode === ENTER_KEY_CODE && !isTyping) {
-        print('> ', TerminalTextStyle.Blue, true);
+      if (e.keyCode === ENTER_KEY_CODE && !e.shiftKey && !isTyping) {
+        e.preventDefault();
+        if (prompt === TerminalPromptType.BASH) {
+          print('$ ', TerminalTextStyle.Green, true);
+        } else if (prompt === TerminalPromptType.JS) {
+          print('> ', TerminalTextStyle.Blue, true);
+        }
         print(inputText, TerminalTextStyle.White, true);
         newline();
         TerminalEmitter.getInstance().emit(
           TerminalEvent.UserEnteredInput,
           inputText
         );
-        inputRef.current.value = '';
+        setPreviousInput(inputText);
+        setInputHeight(1);
         setInputText('');
+      } else if (
+        e.keyCode === UP_ARROW_KEY_CODE &&
+        inputText === '' &&
+        previousInput !== '' &&
+        !isTyping
+      ) {
+        setInputHeight(1);
+        setInputText(previousInput);
       }
     })();
+  };
+
+  const preventEnterDefault = (e) => {
+    // TODO: this prevents users from doing shift-enter on firefox
+    // if it's attached to onKeyDown
+    if (e.keyCode === ENTER_KEY_CODE && !e.shiftKey && !isTyping) {
+      e.preventDefault();
+    }
   };
 
   useEffect(() => {
@@ -222,9 +260,10 @@ export default function Terminal() {
           str: string,
           style?: TerminalTextStyle,
           skipTyping?: boolean,
-          typistProps?: TypistProps
+          typistProps?: TypistProps,
+          recordAsInput?: string | null
         ) => {
-          print(str, style, skipTyping, undefined, typistProps);
+          print(str, style, skipTyping, undefined, typistProps, recordAsInput);
         }
       )
       .on(
@@ -247,6 +286,12 @@ export default function Terminal() {
       })
       .on(TerminalEvent.SkipAllTyping, () => {
         setSkipAllTyping(true);
+      })
+      .on(TerminalEvent.AllowUnfocusInput, () => {
+        setAlwaysFocusInput(false);
+      })
+      .on(TerminalEvent.ChangePromptType, (promptType: TerminalPromptType) => {
+        setPrompt(promptType);
       });
   }, []);
 
@@ -265,6 +310,10 @@ export default function Terminal() {
     setIsTyping(fragmentNo < fragments.length);
     scrollToEnd();
   }, [fragmentNo, fragments]);
+
+  useEffect(() => {
+    setInputHeight(heightMeasureRef.current.scrollHeight);
+  }, [inputText]);
 
   return (
     <TerminalContainer ref={ref}>
@@ -297,34 +346,64 @@ export default function Terminal() {
           if (userInputEnabled && !isTyping) inputRef.current.focus();
         }}
       >
-        <Prompt />
+        {prompt === TerminalPromptType.BASH ? <BashPrompt /> : <JSPrompt />}
         {/* <span>{inputText}</span> */}
-        <input
-          type='text'
+        <div
           style={{
-            background: 'none',
-            outline: 'none',
-            border: 'none',
-            color: dfstyles.colors.text,
-            // caretColor: 'transparent',
-            flexGrow: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            width: '100%',
           }}
-          className={'myinput'}
-          ref={inputRef}
-          onBlur={() => {
-            if (userInputEnabled) inputRef.current.focus();
-          }}
-          onFocus={() => {
-            if (!userInputEnabled) inputRef.current.blur();
-          }}
-          onKeyDown={doEnter}
-          onChange={() => {
-            if (userInputEnabled) {
-              setInputText(inputRef.current.value);
-            }
-          }}
-        />
-        {/* <BlinkCursor /> */}
+        >
+          <textarea
+            style={{
+              background: 'none',
+              outline: 'none',
+              border: 'none',
+              color: dfstyles.colors.text,
+              // caretColor: 'transparent',
+              height: `${inputHeight}px`,
+              resize: 'none',
+              flexGrow: 1,
+            }}
+            className={'myinput'}
+            ref={inputRef}
+            onBlur={() => {
+              if (userInputEnabled && alwaysFocusInput)
+                inputRef.current.focus();
+            }}
+            onFocus={() => {
+              if (!userInputEnabled && alwaysFocusInput)
+                inputRef.current.blur();
+            }}
+            onKeyUp={onKeyUp}
+            onKeyDown={preventEnterDefault}
+            onKeyPress={isFirefox() ? () => {} : preventEnterDefault}
+            value={inputText}
+            onChange={(e) => {
+              if (userInputEnabled) {
+                setInputText(e.target.value);
+              }
+            }}
+          />
+          {/* "ghost" textarea used to measure the scrollHeight of the input */}
+          <textarea
+            style={{
+              background: 'none',
+              outline: 'none',
+              border: 'none',
+              color: dfstyles.colors.text,
+              // caretColor: 'transparent',
+              height: `0px`,
+              resize: 'none',
+              flexGrow: 0,
+            }}
+            className={'myinput'}
+            ref={heightMeasureRef}
+            value={inputText}
+          />
+        </div>
       </p>
     </TerminalContainer>
   );

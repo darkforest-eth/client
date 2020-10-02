@@ -16,7 +16,9 @@ yarn-error.log*
 # built by local-deploy
 /src/utils/local_contract_addr.ts
 
-/public/contracts
-
 # firebase
 .firebase
+
+# compiled contracts
+public/contracts/*.json
+!public/contracts/DarkForestCore.json

@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { TooltipPane } from './Tooltip';
 import { TooltipName } from '../../utils/WindowManager';
 import {
   Planet,
@@ -11,6 +10,7 @@ import { Sub, Red, White, Green } from '../../components/Text';
 import { getPlanetRank, isFullRank } from '../../utils/Utils';
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
+import { SelectedContext } from '../GameWindow';
 
 const TooltipInfo = styled.div`
   & > div {
@@ -26,157 +26,146 @@ const TooltipInfo = styled.div`
 
 export function TwitterHandleTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.TwitterHandle}>
+    <div>
       <Sub>
         You may connect your account to <White>Twitter</White>
         <br />
         to identify yourself on the <White>Leaderboard</White>.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function RankTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.Rank}>
+    <div>
       <Sub>
         Your current rank, based on <White>score</White>.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
-export function ScoreTooltipTooltipPane() {
+export function ScoreTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.Score}>
+    <div>
       <Sub>
         Your current score. <White>Score</White> is calculated as the sum of the
         total <br />
-        <White>Population Cap</White> of your top 10 planets plus 10 percent of
-        your <br />
+        <White>Energy Cap</White> of your top 10 planets plus 10 percent of your{' '}
+        <br />
         planets' <White>total silver value</White>. (Cost of upgrades + current
         silver)
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function MiningPauseTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.MiningPause}>
+    <div>
       <Sub>
-        Start / Stop your <White>miner</White>. Your explores the universe in
-        chunks of <White>16</White> x <White>16</White>.
+        Start / Stop your <White>explorer</White>. Your explorerer looks for
+        planets in chunks of <White>16</White> x <White>16</White>.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function MiningTargetTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.MiningTarget}>
+    <div>
       <Sub>
-        Change the location of your <White>miner</White>. Click anywhere on the{' '}
-        <White>Game Screen</White>, <br />
+        Change the location of your <White>explorer</White>. Click anywhere on
+        the <White>Game Screen</White>, <br />
         and your <White>miner</White> will start hashing around that chunk.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function HashesPerSecTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.HashesPerSec}>
+    <div>
       <Sub>
-        The speed of your <White>miner</White>, in <White>hashes</White> per
+        The speed of your <White>explorer</White>, in <White>hashes</White> per
         second.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function CurrentMiningTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.CurrentMining}>
+    <div>
       <Sub>
-        The current coordinates of your <White>miner</White>.
+        The current coordinates of your <White>explorer</White>.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function BonusTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.Bonus}>
+    <div>
       <Green>This stat has been randomly doubled!</Green>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function SilverTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.Silver}>
+    <div>
       <Sub>
         <White>Silver:</White> the universe's monetary resource. It allows you
         to buy upgrades. <br />
-        Only <White>1/4</White> of planets produce silver. Those that do grow
-        linearly until their <White>Silver Cap</White>.<br />
-        However, all planets can cache silver up until their{' '}
-        <White>Silver Max</White>.
+        Only <White>silver mines</White> produce silver. They're much rarer than
+        planets!
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
-export function PopulationTooltipPane() {
+export function EnergyTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.Population}>
+    <div>
       <Sub>
-        <White>Population:</White> the number of forces on a planet. Population
-        allows you to make moves. <br />
-        Population grows following an <White>S-curve</White>, and grows fastest
-        at <White>50% capacity</White>.
-        <br />
-        <Red>Silver won't grow</Red> on planets until you reach{' '}
-        <White>50% population</White>.
+        <White>Energy:</White> Energy allows you to make moves. <br />
+        Energy grows following an <White>S-curve</White>, and grows fastest at{' '}
+        <White>50% capacity</White>.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
-export function SelectedPopulationTooltipPane({
-  selected,
-}: {
-  selected: Planet | null;
-}) {
+export function SelectedEnergyTooltipPane() {
+  const selected = useContext<Planet | null>(SelectedContext);
+
   return (
-    <TooltipPane name={TooltipName.SelectedPopulation}>
+    <div>
       {selected ? (
         <TooltipInfo>
           <div>
-            <Sub>Population:</Sub>
-            <span>{selected.population}</span>
+            <Sub>Energy:</Sub>
+            <span>{selected.energy}</span>
           </div>
           <div>
             <Sub>Growth:</Sub>
-            <span>{selected.populationGrowth}</span>
+            <span>{selected.energyGrowth}</span>
           </div>
         </TooltipInfo>
       ) : (
         <>Select a planet to view more about its stats.</>
       )}
-    </TooltipPane>
+    </div>
   );
 }
 
-export function PlanetRankTooltipPane({
-  selected,
-}: {
-  selected: Planet | null;
-}) {
+export function PlanetRankTooltipPane() {
+  const selected = useContext<Planet | null>(SelectedContext);
   const rank = getPlanetRank(selected);
   return (
-    <TooltipPane name={TooltipName.PlanetRank}>
+    <div>
       <Sub>
         This planet is{' '}
         <White>
@@ -184,38 +173,36 @@ export function PlanetRankTooltipPane({
         </White>
         !
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function MaxLevelTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.MaxLevel}>
+    <div>
       <Sub>
         This planet is <White>Level 7</White>, making it one of the <br />
         most powerful planets in the galaxy!
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function SilverProdTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.SilverProd}>
+    <div>
       <Sub>
         This planet produces <White>Silver</White>! Use it to buy upgrades!
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
-export function SelectedSilverTooltipPane({
-  selected,
-}: {
-  selected: Planet | null;
-}) {
+export function SelectedSilverTooltipPane() {
+  const selected = useContext<Planet | null>(SelectedContext);
+
   return (
-    <TooltipPane name={TooltipName.SelectedSilver}>
+    <div>
       {selected ? (
         <TooltipInfo>
           <div>
@@ -223,20 +210,14 @@ export function SelectedSilverTooltipPane({
             <span>{selected.silver}</span>
           </div>
           <div>
-            <Sub>Max:</Sub>
-            <span>{selected.silverMax}</span>
+            <Sub>Cap:</Sub>
+            <span>{selected.silverCap}</span>
           </div>
           {selected.planetResource === PlanetResource.SILVER ? (
-            <>
-              <div>
-                <Sub>Cap:</Sub>
-                <span>{selected.silverCap}</span>
-              </div>
-              <div>
-                <Sub>Growth:</Sub>
-                <span>{selected.silverGrowth * 60}</span>
-              </div>
-            </>
+            <div>
+              <Sub>Growth:</Sub>
+              <span>{selected.silverGrowth * 60}</span>
+            </div>
           ) : (
             <div>
               <Red>This planet does not produce silver.</Red>
@@ -246,259 +227,191 @@ export function SelectedSilverTooltipPane({
       ) : (
         <>Select a planet to view more about its stats.</>
       )}
-    </TooltipPane>
+    </div>
   );
 }
 
 export function RangeTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.Range}>
+    <div>
       <Sub>
         <White>Range:</White> how far you can send your forces.{' '}
         <White>Forces decay</White> the farther out you send them. <br />
         Higher range means that you can send forces the same distance with less
         decay.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
-export function MinPopTooltipPane() {
+export function MinEnergyTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.MinPop}>
+    <div>
       <Sub>
-        The minimum population you need to send a move from this planet. <br />
-        Moves incur a base cost of 5% of the planet's{' '}
-        <White>Population Cap</White>.
+        The minimum energy you need to send a move from this planet. <br />
+        Moves incur a base cost of 5% of the planet's <White>Energy Cap</White>.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function Time50TooltipPane() {
   return (
-    <TooltipPane name={TooltipName.Time50}>
+    <div>
       <Sub>
-        Time to <White>50%</White> of full population. On silver-producing
-        planets, <br /> silver starts growing at <White>50%</White>.
+        Time to <White>50%</White> of full energy.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function Time90TooltipPane() {
   return (
-    <TooltipPane name={TooltipName.Time90}>
+    <div>
       <Sub>
-        Time to <White>90%</White> of full population. Since population grows on
-        an <br />
-        s-curve, population growth slows drastically by this point.
+        Time to <White>90%</White> of full energy. Since energy grows on an{' '}
+        <br />
+        s-curve, energy growth slows drastically by this point.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
-export function PopGrowthTooltipPane() {
+export function EnergyGrowthTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.PopulationGrowth}>
+    <div>
       <Sub>
-        <White>Population Growth:</White> the maximum growth rate of this
-        planet's population <br />
+        <White>Energy Growth:</White> the maximum growth rate of this planet's
+        energy <br />
         representing the rate at the middle of the <White>s-curve</White>.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function SilverGrowthTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.PopulationGrowth}>
+    <div>
       <Sub>
         <White>Silver Growth</White>: the per-minute linear growth rate of this
         planet's silver.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function SilverCapTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.SilverGrowth}>
+    <div>
       <Sub>
-        <White>Silver Cap</White>: the maximum silver that this{' '}
-        <White>silver-producing</White> planet <br />
-        can grow to on its own.
+        <White>Silver Cap</White>: the maximum silver that this planet can hold.
       </Sub>
-    </TooltipPane>
-  );
-}
-
-export function SilverMaxTooltipPane() {
-  return (
-    <TooltipPane name={TooltipName.SilverMax}>
-      <Sub>
-        <White>Silver Max</White>: the maximum silver that this planet can hold.
-        <br />
-        Non <White>silver-producing</White> planets can still have silver moved
-        onto them.
-      </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function PiratesTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.Pirates}>
+    <div>
       <Sub>
         <Red>This planet has space pirates!</Red> Unoccupied planets must first
         be defeated <br /> before they can be conquered.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function UpgradesTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.Upgrades}>
+    <div>
       <Sub>
-        <White>Planet Rank</White>: The highest upgrade of your planet. Note
-        that <br />
-        <White>Rank 3</White> planets cannot upgrade other branches to Level 3.{' '}
-        <br />
-        Once you've chosen a stat, you're stuck with it!
+        <White>Planet Rank</White>: the number of times you've upgraded your
+        planet.
       </Sub>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function ModalHelpTooltipPane() {
-  return (
-    <TooltipPane name={TooltipName.ModalHelp}>
-      View patch notes and instruction
-    </TooltipPane>
-  );
+  return <div>View patch notes and instruction</div>;
 }
 
 export function ModalPlanetDetailsTooltipPane() {
-  return (
-    <TooltipPane name={TooltipName.ModalPlanetDetails}>
-      View detailed information about the selected planet
-    </TooltipPane>
-  );
+  return <div>View detailed information about the selected planet</div>;
 }
 
 export function ModalLeaderboardTooltipPane() {
-  return (
-    <TooltipPane name={TooltipName.ModalLeaderboard}>
-      View the top players, and their top planets
-    </TooltipPane>
-  );
+  return <div>View the top players, and their top planets</div>;
 }
 
 export function ModalPlanetDexTooltipPane() {
-  return (
-    <TooltipPane name={TooltipName.ModalPlanetDex}>
-      View a list of your planets
-    </TooltipPane>
-  );
+  return <div>View a list of your planets</div>;
 }
 
 export function ModalUpgradeDetailsTooltipPane() {
-  return (
-    <TooltipPane name={TooltipName.ModalUpgradeDetails}>
-      Upgrade the selected planet
-    </TooltipPane>
-  );
+  return <div>Upgrade the selected planet</div>;
 }
 
 export function ModalTwitterVerificationTooltipPane() {
-  return (
-    <TooltipPane name={TooltipName.ModalTwitterVerification}>
-      Connect your address to Twitter
-    </TooltipPane>
-  );
+  return <div>Connect your address to Twitter</div>;
 }
 
 export function ModalTwitterBroadcastTooltipPane() {
+  return <div>Broadcast the selected planet's coordinates to Twitter</div>;
+}
+
+export function BonusEnergyCapTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.ModalTwitterBroadcast}>
-      Broadcast the selected planet's coordinates to Twitter
-    </TooltipPane>
+    <div>
+      <Green>
+        This planet's <White>Energy Cap</White> has been randomly doubled!
+      </Green>
+    </div>
   );
 }
 
-export function BonusPopCapTooltipPane() {
+export function BonusEnergyGroTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.BonusPopCap}>
+    <div>
       <Green>
-        This planet's <White>Population Cap</White> has been randomly doubled!
+        This planet's <White>Energy Growth</White> has been randomly doubled!
       </Green>
-    </TooltipPane>
-  );
-}
-
-export function BonusPopGroTooltipPane() {
-  return (
-    <TooltipPane name={TooltipName.BonusPopGro}>
-      <Green>
-        This planet's <White>Population Growth</White> has been randomly
-        doubled!
-      </Green>
-    </TooltipPane>
-  );
-}
-
-export function BonusSilCapTooltipPane({
-  selected,
-}: {
-  selected: Planet | null;
-}) {
-  return (
-    <TooltipPane name={TooltipName.BonusSilCap}>
-      <Green>
-        This planet's <White>Silver Cap</White> has been randomly doubled!
-        <br />
-        {selected?.planetResource !== PlanetResource.SILVER && (
-          <Sub>
-            <em>Unfortunately, it doesn't produce any silver...</em>
-          </Sub>
-        )}
-      </Green>
-    </TooltipPane>
-  );
-}
-
-export function BonusSilGroTooltipPane({
-  selected,
-}: {
-  selected: Planet | null;
-}) {
-  return (
-    <TooltipPane name={TooltipName.BonusSilGro}>
-      <Green>
-        This planet's <White>Silver Growth</White> has been randomly doubled!
-        <br />
-        {selected?.planetResource !== PlanetResource.SILVER && (
-          <Sub>
-            <em>Unfortunately, it doesn't produce any silver...</em>
-          </Sub>
-        )}
-      </Green>
-    </TooltipPane>
+    </div>
   );
 }
 
 export function BonusRangeTooltipPane() {
   return (
-    <TooltipPane name={TooltipName.BonusRange}>
+    <div>
       <Green>
         This planet's <White>Range</White> has been randomly doubled!
       </Green>
-    </TooltipPane>
+    </div>
   );
 }
 
-export function ClownTooltipPane({ selected }: { selected: Planet | null }) {
+export function BonusSpeedTooltipPane() {
+  return (
+    <div>
+      <Green>
+        This planet's <White>Speed</White> has been randomly doubled!
+      </Green>
+    </div>
+  );
+}
+
+export function BonusDefenseTooltipPane() {
+  return (
+    <div>
+      <Green>
+        This planet's <White>Defense</White> has been randomly doubled!
+      </Green>
+    </div>
+  );
+}
+
+export function ClowntownTooltipPane() {
+  const selected = useContext<Planet | null>(SelectedContext);
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
   const [account, setAccount] = useState<EthAddress | null>(null);
 
@@ -509,12 +422,73 @@ export function ClownTooltipPane({ selected }: { selected: Planet | null }) {
   }, [uiManager]);
 
   return (
-    <TooltipPane name={TooltipName.Clowntown}>
+    <div>
       <span>
         {selected?.owner === account
           ? `You are the proud mayor of Clown Town!`
           : `It's a town of clowns...`}
       </span>
-    </TooltipPane>
+    </div>
   );
+}
+
+function DefenseTooltipPane() {
+  return <div>Planets with higher defense are more resistant to attack.</div>;
+}
+
+function SpeedTooltipPane() {
+  return (
+    <div>
+      Moves sent out from planets with higher speed travel the universe faster.
+    </div>
+  );
+}
+
+export function TooltipContent({ name }: { name: TooltipName }) {
+  if (name === TooltipName.SilverGrowth) return <SilverGrowthTooltipPane />;
+  if (name === TooltipName.SilverCap) return <SilverCapTooltipPane />;
+  if (name === TooltipName.Silver) return <SilverTooltipPane />;
+  if (name === TooltipName.Energy) return <EnergyTooltipPane />;
+  if (name === TooltipName.EnergyGrowth) return <EnergyGrowthTooltipPane />;
+  if (name === TooltipName.Range) return <RangeTooltipPane />;
+  if (name === TooltipName.TwitterHandle) return <TwitterHandleTooltipPane />;
+  if (name === TooltipName.Bonus) return <BonusTooltipPane />;
+  if (name === TooltipName.MinEnergy) return <MinEnergyTooltipPane />;
+  if (name === TooltipName.Time50) return <Time50TooltipPane />;
+  if (name === TooltipName.Time90) return <Time90TooltipPane />;
+  if (name === TooltipName.Pirates) return <PiratesTooltipPane />;
+  if (name === TooltipName.Upgrades) return <UpgradesTooltipPane />;
+  if (name === TooltipName.PlanetRank) return <PlanetRankTooltipPane />;
+  if (name === TooltipName.MaxLevel) return <MaxLevelTooltipPane />;
+  if (name === TooltipName.SelectedSilver) return <SelectedSilverTooltipPane />;
+  if (name === TooltipName.SelectedEnergy) return <SelectedEnergyTooltipPane />;
+  if (name === TooltipName.Rank) return <RankTooltipPane />;
+  if (name === TooltipName.Score) return <ScoreTooltipPane />;
+  if (name === TooltipName.MiningPause) return <MiningPauseTooltipPane />;
+  if (name === TooltipName.MiningTarget) return <MiningTargetTooltipPane />;
+  if (name === TooltipName.HashesPerSec) return <HashesPerSecTooltipPane />;
+  if (name === TooltipName.CurrentMining) return <CurrentMiningTooltipPane />;
+  if (name === TooltipName.SilverProd) return <SilverProdTooltipPane />;
+  if (name === TooltipName.BonusEnergyCap) return <BonusEnergyCapTooltipPane />;
+  if (name === TooltipName.BonusEnergyGro) return <BonusEnergyGroTooltipPane />;
+  if (name === TooltipName.BonusRange) return <BonusRangeTooltipPane />;
+  if (name === TooltipName.BonusSpeed) return <BonusSpeedTooltipPane />;
+  if (name === TooltipName.BonusDefense) return <BonusDefenseTooltipPane />;
+  if (name === TooltipName.Clowntown) return <ClowntownTooltipPane />;
+  if (name === TooltipName.ModalHelp) return <ModalHelpTooltipPane />;
+  if (name === TooltipName.ModalPlanetDetails)
+    return <ModalPlanetDetailsTooltipPane />;
+  if (name === TooltipName.ModalLeaderboard)
+    return <ModalLeaderboardTooltipPane />;
+  if (name === TooltipName.ModalPlanetDex) return <ModalPlanetDexTooltipPane />;
+  if (name === TooltipName.ModalUpgradeDetails)
+    return <ModalUpgradeDetailsTooltipPane />;
+  if (name === TooltipName.ModalTwitterVerification)
+    return <ModalTwitterVerificationTooltipPane />;
+  if (name === TooltipName.ModalTwitterBroadcast)
+    return <ModalTwitterBroadcastTooltipPane />;
+  if (name === TooltipName.Defense) return <DefenseTooltipPane />;
+  if (name === TooltipName.Speed) return <SpeedTooltipPane />;
+
+  return <></>;
 }

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 import dfstyles from '../../styles/dfstyles';
 import WindowManager, { TooltipName } from '../../utils/WindowManager';
-import { PaneProps } from '../GameWindowComponents';
+import { PaneProps } from '../GameWindowComponents/GameWindowComponents';
 import { GameWindowZIndex } from '../GameWindow';
 import {
   HelpIcon,
@@ -13,11 +13,14 @@ import {
   TwitterIcon,
   BroadcastIcon,
   ShareIcon,
+  LockIcon,
+  HatIcon,
+  SettingsIcon,
 } from '../Icons';
 import { TooltipTrigger } from './Tooltip';
 
-export const IconButton = styled.div`
-  width: 1.5em;
+export const IconButton = styled.div<{ width?: string }>`
+  width: ${(props) => props.width || '1.5em'};
   height: 1.5em;
   display: inline-flex;
   flex-direction: row;
@@ -54,9 +57,14 @@ export enum ModalName {
   Leaderboard,
   PlanetDex,
   UpgradeDetails,
-  TwitterVerification,
+  TwitterVerify,
   TwitterBroadcast,
   MapShare,
+  ManageAccount,
+  Hats,
+  Settings,
+  Onboarding,
+  Private,
 }
 
 export function ModalIcon({
@@ -72,9 +80,12 @@ export function ModalIcon({
     else if (modal === ModalName.Leaderboard) return <LeaderboardIcon />;
     else if (modal === ModalName.PlanetDex) return <PlanetdexIcon />;
     else if (modal === ModalName.UpgradeDetails) return <UpgradeIcon />;
-    else if (modal === ModalName.TwitterVerification) return <TwitterIcon />;
+    else if (modal === ModalName.TwitterVerify) return <TwitterIcon />;
     else if (modal === ModalName.TwitterBroadcast) return <BroadcastIcon />;
     else if (modal === ModalName.MapShare) return <ShareIcon />;
+    else if (modal === ModalName.ManageAccount) return <LockIcon />;
+    else if (modal === ModalName.Hats) return <HatIcon />;
+    else if (modal === ModalName.Settings) return <SettingsIcon />;
     return <span>T</span>;
   };
 
@@ -86,7 +97,10 @@ export function ModalIcon({
       style={{ height: '1.5em' }}
     >
       <IconButton
-        onClick={() => setActive((b) => !b)}
+        onClick={(e) => {
+          setActive((b) => !b);
+          e.stopPropagation();
+        }}
         className={active ? 'active' : undefined}
       >
         {child()}
@@ -95,7 +109,51 @@ export function ModalIcon({
   );
 }
 
-const _Modal = styled.div`
+export function ModalHelpIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.Help} />;
+}
+
+export function ModalPlanetDetailsIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.PlanetDetails} />;
+}
+
+export function ModalLeaderboardIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.Leaderboard} />;
+}
+
+export function ModalPlanetDexIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.PlanetDex} />;
+}
+
+export function ModalUpgradeDetailsIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.UpgradeDetails} />;
+}
+
+export function ModalMapShareIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.MapShare} />;
+}
+
+export function ModalTwitterVerifyIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.TwitterVerify} />;
+}
+
+export function ModalTwitterBroadcastIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.TwitterBroadcast} />;
+}
+
+export function ModalAccountIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.ManageAccount} />;
+}
+
+export function ModalHatIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.Hats} />;
+}
+
+export function ModalSettingsIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.Settings} />;
+}
+
+const StyledModalPane = styled.div`
   position: absolute;
   width: fit-content;
   height: fit-content;
@@ -143,9 +201,9 @@ const _Modal = styled.div`
   & .modal-container {
     margin-top: 4pt;
     width: fit-content;
-    min-width: 18em;
+    min-width: 10em;
     height: fit-content;
-    min-height: 10em;
+    min-height: 5em;
   }
 `;
 
@@ -161,7 +219,15 @@ export function ModalPane({
   title,
   hook: [visible, setVisible],
   name: _id,
-}: PaneProps & ModalProps) {
+  fixCorner,
+  hideClose,
+  style,
+}: PaneProps &
+  ModalProps & {
+    fixCorner?: boolean;
+    hideClose?: boolean;
+    style?: React.CSSProperties;
+  }) {
   const [coords, setCoords] = useState<Coords | null>(null);
   const [delCoords, setDelCoords] = useState<Coords | null>(null);
 
@@ -252,17 +318,27 @@ export function ModalPane({
     setZIndex(windowManager.getIndex());
   }, [containerRef, windowManager]);
 
+  // if fixCorner, fix to corner
+  useLayoutEffect(() => {
+    if (fixCorner) {
+      const newX = window.innerWidth - containerRef.current.offsetWidth - 12;
+      const newY = window.innerHeight - containerRef.current.offsetHeight - 12;
+      setCoords({ x: newX, y: newY });
+    }
+  }, [fixCorner]);
+
   // push to top
   useLayoutEffect(() => {
     setZIndex(windowManager.getIndex());
   }, [visible, windowManager]);
 
   return (
-    <_Modal
+    <StyledModalPane
       style={{
         left: getLeft() + 'px',
         top: getTop() + 'px',
         zIndex: visible ? zIndex : -1000,
+        ...style,
       }}
       ref={containerRef}
       onMouseDown={(_e) => setZIndex(windowManager.getIndex())}
@@ -288,9 +364,9 @@ export function ModalPane({
         <p>
           <u>{title}</u>
         </p>
-        <span onClick={() => setVisible(false)}>X</span>
+        {!hideClose && <span onClick={() => setVisible(false)}>X</span>}
       </div>
       <div className='modal-container'>{children}</div>
-    </_Modal>
+    </StyledModalPane>
   );
 }

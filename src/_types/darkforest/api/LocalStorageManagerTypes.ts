@@ -1,4 +1,4 @@
-import { LocationId } from '../../global/GlobalTypes';
+import { ChunkFootprint, LocationId } from '../../global/GlobalTypes';
 
 // (capital) alphanumeric character
 // a "bucket" index deterministically generated from chunkX and chunkY
@@ -16,4 +16,9 @@ export interface LSMChunkData {
   y: number; // bottom
   s: number; // side length
   l: LSMLoc[];
+  p: number; // approximate avg perlin value. used for rendering
+}
+
+export interface ChunkStore {
+  hasMinedChunk: (chunkFootprint: ChunkFootprint) => boolean;
 }

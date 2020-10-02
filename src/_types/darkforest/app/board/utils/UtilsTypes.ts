@@ -1,4 +1,6 @@
-export interface PlanetColorInfo {
+import { HatType } from '../../../../../utils/Hats';
+
+export interface PlanetCosmeticInfo {
   baseHue: number;
 
   baseColor: string;
@@ -11,4 +13,8 @@ export interface PlanetColorInfo {
 
   backgroundColor: string;
   previewColor: string;
+  asteroidColor: string;
+
+  // ultra ultra hacky, but we're doing this since it's cached in the renderer
+  hatType: HatType;
 }

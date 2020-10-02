@@ -6,6 +6,7 @@ import GameLandingPage from './GameLandingPage';
 import dfstyles from '../styles/dfstyles';
 import styled from 'styled-components';
 import { SharePlanet } from './SharePlanet';
+import { TxConfirmPopup } from './TxConfirmPopup';
 
 function App() {
   return (
@@ -18,6 +19,10 @@ function App() {
         />
         <Route path='/' exact component={LandingPage} />
         <Route path='/planet:location' component={SharePlanet} />
+        <Route
+          path='/wallet/:addr/:actionId/:balance/:method'
+          component={TxConfirmPopup}
+        />
       </Switch>
     </Router>
   );

@@ -1,5 +1,5 @@
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
-import { WorldCoords } from '../../utils/Coordinates';
+import { compareWorldCoords, WorldCoords } from '../../utils/Coordinates';
 import {
   Planet,
   Location,
@@ -10,27 +10,40 @@ import {
   Player,
   EthAddress,
   Upgrade,
+  UpgradeBranchName,
+  SpaceType,
+  PlanetResource,
+  ChunkFootprint,
 } from '../../_types/global/GlobalTypes';
 import autoBind from 'auto-bind';
 import { EventEmitter } from 'events';
 import AbstractUIManager from './AbstractUIManager';
 import AbstractGameManager from '../../api/AbstractGameManager';
-import { moveShipsDecay } from '../../utils/Utils';
+import { moveShipsDecay, planetHasBonus } from '../../utils/Utils';
 import {
   UnconfirmedMove,
   UnconfirmedUpgrade,
-} from '../../_types/darkforest/api/EthereumAPITypes';
+} from '../../_types/darkforest/api/ContractsAPITypes';
 import { MiningPattern } from '../../utils/MiningPatterns';
 import { GameManagerEvent } from '../../api/GameManager';
+import TutorialManager, { TutorialState } from '../../utils/TutorialManager';
+import UIStateStorageManager, {
+  UIDataKey,
+  UIDataValue,
+} from '../../api/UIStateStorageManager';
+import NotificationManager from '../../utils/NotificationManager';
+import { emptyAddress } from '../../utils/CheckedTypeUtils';
+import TerminalEmitter from '../../utils/TerminalEmitter';
 
 export enum GameUIManagerEvent {
   InitializedPlayer = 'InitializedPlayer',
   InitializedPlayerError = 'InitializedPlayerError',
-  EnergyUpdate = 'EnergyUpdate',
 }
 
 class GameUIManager extends EventEmitter implements AbstractUIManager {
   private gameManager: AbstractGameManager;
+  private uiStateStorageManager: UIStateStorageManager;
+
   private replayMode: boolean;
   private detailLevel: number; // 0 is show everything; higher means show less
   private readonly radiusMap = {};
@@ -41,6 +54,13 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
   private mouseDownOverCoords: WorldCoords | null = null;
   private mouseHoveringOverPlanet: Planet | null = null;
   private mouseHoveringOverCoords: WorldCoords | null = null;
+
+  private sendingPlanet: Planet | null = null;
+  private sendingCoords: WorldCoords | null = null;
+  private isSending = false;
+
+  private minerLocation: WorldCoords | null = null;
+  private isMining = true;
 
   private forcesSending: Record<LocationId, number> = {}; // this is a percentage
   private silverSending: Record<LocationId, number> = {}; // this is a percentage
@@ -66,6 +86,13 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     // this.radiusMap[PlanetType.SuperGiant] = 75;
     // this.radiusMap[PlanetType.HyperGiant] = 100;
 
+    const account = gameManager.getAccount();
+    const contractAddress = gameManager.getContractAddress();
+    this.uiStateStorageManager = UIStateStorageManager.create(
+      account,
+      contractAddress
+    );
+
     autoBind(this);
   }
 
@@ -78,12 +105,19 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     );
 
     uiEmitter.on(UIEmitterEvent.WorldMouseDown, uiManager.onMouseDown);
+    uiEmitter.on(UIEmitterEvent.WorldMouseClick, uiManager.onMouseClick);
     uiEmitter.on(UIEmitterEvent.WorldMouseMove, uiManager.onMouseMove);
     uiEmitter.on(UIEmitterEvent.WorldMouseUp, uiManager.onMouseUp);
     uiEmitter.on(UIEmitterEvent.WorldMouseOut, uiManager.onMouseOut);
 
+    uiEmitter.on(UIEmitterEvent.SendInitiated, uiManager.onSendInit);
+    uiEmitter.on(UIEmitterEvent.SendCancelled, uiManager.onSendCancel);
+
     gameManager.on(GameManagerEvent.PlanetUpdate, uiManager.updatePlanets);
-    gameManager.on(GameManagerEvent.EnergyUpdate, uiManager.emitUpdateEnergy);
+    gameManager.on(
+      GameManagerEvent.DiscoveredNewChunk,
+      uiManager.onDiscoveredChunk
+    );
 
     return uiManager;
   }
@@ -92,17 +126,17 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     const uiEmitter = UIEmitter.getInstance();
 
     uiEmitter.removeListener(UIEmitterEvent.WorldMouseDown, this.onMouseDown);
+    uiEmitter.removeListener(UIEmitterEvent.WorldMouseClick, this.onMouseClick);
     uiEmitter.removeListener(UIEmitterEvent.WorldMouseMove, this.onMouseMove);
     uiEmitter.removeListener(UIEmitterEvent.WorldMouseUp, this.onMouseUp);
     uiEmitter.removeListener(UIEmitterEvent.WorldMouseOut, this.onMouseOut);
 
+    uiEmitter.on(UIEmitterEvent.SendInitiated, this.onSendInit);
+    uiEmitter.on(UIEmitterEvent.SendCancelled, this.onSendCancel);
+
     this.gameManager.removeListener(
       GameManagerEvent.PlanetUpdate,
       this.updatePlanets
-    );
-    this.gameManager.removeListener(
-      GameManagerEvent.EnergyUpdate,
-      this.emitUpdateEnergy
     );
     this.gameManager.removeListener(
       GameManagerEvent.InitializedPlayer,
@@ -112,8 +146,17 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
       GameManagerEvent.InitializedPlayerError,
       this.onEmitInitializedPlayerError
     );
+    this.gameManager.removeListener(
+      GameManagerEvent.DiscoveredNewChunk,
+      this.onDiscoveredChunk
+    );
 
     this.gameManager.destroy();
+    this.uiStateStorageManager.destroy();
+  }
+
+  getContractAddress(): EthAddress {
+    return this.gameManager.getContractAddress();
   }
 
   // actions
@@ -138,7 +181,17 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     return this.gameManager.verifyTwitter(twitter);
   }
 
+  getPrivateKey(): string {
+    return this.gameManager.getPrivateKey();
+  }
+
+  getMyBalance(): number {
+    return this.gameManager.getMyBalance();
+  }
+
   onMouseDown(coords: WorldCoords) {
+    if (this.sendingPlanet) return;
+
     const hoveringOverCoords = this.updateMouseHoveringOverCoords(coords);
 
     this.mouseDownOverPlanet = this.gameManager.getPlanetWithCoords(
@@ -147,15 +200,26 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     this.mouseDownOverCoords = this.mouseHoveringOverCoords;
   }
 
+  onMouseClick(_coords: WorldCoords) {
+    if (!this.mouseDownOverPlanet && !this.mouseHoveringOverPlanet) {
+      this.setSelectedPlanet(null);
+      this.selectedCoords = null;
+    }
+  }
+
   onMouseMove(coords: WorldCoords) {
     this.updateMouseHoveringOverCoords(coords);
   }
 
   onMouseUp(coords: WorldCoords) {
+    const terminalEmitter = TerminalEmitter.getInstance();
     const mouseUpOverCoords = this.updateMouseHoveringOverCoords(coords);
     const mouseUpOverPlanet = this.gameManager.getPlanetWithCoords(
       mouseUpOverCoords
     );
+
+    const mouseDownPlanet = this.getMouseDownPlanet();
+
     if (mouseUpOverPlanet) {
       if (
         this.mouseDownOverPlanet &&
@@ -171,64 +235,60 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
         } else {
           this.setSelectedPlanet(mouseUpOverPlanet);
           this.selectedCoords = mouseUpOverCoords;
-          /*
-          console.log(this.selectedPlanet);
-          console.log(
-            perlin({
-              x: this.selectedCoords.x,
-              y: this.selectedCoords.y,
-            })
-          );
-          */
+          terminalEmitter.println(`Selected: ${mouseUpOverPlanet.locationId}`);
         }
       } else if (
-        !this.replayMode &&
-        this.mouseDownOverPlanet &&
-        this.mouseDownOverCoords &&
-        this.mouseDownOverPlanet.owner === this.gameManager.getAccount()
+        mouseDownPlanet &&
+        mouseDownPlanet.owner === this.gameManager.getAccount()
       ) {
         // move initiated if enough forces
-        const from = this.mouseDownOverPlanet;
+        const from = mouseDownPlanet;
         const to = mouseUpOverPlanet;
-        let effectivePopulation = from.population;
+        let effectiveEnergy = from.energy;
         for (const unconfirmedMove of from.unconfirmedDepartures) {
-          effectivePopulation -= unconfirmedMove.forces;
+          effectiveEnergy -= unconfirmedMove.forces;
         }
         const effPercent = Math.min(this.getForcesSending(from.locationId), 98);
-        let forces = Math.floor((effectivePopulation * effPercent) / 100);
+        let forces = Math.floor((effectiveEnergy * effPercent) / 100);
 
         // make it so you leave one force behind
-        if (forces >= from.population) {
-          forces = from.population - 1;
+        if (forces >= from.energy) {
+          forces = from.energy - 1;
           if (forces < 1) return;
         }
 
+        const loc = this.getLocationOfPlanet(mouseDownPlanet.locationId);
+        const mouseDownCoords = loc ? loc.coords : { x: 0, y: 0 };
+
         const dist = Math.sqrt(
-          (this.mouseDownOverCoords.x - mouseUpOverCoords.x) ** 2 +
-            (this.mouseDownOverCoords.y - mouseUpOverCoords.y) ** 2
+          (mouseDownCoords.x - mouseUpOverCoords.x) ** 2 +
+            (mouseDownCoords.y - mouseUpOverCoords.y) ** 2
         );
-        const myAtk: number = moveShipsDecay(
-          forces,
-          this.mouseDownOverPlanet,
-          dist
-        );
+        const myAtk: number = moveShipsDecay(forces, mouseDownPlanet, dist);
         const effPercentSilver = Math.min(
           this.getSilverSending(from.locationId),
           98
         );
         if (myAtk > 0) {
-          this.gameManager.move(
-            from,
-            to,
-            forces,
-            Math.floor((from.silver * effPercentSilver) / 100)
+          const silver = Math.floor((from.silver * effPercentSilver) / 100);
+          // TODO: do something like JSON.stringify(args) so we know formatting is correct
+          terminalEmitter.jsShell(
+            `df.move('${from.locationId}', '${to.locationId}', ${forces}, ${silver})`
           );
+          this.gameManager.move(from.locationId, to.locationId, forces, silver);
+          const tutorialManager = TutorialManager.getInstance();
+          tutorialManager.acceptInput(TutorialState.SendFleet);
         }
       }
     }
 
     this.mouseDownOverPlanet = null;
     this.mouseDownOverCoords = null;
+
+    const uiEmitter = UIEmitter.getInstance();
+    uiEmitter.emit(UIEmitterEvent.SendCompleted);
+    this.sendingPlanet = null;
+    this.isSending = false;
   }
 
   onMouseOut() {
@@ -240,10 +300,13 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
   startExplore() {
     this.gameManager.startExplore();
+    this.isMining = true;
   }
 
   stopExplore() {
     this.gameManager.stopExplore();
+    this.isMining = false;
+    this.minerLocation = null;
   }
 
   setForcesSending(planetId: LocationId, percentage: number) {
@@ -288,7 +351,7 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     return this.gameManager.getEndTimeSeconds();
   }
 
-  getUpgrade(branch: number, level: number): Upgrade {
+  getUpgrade(branch: UpgradeBranchName, level: number): Upgrade {
     return this.gameManager.getUpgrade(branch, level);
   }
 
@@ -305,14 +368,28 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
   }
 
   setSelectedPlanet(planet: Planet | null): void {
+    if (!planet) {
+      const tutorialManager = TutorialManager.getInstance();
+      tutorialManager.acceptInput(TutorialState.Deselect);
+    }
+
     const uiEmitter = UIEmitter.getInstance();
     this.selectedPlanet = planet;
+    console.log(planet);
     if (!planet) {
       this.selectedCoords = null;
     } else {
       const loc = this.getLocationOfPlanet(planet.locationId);
       if (!loc) this.selectedCoords = null;
-      else this.selectedCoords = loc.coords;
+      else {
+        // loc is not null
+        this.selectedCoords = loc.coords;
+
+        if (compareWorldCoords(loc.coords, this.getHomeCoords())) {
+          const tutorialManager = TutorialManager.getInstance();
+          tutorialManager.acceptInput(TutorialState.HomePlanet);
+        }
+      }
     }
     uiEmitter.emit(UIEmitterEvent.GamePlanetSelected);
   }
@@ -322,10 +399,104 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
   }
 
   getMouseDownPlanet(): Planet | null {
+    if (this.isSending && this.sendingPlanet) return this.sendingPlanet;
     return this.mouseDownOverPlanet;
   }
 
+  onSendInit(planet: Planet | null): void {
+    this.isSending = true;
+    this.sendingPlanet = planet;
+    const loc = planet ? this.getLocationOfPlanet(planet.locationId) : null;
+    this.sendingCoords = loc ? loc.coords : { x: 0, y: 0 };
+  }
+
+  onSendCancel(): void {
+    this.isSending = false;
+    this.sendingPlanet = null;
+    this.sendingCoords = null;
+  }
+
+  hasMinedChunk(chunkLocation: ChunkFootprint): boolean {
+    return this.gameManager.hasMinedChunk(chunkLocation);
+  }
+
+  spaceTypeFromPerlin(perlin: number): SpaceType {
+    return this.gameManager.spaceTypeFromPerlin(perlin);
+  }
+
+  onDiscoveredChunk(chunk: ExploredChunkData): void {
+    const res = this.gameManager.getCurrentlyExploringChunk();
+    if (res) {
+      const { bottomLeft, sideLength } = res;
+      this.minerLocation = {
+        x: bottomLeft.x + sideLength / 2,
+        y: bottomLeft.y + sideLength / 2,
+      };
+    } else {
+      this.minerLocation = null;
+    }
+
+    // TODO: skip this if everything has already been found
+    const notifManager = NotificationManager.getInstance();
+    for (const loc of chunk.planetLocations) {
+      const planet = this.getPlanetWithId(loc.hash);
+      if (!planet) break;
+
+      if (planet.owner === emptyAddress && planet.energy > 0) {
+        if (
+          !this.getUIDataItem(UIDataKey.foundPirates) &&
+          this.getUIDataItem(UIDataKey.tutorialCompleted)
+        ) {
+          notifManager.foundPirates(planet);
+          this.setUIDataItem(UIDataKey.foundPirates, true);
+        }
+      }
+
+      if (planet.planetResource === PlanetResource.SILVER) {
+        if (
+          !this.getUIDataItem(UIDataKey.foundSilver) &&
+          this.getUIDataItem(UIDataKey.tutorialCompleted)
+        ) {
+          notifManager.foundSilver(planet);
+          this.setUIDataItem(UIDataKey.foundSilver, true);
+        }
+      }
+      if (planetHasBonus(planet)) {
+        if (
+          !this.getUIDataItem(UIDataKey.foundComet) &&
+          this.getUIDataItem(UIDataKey.tutorialCompleted)
+        ) {
+          notifManager.foundComet(planet);
+          this.setUIDataItem(UIDataKey.foundComet, true);
+        }
+      }
+    }
+
+    if (this.spaceTypeFromPerlin(chunk.perlin) === SpaceType.DEEP_SPACE) {
+      if (
+        !this.getUIDataItem(UIDataKey.foundDeepSpace) &&
+        this.getUIDataItem(UIDataKey.tutorialCompleted)
+      ) {
+        notifManager.foundDeepSpace(chunk);
+        this.setUIDataItem(UIDataKey.foundDeepSpace, true);
+      }
+    } else if (this.spaceTypeFromPerlin(chunk.perlin) === SpaceType.SPACE) {
+      if (
+        !this.getUIDataItem(UIDataKey.foundSpace) &&
+        this.getUIDataItem(UIDataKey.tutorialCompleted)
+      ) {
+        notifManager.foundSpace(chunk);
+        this.setUIDataItem(UIDataKey.foundSpace, true);
+      }
+    }
+  }
+
+  getMinerLocation(): WorldCoords | null {
+    return this.minerLocation;
+  }
+
   getMouseDownCoords(): WorldCoords | null {
+    if (this.isSending && this.sendingPlanet) return this.sendingCoords;
     return this.mouseDownOverCoords;
   }
 
@@ -362,10 +533,6 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
   getPlanetWithId(planetId: LocationId): Planet | null {
     return this.gameManager.getPlanetWithId(planetId);
-  }
-
-  getPlanetWithLocation(location: Location): Planet | null {
-    return this.gameManager.getPlanetWithLocation(location);
   }
 
   getPlanetLevel(planetId: LocationId): PlanetLevel | null {
@@ -408,42 +575,46 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     return this.gameManager.getWorldSilver();
   }
 
-  getWorldPop(): number {
-    return this.gameManager.getWorldPop();
+  getUniverseTotalEnergy(): number {
+    return this.gameManager.getUniverseTotalEnergy();
   }
 
   getSilverOfPlayer(player: EthAddress): number {
     return this.gameManager.getSilverOfPlayer(player);
   }
 
-  getPopOfPlayer(player: EthAddress): number {
-    return this.gameManager.getPopOfPlayer(player);
-  }
-
-  getEnergy(): number {
-    return 0;
-    // return this.gameManager.getEnergyNow();
+  getEnergyOfPlayer(player: EthAddress): number {
+    return this.gameManager.getEnergyOfPlayer(player);
   }
 
   upgrade(planet: Planet, branch: number): void {
-    this.gameManager.upgrade(planet, branch);
+    const terminalEmitter = TerminalEmitter.getInstance();
+    // TODO: do something like JSON.stringify(args) so we know formatting is correct
+    terminalEmitter.jsShell(`df.upgrade('${planet.locationId}', ${branch})`);
+    this.gameManager.upgrade(planet.locationId, branch);
+  }
+
+  buyHat(planet: Planet): void {
+    const terminalEmitter = TerminalEmitter.getInstance();
+    // TODO: do something like JSON.stringify(args) so we know formatting is correct
+    terminalEmitter.jsShell(`df.buyHat('${planet.locationId}')`);
+    this.gameManager.buyHat(planet.locationId);
   }
 
   // non-nullable
   getHomeCoords(): WorldCoords {
     return this.gameManager.getHomeCoords() || { x: 0, y: 0 };
   }
+  getHomeHash(): LocationId | null {
+    return this.gameManager.getHomeHash();
+  }
 
   getRadiusOfPlanetLevel(planetRarity: PlanetLevel): number {
     return this.radiusMap[planetRarity];
   }
 
-  getDefaultSilver(planet: Planet): number {
-    return this.gameManager.getDefaultSilver(planet);
-  }
-
-  getPopulationCurveAtPercent(planet: Planet, percent: number): number {
-    return this.gameManager.getPopulationCurveAtPercent(planet, percent);
+  getEnergyCurveAtPercent(planet: Planet, percent: number): number {
+    return this.gameManager.getEnergyCurveAtPercent(planet, percent);
   }
 
   getSilverCurveAtPercent(planet: Planet, percent: number): number | null {
@@ -456,6 +627,17 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
   generateVerificationTweet(twitter: string): Promise<string> {
     return this.gameManager.getSignedTwitter(twitter);
+  }
+
+  getPerlinThresholds(): [number, number] {
+    return this.gameManager.getPerlinThresholds();
+  }
+
+  setUIDataItem(key: UIDataKey, value: UIDataValue): void {
+    this.uiStateStorageManager.setUIDataItem(key, value);
+  }
+  getUIDataItem(key: UIDataKey): UIDataValue {
+    return this.uiStateStorageManager.getUIDataItem(key);
   }
 
   // internal utils
@@ -476,11 +658,6 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
         this.mouseHoveringOverPlanet.locationId
       );
     }
-  }
-
-  private emitUpdateEnergy() {
-    // this is where we would update an internal energy value if we had one
-    this.emit(GameUIManagerEvent.EnergyUpdate, this.getEnergy());
   }
 
   private updateMouseHoveringOverCoords(coords: WorldCoords): WorldCoords {

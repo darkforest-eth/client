@@ -3,23 +3,15 @@ import GameManager from '../api/GameManager';
 import GameUIManagerContext from './board/GameUIManagerContext';
 import GameUIManager, { GameUIManagerEvent } from './board/GameUIManager';
 import AbstractGameManager from '../api/AbstractGameManager';
-import {
-  doesBrowserHaveAccountData,
-  unsupportedFeatures,
-  Incompatibility,
-  enableEthereum,
-} from '../api/BrowserChecks';
+import { unsupportedFeatures, Incompatibility } from '../api/BrowserChecks';
 import {
   isAddressWhitelisted,
   submitWhitelistKey,
   submitInterestedEmail,
   submitPlayerEmail,
   EmailResponse,
+  requestDevFaucet,
 } from '../api/UtilityServerAPI';
-import {
-  getAddress,
-  handleEthereumConfigChanges,
-} from '../utils/EthereumUtils';
 import _ from 'lodash';
 import TerminalEmitter, {
   TerminalTextStyle,
@@ -34,12 +26,24 @@ import {
   TerminalWrapper,
   Hidden,
   GameWindowWrapper,
+  TerminalToggler,
 } from './GameLandingPageComponents';
 import UIEmitter, { UIEmitterEvent } from '../utils/UIEmitter';
+import { utils, Wallet } from 'ethers';
+import EthereumAccountManager from '../api/EthereumAccountManager';
+import { address } from '../utils/CheckedTypeUtils';
+import { UIDataKey, useStoredUIState } from '../api/UIStateStorageManager';
+import TutorialManager, { TutorialState } from '../utils/TutorialManager';
+import { TerminalPromptType } from '../_types/darkforest/app/board/utils/TerminalTypes';
+import { BLOCK_EXPLORER_URL } from '../utils/constants';
 
 enum InitState {
   NONE,
   COMPATIBILITY_CHECKS_PASSED,
+  DISPLAY_ACCOUNTS,
+  GENERATE_ACCOUNT,
+  IMPORT_ACCOUNT,
+  ACCOUNT_SET,
   ASKING_HAS_WHITELIST_KEY,
   ASKING_WAITLIST_EMAIL,
   ASKING_WHITELIST_KEY,
@@ -69,6 +73,8 @@ export enum InitRenderState {
 export default function GameLandingPage(_props: { replayMode: boolean }) {
   const history = useHistory();
   /* terminal stuff */
+  const isProd = process.env.NODE_ENV === 'production';
+
   let initState = InitState.NONE;
   const [initRenderState, setInitRenderState] = useState<InitRenderState>(
     InitRenderState.NONE
@@ -82,6 +88,21 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
   const modalClose = () => setModal(ModalState.NONE);
 
   const gameUIManagerRef = useRef<GameUIManager | null>(null);
+
+  const [terminalEnabled, setTerminalEnabled] = useStoredUIState<boolean>(
+    UIDataKey.terminalEnabled,
+    gameUIManagerRef.current
+  );
+
+  // emit event on terminal toggle
+  useEffect(() => {
+    if (!terminalEnabled) {
+      const tutorialManager = TutorialManager.getInstance();
+      tutorialManager.acceptInput(TutorialState.Terminal);
+    }
+  }, [terminalEnabled]);
+
+  // TODO make these nullable
   const emailFormRef = useRef<HTMLFormElement>(document.createElement('form'));
   const emailInputRef = useRef<HTMLInputElement>(
     document.createElement('input')
@@ -138,6 +159,9 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromNone = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
+    if (!isProd) {
+      terminalEmitter.emit(TerminalEvent.SkipAllTyping);
+    }
 
     const lastUpdated = localStorage.getItem('lastUpdated');
     if (lastUpdated) {
@@ -146,7 +170,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
       if (diff < 1000 * 60 * 10)
         terminalEmitter.emit(TerminalEvent.SkipAllTyping);
     }
-    terminalEmitter.shell('df init');
+    terminalEmitter.bashShell('df init');
     terminalEmitter.println('Initializing Dark Forest...');
 
     terminalEmitter.print('Loading zkSNARK proving key');
@@ -165,10 +189,10 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
       TerminalTextStyle.Blue
     );
 
-    terminalEmitter.print('Connecting to Ethereum network');
+    terminalEmitter.print('Connecting to Ethereum L2');
     await animEllipsis();
     terminalEmitter.print(' ');
-    terminalEmitter.println('Connected to Ethereum.', TerminalTextStyle.Blue);
+    terminalEmitter.println('Connected to xDAI STAKE.', TerminalTextStyle.Blue);
 
     terminalEmitter.print('Installing flux capacitor');
     await animEllipsis();
@@ -181,16 +205,15 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     terminalEmitter.println('Initialization complete.');
     terminalEmitter.newline();
     const issues = await unsupportedFeatures();
-    handleEthereumConfigChanges(); // this reloads the page if network/account changes, so no cleanup needed
 
     // $ df check
-    terminalEmitter.shell('df check');
+    terminalEmitter.bashShell('df check');
 
     terminalEmitter.print('Checking compatibility');
     await animEllipsis();
     terminalEmitter.print(' ');
     terminalEmitter.println(
-      'Initiating (6) compatibility checks.',
+      'Initiating (3) compatibility checks.',
       TerminalTextStyle.Blue
     );
 
@@ -233,59 +256,22 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
       terminalEmitter.println('Browser Supported.', TerminalTextStyle.White);
     }
 
-    terminalEmitter.print('Checking for Metamask');
+    terminalEmitter.print('Checking Ethereum Mainnet');
     await animEllipsis();
     terminalEmitter.print(' ');
-    if (issues.includes(Incompatibility.NoMetamaskInstalled)) {
-      terminalEmitter.println(
-        'ERROR: Could not find Metamask. Please install Metamask.',
-        TerminalTextStyle.Red
-      );
-    } else {
-      terminalEmitter.println('Metamask found.', TerminalTextStyle.White);
-    }
-
-    terminalEmitter.print('Checking if Ethereum is enabled');
+    terminalEmitter.printLink(
+      'ERROR: Gas prices too high!',
+      () => setModal(ModalState.GAS_PRICES),
+      TerminalTextStyle.White
+    );
+    terminalEmitter.newline();
+    terminalEmitter.print('Falling back to L2');
     await animEllipsis();
     terminalEmitter.print(' ');
-    if (issues.includes(Incompatibility.NotLoggedInOrEnabled)) {
-      terminalEmitter.print(
-        'ERROR: Ethereum is not enabled. ',
-        TerminalTextStyle.Red
-      );
-      terminalEmitter.printLink(
-        'Click here to enable Ethereum',
-        enableEthereum.bind(this),
-        TerminalTextStyle.Red
-      );
-      terminalEmitter.println('.', TerminalTextStyle.Red);
-    } else {
-      terminalEmitter.println('Ethereum enabled.', TerminalTextStyle.White);
-    }
-
-    if (issues.includes(Incompatibility.NotRopsten)) {
-      terminalEmitter.print('Connecting to Ropsten Testnet');
-      await animEllipsis();
-      terminalEmitter.print(' ');
-      terminalEmitter.println(
-        'ERROR: Ropsten not selected. Please select Ropsten and try again.',
-        TerminalTextStyle.Red
-      );
-    } else {
-      terminalEmitter.print('Checking Ethereum Mainnet');
-      await animEllipsis();
-      terminalEmitter.print(' ');
-      terminalEmitter.printLink(
-        'ERROR: Gas prices too high!',
-        () => setModal(ModalState.GAS_PRICES),
-        TerminalTextStyle.White
-      );
-      terminalEmitter.newline();
-      terminalEmitter.print('Falling back to Ropsten');
-      await animEllipsis();
-      terminalEmitter.print(' ');
-      terminalEmitter.println('Ropsten selected.', TerminalTextStyle.White);
-    }
+    terminalEmitter.println(
+      'Connected to xDAI L2 network.',
+      TerminalTextStyle.White
+    );
 
     if (issues.length > 0) {
       terminalEmitter.print(
@@ -303,7 +289,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromCompatibilityPassed = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    terminalEmitter.shell('df log');
+    terminalEmitter.bashShell('df log');
     terminalEmitter.newline();
     terminalEmitter.print('    ');
     terminalEmitter.print('Version', TerminalTextStyle.Underline);
@@ -325,13 +311,144 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     );
     terminalEmitter.print('    v0.3       ');
     terminalEmitter.print('08/07/2020        ', TerminalTextStyle.White);
-    terminalEmitter.println('<tbd>', TerminalTextStyle.Blue);
+    terminalEmitter.printLink(
+      '[ANON] Singer',
+      () => {
+        window.open('https://twitter.com/hideandcleanse');
+      },
+      TerminalTextStyle.White
+    );
+    terminalEmitter.newline();
+    terminalEmitter.print('    v0.4       ');
+    terminalEmitter.print('10/02/2020        ', TerminalTextStyle.White);
+    terminalEmitter.println('<tbd>', TerminalTextStyle.White);
     terminalEmitter.newline();
 
-    const address = await getAddress();
+    const knownAddrs = EthereumAccountManager.getInstance().getKnownAccounts();
+    terminalEmitter.println(
+      `Found ${knownAddrs.length} accounts on this device.`
+    );
+    if (knownAddrs.length > 0) {
+      terminalEmitter.println('(a) Login with existing account.');
+    }
+    terminalEmitter.println(`(n) Generate new burner wallet account.`);
+    terminalEmitter.println(`(i) Import private key.`);
+    terminalEmitter.println(`Select an option.`, TerminalTextStyle.White);
+
+    const userInput = await getUserInput();
+    if (userInput === 'a') {
+      initState = InitState.DISPLAY_ACCOUNTS;
+    } else if (userInput === 'n') {
+      initState = InitState.GENERATE_ACCOUNT;
+    } else if (userInput === 'i') {
+      initState = InitState.IMPORT_ACCOUNT;
+    } else {
+      terminalEmitter.println('Unrecognized input. Please try again.');
+    }
+  };
+
+  const advanceStateFromDisplayAccounts = async () => {
+    const terminalEmitter = TerminalEmitter.getInstance();
+    const ethConnection = EthereumAccountManager.getInstance();
+
+    const knownAddrs = ethConnection.getKnownAccounts();
+    terminalEmitter.println(`Select an account.`, TerminalTextStyle.White);
+    for (let i = 0; i < knownAddrs.length; i += 1) {
+      terminalEmitter.println(`(${i + 1}): ${knownAddrs[i]}`);
+    }
+    const selection = +(await getUserInput());
+    if (isNaN(selection) || selection > knownAddrs.length) {
+      terminalEmitter.println('Unrecognized input. Please try again.');
+    } else {
+      const addr = knownAddrs[selection - 1];
+      try {
+        ethConnection.setAccount(addr);
+        initState = InitState.ACCOUNT_SET;
+      } catch (e) {
+        terminalEmitter.println(
+          'An unknown error occurred. please try again.',
+          TerminalTextStyle.Red
+        );
+      }
+    }
+  };
+
+  const advanceStateFromGenerateAccount = async () => {
+    const terminalEmitter = TerminalEmitter.getInstance();
+    const ethConnection = EthereumAccountManager.getInstance();
+
+    const newWallet = Wallet.createRandom();
+    const newSKey = newWallet.privateKey;
+    const newAddr = address(newWallet.address);
+    try {
+      ethConnection.addAccount(newSKey);
+      ethConnection.setAccount(newAddr);
+      terminalEmitter.println(
+        `Created new burner wallet with address ${newAddr}.`
+      );
+      terminalEmitter.println(
+        'NOTE: BURNER WALLETS ARE STORED IN BROWSER LOCAL STORAGE.',
+        TerminalTextStyle.White
+      );
+      terminalEmitter.println(
+        'They are relatively insecure and you should avoid storing substantial funds in them.'
+      );
+      terminalEmitter.println(
+        'Also, clearing browser local storage/cache will render your burner wallets inaccessible, unless you export your private keys.'
+      );
+      terminalEmitter.println(
+        'Press any key to continue.',
+        TerminalTextStyle.White
+      );
+
+      await getUserInput();
+      initState = InitState.ACCOUNT_SET;
+    } catch (e) {
+      terminalEmitter.println(
+        'An unknown error occurred. please try again.',
+        TerminalTextStyle.Red
+      );
+    }
+  };
+
+  const advanceStateFromImportAccount = async () => {
+    const terminalEmitter = TerminalEmitter.getInstance();
+    const ethConnection = EthereumAccountManager.getInstance();
+
+    terminalEmitter.println(
+      'Enter the 0x-prefixed private key of the account you wish to import',
+      TerminalTextStyle.White
+    );
+    terminalEmitter.println(
+      "NOTE: THIS WILL STORE THE PRIVATE KEY IN YOUR BROWSER'S LOCAL STORAGE",
+      TerminalTextStyle.White
+    );
+    terminalEmitter.println(
+      'Local storage is relatively insecure. We recommend only importing accounts with zero-to-no funds.'
+    );
+    const newSKey = await getUserInput();
+    try {
+      const newAddr = address(utils.computeAddress(newSKey));
+      ethConnection.addAccount(newSKey);
+      ethConnection.setAccount(newAddr);
+      terminalEmitter.println(`Imported account with address ${newAddr}.`);
+      initState = InitState.ACCOUNT_SET;
+    } catch (e) {
+      terminalEmitter.println(
+        'An unknown error occurred. please try again.',
+        TerminalTextStyle.Red
+      );
+    }
+  };
+
+  const advanceStateFromAccountSet = async () => {
+    const terminalEmitter = TerminalEmitter.getInstance();
+    const ethConnection = EthereumAccountManager.getInstance();
+
+    const address = ethConnection.getAddress();
     const isWhitelisted = await isAddressWhitelisted(address);
 
-    terminalEmitter.shell('df join v0.3');
+    terminalEmitter.bashShell('df join v0.3');
     terminalEmitter.print('Checking if whitelisted... (address ');
     terminalEmitter.print(address, TerminalTextStyle.White);
     terminalEmitter.println(')');
@@ -342,6 +459,13 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
         `Welcome, player ${address}.`,
         TerminalTextStyle.White
       );
+      if (!isProd) {
+        // in development, automatically get some ether from faucet
+        const balance = await ethConnection.getBalance(address);
+        if (balance === 0) {
+          await requestDevFaucet(address);
+        }
+      }
       initState = InitState.FETCHING_ETH_DATA;
     } else {
       initState = InitState.ASKING_HAS_WHITELIST_KEY;
@@ -368,7 +492,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromAskWhitelistKey = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const address = await getAddress();
+    const address = EthereumAccountManager.getInstance().getAddress();
 
     terminalEmitter.println(
       'Please enter your invite key. (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX)',
@@ -378,7 +502,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     const key = await getUserInput();
 
     terminalEmitter.print('Processing key... (this may take up to 30s)');
-    const response = await (async () => {
+    const txHash = await (async () => {
       const intervalId = setInterval(() => terminalEmitter.print('.'), 3000);
       const ret = await submitWhitelistKey(key, address);
       clearInterval(intervalId);
@@ -386,7 +510,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     })();
     terminalEmitter.newline();
 
-    if (!response) {
+    if (!txHash) {
       terminalEmitter.println('ERROR: Not a valid key.', TerminalTextStyle.Red);
       initState = InitState.ASKING_WAITLIST_EMAIL;
     } else {
@@ -396,6 +520,15 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
       );
       terminalEmitter.print(`Welcome, player `);
       terminalEmitter.println(address, TerminalTextStyle.White);
+      terminalEmitter.print('Sent player $0.05 :) ', TerminalTextStyle.Blue);
+      terminalEmitter.printLink(
+        '(View Transaction)',
+        () => {
+          window.open(`${BLOCK_EXPLORER_URL}/tx/${txHash}`);
+        },
+        TerminalTextStyle.Blue
+      );
+      terminalEmitter.newline();
       initState = InitState.ASKING_PLAYER_EMAIL;
     }
   };
@@ -441,7 +574,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromAskPlayerEmail = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const address = await getAddress();
+    const address = EthereumAccountManager.getInstance().getAddress();
 
     terminalEmitter.print(
       'Enter your email address. ',
@@ -475,21 +608,23 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     terminalEmitter.println(
       'Downloading data from Ethereum blockchain... (the contract is very big. this may take a while)'
     );
+
     const newGameManager: AbstractGameManager = await GameManager.create();
-    const gameUIManager = GameUIManager.create(newGameManager);
+    window.df = newGameManager;
+    const newGameUIManager = GameUIManager.create(newGameManager);
+    window.uiManager = newGameUIManager;
 
     terminalEmitter.println('Connected to DarkForestCore contract.');
-    gameUIManagerRef.current = gameUIManager;
+    gameUIManagerRef.current = newGameUIManager;
+
     if (!newGameManager.hasJoinedGame()) {
       initState = InitState.NO_HOME_PLANET;
     } else {
       terminalEmitter.println('Validating secret local data...');
-      const browserHasData = await doesBrowserHaveAccountData(
-        newGameManager.getContractAddress()
-      );
+      const browserHasData = !!newGameManager.getHomeCoords();
       if (!browserHasData) {
         terminalEmitter.println(
-          'ERROR: Account data for this player is not associated with this browser.',
+          'ERROR: Home coords not found on this browser.',
           TerminalTextStyle.Red
         );
         initState = InitState.ASK_ADD_ACCOUNT;
@@ -524,6 +659,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
   const advanceStateFromAddAccount = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
     const gameUIManager = gameUIManagerRef.current;
+
     if (gameUIManager) {
       try {
         terminalEmitter.println('x: ', TerminalTextStyle.Blue);
@@ -591,8 +727,9 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
         })
         .once(GameUIManagerEvent.InitializedPlayerError, (error) => {
           terminalEmitter.println(
-            `[ERROR] An unexpected error occurred: ${error}`,
-            TerminalTextStyle.Red
+            `[ERROR] An error occurred: ${error.toString().slice(0, 10000)}`,
+            TerminalTextStyle.Red,
+            true
           );
           resolve(false);
         });
@@ -614,10 +751,35 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
     setInitRenderState(InitRenderState.COMPLETE);
 
+    terminalEmitter.bashShell('df shell');
+    terminalEmitter.changePromptType(TerminalPromptType.JS);
+    terminalEmitter.allowUnfocusInput();
+
     terminalEmitter.println(
       'Welcome to the universe of Dark Forest.',
       TerminalTextStyle.Green
     );
+    terminalEmitter.println(
+      "This is the Dark Forest interactive Javascript terminal. Only use this if you know exactly what you're doing."
+    );
+    terminalEmitter.println('Try typing in: terminal.println(df.getAccount())');
+  };
+
+  const advanceStateFromComplete = async () => {
+    const terminalEmitter = TerminalEmitter.getInstance();
+    window.terminal = terminalEmitter;
+    const input = await getUserInput();
+    let res = '';
+    try {
+      // indrect eval call: http://perfectionkills.com/global-eval-what-are-the-options/
+      res = (1, eval)(input);
+      if (res !== undefined) {
+        terminalEmitter.println(res.toString(), TerminalTextStyle.White, true);
+      }
+    } catch (e) {
+      res = e.message;
+      terminalEmitter.println(`ERROR: ${res}`, TerminalTextStyle.Red, true);
+    }
   };
 
   const advanceState = async () => {
@@ -625,6 +787,14 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
       await advanceStateFromNone();
     } else if (initState === InitState.COMPATIBILITY_CHECKS_PASSED) {
       await advanceStateFromCompatibilityPassed();
+    } else if (initState === InitState.DISPLAY_ACCOUNTS) {
+      await advanceStateFromDisplayAccounts();
+    } else if (initState === InitState.GENERATE_ACCOUNT) {
+      await advanceStateFromGenerateAccount();
+    } else if (initState === InitState.IMPORT_ACCOUNT) {
+      await advanceStateFromImportAccount();
+    } else if (initState === InitState.ACCOUNT_SET) {
+      await advanceStateFromAccountSet();
     } else if (initState === InitState.ASKING_HAS_WHITELIST_KEY) {
       await advanceStateFromAskHasWhitelistKey();
     } else if (initState === InitState.ASKING_WHITELIST_KEY) {
@@ -643,12 +813,11 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
       await advanceStateFromNoHomePlanet();
     } else if (initState === InitState.ALL_CHECKS_PASS) {
       await advanceStateFromAllChecksPass();
+    } else if (initState === InitState.COMPLETE) {
+      await advanceStateFromComplete();
     }
 
-    if (
-      initState !== InitState.TERMINATED &&
-      initState !== InitState.COMPLETE
-    ) {
+    if (initState !== InitState.TERMINATED) {
       advanceState();
     }
   };
@@ -666,7 +835,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
   }, []);
 
   return (
-    <Wrapper initRender={initRenderState}>
+    <Wrapper initRender={initRenderState} terminalEnabled={terminalEnabled}>
       {modal === ModalState.GAS_PRICES && (
         <ModalWindow close={modalClose}>
           <img
@@ -680,12 +849,22 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
           should basically assume that they are in a fresh div. 
           the children should never exceed the contents of that div.
       */}
-      <GameWindowWrapper initRender={initRenderState}>
+      <GameWindowWrapper
+        initRender={initRenderState}
+        terminalEnabled={terminalEnabled}
+      >
         <GameUIManagerContext.Provider value={gameUIManagerRef.current}>
           <GameWindow />
         </GameUIManagerContext.Provider>
+        <TerminalToggler
+          terminalEnabled={terminalEnabled}
+          setTerminalEnabled={setTerminalEnabled}
+        />
       </GameWindowWrapper>
-      <TerminalWrapper initRender={initRenderState}>
+      <TerminalWrapper
+        initRender={initRenderState}
+        terminalEnabled={terminalEnabled}
+      >
         <Terminal />
       </TerminalWrapper>
 

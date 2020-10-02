@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import dfstyles from '../../styles/dfstyles';
 import {
   Planet,
-  StatIdx,
   PlanetLevel,
   PlanetResource,
+  StatIdx,
 } from '../../_types/global/GlobalTypes';
 import {
   getPlanetColors,
@@ -14,21 +14,21 @@ import {
   planetRandom,
   getPlanetName,
 } from '../../utils/ProcgenUtils';
-import { PlanetColorInfo } from '../../_types/darkforest/app/board/utils/UtilsTypes';
+import { PlanetCosmeticInfo } from '../../_types/darkforest/app/board/utils/UtilsTypes';
 import _ from 'lodash';
 import { bonusFromHex, getPlanetRank } from '../../utils/Utils';
 import { TooltipTrigger } from './Tooltip';
 import { TooltipName } from '../../utils/WindowManager';
 import {
-  SilverIcon,
-  PopulationIcon,
+  EnergyIcon,
   PiratesIcon,
-  PopulationGrowthIcon,
-  SilverGrowthIcon,
   RangeIcon,
   RankIcon,
   MaxLevelIcon,
   SilverProdIcon,
+  DefenseIcon,
+  SpeedIcon,
+  EnergyGrowthIcon,
 } from '../Icons';
 import { emptyAddress } from '../../utils/CheckedTypeUtils';
 import autoBind from 'auto-bind';
@@ -80,12 +80,12 @@ const ClownIcon = styled.span`
 
 export function PlanetIcons({ planet }: { planet: Planet | null }) {
   if (!planet) return <_PlanetIcons />;
-  const bonus = bonusFromHex(planet?.locationId);
+  const bonuses = bonusFromHex(planet.locationId);
   const rank = getPlanetRank(planet);
 
   return (
     <_PlanetIcons>
-      {planet.owner === emptyAddress && planet.population > 0 && (
+      {planet.owner === emptyAddress && planet.energy > 0 && (
         <TooltipTrigger name={TooltipName.Pirates}>
           <PiratesIcon />
         </TooltipTrigger>
@@ -100,29 +100,29 @@ export function PlanetIcons({ planet }: { planet: Planet | null }) {
           <SilverProdIcon />
         </TooltipTrigger>
       )}
-      {bonus[StatIdx.PopCap] && (
-        <TooltipTrigger name={TooltipName.BonusPopCap}>
-          <PopulationIcon />
+      {bonuses[StatIdx.EnergyCap] && (
+        <TooltipTrigger name={TooltipName.BonusEnergyCap}>
+          <EnergyIcon />
         </TooltipTrigger>
       )}
-      {bonus[StatIdx.PopGro] && (
-        <TooltipTrigger name={TooltipName.BonusPopGro}>
-          <PopulationGrowthIcon />
+      {bonuses[StatIdx.EnergyGro] && (
+        <TooltipTrigger name={TooltipName.BonusEnergyGro}>
+          <EnergyGrowthIcon />
         </TooltipTrigger>
       )}
-      {bonus[StatIdx.ResCap] && (
-        <TooltipTrigger name={TooltipName.BonusSilCap}>
-          <SilverIcon />
-        </TooltipTrigger>
-      )}
-      {bonus[StatIdx.ResGro] && (
-        <TooltipTrigger name={TooltipName.BonusSilGro}>
-          <SilverGrowthIcon />
-        </TooltipTrigger>
-      )}
-      {bonus[StatIdx.Range] && (
+      {bonuses[StatIdx.Range] && (
         <TooltipTrigger name={TooltipName.BonusRange}>
           <RangeIcon />
+        </TooltipTrigger>
+      )}
+      {bonuses[StatIdx.Speed] && (
+        <TooltipTrigger name={TooltipName.BonusSpeed}>
+          <SpeedIcon />
+        </TooltipTrigger>
+      )}
+      {bonuses[StatIdx.Defense] && (
+        <TooltipTrigger name={TooltipName.BonusDefense}>
+          <DefenseIcon />
         </TooltipTrigger>
       )}
       {rank > 0 && (
@@ -200,30 +200,55 @@ class PlanetscapeRenderer {
     ctx.globalAlpha = 1;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = colors.backgroundColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.globalCompositeOperation = 'color-burn';
-    const darkness = Math.max(
-      0,
-      0.35 + 0.4 * Math.sin(Date.now() / 15000 + rand() * 10000)
-    );
-    ctx.globalAlpha = darkness;
-    ctx.fillStyle = '#020208';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.globalCompositeOperation = 'source-over';
+    // draw bg
+    if (planet.planetResource === PlanetResource.NONE) {
+      ctx.fillStyle = colors.backgroundColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.globalCompositeOperation = 'color-burn';
+      const darkness = Math.max(
+        0,
+        0.35 + 0.4 * Math.sin(Date.now() / 15000 + rand() * 10000)
+      );
+      ctx.globalAlpha = darkness;
+      ctx.fillStyle = '#020208';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.globalCompositeOperation = 'source-over';
 
-    ctx.fillStyle = 'white';
-    for (let i = 0; i < 20; i++) {
-      const center = { x: (rand() * 10000) % 500, y: (rand() * 10000) % 200 };
-      if (rand() < 0.5) {
-        const starSize = 1 + rand() * 3;
-        ctx.fillRect(center.x - starSize, center.y, 2 * starSize + 1, 1);
-        ctx.fillRect(center.x, center.y - starSize, 1, 2 * starSize + 1);
-      } else {
-        ctx.fillRect(center.x, center.y, 1, 1);
+      ctx.fillStyle = 'white';
+      for (let i = 0; i < 20; i++) {
+        const center = { x: (rand() * 10000) % 500, y: (rand() * 10000) % 200 };
+        if (rand() < 0.5) {
+          const starSize = 1 + rand() * 3;
+          ctx.fillRect(center.x - starSize, center.y, 2 * starSize + 1, 1);
+          ctx.fillRect(center.x, center.y - starSize, 1, 2 * starSize + 1);
+        } else {
+          ctx.fillRect(center.x, center.y, 1, 1);
+        }
+      }
+    } else {
+      ctx.fillStyle = colors.backgroundColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.globalCompositeOperation = 'color-burn';
+      const darkness = 0.8;
+      ctx.globalAlpha = darkness;
+      ctx.fillStyle = '#020208';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.globalCompositeOperation = 'source-over';
+
+      ctx.fillStyle = 'white';
+      for (let i = 0; i < 40; i++) {
+        const center = { x: (rand() * 10000) % 500, y: (rand() * 10000) % 200 };
+        if (rand() < 0.5) {
+          const starSize = 1 + rand() * 3;
+          ctx.fillRect(center.x - starSize, center.y, 2 * starSize + 1, 1);
+          ctx.fillRect(center.x, center.y - starSize, 1, 2 * starSize + 1);
+        } else {
+          ctx.fillRect(center.x, center.y, 1, 1);
+        }
       }
     }
 
+    // draw moons
     const dir = rand() < 0.5 ? -1 : 1;
     for (let i = 0; i < bonuses.length; i++) {
       const bar = 10000;
@@ -238,17 +263,17 @@ class PlanetscapeRenderer {
       if (bonuses[i]) {
         let color;
         const {
-          popCap,
-          popGro,
-          silCap,
-          silGro,
+          energyCap,
+          energyGro,
           range,
+          speed,
+          def,
         } = dfstyles.game.bonuscolors;
-        if (i === StatIdx.PopCap) color = popCap;
-        else if (i === StatIdx.PopGro) color = popGro;
-        else if (i === StatIdx.ResCap) color = silCap;
-        else if (i === StatIdx.ResGro) color = silGro;
-        else color = range;
+        if (i === StatIdx.EnergyCap) color = energyCap;
+        else if (i === StatIdx.EnergyGro) color = energyGro;
+        else if (i === StatIdx.Range) color = range;
+        else if (i === StatIdx.Speed) color = speed;
+        else color = def;
 
         ctx.globalAlpha = 0.7;
         ctx.beginPath();
@@ -274,11 +299,11 @@ class PlanetscapeRenderer {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       return;
     }
-    const colors: PlanetColorInfo = getPlanetColors(planet);
+    const colors: PlanetCosmeticInfo = getPlanetColors(planet);
     ctx.globalAlpha = 1;
 
     const perlin: (x: PixelCoords) => number = planetPerlin(planet.locationId);
-    // const rand: (x: number) => number = planetRandom(planet.locationId);
+    const rand: () => number = planetRandom(planet.locationId);
 
     function drawPath(arr: PixelCoords[]): void {
       if (arr.length < 3) return;
@@ -311,6 +336,26 @@ class PlanetscapeRenderer {
 
       drawPath(arr);
     }
+    const drawBlob = (cx, cy, r) => {
+      const arr: PixelCoords[] = [];
+      const ticks = 120;
+      const offX = rand() * 100;
+      const offY = rand() * 100;
+      for (let i = 0; i < ticks; i++) {
+        const t = (i * (Math.PI * 2)) / ticks;
+        let x = r * Math.cos(t);
+        let y = r * Math.sin(t);
+        const p = perlin({ x: x * 1.2 + offX, y: y * 1.2 + offY });
+        const rad = r * (1 + p * 0.3);
+
+        x = rad * Math.cos(t);
+        y = rad * Math.sin(t);
+
+        arr.push({ x: x + cx, y: y + cy });
+      }
+
+      drawPath(arr);
+    };
     if (canvas.width === 0 || canvas.height === 0) return;
 
     const { width, height } = canvas;
@@ -318,35 +363,49 @@ class PlanetscapeRenderer {
     // ctx.fillStyle = colors.backgroundColor;
     ctx.clearRect(0, 0, width, height);
 
-    const oct1 = (p: PixelCoords) => 0.5 * perlin({ x: 2 * p.x, y: 2 * p.y });
-    const oct2 = (p: PixelCoords) => 0.25 * perlin({ x: 4 * p.x, y: 4 * p.y });
+    if (planet.planetResource === PlanetResource.SILVER) {
+      const roidBase = height * 0.7;
 
-    const mtn = (p: PixelCoords) => perlin(p) + oct1(p) + oct2(p);
+      ctx.fillStyle = colors.secondaryColor;
+      drawBlob(0.2 * width, roidBase - 30, 30);
+      drawBlob(0.5 * width, roidBase - 50, 30);
+      drawBlob(0.8 * width, roidBase - 30, 30);
 
-    // const offset = Date.now() / 10;
-    const offset = 0;
+      ctx.fillStyle = colors.secondaryColor2;
+      drawBlob(0.35 * width, roidBase, 40);
+      drawBlob(0.65 * width, roidBase, 40);
+    } else {
+      const oct1 = (p: PixelCoords) => 0.5 * perlin({ x: 2 * p.x, y: 2 * p.y });
+      const oct2 = (p: PixelCoords) =>
+        0.25 * perlin({ x: 4 * p.x, y: 4 * p.y });
 
-    const mtnBase = height * 0.7;
-    const mtnHeight = 80;
-    ctx.fillStyle = colors.secondaryColor;
-    drawHill((x) => mtnBase + mtnHeight * mtn({ x: 2 * x + offset, y: 30 }));
-    ctx.fillStyle = colors.secondaryColor2;
-    drawHill(
-      (x) => 7 + mtnBase + mtnHeight * mtn({ x: 2 * x + offset, y: 37 })
-    );
-    ctx.fillStyle = colors.secondaryColor3;
-    drawHill(
-      (x) => 14 + mtnBase + mtnHeight * mtn({ x: 2 * x + offset, y: 44 })
-    );
+      const mtn = (p: PixelCoords) => perlin(p) + oct1(p) + oct2(p);
 
-    const hillBase = height * 0.74;
-    const hillHeight = 10;
-    ctx.fillStyle = colors.baseColor3;
-    drawHill((x) => hillBase + hillHeight * perlin({ x, y: 0 }));
-    ctx.fillStyle = colors.baseColor2;
-    drawHill((x) => 5 + hillBase + hillHeight * perlin({ x, y: 5 }));
-    ctx.fillStyle = colors.baseColor;
-    drawHill((x) => 15 + hillBase + hillHeight * perlin({ x, y: 10 }));
+      // const offset = Date.now() / 10;
+      const offset = 0;
+
+      const mtnBase = height * 0.7;
+      const mtnHeight = 80;
+      ctx.fillStyle = colors.secondaryColor;
+      drawHill((x) => mtnBase + mtnHeight * mtn({ x: 2 * x + offset, y: 30 }));
+      ctx.fillStyle = colors.secondaryColor2;
+      drawHill(
+        (x) => 7 + mtnBase + mtnHeight * mtn({ x: 2 * x + offset, y: 37 })
+      );
+      ctx.fillStyle = colors.secondaryColor3;
+      drawHill(
+        (x) => 14 + mtnBase + mtnHeight * mtn({ x: 2 * x + offset, y: 44 })
+      );
+
+      const hillBase = height * 0.74;
+      const hillHeight = 10;
+      ctx.fillStyle = colors.baseColor3;
+      drawHill((x) => hillBase + hillHeight * perlin({ x, y: 0 }));
+      ctx.fillStyle = colors.baseColor2;
+      drawHill((x) => 5 + hillBase + hillHeight * perlin({ x, y: 5 }));
+      ctx.fillStyle = colors.baseColor;
+      drawHill((x) => 15 + hillBase + hillHeight * perlin({ x, y: 10 }));
+    }
   }
 }
 

@@ -2,13 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
 import dfstyles from '../../styles/dfstyles';
+import { GameWindowZIndex } from '../GameWindow';
 
 const _ZoomPane = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.5em;
-  padding-top: 0;
+  // position: absolute;
+  // top: 0;
+  // right: 0;
+
+  z-index: ${GameWindowZIndex.MenuBar};
+
+  padding-left: 0.75em;
+  padding-top: 0.1em;
   margin-top: 0;
   display: flex;
   font-size: 1.5em;
@@ -27,7 +31,8 @@ const _ZoomPane = styled.div`
     }
   }
 `;
-export default function ZoomPane() {
+
+export function ZoomPane() {
   const uiEmitter = UIEmitter.getInstance();
   return (
     <_ZoomPane>

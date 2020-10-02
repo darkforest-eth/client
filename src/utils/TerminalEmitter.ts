@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import { defaultTypistProps, shellProps } from '../app/Terminal';
+import { TerminalPromptType } from '../_types/darkforest/app/board/utils/TerminalTypes';
 
 export enum TerminalTextStyle {
   Green,
@@ -22,6 +23,8 @@ export enum TerminalEvent {
   DisableUserInput = 'DisableUserInput',
   UserEnteredInput = 'UserEnteredInput',
   SkipAllTyping = 'SkipAllTyping',
+  ChangePromptType = 'ChangePromptType',
+  AllowUnfocusInput = 'AllowUnfocusInput',
 }
 
 class TerminalEmitter extends EventEmitter {
@@ -49,9 +52,17 @@ class TerminalEmitter extends EventEmitter {
     str: string,
     style: TerminalTextStyle = TerminalTextStyle.Default,
     skipTyping = false,
-    typistProps = defaultTypistProps
+    typistProps = defaultTypistProps,
+    recordAsInput: string | null = null
   ) {
-    this.emit(TerminalEvent.Print, str, style, skipTyping, typistProps);
+    this.emit(
+      TerminalEvent.Print,
+      str,
+      style,
+      skipTyping,
+      typistProps,
+      recordAsInput
+    );
   }
 
   newline() {
@@ -62,9 +73,17 @@ class TerminalEmitter extends EventEmitter {
     str: string,
     style: TerminalTextStyle = TerminalTextStyle.Default,
     skipTyping = false,
-    typistProps = defaultTypistProps
+    typistProps = defaultTypistProps,
+    recordAsInput: string | null = null
   ) {
-    this.emit(TerminalEvent.Print, str, style, skipTyping, typistProps);
+    this.emit(
+      TerminalEvent.Print,
+      str,
+      style,
+      skipTyping,
+      typistProps,
+      recordAsInput
+    );
     this.emit(TerminalEvent.Newline);
   }
 
@@ -72,12 +91,24 @@ class TerminalEmitter extends EventEmitter {
     str: string,
     onClick: () => void,
     style: TerminalTextStyle = TerminalTextStyle.Default,
-    skipTyping = false
+    skipTyping = false,
+    recordAsInput: string | null = null
   ) {
-    this.emit(TerminalEvent.PrintLink, str, onClick, style, skipTyping);
+    this.emit(
+      TerminalEvent.PrintLink,
+      str,
+      onClick,
+      style,
+      skipTyping,
+      recordAsInput
+    );
   }
 
-  shell(str: string) {
+  changePromptType(promptType: TerminalPromptType) {
+    this.emit(TerminalEvent.ChangePromptType, promptType);
+  }
+
+  bashShell(str: string) {
     this.emit(
       TerminalEvent.Print,
       '$ ',
@@ -95,12 +126,35 @@ class TerminalEmitter extends EventEmitter {
     this.emit(TerminalEvent.Newline);
   }
 
+  jsShell(str: string) {
+    this.emit(
+      TerminalEvent.Print,
+      '> ',
+      TerminalTextStyle.Blue,
+      false,
+      shellProps
+    );
+    this.emit(
+      TerminalEvent.Print,
+      str,
+      TerminalTextStyle.White,
+      false,
+      shellProps,
+      str
+    );
+    this.emit(TerminalEvent.Newline);
+  }
+
   enableUserInput() {
     this.emit(TerminalEvent.EnableUserInput);
   }
 
   disableUserInput() {
     this.emit(TerminalEvent.DisableUserInput);
+  }
+
+  allowUnfocusInput() {
+    this.emit(TerminalEvent.AllowUnfocusInput);
   }
 }
 

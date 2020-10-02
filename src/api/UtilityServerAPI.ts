@@ -1,7 +1,5 @@
-const WEBSERVER_URL =
-  process.env.NODE_ENV === 'production'
-    ? 'https://zkga.me'
-    : 'http://localhost:3000';
+const isProd = process.env.NODE_ENV === 'production';
+const WEBSERVER_URL = isProd ? 'https://zkga.me' : 'http://localhost:3000';
 import * as EmailValidator from 'email-validator';
 import { AddressTwitterMap } from '../_types/darkforest/api/UtilityServerAPITypes';
 import { EthAddress } from '../_types/global/GlobalTypes';
@@ -51,9 +49,9 @@ export const submitPlayerEmail = async (
 export const submitWhitelistKey = async (
   key: string,
   address: EthAddress
-): Promise<boolean> => {
+): Promise<string | null> => {
   try {
-    const { success } = await fetch(`${WEBSERVER_URL}/whitelist/register`, {
+    const { txHash } = await fetch(`${WEBSERVER_URL}/whitelist/register`, {
       method: 'POST',
       body: JSON.stringify({
         key,
@@ -64,10 +62,10 @@ export const submitWhitelistKey = async (
       },
     }).then((x) => x.json());
 
-    return success;
+    return txHash;
   } catch (e) {
     console.error(`error when registering for whitelist: ${e}`);
-    return false;
+    return null;
   }
 };
 
@@ -82,6 +80,30 @@ export const isAddressWhitelisted = async (
   } catch (e) {
     console.log('Whitelist internal error, returning true.');
     console.error(e);
+    return false;
+  }
+};
+
+export const requestDevFaucet = async (
+  address: EthAddress
+): Promise<boolean> => {
+  if (isProd) {
+    return false;
+  }
+  try {
+    const { success } = await fetch(`${WEBSERVER_URL}/whitelist/faucet`, {
+      method: 'POST',
+      body: JSON.stringify({
+        address,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((x) => x.json());
+
+    return success;
+  } catch (e) {
+    console.error(`error when requesting drip: ${e}`);
     return false;
   }
 };

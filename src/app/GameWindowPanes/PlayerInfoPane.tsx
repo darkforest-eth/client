@@ -1,14 +1,16 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { SidebarPane } from '../GameWindowComponents';
+import { SidebarPane } from '../GameWindowComponents/GameWindowComponents';
 import styled from 'styled-components';
 import dfstyles from '../../styles/dfstyles';
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
 import { EthAddress } from '../../_types/global/GlobalTypes';
 import { formatNumber } from '../../utils/Utils';
-import { ModalHook } from './ModalPane';
+import { ModalHook, ModalTwitterVerifyIcon } from './ModalPane';
 import { TooltipTrigger } from './Tooltip';
 import { TooltipName } from '../../utils/WindowManager';
+import { calculateRankAndScore } from './LeaderboardPane';
+import { AccountContext } from '../GameWindow';
 
 const PlayerInfoWrapper = styled.div`
   width: 100%;
@@ -37,38 +39,67 @@ const PlayerInfoWrapper = styled.div`
   }
 `;
 
-export default function PlayerInfoPane({
-  _updater,
-  hook: twitterHook,
-  score,
-  rank,
-}: {
-  _updater: number;
-  hook: ModalHook;
-  score: number;
-  rank: number;
-}) {
+export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
-  const [account, setAccount] = useState<EthAddress | null>(null);
+  const account = useContext<EthAddress | null>(AccountContext);
+
   const [twitter, setTwitter] = useState<string | null>(null);
 
+  const [rank, setRank] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
+
+  useEffect(() => {
+    if (!uiManager || !account) return;
+
+    const updateRankAndScore = () => {
+      const players = uiManager.getAllPlayers();
+      const planets = uiManager.getAllOwnedPlanets();
+      const [myRank, myScore] = calculateRankAndScore(
+        players,
+        planets,
+        account
+      );
+
+      setRank(myRank);
+      setScore(myScore);
+    };
+
+    const intervalId = setInterval(updateRankAndScore, 60000);
+    updateRankAndScore();
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [uiManager, account]);
+
   // sync account and twitter
+  // TODO Make this listen to an event instead
   useEffect(() => {
     if (!uiManager) return;
-    setAccount(uiManager.getAccount());
-    setTwitter(uiManager.getTwitter(null));
-  }, [uiManager, _updater]);
+    const updateTwitter = () => {
+      setTwitter(uiManager.getTwitter(null));
+    };
+
+    const intervalId = setInterval(updateTwitter, 2000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [uiManager]);
 
   return (
-    <SidebarPane title='Player Info' headerItems={<></>}>
+    <SidebarPane
+      title='Player Info'
+      headerItems={<ModalTwitterVerifyIcon hook={twitterHook} />}
+    >
       <PlayerInfoWrapper>
         <div>
-          <TooltipTrigger name={TooltipName.Population} needsShift>
-            <span>Population</span>
+          <TooltipTrigger name={TooltipName.Energy} needsShift>
+            <span>Energy</span>
           </TooltipTrigger>
           <span>
             {account && uiManager
-              ? formatNumber(uiManager.getPopOfPlayer(account))
+              ? formatNumber(uiManager.getEnergyOfPlayer(account))
               : '...'}
           </span>
         </div>

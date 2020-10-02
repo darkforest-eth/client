@@ -6,7 +6,10 @@ import {
 } from '../_types/global/GlobalTypes';
 import { openDB, IDBPDatabase } from 'idb';
 import _, { Cancelable } from 'lodash';
-import { LSMChunkData } from '../_types/darkforest/api/LocalStorageManagerTypes';
+import {
+  LSMChunkData,
+  ChunkStore,
+} from '../_types/darkforest/api/LocalStorageManagerTypes';
 import { WorldCoords } from '../utils/Coordinates';
 import {
   getChunkKey,
@@ -16,7 +19,7 @@ import {
   getChunkOfSideLength,
 } from '../utils/ChunkUtils';
 import { MAX_CHUNK_SIZE } from '../utils/constants';
-import { UnconfirmedTx } from '../_types/darkforest/api/EthereumAPITypes';
+import { SubmittedTx } from '../_types/darkforest/api/ContractsAPITypes';
 
 const isProd = process.env.NODE_ENV === 'production';
 const contractAddress = isProd
@@ -42,7 +45,7 @@ interface DBAction {
 
 type DBTx = DBAction[];
 
-class LocalStorageManager {
+class LocalStorageManager implements ChunkStore {
   private db: IDBPDatabase;
   private cached: DBTx[];
   private throttledSaveChunkCacheToDisk: (() => Promise<void>) & Cancelable;
@@ -283,7 +286,7 @@ class LocalStorageManager {
     return this.chunkMap.values();
   }
 
-  public async onEthTxSubmit(tx: UnconfirmedTx): Promise<void> {
+  public async onEthTxSubmit(tx: SubmittedTx): Promise<void> {
     if (this.confirmedTxHashes.has(tx.txHash)) {
       // in case the tx was mined and saved already
       return Promise.resolve();
@@ -296,8 +299,8 @@ class LocalStorageManager {
     await this.db.delete(ObjectStore.UNCONFIRMED_ETH_TXS, txHash);
   }
 
-  public async getUnconfirmedEthTxs(): Promise<UnconfirmedTx[]> {
-    const ret: UnconfirmedTx[] = await this.db.getAll(
+  public async getUnconfirmedSubmittedEthTxs(): Promise<SubmittedTx[]> {
+    const ret: SubmittedTx[] = await this.db.getAll(
       ObjectStore.UNCONFIRMED_ETH_TXS
     );
     return ret;

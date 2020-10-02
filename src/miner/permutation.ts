@@ -99,10 +99,11 @@ export const getPlanetLocations = (
   chunkFootprint: ChunkFootprint,
   planetRarity: number
 ) => {
+  // assume that the chunkFootprint is entirely contained within a 256x256 grid square
   const { bottomLeft, sideLength } = chunkFootprint;
   const { x, y } = bottomLeft;
-  const m = x / 256;
-  const n = y / 256;
+  const m = Math.floor(x / 256);
+  const n = Math.floor(y / 256);
   const [mPrime, nPrime] = sigma(m, n);
   const postImages: [number, number][] = [];
   for (let i = 0; i < SIZE / planetRarity; i += 1) {
@@ -125,7 +126,9 @@ export const getPlanetLocations = (
     .filter(
       (coords) =>
         coords.x - bottomLeft.x < sideLength &&
-        coords.y - bottomLeft.y < sideLength
+        coords.x >= bottomLeft.x &&
+        coords.y - bottomLeft.y < sideLength &&
+        coords.y >= bottomLeft.y
     )
     .map((coords) => ({
       coords,

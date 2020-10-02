@@ -18,7 +18,7 @@ import {
 // NOTE: DO NOT IMPORT FROM ETHERS SUBPATHS. see https://github.com/ethers-io/ethers.js/issues/349 (these imports trip up webpack)
 // for example, the below is bad!
 // import {TransactionReceipt, Provider, TransactionResponse, Web3Provider} from "ethers/providers";
-import { ClientMockchainData } from '../_types/darkforest/api/EthereumAPITypes';
+import { ClientMockchainData } from '../_types/darkforest/api/ContractsAPITypes';
 
 const post = (url, body) => {
   return fetch(url, {
