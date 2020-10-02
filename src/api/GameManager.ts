@@ -18,9 +18,9 @@ import {
 } from '../_types/global/GlobalTypes';
 import LocalStorageManager from './LocalStorageManager';
 import {
-  LOCATION_ID_UB,
   MAX_CHUNK_SIZE,
-  DERIVED_CHUNK_SIZE, MIN_CHUNK_SIZE
+  MIN_CHUNK_SIZE,
+  DERIVED_CHUNK_SIZE
 } from '../utils/constants';
 import mimcHash from '../miner/mimc';
 import ContractsAPI from './ContractsAPI';
