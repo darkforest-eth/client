@@ -66,6 +66,7 @@ import NotificationManager from '../utils/NotificationManager';
 class GameManager extends EventEmitter implements AbstractGameManager {
   private readonly account: EthAddress | null;
   private balance: number;
+  private balanceInterval: number;
   private readonly players: PlayerMap;
 
   private readonly contractsAPI: ContractsAPI;
@@ -130,6 +131,16 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     this.snarkHelper = snarkHelper;
     this.useMockHash = useMockHash;
 
+    this.balanceInterval = setInterval(() => {
+      if (this.account) {
+        EthereumAccountManager.getInstance()
+          .getBalance(this.account)
+          .then((balance) => {
+            this.balance = balance;
+          });
+      }
+    }, 5000);
+
     this.hashRate = 0;
   }
 
@@ -146,6 +157,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     this.contractsAPI.destroy();
     this.localStorageManager.destroy();
     this.snarkHelper.destroy();
+    clearInterval(this.balanceInterval);
   }
 
   static async create(): Promise<GameManager> {

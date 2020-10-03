@@ -248,7 +248,7 @@ export default function LandingPage() {
           <Typist {...typistProps}>
             <p>
               <Sub>
-                zkSNARK space warfare <HideSmall>(v0.3)</HideSmall>
+                zkSNARK space warfare <HideSmall>(v0.4)</HideSmall>
               </Sub>
             </p>
           </Typist>
