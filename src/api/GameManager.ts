@@ -19,7 +19,6 @@ import {
 import LocalStorageManager from './LocalStorageManager';
 import {
   MAX_CHUNK_SIZE,
-  MIN_CHUNK_SIZE,
   DERIVED_CHUNK_SIZE
 } from '../utils/constants';
 import mimcHash from '../miner/mimc';
@@ -66,8 +65,6 @@ import { getAllTwitters, verifyTwitterHandle } from './UtilityServerAPI';
 import EthereumAccountManager from './EthereumAccountManager';
 import { getRandomActionId } from '../utils/Utils';
 import NotificationManager from '../utils/NotificationManager';
-import { deriveChunkSize, parseCoresInput } from '../utils/cores';
-import { CORES_TO_USE } from '../utils/constants';
 
 class GameManager extends EventEmitter implements AbstractGameManager {
   private readonly account: EthAddress | null;
@@ -645,7 +642,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
       const pattern: MiningPattern = new SpiralPattern(
         { x, y },
-        MIN_CHUNK_SIZE
+        DERIVED_CHUNK_SIZE
       );
       const chunkStore = new HomePlanetMinerChunkStore(perlinThreshold);
       const homePlanetFinder = MinerManager.create(
@@ -663,7 +660,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
           if (minedChunksCount % 8 === 0) {
             terminalEmitter.println(
               `Hashed ${
-                minedChunksCount * MIN_CHUNK_SIZE ** 2
+                minedChunksCount * DERIVED_CHUNK_SIZE ** 2
               } potential home planets...`
             );
           }

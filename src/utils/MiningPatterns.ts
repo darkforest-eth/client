@@ -30,6 +30,7 @@ export class SpiralPattern implements MiningPattern {
       sideLength: chunkSize,
     };
     this.chunkSideLength = chunkSize;
+    console.debug('[SpiralPattern]: Using chunk size ', chunkSize)
   }
 
   nextChunk(chunk: ChunkFootprint): ChunkFootprint {

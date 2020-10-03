@@ -5,8 +5,9 @@ const DEFAULT_CORES = 1;
 const isValidCores = (cores: number) => 
   cores <= 16 && cores > 0
 
+// ChunkSize is a measurement of length, not area
 export const deriveChunkSize = (cores: number) =>
-  Math.min(MAX_CHUNK_SIZE, cores * MIN_CHUNK_SIZE)
+  Math.max(Math.min(MAX_CHUNK_SIZE, Math.floor(Math.sqrt(MIN_CHUNK_SIZE * cores))), MIN_CHUNK_SIZE)
 
 export const parseCoresInput = (cores: any) => {
   if (!cores || cores === null) return DEFAULT_CORES;

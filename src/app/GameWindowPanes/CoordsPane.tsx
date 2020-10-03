@@ -6,7 +6,7 @@ import perlin from '../../miner/perlin';
 import { SpaceType } from '../../_types/global/GlobalTypes';
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
-import { MIN_CHUNK_SIZE } from '../../utils/constants';
+import { DERIVED_CHUNK_SIZE } from '../../utils/constants';
 
 export function CoordsText() {
   const uiEmitter = UIEmitter.getInstance();
@@ -25,10 +25,10 @@ export function CoordsText() {
     if (uiManager) {
       const chunkLoc = {
         bottomLeft: {
-          x: Math.floor(vec.x / MIN_CHUNK_SIZE) * MIN_CHUNK_SIZE,
-          y: Math.floor(vec.y / MIN_CHUNK_SIZE) * MIN_CHUNK_SIZE,
+          x: Math.floor(vec.x / DERIVED_CHUNK_SIZE) * DERIVED_CHUNK_SIZE,
+          y: Math.floor(vec.y / DERIVED_CHUNK_SIZE) * DERIVED_CHUNK_SIZE,
         },
-        sideLength: MIN_CHUNK_SIZE,
+        sideLength: DERIVED_CHUNK_SIZE,
       };
       if (!uiManager.hasMinedChunk(chunkLoc)) return '???';
 
