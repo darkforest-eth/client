@@ -448,7 +448,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     const address = ethConnection.getAddress();
     const isWhitelisted = await isAddressWhitelisted(address);
 
-    terminalEmitter.bashShell('df join v0.3');
+    terminalEmitter.bashShell('df join v0.4');
     terminalEmitter.print('Checking if whitelisted... (address ');
     terminalEmitter.print(address, TerminalTextStyle.White);
     terminalEmitter.println(')');

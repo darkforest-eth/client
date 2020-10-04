@@ -631,7 +631,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       // initialize in a lower perlin area
       do {
         const t = Math.random() * 2 * Math.PI;
-        const r = (0.2 + Math.random() * 0.8) * this.worldRadius;
+        const r = (0.5 + Math.random() * 0.5) * this.worldRadius;
         x = Math.floor(Math.cos(t) * r);
         y = Math.floor(Math.sin(t) * r);
         p = perlin({ x, y }, false);

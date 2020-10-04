@@ -177,7 +177,7 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
               <span className='mono'>{hatPlanet}</span>
             </div>
             <div>
-              <b>Hat Level</b>
+              <b>HAT Level</b>
               <span>
                 {hatLevel} ({hatCost} xDAI)
               </span>

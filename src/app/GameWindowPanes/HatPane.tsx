@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Sub } from '../../components/Text';
+import { HAT_SIZES } from '../../utils/constants';
 import { getPlanetColors } from '../../utils/ProcgenUtils';
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
 import { EthAddress, Planet } from '../../_types/global/GlobalTypes';
@@ -91,15 +92,15 @@ export function HatPane({ hook }: { hook: ModalHook }) {
     !hatUpgradePending() && selected?.owner === account && balance > getCost();
 
   return (
-    <ModalPane hook={hook} title={'Planet Hats'} name={ModalName.Hats}>
+    <ModalPane hook={hook} title={'Planet HATs'} name={ModalName.Hats}>
       <StyledHatPane>
         <div>
-          <Sub>Hat Type</Sub>
+          <Sub>HAT</Sub>
           <span>{getPlanetColors(selected).hatType}</span>
         </div>
         <div>
-          <Sub>Hat Level</Sub>
-          <span>{selected ? selected.hatLevel : 0}</span>
+          <Sub>HAT Level</Sub>
+          <span>{HAT_SIZES[selected ? selected.hatLevel : 0]}</span>
         </div>
         <div className='margin-top'>
           <Sub>Next Level Cost</Sub>
@@ -109,7 +110,12 @@ export function HatPane({ hook }: { hook: ModalHook }) {
         </div>
         <div>
           <Sub>Current Balance</Sub>
-          <span>{balance} DAI</span>
+          <span>{balance} xDAI</span>
+        </div>
+        <div>
+          <a onClick={() => window.open('https://blog.zkga.me/df-04-faq')}>
+            <u>Get More xDAI</u>
+          </a>
         </div>
         <div>
           <Btn
@@ -118,7 +124,7 @@ export function HatPane({ hook }: { hook: ModalHook }) {
             }
             className={!enabled() ? 'btn-disabled' : ''}
           >
-            {selected && selected.hatLevel > 0 ? 'Upgrade' : 'Buy'} Hat
+            {selected && selected.hatLevel > 0 ? 'Upgrade' : 'Buy'} HAT
           </Btn>
         </div>
       </StyledHatPane>

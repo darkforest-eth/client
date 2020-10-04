@@ -53,6 +53,7 @@ import {
   SpeedIcon,
 } from '../Icons';
 import dfstyles from '../../styles/dfstyles';
+import { HAT_SIZES } from '../../utils/constants';
 
 const PlanetscapeWrapper = styled.div`
   width: 100%;
@@ -489,12 +490,14 @@ export function PlanetDetailsPane({
               </span>
             </DetailsRowSingle>
             <DetailsRowSingle>
-              <Sub>Hat Level</Sub>
+              <Sub>HAT</Sub>
               <span>
-                {selected && selected.owner === account && (
-                  <Btn onClick={() => hatHook[1](true)}>Buy</Btn>
-                )}{' '}
-                {selected ? selected.hatLevel : 0}
+                {HAT_SIZES[selectedStats ? selectedStats.hatLevel : 0]}{' '}
+                {selected && selectedStats && selected.owner === account && (
+                  <Btn onClick={() => hatHook[1](true)}>
+                    {selectedStats.hatLevel > 0 ? 'Upgrade' : 'Buy'}
+                  </Btn>
+                )}
               </span>
             </DetailsRowSingle>
             <DetailsRowSingle>
