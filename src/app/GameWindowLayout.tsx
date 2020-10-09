@@ -44,8 +44,13 @@ import { useStoredUIState, UIDataKey } from '../api/UIStateStorageManager';
 import GameUIManager from './board/GameUIManager';
 import GameUIManagerContext from './board/GameUIManagerContext';
 import { PrivatePane } from './GameWindowPanes/PrivatePane';
+import { Hook } from '../_types/global/GlobalTypes';
 
-export function GameWindowLayout() {
+export function GameWindowLayout({
+  hiPerfHook,
+}: {
+  hiPerfHook: Hook<boolean>;
+}) {
   const planetDetHook = useState<boolean>(true);
   const helpHook = useState<boolean>(false);
   const leaderboardHook = useState<boolean>(false);
@@ -59,6 +64,7 @@ export function GameWindowLayout() {
   const privateHook = useState<boolean>(false);
 
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
+
   const newPlayerHook = useStoredUIState<boolean>(
     UIDataKey.newPlayer,
     uiManager
@@ -66,7 +72,7 @@ export function GameWindowLayout() {
 
   return (
     <WindowWrapper>
-      <Tooltip />
+      <Tooltip hiPerf={hiPerfHook[0]} />
 
       {/* modals (fragment is purely semantic) */}
       <>
@@ -83,7 +89,11 @@ export function GameWindowLayout() {
         <TwitterVerifyPane hook={twitterVerifyHook} />
         <TwitterBroadcastPane hook={twitterBroadcastHook} />
         <HatPane hook={hatHook} />
-        <SettingsPane hook={settingsHook} privateHook={privateHook} />
+        <SettingsPane
+          hook={settingsHook}
+          privateHook={privateHook}
+          hiPerfHook={hiPerfHook}
+        />
         <PrivatePane hook={privateHook} />
       </>
 
@@ -114,7 +124,7 @@ export function GameWindowLayout() {
             <ControllableCanvas />
           </CanvasWrapper>
 
-          <CoordsPane />
+          <CoordsPane hiPerf={hiPerfHook[0]} />
 
           <LHSWrapper>
             <ContextMenu>

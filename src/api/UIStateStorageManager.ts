@@ -17,6 +17,7 @@ export enum UIDataKey {
 
   notifMove = 'notifMove',
   newPlayer = 'newPlayer',
+  highPerf = 'highPerf',
 }
 export type UIDataValue = boolean;
 
@@ -34,6 +35,7 @@ export type UIData = {
 
   notifMove: boolean;
   newPlayer: boolean;
+  highPerf: boolean;
 };
 
 export const defaultUserData: UIData = {
@@ -50,6 +52,8 @@ export const defaultUserData: UIData = {
 
   notifMove: true,
   newPlayer: true,
+
+  highPerf: false,
 };
 
 export function useStoredUIState<T extends UIDataValue>(

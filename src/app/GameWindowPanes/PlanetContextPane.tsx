@@ -225,7 +225,7 @@ export function Spinner({ hook }: { hook: NumberHook }) {
 }
 
 const DEFAULT_ENERGY_PERCENT = 50;
-const DEFAULT_SILVER_PERCENT = 100;
+const DEFAULT_SILVER_PERCENT = 0;
 
 export function PlanetContextPane({ hook }: { hook: ModalHook }) {
   const [account, setAccount] = useState<EthAddress | null>(null);

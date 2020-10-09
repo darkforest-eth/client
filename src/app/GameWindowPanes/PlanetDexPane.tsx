@@ -18,7 +18,7 @@ import {
   getPlanetRank,
 } from '../../utils/Utils';
 import dfstyles from '../../styles/dfstyles';
-import { getPlanetName, getPlanetColors } from '../../utils/ProcgenUtils';
+import { getPlanetName, getPlanetCosmetic } from '../../utils/ProcgenUtils';
 import _ from 'lodash';
 import { SelectedContext } from '../GameWindow';
 import { SilverIcon } from '../Icons';
@@ -195,7 +195,7 @@ const ColorIcon = styled.span<{ color: string }>`
 export function PlanetThumb({ planet }: { planet: Planet }) {
   const radius = 5 + 3 * planet.planetLevel;
   // const radius = 5 + 3 * PlanetLevel.MAX;
-  const { baseColor, backgroundColor } = getPlanetColors(planet);
+  const { baseColor, backgroundColor } = getPlanetCosmetic(planet);
 
   const ringW = radius * 1.5;
   const ringH = Math.max(2, ringW / 7);

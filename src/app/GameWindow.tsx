@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React, { useContext, useEffect, useState, createContext } from 'react';
+import { useStoredUIState, UIDataKey } from '../api/UIStateStorageManager';
 import UIEmitter, { UIEmitterEvent } from '../utils/UIEmitter';
 import { copyPlanetStats, PlanetStatsInfo } from '../utils/Utils';
 import { EthAddress, Planet } from '../_types/global/GlobalTypes';
@@ -29,6 +30,8 @@ export const AccountContext = createContext<EthAddress | null>(null);
 // we separate these two for a small speed optimization - we only need to refresh some planet stats on a loop
 export const SelectedContext = createContext<Planet | null>(null);
 export const SelectedStatContext = createContext<PlanetStatsInfo | null>(null);
+
+export const HiPerfContext = createContext<boolean | null>(null);
 
 export default function GameWindow() {
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
@@ -121,12 +124,17 @@ export default function GameWindow() {
     setAccount(uiManager.getAccount());
   }, [uiManager]);
 
+  // make this into a context (fix this later)
+  const hiPerfHook = useStoredUIState<boolean>(UIDataKey.highPerf, uiManager);
+
   return (
     <SelectedContext.Provider value={selected}>
       <ContextMenuContext.Provider value={contextMenu}>
         <AccountContext.Provider value={account}>
           <SelectedStatContext.Provider value={planetStats}>
-            <GameWindowLayout />
+            <HiPerfContext.Provider value={hiPerfHook[0]}>
+              <GameWindowLayout hiPerfHook={hiPerfHook} />
+            </HiPerfContext.Provider>
           </SelectedStatContext.Provider>
         </AccountContext.Provider>
       </ContextMenuContext.Provider>

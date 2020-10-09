@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import dfstyles from '../../styles/dfstyles';
 import {
-  getPlanetColors,
+  getPlanetCosmetic,
   PixelCoords,
   planetPerlin,
   planetRandom,
@@ -89,7 +89,7 @@ class PlanetPreviewRenderer {
 
   drawAsteroids(): void {
     const { ctx, bufferCtx, bufferCanvas, planet } = this;
-    const colors = getPlanetColors(planet);
+    const colors = getPlanetCosmetic(planet);
     const perlin = planet
       ? planetPerlin(planet.locationId)
       : (_: PixelCoords) => 0;
@@ -166,7 +166,7 @@ class PlanetPreviewRenderer {
   drawPlanet(): void {
     const { ctx, bufferCtx, bufferCanvas, planet } = this;
 
-    const colors = getPlanetColors(planet);
+    const colors = getPlanetCosmetic(planet);
     const perlin = planet
       ? planetPerlin(planet.locationId)
       : (_: PixelCoords) => 0;

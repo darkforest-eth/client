@@ -5,7 +5,7 @@ import { useStoredUIState, UIDataKey } from '../../api/UIStateStorageManager';
 import { Sub, Red, White } from '../../components/Text';
 import dfstyles from '../../styles/dfstyles';
 import { ONE_DAY } from '../../utils/Utils';
-import { EthAddress } from '../../_types/global/GlobalTypes';
+import { EthAddress, Hook } from '../../_types/global/GlobalTypes';
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
 import { AccountContext } from '../GameWindow';
@@ -58,9 +58,11 @@ const StyledSettingsPane = styled.div`
 export function SettingsPane({
   hook,
   privateHook,
+  hiPerfHook,
 }: {
   hook: ModalHook;
   privateHook: ModalHook;
+  hiPerfHook: Hook<boolean>;
 }) {
   const account = useContext<EthAddress | null>(AccountContext);
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
@@ -70,6 +72,8 @@ export function SettingsPane({
     UIDataKey.notifMove,
     uiManager
   );
+
+  const [hiPerf, setHiPerf] = hiPerfHook;
 
   const [allowTx, setAllowTx] = useState<boolean>(false);
   const updateAllowTx = (newVal: boolean): void => {
@@ -303,13 +307,21 @@ export function SettingsPane({
         </div>
 
         <div className='section'>
-          <p>Manage notification settings.</p>
+          <p>Manage other settings.</p>
           <div className='row'>
             <Sub>Show notifications for MOVE</Sub>
             <input
               type='checkbox'
               checked={notifMove}
               onChange={(e) => setNotifMove(e.target.checked)}
+            />
+          </div>
+          <div className='row'>
+            <Sub>High-performance mode (lower quality, faster speed!)</Sub>
+            <input
+              type='checkbox'
+              checked={hiPerf}
+              onChange={(e) => setHiPerf(e.target.checked)}
             />
           </div>
         </div>

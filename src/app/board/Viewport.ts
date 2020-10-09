@@ -3,6 +3,7 @@ import { WorldCoords, CanvasCoords, distL2 } from '../../utils/Coordinates';
 import autoBind from 'auto-bind';
 import AbstractUIManager from './AbstractUIManager';
 import { ExploredChunkData, Planet } from '../../_types/global/GlobalTypes';
+import _ from 'lodash';
 
 class Viewport {
   // The sole listener for events from Canvas
@@ -101,9 +102,14 @@ class Viewport {
       canvas
     );
 
+    // temporary, we do this because otherwise new players see a faded out home planet
+    viewport.zoomIn();
+    viewport.zoomIn();
+    viewport.centerCoords(gameUIManager.getHomeCoords());
+
     uiEmitter
       .on(UIEmitterEvent.CanvasMouseDown, viewport.onMouseDown)
-      .on(UIEmitterEvent.CanvasMouseMove, viewport.onMouseMove)
+      .on(UIEmitterEvent.CanvasMouseMove, _.throttle(viewport.onMouseMove, 33))
       .on(UIEmitterEvent.CanvasMouseUp, viewport.onMouseUp)
       .on(UIEmitterEvent.CanvasMouseOut, viewport.onMouseOut)
       .on(UIEmitterEvent.CanvasScroll, viewport.onScroll)
@@ -123,6 +129,10 @@ class Viewport {
     if (!loc) return;
     const { x, y } = loc.coords;
     this.centerWorldCoords = { x, y };
+  }
+
+  centerCoords(coords: WorldCoords): void {
+    this.centerWorldCoords = coords;
   }
 
   centerChunk(chunk: ExploredChunkData): void {

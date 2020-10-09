@@ -15,6 +15,7 @@ import WindowManager, {
   CursorState,
   WindowManagerEvent,
 } from '../../utils/WindowManager';
+import _ from 'lodash';
 
 export default function ControllableCanvas() {
   // html canvas element width and height. viewport dimensions are tracked by viewport obj
@@ -77,6 +78,7 @@ export default function ControllableCanvas() {
       const { deltaY } = e;
       uiEmitter.emit(UIEmitterEvent.CanvasScroll, deltaY);
     }
+    const throttledWheel = _.throttle(onWheel, 60);
 
     const canvas = canvasRef.current;
     const img = imgRef.current;
@@ -89,7 +91,7 @@ export default function ControllableCanvas() {
     CanvasRenderer.initialize(canvas, gameUIManager, img);
     // We can't attach the wheel event onto the canvas due to:
     // https://www.chromestatus.com/features/6662647093133312
-    canvas.addEventListener('wheel', onWheel);
+    canvas.addEventListener('wheel', throttledWheel);
     window.addEventListener('resize', onResize);
 
     uiEmitter.on(UIEmitterEvent.UIChange, doResize);
@@ -97,29 +99,53 @@ export default function ControllableCanvas() {
     return () => {
       Viewport.destroyInstance();
       CanvasRenderer.destroyInstance();
-      canvas.removeEventListener('wheel', onWheel);
+      canvas.removeEventListener('wheel', throttledWheel);
       window.removeEventListener('resize', onResize);
       uiEmitter.removeListener(UIEmitterEvent.UIChange, doResize);
     };
   }, [gameUIManager, uiEmitter, doResize, imgRef, loaded]);
 
-  if (!gameUIManager) {
-    console.error('GameUIManager context is null');
-    return <div />;
-  }
+  // attach event listeners
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
 
-  function onMouseEvent(
-    emitEventName: UIEmitterEvent,
-    mouseEvent: React.MouseEvent
-  ) {
-    if (!canvasRef.current) {
-      return;
+    function onMouseEvent(
+      emitEventName: UIEmitterEvent,
+      mouseEvent: React.MouseEvent
+    ) {
+      const rect = canvas.getBoundingClientRect();
+      const canvasX = mouseEvent.clientX - rect.left;
+      const canvasY = mouseEvent.clientY - rect.top;
+      uiEmitter.emit(emitEventName, { x: canvasX, y: canvasY });
     }
-    const rect = canvasRef.current.getBoundingClientRect();
-    const canvasX = mouseEvent.clientX - rect.left;
-    const canvasY = mouseEvent.clientY - rect.top;
-    uiEmitter.emit(emitEventName, { x: canvasX, y: canvasY });
-  }
+
+    const onMouseDown = (e) => {
+      onMouseEvent(UIEmitterEvent.CanvasMouseDown, e);
+    };
+    // this is the root of the mousemove event
+    const onMouseMove = (e) => {
+      onMouseEvent(UIEmitterEvent.CanvasMouseMove, e);
+    };
+    const onMouseUp = (e) => {
+      onMouseEvent(UIEmitterEvent.CanvasMouseUp, e);
+    };
+    // TODO convert this to mouseleave
+    const onMouseOut = () => {
+      uiEmitter.emit(UIEmitterEvent.CanvasMouseOut);
+    };
+
+    canvas.addEventListener('mousedown', onMouseDown);
+    canvas.addEventListener('mousemove', onMouseMove);
+    canvas.addEventListener('mouseup', onMouseUp);
+    canvas.addEventListener('mouseout', onMouseOut);
+    return () => {
+      canvas.removeEventListener('mousedown', onMouseDown);
+      canvas.removeEventListener('mousemove', onMouseMove);
+      canvas.removeEventListener('mouseup', onMouseUp);
+      canvas.removeEventListener('mouseout', onMouseOut);
+    };
+  }, [canvasRef, uiEmitter]);
 
   return (
     <div
@@ -141,18 +167,6 @@ export default function ControllableCanvas() {
           height: '100%',
         }}
         id='mycanvas'
-        onMouseDown={(e) => {
-          onMouseEvent(UIEmitterEvent.CanvasMouseDown, e);
-        }}
-        onMouseMove={(e) => {
-          onMouseEvent(UIEmitterEvent.CanvasMouseMove, e);
-        }}
-        onMouseUp={(e) => {
-          onMouseEvent(UIEmitterEvent.CanvasMouseUp, e);
-        }}
-        onMouseOut={() => {
-          uiEmitter.emit(UIEmitterEvent.CanvasMouseOut);
-        }}
         ref={canvasRef}
         width={width}
         height={height}

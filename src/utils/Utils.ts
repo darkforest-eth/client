@@ -235,27 +235,40 @@ export const aggregateBulkGetter = async <T>(
     const start = i * querySize;
     const end = Math.min((i + 1) * querySize, total);
     promises.push(
-      getterFn(start, end)
-        .then((res) => {
-          if (
-            printProgress &&
-            Math.floor((soFar * 20) / total) !==
-              Math.floor(((soFar + querySize) * 20) / total)
-          ) {
-            // print every 5%
-            let percent = Math.floor(((soFar + querySize) * 20) / total) * 5;
-            percent = Math.min(percent, 100);
-            terminalEmitter.print(`${percent}%... `);
-          }
-          soFar += querySize;
-          return res;
-        })
-        .catch((err) => {
-          console.error(
-            `error ${JSON.stringify(err)} occurred querying ${start}-${end}`
-          );
-          return [];
-        })
+      new Promise<T[]>(async (resolve) => {
+        let res: T[] = [];
+        const tries = 0;
+        while (res.length === 0) {
+          // retry with exponential backoff if request fails
+          await new Promise<void>((resolve) => {
+            setTimeout(resolve, Math.max(15, 2 ** tries - 1) * 1000);
+          });
+          res = await getterFn(start, end)
+            .then((res) => {
+              if (
+                printProgress &&
+                Math.floor((soFar * 20) / total) !==
+                  Math.floor(((soFar + querySize) * 20) / total)
+              ) {
+                // print every 5%
+                let percent =
+                  Math.floor(((soFar + querySize) * 20) / total) * 5;
+                percent = Math.min(percent, 100);
+                terminalEmitter.print(`${percent}%... `);
+              }
+              soFar += querySize;
+              console.log(`retrieved ${start}-${end}.`);
+              return res;
+            })
+            .catch(() => {
+              console.error(
+                `error occurred querying ${start}-${end}. retrying...`
+              );
+              return [];
+            });
+        }
+        resolve(res);
+      })
     );
   }
   const unflattenedResults = await Promise.all(promises);

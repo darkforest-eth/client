@@ -35,9 +35,12 @@ import {
 } from './ContractsAPI';
 import NotificationManager from '../utils/NotificationManager';
 
-interface MemoizedCoordHashes {
-  [x: number]: { [y: number]: Location };
-}
+type CoordsString = string;
+type MemoizedCoordHashes = Map<CoordsString, Location>;
+
+const getCoordsString = (coords: WorldCoords): CoordsString => {
+  return `${coords.x},${coords.y}`;
+};
 
 export class PlanetHelper {
   private readonly planets: PlanetMap;
@@ -66,7 +69,7 @@ export class PlanetHelper {
     this.address = address;
     this.planets = planets;
     this.contractConstants = contractConstants;
-    this.coordsToLocation = {};
+    this.coordsToLocation = new Map();
     this.planetLocationMap = {};
     const planetArrivalIds: PlanetVoyageIdMap = {};
     const arrivals: VoyageMap = {};
@@ -108,12 +111,12 @@ export class PlanetHelper {
     // set interval to update all planets every 120s
     setInterval(() => {
       for (const planetId of Object.keys(this.planets)) {
-        setTimeout(() => {
-          const planet = this.planets[planetId];
-          if (planet && hasOwner(planet)) {
-            this.updatePlanetToTime(planet, Date.now());
-          }
-        }, Math.floor(120000 * Math.random())); // evenly distribute updates
+        // setTimeout(() => {
+        const planet = this.planets[planetId];
+        if (planet && hasOwner(planet)) {
+          this.updatePlanetToTime(planet, Date.now());
+        }
+        // }, Math.floor(120000 * Math.random())); // evenly distribute updates
       }
     }, 120000);
   }
@@ -188,14 +191,13 @@ export class PlanetHelper {
   // returns an empty planet if planet is not in contract
   // returns null if this isn't a planet, according to hash and coords
   public getPlanetWithCoords(coords: WorldCoords): Planet | null {
-    const { x, y } = coords;
-    let location: Location | null = null;
-    if (this.coordsToLocation[x] && this.coordsToLocation[x][y]) {
-      location = this.coordsToLocation[x][y];
-    }
+    const str = getCoordsString(coords);
+
+    const location = this.coordsToLocation.get(str);
     if (!location) {
       return null;
     }
+
     return this.getPlanetWithLocation(location);
   }
 
@@ -217,9 +219,11 @@ export class PlanetHelper {
 
   public addPlanetLocation(planetLocation: Location): void {
     this.planetLocationMap[planetLocation.hash] = planetLocation;
-    const { x, y } = planetLocation.coords;
-    if (!this.coordsToLocation[x]) this.coordsToLocation[x] = {};
-    this.coordsToLocation[x][y] = planetLocation;
+    const str = getCoordsString(planetLocation.coords);
+    if (!this.coordsToLocation.has(str)) {
+      this.coordsToLocation.set(str, planetLocation);
+    }
+
     if (!this.planets[planetLocation.hash]) {
       this.planets[planetLocation.hash] = this.defaultPlanetFromLocation(
         planetLocation

@@ -605,14 +605,17 @@ class GameManager extends EventEmitter implements AbstractGameManager {
   }
 
   async addAccount(coords: WorldCoords): Promise<boolean> {
+    /*
     const homePlanetId = locationIdFromBigInt(mimcHash(coords.x, coords.y));
     const planet = this.getPlanetWithId(homePlanetId);
     if (!planet || planet.owner !== this.account) {
       return Promise.resolve(false);
     }
+    */
     await this.localStorageManager.setHomeCoords(coords);
     this.initMiningManager(coords);
     this.homeCoords = coords;
+    this.homeHash = locationIdFromBigInt(mimcHash(coords.x, coords.y));
     return true;
   }
 
@@ -631,7 +634,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       // initialize in a lower perlin area
       do {
         const t = Math.random() * 2 * Math.PI;
-        const r = (0.5 + Math.random() * 0.5) * this.worldRadius;
+        const r = (0.7 + Math.random() * 0.3) * this.worldRadius;
         x = Math.floor(Math.cos(t) * r);
         y = Math.floor(Math.sin(t) * r);
         p = perlin({ x, y }, false);

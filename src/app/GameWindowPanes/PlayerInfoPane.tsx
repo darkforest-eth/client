@@ -48,6 +48,9 @@ export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
   const [rank, setRank] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
 
+  const [energy, setEnergy] = useState<number>(0);
+  const [silver, setSilver] = useState<number>(0);
+
   useEffect(() => {
     if (!uiManager || !account) return;
 
@@ -62,6 +65,9 @@ export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
 
       setRank(myRank);
       setScore(myScore);
+
+      setEnergy(uiManager.getEnergyOfPlayer(account));
+      setSilver(uiManager.getSilverOfPlayer(account));
     };
 
     const intervalId = setInterval(updateRankAndScore, 60000);
@@ -97,21 +103,13 @@ export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
           <TooltipTrigger name={TooltipName.Energy} needsShift>
             <span>Energy</span>
           </TooltipTrigger>
-          <span>
-            {account && uiManager
-              ? formatNumber(uiManager.getEnergyOfPlayer(account))
-              : '...'}
-          </span>
+          <span>{formatNumber(energy)}</span>
         </div>
         <div>
           <TooltipTrigger name={TooltipName.Silver} needsShift>
             <span>Silver</span>
           </TooltipTrigger>
-          <span>
-            {account && uiManager
-              ? formatNumber(uiManager.getSilverOfPlayer(account))
-              : '...'}
-          </span>
+          <span>{formatNumber(silver)}</span>
         </div>
         <div>
           <TooltipTrigger name={TooltipName.TwitterHandle} needsShift>

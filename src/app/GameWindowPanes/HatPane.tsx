@@ -3,7 +3,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { Sub } from '../../components/Text';
 import { HAT_SIZES } from '../../utils/constants';
-import { getPlanetColors } from '../../utils/ProcgenUtils';
+import { getPlanetCosmetic } from '../../utils/ProcgenUtils';
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
 import { EthAddress, Planet } from '../../_types/global/GlobalTypes';
 import GameUIManager from '../board/GameUIManager';
@@ -96,7 +96,7 @@ export function HatPane({ hook }: { hook: ModalHook }) {
       <StyledHatPane>
         <div>
           <Sub>HAT</Sub>
-          <span>{getPlanetColors(selected).hatType}</span>
+          <span>{getPlanetCosmetic(selected).hatType}</span>
         </div>
         <div>
           <Sub>HAT Level</Sub>

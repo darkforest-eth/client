@@ -8,7 +8,7 @@ import {
   StatIdx,
 } from '../../_types/global/GlobalTypes';
 import {
-  getPlanetColors,
+  getPlanetCosmetic,
   PixelCoords,
   planetPerlin,
   planetRandom,
@@ -152,6 +152,7 @@ class PlanetscapeRenderer {
 
   frameRequestId: number;
   private TICK_SIZE = 2;
+  frameCount = 0;
 
   constructor(scapeCanvas: HTMLCanvasElement, moonCanvas: HTMLCanvasElement) {
     this.planet = null;
@@ -176,7 +177,8 @@ class PlanetscapeRenderer {
   }
 
   draw() {
-    this.drawMoon();
+    this.frameCount++;
+    if (this.frameCount % 3 === 0) this.drawMoon();
     // this.drawScape();
     this.frameRequestId = window.requestAnimationFrame(this.draw);
   }
@@ -193,7 +195,7 @@ class PlanetscapeRenderer {
       return;
     }
 
-    const colors = getPlanetColors(planet);
+    const colors = getPlanetCosmetic(planet);
     const bonuses = bonusFromHex(planet.locationId);
 
     const rand = planetRandom(planet.locationId);
@@ -299,7 +301,7 @@ class PlanetscapeRenderer {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       return;
     }
-    const colors: PlanetCosmeticInfo = getPlanetColors(planet);
+    const colors: PlanetCosmeticInfo = getPlanetCosmetic(planet);
     ctx.globalAlpha = 1;
 
     const perlin: (x: PixelCoords) => number = planetPerlin(planet.locationId);
@@ -456,7 +458,7 @@ export function PlanetScape({
 
   // make sure bg color matches planet
   useEffect(() => {
-    const planetColors = getPlanetColors(planet);
+    const planetColors = getPlanetCosmetic(planet);
     setColor(planetColors.backgroundColor);
   }, [planet]);
 

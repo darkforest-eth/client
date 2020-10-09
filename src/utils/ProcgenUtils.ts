@@ -24,7 +24,13 @@ export const hslStr: (h: number, s: number, l: number) => string = (
 ) => {
   return `hsl(${h % 360},${s}%,${l}%)`;
 };
+
+const huesByHash = new Map<string, number>();
+
 function hashToHue(hash: string): number {
+  if (huesByHash.has(hash)) {
+    return huesByHash.get(hash) || 0;
+  }
   let seed = bigInt(hash, 16).and(0xffffff).toString(16);
   seed = '0x' + '0'.repeat(6 - seed.length) + seed;
 
@@ -36,9 +42,14 @@ export const getPlayerColor: (player: EthAddress) => string = (player) => {
   return hslStr(hashToHue(player.slice(2)), 100, 70); // remove 0x
 };
 
-export const getOwnerColor: (planet: Planet) => string = (planet) => {
+export const getOwnerColor: (planet: Planet, alpha: number) => string = (
+  planet,
+  alpha
+) => {
   if (planet.owner === emptyAddress) return '#996666';
-  return planet.owner ? getPlayerColor(planet.owner) : 'hsl(0,1%,50%)';
+  return planet.owner
+    ? getPlayerColor(planet.owner)
+    : `hsla(0,1%,50%,${alpha})`;
 };
 
 export type PixelCoords = {
@@ -99,10 +110,16 @@ const grayColors: PlanetCosmeticInfo = {
   hatType: HatType.GraduationCap,
 };
 
-export const getPlanetColors: (planet: Planet | null) => PlanetCosmeticInfo = (
-  planet
-) => {
+const cosmeticByLocId = new Map<LocationId, PlanetCosmeticInfo>();
+
+export const getPlanetCosmetic: (
+  planet: Planet | null
+) => PlanetCosmeticInfo = (planet) => {
   if (!planet) return grayColors;
+  if (cosmeticByLocId.has(planet.locationId)) {
+    return cosmeticByLocId.get(planet.locationId) || grayColors;
+  }
+
   const baseHue = hashToHue(planet.locationId);
   const baseColor = hslStr(baseHue % 360, 70, 60);
 

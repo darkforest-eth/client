@@ -71,9 +71,11 @@ const StyledCoordsPane = styled.div`
   width: 16em;
   height: 4em;
 `;
-export function CoordsPane() {
+export function CoordsPane({ hiPerf }: { hiPerf: boolean }) {
   const [hovering, setHovering] = useState<boolean>(false);
   const [hidden, setHidden] = useState<boolean>(false);
+
+  if (hiPerf) return <></>;
 
   return (
     <StyledCoordsPane

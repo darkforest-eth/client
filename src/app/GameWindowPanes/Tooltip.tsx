@@ -1,11 +1,17 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useLayoutEffect,
+  useContext,
+} from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import dfstyles from '../../styles/dfstyles';
 import WindowManager, {
   TooltipName,
   WindowManagerEvent,
 } from '../../utils/WindowManager';
-import { GameWindowZIndex } from '../GameWindow';
+import { GameWindowZIndex, HiPerfContext } from '../GameWindow';
 import { TooltipContent } from './TooltipPanes';
 
 // activate TooltipName on mouseenter, deactivate on mouse leave
@@ -58,6 +64,8 @@ export function TooltipTrigger({
 
   const [pushed, setPushed] = useState<boolean>(false);
 
+  const hiPerf = useContext<boolean | null>(HiPerfContext);
+
   const windowManager = WindowManager.getInstance();
 
   useEffect(() => {
@@ -99,7 +107,7 @@ export function TooltipTrigger({
       display={display}
       style={{ ...style }}
       className={className}
-      anim={shift}
+      anim={shift && !hiPerf}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
@@ -125,7 +133,7 @@ const StyledTooltip = styled.div<{
   display: ${(props) => (props.visible ? 'block' : 'none')};
 `;
 
-export function Tooltip() {
+export function Tooltip({ hiPerf }: { hiPerf: boolean }) {
   const [top, setTop] = useState<number>(0);
   const [left, setLeft] = useState<number>(0);
 
@@ -142,7 +150,7 @@ export function Tooltip() {
   const [height, setHeight] = useState<number>(20);
   const [width, setWidth] = useState<number>(20);
 
-  // sync current
+  // subscribe to tooltip changes
   useEffect(() => {
     const checkTooltip = () => {
       const current = windowManager.getTooltip();
@@ -157,23 +165,17 @@ export function Tooltip() {
     };
   }, [windowManager]);
 
+  // sync visible to current tooltip
   useEffect(() => {
-    const doMouseMove = (e) => {
-      setLeft(e.clientX);
-      setTop(e.clientY);
-    };
-
     const checkTooltip = () => {
       const current = windowManager.getTooltip();
       if (current === TooltipName.None) setVisible(false);
       else setVisible(true);
     };
 
-    window.addEventListener('mousemove', doMouseMove);
     windowManager.on(WindowManagerEvent.TooltipUpdated, checkTooltip);
 
     return () => {
-      window.removeEventListener('mousemove', doMouseMove);
       windowManager.removeListener(
         WindowManagerEvent.TooltipUpdated,
         checkTooltip
@@ -181,11 +183,30 @@ export function Tooltip() {
     };
   }, [windowManager, height, width]);
 
+  // sync mousemove event
+  useEffect(() => {
+    const doMouseMove = (e) => {
+      if (!visible) return;
+      setLeft(e.clientX);
+      setTop(e.clientY);
+    };
+
+    if (visible) {
+      window.addEventListener('mousemove', doMouseMove);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', doMouseMove);
+    };
+  }, [visible]);
+
+  // sync size to content size
   useLayoutEffect(() => {
     setHeight(elRef.current.offsetHeight);
     setWidth(elRef.current.offsetWidth);
   }, [elRef.current.offsetHeight, elRef, visible]);
 
+  // point it in the right direction based on quadrant
   useLayoutEffect(() => {
     if (left < window.innerWidth / 2) {
       setLeftOffset(10);
@@ -200,8 +221,7 @@ export function Tooltip() {
     }
   }, [left, top, width, height]);
 
-  const tooltipArr: Array<React.ReactNode> = [];
-  tooltipArr[TooltipName.None] = <></>;
+  if (hiPerf) return <div ref={elRef} style={{ display: 'none' }}></div>;
 
   return (
     <StyledTooltip

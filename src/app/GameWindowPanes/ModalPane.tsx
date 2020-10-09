@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useCallback,
+} from 'react';
 import styled from 'styled-components';
 import dfstyles from '../../styles/dfstyles';
 import WindowManager, { TooltipName } from '../../utils/WindowManager';
@@ -214,6 +220,22 @@ export type ModalProps = {
 
 type Coords = { x: number; y: number };
 
+const clipX = (x, width) => {
+  let newX = x;
+  if (newX + width > window.innerWidth) {
+    newX = window.innerWidth - width;
+  } else if (newX < 0) newX = 0;
+  return newX;
+};
+
+const clipY = (y, height) => {
+  let newY = y;
+  if (newY + height > window.innerHeight) {
+    newY = window.innerHeight - height;
+  } else if (newY < 0) newY = 0;
+  return newY;
+};
+
 export function ModalPane({
   children,
   title,
@@ -228,95 +250,97 @@ export function ModalPane({
     hideClose?: boolean;
     style?: React.CSSProperties;
   }) {
+  const windowManager = WindowManager.getInstance();
+
   const [coords, setCoords] = useState<Coords | null>(null);
   const [delCoords, setDelCoords] = useState<Coords | null>(null);
+  const [mousedownCoords, setMousedownCoords] = useState<Coords | null>(null);
 
+  // TODO clean this up and merge them into one guy?
   const [styleClicking, setStyleClicking] = useState<boolean>(false);
+  const [clicking, setClicking] = useState<boolean>(false);
 
   const [zIndex, setZIndex] = useState<number>(GameWindowZIndex.Modal);
+  const push = useCallback(() => setZIndex(windowManager.getIndex()), [
+    windowManager,
+  ]);
 
   const containerRef = useRef<HTMLDivElement>(document.createElement('div'));
   const headerRef = useRef<HTMLDivElement>(document.createElement('div'));
 
-  const windowManager = WindowManager.getInstance();
-
-  const clipX = (x, delX) => {
-    let newLeft = x + delX;
-    if (newLeft + containerRef.current.offsetWidth > window.innerWidth) {
-      newLeft = window.innerWidth - containerRef.current.offsetWidth;
-    } else if (newLeft < 0) newLeft = 0;
-    return newLeft;
-  };
-  const getLeft = () => {
-    if (!coords) return;
-    if (!delCoords) return coords.x;
-    return clipX(coords.x, delCoords.x);
-  };
-  const clipY = (y, delY) => {
-    let newTop = y + delY;
-    if (newTop + containerRef.current.offsetHeight > window.innerHeight) {
-      newTop = window.innerHeight - containerRef.current.offsetHeight;
-    } else if (newTop < 0) newTop = 0;
-    return newTop;
-  };
-  const getTop = () => {
-    if (!coords) return;
-    if (!delCoords) return coords.y;
-    return clipY(coords.y, delCoords.y);
-  };
-
+  // attach mouse down handler
   useEffect(() => {
     if (!coords) return;
 
     const myCurrent = headerRef.current;
-    let oldMouse: null | { x: number; y: number } = null;
-    const myCoords = coords;
-    let delX = 0;
-    let delY = 0;
 
     const doMouseDown = (e) => {
-      oldMouse = { x: e.clientX, y: e.clientY };
-    };
-    const doMouseUp = () => {
-      if (!oldMouse) return; // is null, something messed up
-
-      const newCoords = {
-        x: clipX(myCoords.x, delX),
-        y: clipY(myCoords.y, delY),
-      };
-
-      oldMouse = null;
-      setDelCoords(null);
-      setCoords(newCoords);
-    };
-    const doMouseMove = (e) => {
-      if (!oldMouse) return; // is null, something messed up
-
-      delX = e.clientX - oldMouse.x;
-      delY = e.clientY - oldMouse.y;
-      setDelCoords({ x: delX, y: delY });
+      setMousedownCoords({ x: e.clientX, y: e.clientY });
+      setClicking(true);
     };
 
     myCurrent.addEventListener('mousedown', doMouseDown);
-    window.addEventListener('mouseup', doMouseUp);
-    window.addEventListener('mouseleave', doMouseUp);
-    window.addEventListener('mousemove', doMouseMove);
 
     return () => {
       myCurrent.removeEventListener('mousedown', doMouseDown);
-      window.removeEventListener('mouseup', doMouseUp);
-      window.addEventListener('mouseleave', doMouseUp);
+    };
+  }, [coords, containerRef]);
+
+  // attach mousemove handler
+  useEffect(() => {
+    const doMouseMove = (e) => {
+      if (!mousedownCoords) return; // is null, something messed up
+      if (!visible || !clicking) return;
+
+      const delX = e.clientX - mousedownCoords.x;
+      const delY = e.clientY - mousedownCoords.y;
+      setDelCoords({ x: delX, y: delY });
+    };
+
+    if (visible && clicking) {
+      window.addEventListener('mousemove', doMouseMove);
+    }
+    return () => {
       window.removeEventListener('mousemove', doMouseMove);
     };
-  }, [coords]);
+  }, [visible, clicking, mousedownCoords]);
+
+  // attach mouseup handler
+  useEffect(() => {
+    if (!mousedownCoords || !coords) return;
+
+    const doMouseUp = (e) => {
+      const delX = e.clientX - mousedownCoords.x;
+      const delY = e.clientY - mousedownCoords.y;
+
+      const newCoords = {
+        x: clipX(coords.x + delX, containerRef.current.offsetWidth),
+        y: clipY(coords.y + delY, containerRef.current.offsetHeight),
+      };
+
+      setMousedownCoords(null);
+      setDelCoords(null);
+      setCoords(newCoords);
+      setClicking(false);
+    };
+
+    if (visible && clicking) {
+      window.addEventListener('mouseleave', doMouseUp);
+      window.addEventListener('mouseup', doMouseUp);
+    }
+    return () => {
+      window.removeEventListener('mouseup', doMouseUp);
+      window.addEventListener('mouseleave', doMouseUp);
+    };
+  }, [visible, clicking, mousedownCoords, coords]);
 
   // inits at center
   useLayoutEffect(() => {
     const newX = 0.5 * (window.innerWidth - containerRef.current.offsetWidth);
     const newY = 0.5 * (window.innerHeight - containerRef.current.offsetHeight);
     setCoords({ x: newX, y: newY });
-    setZIndex(windowManager.getIndex());
-  }, [containerRef, windowManager]);
+    push();
+  }, [containerRef, windowManager, push]);
 
   // if fixCorner, fix to corner
   useLayoutEffect(() => {
@@ -329,19 +353,32 @@ export function ModalPane({
 
   // push to top
   useLayoutEffect(() => {
-    setZIndex(windowManager.getIndex());
-  }, [visible, windowManager]);
+    push();
+  }, [visible, windowManager, push]);
+
+  // calculate real values
+  const [left, setLeft] = useState<number>(0);
+  const [top, setTop] = useState<number>(0);
+
+  useLayoutEffect(() => {
+    if (!coords) return;
+    const delX = delCoords ? delCoords.x : 0;
+    const delY = delCoords ? delCoords.y : 0;
+
+    setLeft(clipX(coords.x + delX, containerRef.current.offsetWidth));
+    setTop(clipY(coords.y + delY, containerRef.current.offsetHeight));
+  }, [coords, delCoords, containerRef]);
 
   return (
     <StyledModalPane
       style={{
-        left: getLeft() + 'px',
-        top: getTop() + 'px',
+        left: left + 'px',
+        top: top + 'px',
         zIndex: visible ? zIndex : -1000,
         ...style,
       }}
       ref={containerRef}
-      onMouseDown={(_e) => setZIndex(windowManager.getIndex())}
+      onMouseDown={push}
     >
       <div
         ref={headerRef}
