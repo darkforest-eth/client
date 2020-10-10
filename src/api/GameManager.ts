@@ -884,17 +884,19 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     );
   }
 
-  getMaxMoveDist(planet: Planet, sendingPercent: number): number {
+  getMaxMoveDist(planetId: LocationId, sendingPercent: number): number {
+    const planet = this.getPlanetWithId(planetId);
+    if (!planet) throw new Error('origin planet unknown');
     // log_2(sendingPercent / 5%)
     let ratio = Math.log(sendingPercent / 5) / Math.log(2);
     ratio = Math.max(ratio, 0);
     return ratio * planet.range;
   }
 
-  getDist(from: Planet, to: Planet) {
-    const fromLoc = this.planetHelper.getLocationOfPlanet(from.locationId);
+  getDist(fromId: LocationId, toId: LocationId): number {
+    const fromLoc = this.planetHelper.getLocationOfPlanet(fromId);
     if (!fromLoc) throw new Error('origin location unknown');
-    const toLoc = this.planetHelper.getLocationOfPlanet(to.locationId);
+    const toLoc = this.planetHelper.getLocationOfPlanet(toId);
     if (!toLoc) throw new Error('destination location unknown');
 
     const { x: fromX, y: fromY } = fromLoc.coords;
@@ -903,12 +905,12 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     return Math.sqrt((fromX - toX) ** 2 + (fromY - toY) ** 2);
   }
 
-  getPlanetsInRange(planet: Planet, sendingPercent: number): Planet[] {
-    const loc = this.planetHelper.getLocationOfPlanet(planet.locationId);
+  getPlanetsInRange(planetId: LocationId, sendingPercent: number): Planet[] {
+    const loc = this.planetHelper.getLocationOfPlanet(planetId);
     if (!loc) throw new Error('origin planet location unknown');
 
     const ret: Planet[] = [];
-    const maxDist = this.getMaxMoveDist(planet, sendingPercent);
+    const maxDist = this.getMaxMoveDist(planetId, sendingPercent);
     const planetsIt = this.planetHelper.getAllPlanets();
     for (const toPlanet of planetsIt) {
       const toLoc = this.planetHelper.getLocationOfPlanet(toPlanet.locationId);
@@ -920,15 +922,17 @@ class GameManager extends EventEmitter implements AbstractGameManager {
         ret.push(toPlanet);
       }
     }
-    return [];
+    return ret;
   }
 
   getEnergyNeededForMove(
-    from: Planet,
-    to: Planet,
+    fromId: LocationId,
+    toId: LocationId,
     arrivingEnergy: number
   ): number {
-    const dist = this.getDist(from, to);
+    const from = this.getPlanetWithId(fromId);
+    if (!from) throw new Error('origin planet unknown');
+    const dist = this.getDist(fromId, toId);
     const rangeSteps = dist / from.range;
 
     const arrivingProp = arrivingEnergy / from.energyCap + 0.05;
@@ -936,13 +940,21 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     return arrivingProp * Math.pow(2, rangeSteps) * from.energyCap;
   }
 
-  getEnergyArrivingForMove(from: Planet, to: Planet, sentEnergy: number) {
-    const dist = this.getDist(from, to);
+  getEnergyArrivingForMove(
+    fromId: LocationId,
+    toId: LocationId,
+    sentEnergy: number
+  ) {
+    const from = this.getPlanetWithId(fromId);
+    if (!from) throw new Error('origin planet unknown');
+    const dist = this.getDist(fromId, toId);
     return moveShipsDecay(sentEnergy, from, dist);
   }
 
-  getTimeForMove(from: Planet, to: Planet): number {
-    const dist = this.getDist(from, to);
+  getTimeForMove(fromId: LocationId, toId: LocationId): number {
+    const from = this.getPlanetWithId(fromId);
+    if (!from) throw new Error('origin planet unknown');
+    const dist = this.getDist(fromId, toId);
     return dist / (from.speed / 100);
   }
 

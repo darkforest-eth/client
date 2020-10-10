@@ -81,19 +81,19 @@ export default interface AbstractGameManager extends EventEmitter {
 
   // estimation utils. used for scripting only (not in core client functions)
   getMyPlanets(): Planet[];
-  getDist(from: Planet, to: Planet): number;
-  getMaxMoveDist(planet: Planet, sendingPercent: number): number;
-  getPlanetsInRange(planet: Planet, sendingPercent: number): Planet[];
+  getDist(fromId: LocationId, toId: LocationId): number;
+  getMaxMoveDist(planetId: LocationId, sendingPercent: number): number;
+  getPlanetsInRange(planetId: LocationId, sendingPercent: number): Planet[];
   getEnergyNeededForMove(
-    from: Planet,
-    to: Planet,
+    fromId: LocationId,
+    toId: LocationId,
     arrivingEnergy: number
   ): number;
   getEnergyArrivingForMove(
-    from: Planet,
-    to: Planet,
+    fromId: LocationId,
+    toId: LocationId,
     sentEnergy: number
   ): number;
-  getTimeForMove(from: Planet, to: Planet): number;
+  getTimeForMove(fromId: LocationId, toId: LocationId): number;
   getTemperature(coords: WorldCoords): number;
 }
