@@ -113,7 +113,7 @@ class CanvasRenderer {
     this.zone0ChunkMap = new Map<string, ExploredChunkData>();
     this.zone1ChunkMap = new Map<string, ExploredChunkData>();
     this.zone2ChunkMap = new Map<string, ExploredChunkData>();
-    const planetLocations: Location[] = [];
+    const planetLocations: Set<Location> = new Set();
     for (const exploredChunk of exploredChunks) {
       if (viewport.intersectsViewport(exploredChunk)) {
         let chunkMap: Map<string, ExploredChunkData>;
@@ -126,7 +126,7 @@ class CanvasRenderer {
         }
         addToChunkMap(chunkMap, exploredChunk, false);
         for (const planetLocation of exploredChunk.planetLocations) {
-          planetLocations.push(planetLocation);
+          planetLocations.add(planetLocation);
         }
       }
     }
@@ -236,33 +236,37 @@ class CanvasRenderer {
     }
   }
 
-  private drawPlanets(planetLocations: Location[]) {
+  private drawPlanets(planetLocations: Set<Location>) {
     for (let l = PlanetLevel.MAX; l >= PlanetLevel.MIN; l--) {
-      for (let i = 0; i < planetLocations.length; i++) {
-        this.drawPlanetAtLocation(planetLocations[i], l);
-      }
+      planetLocations.forEach((loc) => {
+        this.drawPlanetAtLocation(loc, l);
+      });
     }
   }
 
   private drawPlanetAtLocation(location: Location, atLevel: PlanetLevel) {
     const uiManager = this.gameUIManager;
-    const planetLevel = uiManager.getPlanetDetailLevel(location.hash);
-    if (planetLevel !== atLevel) return; // strictly for ordering
-
-    const isSelected = location.hash === this.selected?.locationId;
     const planet = uiManager.getPlanetWithId(location.hash);
+    const isSelected = location.hash === this.selected?.locationId;
+
     if (!planet) return; // if we messed up somehow
+
+    const planetLevel = planet.planetLevel;
+    const detailLevel = uiManager.getPlanetDetailLevel(location.hash);
+
+    if (planetLevel !== atLevel) return; // strictly for ordering
 
     const isVeryBig = planetLevel >= 6;
 
-    const radius = uiManager.getRadiusOfPlanetLevel(planet.planetLevel);
+    const radius = uiManager.getRadiusOfPlanetLevel(planetLevel);
     const viewport = Viewport.getInstance();
     const radiusReal = viewport.worldToCanvasDist(radius);
 
-    const MIN_RADIUS = 2;
-    if (!isSelected) {
-      if (radiusReal < MIN_RADIUS && !isVeryBig) return; // detail level fallback
-      if (planetLevel === null || planetLevel < uiManager.getDetailLevel()) {
+    const minRadius = this.highPerf ? 3 : 1;
+    if (!isSelected || !isVeryBig) {
+      // always show selected and very big
+      if (radiusReal < minRadius) return; // detail level fallback
+      if (detailLevel === null || detailLevel < uiManager.getDetailLevel()) {
         return; // so we don't call getPlanetWithLocation, which triggers updates every second
       }
     }
@@ -270,7 +274,7 @@ class CanvasRenderer {
     if (isSelected || isVeryBig) {
       this.ctx.globalAlpha = 1;
     } else {
-      const alpha = Math.max(0, 0.15 * (radiusReal - MIN_RADIUS));
+      const alpha = Math.max(0, 0.25 * (radiusReal - minRadius + 1));
       this.ctx.globalAlpha = Math.min(alpha, 1);
     }
 
@@ -364,8 +368,8 @@ class CanvasRenderer {
     if (det === null) return;
     if (det > current + 1 || isSelected) {
       if (!isSelected && !isVeryBig) {
-        this.ctx.globalAlpha = Math.min(0.1 * radiusReal, 1);
-      }
+        this.ctx.globalAlpha = Math.min(0.2 * radiusReal, 1);
+      } // don't need else, already max opacity
 
       const fromPlanet = uiManager.getMouseDownPlanet();
       const fromCoords = uiManager.getMouseDownCoords();
@@ -875,7 +879,7 @@ class CanvasRenderer {
       const y = Math.sin(theta);
 
       if (!this.highPerf) {
-        const clip = (tt) => tt % (Math.PI * 2);
+        const clip = (tt: number): number => tt % (Math.PI * 2);
         ctx.lineWidth = r;
         const oldAlpha = ctx.globalAlpha;
         for (let i = 1; i <= 8; i++) {

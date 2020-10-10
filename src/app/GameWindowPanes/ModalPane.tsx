@@ -309,7 +309,7 @@ export function ModalPane({
   useEffect(() => {
     if (!mousedownCoords || !coords) return;
 
-    const doMouseUp = (e) => {
+    const doMouseUp = (e: MouseEvent) => {
       const delX = e.clientX - mousedownCoords.x;
       const delY = e.clientY - mousedownCoords.y;
 

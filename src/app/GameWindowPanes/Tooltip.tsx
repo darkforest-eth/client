@@ -185,7 +185,7 @@ export function Tooltip({ hiPerf }: { hiPerf: boolean }) {
 
   // sync mousemove event
   useEffect(() => {
-    const doMouseMove = (e) => {
+    const doMouseMove = (e: MouseEvent) => {
       if (!visible) return;
       setLeft(e.clientX);
       setTop(e.clientY);

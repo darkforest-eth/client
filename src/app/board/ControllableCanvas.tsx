@@ -33,7 +33,7 @@ export default function ControllableCanvas() {
   const [loaded, setLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    const updateTargeting = (newstate) => {
+    const updateTargeting = (newstate: CursorState) => {
       setTargeting(newstate === CursorState.TargetingExplorer);
     };
     windowManager.on(WindowManagerEvent.StateChanged, updateTargeting);
@@ -73,12 +73,16 @@ export default function ControllableCanvas() {
       uiEmitter.emit(UIEmitterEvent.WindowResize);
     }
 
-    function onWheel(e: WheelEvent) {
-      e.preventDefault();
+    const wheel = (e: WheelEvent): void => {
       const { deltaY } = e;
       uiEmitter.emit(UIEmitterEvent.CanvasScroll, deltaY);
-    }
-    const throttledWheel = _.throttle(onWheel, 60);
+    };
+    const throttledWheel = _.throttle(wheel, 60);
+
+    const onWheel = (e: WheelEvent): void => {
+      e.preventDefault();
+      throttledWheel(e);
+    };
 
     const canvas = canvasRef.current;
     const img = imgRef.current;
@@ -91,7 +95,7 @@ export default function ControllableCanvas() {
     CanvasRenderer.initialize(canvas, gameUIManager, img);
     // We can't attach the wheel event onto the canvas due to:
     // https://www.chromestatus.com/features/6662647093133312
-    canvas.addEventListener('wheel', throttledWheel);
+    canvas.addEventListener('wheel', onWheel);
     window.addEventListener('resize', onResize);
 
     uiEmitter.on(UIEmitterEvent.UIChange, doResize);
@@ -99,7 +103,7 @@ export default function ControllableCanvas() {
     return () => {
       Viewport.destroyInstance();
       CanvasRenderer.destroyInstance();
-      canvas.removeEventListener('wheel', throttledWheel);
+      canvas.removeEventListener('wheel', onWheel);
       window.removeEventListener('resize', onResize);
       uiEmitter.removeListener(UIEmitterEvent.UIChange, doResize);
     };
@@ -112,7 +116,7 @@ export default function ControllableCanvas() {
 
     function onMouseEvent(
       emitEventName: UIEmitterEvent,
-      mouseEvent: React.MouseEvent
+      mouseEvent: MouseEvent
     ) {
       const rect = canvas.getBoundingClientRect();
       const canvasX = mouseEvent.clientX - rect.left;
@@ -120,14 +124,14 @@ export default function ControllableCanvas() {
       uiEmitter.emit(emitEventName, { x: canvasX, y: canvasY });
     }
 
-    const onMouseDown = (e) => {
+    const onMouseDown = (e: MouseEvent) => {
       onMouseEvent(UIEmitterEvent.CanvasMouseDown, e);
     };
     // this is the root of the mousemove event
-    const onMouseMove = (e) => {
+    const onMouseMove = (e: MouseEvent) => {
       onMouseEvent(UIEmitterEvent.CanvasMouseMove, e);
     };
-    const onMouseUp = (e) => {
+    const onMouseUp = (e: MouseEvent) => {
       onMouseEvent(UIEmitterEvent.CanvasMouseUp, e);
     };
     // TODO convert this to mouseleave

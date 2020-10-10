@@ -21,8 +21,11 @@ import {
 export const ONE_DAY = 24 * 60 * 60 * 1000;
 
 type NestedBigIntArray = (BigInteger | string | NestedBigIntArray)[];
+type NestedStringArray = (string | NestedStringArray)[];
 
-export const hexifyBigIntNestedArray = (arr: NestedBigIntArray) => {
+export const hexifyBigIntNestedArray = (
+  arr: NestedBigIntArray
+): NestedStringArray => {
   return arr.map((value) => {
     if (Array.isArray(value)) {
       return hexifyBigIntNestedArray(value);
@@ -31,7 +34,8 @@ export const hexifyBigIntNestedArray = (arr: NestedBigIntArray) => {
         const valueBI = bigInt(value as string);
         return '0x' + valueBI.toString(16);
       } else {
-        return '0x' + value.toString(16);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return '0x' + (value as any).toString(16);
       }
     }
   });
@@ -130,8 +134,10 @@ export const getFormatProp = (
   prop: string
 ): string => {
   if (!planet) return '0';
-  if (prop === 'silverGrowth') return formatNumber(planet[prop] * 60);
-  else return formatNumber(planet[prop]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const myPlanet = planet as any;
+  if (prop === 'silverGrowth') return formatNumber(myPlanet[prop] * 60);
+  else return formatNumber(myPlanet[prop]);
 };
 
 export const getPlanetRank = (planet: Planet | null): number => {
@@ -165,7 +171,7 @@ export const planetCanUpgrade = (planet: Planet | null) => {
   );
 };
 //https://stackoverflow.com/questions/32589197/how-can-i-capitalize-the-first-letter-of-each-word-in-a-string-using-javascript/45620677#45620677
-export const titleCase = (title) =>
+export const titleCase = (title: string): string =>
   title
     .split(/ /g)
     .map((word) => `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`)
@@ -237,11 +243,11 @@ export const aggregateBulkGetter = async <T>(
     promises.push(
       new Promise<T[]>(async (resolve) => {
         let res: T[] = [];
-        const tries = 0;
+        let tries = 0;
         while (res.length === 0) {
           // retry with exponential backoff if request fails
           await new Promise<void>((resolve) => {
-            setTimeout(resolve, Math.max(15, 2 ** tries - 1) * 1000);
+            setTimeout(resolve, Math.min(15, 2 ** tries - 1) * 1000);
           });
           res = await getterFn(start, end)
             .then((res) => {
@@ -266,6 +272,7 @@ export const aggregateBulkGetter = async <T>(
               );
               return [];
             });
+          tries += 1;
         }
         resolve(res);
       })

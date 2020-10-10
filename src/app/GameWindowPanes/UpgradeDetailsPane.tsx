@@ -266,7 +266,7 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
     }
 
     const currentLevel = selected.upgradeState[branch];
-    const newUpgrade = uiManager.getUpgrade(branch, currentLevel + 1);
+    const newUpgrade = uiManager.getUpgrade(branch, currentLevel);
     setUpgrade(newUpgrade);
   }, [branch, uiManager, selected]);
 
@@ -419,7 +419,10 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
     else return `@${twitter}'s ${shorthash} ${planetname} - ${str}`;
   };
 
-  const disabled = !planetCanUpgrade(selected);
+  // tuple of 3 bools, one for each branch
+  const disabled: boolean[] = planetCanUpgrade(selected)
+    ? selected?.upgradeState.map((level) => level >= 4) || [true, true, true]
+    : [true, true, true];
 
   useEffect(() => {
     const [, setVisible] = hook;
@@ -448,19 +451,19 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
             <UpgradeButton
               branch={0}
               hook={branchHook}
-              disabled={disabled}
+              disabled={disabled[0]}
               planet={selected}
             />
             <UpgradeButton
               branch={1}
               hook={branchHook}
-              disabled={disabled}
+              disabled={disabled[1]}
               planet={selected}
             />
             <UpgradeButton
               branch={2}
               hook={branchHook}
-              disabled={disabled}
+              disabled={disabled[2]}
               planet={selected}
             />
           </SectionButtons>

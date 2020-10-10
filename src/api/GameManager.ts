@@ -60,7 +60,7 @@ export enum GameManagerEvent {
 import TerminalEmitter, { TerminalTextStyle } from '../utils/TerminalEmitter';
 import { getAllTwitters, verifyTwitterHandle } from './UtilityServerAPI';
 import EthereumAccountManager from './EthereumAccountManager';
-import { getRandomActionId } from '../utils/Utils';
+import { getRandomActionId, moveShipsDecay } from '../utils/Utils';
 import NotificationManager from '../utils/NotificationManager';
 
 class GameManager extends EventEmitter implements AbstractGameManager {
@@ -188,11 +188,12 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     // fetch planets after allArrivals, since an arrival to a new planet might be sent
     // while we are fetching
     const planets = await contractsAPI.getPlanets();
-    for (const planetId in planets) {
-      if (planets.hasOwnProperty(planetId)) {
-        planetVoyageIdMap[planetId] = [];
+    planets.forEach((planet, locId) => {
+      if (planets.has(locId)) {
+        planetVoyageIdMap[locId] = [];
       }
-    }
+    });
+
     for (const arrival of allArrivals) {
       planetVoyageIdMap[arrival.toPlanet].push(arrival.eventId);
       arrivals[arrival.eventId] = arrival;
@@ -398,6 +399,10 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     else return null;
   }
 
+  setMinerCores(nCores: number): void {
+    this.minerManager?.setCores(nCores);
+  }
+
   getCurrentlyExploringChunk(): ChunkFootprint | null {
     if (this.minerManager) {
       return this.minerManager.getCurrentlyExploringChunk();
@@ -467,15 +472,6 @@ class GameManager extends EventEmitter implements AbstractGameManager {
   getMyBalance(): number {
     if (!this.account) return 0;
     return this.balance;
-  }
-
-  async notifyIfBalanceEmpty(): Promise<void> {
-    const balance = await this.getMyBalance();
-    const notifManager = NotificationManager.getInstance();
-
-    if (balance < 0.0015) {
-      notifManager.balanceEmpty();
-    }
   }
 
   getUnconfirmedMoves(): UnconfirmedMove[] {
@@ -697,8 +693,6 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     forces: number,
     silver: number
   ): GameManager {
-    this.notifyIfBalanceEmpty();
-
     localStorage.setItem(
       `${this.getAccount()?.toLowerCase()}-fromPlanet`,
       from
@@ -789,8 +783,6 @@ class GameManager extends EventEmitter implements AbstractGameManager {
   }
 
   upgrade(planetId: LocationId, branch: number): GameManager {
-    this.notifyIfBalanceEmpty();
-
     // this is shitty
     localStorage.setItem(
       `${this.getAccount()?.toLowerCase()}-upPlanet`,
@@ -832,7 +824,6 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
   buyHat(planetId: LocationId): GameManager {
     const terminalEmitter = TerminalEmitter.getInstance();
-    this.notifyIfBalanceEmpty();
 
     const planetLoc = this.planetHelper.getLocationOfPlanet(planetId);
     if (!planetLoc) {
@@ -884,6 +875,80 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       this.planetHelper.addPlanetLocation(planetLocation);
     }
     return this;
+  }
+
+  // utils - scripting only
+  getMyPlanets(): Planet[] {
+    return this.getAllOwnedPlanets().filter(
+      (planet) => planet.owner === this.account
+    );
+  }
+
+  getMaxMoveDist(planet: Planet, sendingPercent: number): number {
+    // log_2(sendingPercent / 5%)
+    let ratio = Math.log(sendingPercent / 5) / Math.log(2);
+    ratio = Math.max(ratio, 0);
+    return ratio * planet.range;
+  }
+
+  getDist(from: Planet, to: Planet) {
+    const fromLoc = this.planetHelper.getLocationOfPlanet(from.locationId);
+    if (!fromLoc) throw new Error('origin location unknown');
+    const toLoc = this.planetHelper.getLocationOfPlanet(to.locationId);
+    if (!toLoc) throw new Error('destination location unknown');
+
+    const { x: fromX, y: fromY } = fromLoc.coords;
+    const { x: toX, y: toY } = toLoc.coords;
+
+    return Math.sqrt((fromX - toX) ** 2 + (fromY - toY) ** 2);
+  }
+
+  getPlanetsInRange(planet: Planet, sendingPercent: number): Planet[] {
+    const loc = this.planetHelper.getLocationOfPlanet(planet.locationId);
+    if (!loc) throw new Error('origin planet location unknown');
+
+    const ret: Planet[] = [];
+    const maxDist = this.getMaxMoveDist(planet, sendingPercent);
+    const planetsIt = this.planetHelper.getAllPlanets();
+    for (const toPlanet of planetsIt) {
+      const toLoc = this.planetHelper.getLocationOfPlanet(toPlanet.locationId);
+      if (!toLoc) continue;
+
+      const { x: fromX, y: fromY } = loc.coords;
+      const { x: toX, y: toY } = toLoc.coords;
+      if ((fromX - toX) ** 2 + (fromY - toY) ** 2 < maxDist ** 2) {
+        ret.push(toPlanet);
+      }
+    }
+    return [];
+  }
+
+  getEnergyNeededForMove(
+    from: Planet,
+    to: Planet,
+    arrivingEnergy: number
+  ): number {
+    const dist = this.getDist(from, to);
+    const rangeSteps = dist / from.range;
+
+    const arrivingProp = arrivingEnergy / from.energyCap + 0.05;
+
+    return arrivingProp * Math.pow(2, rangeSteps) * from.energyCap;
+  }
+
+  getEnergyArrivingForMove(from: Planet, to: Planet, sentEnergy: number) {
+    const dist = this.getDist(from, to);
+    return moveShipsDecay(sentEnergy, from, dist);
+  }
+
+  getTimeForMove(from: Planet, to: Planet): number {
+    const dist = this.getDist(from, to);
+    return dist / (from.speed / 100);
+  }
+
+  getTemperature(coords: WorldCoords): number {
+    const p = perlin(coords, false);
+    return (16 - p) * 16;
   }
 }
 

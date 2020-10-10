@@ -46,7 +46,10 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
   private replayMode: boolean;
   private detailLevel: number; // 0 is show everything; higher means show less
-  private readonly radiusMap = {};
+
+  // TODO fix this
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private readonly radiusMap: any = {};
 
   private selectedPlanet: Planet | null = null;
   private selectedCoords: WorldCoords | null = null;
@@ -62,8 +65,8 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
   private minerLocation: WorldCoords | null = null;
   private isMining = true;
 
-  private forcesSending: Record<LocationId, number> = {}; // this is a percentage
-  private silverSending: Record<LocationId, number> = {}; // this is a percentage
+  private forcesSending: { [key: string]: number } = {}; // this is a percentage
+  private silverSending: { [key: string]: number } = {}; // this is a percentage
 
   // lifecycle methods
 
@@ -225,18 +228,10 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
         this.mouseDownOverPlanet &&
         mouseUpOverPlanet.locationId === this.mouseDownOverPlanet.locationId
       ) {
-        // toggle select
-        if (
-          this.selectedPlanet &&
-          this.selectedPlanet.locationId === mouseUpOverPlanet.locationId
-        ) {
-          this.setSelectedPlanet(null);
-          this.selectedCoords = null;
-        } else {
-          this.setSelectedPlanet(mouseUpOverPlanet);
-          this.selectedCoords = mouseUpOverCoords;
-          terminalEmitter.println(`Selected: ${mouseUpOverPlanet.locationId}`);
-        }
+        // select planet
+        this.setSelectedPlanet(mouseUpOverPlanet);
+        this.selectedCoords = mouseUpOverCoords;
+        terminalEmitter.println(`Selected: ${mouseUpOverPlanet.locationId}`);
       } else if (
         mouseDownPlanet &&
         mouseDownPlanet.owner === this.gameManager.getAccount()
@@ -265,10 +260,16 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
             (mouseDownCoords.y - mouseUpOverCoords.y) ** 2
         );
         const myAtk: number = moveShipsDecay(forces, mouseDownPlanet, dist);
-        const effPercentSilver = Math.min(
-          this.getSilverSending(from.locationId),
-          98
-        );
+        let effPercentSilver = this.getSilverSending(from.locationId);
+        if (
+          effPercentSilver > 98 &&
+          from.planetResource === PlanetResource.SILVER &&
+          from.silver < from.silverCap
+        ) {
+          // player is trying to send 100% silver from a silver mine that is not at cap
+          // Date.now() and block.timestamp are occasionally a bit out of sync, so clip
+          effPercentSilver = 98;
+        }
         if (myAtk > 0) {
           const silver = Math.floor((from.silver * effPercentSilver) / 100);
           // TODO: do something like JSON.stringify(args) so we know formatting is correct

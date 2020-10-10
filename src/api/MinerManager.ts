@@ -10,6 +10,7 @@ import { MiningPattern } from '../utils/MiningPatterns';
 import perlin from '../miner/perlin';
 import { ChunkStore } from '../_types/darkforest/api/LocalStorageManagerTypes';
 import { getChunkKey } from '../utils/ChunkUtils';
+import TerminalEmitter from '../utils/TerminalEmitter';
 
 export enum MinerManagerEvent {
   DiscoveredNewChunk = 'DiscoveredNewChunk',
@@ -180,6 +181,19 @@ class MinerManager extends EventEmitter {
     );
   }
 
+  public setCores(nCores: number): void {
+    this.stopExplore();
+    this.workers.map((x) => x.terminate());
+    this.workers = [];
+
+    this.cores = nCores;
+    _.range(this.cores).forEach((i) => this.initWorker(i));
+    this.startExplore();
+
+    const terminalEmitter = TerminalEmitter.getInstance();
+    terminalEmitter.println(`Now mining on ${nCores} core(s).`);
+  }
+
   public startExplore(): void {
     // increments the current job ID
     if (!this.isExploring) {
@@ -198,8 +212,8 @@ class MinerManager extends EventEmitter {
     if (!this.isExploring) {
       return null;
     }
-    const keys = Object.keys(this.exploringChunk);
-    for (const key of keys) {
+
+    for (const key in this.exploringChunk) {
       const res = this.chunkKeyToLocation(key);
       if (res) {
         const [chunkLocation, jobId] = res;

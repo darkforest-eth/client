@@ -35,6 +35,7 @@ function hashToHue(hash: string): number {
   seed = '0x' + '0'.repeat(6 - seed.length) + seed;
 
   const baseHue = parseInt(seed) % 360;
+  huesByHash.set(hash, baseHue);
   return baseHue;
 }
 
@@ -65,7 +66,7 @@ export const planetPerlin: NoiseClosure = (loc: LocationId) => {
 
   const noise = Noise.getInstance();
   const offset = parseInt('0x' + realHash.substring(0, 10));
-  const t = (num) => num / 100 + offset;
+  const t = (num: number): number => num / 100 + offset;
 
   return (coords: PixelCoords) => {
     const ret = noise.simplex2(t(coords.x), t(coords.y));
@@ -136,6 +137,8 @@ export const getPlanetCosmetic: (
     asteroidColor: hslStr(baseHue % 360, 40, 40),
     hatType: hatTypeFromHash(planet.locationId),
   };
+
+  cosmeticByLocId.set(planet.locationId, colors);
 
   return colors;
 };

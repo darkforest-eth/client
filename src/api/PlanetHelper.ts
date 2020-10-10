@@ -74,9 +74,10 @@ export class PlanetHelper {
     const planetArrivalIds: PlanetVoyageIdMap = {};
     const arrivals: VoyageMap = {};
     this.endTimeSeconds = endTimeSeconds;
-    for (const planetId in planets) {
-      if (planets.hasOwnProperty(planetId)) {
-        const planet = planets[planetId];
+
+    planets.forEach((_planet, planetId) => {
+      const planet = planets.get(planetId);
+      if (planet) {
         const arrivalsForPlanet = unprocessedPlanetArrivalIds[planetId]
           .map((arrivalId) => unprocessedArrivals[arrivalId] || null)
           .filter((x) => !!x);
@@ -93,7 +94,7 @@ export class PlanetHelper {
         }
         this.updateScore(planetId as LocationId);
       }
-    }
+    });
 
     const allChunks = chunkStore.allChunks();
     for (const chunk of allChunks) {
@@ -110,20 +111,17 @@ export class PlanetHelper {
 
     // set interval to update all planets every 120s
     setInterval(() => {
-      for (const planetId of Object.keys(this.planets)) {
-        // setTimeout(() => {
-        const planet = this.planets[planetId];
+      this.planets.forEach((planet) => {
         if (planet && hasOwner(planet)) {
           this.updatePlanetToTime(planet, Date.now());
         }
-        // }, Math.floor(120000 * Math.random())); // evenly distribute updates
-      }
+      });
     }, 120000);
   }
 
   // get planet by ID - must be in contract or known chunks
   public getPlanetWithId(planetId: LocationId): Planet | null {
-    const planet = this.planets[planetId];
+    const planet = this.planets.get(planetId);
     if (planet) {
       this.updatePlanetIfStale(planet);
       return planet;
@@ -136,7 +134,7 @@ export class PlanetHelper {
   // returns null if this planet is neither in contract nor in known chunks
   // fast query that doesn't update planet if stale
   public getPlanetLevel(planetId: LocationId): PlanetLevel | null {
-    const planet = this.planets[planetId];
+    const planet = this.planets.get(planetId);
     if (planet) {
       return planet.planetLevel;
     }
@@ -146,7 +144,7 @@ export class PlanetHelper {
   // returns null if this planet is neither in contract nor in known chunks
   // fast query that doesn't update planet if stale
   public getPlanetDetailLevel(planetId: LocationId): number | null {
-    const planet = this.planets[planetId];
+    const planet = this.planets.get(planetId);
     if (planet) {
       let detailLevel = planet.planetLevel;
       if (hasOwner(planet)) {
@@ -164,17 +162,18 @@ export class PlanetHelper {
   ): void {
     // does not modify unconfirmed departures or upgrades
     // that is handled by onTxConfirm
-    if (this.planets[planet.locationId]) {
+    const localPlanet = this.planets.get(planet.locationId);
+    if (localPlanet) {
       const {
         unconfirmedDepartures,
         unconfirmedUpgrades,
         unconfirmedBuyHats,
-      } = this.planets[planet.locationId];
+      } = localPlanet;
       planet.unconfirmedDepartures = unconfirmedDepartures;
       planet.unconfirmedUpgrades = unconfirmedUpgrades;
       planet.unconfirmedBuyHats = unconfirmedBuyHats;
     }
-    this.planets[planet.locationId] = planet;
+    this.planets.set(planet.locationId, planet);
     this.clearOldArrivals(planet);
     const updatedAwts = this.processArrivalsForPlanet(
       planet.locationId,
@@ -204,17 +203,17 @@ export class PlanetHelper {
   // returns an empty planet if planet is not in contract
   // returns null if this isn't a planet, according to hash and coords
   public getPlanetWithLocation(location: Location): Planet | null {
-    if (!!this.planets[location.hash]) {
-      const planet = this.planets[location.hash];
+    const planet = this.planets.get(location.hash);
+    if (planet) {
       this.updatePlanetIfStale(planet);
-      return this.planets[location.hash];
+      return planet;
     }
+
     // return a default unowned planet
-    const myPlanet = this.defaultPlanetFromLocation(location);
+    const defaultPlanet = this.defaultPlanetFromLocation(location);
+    this.planets.set(location.hash, defaultPlanet);
 
-    this.planets[location.hash] = myPlanet;
-
-    return myPlanet;
+    return defaultPlanet;
   }
 
   public addPlanetLocation(planetLocation: Location): void {
@@ -224,9 +223,10 @@ export class PlanetHelper {
       this.coordsToLocation.set(str, planetLocation);
     }
 
-    if (!this.planets[planetLocation.hash]) {
-      this.planets[planetLocation.hash] = this.defaultPlanetFromLocation(
-        planetLocation
+    if (!this.planets.get(planetLocation.hash)) {
+      this.planets.set(
+        planetLocation.hash,
+        this.defaultPlanetFromLocation(planetLocation)
       );
     }
   }
@@ -235,8 +235,13 @@ export class PlanetHelper {
     return this.planetLocationMap[planetId] || null;
   }
 
+  // NOT PERFORMANT - for scripting only
+  public getAllPlanets(): Iterable<Planet> {
+    return this.planets.values();
+  }
+
   public getAllOwnedPlanets(): Planet[] {
-    return Object.values(this.planets).filter(hasOwner);
+    return [...this.planets.values()].filter(hasOwner);
   }
 
   public getAllVoyages(): QueuedArrival[] {
@@ -392,30 +397,23 @@ export class PlanetHelper {
     const nowInSeconds = Date.now() / 1000;
     for (const arrival of arrivals) {
       try {
-        if (
-          nowInSeconds - arrival.arrivalTime > 0 &&
-          this.planets[arrival.fromPlanet] &&
-          this.planets[arrival.toPlanet]
-        ) {
+        const fromPlanet = this.planets.get(arrival.fromPlanet);
+        const toPlanet = this.planets.get(arrival.toPlanet);
+        if (nowInSeconds - arrival.arrivalTime > 0 && fromPlanet && toPlanet) {
           // if arrival happened in the past, run this arrival
-          this.arrive(
-            this.planets[arrival.fromPlanet],
-            this.planets[arrival.toPlanet],
-            arrival
-          );
+          this.arrive(fromPlanet, toPlanet, arrival);
         } else {
           // otherwise, set a timer to do this arrival in the future
           // and append it to arrivalsWithTimers
           const applyFutureArrival = setTimeout(() => {
-            this.arrive(
-              this.planets[arrival.fromPlanet],
-              this.planets[arrival.toPlanet],
-              arrival
-            );
+            const fromPlanet = this.planets.get(arrival.fromPlanet);
+            const toPlanet = this.planets.get(arrival.toPlanet);
+            if (fromPlanet && toPlanet)
+              this.arrive(fromPlanet, toPlanet, arrival);
 
             const notifManager = NotificationManager.getInstance();
-            const toPlanet = this.planets[arrival.toPlanet];
             if (
+              toPlanet &&
               this.planetCanUpgrade(toPlanet) &&
               toPlanet.owner === this.address
             ) {
@@ -516,6 +514,11 @@ export class PlanetHelper {
   }
 
   private planetCanUpgrade(planet: Planet): boolean {
+    const totalRank = planet.upgradeState.reduce((a, b) => a + b);
+    if (planet.spaceType === SpaceType.NEBULA && totalRank >= 3) return false;
+    if (planet.spaceType === SpaceType.SPACE && totalRank >= 4) return false;
+    if (planet.spaceType === SpaceType.DEEP_SPACE && totalRank >= 5)
+      return false;
     return (
       planet.planetLevel !== 0 &&
       planet.planetResource !== PlanetResource.SILVER &&
@@ -762,7 +765,7 @@ export class PlanetHelper {
   }
 
   private updateScore(planetId: LocationId) {
-    const planet = this.planets[planetId];
+    const planet = this.planets.get(planetId);
     if (!planet) {
       return;
     }

@@ -9,7 +9,7 @@
     "@metamask/detect-provider": "^1.1.0",
     "@types/lodash": "^4.14.157",
     "auto-bind": "^4.0.0",
-    "big-integer": "^1.6.46",
+    "big-integer": "^1.6.48",
     "csv-parse": "^4.10.1",
     "email-validator": "^2.0.4",
     "es6-promisify": "^6.1.1",

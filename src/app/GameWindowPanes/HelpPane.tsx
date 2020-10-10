@@ -44,6 +44,16 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
   return (
     <ModalPane hook={hook} title='Help' name={ModalName.Help}>
       <HelpWrapper>
+        <p className='title'>Patch Notes</p>
+        <ul>
+          <li>Made game initialization more stable for higher loads on xDAI</li>
+          <li>
+            Added "high performance" mode to settings - this will draw slightly
+            fewer things on the UI, allowing the client to run faster for
+            players with large maps
+          </li>
+        </ul>
+
         <p className='title'>Tutorial</p>
         <p>
           <a onClick={() => TutorialManager.getInstance().reset()}>

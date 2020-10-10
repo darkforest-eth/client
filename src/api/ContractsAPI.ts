@@ -21,7 +21,6 @@ import {
   BigNumber as EthersBN,
 } from 'ethers';
 import _ from 'lodash';
-import bigInt from 'big-integer';
 
 import {
   address,
@@ -65,6 +64,7 @@ import TerminalEmitter, { TerminalTextStyle } from '../utils/TerminalEmitter';
 import EthereumAccountManager from './EthereumAccountManager';
 import NotificationManager from '../utils/NotificationManager';
 import { BLOCK_EXPLORER_URL } from '../utils/constants';
+import bigInt from 'big-integer';
 
 export function isUnconfirmedInit(tx: UnconfirmedTx): tx is UnconfirmedInit {
   return tx.type === EthTxType.INIT;
@@ -143,9 +143,6 @@ class TxExecutor extends EventEmitter {
 
     // this guy should get a manager / API so we can actually understand it
     const enableUntilStr = localStorage.getItem(`wallet-enabled-${userAddr}`);
-    console.log(`wallet-enabled-${userAddr}`);
-
-    console.log(txRequest.args);
 
     if (
       !enableUntilStr ||
@@ -194,6 +191,17 @@ class TxExecutor extends EventEmitter {
     this.pendingExec = true;
     try {
       console.log('executing tx');
+      // check if balance too low
+      const ethConnection = EthereumAccountManager.getInstance();
+      const balance = await ethConnection.getBalance(
+        ethConnection.getAddress()
+      );
+      if (balance < 0.002) {
+        const notifsManager = NotificationManager.getInstance();
+        notifsManager.balanceEmpty();
+        throw new Error('xDAI balance too low!');
+      }
+
       if (Date.now() - this.nonceLastUpdated > 30000) {
         this.nonce = await EthereumAccountManager.getInstance().getNonce();
       }
@@ -227,7 +235,7 @@ class TxExecutor extends EventEmitter {
 
 class ContractsAPI extends EventEmitter {
   readonly account: EthAddress;
-  private readonly coreContract: Contract;
+  private coreContract: Contract;
   private readonly txRequestExecutor: TxExecutor;
 
   private constructor(
@@ -302,6 +310,12 @@ class ContractsAPI extends EventEmitter {
         const planet = await this.getPlanet(location);
         this.emit(ContractsAPIEvent.PlanetUpdate, planet);
       });
+
+    const ethConnection = EthereumAccountManager.getInstance();
+
+    ethConnection.on('ChangedRPCEndpoint', async () => {
+      this.coreContract = await ethConnection.loadCoreContract();
+    });
   }
 
   removeEventListeners(): void {
@@ -770,7 +784,7 @@ class ContractsAPI extends EventEmitter {
       true
     );
 
-    const planets: PlanetMap = {};
+    const planets: PlanetMap = new Map();
     for (let i = 0; i < nPlanets; i += 1) {
       if (!!rawPlanets[i] && !!rawPlanetsExtendedInfo[i]) {
         const planet = this.rawPlanetToObject(
@@ -778,7 +792,7 @@ class ContractsAPI extends EventEmitter {
           rawPlanets[i],
           rawPlanetsExtendedInfo[i]
         );
-        planets[planet.locationId as string] = planet;
+        planets.set(planet.locationId, planet);
       }
     }
     return planets;

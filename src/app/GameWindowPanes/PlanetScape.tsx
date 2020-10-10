@@ -338,7 +338,7 @@ class PlanetscapeRenderer {
 
       drawPath(arr);
     }
-    const drawBlob = (cx, cy, r) => {
+    const drawBlob = (cx: number, cy: number, r: number): void => {
       const arr: PixelCoords[] = [];
       const ticks = 120;
       const offX = rand() * 100;
