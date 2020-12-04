@@ -16,6 +16,8 @@
  *
  */
 
+// @ts-nocheck
+
 // Modified for TypeScript by Alan Luo
 class Noise {
   noise: any;

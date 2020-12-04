@@ -120,7 +120,8 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     return ret.trim();
   };
 
-  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const wait = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
   const animEllipsis = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();

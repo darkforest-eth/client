@@ -100,7 +100,7 @@ class PlanetPreviewRenderer {
     bufferCtx.save();
     bufferCtx.translate(mid.x, mid.y); // push translate
 
-    const blobPath = (cx, cy, r) => {
+    const blobPath = (cx: number, cy: number, r: number): void => {
       bufferCtx.save();
       bufferCtx.translate(cx, cy);
 
@@ -124,7 +124,7 @@ class PlanetPreviewRenderer {
       bufferCtx.restore();
     };
 
-    const drawAsteroid = (cx, cy) => {
+    const drawAsteroid = (cx: number, cy: number): void => {
       bufferCtx.save();
       bufferCtx.translate(cx, cy);
 

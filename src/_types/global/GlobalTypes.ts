@@ -18,6 +18,7 @@ export interface Web3Object {
   currentProvider: Record<string, unknown>;
 }
 
+export type SetFn<T> = Dispatch<SetStateAction<T>>;
 export type Hook<T> = [T, Dispatch<SetStateAction<T>>];
 
 export enum PlanetLevel {
@@ -70,9 +71,12 @@ export interface SnarkJSProofAndSignals {
   publicSignals: string[];
 }
 
+/**
+ * this is expected to be 64-length, lowercase hex string. see src/utils/CheckedTypeUtils.ts for constructor
+ */
 export type LocationId = string & {
   __value__: never;
-}; // this is expected to be 64 chars, lowercase hex. see src/utils/CheckedTypeUtils.ts for constructor
+};
 
 export type EthAddress = string & {
   __value__: never;
@@ -113,7 +117,7 @@ export const enum UpgradeBranchName {
   Speed = 2,
 }
 
-export interface Planet {
+export type Planet = {
   locationId: LocationId;
   perlin: number;
   spaceType: SpaceType;
@@ -137,8 +141,6 @@ export interface Planet {
   silver: number;
 
   // metadata stuff
-  isInitialized?: boolean; // TODO consider making these non-optional
-  createdAt?: number;
   lastUpdated: number;
   upgradeState: UpgradeState;
 
@@ -147,22 +149,17 @@ export interface Planet {
   unconfirmedBuyHats: UnconfirmedBuyHat[];
   silverSpent: number;
 
-  pulledFromContract: boolean;
+  isInContract: boolean;
+  syncedWithContract: boolean;
+};
+
+export type LocatablePlanet = Planet & {
+  location: Location;
+};
+
+export function isLocatable(planet: Planet): planet is LocatablePlanet {
+  return (planet as LocatablePlanet).location !== undefined;
 }
-/*
-export interface QueuedArrival {
-  arrivalId: string;
-  departureTime: number;
-  arrivalTime: number;
-  // TODO should this be Address?
-  player: string;
-  oldLoc: LocationId;
-  newLoc: LocationId;
-  maxDist: number;
-  shipsMoved: number;
-  silverMoved: number;
-}
-*/
 
 export type QueuedArrival = {
   eventId: string;
@@ -182,31 +179,24 @@ export interface ArrivalWithTimer {
 
 export type PlanetMap = Map<LocationId, Planet>;
 
-export interface PlanetLocationMap {
-  [planetId: string]: Location;
-}
+export type PlanetLocationMap = Map<LocationId, Location>;
 
-// ONLY USED FOR GAMEMANAGER/PLANETHELPER CONSTRUCTOR
-export interface VoyageContractData {
-  [arrivalId: string]: QueuedArrival;
-}
+// // ONLY USED FOR GAMEMANAGER/PLANETHELPER CONSTRUCTOR
+// arrivalId: string, QueuedArrival
+export type VoyageContractData = Map<string, QueuedArrival>;
 
-export interface VoyageMap {
-  [arrivalId: string]: ArrivalWithTimer;
-}
+// arrivalId: string, ArrivalWithTimer
+export type VoyageMap = Map<string, ArrivalWithTimer>;
 
-export interface PlanetVoyageIdMap {
-  [planetId: string]: string[]; // to arrivalIDs
-}
+// planetId: string, arrivalIds: string[]
+export type PlanetVoyageIdMap = Map<string, string[]>;
 
 export interface Player {
   address: EthAddress;
   twitter?: string;
 }
 
-export class PlayerMap {
-  [playerId: string]: Player;
-}
+export type PlayerMap = Map<string, Player>;
 
 export interface ChunkFootprint {
   bottomLeft: WorldCoords;

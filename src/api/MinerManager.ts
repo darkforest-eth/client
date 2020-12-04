@@ -8,7 +8,7 @@ import { EventEmitter } from 'events';
 import _ from 'lodash';
 import { MiningPattern } from '../utils/MiningPatterns';
 import perlin from '../miner/perlin';
-import { ChunkStore } from '../_types/darkforest/api/LocalStorageManagerTypes';
+import { ChunkStore } from '../_types/darkforest/api/ChunkStoreTypes';
 import { getChunkKey } from '../utils/ChunkUtils';
 import TerminalEmitter from '../utils/TerminalEmitter';
 
@@ -55,7 +55,7 @@ class MinerManager extends EventEmitter {
   private exploringChunkStart: { [chunkKey: string]: number } = {};
   private minersComplete: { [chunkKey: string]: number } = {};
   private currentJobId = 0;
-  private useMockHash;
+  private useMockHash: boolean;
 
   private constructor(
     minedChunksStore: ChunkStore,

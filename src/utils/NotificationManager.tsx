@@ -4,7 +4,7 @@ import { getRandomActionId } from './Utils';
 import {
   EthTxStatus,
   SubmittedTx,
-  UnconfirmedTx,
+  TxIntent,
 } from '../_types/darkforest/api/ContractsAPITypes';
 import { EthIcon } from '../app/Icons';
 import {
@@ -36,7 +36,7 @@ export type NotificationInfo = {
   icon: React.ReactNode;
   id: string;
   color?: string;
-  txData?: UnconfirmedTx;
+  txData?: TxIntent;
   txStatus?: EthTxStatus;
 };
 
@@ -88,7 +88,7 @@ class NotificationManager extends EventEmitter {
   }
 
   notifyTx(
-    txData: UnconfirmedTx,
+    txData: TxIntent,
     message: React.ReactNode,
     txStatus: EthTxStatus
   ): void {
@@ -103,10 +103,10 @@ class NotificationManager extends EventEmitter {
     });
   }
 
-  txInit(tx: UnconfirmedTx): void {
+  txInit(txIntent: TxIntent): void {
     this.notifyTx(
-      tx,
-      <span>Transaction {tx.actionId} initialized.</span>,
+      txIntent,
+      <span>Transaction {txIntent.actionId} initialized.</span>,
       EthTxStatus.Init
     );
   }
@@ -135,11 +135,11 @@ class NotificationManager extends EventEmitter {
     );
   }
 
-  unsubmittedTxFail(tx: UnconfirmedTx, e: Error): void {
+  unsubmittedTxFail(txIntent: TxIntent, e: Error): void {
     this.notifyTx(
-      tx,
+      txIntent,
       <span>
-        Transaction {tx.actionId} failed.
+        Transaction {txIntent.actionId} failed.
         <br />
         Reason: {e.message}
       </span>,

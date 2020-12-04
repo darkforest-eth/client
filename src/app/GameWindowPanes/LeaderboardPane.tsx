@@ -82,25 +82,31 @@ function calculateScoreboard(
   players: Player[],
   planets: Planet[]
 ): ScoreboardEntry[] {
-  const scoreboardMap: Record<EthAddress, ScoreboardEntry> = [];
+  const scoreboardMap: Map<EthAddress, ScoreboardEntry> = new Map();
+
   for (const player of players) {
-    scoreboardMap[player.address] = {
+    const entry: ScoreboardEntry = {
       playerId: player.address,
       score: 0,
       sortedPlanets: [],
     };
-    if (player.twitter) {
-      scoreboardMap[player.address].twitter = player.twitter;
-    }
+    if (player.twitter) entry.twitter = player.twitter;
+    scoreboardMap.set(player.address, entry);
   }
+
   for (const planet of planets) {
     const owner = planet.owner;
-    if (scoreboardMap[owner]) {
-      scoreboardMap[owner].sortedPlanets.push(planet);
+    const entry = scoreboardMap.get(owner);
+    if (entry) {
+      entry.sortedPlanets.push(planet);
+      scoreboardMap.set(owner, entry);
     }
   }
+
   for (const player of players) {
-    const entry: ScoreboardEntry = scoreboardMap[player.address];
+    const entry = scoreboardMap.get(player.address);
+    if (!entry) break;
+
     entry.sortedPlanets.sort((a, b) => b.energyCap - a.energyCap);
     const nPlanets = entry.sortedPlanets.length;
     for (let i = 0; i < nPlanets; i += 1) {
@@ -111,7 +117,7 @@ function calculateScoreboard(
       }
     }
   }
-  const entries: ScoreboardEntry[] = Object.values(scoreboardMap);
+  const entries: ScoreboardEntry[] = Array.from(scoreboardMap.values());
   entries.sort((a, b) => b.score - a.score);
 
   return entries;
@@ -124,6 +130,8 @@ export function calculateRankAndScore(
   account: EthAddress
 ): [number, number] {
   const entries = calculateScoreboard(players, planets);
+  console.log(players, planets, account, entries);
+
   for (let i = 0; i < entries.length; i++) {
     if (entries[i].playerId === account) {
       return [i + 1, entries[i].score];

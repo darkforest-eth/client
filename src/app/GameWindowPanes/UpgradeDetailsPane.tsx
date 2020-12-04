@@ -277,8 +277,11 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
 
   const getStat = (stat: string): number => {
     if (!selected) return 0;
-    if (stat === 'silverGrowth') return selected[stat] * 60;
-    else return selected[stat];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mySelected = selected as any;
+
+    if (stat === 'silverGrowth') return mySelected[stat] * 60;
+    else return mySelected[stat];
   };
   const stat = (stat: string): string => {
     const num = getStat(stat);
@@ -287,7 +290,10 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
   };
   const getStatFuture = (stat: string): number => {
     if (!selected) return 0;
-    if (!upgrade) return selected[stat];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mySelected = selected as any;
+
+    if (!upgrade) return mySelected[stat];
 
     let mult = 1;
     if (stat === 'energyCap') {
@@ -372,7 +378,7 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
     );
   };
 
-  const doUpgrade = (_e) => {
+  const doUpgrade = (_e: React.MouseEvent) => {
     if (!canUpgrade() || !uiManager || !selected || branch === null) return;
     uiManager.upgrade(selected, branch);
   };

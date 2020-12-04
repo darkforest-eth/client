@@ -222,7 +222,7 @@ export function TutorialPane({
 
   // sync tutorial state
   useEffect(() => {
-    const update = (newState) => {
+    const update = (newState: TutorialState) => {
       setTutorialState(newState);
       setCompleted(newState === TutorialState.Completed);
     };

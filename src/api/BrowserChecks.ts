@@ -45,7 +45,7 @@ const isSupportedBrowser = async () =>
 type FeatureList = Partial<Record<Incompatibility, boolean>>;
 
 const checkFeatures = async (): Promise<FeatureList> => {
-  const incompats = {};
+  const incompats: FeatureList = {};
 
   try {
     incompats[
@@ -63,5 +63,7 @@ const checkFeatures = async (): Promise<FeatureList> => {
 
 export const unsupportedFeatures = async (): Promise<Incompatibility[]> => {
   const features = await checkFeatures();
-  return _.keys(features).filter((f) => features[f]) as Incompatibility[];
+  return _.keys(features).filter(
+    (f: Incompatibility) => features[f]
+  ) as Incompatibility[];
 };

@@ -45,7 +45,7 @@ export default function GameWindow() {
   useEffect(() => {
     if (!uiManager) return;
 
-    const onKeypress = (e) => {
+    const onKeypress = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setSelected(null);
         uiManager?.setSelectedPlanet(null);

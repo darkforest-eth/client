@@ -125,9 +125,11 @@ class LandingPageCanvasRenderer {
         : 3;
 
     const perturb = () => -150 + Math.random() * 300;
-    const midX = (x) => 0.2 * canvas.width < x && x < 0.8 * canvas.width;
-    const midY = (y) => 0.2 * canvas.height < y && y < 0.8 * canvas.height;
-    const mid = (x, y) => midX(x) && midY(y);
+    const midX = (x: number) =>
+      0.2 * canvas.width < x && x < 0.8 * canvas.width;
+    const midY = (y: number) =>
+      0.2 * canvas.height < y && y < 0.8 * canvas.height;
+    const mid = (x: number, y: number) => midX(x) && midY(y);
 
     for (let i = 0; i < numH; i++) {
       for (let j = 0; j < numV; j++) {
@@ -169,7 +171,7 @@ class LandingPageCanvasRenderer {
         clientX: xOfT() * window.innerWidth,
         clientY: yOfT() * window.innerHeight,
       };
-      this._mouseMove(fakeE);
+      this._mouseMove(fakeE as MouseEvent);
     }
 
     // draw stuff
@@ -242,12 +244,12 @@ class LandingPageCanvasRenderer {
     this.frameRequestId = window.requestAnimationFrame(this.frame.bind(this));
   }
 
-  private mouseMove(e) {
+  private mouseMove(e: MouseEvent) {
     if (!this.allowMouse()) return;
     this._mouseMove(e);
   }
 
-  private _mouseMove(e) {
+  private _mouseMove(e: MouseEvent) {
     const newMouse = {
       x: e.clientX * scaleFactor,
       y: e.clientY * scaleFactor,
@@ -277,7 +279,7 @@ class LandingPageCanvasRenderer {
       } else return base;
     };
 
-    const _tIdentity = (x, _m) => x;
+    const _tIdentity = (x: Position, _m: number) => x;
 
     if (this.mouse.x !== -0xdeadbeef) {
       const baseVmouse = {

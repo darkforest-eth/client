@@ -4,12 +4,19 @@
     "target": "ES6",
     "outDir": "./dist/",
     "sourceMap": true,
-    // "noImplicitAny": true,
+    "noImplicitAny": true,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "react", // use typescript to transpile jsx to js
     "allowJs": true, // allow a partial TypeScript and JavaScript codebase
     "moduleResolution": "Node",
-    "lib": ["es2015", "dom", "webworker"]
-  }
+    "lib": ["es2015", "dom"],
+    "skipLibCheck": true,
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "./node_modules",
+    "**/*.d.ts",
+    "./dist",
+  ]
 }

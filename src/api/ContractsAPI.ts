@@ -1,4 +1,3 @@
-//import * as EventEmitter from 'events';
 import { EventEmitter } from 'events';
 import {
   EthAddress,
@@ -9,6 +8,7 @@ import {
   Planet,
   Upgrade,
   SpaceType,
+  LocationId,
 } from '../_types/global/GlobalTypes';
 // NOTE: DO NOT IMPORT FROM ETHERS SUBPATHS. see https://github.com/ethers-io/ethers.js/issues/349 (these imports trip up webpack)
 // in particular, the below is bad!
@@ -26,6 +26,7 @@ import {
   address,
   locationIdFromDecStr,
   locationIdToDecStr,
+  locationIdFromEthersBN,
   locationIdToBigNumber,
 } from '../utils/CheckedTypeUtils';
 import {
@@ -34,7 +35,7 @@ import {
   MoveArgs,
   RawPlanetData,
   RawPlanetExtendedInfo,
-  UnconfirmedTx,
+  TxIntent,
   UnconfirmedInit,
   EthTxType,
   UnconfirmedMove,
@@ -66,24 +67,28 @@ import NotificationManager from '../utils/NotificationManager';
 import { BLOCK_EXPLORER_URL } from '../utils/constants';
 import bigInt from 'big-integer';
 
-export function isUnconfirmedInit(tx: UnconfirmedTx): tx is UnconfirmedInit {
-  return tx.type === EthTxType.INIT;
+export function isUnconfirmedInit(
+  txIntent: TxIntent
+): txIntent is UnconfirmedInit {
+  return txIntent.type === EthTxType.INIT;
 }
 
-export function isUnconfirmedMove(tx: UnconfirmedTx): tx is UnconfirmedMove {
-  return tx.type === EthTxType.MOVE;
+export function isUnconfirmedMove(
+  txIntent: TxIntent
+): txIntent is UnconfirmedMove {
+  return txIntent.type === EthTxType.MOVE;
 }
 
 export function isUnconfirmedUpgrade(
-  tx: UnconfirmedTx
-): tx is UnconfirmedUpgrade {
-  return tx.type === EthTxType.UPGRADE;
+  txIntent: TxIntent
+): txIntent is UnconfirmedUpgrade {
+  return txIntent.type === EthTxType.UPGRADE;
 }
 
 export function isUnconfirmedBuyHat(
-  tx: UnconfirmedTx
-): tx is UnconfirmedBuyHat {
-  return tx.type === EthTxType.BUY_HAT;
+  txIntent: TxIntent
+): txIntent is UnconfirmedBuyHat {
+  return txIntent.type === EthTxType.BUY_HAT;
 }
 
 export const contractPrecision = 1000;
@@ -96,11 +101,14 @@ type QueuedTxRequest = {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   args: any[];
   overrides: providers.TransactionRequest;
+
+  onSuccess: (res: providers.TransactionResponse) => void;
+  onError: (e: Error) => void;
 };
 
 class TxExecutor extends EventEmitter {
   private txRequests: QueuedTxRequest[];
-  private pendingExec: boolean;
+  private currentlyExecuting: boolean;
   private nonce: number;
   private nonceLastUpdated: number;
 
@@ -108,34 +116,39 @@ class TxExecutor extends EventEmitter {
     super();
 
     this.txRequests = [];
-    this.pendingExec = false;
+    this.currentlyExecuting = false;
     this.nonce = nonce;
     this.nonceLastUpdated = Date.now();
   }
 
-  makeRequest(
-    txRequest: QueuedTxRequest
+  public makeRequest(
+    actionId: string,
+    contract: Contract,
+    method: string,
+    args: any[],
+    overrides: providers.TransactionRequest
   ): Promise<providers.TransactionResponse> {
-    this.txRequests.push(txRequest);
-    if (!this.pendingExec) {
-      const toExec = this.txRequests.shift();
-      if (toExec) this.execute(toExec);
-    }
     return new Promise<providers.TransactionResponse>((resolve, reject) => {
-      this.once(
-        txRequest.actionId,
-        (res: providers.TransactionResponse, e: Error) => {
-          if (res) {
-            resolve(res);
-          } else {
-            reject(e);
-          }
-        }
-      );
+      const txRequest = {
+        actionId,
+        contract,
+        method,
+        args,
+        overrides,
+        onSuccess: resolve,
+        onError: reject,
+      };
+      this.txRequests.push(txRequest);
+      if (!this.currentlyExecuting) {
+        const toExec = this.txRequests.shift();
+        if (toExec) this.execute(toExec);
+      }
     });
   }
 
-  async popupConfirmationWindow(txRequest: QueuedTxRequest): Promise<void> {
+  private async popupConfirmationWindow(
+    txRequest: QueuedTxRequest
+  ): Promise<void> {
     // popup a confirmation window
     const userAddr = await (
       await txRequest.contract.signer.getAddress()
@@ -187,10 +200,9 @@ class TxExecutor extends EventEmitter {
     }
   }
 
-  async execute(txRequest: QueuedTxRequest) {
-    this.pendingExec = true;
+  private async execute(txRequest: QueuedTxRequest) {
+    this.currentlyExecuting = true;
     try {
-      console.log('executing tx');
       // check if balance too low
       const ethConnection = EthereumAccountManager.getInstance();
       const balance = await ethConnection.getBalance(
@@ -206,26 +218,20 @@ class TxExecutor extends EventEmitter {
         this.nonce = await EthereumAccountManager.getInstance().getNonce();
       }
       await this.popupConfirmationWindow(txRequest);
-      try {
-        const res = await txRequest.contract[txRequest.method](
-          ...txRequest.args,
-          {
-            ...txRequest.overrides,
-            nonce: this.nonce,
-          }
-        );
-        this.nonce += 1;
-        this.nonceLastUpdated = Date.now();
-        this.emit(txRequest.actionId, res);
-      } catch (e) {
-        console.error('error while submitting tx:');
-        console.error(e);
-        throw new Error('Unknown error occurred.');
-      }
+      const res = await txRequest.contract[txRequest.method](
+        ...txRequest.args,
+        {
+          ...txRequest.overrides,
+          nonce: this.nonce,
+        }
+      );
+      this.nonce += 1;
+      this.nonceLastUpdated = Date.now();
+      txRequest.onSuccess(res);
     } catch (e) {
-      this.emit(txRequest.actionId, undefined, e);
+      txRequest.onError(e);
     }
-    this.pendingExec = false;
+    this.currentlyExecuting = false;
     const next = this.txRequests.shift();
     if (next) {
       this.execute(next);
@@ -276,9 +282,10 @@ class ContractsAPI extends EventEmitter {
       .on(ContractEvent.PlayerInitialized, async (player, locRaw, _: Event) => {
         const newPlayer: Player = { address: address(player) };
         this.emit(ContractsAPIEvent.PlayerInit, newPlayer);
-
-        const newPlanet: Planet = await this.getPlanet(locRaw);
-        this.emit(ContractsAPIEvent.PlanetUpdate, newPlanet);
+        this.emit(
+          ContractsAPIEvent.PlanetUpdate,
+          locationIdFromEthersBN(locRaw)
+        );
         this.emit(ContractsAPIEvent.RadiusUpdated);
       })
       .on(
@@ -291,24 +298,22 @@ class ContractsAPI extends EventEmitter {
             console.error('arrival is null');
             return;
           }
-          const fromPlanet: Planet = await this.getPlanet(
-            locationIdToBigNumber(arrival.fromPlanet)
-          );
-          const toPlanet: Planet = await this.getPlanet(
-            locationIdToBigNumber(arrival.toPlanet)
-          );
-          this.emit(ContractsAPIEvent.PlanetUpdate, toPlanet);
-          this.emit(ContractsAPIEvent.PlanetUpdate, fromPlanet);
+          this.emit(ContractsAPIEvent.PlanetUpdate, arrival.toPlanet);
+          this.emit(ContractsAPIEvent.PlanetUpdate, arrival.fromPlanet);
           this.emit(ContractsAPIEvent.RadiusUpdated);
         }
       )
       .on(ContractEvent.PlanetUpgraded, async (location, _: Event) => {
-        const planet = await this.getPlanet(location);
-        this.emit(ContractsAPIEvent.PlanetUpdate, planet);
+        this.emit(
+          ContractsAPIEvent.PlanetUpdate,
+          locationIdFromEthersBN(location)
+        );
       })
       .on(ContractEvent.BoughtHat, async (location, _: Event) => {
-        const planet = await this.getPlanet(location);
-        this.emit(ContractsAPIEvent.PlanetUpdate, planet);
+        this.emit(
+          ContractsAPIEvent.PlanetUpdate,
+          locationIdFromEthersBN(location)
+        );
       });
 
     const ethConnection = EthereumAccountManager.getInstance();
@@ -326,13 +331,6 @@ class ContractsAPI extends EventEmitter {
 
   public getContractAddress(): EthAddress {
     return address(this.coreContract.address);
-  }
-
-  public onTxInit(unminedTx: UnconfirmedTx): void {
-    const notifManager = NotificationManager.getInstance();
-    notifManager.txInit(unminedTx);
-
-    this.emit(ContractsAPIEvent.TxInitialized, unminedTx);
   }
 
   public onTxSubmit(unminedTx: SubmittedTx): void {
@@ -383,6 +381,7 @@ class ContractsAPI extends EventEmitter {
 
       const notifManager = NotificationManager.getInstance();
       notifManager.txConfirm(unminedTx);
+      this.emit(ContractsAPIEvent.TxConfirmed, unminedTx);
     } else {
       terminalEmitter.print(
         `[TX ERROR] ${unminedTx.type} transaction (`,
@@ -402,8 +401,8 @@ class ContractsAPI extends EventEmitter {
 
       const notifManager = NotificationManager.getInstance();
       notifManager.txRevert(unminedTx);
+      this.emit(ContractsAPIEvent.TxReverted, unminedTx);
     }
-    this.emit(ContractsAPIEvent.TxConfirmed, unminedTx);
   }
 
   // throws if tx initialization fails
@@ -429,13 +428,11 @@ class ContractsAPI extends EventEmitter {
       gasLimit: 2000000,
     };
     const tx: providers.TransactionResponse = await this.txRequestExecutor.makeRequest(
-      {
-        actionId,
-        contract: this.coreContract,
-        method: 'initializePlayer',
-        args,
-        overrides,
-      }
+      actionId,
+      this.coreContract,
+      'initializePlayer',
+      args,
+      overrides
     );
     if (tx.hash) {
       const unminedInitTx: SubmittedInit = {
@@ -470,13 +467,11 @@ class ContractsAPI extends EventEmitter {
       gasLimit: 2000000,
     };
     const tx: providers.TransactionResponse = await this.txRequestExecutor.makeRequest(
-      {
-        actionId,
-        contract: this.coreContract,
-        method: 'upgradePlanet',
-        args,
-        overrides,
-      }
+      actionId,
+      this.coreContract,
+      'upgradePlanet',
+      args,
+      overrides
     );
     if (tx.hash) {
       const unminedUpgradeTx: SubmittedUpgrade = {
@@ -528,13 +523,11 @@ class ContractsAPI extends EventEmitter {
     terminalEmitter.newline();
 
     const tx: providers.TransactionResponse = await this.txRequestExecutor.makeRequest(
-      {
-        actionId,
-        contract: this.coreContract,
-        method: 'move',
-        args,
-        overrides,
-      }
+      actionId,
+      this.coreContract,
+      'move',
+      args,
+      overrides
     );
 
     if (tx.hash) {
@@ -582,13 +575,11 @@ class ContractsAPI extends EventEmitter {
         .toString(),
     };
     const tx: providers.TransactionResponse = await this.txRequestExecutor.makeRequest(
-      {
-        actionId,
-        contract: this.coreContract,
-        method: 'buyHat', // TODO make this an enum
-        args: [planetIdDecStr],
-        overrides,
-      }
+      actionId,
+      this.coreContract,
+      'buyHat',
+      [planetIdDecStr],
+      overrides
     );
     if (tx.hash) {
       const unminedBuyHatTx: SubmittedBuyHat = {
@@ -695,9 +686,9 @@ class ContractsAPI extends EventEmitter {
         (await contract.bulkGetPlayers(start, end)).map(address)
     );
 
-    const playerMap: PlayerMap = {};
+    const playerMap: PlayerMap = new Map();
     for (const playerId of playerIds) {
-      playerMap[address(playerId)] = { address: address(playerId) };
+      playerMap.set(address(playerId), { address: address(playerId) });
     }
     return playerMap;
   }
@@ -720,29 +711,35 @@ class ContractsAPI extends EventEmitter {
     return this.rawArrivalToObject(rawArrival);
   }
 
-  async getArrivalsForPlanet(planet: Planet): Promise<QueuedArrival[]> {
+  async getArrivalsForPlanet(planetId: LocationId): Promise<QueuedArrival[]> {
     const contract = this.coreContract;
 
     const events = (
-      await contract.getPlanetArrivals(locationIdToDecStr(planet.locationId))
+      await contract.getPlanetArrivals(locationIdToDecStr(planetId))
     ).map(this.rawArrivalToObject);
 
     return events;
   }
 
-  async getAllArrivals(): Promise<QueuedArrival[]> {
+  /**
+   * Loads arrivals for only the given planets
+   */
+  async getAllArrivals(planetsToLoad: LocationId[]): Promise<QueuedArrival[]> {
     console.log('getting arrivals');
     const contract = this.coreContract;
     const terminalEmitter = TerminalEmitter.getInstance();
-    terminalEmitter.println('(3/6) Getting pending moves...');
-    const nPlanets: number = await contract.getNPlanets();
+    terminalEmitter.println('(4/6) Getting pending moves...');
 
     const arrivalsUnflattened = await aggregateBulkGetter<QueuedArrival[]>(
-      nPlanets,
+      planetsToLoad.length,
       1000,
       async (start, end) => {
         return (
-          await contract.bulkGetPlanetArrivals(start, end)
+          await contract.bulkGetPlanetArrivalsByIds(
+            planetsToLoad
+              .slice(start, end)
+              .map((id) => locationIdToBigNumber(id))
+          )
         ).map((arrivals: RawArrivalData[]) =>
           arrivals.map(this.rawArrivalToObject)
         );
@@ -753,42 +750,59 @@ class ContractsAPI extends EventEmitter {
     return _.flatten(arrivalsUnflattened);
   }
 
-  async getPlanets(): Promise<PlanetMap> {
-    console.log('getting planets');
-    const contract = this.coreContract;
+  async getTouchedPlanetIds(): Promise<LocationId[]> {
     const terminalEmitter = TerminalEmitter.getInstance();
+    terminalEmitter.println('(3/6) Getting planet IDs...');
+    const contract = this.coreContract;
     const nPlanets: number = await contract.getNPlanets();
 
-    terminalEmitter.println('(4/6) Getting planet IDs...');
-    const planetIds = await aggregateBulkGetter<BigInteger>(
+    const planetIds = await aggregateBulkGetter<EthersBN>(
       nPlanets,
       2000,
       async (start, end) => await contract.bulkGetPlanetIds(start, end),
       true
     );
+
+    return planetIds.map((id) => locationIdFromEthersBN(id));
+  }
+  /**
+   * bulk syncs all the planet data from the contract, for planets that have been mined on this device.
+   */
+  async getTouchedPlanets(toLoadPlanets: LocationId[]): Promise<PlanetMap> {
+    console.log('getting planets');
+    const contract = this.coreContract;
+    const terminalEmitter = TerminalEmitter.getInstance();
+
     terminalEmitter.println('(5/6) Getting planet metadata...');
     const rawPlanetsExtendedInfo = await aggregateBulkGetter<
       RawPlanetExtendedInfo
     >(
-      nPlanets,
+      toLoadPlanets.length,
       1000,
       async (start, end) =>
-        await contract.bulkGetPlanetsExtendedInfo(start, end),
+        await contract.bulkGetPlanetsExtendedInfoByIds(
+          toLoadPlanets.slice(start, end).map((id) => locationIdToBigNumber(id))
+        ),
       true
     );
+
     terminalEmitter.println('(6/6) Getting planet data...');
     const rawPlanets = await aggregateBulkGetter<RawPlanetData>(
-      nPlanets,
+      toLoadPlanets.length,
       1000,
-      async (start, end) => await contract.bulkGetPlanets(start, end),
+      async (start, end) =>
+        await contract.bulkGetPlanetsByIds(
+          toLoadPlanets.slice(start, end).map((id) => locationIdToBigNumber(id))
+        ),
       true
     );
 
     const planets: PlanetMap = new Map();
-    for (let i = 0; i < nPlanets; i += 1) {
+
+    for (let i = 0; i < toLoadPlanets.length; i += 1) {
       if (!!rawPlanets[i] && !!rawPlanetsExtendedInfo[i]) {
         const planet = this.rawPlanetToObject(
-          planetIds[i].toString(),
+          locationIdToDecStr(toLoadPlanets[i]),
           rawPlanets[i],
           rawPlanetsExtendedInfo[i]
         );
@@ -798,16 +812,14 @@ class ContractsAPI extends EventEmitter {
     return planets;
   }
 
-  private async getPlanet(rawLoc: EthersBN): Promise<Planet> {
-    const rawPlanet = await this.coreContract.planets(rawLoc);
-    const rawPlanetExtendedInfo = await this.coreContract.planetsExtendedInfo(
-      rawLoc
+  public async getPlanetById(planetId: LocationId): Promise<Planet | null> {
+    const decStrId = locationIdToDecStr(planetId);
+    const rawPlanetExtendedInfo: RawPlanetExtendedInfo = await this.coreContract.planetsExtendedInfo(
+      decStrId
     );
-    return this.rawPlanetToObject(
-      rawLoc.toString(),
-      rawPlanet,
-      rawPlanetExtendedInfo
-    );
+    if (!rawPlanetExtendedInfo[0]) return null; // planetExtendedInfo.isInitialized is false
+    const rawPlanet: RawPlanetData = await this.coreContract.planets(decStrId);
+    return this.rawPlanetToObject(decStrId, rawPlanet, rawPlanetExtendedInfo);
   }
 
   // not strictly necessary but it's cleaner
@@ -853,8 +865,6 @@ class ContractsAPI extends EventEmitter {
     const rawSilver = rawPlanet[10];
     const rawPlanetLevel = rawPlanet[11];
 
-    const rawIsInitialized = rawPlanetExtendedInfo[0];
-    const rawCreatedAt = rawPlanetExtendedInfo[1];
     const rawLastUpdated = rawPlanetExtendedInfo[2];
     const rawPerlin = rawPlanetExtendedInfo[3];
     const rawSpaceType = rawPlanetExtendedInfo[4] as SpaceType;
@@ -889,8 +899,6 @@ class ContractsAPI extends EventEmitter {
       defense: rawDefense.toNumber(),
 
       // metadata
-      isInitialized: rawIsInitialized,
-      createdAt: rawCreatedAt.toNumber(),
       lastUpdated: rawLastUpdated.toNumber(),
       upgradeState: [
         rawUpgradeState[0].toNumber(),
@@ -903,7 +911,8 @@ class ContractsAPI extends EventEmitter {
       unconfirmedBuyHats: [],
       silverSpent: 0, // this is stale and will be updated in planethelper
 
-      pulledFromContract: true,
+      isInContract: true,
+      syncedWithContract: true,
     };
     return planet;
   }

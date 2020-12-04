@@ -30,11 +30,84 @@ interface MoveInfo {
   distMax: string;
 }
 
+type ZKPTask = {
+  taskId: number;
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  input: any;
+  circuitPath: string;
+  zkeyPath: string;
+  onSuccess: (proof: SnarkJSProofAndSignals) => void;
+  onError: (e: Error) => void;
+};
+
+/**
+ * WET; we have an async task execution queue in ContractsAPI also
+ * if we have to write a third one then i'll abstract it
+ */
+class SnarkProverQueue {
+  private taskQueue: ZKPTask[];
+  private currentlyExecuting: boolean;
+  private taskCount: number;
+
+  constructor() {
+    this.taskQueue = [];
+    this.currentlyExecuting = false;
+    this.taskCount = 0;
+  }
+
+  public doProof(
+    input: any,
+    circuitPath: string,
+    zkeyPath: string
+  ): Promise<SnarkJSProofAndSignals> {
+    return new Promise<SnarkJSProofAndSignals>((resolve, reject) => {
+      const taskId = this.taskCount++;
+      this.taskQueue.push({
+        input,
+        circuitPath,
+        zkeyPath,
+        taskId,
+        onSuccess: resolve,
+        onError: reject,
+      });
+      if (!this.currentlyExecuting) {
+        const toExec = this.taskQueue.shift();
+        if (toExec) this.execute(toExec);
+      }
+    });
+  }
+
+  private async execute(task: ZKPTask) {
+    this.currentlyExecuting = true;
+    try {
+      console.log(`proving ${task.taskId}`);
+      const res = await window.snarkjs.groth16.fullProve(
+        task.input,
+        task.circuitPath,
+        task.zkeyPath
+      );
+      console.log(`proved ${task.taskId}`);
+      task.onSuccess(res);
+    } catch (e) {
+      console.error('error while calculating SNARK proof:');
+      console.error(e);
+      task.onError(e);
+    }
+    this.currentlyExecuting = false;
+    const next = this.taskQueue.shift();
+    if (next) {
+      this.execute(next);
+    }
+  }
+}
+
 class SnarkArgsHelper {
   private readonly useMockHash: boolean;
+  private readonly snarkProverQueue: SnarkProverQueue;
 
   private constructor(useMockHash: boolean) {
     this.useMockHash = useMockHash;
+    this.snarkProverQueue = new SnarkProverQueue();
   }
 
   destroy(): void {
@@ -70,11 +143,13 @@ class SnarkArgsHelper {
       const hash = this.useMockHash ? fakeHash(x, y) : mimcHash(x, y);
       const publicSignals: BigInteger[] = [hash, bigInt(p), bigInt(r)];
 
-      const snarkProof: SnarkJSProofAndSignals = await window.snarkjs.groth16.fullProve(
-        input,
-        '/public/circuits/init/circuit.wasm',
-        '/public/init.zkey'
-      );
+      const snarkProof: SnarkJSProofAndSignals = this.useMockHash
+        ? SnarkArgsHelper.fakeProof()
+        : await this.snarkProverQueue.doProof(
+            input,
+            '/public/circuits/init/circuit.wasm',
+            '/public/init.zkey'
+          );
       const ret = this.callArgsFromProofAndSignals(
         snarkProof.proof,
         publicSignals.map((x) => modPBigIntNative(x))
@@ -87,7 +162,7 @@ class SnarkArgsHelper {
 
       return ret;
     } catch (e) {
-      throw new Error('error calculating zkSNARK.');
+      throw e;
     }
   }
 
@@ -117,11 +192,13 @@ class SnarkArgsHelper {
         r: r.toString(),
         distMax: distMax.toString(),
       };
-      const snarkProof: SnarkJSProofAndSignals = await window.snarkjs.groth16.fullProve(
-        input,
-        'public/circuits/move/circuit.wasm',
-        '/public/move.zkey'
-      );
+      const snarkProof: SnarkJSProofAndSignals = this.useMockHash
+        ? SnarkArgsHelper.fakeProof()
+        : await this.snarkProverQueue.doProof(
+            input,
+            '/public/circuits/move/circuit.wasm',
+            '/public/move.zkey'
+          );
       const hash1 = this.useMockHash ? fakeHash(x1, y1) : mimcHash(x1, y1);
       const hash2 = this.useMockHash ? fakeHash(x2, y2) : mimcHash(x2, y2);
       const publicSignals: BigInteger[] = [
@@ -142,8 +219,24 @@ class SnarkArgsHelper {
       );
       return proofArgs as MoveSnarkArgs;
     } catch (e) {
-      throw new Error('error calculating zkSNARK.');
+      throw e;
     }
+  }
+
+  // if we're using a mock hash and ZK proofs are disabled, just give an empty proof
+  private static fakeProof(): SnarkJSProofAndSignals {
+    return {
+      proof: {
+        pi_a: ['0', '0', '0'],
+        pi_b: [
+          ['0', '0'],
+          ['0', '0'],
+          ['0', '0'],
+        ],
+        pi_c: ['0', '0', '0'],
+      },
+      publicSignals: [],
+    };
   }
 
   private callArgsFromProofAndSignals(

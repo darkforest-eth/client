@@ -3,6 +3,8 @@ import * as bigInt from 'big-integer';
 import { LOCATION_ID_UB } from './constants';
 import { BigInteger } from 'big-integer';
 import { BigNumber as EthersBN } from 'ethers';
+import mimcHash from '../miner/mimc';
+import { WorldCoords } from './Coordinates';
 
 // constructors for specific types
 // this pattern ensures that LocationIds and Addresses can only be initialized through constructors that do
@@ -36,6 +38,12 @@ export const locationIdFromBigInt: (location: BigInteger) => LocationId = (
   let ret = locationBI.toString(16);
   while (ret.length < 64) ret = '0' + ret;
   return ret as LocationId;
+};
+
+export const locationIdFromEthersBN: (location: EthersBN) => LocationId = (
+  location
+) => {
+  return locationIdFromDecStr(location.toString());
 };
 
 export const locationIdToHexStr: (locationId: LocationId) => string = (
@@ -74,3 +82,10 @@ export const emptyAddress = address('0000000000000000000000000000000000000000');
 export const emptyLocationId = locationIdFromHexStr(
   '0000000000000000000000000000000000000000000000000000000000000000'
 );
+
+/**
+ * this shouldn't be used in render loop or anywhere where calls are made very frequently (mimc is expensive)
+ */
+export function locationIdFromCoords(location: WorldCoords): LocationId {
+  return locationIdFromBigInt(mimcHash(location.x, location.y));
+}

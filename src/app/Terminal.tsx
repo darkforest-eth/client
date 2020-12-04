@@ -153,7 +153,7 @@ export default function Terminal() {
   };
 
   const print = (
-    str,
+    str: string,
     style: TerminalTextStyle = TerminalTextStyle.Default,
     skipTyping = false,
     onClick: (() => void) | undefined = undefined,
@@ -212,7 +212,7 @@ export default function Terminal() {
     });
   };
 
-  const onKeyUp = (e) => {
+  const onKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     (async () => {
       if (e.keyCode === ENTER_KEY_CODE && !e.shiftKey && !isTyping) {
         e.preventDefault();
@@ -242,7 +242,9 @@ export default function Terminal() {
     })();
   };
 
-  const preventEnterDefault = (e) => {
+  const preventEnterDefault = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>
+  ): void => {
     // TODO: this prevents users from doing shift-enter on firefox
     // if it's attached to onKeyDown
     if (e.keyCode === ENTER_KEY_CODE && !e.shiftKey && !isTyping) {

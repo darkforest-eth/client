@@ -718,7 +718,7 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     this.emit(GameUIManagerEvent.InitializedPlayer);
   }
 
-  private onEmitInitializedPlayerError(err) {
+  private onEmitInitializedPlayerError(err: React.ReactNode) {
     this.emit(GameUIManagerEvent.InitializedPlayerError, err);
   }
 }

@@ -9,7 +9,7 @@ import _, { Cancelable } from 'lodash';
 import {
   LSMChunkData,
   ChunkStore,
-} from '../_types/darkforest/api/LocalStorageManagerTypes';
+} from '../_types/darkforest/api/ChunkStoreTypes';
 import { WorldCoords } from '../utils/Coordinates';
 import {
   getChunkKey,
@@ -45,7 +45,7 @@ interface DBAction {
 
 type DBTx = DBAction[];
 
-class LocalStorageManager implements ChunkStore {
+class PersistentChunkStore implements ChunkStore {
   private db: IDBPDatabase;
   private cached: DBTx[];
   private throttledSaveChunkCacheToDisk: (() => Promise<void>) & Cancelable;
@@ -70,7 +70,7 @@ class LocalStorageManager implements ChunkStore {
     // no-op; we don't actually destroy the instance, we leave the db connection open in case we need it in the future
   }
 
-  static async create(account: EthAddress): Promise<LocalStorageManager> {
+  static async create(account: EthAddress): Promise<PersistentChunkStore> {
     const db = await openDB(`darkforest-${contractAddress}-${account}`, 1, {
       upgrade(db) {
         db.createObjectStore(ObjectStore.DEFAULT);
@@ -78,7 +78,7 @@ class LocalStorageManager implements ChunkStore {
         db.createObjectStore(ObjectStore.UNCONFIRMED_ETH_TXS);
       },
     });
-    const localStorageManager = new LocalStorageManager(db, account);
+    const localStorageManager = new PersistentChunkStore(db, account);
 
     await localStorageManager.loadIntoMemory();
 
@@ -307,4 +307,4 @@ class LocalStorageManager implements ChunkStore {
   }
 }
 
-export default LocalStorageManager;
+export default PersistentChunkStore;

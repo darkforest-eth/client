@@ -220,7 +220,7 @@ export type ModalProps = {
 
 type Coords = { x: number; y: number };
 
-const clipX = (x, width) => {
+const clipX = (x: number, width: number): number => {
   let newX = x;
   if (newX + width > window.innerWidth) {
     newX = window.innerWidth - width;
@@ -228,7 +228,7 @@ const clipX = (x, width) => {
   return newX;
 };
 
-const clipY = (y, height) => {
+const clipY = (y: number, height: number): number => {
   let newY = y;
   if (newY + height > window.innerHeight) {
     newY = window.innerHeight - height;
@@ -274,7 +274,7 @@ export function ModalPane({
 
     const myCurrent = headerRef.current;
 
-    const doMouseDown = (e) => {
+    const doMouseDown = (e: MouseEvent) => {
       setMousedownCoords({ x: e.clientX, y: e.clientY });
       setClicking(true);
     };
@@ -288,7 +288,7 @@ export function ModalPane({
 
   // attach mousemove handler
   useEffect(() => {
-    const doMouseMove = (e) => {
+    const doMouseMove = (e: MouseEvent) => {
       if (!mousedownCoords) return; // is null, something messed up
       if (!visible || !clicking) return;
 

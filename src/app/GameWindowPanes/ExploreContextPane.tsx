@@ -50,7 +50,7 @@ export function ExploreContextPane() {
   }, [uiManager]);
 
   useEffect(() => {
-    const doMouseDown = (worldCoords) => {
+    const doMouseDown = (worldCoords: WorldCoords) => {
       if (windowManager.getCursorState() === CursorState.TargetingExplorer) {
         windowManager.acceptInputForTarget(worldCoords);
       }
@@ -76,7 +76,7 @@ export function ExploreContextPane() {
     };
   }, [uiEmitter, windowManager, uiManager]);
 
-  const doTarget = (_e) => {
+  const doTarget = (_e: React.MouseEvent) => {
     if (windowManager.getCursorState() === CursorState.TargetingExplorer)
       windowManager.setCursorState(CursorState.Normal);
     else windowManager.setCursorState(CursorState.TargetingExplorer);

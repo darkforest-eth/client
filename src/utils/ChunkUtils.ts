@@ -2,7 +2,7 @@ import {
   LSMBucket,
   LSMChunkData,
   LSMLoc,
-} from '../_types/darkforest/api/LocalStorageManagerTypes';
+} from '../_types/darkforest/api/ChunkStoreTypes';
 import {
   ChunkFootprint,
   ExploredChunkData,
@@ -119,8 +119,8 @@ export const addToChunkMap = (
   map: Map<string, ExploredChunkData>,
   chunk: ExploredChunkData,
   includePlanets = true,
-  onAdd?: (ExploredChunkData) => void,
-  onRemove?: (ExploredChunkData) => void,
+  onAdd?: (arg: ExploredChunkData) => void,
+  onRemove?: (arg: ExploredChunkData) => void,
   maxChunkSize?: number
 ) => {
   let sideLength = chunk.chunkFootprint.sideLength;
@@ -148,7 +148,7 @@ export const addToChunkMap = (
     for (const siblingLoc of siblingLocs) {
       const siblingKey = getChunkKey(siblingLoc);
       const sibling = map.get(siblingKey);
-      if (onRemove !== undefined) {
+      if (onRemove !== undefined && sibling) {
         onRemove(sibling);
       } else {
         map.delete(siblingKey);

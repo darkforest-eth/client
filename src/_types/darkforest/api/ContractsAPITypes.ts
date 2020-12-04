@@ -42,10 +42,10 @@ export enum ContractEvent {
 export enum ContractsAPIEvent {
   PlayerInit = 'PlayerInit',
   PlanetUpdate = 'PlanetUpdate',
-  TxInitialized = 'TxInitialized',
   TxInitFailed = 'TxInitFailed',
   TxSubmitted = 'TxSubmitted',
   TxConfirmed = 'TxConfirmed',
+  TxReverted = 'TxReverted',
   RadiusUpdated = 'RadiusUpdated',
 }
 
@@ -345,26 +345,26 @@ export enum EthTxStatus {
   Fail,
 }
 
-export type UnconfirmedTx = {
+export type TxIntent = {
   // we generate a txId so we can reference the tx
   // before it is submitted to chain and given a txHash
   actionId: string;
   type: EthTxType;
 };
 
-export type SubmittedTx = UnconfirmedTx & {
+export type SubmittedTx = TxIntent & {
   txHash: string;
   sentAtTimestamp: number;
 };
 
-export type UnconfirmedInit = UnconfirmedTx & {
+export type UnconfirmedInit = TxIntent & {
   type: EthTxType.INIT;
   locationId: LocationId;
 };
 
 export type SubmittedInit = UnconfirmedInit & SubmittedTx;
 
-export type UnconfirmedMove = UnconfirmedTx & {
+export type UnconfirmedMove = TxIntent & {
   type: EthTxType.MOVE;
   from: LocationId;
   to: LocationId;
@@ -374,7 +374,7 @@ export type UnconfirmedMove = UnconfirmedTx & {
 
 export type SubmittedMove = UnconfirmedMove & SubmittedTx;
 
-export type UnconfirmedUpgrade = UnconfirmedTx & {
+export type UnconfirmedUpgrade = TxIntent & {
   type: EthTxType.UPGRADE;
   locationId: LocationId;
   upgradeBranch: number; // 0, 1, or 2
@@ -382,7 +382,7 @@ export type UnconfirmedUpgrade = UnconfirmedTx & {
 
 export type SubmittedUpgrade = UnconfirmedUpgrade & SubmittedTx;
 
-export type UnconfirmedBuyHat = UnconfirmedTx & {
+export type UnconfirmedBuyHat = TxIntent & {
   type: EthTxType.BUY_HAT;
   locationId: LocationId;
 };

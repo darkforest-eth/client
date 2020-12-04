@@ -46,7 +46,7 @@ const generateVecs = () => {
 
 const vecs = generateVecs();
 */
-let vecs;
+let vecs: Array<Vector>;
 try {
   vecs = [
     [1000, 0],

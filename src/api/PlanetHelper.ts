@@ -13,12 +13,13 @@ import {
   PlanetResource,
   SpaceType,
   EthAddress,
+  LocatablePlanet,
 } from '../_types/global/GlobalTypes';
 import {
   ContractConstants,
   UnconfirmedBuyHat,
   UnconfirmedMove,
-  UnconfirmedTx,
+  TxIntent,
   UnconfirmedUpgrade,
 } from '../_types/darkforest/api/ContractsAPITypes';
 import bigInt from 'big-integer';
@@ -26,7 +27,7 @@ import _ from 'lodash';
 import { WorldCoords } from '../utils/Coordinates';
 import { emptyAddress } from '../utils/CheckedTypeUtils';
 import { hasOwner, getBytesFromHex, bonusFromHex } from '../utils/Utils';
-import LocalStorageManager from './LocalStorageManager';
+import PersistentChunkStore from './PersistentChunkStore';
 import {
   contractPrecision,
   isUnconfirmedBuyHat,
@@ -44,6 +45,7 @@ const getCoordsString = (coords: WorldCoords): CoordsString => {
 
 export class PlanetHelper {
   private readonly planets: PlanetMap;
+  private readonly touchedPlanetIds: Set<LocationId>;
   private readonly arrivals: VoyageMap;
   private readonly planetArrivalIds: PlanetVoyageIdMap;
   private readonly planetLocationMap: PlanetLocationMap;
@@ -58,8 +60,9 @@ export class PlanetHelper {
   private address: EthAddress | null;
 
   constructor(
-    planets: PlanetMap,
-    chunkStore: LocalStorageManager,
+    touchedPlanets: PlanetMap,
+    allTouchedPlanetIds: Set<LocationId>,
+    chunkStore: PersistentChunkStore,
     unprocessedArrivals: VoyageContractData,
     unprocessedPlanetArrivalIds: PlanetVoyageIdMap,
     contractConstants: ContractConstants,
@@ -67,30 +70,37 @@ export class PlanetHelper {
     address: EthAddress | null
   ) {
     this.address = address;
-    this.planets = planets;
+    this.planets = touchedPlanets;
+    this.touchedPlanetIds = allTouchedPlanetIds;
     this.contractConstants = contractConstants;
     this.coordsToLocation = new Map();
-    this.planetLocationMap = {};
-    const planetArrivalIds: PlanetVoyageIdMap = {};
-    const arrivals: VoyageMap = {};
+    this.planetLocationMap = new Map();
+    const planetArrivalIds = new Map();
+    const arrivals = new Map();
     this.endTimeSeconds = endTimeSeconds;
 
-    planets.forEach((_planet, planetId) => {
-      const planet = planets.get(planetId);
-      if (planet) {
-        const arrivalsForPlanet = unprocessedPlanetArrivalIds[planetId]
-          .map((arrivalId) => unprocessedArrivals[arrivalId] || null)
-          .filter((x) => !!x);
+    touchedPlanets.forEach((_planet, planetId) => {
+      const planet = touchedPlanets.get(planetId);
+      const arrivalIds = unprocessedPlanetArrivalIds.get(planetId);
+      if (planet && arrivalIds) {
+        const arrivalsForPlanetNull: (QueuedArrival | null)[] = arrivalIds.map(
+          (arrivalId) => unprocessedArrivals.get(arrivalId) || null
+        );
+        const arrivalsForPlanet: QueuedArrival[] = arrivalsForPlanetNull.filter(
+          (x) => !!x
+        ) as QueuedArrival[];
+
         const arrivalsWithTimers = this.processArrivalsForPlanet(
           planet.locationId,
           arrivalsForPlanet
         );
-        planetArrivalIds[planetId] = arrivalsWithTimers.map(
-          (arrival) => arrival.arrivalData.eventId
+        planetArrivalIds.set(
+          planetId,
+          arrivalsWithTimers.map((arrival) => arrival.arrivalData.eventId)
         );
         for (const arrivalWithTimer of arrivalsWithTimers) {
           const arrivalId = arrivalWithTimer.arrivalData.eventId;
-          arrivals[arrivalId] = arrivalWithTimer;
+          arrivals.set(arrivalId, arrivalWithTimer);
         }
         this.updateScore(planetId as LocationId);
       }
@@ -156,10 +166,14 @@ export class PlanetHelper {
     }
   }
 
-  public refreshPlanetAndArrivals(
+  /**
+   * received some planet data from the contract. update our stores
+   */
+  public replacePlanetFromContractData(
     planet: Planet,
     arrivals: QueuedArrival[]
   ): void {
+    this.touchedPlanetIds.add(planet.locationId);
     // does not modify unconfirmed departures or upgrades
     // that is handled by onTxConfirm
     const localPlanet = this.planets.get(planet.locationId);
@@ -173,7 +187,15 @@ export class PlanetHelper {
       planet.unconfirmedUpgrades = unconfirmedUpgrades;
       planet.unconfirmedBuyHats = unconfirmedBuyHats;
     }
+    // make planet Locatable if we know its location
+    const loc = this.planetLocationMap.get(planet.locationId);
+    if (loc) {
+      (planet as LocatablePlanet).location = loc;
+    }
+
     this.planets.set(planet.locationId, planet);
+
+    // apply arrivals
     this.clearOldArrivals(planet);
     const updatedAwts = this.processArrivalsForPlanet(
       planet.locationId,
@@ -181,8 +203,12 @@ export class PlanetHelper {
     );
     for (const awt of updatedAwts) {
       const arrivalId = awt.arrivalData.eventId;
-      this.arrivals[arrivalId] = awt;
-      this.planetArrivalIds[planet.locationId].push(arrivalId);
+      this.arrivals.set(arrivalId, awt);
+      const arrivalIds = this.planetArrivalIds.get(planet.locationId);
+      if (arrivalIds) {
+        arrivalIds.push(arrivalId);
+        this.planetArrivalIds.set(planet.locationId, arrivalIds);
+      }
     }
     this.updateScore(planet.locationId);
   }
@@ -216,8 +242,13 @@ export class PlanetHelper {
     return defaultPlanet;
   }
 
+  /**
+   * Called when we load chunk data into memory (on startup) and when miner has mined a new chunk
+   * Adds a Location to the planetLocationMap
+   * Sets an unsynced default planet in the PlanetMap this.planets
+   */
   public addPlanetLocation(planetLocation: Location): void {
-    this.planetLocationMap[planetLocation.hash] = planetLocation;
+    this.planetLocationMap.set(planetLocation.hash, planetLocation);
     const str = getCoordsString(planetLocation.coords);
     if (!this.coordsToLocation.has(str)) {
       this.coordsToLocation.set(str, planetLocation);
@@ -232,7 +263,7 @@ export class PlanetHelper {
   }
 
   public getLocationOfPlanet(planetId: LocationId): Location | null {
-    return this.planetLocationMap[planetId] || null;
+    return this.planetLocationMap.get(planetId) || null;
   }
 
   // NOT PERFORMANT - for scripting only
@@ -241,45 +272,46 @@ export class PlanetHelper {
   }
 
   public getAllOwnedPlanets(): Planet[] {
-    return [...this.planets.values()].filter(hasOwner);
+    return Array.from(this.planets.values()).filter(hasOwner);
   }
 
   public getAllVoyages(): QueuedArrival[] {
     // there are not many voyages
-    return Object.values(this.arrivals).map((awt) => awt.arrivalData);
+    return Array.from(this.arrivals.values()).map((awt) => awt.arrivalData);
   }
 
-  public onTxInit(initializedTx: UnconfirmedTx) {
-    if (isUnconfirmedMove(initializedTx)) {
-      this.unconfirmedMoves[initializedTx.actionId] = initializedTx;
-      const planet = this.getPlanetWithId(initializedTx.from);
+  public onTxIntent(txIntent: TxIntent) {
+    const notifManager = NotificationManager.getInstance();
+    notifManager.txInit(txIntent);
+
+    if (isUnconfirmedMove(txIntent)) {
+      this.unconfirmedMoves[txIntent.actionId] = txIntent;
+      const planet = this.getPlanetWithId(txIntent.from);
       if (planet) {
-        planet.unconfirmedDepartures.push(initializedTx);
+        planet.unconfirmedDepartures.push(txIntent);
       }
-    } else if (isUnconfirmedUpgrade(initializedTx)) {
-      this.unconfirmedUpgrades[initializedTx.actionId] = initializedTx;
-      const planet = this.getPlanetWithId(initializedTx.locationId);
+    } else if (isUnconfirmedUpgrade(txIntent)) {
+      this.unconfirmedUpgrades[txIntent.actionId] = txIntent;
+      const planet = this.getPlanetWithId(txIntent.locationId);
       if (planet) {
-        planet.unconfirmedUpgrades.push(initializedTx);
+        planet.unconfirmedUpgrades.push(txIntent);
       }
-    } else if (isUnconfirmedBuyHat(initializedTx)) {
-      this.unconfirmedBuyHats[initializedTx.actionId] = initializedTx;
-      const planet = this.getPlanetWithId(initializedTx.locationId);
+    } else if (isUnconfirmedBuyHat(txIntent)) {
+      this.unconfirmedBuyHats[txIntent.actionId] = txIntent;
+      const planet = this.getPlanetWithId(txIntent.locationId);
       if (planet) {
-        planet.unconfirmedBuyHats.push(initializedTx);
+        planet.unconfirmedBuyHats.push(txIntent);
       }
     }
   }
 
-  public clearUnconfirmedTx(unconfirmedTx: UnconfirmedTx) {
-    if (isUnconfirmedMove(unconfirmedTx)) {
-      const planet = this.getPlanetWithId(unconfirmedTx.from);
+  public clearUnconfirmedTxIntent(txIntent: TxIntent) {
+    if (isUnconfirmedMove(txIntent)) {
+      const planet = this.getPlanetWithId(txIntent.from);
       if (planet) {
         let removeIdx = -1;
         for (let i = 0; i < planet.unconfirmedDepartures.length; i += 1) {
-          if (
-            planet.unconfirmedDepartures[i].actionId === unconfirmedTx.actionId
-          ) {
+          if (planet.unconfirmedDepartures[i].actionId === txIntent.actionId) {
             removeIdx = i;
             break;
           }
@@ -288,15 +320,13 @@ export class PlanetHelper {
           planet.unconfirmedDepartures.splice(removeIdx, 1);
         }
       }
-      delete this.unconfirmedMoves[unconfirmedTx.actionId];
-    } else if (isUnconfirmedUpgrade(unconfirmedTx)) {
-      const planet = this.getPlanetWithId(unconfirmedTx.locationId);
+      delete this.unconfirmedMoves[txIntent.actionId];
+    } else if (isUnconfirmedUpgrade(txIntent)) {
+      const planet = this.getPlanetWithId(txIntent.locationId);
       if (planet) {
         let removeIdx = -1;
         for (let i = 0; i < planet.unconfirmedUpgrades.length; i += 1) {
-          if (
-            planet.unconfirmedUpgrades[i].actionId === unconfirmedTx.actionId
-          ) {
+          if (planet.unconfirmedUpgrades[i].actionId === txIntent.actionId) {
             removeIdx = i;
             break;
           }
@@ -305,15 +335,13 @@ export class PlanetHelper {
           planet.unconfirmedUpgrades.splice(removeIdx, 1);
         }
       }
-      delete this.unconfirmedUpgrades[unconfirmedTx.actionId];
-    } else if (isUnconfirmedBuyHat(unconfirmedTx)) {
-      const planet = this.getPlanetWithId(unconfirmedTx.locationId);
+      delete this.unconfirmedUpgrades[txIntent.actionId];
+    } else if (isUnconfirmedBuyHat(txIntent)) {
+      const planet = this.getPlanetWithId(txIntent.locationId);
       if (planet) {
         let removeIdx = -1;
         for (let i = 0; i < planet.unconfirmedBuyHats.length; i += 1) {
-          if (
-            planet.unconfirmedBuyHats[i].actionId === unconfirmedTx.actionId
-          ) {
+          if (planet.unconfirmedBuyHats[i].actionId === txIntent.actionId) {
             removeIdx = i;
             break;
           }
@@ -322,7 +350,7 @@ export class PlanetHelper {
           planet.unconfirmedBuyHats.splice(removeIdx, 1);
         }
       }
-      delete this.unconfirmedBuyHats[unconfirmedTx.actionId];
+      delete this.unconfirmedBuyHats[txIntent.actionId];
     }
   }
 
@@ -334,12 +362,13 @@ export class PlanetHelper {
     return Object.values(this.unconfirmedUpgrades);
   }
 
-  private arrive(
-    fromPlanet: Planet,
-    toPlanet: Planet,
-    arrival: QueuedArrival
-  ): void {
+  private arrive(toPlanet: Planet, arrival: QueuedArrival): void {
     // this function optimistically simulates an arrival
+    if (toPlanet.locationId !== arrival.toPlanet) {
+      throw new Error(
+        `attempted to apply arrival for wrong toPlanet ${toPlanet.locationId}`
+      );
+    }
 
     // update toPlanet energy and silver right before arrival
     this.updatePlanetToTime(toPlanet, arrival.arrivalTime * 1000);
@@ -389,6 +418,13 @@ export class PlanetHelper {
     planetId: LocationId,
     arrivals: QueuedArrival[]
   ): ArrivalWithTimer[] {
+    const planet = this.planets.get(planetId);
+    if (!planet) {
+      console.error(
+        `attempted to process arrivals for planet not in memory: ${planetId}`
+      );
+      return [];
+    }
     // process the QueuedArrival[] for a single planet
     const arrivalsWithTimers: ArrivalWithTimer[] = [];
 
@@ -397,27 +433,21 @@ export class PlanetHelper {
     const nowInSeconds = Date.now() / 1000;
     for (const arrival of arrivals) {
       try {
-        const fromPlanet = this.planets.get(arrival.fromPlanet);
-        const toPlanet = this.planets.get(arrival.toPlanet);
-        if (nowInSeconds - arrival.arrivalTime > 0 && fromPlanet && toPlanet) {
+        if (nowInSeconds - arrival.arrivalTime > 0) {
           // if arrival happened in the past, run this arrival
-          this.arrive(fromPlanet, toPlanet, arrival);
+          this.arrive(planet, arrival);
         } else {
           // otherwise, set a timer to do this arrival in the future
           // and append it to arrivalsWithTimers
           const applyFutureArrival = setTimeout(() => {
-            const fromPlanet = this.planets.get(arrival.fromPlanet);
-            const toPlanet = this.planets.get(arrival.toPlanet);
-            if (fromPlanet && toPlanet)
-              this.arrive(fromPlanet, toPlanet, arrival);
+            this.arrive(planet, arrival);
 
             const notifManager = NotificationManager.getInstance();
             if (
-              toPlanet &&
-              this.planetCanUpgrade(toPlanet) &&
-              toPlanet.owner === this.address
+              this.planetCanUpgrade(planet) &&
+              planet.owner === this.address
             ) {
-              notifManager.planetCanUpgrade(toPlanet);
+              notifManager.planetCanUpgrade(planet);
             }
           }, arrival.arrivalTime * 1000 - Date.now());
 
@@ -439,19 +469,20 @@ export class PlanetHelper {
   private clearOldArrivals(planet: Planet): void {
     const planetId = planet.locationId;
     // clear old timeouts
-    if (this.planetArrivalIds[planetId]) {
+    const arrivalIds = this.planetArrivalIds.get(planetId);
+    if (arrivalIds) {
       // clear if the planet already had stored arrivals
-      for (const arrivalId of this.planetArrivalIds[planetId]) {
-        const arrivalWithTimer = this.arrivals[arrivalId];
+      for (const arrivalId of arrivalIds) {
+        const arrivalWithTimer = this.arrivals.get(arrivalId);
         if (arrivalWithTimer) {
           clearTimeout(arrivalWithTimer.timer);
         } else {
           console.error(`arrival with id ${arrivalId} wasn't found`);
         }
-        delete this.arrivals[arrivalId];
+        this.arrivals.delete(arrivalId);
       }
     }
-    this.planetArrivalIds[planetId] = [];
+    this.planetArrivalIds.set(planetId, []);
   }
 
   private updatePlanetToTime(planet: Planet, atTimeMillis: number): void {
@@ -560,8 +591,12 @@ export class PlanetHelper {
     return PlanetResource.NONE;
   }
 
-  // imitates contract newPlanet
-  private defaultPlanetFromLocation(location: Location): Planet {
+  /**
+   * returns the data for an unowned, untouched planet at location
+   * most planets in the game are untouched and not stored in the contract,
+   * so we need to generate their data optimistically in the client
+   */
+  private defaultPlanetFromLocation(location: Location): LocatablePlanet {
     const { perlin } = location;
     const hex = location.hash;
     const planetLevel = this.planetLevelFromHexPerlin(hex, perlin);
@@ -666,7 +701,9 @@ export class PlanetHelper {
       unconfirmedBuyHats: [],
       silverSpent: 0,
 
-      pulledFromContract: false,
+      isInContract: this.touchedPlanetIds.has(hex),
+      syncedWithContract: false,
+      location,
     };
   }
 

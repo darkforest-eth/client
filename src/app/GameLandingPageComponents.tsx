@@ -3,6 +3,7 @@ import dfstyles from '../styles/dfstyles';
 import React, { useLayoutEffect } from 'react';
 import { InitRenderState } from './GameLandingPage';
 import UIEmitter, { UIEmitterEvent } from '../utils/UIEmitter';
+import { SetFn } from '../_types/global/GlobalTypes';
 
 type LandingWrapperProps = {
   children: React.ReactNode;
@@ -132,7 +133,7 @@ export function TerminalToggler({
   setTerminalEnabled,
 }: {
   terminalEnabled: boolean;
-  setTerminalEnabled: (any) => void;
+  setTerminalEnabled: SetFn<boolean>;
 }) {
   const uiEmitter = UIEmitter.getInstance();
   useLayoutEffect(() => {
@@ -142,7 +143,7 @@ export function TerminalToggler({
   return (
     <StyledTerminalToggler
       terminalEnabled={terminalEnabled}
-      onClick={() => setTerminalEnabled((b) => !b)}
+      onClick={() => setTerminalEnabled((b: boolean): boolean => !b)}
     >
       <span>{terminalEnabled ? '>' : '<'}</span>
     </StyledTerminalToggler>

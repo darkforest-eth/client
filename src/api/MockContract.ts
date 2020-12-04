@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Listener, TransactionReceipt } from '@ethersproject/providers';
 import { BigNumber as EthersBN } from 'ethers';
 import io from 'socket.io-client';
