@@ -12,7 +12,14 @@ import { ModalName, ModalPane } from './ModalPane';
 
 const StyledOnboardingContent = styled.div`
   width: 36em;
-  height: fit-content;
+  height: 32em;
+  position: relative;
+
+  .btn {
+    position: absolute;
+    right: 0.5em;
+    bottom: 0.5em;
+  }
 
   a {
     color: ${dfstyles.colors.text};
@@ -95,7 +102,9 @@ function OnboardMoney({ advance }: { advance: () => void }) {
 
       <div>
         <span></span>
-        <Btn onClick={advance}>I understand, please proceed.</Btn>
+        <Btn className='btn' onClick={advance}>
+          I understand, please proceed.
+        </Btn>
       </div>
     </StyledOnboardingContent>
   );
@@ -127,7 +136,9 @@ function OnboardStorage({ advance }: { advance: () => void }) {
       </p>
       <div>
         <span></span>
-        <Btn onClick={advance}>Proceed</Btn>
+        <Btn className='btn' onClick={advance}>
+          Proceed
+        </Btn>
       </div>
     </StyledOnboardingContent>
   );
@@ -162,7 +173,9 @@ function OnboardKeys({ advance }: { advance: () => void }) {
 
       <div>
         <span></span>
-        <Btn onClick={advance}>Next</Btn>
+        <Btn onClick={advance} className='btn'>
+          Next
+        </Btn>
       </div>
     </StyledOnboardingContent>
   );
@@ -178,7 +191,9 @@ function OnboardFinished({ advance }: { advance: () => void }) {
       </p>
       <div>
         <span></span>
-        <Btn onClick={advance}>Next</Btn>
+        <Btn onClick={advance} className='btn'>
+          Enter
+        </Btn>
       </div>
     </StyledOnboardingContent>
   );

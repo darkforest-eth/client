@@ -56,7 +56,7 @@ export function GameWindowLayout({
   hiPerfHook: Hook<boolean>;
 }) {
   const planetDetHook = useState<boolean>(true);
-  const helpHook = useState<boolean>(false);
+  const helpHook = useState<boolean>(true);
   const leaderboardHook = useState<boolean>(false);
   const planetdexHook = useState<boolean>(false);
   const yourArtifactsHook = useState<boolean>(false);
