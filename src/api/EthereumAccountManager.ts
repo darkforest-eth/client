@@ -1,10 +1,23 @@
 import * as stringify from 'json-stable-stringify';
 import { JsonRpcProvider, TransactionReceipt } from '@ethersproject/providers';
-import { providers, Contract, Wallet, utils, ContractInterface } from 'ethers';
+import {
+  providers,
+  Contract,
+  Wallet,
+  utils,
+  ContractInterface,
+  BigNumber,
+} from 'ethers';
 import { EthAddress } from '../_types/global/GlobalTypes';
 import { address } from '../utils/CheckedTypeUtils';
 import { EventEmitter } from 'events';
 import { XDAI_CHAIN_ID } from '../utils/constants';
+import { callWithRetry, sleep } from '../utils/Utils';
+
+// rpc-df only has CORS enabled for zkga.me, not localhost
+const XDAI_DEFAULT_URL = window.origin.includes('localhost')
+  ? 'https://rpc.xdaichain.com/'
+  : 'https://rpc-df.xdaichain.com/';
 
 class EthereumAccountManager extends EventEmitter {
   static instance: EthereumAccountManager | null = null;
@@ -20,9 +33,7 @@ class EthereumAccountManager extends EventEmitter {
     let url: string;
     const isProd = process.env.NODE_ENV === 'production';
     if (isProd) {
-      url =
-        localStorage.getItem('XDAI_RPC_ENDPOINT') ||
-        'https://rpc.xdaichain.com/';
+      url = localStorage.getItem('XDAI_RPC_ENDPOINT') || XDAI_DEFAULT_URL;
     } else {
       url = 'http://localhost:8545';
     }
@@ -68,7 +79,7 @@ class EthereumAccountManager extends EventEmitter {
       this.emit('ChangedRPCEndpoint');
     } catch (e) {
       console.error(`error setting rpc endpoint: ${e}`);
-      this.setRpcEndpoint('https://rpc.xdaichain.com/');
+      this.setRpcEndpoint(XDAI_DEFAULT_URL);
       return;
     }
   }
@@ -110,7 +121,11 @@ class EthereumAccountManager extends EventEmitter {
     if (!this.signer) {
       throw new Error('account not selected yet');
     }
-    return this.provider.getTransactionCount(this.signer.address);
+
+    return callWithRetry<number>(
+      this.provider.getTransactionCount.bind(this.provider),
+      [this.signer.address]
+    );
   }
 
   public setAccount(address: EthAddress): void {
@@ -138,11 +153,16 @@ class EthereumAccountManager extends EventEmitter {
     if (!this.signer) {
       throw new Error('no signer yet');
     }
+
     return this.signer.signMessage(message);
   }
 
   public async getBalance(address: EthAddress): Promise<number> {
-    const balanceWeiBN = await this.provider.getBalance(address);
+    const balanceWeiBN = await callWithRetry<BigNumber>(
+      this.provider.getBalance.bind(this.provider),
+      [address]
+    );
+
     return parseFloat(utils.formatEther(balanceWeiBN));
   }
 
@@ -154,12 +174,44 @@ class EthereumAccountManager extends EventEmitter {
   }
 
   public async waitForTransaction(txHash: string): Promise<TransactionReceipt> {
-    return this.provider.waitForTransaction(txHash).catch(() => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(this.waitForTransaction(txHash));
-        }, 5000);
-      });
+    return new Promise(async (resolve) => {
+      let receipt = null;
+      let tries = 0;
+
+      // waitForTransaction tends to hang on xDAI. but if we have a txHash
+      // the tx WILL get confirmed (or reverted) eventually, so for sure
+      // just keep retrying
+      while (!receipt) {
+        console.log(`[wait-tx] WAITING ON tx hash: ${txHash} tries ${tries}`);
+
+        receipt = await this.provider
+          .waitForTransaction(
+            txHash,
+            0 /* 0 means no confirmations necessary  */,
+            30 * 1000 /* timeout in ms */
+          )
+          .catch((e) => {
+            console.error(
+              `[wait-tx] TIMED OUT tx hash: ${txHash} tries ${tries} error:`,
+              e
+            );
+          });
+
+        if (receipt) {
+          console.log(`[wait-tx] FINISHED tx hash: ${txHash} tries ${tries}`);
+          resolve(receipt);
+          return;
+        }
+
+        // exponential backoff, in seconds:
+        // 1, 1, 2, 3, 4, 6, 9, 13, 19, 29, 43, 65 ...
+        const sleepTime = 5000 * 1.5 ** tries;
+        console.log(
+          `[wait-tx] SLEEPING tx hash: ${txHash} tries ${tries} sleeping for: ${sleepTime} `
+        );
+        await sleep(sleepTime);
+        tries += 1;
+      }
     });
   }
 }

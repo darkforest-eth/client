@@ -8,8 +8,16 @@ import {
   PlanetResource,
   SpaceType,
   UpgradeState,
+  Location,
+  ArtifactId,
+  StatIdx,
+  Upgrade,
 } from '../_types/global/GlobalTypes';
-import { address, emptyAddress } from './CheckedTypeUtils';
+import {
+  address,
+  emptyAddress,
+  locationIdFromBigInt,
+} from './CheckedTypeUtils';
 import _ from 'lodash';
 import TerminalEmitter from './TerminalEmitter';
 import {
@@ -17,6 +25,9 @@ import {
   UnconfirmedMove,
   UnconfirmedUpgrade,
 } from '../_types/darkforest/api/ContractsAPITypes';
+import mimcHash from '../miner/mimc';
+import perlin from '../miner/perlin';
+import { WorldCoords } from './Coordinates';
 
 export const ONE_DAY = 24 * 60 * 60 * 1000;
 
@@ -47,9 +58,34 @@ export type PlanetStatsInfo = {
   silver: number;
   hatLevel: number;
   upgradeState: UpgradeState;
+  hasTriedFindingArtifact: boolean;
   unconfirmedDepartures: UnconfirmedMove[];
   unconfirmedUpgrades: UnconfirmedUpgrade[];
   unconfirmedBuyhats: UnconfirmedBuyHat[];
+  heldArtifactId: ArtifactId | undefined;
+};
+
+/*
+ * returns stat of an upgrade given a stat index
+ */
+
+export const getUpgradeStat = (upgrade: Upgrade, stat: StatIdx): number => {
+  if (stat === StatIdx.EnergyCap) return upgrade.energyCapMultiplier;
+  else if (stat === StatIdx.EnergyGro) return upgrade.energyGroMultiplier;
+  else if (stat === StatIdx.Range) return upgrade.rangeMultiplier;
+  else if (stat === StatIdx.Speed) return upgrade.speedMultiplier;
+  else if (stat === StatIdx.Defense) return upgrade.defMultiplier;
+  else return upgrade.energyCapMultiplier;
+};
+
+export const randomHex = (len: number): string => {
+  let str = '';
+  const chars = 'abcdef0123456789'.split('');
+  while (str.length < len) {
+    str = str + chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  return str;
 };
 
 // this function exists because Object.assign() and _.clone() seem to be slow
@@ -64,9 +100,11 @@ export const copyPlanetStats = (
       silver: planet.silver,
       hatLevel: planet.hatLevel,
       upgradeState: planet.upgradeState,
+      hasTriedFindingArtifact: planet.hasTriedFindingArtifact,
       unconfirmedDepartures: planet.unconfirmedDepartures,
       unconfirmedUpgrades: planet.unconfirmedUpgrades,
       unconfirmedBuyhats: planet.unconfirmedBuyHats,
+      heldArtifactId: planet.heldArtifactId,
     };
   }
 };
@@ -174,7 +212,11 @@ export const planetCanUpgrade = (planet: Planet | null) => {
 export const titleCase = (title: string): string =>
   title
     .split(/ /g)
-    .map((word) => `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`)
+    .map((word, i) => {
+      // don't capitalize articles unless it's the first word
+      if (i !== 0 && ['of', 'the'].includes(word)) return word;
+      return `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`;
+    })
     .join(' ');
 
 export const randomAddress = (): string => {
@@ -208,14 +250,20 @@ export const getBytesFromHex = (
   return bigInt(`0x${byteString}`);
 };
 
-export const bonusFromHex = (hex: LocationId): Bonus => {
-  const bonuses = Array(5).fill(false) as Bonus;
+const bonusById = new Map<LocationId, Bonus>();
 
-  for (let i = 0; i < bonuses.length; i++) {
-    bonuses[i] = getBytesFromHex(hex, 9 + i, 10 + i).lesser(16);
+export const bonusFromHex = (hex: LocationId): Bonus => {
+  const bonus = bonusById.get(hex);
+  if (bonus) return bonus;
+
+  const newBonus = Array(5).fill(false) as Bonus;
+
+  for (let i = 0; i < newBonus.length; i++) {
+    newBonus[i] = getBytesFromHex(hex, 9 + i, 10 + i).lesser(16);
   }
 
-  return bonuses;
+  bonusById.set(hex, newBonus);
+  return newBonus;
 };
 
 export const planetHasBonus = (planet: Planet | null): boolean => {
@@ -228,6 +276,25 @@ export const hasOwner = (planet: Planet) => {
   return planet.owner !== emptyAddress;
 };
 
+export function sleep(timeout: number): Promise<void> {
+  return new Promise<void>((resolve) => setTimeout(resolve, timeout));
+}
+
+// this is slow, do not call in i.e. render/draw loop
+export function locationFromCoords(coords: WorldCoords): Location {
+  return {
+    coords,
+    hash: locationIdFromBigInt(mimcHash(coords.x, coords.y)),
+    perlin: perlin(coords),
+    biomebase: perlin(coords, true, true),
+  };
+}
+
+export function neverResolves(): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return new Promise((resolve, reject) => {});
+}
+
 export const aggregateBulkGetter = async <T>(
   total: number,
   querySize: number,
@@ -237,6 +304,7 @@ export const aggregateBulkGetter = async <T>(
   const terminalEmitter = TerminalEmitter.getInstance();
   const promises: Promise<T[]>[] = [];
   let soFar = 0;
+
   for (let i = 0; i < total / querySize; i += 1) {
     const start = i * querySize;
     const end = Math.min((i + 1) * querySize, total);
@@ -246,9 +314,7 @@ export const aggregateBulkGetter = async <T>(
         let tries = 0;
         while (res.length === 0) {
           // retry with exponential backoff if request fails
-          await new Promise<void>((resolve) => {
-            setTimeout(resolve, Math.min(15, 2 ** tries - 1) * 1000);
-          });
+          await sleep(Math.min(15, 2 ** tries - 1) * 1000);
           res = await getterFn(start, end)
             .then((res) => {
               if (
@@ -280,10 +346,52 @@ export const aggregateBulkGetter = async <T>(
     );
   }
   const unflattenedResults = await Promise.all(promises);
-  if (printProgress) {
+  if (printProgress && total > 0) {
     terminalEmitter.newline();
   }
   return _.flatten(unflattenedResults);
+};
+
+export type RetryErrorHandler = (i: number, e: Error) => void;
+
+export const callWithRetry = async <T>(
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  fn: (...args: any[]) => Promise<T>,
+  args: any[] = [],
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+  onError?: RetryErrorHandler,
+  maxRetries = 10,
+  retryInterval = 1000
+): Promise<T> => {
+  return new Promise<T>(async (resolve, reject) => {
+    let res: T;
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        res = await fn(...args);
+        resolve(res);
+        break;
+      } catch (e) {
+        console.error(`error: ${e}`);
+        console.log(`retrying (${i}/${maxRetries})...`);
+
+        if (onError) {
+          try {
+            onError(i, e);
+          } catch (e) {
+            console.log(`failed executing callWithRetry error handler`, e);
+          }
+        }
+
+        if (i < maxRetries - 1) {
+          await sleep(
+            Math.min(retryInterval * 2 ** i + Math.random() * 100, 15000)
+          );
+        } else {
+          reject(e);
+        }
+      }
+    }
+  });
 };
 
 export const isFirefox = () => navigator.userAgent.indexOf('Firefox') > 0;

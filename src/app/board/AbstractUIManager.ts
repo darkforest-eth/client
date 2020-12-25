@@ -11,14 +11,21 @@ import {
   Upgrade,
   SpaceType,
   ChunkFootprint,
+  Artifact,
+  ArtifactId,
 } from '../../_types/global/GlobalTypes';
 import { UnconfirmedMove } from '../../_types/darkforest/api/ContractsAPITypes';
 import { MiningPattern } from '../../utils/MiningPatterns';
 import { UIDataKey, UIDataValue } from '../../api/UIStateStorageManager';
+import { PluginManager } from '../../plugins/PluginManager';
 
 export default interface AbstractUIManager {
   destroy(): void;
 
+  centerPlanet(planet: Planet): void;
+  centerCoords(coords: WorldCoords): void;
+  centerLocationId(planetId: LocationId): void;
+  getPluginManager(): PluginManager | null;
   getAccount(): EthAddress | null;
   getContractAddress(): string;
   getTwitter(address: EthAddress | null): string | null; // TODO this null behavior is kinda bad
@@ -49,6 +56,7 @@ export default interface AbstractUIManager {
   getAllPlayers(): Player[];
   getRadiusOfPlanetLevel(planetLevel: PlanetLevel): number;
   getPlanetWithId(planetId: LocationId): Planet | null;
+  getArtifactWithId(artifactId: ArtifactId): Artifact | null;
   getPlanetLevel(planetId: LocationId): PlanetLevel | null;
   getPlanetDetailLevel(planetId: LocationId): number | null;
   getAllOwnedPlanets(): Planet[];
@@ -58,19 +66,22 @@ export default interface AbstractUIManager {
   getExploredChunks(): Iterable<ExploredChunkData>;
   getWorldRadius(): number;
   getWorldSilver(): number;
+  getArtifactPlanet(artifact: Artifact): Planet | null;
+  setSelectedId(id: LocationId): void;
   getUniverseTotalEnergy(): number;
   getSilverOfPlayer(player: EthAddress): number;
   getEnergyOfPlayer(player: EthAddress): number;
   isOverOwnPlanet(coords: WorldCoords): Planet | null; // if world coords are over your own planet, return it; else return null
   getHomeCoords(): WorldCoords;
   getHomeHash(): LocationId | null;
+  getHomePlanet(): Planet | null;
   isOwnedByMe(planet: Planet): boolean;
   hasMinedChunk(chunkLocation: ChunkFootprint): boolean;
 
   getHashesPerSec(): number;
   generateVerificationTweet(twitter: string): Promise<string>;
 
-  onJoinGameClicked(): AbstractUIManager;
+  joinGame(beforeRetry: (e: Error) => Promise<boolean>): AbstractUIManager;
   addAccount(coords: WorldCoords): Promise<boolean>;
   upgrade(planet: Planet, branch: number): void;
   buyHat(planet: Planet): void;

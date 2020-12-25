@@ -27,6 +27,9 @@ export enum UIEmitterEvent {
   SendInitiated = 'SendInitiated',
   SendCancelled = 'SendCanelled',
   SendCompleted = 'SendCompleted',
+
+  DepositArtifact = 'DepositArtifact',
+  DepositToPlanet = 'DepositToPlanet',
 }
 
 class UIEmitter extends EventEmitter {

@@ -195,7 +195,7 @@ const ColorIcon = styled.span<{ color: string }>`
 export function PlanetThumb({ planet }: { planet: Planet }) {
   const radius = 5 + 3 * planet.planetLevel;
   // const radius = 5 + 3 * PlanetLevel.MAX;
-  const { baseColor, backgroundColor } = getPlanetCosmetic(planet);
+  const { baseStr, bgStr } = getPlanetCosmetic(planet);
 
   const ringW = radius * 1.5;
   const ringH = Math.max(2, ringW / 7);
@@ -203,7 +203,7 @@ export function PlanetThumb({ planet }: { planet: Planet }) {
   if (planet.planetResource === PlanetResource.SILVER) {
     return (
       <_PlanetThumb>
-        <ColorIcon color={baseColor}>
+        <ColorIcon color={baseStr}>
           <SilverIcon />
         </ColorIcon>
       </_PlanetThumb>
@@ -218,7 +218,7 @@ export function PlanetThumb({ planet }: { planet: Planet }) {
             width: radius + 'px',
             height: radius + 'px',
             borderRadius: radius / 2 + 'px',
-            background: baseColor,
+            background: baseStr,
           }}
         ></span>
       </span>
@@ -228,7 +228,7 @@ export function PlanetThumb({ planet }: { planet: Planet }) {
             width: ringW + 'px',
             height: ringH + 'px',
             borderRadius: ringW * 2 + 'px',
-            background: getPlanetRank(planet) > 0 ? backgroundColor : 'none',
+            background: getPlanetRank(planet) > 0 ? bgStr : 'none',
           }}
         ></span>
       </span>

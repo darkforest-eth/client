@@ -2,7 +2,7 @@ import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import { Planet } from '../_types/global/GlobalTypes';
-import { PlanetScape } from './GameWindowPanes/PlanetScape';
+import { PlanetScape } from './planetscape/PlanetScape';
 import { getPlanetShortHash } from '../utils/Utils';
 import {
   getPlanetName,
@@ -73,7 +73,7 @@ export function SharePlanet({ match }: RouteComponentProps) {
             {getPlanetShortHash(planet)} {getPlanetName(planet)}
           </div>
           <div>
-            <PlanetScape planet={planet} keepDrawing={true} />
+            <PlanetScape planet={planet} info={null} keepDrawing={true} />
           </div>
           <div>
             <p>

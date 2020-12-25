@@ -248,7 +248,7 @@ export default function LandingPage() {
           <Typist {...typistProps}>
             <p>
               <Sub>
-                zkSNARK space warfare <HideSmall>(v0.4)</HideSmall>
+                zkSNARK space warfare <HideSmall>(v0.5)</HideSmall>
               </Sub>
             </p>
           </Typist>
@@ -275,7 +275,9 @@ export default function LandingPage() {
                   <td>
                     02/22/<HideSmall>20</HideSmall>20
                   </td>
-                  <td>Dylan Field</td>
+                  <td>
+                    <a href='https://twitter.com/zoink'>Dylan Field</a>
+                  </td>
                 </TRow>
                 <TRow>
                   <td>
@@ -296,6 +298,19 @@ export default function LandingPage() {
                   <td>
                     <a href='https://twitter.com/hideandcleanse'>
                       @HideAndCleanse
+                    </a>
+                  </td>
+                </TRow>
+                <TRow>
+                  <td>
+                    <HideSmall>v</HideSmall>0.3
+                  </td>
+                  <td>
+                    10/02/<HideSmall>20</HideSmall>20
+                  </td>
+                  <td>
+                    <a href='https://twitter.com/jacobrosenthal'>
+                      Jake Rosenthal
                     </a>
                   </td>
                 </TRow>

@@ -1,5 +1,6 @@
 const path = require('path');
 
+const { EnvironmentPlugin } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -70,6 +71,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new EnvironmentPlugin({
+      NODE_ENV: 'development'
+    }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './index.html',

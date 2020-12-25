@@ -18,7 +18,21 @@ export enum UIDataKey {
   notifMove = 'notifMove',
   newPlayer = 'newPlayer',
   highPerf = 'highPerf',
+
+  /**
+   * Whether or not `PluginHost` has added the default plugins to
+   * this user's plugin library. We need to keep track of this so
+   * that we only do it the first time that the plugins UI is opened.
+   */
+  hasAddedDefaultPlugins = 'hasAddedReadme',
+
+  /**
+   * Has this use acknowledged the fact that downloading and running
+   * plugins from the internet is dangerous?
+   */
+  hasAcceptedPluginRisk = 'hasAcceptedPluginRisk',
 }
+
 export type UIDataValue = boolean;
 
 export type UIData = {
@@ -36,6 +50,9 @@ export type UIData = {
   notifMove: boolean;
   newPlayer: boolean;
   highPerf: boolean;
+
+  hasAddedReadme: boolean;
+  hasAcceptedPluginRisk: boolean;
 };
 
 export const defaultUserData: UIData = {
@@ -54,6 +71,8 @@ export const defaultUserData: UIData = {
   newPlayer: true,
 
   highPerf: false,
+  hasAddedReadme: false,
+  hasAcceptedPluginRisk: false,
 };
 
 export function useStoredUIState<T extends UIDataValue>(

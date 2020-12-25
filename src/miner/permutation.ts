@@ -134,6 +134,7 @@ export const getPlanetLocations = (
       coords,
       hash: locationIdFromBigInt(fakeHash(coords.x, coords.y)),
       perlin: perlin(coords),
+      biomebase: perlin(coords, true, true),
     }));
 
   return locs;

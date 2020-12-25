@@ -7,6 +7,9 @@ import { EthAddress, Planet, Player } from '../../_types/global/GlobalTypes';
 import { Sub } from '../../components/Text';
 import dfstyles from '../../styles/dfstyles';
 import { PlanetThumb, PlanetLink } from './PlanetDexPane';
+import { getCachedScoreboard } from '../../api/UtilityServerAPI';
+import { ServerScoreboard } from '../../_types/darkforest/api/UtilityServerAPITypes';
+import { format as formatTime } from 'timeago.js';
 
 const LeaderboardWrapper = styled.div`
   width: 42em;
@@ -75,75 +78,57 @@ type ScoreboardEntry = {
   playerId: EthAddress;
   twitter?: string;
   score: number;
-  sortedPlanets: Planet[];
+  topPlanets: Planet[];
 };
-
-function calculateScoreboard(
-  players: Player[],
-  planets: Planet[]
-): ScoreboardEntry[] {
-  const scoreboardMap: Map<EthAddress, ScoreboardEntry> = new Map();
-
-  for (const player of players) {
-    const entry: ScoreboardEntry = {
-      playerId: player.address,
-      score: 0,
-      sortedPlanets: [],
-    };
-    if (player.twitter) entry.twitter = player.twitter;
-    scoreboardMap.set(player.address, entry);
-  }
-
-  for (const planet of planets) {
-    const owner = planet.owner;
-    const entry = scoreboardMap.get(owner);
-    if (entry) {
-      entry.sortedPlanets.push(planet);
-      scoreboardMap.set(owner, entry);
-    }
-  }
-
-  for (const player of players) {
-    const entry = scoreboardMap.get(player.address);
-    if (!entry) break;
-
-    entry.sortedPlanets.sort((a, b) => b.energyCap - a.energyCap);
-    const nPlanets = entry.sortedPlanets.length;
-    for (let i = 0; i < nPlanets; i += 1) {
-      const planet = entry.sortedPlanets[i];
-      entry.score += (planet.silverSpent + planet.silver) / 10; // silver spent or held on this planet
-      if (i < 10) {
-        entry.score += planet.energyCap;
-      }
-    }
-  }
-  const entries: ScoreboardEntry[] = Array.from(scoreboardMap.values());
-  entries.sort((a, b) => b.score - a.score);
-
-  return entries;
-}
 
 // as [rank, score]
 export function calculateRankAndScore(
-  players: Player[],
-  planets: Planet[],
+  scoreboard: ScoreboardEntry[],
   account: EthAddress
 ): [number, number] {
-  const entries = calculateScoreboard(players, planets);
-  console.log(players, planets, account, entries);
-
-  for (let i = 0; i < entries.length; i++) {
-    if (entries[i].playerId === account) {
-      return [i + 1, entries[i].score];
+  for (let i = 0; i < scoreboard.length; i++) {
+    if (scoreboard[i].playerId === account) {
+      return [i + 1, scoreboard[i].score];
     }
   }
 
   return [-1, -1];
 }
 
+export function getScoreboard(
+  uiManager: GameUIManager,
+  serverScoreboard: ServerScoreboard
+): ScoreboardEntry[] {
+  const entries: ScoreboardEntry[] = [];
+  const players = uiManager.getAllPlayers();
+  const playerMap: Record<string, Player> = {};
+  for (const player of players) playerMap[player.address] = player;
+  for (const serverEntry of serverScoreboard) {
+    const planets: Planet[] = [];
+    for (const planetId of serverEntry.top5Planets) {
+      const planet = uiManager.getPlanetWithId(planetId);
+      if (planet) planets.push(planet);
+    }
+    const entryToAdd: ScoreboardEntry = {
+      playerId: serverEntry.player,
+      score: serverEntry.score,
+      topPlanets: planets,
+    };
+    if (
+      playerMap[serverEntry.player] &&
+      playerMap[serverEntry.player].twitter
+    ) {
+      entryToAdd.twitter = playerMap[serverEntry.player].twitter;
+    }
+    entries.push(entryToAdd);
+  }
+  return entries;
+}
+
 export function LeaderboardPane({ hook }: { hook: ModalHook }) {
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
   const [scoreboard, setScoreboard] = useState<ScoreboardEntry[]>([]);
+  const [lastUpdated, setLastUpdated] = useState<number | null>(null);
 
   const [account, setAccount] = useState<EthAddress | null>(null);
   useEffect(() => {
@@ -155,16 +140,24 @@ export function LeaderboardPane({ hook }: { hook: ModalHook }) {
 
   useEffect(() => {
     if (uiManager) {
-      const players = uiManager.getAllPlayers();
-      const planets = uiManager.getAllOwnedPlanets();
-      const entries = calculateScoreboard(players, planets);
-
-      setScoreboard(entries);
+      getCachedScoreboard().then((res) => {
+        setScoreboard(getScoreboard(uiManager, res.scoreboard));
+        setLastUpdated(res.timestamp);
+      });
     }
   }, [uiManager, visible, account]);
 
   return (
     <ModalPane hook={hook} title='Leaderboard' name={ModalName.Leaderboard}>
+      {lastUpdated ? (
+        <div>
+          <span></span>
+          <span>
+            <Sub>{`Last updated: ${formatTime(lastUpdated)}`}</Sub>
+          </span>
+          <span></span>
+        </div>
+      ) : null}
       <LeaderboardWrapper>
         <div>
           <span></span>
@@ -207,7 +200,7 @@ export function LeaderboardPane({ hook }: { hook: ModalHook }) {
               )}
             </span>
             <span>
-              {entry.sortedPlanets.slice(0, 3).map((planet, i) => (
+              {entry.topPlanets.slice(0, 3).map((planet, i) => (
                 <span key={i}>
                   <PlanetLink planet={planet}>
                     <PlanetThumb planet={planet} />

@@ -3,6 +3,8 @@ import {
   EthAddress,
   ExploredChunkData,
   ChunkFootprint,
+  LocationId,
+  Location,
 } from '../_types/global/GlobalTypes';
 import { openDB, IDBPDatabase } from 'idb';
 import _, { Cancelable } from 'lodash';
@@ -10,7 +12,6 @@ import {
   LSMChunkData,
   ChunkStore,
 } from '../_types/darkforest/api/ChunkStoreTypes';
-import { WorldCoords } from '../utils/Coordinates';
 import {
   getChunkKey,
   toExploredChunk,
@@ -20,6 +21,7 @@ import {
 } from '../utils/ChunkUtils';
 import { MAX_CHUNK_SIZE } from '../utils/constants';
 import { SubmittedTx } from '../_types/darkforest/api/ContractsAPITypes';
+import { SerializedPlugin } from '../plugins/SerializedPlugin';
 
 const isProd = process.env.NODE_ENV === 'production';
 const contractAddress = isProd
@@ -30,6 +32,7 @@ enum ObjectStore {
   DEFAULT = 'default',
   BOARD = 'knownBoard',
   UNCONFIRMED_ETH_TXS = 'unminedEthTxs',
+  PLUGINS = 'plugins',
 }
 
 enum DBActionType {
@@ -76,6 +79,7 @@ class PersistentChunkStore implements ChunkStore {
         db.createObjectStore(ObjectStore.DEFAULT);
         db.createObjectStore(ObjectStore.BOARD);
         db.createObjectStore(ObjectStore.UNCONFIRMED_ETH_TXS);
+        db.createObjectStore(ObjectStore.PLUGINS);
       },
     });
     const localStorageManager = new PersistentChunkStore(db, account);
@@ -85,19 +89,33 @@ class PersistentChunkStore implements ChunkStore {
     return localStorageManager;
   }
 
-  private async getKey(key: string): Promise<string | null | undefined> {
+  private async getKey(
+    key: string,
+    objStore: ObjectStore = ObjectStore.DEFAULT
+  ): Promise<string | null | undefined> {
     return await this.db.get(
-      ObjectStore.DEFAULT,
+      objStore,
       `${contractAddress}-${this.account}-${key}`
     );
   }
 
-  private async setKey(key: string, value: string): Promise<void> {
+  private async setKey(
+    key: string,
+    value: string,
+    objStore: ObjectStore = ObjectStore.DEFAULT
+  ): Promise<void> {
     await this.db.put(
-      ObjectStore.DEFAULT,
+      objStore,
       value,
       `${contractAddress}-${this.account}-${key}`
     );
+  }
+
+  private async removeKey(
+    key: string,
+    objStore: ObjectStore = ObjectStore.DEFAULT
+  ): Promise<void> {
+    await this.db.delete(objStore, `${contractAddress}-${this.account}-${key}`);
   }
 
   private async bulkSetKeyInCollection(
@@ -141,17 +159,50 @@ class PersistentChunkStore implements ChunkStore {
     await this.bulkSetKeyInCollection(toSave, ObjectStore.BOARD);
   }
 
-  public async getHomeCoords(): Promise<WorldCoords | null> {
-    const homeCoords = await this.getKey('homeCoords');
-    if (homeCoords) {
-      const parsed = JSON.parse(homeCoords) as { x: number; y: number };
-      return parsed;
+  /**
+   * we keep a list rather than a single location, since client/contract can
+   * often go out of sync on initialization - if client thinks that init
+   * failed but is wrong, it will prompt user to initialize with new home coords,
+   * which bricks the user's account.
+   */
+  public async getHomeLocations(): Promise<Location[]> {
+    const homeLocations = await this.getKey('homeLocations');
+    let parsed: Location[] = [];
+    if (homeLocations) {
+      parsed = JSON.parse(homeLocations) as Location[];
     }
-    return null;
+
+    return parsed;
   }
 
-  public async setHomeCoords(coords: WorldCoords): Promise<void> {
-    await this.setKey('homeCoords', stringify(coords));
+  public async addHomeLocation(location: Location): Promise<void> {
+    let locationList = await this.getHomeLocations();
+    if (locationList) {
+      locationList.push(location);
+    } else {
+      locationList = [location];
+    }
+    locationList = Array.from(new Set(locationList));
+    await this.setKey('homeLocations', stringify(locationList));
+  }
+
+  public async confirmHomeLocation(location: Location): Promise<void> {
+    await this.setKey('homeLocations', stringify([location]));
+  }
+
+  public async getSavedTouchedPlanetIds(): Promise<LocationId[]> {
+    const touchedPlanetIds = await this.getKey('touchedPlanetIds');
+
+    if (touchedPlanetIds) {
+      const parsed = JSON.parse(touchedPlanetIds) as LocationId[];
+      return parsed;
+    }
+
+    return [];
+  }
+
+  public async saveTouchedPlanetIds(ids: LocationId[]) {
+    await this.setKey('touchedPlanetIds', stringify(ids));
   }
 
   public hasMinedChunk(chunkLoc: ChunkFootprint): boolean {
@@ -304,6 +355,20 @@ class PersistentChunkStore implements ChunkStore {
       ObjectStore.UNCONFIRMED_ETH_TXS
     );
     return ret;
+  }
+
+  public async loadPlugins(): Promise<SerializedPlugin[]> {
+    const savedPlugins = await this.getKey('plugins', ObjectStore.PLUGINS);
+
+    if (!savedPlugins) {
+      return [];
+    }
+
+    return JSON.parse(savedPlugins) as SerializedPlugin[];
+  }
+
+  public async savePlugins(plugins: SerializedPlugin[]) {
+    this.setKey('plugins', JSON.stringify(plugins), ObjectStore.PLUGINS);
   }
 }
 

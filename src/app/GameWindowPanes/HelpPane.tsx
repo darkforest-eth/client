@@ -46,11 +46,19 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
       <HelpWrapper>
         <p className='title'>Patch Notes</p>
         <ul>
-          <li>Made game initialization more stable for higher loads on xDAI</li>
           <li>
-            Added "high performance" mode to settings - this will draw slightly
-            fewer things on the UI, allowing the client to run faster for
-            players with large maps
+            Added PLUGINS: You can now write and share arbitrary client tools
+            and customizations.
+          </li>
+          <li>
+            Upgraded Graphics: Planets are no longer solid-colored circles.
+          </li>
+          <li>
+            Added Artifacts: Collect Dark Forest NFTs by exploring the universe.
+          </li>
+          <li>
+            Improved performance: Sped up loading times, reduced frequency of
+            errors and network failure.
           </li>
         </ul>
 
@@ -62,12 +70,12 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
         </p>
         <p className='title'>FAQ and Troubleshooting</p>
         <p>
-          <a onClick={() => window.open('https://blog.zkga.me/df-04-faq')}>
+          <a onClick={() => window.open('https://blog.zkga.me/df-05-faq')}>
             FAQ
           </a>
         </p>
         <p></p>
-        <p className='title'>Welcome to Dark Forest v0.4!</p>
+        <p className='title'>Welcome to Dark Forest v0.5!</p>
         <p>
           This window gives additional information about the game. When you are
           done reading, click the <White>X</White> in the upper-right corner to
@@ -95,13 +103,18 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
           silver increases your score.
         </p>
         <p>
+          Some planets contain <White>Artifacts</White>. Artifacts can be
+          harvested and deposited onto planets, buffing their stats. Artifacts
+          are ERC721 tokens that can be traded with other players.
+        </p>
+        <p>
           If you need help, click "Reset Tutorial" above, or check out the FAQ.
           You can also hold down <White>SHIFT</White> and hover over anything
           that is highlighted <BlueBG>Blue</BlueBG> to learn more about it!
         </p>
         <p className='title'>Prizes and Scoring</p>
         <p>
-          A snapshot of scores will be taken on 10/12/2020. At that time, the
+          A snapshot of scores will be taken on 01/08/2021. At that time, the
           top 15 highest-scoring players will be awarded prizes from a pool of
           1024 DAI. Your score is determined by the value of your largest 10
           planets, plus the silver you've produced and spent during the game.

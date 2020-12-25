@@ -1,5 +1,7 @@
 import { css } from 'styled-components';
 
+export const ARTIFACT_ROW_H = 48;
+
 const dfstyles = {
   colors: {
     text: '#ffffff',

@@ -1,8 +1,12 @@
 import { WorldCoords } from '../../utils/Coordinates';
 import {
   UnconfirmedBuyHat,
+  UnconfirmedDepositArtifact,
+  UnconfirmedFindArtifact,
   UnconfirmedMove,
+  UnconfirmedPlanetTransfer,
   UnconfirmedUpgrade,
+  UnconfirmedWithdrawArtifact,
 } from '../darkforest/api/ContractsAPITypes';
 import { EventEmitter } from 'events';
 import TerminalEmitter from '../../utils/TerminalEmitter';
@@ -45,6 +49,34 @@ export enum SpaceType {
   DEEP_SPACE,
 }
 
+export enum Biome {
+  UNKNOWN,
+  OCEAN,
+  FOREST,
+  GRASSLAND,
+  TUNDRA,
+  SWAMP,
+  DESERT,
+  ICE,
+  WASTELAND,
+  LAVA,
+  MIN = Biome.OCEAN,
+  MAX = Biome.LAVA,
+}
+
+export const BiomeNames = [
+  'Unknown',
+  'Ocean',
+  'Forest',
+  'Grassland',
+  'Tundra',
+  'Swamp',
+  'Desert',
+  'Ice',
+  'Wasteland',
+  'Lava',
+];
+
 declare global {
   interface Window {
     // gameManager: any;
@@ -55,7 +87,7 @@ declare global {
     // TODO: these three should eventually live in some sort of `DFTerminal` namespace
     // instead of global
     df?: AbstractGameManager;
-    uiManager?: AbstractUIManager;
+    ui?: AbstractUIManager;
     terminal?: TerminalEmitter;
   }
 }
@@ -78,6 +110,14 @@ export type LocationId = string & {
   __value__: never;
 };
 
+export type VoyageId = string & {
+  __value__: never;
+};
+
+export type ArtifactId = string & {
+  __value__: never;
+};
+
 export type EthAddress = string & {
   __value__: never;
 }; // this is expected to be 40 chars, lowercase hex. see src/utils/CheckedTypeUtils.ts for constructor
@@ -92,6 +132,7 @@ export interface Location {
   coords: WorldCoords;
   hash: LocationId;
   perlin: number;
+  biomebase: number; // biome perlin value. combined with spaceType to get the actual biome
 }
 
 export type Bonus = [boolean, boolean, boolean, boolean, boolean];
@@ -116,6 +157,46 @@ export const enum UpgradeBranchName {
   Range = 1,
   Speed = 2,
 }
+
+export enum ArtifactType {
+  Unknown = 0,
+  Monolith = 1,
+  Colossus = 2,
+  Spaceship = 3,
+  Pyramid = 4,
+}
+
+export const ArtifactNames = [
+  'Unknown',
+  'Monolith',
+  'Colossus',
+  'Spaceship',
+  'Pyramid',
+];
+
+export enum ArtifactRarity {
+  Common,
+  Rare,
+  Epic,
+  Legendary,
+}
+
+export const RarityNames = ['Common', 'Rare', 'Epic', 'Legendary'];
+
+export type Artifact = {
+  id: ArtifactId;
+  planetDiscoveredOn: LocationId;
+  planetLevel: PlanetLevel;
+  planetBiome: Biome;
+  mintedAtTimestamp: number;
+  discoverer: EthAddress;
+  currentOwner: EthAddress; // owner of the NFT - can be the contract
+  artifactType: ArtifactType;
+  upgrade: Upgrade;
+  onPlanetId?: LocationId;
+  unconfirmedDepositArtifact?: UnconfirmedDepositArtifact;
+  unconfirmedWithdrawArtifact?: UnconfirmedWithdrawArtifact;
+};
 
 export type Planet = {
   locationId: LocationId;
@@ -143,10 +224,17 @@ export type Planet = {
   // metadata stuff
   lastUpdated: number;
   upgradeState: UpgradeState;
+  hasTriedFindingArtifact: boolean;
+  heldArtifactId?: ArtifactId;
+  artifactLockedTimestamp?: number;
 
   unconfirmedDepartures: UnconfirmedMove[];
   unconfirmedUpgrades: UnconfirmedUpgrade[];
   unconfirmedBuyHats: UnconfirmedBuyHat[];
+  unconfirmedPlanetTransfers: UnconfirmedPlanetTransfer[];
+  unconfirmedFindArtifact?: UnconfirmedFindArtifact;
+  unconfirmedDepositArtifact?: UnconfirmedDepositArtifact;
+  unconfirmedWithdrawArtifact?: UnconfirmedWithdrawArtifact;
   silverSpent: number;
 
   isInContract: boolean;
@@ -155,6 +243,7 @@ export type Planet = {
 
 export type LocatablePlanet = Planet & {
   location: Location;
+  biome: Biome;
 };
 
 export function isLocatable(planet: Planet): planet is LocatablePlanet {
@@ -162,7 +251,7 @@ export function isLocatable(planet: Planet): planet is LocatablePlanet {
 }
 
 export type QueuedArrival = {
-  eventId: string;
+  eventId: VoyageId;
   player: EthAddress;
   fromPlanet: LocationId;
   toPlanet: LocationId;
@@ -177,26 +266,10 @@ export interface ArrivalWithTimer {
   timer: ReturnType<typeof setTimeout>;
 }
 
-export type PlanetMap = Map<LocationId, Planet>;
-
-export type PlanetLocationMap = Map<LocationId, Location>;
-
-// // ONLY USED FOR GAMEMANAGER/PLANETHELPER CONSTRUCTOR
-// arrivalId: string, QueuedArrival
-export type VoyageContractData = Map<string, QueuedArrival>;
-
-// arrivalId: string, ArrivalWithTimer
-export type VoyageMap = Map<string, ArrivalWithTimer>;
-
-// planetId: string, arrivalIds: string[]
-export type PlanetVoyageIdMap = Map<string, string[]>;
-
 export interface Player {
   address: EthAddress;
   twitter?: string;
 }
-
-export type PlayerMap = Map<string, Player>;
 
 export interface ChunkFootprint {
   bottomLeft: WorldCoords;

@@ -9,8 +9,9 @@ import { formatNumber } from '../../utils/Utils';
 import { ModalHook, ModalTwitterVerifyIcon } from './ModalPane';
 import { TooltipTrigger } from './Tooltip';
 import { TooltipName } from '../../utils/WindowManager';
-import { calculateRankAndScore } from './LeaderboardPane';
+import { calculateRankAndScore, getScoreboard } from './LeaderboardPane';
 import { AccountContext } from '../GameWindow';
+import { getCachedScoreboard } from '../../api/UtilityServerAPI';
 
 const PlayerInfoWrapper = styled.div`
   width: 100%;
@@ -54,27 +55,36 @@ export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
   useEffect(() => {
     if (!uiManager || !account) return;
 
-    const updateRankAndScore = () => {
-      const players = uiManager.getAllPlayers();
-      const planets = uiManager.getAllOwnedPlanets();
-      const [myRank, myScore] = calculateRankAndScore(
-        players,
-        planets,
-        account
-      );
-
-      setRank(myRank);
-      setScore(myScore);
-
+    const updateEnergyAndSilver = () => {
       setEnergy(uiManager.getEnergyOfPlayer(account));
       setSilver(uiManager.getSilverOfPlayer(account));
     };
 
-    const intervalId = setInterval(updateRankAndScore, 60000);
+    const updateRankAndScore = () => {
+      getCachedScoreboard().then((res) => {
+        const scoreboardEntries = getScoreboard(uiManager, res.scoreboard);
+        const [myRank, myScore] = calculateRankAndScore(
+          scoreboardEntries,
+          account
+        );
+
+        setRank(myRank);
+        setScore(myScore);
+
+        if (myRank === -1 && myScore === -1) {
+          setTimeout(updateRankAndScore, 60 * 1000);
+        }
+      });
+    };
+
+    const rankInterval = setInterval(updateRankAndScore, 30 * 60 * 1000);
+    const energySilverInterval = setInterval(updateEnergyAndSilver, 60 * 1000);
     updateRankAndScore();
+    updateEnergyAndSilver();
 
     return () => {
-      clearInterval(intervalId);
+      clearInterval(rankInterval);
+      clearInterval(energySilverInterval);
     };
   }, [uiManager, account]);
 

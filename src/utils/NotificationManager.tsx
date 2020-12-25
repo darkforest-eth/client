@@ -13,8 +13,13 @@ import {
   PlanetNameLink,
   TxLink,
 } from '../components/Text';
-import { ExploredChunkData, Planet } from '../_types/global/GlobalTypes';
+import {
+  ExploredChunkData,
+  LocatablePlanet,
+  Planet,
+} from '../_types/global/GlobalTypes';
 import dfstyles from '../styles/dfstyles';
+import { biomeName } from './ArtifactUtils';
 
 export enum NotificationType {
   Tx,
@@ -28,6 +33,8 @@ export enum NotificationType {
   FoundPirates,
   FoundSilver,
   FoundComet,
+
+  FoundBiome,
 }
 
 export type NotificationInfo = {
@@ -218,6 +225,16 @@ class NotificationManager extends EventEmitter {
       NotificationType.FoundComet,
       <span>
         You found a comet! Planets with comets have a stat doubled! <br />
+        Click to view <PlanetNameLink planet={planet} />
+      </span>
+    );
+  }
+
+  foundBiome(planet: LocatablePlanet): void {
+    this.notify(
+      NotificationType.FoundBiome,
+      <span>
+        You have discovered the {biomeName(planet.biome)} biome! <br />
         Click to view <PlanetNameLink planet={planet} />
       </span>
     );

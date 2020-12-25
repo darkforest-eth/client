@@ -1,8 +1,6 @@
-import React, { useContext, useState } from 'react';
-
+import React, { useState, useRef } from 'react';
 import { ContextMenu } from './GameWindowComponents/ContextMenu';
 import ControllableCanvas from './board/ControllableCanvas';
-
 import {
   Sidebar,
   CanvasContainer,
@@ -13,7 +11,6 @@ import {
   LHSWrapper,
   UpperLeft,
 } from './GameWindowComponents/GameWindowComponents';
-
 import {
   Tooltip,
   CoordsPane,
@@ -27,11 +24,12 @@ import {
   TwitterBroadcastPane,
   ZoomPane,
 } from './GameWindowPanes/GameWindowPanes';
-
 import {
   ModalHelpIcon,
   ModalLeaderboardIcon,
+  ModalPluginIcon,
   ModalSettingsIcon,
+  ModalYourArtifactsIcon,
 } from './GameWindowPanes/ModalPane';
 import { ExploreContextPane } from './GameWindowPanes/ExploreContextPane';
 import { PlanetContextPane } from './GameWindowPanes/PlanetContextPane';
@@ -42,45 +40,59 @@ import { SettingsPane } from './GameWindowPanes/SettingsPane';
 import OnboardingPane from './GameWindowPanes/OnboardingPane';
 import { useStoredUIState, UIDataKey } from '../api/UIStateStorageManager';
 import GameUIManager from './board/GameUIManager';
-import GameUIManagerContext from './board/GameUIManagerContext';
 import { PrivatePane } from './GameWindowPanes/PrivatePane';
-import { Hook } from '../_types/global/GlobalTypes';
+import { Artifact, Hook } from '../_types/global/GlobalTypes';
+import { PlayerArtifactsPane } from './GameWindowPanes/PlayerArtifactsPane';
+import { FindArtifactPane } from './GameWindowPanes/FindArtifactPane';
+import { PluginLibraryView } from '../plugins/PluginLibraryView';
+import { ArtifactDetailsPane } from './GameWindowPanes/ArtifactDetailsPane';
+import { DepositArtifactPane } from './GameWindowPanes/DepositArtifactPane';
 
 export function GameWindowLayout({
+  gameUIManager,
   hiPerfHook,
 }: {
+  gameUIManager: GameUIManager;
   hiPerfHook: Hook<boolean>;
 }) {
   const planetDetHook = useState<boolean>(true);
-  const helpHook = useState<boolean>(true);
+  const helpHook = useState<boolean>(false);
   const leaderboardHook = useState<boolean>(false);
   const planetdexHook = useState<boolean>(false);
+  const yourArtifactsHook = useState<boolean>(false);
   const upgradeDetHook = useState<boolean>(false);
   const twitterVerifyHook = useState<boolean>(false);
   const twitterBroadcastHook = useState<boolean>(false);
   const hatHook = useState<boolean>(false);
+  const findArtifactHook = useState<boolean>(false);
   const settingsHook = useState<boolean>(false);
-
   const privateHook = useState<boolean>(false);
-
-  const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
+  const pluginsHook = useState<boolean>(false);
+  const modalsContainerRef = useRef<HTMLDivElement>(null);
 
   const newPlayerHook = useStoredUIState<boolean>(
     UIDataKey.newPlayer,
-    uiManager
+    gameUIManager
   );
+
+  /* artifact stuff */
+  const selectedArtifactHook = useState<Artifact | null>(null);
+  const artifactDetailsHook = useState<boolean>(false);
+  const depositHook = useState<boolean>(false);
 
   return (
     <WindowWrapper>
       <Tooltip hiPerf={hiPerfHook[0]} />
 
-      {/* modals (fragment is purely semantic) */}
-      <>
+      {/* all modals rendered into here */}
+      <div ref={modalsContainerRef}>
         <PlanetDetailsPane
           hook={planetDetHook}
           broadcastHook={twitterBroadcastHook}
           upgradeDetHook={upgradeDetHook}
           hatHook={hatHook}
+          findArtifactHook={findArtifactHook}
+          depositHook={depositHook}
         />
         <HelpPane hook={helpHook} />
         <LeaderboardPane hook={leaderboardHook} />
@@ -88,6 +100,11 @@ export function GameWindowLayout({
         <UpgradeDetailsPane hook={upgradeDetHook} />
         <TwitterVerifyPane hook={twitterVerifyHook} />
         <TwitterBroadcastPane hook={twitterBroadcastHook} />
+        <FindArtifactPane
+          hook={findArtifactHook}
+          artifactDetailsHook={artifactDetailsHook}
+          selectedArtifactHook={selectedArtifactHook}
+        />
         <HatPane hook={hatHook} />
         <SettingsPane
           hook={settingsHook}
@@ -95,7 +112,25 @@ export function GameWindowLayout({
           hiPerfHook={hiPerfHook}
         />
         <PrivatePane hook={privateHook} />
-      </>
+        <PlayerArtifactsPane
+          hook={yourArtifactsHook}
+          artifactDetailsHook={artifactDetailsHook}
+          selectedArtifactHook={selectedArtifactHook}
+        />
+        <ArtifactDetailsPane
+          hook={artifactDetailsHook}
+          artifactHook={selectedArtifactHook}
+        />
+        <DepositArtifactPane hook={depositHook} />
+
+        {modalsContainerRef.current && (
+          <PluginLibraryView
+            modalsContainer={modalsContainerRef.current}
+            gameUIManager={gameUIManager}
+            hook={pluginsHook}
+          />
+        )}
+      </div>
 
       <OnboardingPane newPlayerHook={newPlayerHook} />
 
@@ -112,6 +147,8 @@ export function GameWindowLayout({
             <MenuBar>
               <ModalHelpIcon hook={helpHook} />
               <ModalLeaderboardIcon hook={leaderboardHook} />
+              <ModalPluginIcon hook={pluginsHook} />
+              <ModalYourArtifactsIcon hook={yourArtifactsHook} />
               <ModalSettingsIcon hook={settingsHook} />
             </MenuBar>
             <ZoomPane />

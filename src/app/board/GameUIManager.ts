@@ -14,6 +14,11 @@ import {
   SpaceType,
   PlanetResource,
   ChunkFootprint,
+  Artifact,
+  ArtifactId,
+  LocatablePlanet,
+  Biome,
+  isLocatable,
 } from '../../_types/global/GlobalTypes';
 import autoBind from 'auto-bind';
 import { EventEmitter } from 'events';
@@ -34,6 +39,9 @@ import UIStateStorageManager, {
 import NotificationManager from '../../utils/NotificationManager';
 import { emptyAddress } from '../../utils/CheckedTypeUtils';
 import TerminalEmitter from '../../utils/TerminalEmitter';
+import Viewport from './Viewport';
+import { PluginManager } from '../../plugins/PluginManager';
+import { biomeName } from '../../utils/ArtifactUtils';
 
 export enum GameUIManagerEvent {
   InitializedPlayer = 'InitializedPlayer',
@@ -49,7 +57,7 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
   // TODO fix this
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private readonly radiusMap: any = {};
+  private readonly radiusMap: Record<PlanetLevel, number> = {};
 
   private selectedPlanet: Planet | null = null;
   private selectedCoords: WorldCoords | null = null;
@@ -68,6 +76,8 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
   private forcesSending: { [key: string]: number } = {}; // this is a percentage
   private silverSending: { [key: string]: number } = {}; // this is a percentage
 
+  private plugins: PluginManager;
+
   // lifecycle methods
 
   private constructor(gameManager: AbstractGameManager, replayMode = false) {
@@ -75,19 +85,17 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
     this.gameManager = gameManager;
     this.replayMode = replayMode;
+
     if (this.replayMode) this.stopExplore();
 
-    // this.radiusMap[PlanetType.LittleAsteroid] = 1;
-    this.radiusMap[PlanetLevel.Asteroid] = 1;
-    this.radiusMap[PlanetLevel.BrownDwarf] = 3;
-    this.radiusMap[PlanetLevel.RedDwarf] = 9;
-    this.radiusMap[PlanetLevel.WhiteDwarf] = 27;
-    this.radiusMap[PlanetLevel.YellowStar] = 54;
-    this.radiusMap[PlanetLevel.BlueStar] = 72;
-    this.radiusMap[PlanetLevel.Giant] = 81;
-    this.radiusMap[PlanetLevel.Supergiant] = 90;
-    // this.radiusMap[PlanetType.SuperGiant] = 75;
-    // this.radiusMap[PlanetType.HyperGiant] = 100;
+    this.radiusMap[PlanetLevel.Asteroid] = 2;
+    this.radiusMap[PlanetLevel.BrownDwarf] = 6;
+    this.radiusMap[PlanetLevel.RedDwarf] = 18;
+    this.radiusMap[PlanetLevel.WhiteDwarf] = 54;
+    this.radiusMap[PlanetLevel.YellowStar] = 108;
+    this.radiusMap[PlanetLevel.BlueStar] = 192;
+    this.radiusMap[PlanetLevel.Giant] = 224;
+    this.radiusMap[PlanetLevel.Supergiant] = 256;
 
     const account = gameManager.getAccount();
     const contractAddress = gameManager.getContractAddress();
@@ -96,10 +104,12 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
       contractAddress
     );
 
+    this.plugins = new PluginManager(gameManager, this);
+
     autoBind(this);
   }
 
-  static create(gameManager: AbstractGameManager) {
+  static async create(gameManager: AbstractGameManager) {
     const uiEmitter = UIEmitter.getInstance();
 
     const uiManager = new GameUIManager(
@@ -164,9 +174,26 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
   // actions
 
-  onJoinGameClicked(): GameUIManager {
+  centerPlanet(planet: Planet | null) {
+    if (planet) {
+      Viewport.getInstance().centerPlanet(planet);
+      this.setSelectedPlanet(planet);
+    }
+  }
+
+  centerCoords(coords: WorldCoords) {
+    const planet = this.gameManager.getPlanetWithCoords(coords);
+    this.centerPlanet(planet);
+  }
+
+  centerLocationId(planetId: LocationId) {
+    const planet = this.getPlanetWithId(planetId);
+    this.centerPlanet(planet);
+  }
+
+  joinGame(beforeRetry: (e: Error) => Promise<boolean>): GameUIManager {
     this.gameManager
-      .joinGame()
+      .joinGame(beforeRetry)
       .once(GameManagerEvent.InitializedPlayer, this.onEmitInitializedPlayer)
       .once(
         GameManagerEvent.InitializedPlayerError,
@@ -184,12 +211,27 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     return this.gameManager.verifyTwitter(twitter);
   }
 
+  getPluginManager(): PluginManager | null {
+    return this.plugins;
+  }
+
   getPrivateKey(): string {
     return this.gameManager.getPrivateKey();
   }
 
   getMyBalance(): number {
     return this.gameManager.getMyBalance();
+  }
+
+  findArtifact(planetId: LocationId) {
+    this.gameManager.findArtifact(planetId);
+  }
+
+  withdrawArtifact(locationId: LocationId) {
+    this.gameManager.withdrawArtifact(locationId);
+  }
+  depositArtifact(locationId: LocationId, artifactId: ArtifactId) {
+    this.gameManager.depositArtifact(locationId, artifactId);
   }
 
   onMouseDown(coords: WorldCoords) {
@@ -356,6 +398,28 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     return this.gameManager.getUpgrade(branch, level);
   }
 
+  private getBiomeKey(biome: Biome) {
+    return `${this.getAccount()}-${this.gameManager.getContractAddress()}-biome-${biome}`;
+  }
+
+  getDiscoverBiomeName(biome: Biome): string {
+    const item = localStorage.getItem(this.getBiomeKey(biome));
+    if (item === 'true') {
+      return biomeName(biome);
+    }
+    return 'Undiscovered';
+  }
+
+  discoverBiome(planet: LocatablePlanet): void {
+    const key = this.getBiomeKey(planet.biome);
+    const item = localStorage.getItem(key);
+    if (item !== 'true') {
+      const notifManager = NotificationManager.getInstance();
+      localStorage.setItem(key, 'true');
+      notifManager.foundBiome(planet);
+    }
+  }
+
   getAllPlayers(): Player[] {
     return this.gameManager.getAllPlayers();
   }
@@ -366,6 +430,11 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
   getSelectedPlanet(): Planet | null {
     return this.selectedPlanet;
+  }
+
+  setSelectedId(id: LocationId): void {
+    const planet = this.getPlanetWithId(id);
+    if (planet) this.setSelectedPlanet(planet);
   }
 
   setSelectedPlanet(planet: Planet | null): void {
@@ -471,6 +540,12 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
           this.setUIDataItem(UIDataKey.foundComet, true);
         }
       }
+      if (
+        isLocatable(planet) &&
+        planet.planetResource === PlanetResource.NONE
+      ) {
+        this.discoverBiome(planet);
+      }
     }
 
     if (this.spaceTypeFromPerlin(chunk.perlin) === SpaceType.DEEP_SPACE) {
@@ -522,18 +597,28 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
       return null;
     }
     const res = this.planetHitboxForCoords(coords);
-    let planet: Planet | null = null;
-    if (res) {
-      planet = res[0];
-    }
+    const planet: LocatablePlanet | null = res;
     if (!planet) {
       return null;
     }
     return planet.owner === this.gameManager.getAccount() ? planet : null;
   }
 
+  getMyArtifacts(): Artifact[] {
+    return this.gameManager.getMyArtifacts();
+  }
+
   getPlanetWithId(planetId: LocationId): Planet | null {
     return this.gameManager.getPlanetWithId(planetId);
+  }
+
+  getArtifactWithId(artifactId: ArtifactId): Artifact | null {
+    return this.gameManager.getArtifactWithId(artifactId);
+  }
+
+  getArtifactPlanet(artifact: Artifact): Planet | null {
+    if (!artifact.onPlanetId) return null;
+    return this.getPlanetWithId(artifact.onPlanetId);
   }
 
   getPlanetLevel(planetId: LocationId): PlanetLevel | null {
@@ -566,6 +651,27 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
   getExploredChunks(): Iterable<ExploredChunkData> {
     return this.gameManager.getExploredChunks();
+  }
+
+  getLocationsAndChunks(): {
+    locations: Iterable<Location>;
+    chunks: Iterable<ExploredChunkData>;
+  } {
+    const locations: Set<Location> = new Set();
+    const chunks: Set<ExploredChunkData> = new Set();
+
+    const viewport = Viewport.getInstance();
+    const exploredChunks = this.getExploredChunks();
+
+    for (const exploredChunk of exploredChunks) {
+      if (viewport.intersectsViewport(exploredChunk)) {
+        chunks.add(exploredChunk);
+        for (const planetLocation of exploredChunk.planetLocations) {
+          locations.add(planetLocation);
+        }
+      }
+    }
+    return { locations, chunks };
   }
 
   getWorldRadius(): number {
@@ -608,6 +714,11 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
   }
   getHomeHash(): LocationId | null {
     return this.gameManager.getHomeHash();
+  }
+  getHomePlanet(): Planet | null {
+    const homeHash = this.getHomeHash();
+    if (!homeHash) return null;
+    return this.getPlanetWithId(homeHash);
   }
 
   getRadiusOfPlanetLevel(planetRarity: PlanetLevel): number {
@@ -668,8 +779,8 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
     const res = this.planetHitboxForCoords(coords);
     if (res) {
-      this.mouseHoveringOverPlanet = res[0];
-      this.mouseHoveringOverCoords = res[1];
+      this.mouseHoveringOverPlanet = res;
+      this.mouseHoveringOverCoords = res.location.coords;
     }
 
     this.mouseHoveringOverCoords = {
@@ -679,39 +790,8 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     return this.mouseHoveringOverCoords;
   }
 
-  private planetHitboxForCoords(
-    coords: WorldCoords
-  ): [Planet, WorldCoords] | null {
-    const maxRadius = this.radiusMap[PlanetLevel.MAX];
-    let planetInHitbox: Planet | null = null;
-    let smallestPlanetRadius: number = maxRadius + 1;
-    let planetCoords: WorldCoords | null = null;
-
-    for (let dx = -1 * maxRadius; dx < maxRadius + 1; dx += 1) {
-      for (let dy = -1 * maxRadius; dy < maxRadius + 1; dy += 1) {
-        const x = Math.round(coords.x) + dx;
-        const y = Math.round(coords.y) + dy;
-        const planet = this.gameManager.getPlanetWithCoords({ x, y });
-        if (
-          planet &&
-          this.radiusMap[planet.planetLevel] >
-            Math.max(Math.abs(x - coords.x), Math.abs(y - coords.y))
-        ) {
-          // coords is in hitbox
-          if (this.radiusMap[planet.planetLevel] < smallestPlanetRadius) {
-            // we want the smallest planet that we're in the hitbox of
-            planetInHitbox = planet;
-            smallestPlanetRadius = this.radiusMap[planet.planetLevel];
-            planetCoords = { x, y };
-          }
-        }
-      }
-    }
-
-    if (planetCoords && planetInHitbox) {
-      return [planetInHitbox, planetCoords];
-    }
-    return null;
+  private planetHitboxForCoords(coords: WorldCoords): LocatablePlanet | null {
+    return this.gameManager.getPlanetHitboxForCoords(coords, this.radiusMap);
   }
 
   private onEmitInitializedPlayer() {

@@ -1,4 +1,5 @@
 import {
+  BiomeArgs,
   ContractCallArgs,
   InitializePlayerArgs,
   MoveSnarkArgs,
@@ -12,23 +13,27 @@ import mimcHash, { modPBigInt, modPBigIntNative } from '../miner/mimc';
 import * as bigInt from 'big-integer';
 import { fakeHash } from '../miner/permutation';
 import TerminalEmitter, { TerminalTextStyle } from '../utils/TerminalEmitter';
+import perlin from '../miner/perlin';
 
-interface InitInfo {
+type InitInfo = {
   x: string;
   y: string;
-  p: string;
   r: string;
-}
+};
 
-interface MoveInfo {
+type MoveInfo = {
   x1: string;
   y1: string;
   x2: string;
   y2: string;
-  p2: string;
   r: string;
   distMax: string;
-}
+};
+
+type FindArtifactInfo = {
+  x: string;
+  y: string;
+};
 
 type ZKPTask = {
   taskId: number;
@@ -123,7 +128,6 @@ class SnarkArgsHelper {
   async getInitArgs(
     x: number,
     y: number,
-    p: number,
     r: number
   ): Promise<InitializePlayerArgs> {
     try {
@@ -136,12 +140,12 @@ class SnarkArgsHelper {
       const input: InitInfo = {
         x: modPBigInt(x).toString(),
         y: modPBigInt(y).toString(),
-        p: modPBigInt(p).toString(),
         r: r.toString(),
       };
 
       const hash = this.useMockHash ? fakeHash(x, y) : mimcHash(x, y);
-      const publicSignals: BigInteger[] = [hash, bigInt(p), bigInt(r)];
+      const perl = perlin({ x, y });
+      const publicSignals: BigInteger[] = [hash, bigInt(perl), bigInt(r)];
 
       const snarkProof: SnarkJSProofAndSignals = this.useMockHash
         ? SnarkArgsHelper.fakeProof()
@@ -171,7 +175,6 @@ class SnarkArgsHelper {
     y1: number,
     x2: number,
     y2: number,
-    p2: number,
     r: number,
     distMax: number
   ): Promise<MoveSnarkArgs> {
@@ -188,7 +191,6 @@ class SnarkArgsHelper {
         y1: modPBigInt(y1).toString(),
         x2: modPBigInt(x2).toString(),
         y2: modPBigInt(y2).toString(),
-        p2: modPBigInt(p2).toString(),
         r: r.toString(),
         distMax: distMax.toString(),
       };
@@ -201,10 +203,11 @@ class SnarkArgsHelper {
           );
       const hash1 = this.useMockHash ? fakeHash(x1, y1) : mimcHash(x1, y1);
       const hash2 = this.useMockHash ? fakeHash(x2, y2) : mimcHash(x2, y2);
+      const perl2 = perlin({ x: x2, y: y2 });
       const publicSignals: BigInteger[] = [
         hash1,
         hash2,
-        bigInt(p2),
+        bigInt(perl2),
         bigInt(r),
         bigInt(distMax),
       ];
@@ -218,6 +221,45 @@ class SnarkArgsHelper {
         publicSignals.map((x) => modPBigIntNative(x))
       );
       return proofArgs as MoveSnarkArgs;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getFindArtifactArgs(x: number, y: number): Promise<BiomeArgs> {
+    try {
+      const terminalEmitter = TerminalEmitter.getInstance();
+
+      const start = Date.now();
+      terminalEmitter.println(
+        'ARTIFACT: calculating witness and proof',
+        TerminalTextStyle.Sub
+      );
+      const input: FindArtifactInfo = {
+        x: modPBigInt(x).toString(),
+        y: modPBigInt(y).toString(),
+      };
+      const snarkProof: SnarkJSProofAndSignals = this.useMockHash
+        ? SnarkArgsHelper.fakeProof()
+        : await this.snarkProverQueue.doProof(
+            input,
+            '/public/circuits/biomebase/circuit.wasm',
+            '/public/biomebase.zkey'
+          );
+      const hash = this.useMockHash ? fakeHash(x, y) : mimcHash(x, y);
+      const biomebase = bigInt(perlin({ x, y }, true, true));
+      const publicSignals: BigInteger[] = [hash, biomebase];
+      const end = Date.now();
+      terminalEmitter.println(
+        `ARTIFACT: calculated witness and proof in ${end - start}ms`,
+        TerminalTextStyle.Sub
+      );
+      const proofArgs = this.callArgsFromProofAndSignals(
+        snarkProof.proof,
+        publicSignals.map((x) => modPBigIntNative(x))
+      );
+
+      return proofArgs as BiomeArgs;
     } catch (e) {
       throw e;
     }

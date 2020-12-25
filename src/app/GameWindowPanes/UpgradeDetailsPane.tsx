@@ -14,6 +14,7 @@ import {
   Upgrade,
   EthAddress,
   UpgradeBranchName,
+  SpaceType,
 } from '../../_types/global/GlobalTypes';
 import {
   getPlanetRank,
@@ -427,7 +428,14 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
 
   // tuple of 3 bools, one for each branch
   const disabled: boolean[] = planetCanUpgrade(selected)
-    ? selected?.upgradeState.map((level) => level >= 4) || [true, true, true]
+    ? selected?.upgradeState.map((level, i) => {
+        if (
+          i === UpgradeBranchName.Defense &&
+          selected.spaceType === SpaceType.DEEP_SPACE
+        )
+          return level >= 2;
+        return level >= 4;
+      }) || [true, true, true]
     : [true, true, true];
 
   useEffect(() => {

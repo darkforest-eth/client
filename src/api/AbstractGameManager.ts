@@ -10,6 +10,9 @@ import {
   Upgrade,
   ChunkFootprint,
   SpaceType,
+  Artifact,
+  ArtifactId,
+  LocatablePlanet,
 } from '../_types/global/GlobalTypes';
 import { EventEmitter } from 'events';
 import { WorldCoords } from '../utils/Coordinates';
@@ -18,6 +21,7 @@ import {
   UnconfirmedUpgrade,
 } from '../_types/darkforest/api/ContractsAPITypes';
 import { MiningPattern } from '../utils/MiningPatterns';
+import { SerializedPlugin } from '../plugins/SerializedPlugin';
 
 export default interface AbstractGameManager extends EventEmitter {
   destroy(): void;
@@ -36,14 +40,22 @@ export default interface AbstractGameManager extends EventEmitter {
   getWorldRadius(): number;
   getWorldSilver(): number;
   getUniverseTotalEnergy(): number;
+  getMyArtifacts(): Artifact[]; // gets both deposited artifacts that are on planets i own as well as artifacts i own
   getSilverOfPlayer(player: EthAddress): number;
   getEnergyOfPlayer(player: EthAddress): number;
   getPlanetWithId(planetId: LocationId): Planet | null; // null if planet is neither in contract nor known chunks
+  getArtifactWithId(artifactId: ArtifactId): Artifact | null; // null if no artifact with id exists
   getPlanetWithCoords(coords: WorldCoords): Planet | null; // null if not a valid location or if no planet exists at location
+  getPlanetHitboxForCoords(
+    coords: WorldCoords,
+    radiusMap: Record<PlanetLevel, number>
+  ): LocatablePlanet | null; // get the planet that these coords are on top of
   getPlanetLevel(planetId: LocationId): PlanetLevel | null; // null if planet is neither in contract nor known chunks. fast; doesn't update planet
   getPlanetDetailLevel(planetId: LocationId): number | null; // null if planet is neither in contract nor known chunks. fast; doesn't update planet
   getLocationOfPlanet(planetId: LocationId): Location | null; // null if we don't know the location of this planet
   getAllOwnedPlanets(): Planet[];
+  getMyPlanets(): Planet[];
+  getAllPlanets(): Iterable<Planet>;
   getAllVoyages(): QueuedArrival[];
   getUnconfirmedMoves(): UnconfirmedMove[];
   getUnconfirmedUpgrades(): UnconfirmedUpgrade[];
@@ -67,8 +79,10 @@ export default interface AbstractGameManager extends EventEmitter {
   addNewChunk(chunk: ExploredChunkData): AbstractGameManager;
 
   // account management + chain operations
+  findArtifact(planetId: LocationId): AbstractGameManager;
   verifyTwitter(twitter: string): Promise<boolean>;
-  joinGame(): AbstractGameManager;
+  // TODO: remove beforeRetry: (e: Error) => Promise<boolean>
+  joinGame(beforeRetry: (e: Error) => Promise<boolean>): AbstractGameManager;
   addAccount(coords: WorldCoords): Promise<boolean>;
   move(
     from: LocationId,
@@ -78,9 +92,13 @@ export default interface AbstractGameManager extends EventEmitter {
   ): AbstractGameManager;
   upgrade(planetId: LocationId, branch: number): AbstractGameManager;
   buyHat(planetId: LocationId): AbstractGameManager;
+  depositArtifact(
+    planetId: LocationId,
+    artifactId: ArtifactId
+  ): AbstractGameManager;
+  withdrawArtifact(planetId: LocationId): AbstractGameManager;
 
   // estimation utils. used for scripting only (not in core client functions)
-  getMyPlanets(): Planet[];
   getDist(fromId: LocationId, toId: LocationId): number;
   getMaxMoveDist(planetId: LocationId, sendingPercent: number): number;
   getPlanetsInRange(planetId: LocationId, sendingPercent: number): Planet[];
@@ -96,4 +114,7 @@ export default interface AbstractGameManager extends EventEmitter {
   ): number;
   getTimeForMove(fromId: LocationId, toId: LocationId): number;
   getTemperature(coords: WorldCoords): number;
+  loadPlugins(): Promise<SerializedPlugin[]>;
+  savePlugins(savedPlugin: SerializedPlugin[]): Promise<void>;
+  isPlanetMineable(p: Planet): boolean;
 }

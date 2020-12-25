@@ -6,6 +6,16 @@ export type Hat = {
   bottomLayer: Array<string>;
 };
 
+const santaHat = {
+  topLayer: [
+    'M252.4,449.8c44.3-1.2,84.2,15.3,97.2,24.6s26.4,31.5,43.9,31.5s39-29.9,39-73.5s-16.6-66.6-35.8-74.7 c-16.3-6.9-20.3-1.9-20.3-1.9s-7.5-7.6-13.5-10.5c-6-2.9-17.1-1.1-17.1-1.1s-6.2-9-16.6-12c-10.4-3-23.1,3-23.1,3s-3.5-6.9-15.9-7.8 c-12.4-0.9-18,4.4-18,4.4s-9.3-8.1-21.4-8.1s-25.6,11.3-25.6,11.3s-10.9-9.2-27.7-4.9s-22.3,14.1-22.3,14.1s-11.5-3.9-26.9,2.9 S129,367.5,129,367.5s-24.1,1.9-37.2,23.9s-10.8,47.2-7.9,60.8c2.8,13.5,14.6,51.1,37.2,52.7C143.6,506.5,172.4,452,252.4,449.8z',
+    'M447.2,185.4c-34.7,0-62.8-27.9-62.8-62.4s28.1-62.4,62.8-62.4S510,88.5,510,123S481.9,185.4,447.2,185.4z',
+  ],
+  bottomLayer: [
+    'M115.1,386c0,0-1.2-101.8,33.6-169s75-119.3,159.2-127.8s123.2,11.5,145.2,26.6s-4.3,62.4-31.7,72.7 c-27.5,10.3-43.9,25.4-43.9,78.7s14,101.1,14,101.1l-97,29.7L115.1,386z',
+  ],
+};
+
 const graduationCap = {
   topLayer: [],
   bottomLayer: [
@@ -95,6 +105,7 @@ export enum HatType {
   CowboyHat = 'CowboyHat',
   PopeHat = 'PopeHat',
   Squid = 'Squid',
+  SantaHat = 'SantaHat',
 }
 
 export const hats: Record<HatType, Hat> = {
@@ -107,6 +118,7 @@ export const hats: Record<HatType, Hat> = {
   CowboyHat: cowboyHat,
   PopeHat: popeHat,
   Squid: squid,
+  SantaHat: santaHat,
 };
 
 export const hatFromType = (type: HatType): Hat => hats[type];
@@ -114,6 +126,7 @@ export const hatFromType = (type: HatType): Hat => hats[type];
 export const hatTypeFromHash = (hash: LocationId): HatType => {
   const rand = planetRandomInt(hash);
   if (rand() % 69 === 0) return HatType.Fish;
+  if (rand() % 16 === 0) return HatType.SantaHat;
 
   const mod = rand() % 8;
 

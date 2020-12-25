@@ -5,8 +5,10 @@ import {
   Bonus,
   StatIdx,
   PlanetResource,
+  isLocatable,
+  BiomeNames,
 } from '../../_types/global/GlobalTypes';
-import { PlanetScape } from './PlanetScape';
+import { PlanetScape } from '../planetscape/PlanetScape';
 import styled from 'styled-components';
 import { Sub, Green } from '../../components/Text';
 import {
@@ -26,6 +28,8 @@ import {
   ModalUpgradeDetailsIcon,
   ModalTwitterBroadcastIcon,
   ModalHatIcon,
+  ModalArtifactIcon,
+  ModalDepositIcon,
 } from './ModalPane';
 import {
   getPlanetBlurb,
@@ -147,7 +151,7 @@ const DetailsRowSingle = styled(DetailsRow)`
 const StyledPlanetDetailsPane = styled.div`
   // height: calc(100vh - 8em);
   height: fit-content;
-  width: 28em;
+  width: 31em;
 
   & .margin-top {
     margin-top: 0.5em;
@@ -202,11 +206,15 @@ export function PlanetDetailsPane({
   broadcastHook,
   upgradeDetHook,
   hatHook,
+  findArtifactHook,
+  depositHook,
 }: {
   hook: ModalHook;
   broadcastHook: ModalHook;
   upgradeDetHook: ModalHook;
   hatHook: ModalHook;
+  findArtifactHook: ModalHook;
+  depositHook: ModalHook;
 }) {
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
   const selected = useContext<Planet | null>(SelectedContext);
@@ -243,35 +251,6 @@ export function PlanetDetailsPane({
     return owner;
   };
 
-  /*
-  const formatTimeUntil = (timeSeconds: number | null) => {
-    if (timeSeconds === null || Number.isNaN(timeSeconds)) {
-      return '0s';
-    }
-    const nowSeconds = Date.now() / 1000;
-    if (nowSeconds > timeSeconds) {
-      return '0s';
-    }
-    return `${Math.floor(timeSeconds - nowSeconds)}s`;
-  };
-
-  const getPop = (p) => {
-    if (!uiManager) return 0;
-    if (selected?.owner === emptyAddress) return 0;
-    return formatTimeUntil(
-      selected ? uiManager.getPopulationCurveAtPercent(selected, p) : 0
-    );
-  };
-
-  const getSilver = (p) => {
-    if (!uiManager) return 0;
-    if (selected?.owner === emptyAddress) return 0;
-    return formatTimeUntil(
-      selected ? uiManager.getSilverCurveAtPercent(selected, p) : 0
-    );
-  };
-  */
-
   const windowName = (): string => {
     const str = 'Planet Details';
     if (!uiManager) return str;
@@ -287,6 +266,7 @@ export function PlanetDetailsPane({
     else return `@${twitter}'s ${shorthash} ${planetname} - ${str}`;
   };
 
+  /*
   const sharePlanet = (): void => {
     const str = `I found an awesome level ${
       selected?.planetLevel
@@ -299,6 +279,7 @@ export function PlanetDetailsPane({
       )}&hashtags=darkforest`
     );
   };
+  */
 
   useEffect(() => {
     const doChange = (type: ContextMenuType) => {
@@ -334,12 +315,20 @@ export function PlanetDetailsPane({
     );
   };
 
+  const biomePlanet = (): string => {
+    let append = '';
+    if (selected && isLocatable(selected)) {
+      append = BiomeNames[selected.biome] + ' ';
+    }
+    return append + 'Planet';
+  };
+
   return (
     <ModalPane
       style={{
         opacity: visible && hook[0] ? '1' : '0',
         pointerEvents: visible && hook[0] ? 'auto' : 'none',
-        zIndex: visible && hook[0] ? undefined : -1000,
+        // zIndex: visible && hook[0] ? undefined : -1000,
       }}
       hook={hook}
       title={windowName()}
@@ -356,7 +345,7 @@ export function PlanetDetailsPane({
         >
           <PlanetscapeWrapper>
             <div>
-              <PlanetScape planet={selected} />
+              <PlanetScape planet={selected} info={selectedStats} />
             </div>
             <div>
               <div>
@@ -447,38 +436,6 @@ export function PlanetDetailsPane({
             <LocationViewer planet={selected} />
           </DetailsRowSingle>
 
-          {/* <DetailsRowDouble className='margin-top'>
-            <Sub>Level</Sub>
-            <span>{selected ? selected.planetLevel : 0}</span>
-            <Sub>Coordinates</Sub>
-            <span>{getLoc()}</span>
-          </DetailsRowDouble> */}
-
-          {/* <DetailsRowDouble>
-            <span>
-              <TooltipTrigger name={TooltipName.Time50} needsShift>
-                <Sub>Time to 50%</Sub>
-              </TooltipTrigger>
-            </span>
-            <span>{getPop(50)}</span>
-            <span>
-              <TooltipTrigger name={TooltipName.Time90} needsShift>
-                <Sub>Time to 90%</Sub>
-              </TooltipTrigger>
-            </span>
-            <span>{getPop(90)}</span>
-          </DetailsRowDouble> 
-          
-          {selected && selected.planetResource === PlanetResource.SILVER && (
-            <DetailsRowDouble>
-              <Sub>Silver Growth</Sub>
-              <span>{getFormatProp(selected, 'silverGrowth')}</span>
-              <Sub>Time left</Sub>
-              <span>{getSilver(100)}</span>
-            </DetailsRowDouble>
-          )}
-          
-          */}
           <StyledPlanetDetails>
             <DetailsRowSingle className='margin-top'>
               <Sub>Celestial Body</Sub>
@@ -486,18 +443,7 @@ export function PlanetDetailsPane({
                 Level {selected && selected.planetLevel}{' '}
                 {selected && selected.planetResource === PlanetResource.SILVER
                   ? 'Asteroid Field'
-                  : 'Planet'}
-              </span>
-            </DetailsRowSingle>
-            <DetailsRowSingle>
-              <Sub>HAT</Sub>
-              <span>
-                {HAT_SIZES[selectedStats ? selectedStats.hatLevel : 0]}{' '}
-                {selected && selectedStats && selected.owner === account && (
-                  <Btn onClick={() => hatHook[1](true)}>
-                    {selectedStats.hatLevel > 0 ? 'Upgrade' : 'Buy'}
-                  </Btn>
-                )}
+                  : biomePlanet()}
               </span>
             </DetailsRowSingle>
             <DetailsRowSingle>
@@ -509,6 +455,17 @@ export function PlanetDetailsPane({
               </Sub>
               <span>
                 Rank {getPlanetRank(selected)} ({getPlanetTitle(selected)})
+              </span>
+            </DetailsRowSingle>
+            <DetailsRowSingle>
+              <Sub>HAT</Sub>
+              <span>
+                {HAT_SIZES[selectedStats ? selectedStats.hatLevel : 0]}{' '}
+                {selected && selectedStats && selected.owner === account && (
+                  <Btn onClick={() => hatHook[1](true)}>
+                    {selectedStats.hatLevel > 0 ? 'Upgrade' : 'Buy'}
+                  </Btn>
+                )}
               </span>
             </DetailsRowSingle>
             {selected && selected.planetResource === PlanetResource.SILVER && (
@@ -543,15 +500,21 @@ export function PlanetDetailsPane({
 
           <ButtonRow className='margin-top' style={{ marginTop: '1em' }}>
             <span>
-              <Btn
+              {/*<Btn
                 onClick={() => window.open('/planet' + selected?.locationId)}
               >
                 View Planet Card
               </Btn>
-              <Btn onClick={sharePlanet}>Share Planet</Btn>
+              <Btn onClick={sharePlanet}>Share Planet</Btn>*/}
             </span>
 
             <span>
+              {selected && selected.planetResource !== PlanetResource.SILVER && (
+                <>
+                  <ModalArtifactIcon hook={findArtifactHook} />
+                  <ModalDepositIcon hook={depositHook} />
+                </>
+              )}
               <ModalHatIcon hook={hatHook} />
               <ModalTwitterBroadcastIcon hook={broadcastHook} />
               {planetCanUpgrade(selected) && (

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import { FormEvent } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import EthereumAccountManager from '../../api/EthereumAccountManager';
@@ -13,9 +14,14 @@ import {
 } from '../../_types/global/GlobalTypes';
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
+import Viewport, { getDefaultScroll } from '../board/Viewport';
 import { AccountContext } from '../GameWindow';
 import { Btn } from '../GameWindowComponents/Btn';
 import { ModalHook, ModalName, ModalPane } from './ModalPane';
+
+const scrollMin = 0.0001 * 10000;
+const scrollMax = 0.01 * 10000;
+const defaultScroll = Math.round(10000 * (getDefaultScroll() - 1));
 
 const StyledSettingsPane = styled.div`
   width: 32em;
@@ -24,6 +30,13 @@ const StyledSettingsPane = styled.div`
 
   display: flex;
   flex-direction: column;
+
+  .link {
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
 
   .section {
     p,
@@ -49,16 +62,17 @@ const StyledSettingsPane = styled.div`
       flex-grow: 1;
     }
 
-    & .input-rpc {
-      transition: background 0.2s, color 0.2s, width: 0.2s !important;
+    & .input-text {
+      transition: background 0.2s, color 0.2s, width 0.2s !important;
       outline: none;
       background: ${dfstyles.colors.background};
       color: ${dfstyles.colors.subtext};
       border-radius: 4px;
       border: 1px solid ${dfstyles.colors.text};
       margin-left: 0.75em;
-      width: 20em;
+      width: 16em;
       padding: 2px 6px;
+      border-radius: 3px;
 
       &:focus {
         background: ${dfstyles.colors.backgroundlight};
@@ -97,7 +111,7 @@ export function SettingsPane({
     uiManager
   );
 
-  const [hiPerf, setHiPerf] = hiPerfHook;
+  const [_hiPerf, _setHiPerf] = hiPerfHook;
 
   const [allowTx, setAllowTx] = useState<boolean>(false);
   const updateAllowTx = (newVal: boolean): void => {
@@ -172,39 +186,6 @@ export function SettingsPane({
     };
   }, [uiManager]);
 
-  // const [copiedSkey, setCopiedSkey] = useState<boolean>(false);
-  // const copySkey = async () => {
-  //   if (!sKey) return;
-
-  //   try {
-  //     await window.navigator.clipboard.writeText(sKey);
-
-  //     setCopiedSkey(true);
-  //     setTimeout(() => {
-  //       setCopiedSkey(false);
-  //     }, 5000);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
-  // const [copiedHome, setCopiedHome] = useState<boolean>(false);
-
-  // const copyHome = async () => {
-  //   if (!home) return;
-
-  //   try {
-  //     await window.navigator.clipboard.writeText(home);
-
-  //     setCopiedHome(true);
-  //     setTimeout(() => {
-  //       setCopiedHome(false);
-  //     }, 5000);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
   // map share stuff
   const [failure, setFailure] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
@@ -276,6 +257,26 @@ export function SettingsPane({
       setClicks(5);
     }
   };
+
+  const clipScroll = (v: number) => Math.max(Math.min(v, scrollMax), scrollMin);
+  const [scrollSpeed, setScrollSpeed] = useState<number>(defaultScroll);
+
+  const onChange = (e: FormEvent) => {
+    const value = parseFloat((e.target as HTMLInputElement).value);
+    if (!isNaN(value)) setScrollSpeed(value);
+  };
+
+  useEffect(() => {
+    const scroll = localStorage.getItem('scrollSpeed');
+    if (scroll) {
+      setScrollSpeed(10000 * (parseFloat(scroll) - 1));
+    }
+  }, [setScrollSpeed]);
+
+  useEffect(() => {
+    if (!Viewport.instance) return;
+    Viewport.instance.setMouseSensitivty(scrollSpeed / 10000);
+  }, [scrollSpeed]);
 
   return (
     <ModalPane hook={hook} title={'Settings'} name={ModalName.Hats}>
@@ -353,10 +354,7 @@ export function SettingsPane({
           <div className='row'>
             <span>
               <input
-                className='input-rpc'
-                style={{
-                  borderRadius: '3px',
-                }}
+                className='input-text'
                 value={rpcURLText}
                 onChange={(e) => setRpcURLText(e.target.value)}
               />
@@ -378,13 +376,44 @@ export function SettingsPane({
             />
           </div>
           <div className='row'>
+            <Sub>
+              Scroll speed (
+              <span
+                className='link'
+                onClick={() => setScrollSpeed(defaultScroll)}
+              >
+                default
+              </span>
+              )
+            </Sub>
+            <span>
+              <input
+                style={{ width: '15em' }}
+                type='range'
+                value={clipScroll(scrollSpeed)}
+                min={scrollMin}
+                max={scrollMax}
+                step={scrollMin / 10}
+                onInput={onChange}
+              />
+              <input
+                type='text'
+                className='input-text'
+                style={{ width: '4em', color: dfstyles.colors.text }}
+                value={scrollSpeed}
+                onInput={onChange}
+              />
+            </span>
+          </div>
+          {/* keeping this for later */}
+          {/* <div className='row'>
             <Sub>High-performance mode (lower quality, faster speed!)</Sub>
             <input
               type='checkbox'
               checked={hiPerf}
               onChange={(e) => setHiPerf(e.target.checked)}
             />
-          </div>
+          </div> */}
         </div>
       </StyledSettingsPane>
     </ModalPane>

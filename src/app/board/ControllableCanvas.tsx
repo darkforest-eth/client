@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
 import Viewport from './Viewport';
-import CanvasRenderer from './CanvasRenderer';
+import CanvasRenderer from '../renderer/CanvasRenderer';
 import GameUIManagerContext from './GameUIManagerContext';
 import GameUIManager from './GameUIManager';
 import WindowManager, {
@@ -16,21 +16,53 @@ import WindowManager, {
   WindowManagerEvent,
 } from '../../utils/WindowManager';
 import _ from 'lodash';
+import styled from 'styled-components';
+
+const CanvasWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+
+  position: relative;
+
+  canvas {
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+
+    &#buffer {
+      width: auto;
+      height: auto;
+      /* border: 2px solid red; */
+      display: none;
+    }
+  }
+  // TODO put this into a global style
+  canvas,
+  img {
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+`;
 
 export default function ControllableCanvas() {
   // html canvas element width and height. viewport dimensions are tracked by viewport obj
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const imgRef = useRef<HTMLImageElement | null>(null);
+  const glRef = useRef<HTMLCanvasElement | null>(null);
+  const bufferRef = useRef<HTMLCanvasElement | null>(null);
+
+  const evtRef = canvasRef;
 
   const uiEmitter: UIEmitter = UIEmitter.getInstance();
   const gameUIManager = useContext<GameUIManager | null>(GameUIManagerContext);
 
   const windowManager = WindowManager.getInstance();
   const [targeting, setTargeting] = useState<boolean>(false);
-
-  const [loaded, setLoaded] = useState<boolean>(false);
 
   useEffect(() => {
     const updateTargeting = (newstate: CursorState) => {
@@ -66,33 +98,33 @@ export default function ControllableCanvas() {
   ]);
 
   useEffect(() => {
-    if (!imgRef || !gameUIManager || !loaded) return;
+    if (!gameUIManager) return;
 
     function onResize() {
       doResize();
       uiEmitter.emit(UIEmitterEvent.WindowResize);
     }
 
-    const wheel = (e: WheelEvent): void => {
+    const onWheel = (e: WheelEvent): void => {
+      e.preventDefault();
       const { deltaY } = e;
       uiEmitter.emit(UIEmitterEvent.CanvasScroll, deltaY);
     };
-    const throttledWheel = _.throttle(wheel, 60);
 
-    const onWheel = (e: WheelEvent): void => {
-      e.preventDefault();
-      throttledWheel(e);
-    };
+    const canvas = evtRef.current;
+    if (!canvas || !canvasRef.current || !glRef.current || !bufferRef.current)
+      return;
 
-    const canvas = canvasRef.current;
-    const img = imgRef.current;
-    if (!canvas || !img) {
-      console.error('');
-      return () => {};
-    }
-
-    Viewport.initialize(gameUIManager, 250, canvas);
-    CanvasRenderer.initialize(canvas, gameUIManager, img);
+    // This zooms your home world in really close to show the awesome details
+    // TODO: Store this as it changes and re-initialize to that if stored
+    const defaultWorldUnits = 4;
+    Viewport.initialize(gameUIManager, defaultWorldUnits, canvas);
+    CanvasRenderer.initialize(
+      canvasRef.current,
+      glRef.current,
+      bufferRef.current,
+      gameUIManager
+    );
     // We can't attach the wheel event onto the canvas due to:
     // https://www.chromestatus.com/features/6662647093133312
     canvas.addEventListener('wheel', onWheel);
@@ -102,17 +134,17 @@ export default function ControllableCanvas() {
 
     return () => {
       Viewport.destroyInstance();
-      CanvasRenderer.destroyInstance();
+      CanvasRenderer.destroy();
       canvas.removeEventListener('wheel', onWheel);
       window.removeEventListener('resize', onResize);
       uiEmitter.removeListener(UIEmitterEvent.UIChange, doResize);
     };
-  }, [gameUIManager, uiEmitter, doResize, imgRef, loaded]);
+  }, [gameUIManager, uiEmitter, doResize, canvasRef, glRef, bufferRef, evtRef]);
 
   // attach event listeners
   useEffect(() => {
-    if (!canvasRef.current) return;
-    const canvas = canvasRef.current;
+    if (!evtRef.current) return;
+    const canvas = evtRef.current;
 
     function onMouseEvent(
       emitEventName: UIEmitterEvent,
@@ -149,32 +181,13 @@ export default function ControllableCanvas() {
       canvas.removeEventListener('mouseup', onMouseUp);
       canvas.removeEventListener('mouseout', onMouseOut);
     };
-  }, [canvasRef, uiEmitter]);
+  }, [evtRef, uiEmitter]);
 
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        cursor: targeting ? 'crosshair' : undefined,
-      }}
-    >
-      <img
-        ref={imgRef}
-        src='/public/img/texture.jpg'
-        style={{ position: 'absolute', left: '-1000px', top: '-1000px' }}
-        onLoad={() => setLoaded(true)}
-      />
-      <canvas
-        style={{
-          width: '100%',
-          height: '100%',
-        }}
-        id='mycanvas'
-        ref={canvasRef}
-        width={width}
-        height={height}
-      />
-    </div>
+    <CanvasWrapper style={{ cursor: targeting ? 'crosshair' : undefined }}>
+      <canvas ref={glRef} width={width} height={height} />
+      <canvas ref={canvasRef} width={width} height={height} />
+      <canvas ref={bufferRef} id='buffer' />
+    </CanvasWrapper>
   );
 }

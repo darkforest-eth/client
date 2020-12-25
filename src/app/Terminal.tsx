@@ -79,6 +79,7 @@ const ENTER_KEY_CODE = 13;
 const UP_ARROW_KEY_CODE = 38;
 
 type FragmentHook = [number, (fn: (x: number) => number) => void];
+
 function TerminalFragment({
   fragment,
   fragmentHook,
@@ -337,7 +338,7 @@ export default function Terminal() {
 
       {/* User input prompt */}
 
-      <p
+      <span
         style={{
           opacity: userInputEnabled ? 1 : 0,
           display: 'flex',
@@ -349,7 +350,6 @@ export default function Terminal() {
         }}
       >
         {prompt === TerminalPromptType.BASH ? <BashPrompt /> : <JSPrompt />}
-        {/* <span>{inputText}</span> */}
         <div
           style={{
             display: 'flex',
@@ -364,7 +364,6 @@ export default function Terminal() {
               outline: 'none',
               border: 'none',
               color: dfstyles.colors.text,
-              // caretColor: 'transparent',
               height: `${inputHeight}px`,
               resize: 'none',
               flexGrow: 1,
@@ -403,10 +402,12 @@ export default function Terminal() {
             }}
             className={'myinput'}
             ref={heightMeasureRef}
+            // to prevent a react warning, we pass a no-op function here
+            onChange={() => {}}
             value={inputText}
           />
         </div>
-      </p>
+      </span>
     </TerminalContainer>
   );
 }

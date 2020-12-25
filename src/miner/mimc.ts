@@ -5,7 +5,8 @@ export const p = bigInt(
   '21888242871839275222246405745257275088548364400416034343698204186575808495617'
 );
 
-const KEY = 3;
+const KEY = 7;
+const BIOME_KEY = 8;
 
 const c = [
   '0',
@@ -262,9 +263,10 @@ class FeistelState {
 function mimcSponge(
   inputs: BigInteger[],
   nOutputs: number,
-  rounds: number
+  rounds: number,
+  key: number
 ): BigInteger[] {
-  const state = new FeistelState(rounds, bigInt(KEY));
+  const state = new FeistelState(rounds, bigInt(key));
   for (const elt of inputs) {
     state.inject(elt);
     state.mix();
@@ -293,13 +295,19 @@ export const modPBigIntNative = (x: BigInteger) => {
   return ret;
 };
 
-export const mimcWithRounds = (rounds: number) => (...inputs: number[]) =>
+export const mimcWithRounds = (rounds: number, key: number) => (
+  ...inputs: number[]
+) =>
   mimcSponge(
     inputs.map((n) => modPBigInt(n)),
     1,
-    rounds
+    rounds,
+    key
   )[0];
 
-const mimcHash = mimcWithRounds(220);
+const mimcHash = mimcWithRounds(220, KEY);
+
+export const spaceTypeHash = mimcWithRounds(4, KEY);
+export const biomeHash = mimcWithRounds(4, BIOME_KEY);
 
 export default mimcHash;

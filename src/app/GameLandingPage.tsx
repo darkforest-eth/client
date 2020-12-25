@@ -36,6 +36,7 @@ import { UIDataKey, useStoredUIState } from '../api/UIStateStorageManager';
 import TutorialManager, { TutorialState } from '../utils/TutorialManager';
 import { TerminalPromptType } from '../_types/darkforest/app/board/utils/TerminalTypes';
 import { BLOCK_EXPLORER_URL } from '../utils/constants';
+import { neverResolves } from '../utils/Utils';
 
 enum InitState {
   NONE,
@@ -56,6 +57,7 @@ enum InitState {
   ALL_CHECKS_PASS,
   COMPLETE,
   TERMINATED,
+  ERROR,
 }
 
 // doing it this way because I plan to add more later
@@ -71,6 +73,10 @@ export enum InitRenderState {
 }
 
 export default function GameLandingPage(_props: { replayMode: boolean }) {
+  const [gameManager, setGameManager] = useState<
+    AbstractGameManager | undefined
+  >();
+
   const history = useHistory();
   /* terminal stuff */
   const isProd = process.env.NODE_ENV === 'production';
@@ -148,7 +154,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     emailInputRef.current.value = email;
     emailFormRef.current.submit();
     if (!popup) return;
-    await new Promise((resolve) => {
+    await new Promise<void>((resolve) => {
       const interval = setInterval(() => {
         if (popup.closed) {
           resolve();
@@ -301,10 +307,15 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     terminalEmitter.newline();
 
     terminalEmitter.print('    v0.1       ');
-    terminalEmitter.println(
-      '02/05/2020        Dylan Field',
+    terminalEmitter.print('02/05/2020        ', TerminalTextStyle.White);
+    terminalEmitter.printLink(
+      'Dylan Field',
+      () => {
+        window.open('https://twitter.com/zoink');
+      },
       TerminalTextStyle.White
     );
+    terminalEmitter.newline();
     terminalEmitter.print('    v0.2       ');
     terminalEmitter.println(
       '06/06/2020        Nate Foss',
@@ -322,6 +333,16 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     terminalEmitter.newline();
     terminalEmitter.print('    v0.4       ');
     terminalEmitter.print('10/02/2020        ', TerminalTextStyle.White);
+    terminalEmitter.printLink(
+      'Jake Rosenthal',
+      () => {
+        window.open('https://twitter.com/jacobrosenthal');
+      },
+      TerminalTextStyle.White
+    );
+    terminalEmitter.newline();
+    terminalEmitter.print('    v0.5       ');
+    terminalEmitter.print('12/25/2020        ', TerminalTextStyle.White);
     terminalEmitter.println('<tbd>', TerminalTextStyle.White);
     terminalEmitter.newline();
 
@@ -610,10 +631,40 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
       'Downloading data from Ethereum blockchain... (the contract is very big. this may take a while)'
     );
 
-    const newGameManager: AbstractGameManager = await GameManager.create();
+    let newGameManager: AbstractGameManager;
+
+    try {
+      newGameManager = await GameManager.create();
+    } catch (e) {
+      console.log(e);
+
+      initState = InitState.ERROR;
+
+      terminalEmitter.print(
+        'Network under heavy load. Please refresh the page, and check ',
+        TerminalTextStyle.Red
+      );
+
+      terminalEmitter.printLink(
+        'https://blockscout.com/poa/xdai/',
+        () => {
+          window.open('https://blockscout.com/poa/xdai/');
+        },
+        TerminalTextStyle.Red
+      );
+
+      terminalEmitter.println('');
+
+      return;
+    }
+
+    setGameManager(newGameManager);
+
     window.df = newGameManager;
-    const newGameUIManager = GameUIManager.create(newGameManager);
-    window.uiManager = newGameUIManager;
+
+    const newGameUIManager = await GameUIManager.create(newGameManager);
+
+    window.ui = newGameUIManager;
 
     terminalEmitter.println('Connected to DarkForestCore contract.');
     gameUIManagerRef.current = newGameUIManager;
@@ -719,22 +770,35 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     terminalEmitter.println(
       'Press ENTER to find a home planet. This may take up to 120s.'
     );
+
     await getUserInput();
-    const success = await new Promise((resolve) => {
+
+    const success = await new Promise(async (resolve) => {
       gameUIManager
-        .onJoinGameClicked()
+        // TODO: remove beforeRetry: (e: Error) => Promise<boolean>
+        .joinGame(async () => {
+          terminalEmitter.println(
+            '[ERROR] please enable popups to confirm the transaction.',
+            TerminalTextStyle.Red
+          );
+          terminalEmitter.println(
+            'Press ENTER to try again. The previous popup is invalidated.'
+          );
+          await getUserInput();
+          return true;
+        })
         .once(GameUIManagerEvent.InitializedPlayer, () => {
           resolve(true);
         })
-        .once(GameUIManagerEvent.InitializedPlayerError, (error) => {
+        .once(GameUIManagerEvent.InitializedPlayerError, (error: Error) => {
           terminalEmitter.println(
             `[ERROR] An error occurred: ${error.toString().slice(0, 10000)}`,
             TerminalTextStyle.Red,
             true
           );
-          resolve(false);
         });
     });
+
     if (success) {
       terminalEmitter.println('Found suitable home planet!');
       terminalEmitter.println('Initializing game...');
@@ -783,6 +847,10 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     }
   };
 
+  const advanceStateFromError = async () => {
+    await neverResolves();
+  };
+
   const advanceState = async () => {
     if (initState === InitState.NONE) {
       await advanceStateFromNone();
@@ -816,6 +884,8 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
       await advanceStateFromAllChecksPass();
     } else if (initState === InitState.COMPLETE) {
       await advanceStateFromComplete();
+    } else if (initState === InitState.ERROR) {
+      await advanceStateFromError();
     }
 
     if (initState !== InitState.TERMINATED) {
@@ -855,7 +925,12 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
         terminalEnabled={terminalEnabled}
       >
         <GameUIManagerContext.Provider value={gameUIManagerRef.current}>
-          <GameWindow />
+          {gameUIManagerRef.current && gameManager && (
+            <GameWindow
+              uiManager={gameUIManagerRef.current}
+              gameManager={gameManager}
+            />
+          )}
         </GameUIManagerContext.Provider>
         <TerminalToggler
           terminalEnabled={terminalEnabled}

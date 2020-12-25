@@ -26,6 +26,8 @@ const StyledExploreContextPane = styled.div`
   & p:last-child {
     margin-top: 0.5em;
   }
+
+  overflow: hidden;
 `;
 
 export function ExploreContextPane() {

@@ -1,11 +1,11 @@
 import _ from 'lodash';
-import React, { useContext, useEffect, useState, createContext } from 'react';
+import React, { useEffect, useState, createContext } from 'react';
+import AbstractGameManager from '../api/AbstractGameManager';
 import { useStoredUIState, UIDataKey } from '../api/UIStateStorageManager';
 import UIEmitter, { UIEmitterEvent } from '../utils/UIEmitter';
 import { copyPlanetStats, PlanetStatsInfo } from '../utils/Utils';
 import { EthAddress, Planet } from '../_types/global/GlobalTypes';
 import GameUIManager from './board/GameUIManager';
-import GameUIManagerContext from './board/GameUIManagerContext';
 import { GameWindowLayout } from './GameWindowLayout';
 
 export const enum GameWindowZIndex {
@@ -33,8 +33,12 @@ export const SelectedStatContext = createContext<PlanetStatsInfo | null>(null);
 
 export const HiPerfContext = createContext<boolean | null>(null);
 
-export default function GameWindow() {
-  const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
+export default function GameWindow({
+  uiManager,
+}: {
+  gameManager: AbstractGameManager;
+  uiManager: GameUIManager;
+}) {
   const [selected, setSelected] = useState<Planet | null>(null);
 
   // TODO rethink abstractions here
@@ -81,8 +85,10 @@ export default function GameWindow() {
 
   // refresh selected stats
   useEffect(() => {
+    if (!uiManager) return;
+
     const updatePlanetStats = () => {
-      setPlanetStats(copyPlanetStats(selected));
+      setPlanetStats(copyPlanetStats(uiManager.getSelectedPlanet()));
     };
 
     const intervalId = setInterval(updatePlanetStats, 1000);
@@ -90,7 +96,7 @@ export default function GameWindow() {
     return () => {
       clearInterval(intervalId);
     };
-  }, [selected]);
+  }, [selected, uiManager]);
 
   // set up lastupdated tick
   useEffect(() => {
@@ -133,7 +139,10 @@ export default function GameWindow() {
         <AccountContext.Provider value={account}>
           <SelectedStatContext.Provider value={planetStats}>
             <HiPerfContext.Provider value={hiPerfHook[0]}>
-              <GameWindowLayout hiPerfHook={hiPerfHook} />
+              <GameWindowLayout
+                hiPerfHook={hiPerfHook}
+                gameUIManager={uiManager}
+              />
             </HiPerfContext.Provider>
           </SelectedStatContext.Provider>
         </AccountContext.Provider>

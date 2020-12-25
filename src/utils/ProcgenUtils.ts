@@ -1,4 +1,11 @@
-import { Planet, EthAddress, LocationId } from '../_types/global/GlobalTypes';
+import {
+  Planet,
+  EthAddress,
+  LocationId,
+  isLocatable,
+  Biome,
+  ArtifactId,
+} from '../_types/global/GlobalTypes';
 import * as bigInt from 'big-integer';
 import { PlanetCosmeticInfo } from '../_types/darkforest/app/board/utils/UtilsTypes';
 import { getPlanetRank, seededRandom, titleCase } from './Utils';
@@ -16,6 +23,21 @@ import tracery from './tracery';
 import { baseEngModifiers } from './tracery-modifiers';
 import { hatTypeFromHash, HatType } from './Hats';
 import { emptyAddress } from './CheckedTypeUtils';
+import { HSLVec, RGBVec } from '../app/renderer/utils/EngineTypes';
+
+/* fixes long strings to be maxLen long as in 0xabc...123 */
+export const ellipsisStr = (str: string, maxLen: number): string => {
+  if (str.length <= maxLen) return str;
+  return (
+    str.substr(0, maxLen - 6) + '...' + str.substr(str.length - 3, str.length)
+  );
+};
+
+/* fixes long strings to be maxLen long as in 0xabc123... */
+export const ellipsStrEnd = (str: string, maxLen: number): string => {
+  if (str.length <= maxLen) return str;
+  return str.substr(0, maxLen - 3) + '...';
+};
 
 export const hslStr: (h: number, s: number, l: number) => string = (
   h,
@@ -24,6 +46,41 @@ export const hslStr: (h: number, s: number, l: number) => string = (
 ) => {
   return `hsl(${h % 360},${s}%,${l}%)`;
 };
+
+// prettier-ignore
+export function hslToRgb([h, s, l]: HSLVec): RGBVec {
+  s = Math.max(Math.min(s, 100), 0);
+  l = Math.max(Math.min(l, 100), 0);
+
+  s /= 100;
+  l /= 100;
+
+  const c = (1 - Math.abs(2 * l - 1)) * s,
+    x = c * (1 - Math.abs(((h / 60) % 2) - 1)),
+    m = l - c / 2;
+
+  let r = 0, g = 0, b = 0;
+
+  if (0 <= h && h < 60) {
+    r = c; g = x; b = 0;
+  } else if (60 <= h && h < 120) {
+    r = x; g = c; b = 0;
+  } else if (120 <= h && h < 180) {
+    r = 0; g = c; b = x;
+  } else if (180 <= h && h < 240) {
+    r = 0; g = x; b = c;
+  } else if (240 <= h && h < 300) {
+    r = x; g = 0; b = c;
+  } else if (300 <= h && h < 360) {
+    r = c; g = 0; b = x;
+  }
+
+  r = Math.round((r + m) * 255);
+  g = Math.round((g + m) * 255);
+  b = Math.round((b + m) * 255);
+
+  return [r, g, b];
+}
 
 const huesByHash = new Map<string, number>();
 
@@ -39,18 +96,22 @@ function hashToHue(hash: string): number {
   return baseHue;
 }
 
-export const getPlayerColor: (player: EthAddress) => string = (player) => {
+export const getPlayerColor = (player: EthAddress): string => {
   return hslStr(hashToHue(player.slice(2)), 100, 70); // remove 0x
 };
 
-export const getOwnerColor: (planet: Planet, alpha: number) => string = (
-  planet,
-  alpha
-) => {
+export const getPlayerColorVec = (player: EthAddress): RGBVec => {
+  return hslToRgb([hashToHue(player.slice(2)), 100, 70]);
+};
+
+export const getOwnerColorVec = (planet: Planet): RGBVec => {
+  if (planet.owner === emptyAddress) return [153, 153, 102];
+  return getPlayerColorVec(planet.owner);
+};
+
+export const getOwnerColor = (planet: Planet): string => {
   if (planet.owner === emptyAddress) return '#996666';
-  return planet.owner
-    ? getPlayerColor(planet.owner)
-    : `hsla(0,1%,50%,${alpha})`;
+  return getPlayerColor(planet.owner);
 };
 
 export type PixelCoords = {
@@ -77,6 +138,7 @@ export const planetPerlin: NoiseClosure = (loc: LocationId) => {
 type RandomFn = () => number;
 type RandomClosure = (loc: LocationId) => RandomFn;
 // returns a deterministic seeded random fn for a given planet loc
+// TODO memoize this guy
 export const planetRandom: RandomClosure = (loc: LocationId) => {
   // shouldn't need to clone since loc is primitive but just to be safe
   const realHash = loc.substring(4, loc.length);
@@ -96,22 +158,74 @@ export const planetRandomInt: RandomClosure = (loc: LocationId) => {
   return () => Math.floor(rand() * 2 ** 24);
 };
 
+type ArtifactRandomClosure = (loc: LocationId) => RandomFn;
+export const artifactRandom: ArtifactRandomClosure = (loc: ArtifactId) => {
+  // shouldn't need to clone since loc is primitive but just to be safe
+  const realHash = loc.substring(4, loc.length);
+
+  let count = 0;
+  const countOffset = parseInt('0x' + realHash.substring(0, 10));
+
+  return () => {
+    count++;
+    const ret = seededRandom(count + countOffset);
+    return ret;
+  };
+};
+
+export const artifactRandomInt: ArtifactRandomClosure = (loc: ArtifactId) => {
+  const rand = artifactRandom(loc);
+  return () => Math.floor(rand() * 2 ** 24);
+};
+
 const grayColors: PlanetCosmeticInfo = {
   baseHue: 0,
-  baseColor: '#888',
-  baseColor2: '#888',
-  baseColor3: '#888',
-  secondaryColor: '#888',
-  secondaryColor2: '#888',
-  secondaryColor3: '#888',
-  backgroundColor: '#888',
-  previewColor: '#888',
-  asteroidColor: '#888',
+  baseStr: '#888',
+  bgStr: '#888',
+  baseColor: [120, 120, 120],
+  baseColor2: [120, 120, 120],
+  baseColor3: [120, 120, 120],
+  mtnColor: [120, 120, 120],
+  mtnColor2: [120, 120, 120],
+  mtnColor3: [120, 120, 120],
+  backgroundColor: [120, 120, 120],
+  previewColor: [120, 120, 120],
+  landRgb: [0, 0, 0],
+  oceanRgb: [0, 0, 0],
+  beachRgb: [0, 0, 0],
+  asteroidHsl: [0, 0, 0],
+  seed: 0,
   // ultra ultra hacky, but we're doing this since it's cached in the renderer
   hatType: HatType.GraduationCap,
 };
 
 const cosmeticByLocId = new Map<LocationId, PlanetCosmeticInfo>();
+
+const baseByBiome: HSLVec[] = [
+  [0, 0, 0], // UNKNOWN
+  [213, 100, 50], // OCEAN
+  [135, 96, 63], // FOREST
+  [82, 80, 76], // GRASSLAND
+  [339, 95, 70], // TUNDRA
+  [44, 81, 33], // SWAMP
+  [51, 78, 60], // DESERT
+  [198, 78, 77], // ICE
+  [0, 0, 18], // WASTELAND
+  [19, 100, 50], // LAVA
+];
+
+const oceanByBiome: HSLVec[] = [
+  [0, 0, 0], // UNKNOWN
+  [213, 89, 35], // OCEAN
+  [193, 96, 43], // FOREST
+  [185, 78, 70], // GRASSLAND
+  [201, 95, 70], // TUNDRA
+  [285, 81, 33], // SWAMP
+  [27, 78, 60], // DESERT
+  [198, 90, 85], // ICE
+  [0, 98, 42], // WASTELAND
+  [12, 92, 39], // LAVA
+];
 
 export const getPlanetCosmetic: (
   planet: Planet | null
@@ -121,20 +235,59 @@ export const getPlanetCosmetic: (
     return cosmeticByLocId.get(planet.locationId) || grayColors;
   }
 
+  // biome-defined
+  const baseColor = isLocatable(planet)
+    ? baseByBiome[planet.biome]
+    : ([0, 0, 50] as HSLVec);
+  const oceanColor = isLocatable(planet)
+    ? oceanByBiome[planet.biome]
+    : ([0, 0, 20] as HSLVec);
+
   const baseHue = hashToHue(planet.locationId);
-  const baseColor = hslStr(baseHue % 360, 70, 60);
+  const seed = parseInt('0x' + planet.locationId.substring(0, 9));
+
+  const bL = Math.min(baseColor[2] + 20, 92);
+  const baseColor2 = [baseColor[0], baseColor[1], bL - 10] as HSLVec;
+  const baseColor3 = [baseColor[0], baseColor[1], bL] as HSLVec;
+
+  const sL = Math.max(0, baseColor[2] - 30);
+  const sS = baseColor[1] - 10;
+  const secondaryColor = [baseColor[0], sS, sL] as HSLVec;
+  const secondaryColor2 = [baseColor[0], sS, sL + 10] as HSLVec;
+  const secondaryColor3 = [baseColor[0], sS, sL + 20] as HSLVec;
+
+  const beachColor = [
+    baseColor[0] + 10,
+    baseColor[1] - 30,
+    Math.min(baseColor[2] + 23, 100),
+  ] as HSLVec;
+
+  const asteroidHsl = (isLocatable(planet) && planet.biome === Biome.WASTELAND
+    ? [0, 0, 40]
+    : baseColor) as HSLVec;
 
   const colors: PlanetCosmeticInfo = {
+    baseStr: hslStr(...baseColor),
+    bgStr: hslStr(oceanColor[0], Math.min(oceanColor[1] + 30, 100), 80),
+
     baseHue,
-    baseColor,
-    baseColor2: hslStr(baseHue % 360, 70, 70),
-    baseColor3: hslStr(baseHue % 360, 70, 80),
-    secondaryColor: hslStr(baseHue % 360, 60, 30),
-    secondaryColor2: hslStr(baseHue % 360, 60, 40),
-    secondaryColor3: hslStr(baseHue % 360, 60, 50),
-    backgroundColor: hslStr((baseHue + 180) % 360, 70, 60),
-    previewColor: baseColor,
-    asteroidColor: hslStr(baseHue % 360, 40, 40),
+    baseColor: hslToRgb(baseColor),
+    baseColor2: hslToRgb(baseColor2),
+    baseColor3: hslToRgb(baseColor3),
+    mtnColor: hslToRgb(secondaryColor),
+    mtnColor2: hslToRgb(secondaryColor2),
+    mtnColor3: hslToRgb(secondaryColor3),
+    backgroundColor: hslToRgb(oceanColor),
+    previewColor: hslToRgb(baseColor),
+
+    landRgb: hslToRgb(baseColor),
+    oceanRgb: hslToRgb(oceanColor),
+    beachRgb: hslToRgb(beachColor),
+
+    asteroidHsl,
+
+    seed,
+
     hatType: hatTypeFromHash(planet.locationId),
   };
 
@@ -165,32 +318,64 @@ export const getPlanetTitle = (planet: Planet | null) => {
   return ret;
 };
 
+const namesById = new Map<LocationId, string>();
+
 export const getPlanetName = (planet: Planet | null): string => {
-  if (!planet) return 'Unknown Unknown';
-  const randInt = planetRandomInt(planet.locationId);
-  if (randInt() % 1024 === 0) return 'Clown Town';
-  const word1 = planetNameWords[randInt() % planetNameWords.length];
-  const word2 = planetNameWords[randInt() % planetNameWords.length];
-  return titleCase(`${word1} ${word2}`);
+  if (!planet) return 'Unknown';
+  return getPlanetNameHash(planet.locationId);
 };
+export const getPlanetNameHash = (locId: LocationId): string => {
+  const name = namesById.get(locId);
+  if (name) return name;
+
+  let planetName = '';
+
+  const randInt = planetRandomInt(locId);
+  if (randInt() % 1024 === 0) {
+    planetName = 'Clown Town';
+  } else {
+    const word1 = planetNameWords[randInt() % planetNameWords.length];
+    const word2 = planetNameWords[randInt() % planetNameWords.length];
+    planetName = titleCase(`${word1} ${word2}`);
+  }
+  namesById.set(locId, planetName);
+
+  return planetName;
+};
+
+const taglinesById = new Map<LocationId, string>();
 
 export const getPlanetTagline = (planet: Planet | null): string => {
   if (!planet) return 'The empty unknown';
 
-  if (getPlanetName(planet) === 'Clown Town') return `A town of clowns`;
+  const tagline = taglinesById.get(planet.locationId);
+  if (tagline) return tagline;
 
-  const randInt = planetRandomInt(planet.locationId);
-  const adj1 = planetTagAdj[randInt() % planetTagAdj.length];
-  const adj2 = planetTagAdj[randInt() % planetTagAdj.length];
-  const noun = planetTagNoun[randInt() % planetTagNoun.length];
+  let myTagline = '';
 
-  return `A ${adj1}, ${adj2} ${noun}`;
+  if (getPlanetName(planet) === 'Clown Town') {
+    myTagline = `A town of clowns`;
+  } else {
+    const randInt = planetRandomInt(planet.locationId);
+    const adj1 = planetTagAdj[randInt() % planetTagAdj.length];
+    const adj2 = planetTagAdj[randInt() % planetTagAdj.length];
+    const noun = planetTagNoun[randInt() % planetTagNoun.length];
+    myTagline = `A ${adj1}, ${adj2} ${noun}`;
+  }
+  taglinesById.set(planet.locationId, myTagline);
+
+  return myTagline;
 };
+
+const blurbsById = new Map<LocationId, string>();
 
 // this one doesn't mention the name
 export const getPlanetBlurb = (planet: Planet | null): string => {
   if (!planet)
     return 'The vast, empty unknown of space contains worlds of infinite possibilities. Select a planet to learn more...';
+
+  const myBlurb = blurbsById.get(planet.locationId);
+  if (myBlurb) return myBlurb;
 
   let append = '';
   if (getPlanetName(planet) === 'Clown Town') {
@@ -212,12 +397,19 @@ export const getPlanetBlurb = (planet: Planet | null): string => {
   const grammar = tracery.createGrammar({ ...blurbGrammar, ...myGrammar });
 
   grammar.addModifiers(baseEngModifiers);
-  return append + grammar.flatten('#origin#');
+
+  const blurb = append + grammar.flatten('#origin#');
+  blurbsById.set(planet.locationId, blurb);
+  return blurb;
 };
 
+const blurbs2ById = new Map<LocationId, string>();
 // this one mentions the name
 export const getPlanetBlurb2 = (planet: Planet | null): string => {
   if (!planet) return '';
+
+  const myBlurb = blurbs2ById.get(planet.locationId);
+  if (myBlurb) return myBlurb;
 
   const name = getPlanetName(planet);
   const tagline = getPlanetTagline(planet);
@@ -231,7 +423,10 @@ export const getPlanetBlurb2 = (planet: Planet | null): string => {
   const grammar = tracery.createGrammar({ ...blurb2grammar, ...myGrammar });
 
   grammar.addModifiers(baseEngModifiers);
-  return grammar.flatten('#origin#');
+  const blurb = grammar.flatten('#origin#');
+
+  blurbs2ById.set(planet.locationId, blurb);
+  return blurb;
 };
 
 export type QuoteData = {

@@ -1,20 +1,30 @@
+import { HSLVec, RGBVec } from '../../../../../app/renderer/utils/EngineTypes';
 import { HatType } from '../../../../../utils/Hats';
 
 export interface PlanetCosmeticInfo {
   baseHue: number;
 
-  baseColor: string;
-  baseColor2: string;
-  baseColor3: string;
+  baseStr: string;
+  bgStr: string;
 
-  secondaryColor: string;
-  secondaryColor2: string;
-  secondaryColor3: string;
+  baseColor: RGBVec;
+  baseColor2: RGBVec;
+  baseColor3: RGBVec;
 
-  backgroundColor: string;
-  previewColor: string;
-  asteroidColor: string;
+  mtnColor: RGBVec;
+  mtnColor2: RGBVec;
+  mtnColor3: RGBVec;
 
-  // ultra ultra hacky, but we're doing this since it's cached in the renderer
+  backgroundColor: RGBVec;
+  previewColor: RGBVec;
+
+  landRgb: RGBVec;
+  oceanRgb: RGBVec;
+  beachRgb: RGBVec;
+
+  asteroidHsl: HSLVec;
+
+  seed: number;
+
   hatType: HatType;
 }

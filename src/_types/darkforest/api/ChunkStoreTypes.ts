@@ -9,6 +9,7 @@ export interface LSMLoc {
   y: number;
   h: LocationId;
   p: number; // perlin
+  b: number; // biomebase perlin
 }
 
 export interface LSMChunkData {

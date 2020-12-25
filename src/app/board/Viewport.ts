@@ -5,6 +5,11 @@ import AbstractUIManager from './AbstractUIManager';
 import { ExploredChunkData, Planet } from '../../_types/global/GlobalTypes';
 import _ from 'lodash';
 
+export const getDefaultScroll = (): number => {
+  const isFirefox = navigator.userAgent.indexOf('Firefox') > 0;
+  return isFirefox ? 1.005 : 1.0006;
+};
+
 class Viewport {
   // The sole listener for events from Canvas
   // Handles panning and zooming
@@ -27,6 +32,8 @@ class Viewport {
   gameUIManager: AbstractUIManager;
 
   mousedownCoords: CanvasCoords | null = null;
+
+  mouseSensitivity: number;
 
   private constructor(
     gameUIManager: AbstractUIManager,
@@ -51,10 +58,29 @@ class Viewport {
     this.mouseLastCoords = centerWorldCoords;
     this.canvas = canvas;
 
-    this.isFirefox = navigator.userAgent.indexOf('Firefox') > 0;
+    const scroll = localStorage.getItem('scrollSpeed');
+    if (scroll) {
+      this.mouseSensitivity = parseFloat(scroll);
+    } else {
+      this.mouseSensitivity = getDefaultScroll();
+    }
 
     this.isPanning = false;
     autoBind(this);
+  }
+
+  get minWorldWidth(): number {
+    // TODO: Figure out a better way to set this based on viewport
+    return 2;
+  }
+
+  get maxWorldWidth(): number {
+    return this.gameUIManager.getWorldRadius() * 4;
+  }
+
+  public setMouseSensitivty(mouseSensitivity: number) {
+    this.mouseSensitivity = 1 + mouseSensitivity;
+    localStorage.setItem('scrollSpeed', this.mouseSensitivity.toString());
   }
 
   static getInstance(): Viewport {
@@ -102,10 +128,8 @@ class Viewport {
       canvas
     );
 
-    // temporary, we do this because otherwise new players see a faded out home planet
-    viewport.zoomIn();
-    viewport.zoomIn();
-    viewport.centerCoords(gameUIManager.getHomeCoords());
+    // later - check if there's a saved viewport state too
+    viewport.zoomPlanet(gameUIManager.getHomePlanet());
 
     uiEmitter
       .on(UIEmitterEvent.CanvasMouseDown, viewport.onMouseDown)
@@ -129,6 +153,15 @@ class Viewport {
     if (!loc) return;
     const { x, y } = loc.coords;
     this.centerWorldCoords = { x, y };
+  }
+
+  // centers on a planet and makes it fill the viewport
+  zoomPlanet(planet: Planet | null): void {
+    if (!planet) return;
+    this.centerPlanet(planet);
+    // in world coords
+    const rad = this.gameUIManager.getRadiusOfPlanetLevel(planet.planetLevel);
+    this.setWorldHeight(4 * rad);
   }
 
   centerCoords(coords: WorldCoords): void {
@@ -209,6 +242,12 @@ class Viewport {
 
   onScroll(deltaY: number, forceZoom = false) {
     if (this.mouseLastCoords !== null || forceZoom) {
+      const base = this.mouseSensitivity;
+      const newWidth = this.widthInWorldUnits * base ** deltaY;
+      if (!this.isValidWorldWidth(newWidth)) {
+        return;
+      }
+
       let mouseWorldCoords = this.centerWorldCoords;
       if (this.mouseLastCoords) {
         mouseWorldCoords = this.canvasToWorldCoords(this.mouseLastCoords);
@@ -217,7 +256,6 @@ class Viewport {
         x: this.centerWorldCoords.x - mouseWorldCoords.x,
         y: this.centerWorldCoords.y - mouseWorldCoords.y,
       };
-      const base = this.isFirefox ? 1.005 : 1.0006;
       const newCentersDiff = {
         x: centersDiff.x * base ** deltaY,
         y: centersDiff.y * base ** deltaY,
@@ -229,7 +267,6 @@ class Viewport {
       this.centerWorldCoords.x = newCenter.x;
       this.centerWorldCoords.y = newCenter.y;
 
-      const newWidth = this.widthInWorldUnits * base ** deltaY;
       this.setWorldWidth(newWidth);
       this.gameUIManager.setDetailLevel(this.getDetailLevel());
     }
@@ -329,11 +366,23 @@ class Viewport {
     return true;
   }
 
+  private isValidWorldWidth(width: number) {
+    return width >= this.minWorldWidth && width <= this.maxWorldWidth;
+  }
+
   private setWorldWidth(width: number): void {
-    // world scale width
-    this.widthInWorldUnits = width;
-    this.heightInWorldUnits =
-      (width * this.viewportHeight) / this.viewportWidth;
+    if (this.isValidWorldWidth(width)) {
+      // world scale width
+      this.widthInWorldUnits = width;
+      this.heightInWorldUnits =
+        (width * this.viewportHeight) / this.viewportWidth;
+    }
+  }
+
+  private setWorldHeight(height: number): void {
+    this.heightInWorldUnits = height;
+    this.widthInWorldUnits =
+      (height * this.viewportWidth) / this.viewportHeight;
   }
 
   private getDetailLevel(): number {

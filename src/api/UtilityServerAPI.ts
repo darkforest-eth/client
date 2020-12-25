@@ -1,7 +1,15 @@
 const isProd = process.env.NODE_ENV === 'production';
 const WEBSERVER_URL = isProd ? 'https://zkga.me' : 'http://localhost:3000';
+
+const CACHE_SERVER_URL = isProd
+  ? 'https://df-headless.xyz'
+  : 'http://localhost:3002';
+
 import * as EmailValidator from 'email-validator';
-import { AddressTwitterMap } from '../_types/darkforest/api/UtilityServerAPITypes';
+import {
+  AddressTwitterMap,
+  ServerScoreboard,
+} from '../_types/darkforest/api/UtilityServerAPITypes';
 import { EthAddress } from '../_types/global/GlobalTypes';
 
 export enum EmailResponse {
@@ -141,5 +149,22 @@ export const verifyTwitterHandle = async (
   } catch (e) {
     console.error(`error when verifying twitter handle: ${e}`);
     return false;
+  }
+};
+
+export const getCachedScoreboard = async (): Promise<{
+  scoreboard: ServerScoreboard;
+  timestamp: number;
+}> => {
+  try {
+    console.log(CACHE_SERVER_URL);
+    const ret: {
+      scoreboard: ServerScoreboard;
+      timestamp: number;
+    } = await fetch(`${CACHE_SERVER_URL}/scoreboard`).then((x) => x.json());
+    return ret;
+  } catch (e) {
+    console.error(`error when fetching scoreboard: ${e}`);
+    return { scoreboard: [], timestamp: Date.now() };
   }
 };

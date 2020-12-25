@@ -2,7 +2,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import dfstyles from '../styles/dfstyles';
-import { UpgradeBranchName, Planet } from '../_types/global/GlobalTypes';
+import {
+  UpgradeBranchName,
+  Planet,
+  StatIdx,
+} from '../_types/global/GlobalTypes';
 import { getPlanetRank, isFullRank } from '../utils/Utils';
 
 const SVGWrapper = styled.span`
@@ -511,6 +515,43 @@ export const SettingsIcon = () => {
   );
 };
 
+const ArtifactSVG = () => (
+  <DefaultSVG>
+    <path d='M385.758 160c9.063-6.44 17.756-13.608 25.722-21.574 16.701-16.701 27.873-37.25 31.456-57.861 3.929-22.593-1.836-43.57-15.815-57.55-11.15-11.149-26.255-17.043-43.682-17.043-24.816 0-50.961 11.912-71.73 32.681-33.238 33.238-52.613 79.119-63.038 111.861-7.72-32.901-23.103-77.322-53.009-107.229-16.047-16.046-36.557-24.285-55.923-24.285-15.827 0-30.89 5.502-42.13 16.743-24.993 24.994-21.616 68.893 7.543 98.052 10.396 10.396 22.549 19.031 35.36 26.206h-108.512v128h32v224h384v-224.001h32v-128h-94.242zM337.163 64.109c13.862-13.862 31.161-22.137 46.275-22.137 5.35 0 12.854 1.127 18.225 6.499 13.015 13.014 5.706 43.154-15.64 64.499-21.973 21.973-51.53 37.084-77.216 47.030h-25.336c9.284-28.774 26.029-68.228 53.692-95.891zM130.607 108.338c-7.914-7.914-12.885-18.080-13.64-27.893-0.351-4.56-0.025-13.124 6.098-19.247 5.122-5.122 11.894-6.198 16.674-6.198v0c10.629 0 21.734 5.008 30.466 13.74 16.936 16.936 30.883 43.886 40.334 77.938 0.255 0.92 0.504 1.835 0.748 2.743-0.908-0.243-1.823-0.492-2.743-0.748-34.052-9.451-61.002-23.399-77.937-40.335zM448 272h-160v208h-64v-208h-160v-16h160v-64h64v64h160v16z'></path>
+  </DefaultSVG>
+);
+
+export const ArtifactIcon = () => (
+  <SVGWrapper>
+    <ArtifactSVG />
+  </SVGWrapper>
+);
+
+const PluginSVG = () => (
+  <DefaultSVG>
+    <path d='M512 141.25l-45.253-45.25-89.373 89.376-50.75-50.751 89.375-89.375-45.25-45.25-89.375 89.375-57.374-57.375-43.313 43.312 256.001 256 43.312-43.311-57.376-57.376 89.376-89.375z'></path>
+    <path d='M397.020 336.895l-221.912-221.912c-47.909 57.452-102.26 146.227-64.698 222.608l-66.124 66.124c-15.556 15.557-15.556 41.012 0 56.568l7.429 7.429c15.557 15.557 41.013 15.557 56.569 0l66.123-66.122c76.382 37.566 165.159-16.783 222.613-64.695z'></path>
+  </DefaultSVG>
+);
+
+export const PluginIcon = () => (
+  <SVGWrapper>
+    <PluginSVG />
+  </SVGWrapper>
+);
+
+const DepositSVG = () => (
+  <DefaultSVG>
+    <path d='M416 32h-320l-96 96v336c0 8.837 7.163 16 16 16h480c8.836 0 16-7.163 16-16v-336l-96-96zM256 416l-160-128h96v-96h128v96h96l-160 128zM77.255 96l32-32h293.489l32 32h-357.489z'></path>
+  </DefaultSVG>
+);
+
+export const DepositIcon = () => (
+  <SVGWrapper>
+    <DepositSVG />
+  </SVGWrapper>
+);
+
 export const RankIcon = ({ planet }: { planet: Planet | null }) => {
   const rank = getPlanetRank(planet);
   if (isFullRank(planet)) return <FullRankIcon />;
@@ -524,4 +565,13 @@ export const BranchIcon = ({ branch }: { branch: number }) => {
   if (branch === UpgradeBranchName.Range) return <EnergyIcon />;
   else if (branch === UpgradeBranchName.Defense) return <SilverIcon />;
   else return <RangeIcon />;
+};
+
+export const StatIcon = ({ stat }: { stat: StatIdx }) => {
+  if (stat === StatIdx.Defense) return <DefenseIcon />;
+  else if (stat === StatIdx.EnergyGro) return <EnergyGrowthIcon />;
+  else if (stat === StatIdx.EnergyCap) return <EnergyIcon />;
+  else if (stat === StatIdx.Range) return <RangeIcon />;
+  else if (stat === StatIdx.Speed) return <SpeedIcon />;
+  else return <DefenseIcon />;
 };

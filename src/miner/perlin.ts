@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { mimcWithRounds } from './mimc';
+import { spaceTypeHash, biomeHash } from './mimc';
 import Fraction from '../utils/fractions/bigFraction.js';
 import BigInt from 'big-integer';
 import { BigInteger } from 'big-integer';
@@ -21,8 +21,16 @@ interface GradientAtPoint {
   gradient: Vector;
 }
 
-const random: (...args: number[]) => number = (...args) => {
-  return mimcWithRounds(4)(...args)
+type HashFn = (...inputs: number[]) => number;
+
+const spaceTypeRandom: (...args: number[]) => number = (...args) => {
+  return spaceTypeHash(...args)
+    .remainder(16)
+    .toJSNumber();
+};
+
+const biomeRandom: (...args: number[]) => number = (...args) => {
+  return biomeHash(...args)
     .remainder(16)
     .toJSNumber();
 };
@@ -70,12 +78,13 @@ try {
   console.error('Browser does not support BigInt.');
 }
 
-const getRandomGradientAt: (point: Vector, scale: Fraction) => Vector = (
-  point,
-  scale
-) => {
+const getRandomGradientAt = (
+  point: Vector,
+  scale: Fraction,
+  randFn: HashFn
+): Vector => {
   const val =
-    vecs[random(point.x.valueOf(), point.y.valueOf(), scale.valueOf())];
+    vecs[randFn(point.x.valueOf(), point.y.valueOf(), scale.valueOf())];
   return val;
 };
 
@@ -150,7 +159,11 @@ const realMod = (dividend: Fraction, divisor: Fraction): Fraction => {
   return temp;
 };
 
-const valueAt = (p: Vector, scale: Fraction) => {
+const valueAt = (
+  p: Vector,
+  scale: Fraction,
+  randFn: (...inputs: number[]) => number
+) => {
   const bottomLeftCoords = {
     x: p.x.sub(realMod(p.x, scale)),
     y: p.y.sub(realMod(p.y, scale)),
@@ -170,19 +183,19 @@ const valueAt = (p: Vector, scale: Fraction) => {
 
   const bottomLeftGrad = {
     coords: bottomLeftCoords,
-    gradient: getRandomGradientAt(bottomLeftCoords, scale),
+    gradient: getRandomGradientAt(bottomLeftCoords, scale, randFn),
   };
   const bottomRightGrad = {
     coords: bottomRightCoords,
-    gradient: getRandomGradientAt(bottomRightCoords, scale),
+    gradient: getRandomGradientAt(bottomRightCoords, scale, randFn),
   };
   const topLeftGrad = {
     coords: topLeftCoords,
-    gradient: getRandomGradientAt(topLeftCoords, scale),
+    gradient: getRandomGradientAt(topLeftCoords, scale, randFn),
   };
   const topRightGrad = {
     coords: topRightCoords,
-    gradient: getRandomGradientAt(topRightCoords, scale),
+    gradient: getRandomGradientAt(topRightCoords, scale, randFn),
   };
 
   const out = perlinValue(
@@ -196,15 +209,30 @@ const valueAt = (p: Vector, scale: Fraction) => {
 
 const MAX_PERLIN_VALUE = 32;
 
-function perlin(p: IntegerVector, floor = true): number {
+function perlin(
+  p: IntegerVector,
+  floor = true,
+  computingBiome = false
+): number {
   const fractionalP = { x: new Fraction(p.x), y: new Fraction(p.y) };
   let ret = new Fraction(0);
+  const pValues: Fraction[] = [];
   for (let i = 12; i < 15; i += 1) {
-    // we want 4096, 8192. 16384
-    ret = ret.add(valueAt(fractionalP, new Fraction(2 ** i)));
+    // we want 4096, 8192, 16384
+    pValues.push(
+      valueAt(
+        fractionalP,
+        new Fraction(2 ** i),
+        computingBiome ? biomeRandom : spaceTypeRandom
+      )
+    );
   }
+  ret = ret.add(pValues[0]);
+  ret = ret.add(pValues[0]);
+  ret = ret.add(pValues[1]);
+  ret = ret.add(pValues[2]);
 
-  ret = ret.div(3);
+  ret = ret.div(4);
   runningLCM = updateLCM(runningLCM, BigInt(ret.d));
 
   ret = ret.mul(MAX_PERLIN_VALUE / 2);

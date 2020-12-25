@@ -1,4 +1,8 @@
-import { EthAddress, LocationId } from '../_types/global/GlobalTypes';
+import {
+  ArtifactId,
+  EthAddress,
+  LocationId,
+} from '../_types/global/GlobalTypes';
 import * as bigInt from 'big-integer';
 import { LOCATION_ID_UB } from './constants';
 import { BigInteger } from 'big-integer';
@@ -30,6 +34,15 @@ export const locationIdFromDecStr: (location: string) => LocationId = (
   return ret as LocationId;
 };
 
+export const artifactIdFromDecStr: (artifactId: string) => ArtifactId = (
+  artifactId
+) => {
+  const locationBI = bigInt(artifactId);
+  let ret = locationBI.toString(16);
+  while (ret.length < 64) ret = '0' + ret;
+  return ret as ArtifactId;
+};
+
 export const locationIdFromBigInt: (location: BigInteger) => LocationId = (
   location
 ) => {
@@ -46,10 +59,10 @@ export const locationIdFromEthersBN: (location: EthersBN) => LocationId = (
   return locationIdFromDecStr(location.toString());
 };
 
-export const locationIdToHexStr: (locationId: LocationId) => string = (
-  locationId
+export const artifactIdFromEthersBN: (artifactId: EthersBN) => ArtifactId = (
+  artifactId
 ) => {
-  return locationId as string;
+  return artifactIdFromDecStr(artifactId.toString());
 };
 
 export const locationIdToDecStr: (locationId: LocationId) => string = (
@@ -58,10 +71,10 @@ export const locationIdToDecStr: (locationId: LocationId) => string = (
   return bigInt(locationId, 16).toString(10);
 };
 
-export const locationIdToBigNumber: (location: LocationId) => EthersBN = (
-  location
+export const artifactIdToDecStr: (artifactId: ArtifactId) => string = (
+  artifactId
 ) => {
-  return EthersBN.from('0x' + location);
+  return bigInt(artifactId, 16).toString(10);
 };
 
 export const address: (str: string) => EthAddress = (str) => {

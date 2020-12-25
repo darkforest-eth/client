@@ -1,5 +1,11 @@
 import { BigNumber as EthersBN } from 'ethers';
-import { LocationId, Upgrade } from '../../global/GlobalTypes';
+import {
+  ArtifactId,
+  EthAddress,
+  LocationId,
+  Location,
+  Upgrade,
+} from '../../global/GlobalTypes';
 
 // TODO write these types
 export type ContractCallArgs = Array<unknown>;
@@ -37,16 +43,21 @@ export enum ContractEvent {
   ArrivalQueued = 'ArrivalQueued',
   PlanetUpgraded = 'PlanetUpgraded',
   BoughtHat = 'BoughtHat',
+  PlanetTransferred = 'PlanetTransferred',
+  FoundArtifact = 'FoundArtifact',
+  DepositedArtifact = 'DepositedArtifact',
+  WithdrewArtifact = 'WithdrewArtifact',
 }
 
 export enum ContractsAPIEvent {
   PlayerInit = 'PlayerInit',
   PlanetUpdate = 'PlanetUpdate',
+  ArtifactUpdate = 'ArtifactUpdate',
+  RadiusUpdated = 'RadiusUpdated',
   TxInitFailed = 'TxInitFailed',
   TxSubmitted = 'TxSubmitted',
   TxConfirmed = 'TxConfirmed',
   TxReverted = 'TxReverted',
-  RadiusUpdated = 'RadiusUpdated',
 }
 
 export type InitializePlayerArgs = [
@@ -99,6 +110,23 @@ export type MoveArgs = [
   ]
 ];
 
+export type BiomeArgs = [
+  [string, string], // proofA
+  [
+    // proofB
+    [string, string],
+    [string, string]
+  ],
+  [string, string], // proofC
+  [
+    string, // hash
+    string // biomebase
+  ]
+];
+
+export type DepositArtifactArgs = [string, string]; // locationId, artifactId
+export type WithdrawArtifactArgs = [string]; // locationId
+
 export type UpgradeBranch = [Upgrade, Upgrade, Upgrade, Upgrade];
 export type UpgradesInfo = [UpgradeBranch, UpgradeBranch, UpgradeBranch];
 
@@ -106,7 +134,11 @@ export interface ContractConstants {
   TIME_FACTOR_HUNDREDTHS: number;
   PERLIN_THRESHOLD_1: number;
   PERLIN_THRESHOLD_2: number;
+  BIOME_THRESHOLD_1: number;
+  BIOME_THRESHOLD_2: number;
   PLANET_RARITY: number;
+
+  ARTIFACT_LOCKUP_DURATION_SECONDS: number;
 
   SILVER_RARITY_1: number;
   SILVER_RARITY_2: number;
@@ -298,6 +330,45 @@ export interface RawPlanetData {
   planetLevel?: EthersBN;
 }
 
+export interface RawArtifactData {
+  // note that from actual blockchain, this will be an array
+  // not an object; this fields will be keyed by numerical index, not string
+  0: EthersBN;
+  id?: EthersBN;
+
+  1: EthersBN;
+  planetDiscoveredOn?: EthersBN;
+
+  2: EthersBN;
+  planetLevel?: EthersBN;
+
+  3: number;
+  planetBiome?: number;
+
+  4: EthersBN;
+  mintedAtTimestamp?: EthersBN;
+
+  5: string;
+  originalOwner?: string;
+
+  6: number;
+  artifactType?: number;
+}
+
+export interface RawArtifactWithMetadata {
+  0: RawArtifactData;
+  artifact?: RawArtifactData;
+
+  1: RawUpgrade;
+  upgrade?: RawUpgrade;
+
+  2: string;
+  owner?: string;
+
+  3: EthersBN;
+  locationId?: EthersBN;
+}
+
 export interface RawPlanetExtendedInfo {
   // note that from actual blockchain, this will be an array
   // not an object; this fields will be keyed by numerical index, not string
@@ -328,7 +399,14 @@ export interface RawPlanetExtendedInfo {
   8: EthersBN;
   hatLevel?: EthersBN;
 
-  // 9 is delegatedPlayers, but we don't get this array
+  9: boolean;
+  hasTriedFindingArtifact?: boolean;
+
+  10: EthersBN;
+  heldArtifactId?: EthersBN;
+
+  11: EthersBN;
+  artifactLockedTimestamp?: EthersBN;
 }
 
 export enum EthTxType {
@@ -336,6 +414,10 @@ export enum EthTxType {
   MOVE = 'MOVE',
   UPGRADE = 'UPGRADE',
   BUY_HAT = 'BUY_HAT',
+  PLANET_TRANSFER = 'PLANET_TRANSFER',
+  FIND_ARTIFACT = 'FIND_ARTIFACT',
+  DEPOSIT_ARTIFACT = 'DEPOSIT_ARTIFACT',
+  WITHDRAW_ARTIFACT = 'WITHDRAW_ARTIFACT',
 }
 
 export enum EthTxStatus {
@@ -360,6 +442,7 @@ export type SubmittedTx = TxIntent & {
 export type UnconfirmedInit = TxIntent & {
   type: EthTxType.INIT;
   locationId: LocationId;
+  location: Location;
 };
 
 export type SubmittedInit = UnconfirmedInit & SubmittedTx;
@@ -373,6 +456,21 @@ export type UnconfirmedMove = TxIntent & {
 };
 
 export type SubmittedMove = UnconfirmedMove & SubmittedTx;
+
+export type UnconfirmedFindArtifact = TxIntent & {
+  type: EthTxType.FIND_ARTIFACT;
+  planetId: LocationId;
+};
+
+export type SubmittedFindArtifact = UnconfirmedFindArtifact & SubmittedTx;
+
+export type UnconfirmedPlanetTransfer = TxIntent & {
+  type: EthTxType.PLANET_TRANSFER;
+  planetId: LocationId;
+  newOwner: EthAddress;
+};
+
+export type SubmittedPlanetTransfer = UnconfirmedPlanetTransfer & SubmittedTx;
 
 export type UnconfirmedUpgrade = TxIntent & {
   type: EthTxType.UPGRADE;
@@ -388,3 +486,20 @@ export type UnconfirmedBuyHat = TxIntent & {
 };
 
 export type SubmittedBuyHat = UnconfirmedBuyHat & SubmittedTx;
+
+export type UnconfirmedDepositArtifact = TxIntent & {
+  type: EthTxType.DEPOSIT_ARTIFACT;
+  locationId: LocationId;
+  artifactId: ArtifactId;
+};
+
+export type SubmittedDepositArtifact = UnconfirmedDepositArtifact & SubmittedTx;
+
+export type UnconfirmedWithdrawArtifact = TxIntent & {
+  type: EthTxType.WITHDRAW_ARTIFACT;
+  locationId: LocationId;
+  artifactId: ArtifactId;
+};
+
+export type SubmittedWithdrawArtifact = UnconfirmedWithdrawArtifact &
+  SubmittedTx;

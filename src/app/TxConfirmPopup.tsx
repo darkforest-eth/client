@@ -159,6 +159,31 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
   const upPlanet = localStorage.getItem(`${addr.toLowerCase()}-upPlanet`);
   const branch = localStorage.getItem(`${addr.toLowerCase()}-branch`);
 
+  const planetToTransfer = localStorage.getItem(
+    `${addr.toLowerCase()}-transferPlanet`
+  );
+  const transferTo = localStorage.getItem(
+    `${addr.toLowerCase()}-transferOwner`
+  );
+
+  const findArtifactPlanet = localStorage.getItem(
+    `${addr.toLowerCase()}-findArtifactOnPlanet`
+  );
+
+  const depositPlanet = localStorage.getItem(
+    `${addr.toLowerCase()}-depositPlanet`
+  );
+  const depositArtifact = localStorage.getItem(
+    `${addr.toLowerCase()}-depositArtifact`
+  );
+
+  const withdrawPlanet = localStorage.getItem(
+    `${addr.toLowerCase()}-withdrawPlanet`
+  );
+  const withdrawArtifact = localStorage.getItem(
+    `${addr.toLowerCase()}-withdrawArtifact`
+  );
+
   return (
     <StyledTxConfirmPopup>
       <div>
@@ -205,6 +230,50 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
             <div>
               <b>Branch</b>
               <span>{branch}</span>
+            </div>
+          </>
+        )}
+        {method === 'transferOwnership' && (
+          <>
+            <div>
+              <b>Planet ID</b>
+              <span className='mono'>{planetToTransfer}</span>
+            </div>
+            <div>
+              <b>Transfer to</b>
+              <span>{transferTo}</span>
+            </div>
+          </>
+        )}
+        {method === 'findArtifact' && (
+          <>
+            <div>
+              <b>Planet ID</b>
+              <span className='mono'>{findArtifactPlanet}</span>
+            </div>
+          </>
+        )}
+        {method === 'depositArtifact' && (
+          <>
+            <div>
+              <b>Planet ID</b>
+              <span className='mono'>{depositPlanet}</span>
+            </div>
+            <div>
+              <b>Artifact ID</b>
+              <span className='mono'>{depositArtifact}</span>
+            </div>
+          </>
+        )}
+        {method === 'withdrawArtifact' && (
+          <>
+            <div>
+              <b>Planet ID</b>
+              <span className='mono'>{withdrawPlanet}</span>
+            </div>
+            <div>
+              <b>Artifact ID</b>
+              <span className='mono'>{withdrawArtifact}</span>
             </div>
           </>
         )}

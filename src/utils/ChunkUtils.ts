@@ -38,6 +38,7 @@ export const toLSMChunk = (chunk: ExploredChunkData) => {
       y: location.coords.y,
       h: location.hash,
       p: location.perlin,
+      b: location.biomebase,
     });
   }
   const ret: LSMChunkData = {
@@ -57,6 +58,7 @@ export const toExploredChunk = (chunk: LSMChunkData) => {
       coords: { x: lsmLoc.x, y: lsmLoc.y },
       hash: lsmLoc.h,
       perlin: lsmLoc.p,
+      biomebase: lsmLoc.b,
     });
   }
   const ret: ExploredChunkData = {

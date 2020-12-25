@@ -22,8 +22,12 @@ import {
   LockIcon,
   HatIcon,
   SettingsIcon,
+  PluginIcon,
+  ArtifactIcon,
+  DepositIcon,
 } from '../Icons';
 import { TooltipTrigger } from './Tooltip';
+import { Spacer, Truncate } from './CoreUI';
 
 export const IconButton = styled.div<{ width?: string }>`
   width: ${(props) => props.width || '1.5em'};
@@ -71,6 +75,11 @@ export enum ModalName {
   Settings,
   Onboarding,
   Private,
+  YourArtifacts,
+  FindArtifact,
+  Plugins,
+  ArtifactDetails,
+  Deposit,
 }
 
 export function ModalIcon({
@@ -92,6 +101,9 @@ export function ModalIcon({
     else if (modal === ModalName.ManageAccount) return <LockIcon />;
     else if (modal === ModalName.Hats) return <HatIcon />;
     else if (modal === ModalName.Settings) return <SettingsIcon />;
+    else if (modal === ModalName.Plugins) return <PluginIcon />;
+    else if (modal === ModalName.YourArtifacts) return <ArtifactIcon />;
+    else if (modal === ModalName.Deposit) return <DepositIcon />;
     return <span>T</span>;
   };
 
@@ -113,6 +125,14 @@ export function ModalIcon({
       </IconButton>
     </TooltipTrigger>
   );
+}
+
+export function ModalDepositIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.Deposit} />;
+}
+
+export function ModalArtifactIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.YourArtifacts} />;
 }
 
 export function ModalHelpIcon({ hook }: { hook: ModalHook }) {
@@ -143,6 +163,10 @@ export function ModalTwitterVerifyIcon({ hook }: { hook: ModalHook }) {
   return <ModalIcon hook={hook} modal={ModalName.TwitterVerify} />;
 }
 
+export function ModalYourArtifactsIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.YourArtifacts} />;
+}
+
 export function ModalTwitterBroadcastIcon({ hook }: { hook: ModalHook }) {
   return <ModalIcon hook={hook} modal={ModalName.TwitterBroadcast} />;
 }
@@ -157,6 +181,10 @@ export function ModalHatIcon({ hook }: { hook: ModalHook }) {
 
 export function ModalSettingsIcon({ hook }: { hook: ModalHook }) {
   return <ModalIcon hook={hook} modal={ModalName.Settings} />;
+}
+
+export function ModalPluginIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.Plugins} />;
 }
 
 const StyledModalPane = styled.div`
@@ -198,7 +226,7 @@ const StyledModalPane = styled.div`
 
       line-height: 1.5em;
 
-      &: hover {
+      &:hover {
         color: ${dfstyles.colors.subtext};
         cursor: pointer;
       }
@@ -215,7 +243,7 @@ const StyledModalPane = styled.div`
 
 export type ModalProps = {
   hook: ModalHook;
-  name: ModalName;
+  name?: ModalName;
 };
 
 type Coords = { x: number; y: number };
@@ -240,15 +268,16 @@ export function ModalPane({
   children,
   title,
   hook: [visible, setVisible],
-  name: _id,
   fixCorner,
   hideClose,
   style,
+  tick,
 }: PaneProps &
   ModalProps & {
     fixCorner?: boolean;
     hideClose?: boolean;
     style?: React.CSSProperties;
+    tick?: number;
   }) {
   const windowManager = WindowManager.getInstance();
 
@@ -367,18 +396,23 @@ export function ModalPane({
 
     setLeft(clipX(coords.x + delX, containerRef.current.offsetWidth));
     setTop(clipY(coords.y + delY, containerRef.current.offsetHeight));
-  }, [coords, delCoords, containerRef]);
+  }, [coords, delCoords, containerRef, tick]);
+
+  function onMouseDown(e: React.SyntheticEvent) {
+    push();
+    e.stopPropagation();
+  }
 
   return (
     <StyledModalPane
       style={{
+        ...style,
         left: left + 'px',
         top: top + 'px',
         zIndex: visible ? zIndex : -1000,
-        ...style,
       }}
       ref={containerRef}
-      onMouseDown={push}
+      onMouseDown={onMouseDown}
     >
       <div
         ref={headerRef}
@@ -398,9 +432,10 @@ export function ModalPane({
           setStyleClicking(true);
         }}
       >
-        <p>
+        <Truncate>
           <u>{title}</u>
-        </p>
+        </Truncate>
+        <Spacer width={8} />
         {!hideClose && <span onClick={() => setVisible(false)}>X</span>}
       </div>
       <div className='modal-container'>{children}</div>

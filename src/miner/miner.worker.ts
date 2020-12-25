@@ -42,6 +42,7 @@ const exploreChunk = (
               coords: { x, y },
               hash: locationIdFromBigInt(hash),
               perlin: perlin({ x, y }),
+              biomebase: perlin({ x, y }, true, true),
             });
           }
         }

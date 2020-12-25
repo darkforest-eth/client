@@ -2,14 +2,12 @@ import autoBind from 'auto-bind';
 import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import dfstyles from '../../styles/dfstyles';
-import {
-  getPlanetCosmetic,
-  PixelCoords,
-  planetPerlin,
-  planetRandom,
-} from '../../utils/ProcgenUtils';
 import { Planet, PlanetResource } from '../../_types/global/GlobalTypes';
-import { PlanetIcons } from './PlanetScape';
+import { mat4 } from 'gl-matrix';
+import { AbstractGLManager } from '../renderer/webgl/WebGLManager';
+import PlanetRenderer from '../renderer/entities/PlanetRenderer';
+import { MineRenderer } from '../renderer/entities/MineRenderer';
+import { PlanetIcons } from '../planetscape/PlanetIcons';
 
 const StyledPlanetPreview = styled.div`
   position: relative;
@@ -30,237 +28,129 @@ const StyledPlanetPreview = styled.div`
   }
 `;
 
-class PlanetPreviewRenderer {
+/*
+ * Renders the planet preview (thumb in planet context menu)
+ */
+
+class PlanetPreviewRenderer implements AbstractGLManager {
   planet: Planet | null;
 
   canvas: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
-
-  bufferCanvas: HTMLCanvasElement;
-  bufferCtx: CanvasRenderingContext2D;
+  gl: WebGL2RenderingContext;
 
   frameRequestId: number;
 
-  constructor(canvas: HTMLCanvasElement, bufferCanvas: HTMLCanvasElement) {
-    this.canvas = canvas;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error('Not a 2D canvas.');
-    this.ctx = ctx;
+  projectionMatrix: mat4;
+  planetRenderer: PlanetRenderer;
 
-    this.bufferCanvas = bufferCanvas;
-    const bufferCtx = bufferCanvas.getContext('2d');
-    if (!bufferCtx) throw new Error('Not a 2D canvas.');
-    this.bufferCtx = bufferCtx;
+  mineRenderer: MineRenderer;
 
-    this.ctx.imageSmoothingEnabled = false;
-
+  constructor(canvas: HTMLCanvasElement) {
     autoBind(this);
-    this.draw();
+
+    this.canvas = canvas;
+    const gl = canvas.getContext('webgl2');
+    if (!gl) {
+      console.error('error getting webgl2 context');
+      return;
+    }
+    this.gl = gl;
+
+    this.projectionMatrix = mat4.create();
+    this.setProjectionMatrix();
+    this.planetRenderer = new PlanetRenderer(this);
+    this.mineRenderer = new MineRenderer(this);
+
+    gl.enable(gl.DEPTH_TEST);
+
+    this.loop();
   }
 
-  destroy() {
+  public destroy() {
     window.cancelAnimationFrame(this.frameRequestId);
   }
 
-  setPlanet(planet: Planet | null) {
+  public setPlanet(planet: Planet | null) {
     this.planet = planet;
   }
 
-  clear(): void {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.bufferCtx.clearRect(
-      0,
-      0,
-      this.bufferCanvas.width,
-      this.bufferCanvas.height
+  private setProjectionMatrix(): void {
+    const height = this.canvas.height;
+    const width = this.canvas.width;
+    const depth = 100;
+
+    // prettier-ignore
+    mat4.set(this.projectionMatrix, 
+      2 / width, 0, 0, 0,
+      0, -2 / height, 0, 0,
+      0, 0, 1 / depth, 0, // TODO make it so that positive is in front
+      -1, 1, 0, 1,
     );
   }
 
-  draw() {
+  public loop() {
     this.clear();
-    if (this.planet?.planetResource === PlanetResource.NONE) {
-      this.drawPlanet();
+    this.draw();
+
+    this.frameRequestId = window.requestAnimationFrame(this.loop);
+  }
+
+  private clear(): void {
+    const gl = this.gl;
+    gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  }
+
+  private draw(): void {
+    if (!this.planet) return;
+    const { planetRenderer: pR, mineRenderer: mR } = this;
+    const margin = 10;
+
+    const dim = this.canvas.width;
+
+    const x1 = margin;
+    const y1 = margin;
+    const x2 = dim - margin;
+    const y2 = dim - margin;
+
+    if (this.planet.planetResource === PlanetResource.SILVER) {
+      mR.queueMineScreen(
+        this.planet,
+        { x: dim / 2, y: dim / 2 },
+        (dim - margin) / 2,
+        -1
+      );
+      mR.flush();
     } else {
-      this.drawAsteroids();
+      pR.queuePlanetBodyScreen(this.planet, dim / 2, x1, y1, x2, y2);
+      pR.flush();
     }
-
-    // this.frameRequestId = window.requestAnimationFrame(this.draw);
-  }
-
-  drawAsteroids(): void {
-    const { ctx, bufferCtx, bufferCanvas, planet } = this;
-    const colors = getPlanetCosmetic(planet);
-    const perlin = planet
-      ? planetPerlin(planet.locationId)
-      : (_: PixelCoords) => 0;
-    const rand = planet ? planetRandom(planet.locationId) : () => 0;
-
-    const mid = { x: bufferCanvas.width / 2, y: bufferCanvas.height / 2 };
-
-    bufferCtx.save();
-    bufferCtx.translate(mid.x, mid.y); // push translate
-
-    const blobPath = (cx: number, cy: number, r: number): void => {
-      bufferCtx.save();
-      bufferCtx.translate(cx, cy);
-
-      bufferCtx.beginPath();
-      bufferCtx.moveTo(r, 0);
-      const offX = rand() * 100;
-      const offY = rand() * 100;
-      for (let i = 0; i < 12; i++) {
-        const t = (i * (Math.PI * 2)) / 12;
-        let x = r * Math.cos(t);
-        let y = r * Math.sin(t);
-        const p = perlin({ x: 5 * x + offX, y: 5 * y + offY });
-        const rad = r * (1 + p * 0.5);
-
-        x = rad * Math.cos(t);
-        y = rad * Math.sin(t);
-
-        bufferCtx.lineTo(x, y);
-      }
-      bufferCtx.closePath();
-      bufferCtx.restore();
-    };
-
-    const drawAsteroid = (cx: number, cy: number): void => {
-      bufferCtx.save();
-      bufferCtx.translate(cx, cy);
-
-      blobPath(cx, cy, 10);
-      bufferCtx.fillStyle = colors.previewColor;
-      bufferCtx.fill();
-      bufferCtx.strokeStyle = colors.asteroidColor;
-      bufferCtx.stroke();
-      bufferCtx.strokeStyle = 'black';
-      bufferCtx.globalAlpha = 0.7;
-      bufferCtx.stroke();
-      bufferCtx.globalAlpha = 1;
-
-      bufferCtx.clip();
-
-      bufferCtx.fillStyle = colors.asteroidColor;
-      const offset = () => -10 + rand() * 20;
-      const count = rand() * 3 + 1;
-      for (let i = 0; i < count; i++) {
-        blobPath(cx + offset(), cy + offset(), 3);
-        bufferCtx.fill();
-      }
-
-      bufferCtx.restore();
-    };
-
-    for (let i = 0; i < 5; i++) {
-      const t = (i * (2 * Math.PI)) / 5;
-      const x = 10 * Math.cos(t);
-      const y = 10 * Math.sin(t);
-      drawAsteroid(x, y);
-    }
-
-    bufferCtx.restore(); // pop translate
-
-    ctx.drawImage(bufferCanvas, 0, 0, 128, 128);
-  }
-
-  drawPlanet(): void {
-    const { ctx, bufferCtx, bufferCanvas, planet } = this;
-
-    const colors = getPlanetCosmetic(planet);
-    const perlin = planet
-      ? planetPerlin(planet.locationId)
-      : (_: PixelCoords) => 0;
-
-    const mid = { x: bufferCanvas.width / 2, y: bufferCanvas.height / 2 };
-
-    bufferCtx.beginPath();
-    bufferCtx.arc(mid.x, mid.y, 20, 0, 2 * Math.PI);
-    bufferCtx.fillStyle = colors.baseColor;
-    bufferCtx.fill();
-
-    bufferCtx.save(); // push clip
-    bufferCtx.clip();
-
-    bufferCtx.fillStyle = colors.backgroundColor;
-    for (let x = 0; x < bufferCanvas.width; x++) {
-      for (let y = 0; y < bufferCanvas.height; y++) {
-        if (perlin({ x: x * 4, y: y * 4 }) > 0.4)
-          bufferCtx.fillRect(x, y, 1, 1);
-      }
-    }
-
-    // draw right side shadow
-    const rad = 24;
-    const offX = 10;
-
-    // push rotate
-    bufferCtx.translate(mid.x, mid.y);
-    bufferCtx.rotate(0.4);
-    bufferCtx.translate(-mid.x, -mid.y);
-
-    bufferCtx.beginPath();
-    bufferCtx.moveTo(mid.x - offX, 0);
-    bufferCtx.lineTo(mid.x - offX, mid.y - (rad + 2));
-    bufferCtx.arc(mid.x - offX, mid.y, rad, -0.5 * Math.PI, 0.5 * Math.PI);
-    bufferCtx.lineTo(mid.x - offX, bufferCanvas.height);
-    bufferCtx.lineTo(bufferCanvas.width, bufferCanvas.height);
-    bufferCtx.lineTo(bufferCanvas.width, 0);
-
-    bufferCtx.fillStyle = 'black';
-    bufferCtx.globalAlpha = 0.2;
-    bufferCtx.fill();
-    bufferCtx.globalAlpha = 1;
-
-    bufferCtx.restore(); // pop clip, rotate
-    // draw clouds
-    bufferCtx.beginPath();
-    bufferCtx.arc(mid.x, mid.y, 23, 0, 2 * Math.PI);
-
-    bufferCtx.save();
-    bufferCtx.clip(); // push clip
-
-    bufferCtx.fillStyle = 'white';
-    bufferCtx.globalAlpha = 0.7;
-    for (let x = 0; x < bufferCanvas.width; x++) {
-      for (let y = 0; y < bufferCanvas.height; y++) {
-        if (perlin({ x: x + 10 /* + Date.now() / 100*/, y: y * 8 + 10 }) > 0.5)
-          bufferCtx.fillRect(x, y, 1, 1);
-      }
-    }
-    bufferCtx.globalAlpha = 1.0;
-
-    bufferCtx.restore(); // pop clip
-
-    ctx.drawImage(bufferCanvas, 0, 0, 128, 128);
   }
 }
 
 export function PlanetPreview({ selected }: { selected: Planet | null }) {
-  const bufferRef = useRef<HTMLCanvasElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const [renderer, setRenderer] = useState<PlanetPreviewRenderer | null>(null);
 
   // sync ref to renderer
   useEffect(() => {
-    if (canvasRef.current && bufferRef.current)
-      setRenderer(
-        new PlanetPreviewRenderer(canvasRef.current, bufferRef.current)
-      );
-  }, [canvasRef, bufferRef]);
+    if (canvasRef.current)
+      setRenderer(new PlanetPreviewRenderer(canvasRef.current));
+  }, [canvasRef]);
 
   // sync planet to renderer
   useEffect(() => {
     if (!renderer) return;
     renderer.setPlanet(selected);
 
-    renderer.draw();
+    renderer.loop();
   }, [selected, renderer]);
 
   return (
     <StyledPlanetPreview>
       <PlanetIcons planet={selected} />
-      <canvas ref={bufferRef} width={64} height={64}></canvas>
       <canvas ref={canvasRef} width={128} height={128}></canvas>
     </StyledPlanetPreview>
   );

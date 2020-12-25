@@ -1,3 +1,5 @@
+// TODO we should do the &never TS thing for world / canvas coords; as this is a common source of bugs
+
 export interface WorldCoords {
   x: number;
   y: number;
