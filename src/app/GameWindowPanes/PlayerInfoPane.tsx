@@ -110,19 +110,19 @@ export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
     >
       <PlayerInfoWrapper>
         <div>
-          <TooltipTrigger name={TooltipName.Energy} needsShift>
+          <TooltipTrigger name={TooltipName.Energy}>
             <span>Energy</span>
           </TooltipTrigger>
           <span>{formatNumber(energy)}</span>
         </div>
         <div>
-          <TooltipTrigger name={TooltipName.Silver} needsShift>
+          <TooltipTrigger name={TooltipName.Silver}>
             <span>Silver</span>
           </TooltipTrigger>
           <span>{formatNumber(silver)}</span>
         </div>
         <div>
-          <TooltipTrigger name={TooltipName.TwitterHandle} needsShift>
+          <TooltipTrigger name={TooltipName.TwitterHandle}>
             <span>Handle</span>
           </TooltipTrigger>
           <span>
@@ -139,13 +139,13 @@ export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
           </span>
         </div>
         <div>
-          <TooltipTrigger name={TooltipName.Score} needsShift>
+          <TooltipTrigger name={TooltipName.Score}>
             <span>Score</span>
           </TooltipTrigger>
           <span>{Math.floor(score)}</span>
         </div>
         <div>
-          <TooltipTrigger name={TooltipName.Rank} needsShift>
+          <TooltipTrigger name={TooltipName.Rank}>
             <span>Rank</span>
           </TooltipTrigger>
           <span>{rank}</span>

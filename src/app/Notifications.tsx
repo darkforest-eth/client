@@ -56,6 +56,8 @@ const StyledNotification = styled.div`
   & > div.n-info {
     height: ${NOTIF_SIZE};
     min-width: 3em;
+    max-width: 50em;
+    overflow: scroll;
     margin-right: ${MARGIN};
     background: ${dfstyles.colors.background};
     padding: 0.5em 1em;

@@ -17,6 +17,12 @@ export const ARTIFACT_FINDER_PLUGIN = dedent`
     renderPlanets = () => {
       this.planetList.innerHTML = '';
 
+      // keep track of how many we have found
+      let count = 0;
+
+      const countText = document.createElement('div');
+      this.planetList.appendChild(countText);
+
       for (const planet of df.getAllPlanets()) {
         if (planet.location) {
           if (df.isPlanetMineable(planet)) {
@@ -28,15 +34,26 @@ export const ARTIFACT_FINDER_PLUGIN = dedent`
             const planetEntry = document.createElement('div');
             this.planetList.appendChild(planetEntry);
 
-            // hint: have a hard time finding planets? ui.centerCoords might help...
+            // hint: have a hard time finding planets? 
+            // ui.centerCoords might help...
             planetEntry.innerText =
               '(' +
               planet.location.coords.x +
               ', ' +
               planet.location.coords.y +
               ')';
+
+            count++;
           }
         }
+      }
+
+      if (count === 0) {
+        countText.innerText = 
+          'you have not found any artifacts yet';
+      } else {
+        countText.innerText = 
+          'you have found ' + count + ' artifacts';
       }
     };
 
@@ -52,6 +69,7 @@ export const ARTIFACT_FINDER_PLUGIN = dedent`
       container.appendChild(this.planetList);
 
       this.planetList.style.maxHeight = '300px';
+      this.planetList.style.width = '400px';
       this.planetList.style.overflowX = 'hidden';
       this.planetList.style.overflowY = 'scroll';
 

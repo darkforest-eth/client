@@ -33,9 +33,6 @@ export enum TooltipName {
   SilverGrowth,
   SilverCap,
   Silver,
-  Energy,
-  EnergyGrowth,
-  Range,
   TwitterHandle,
   Bonus,
   MinEnergy,
@@ -45,6 +42,8 @@ export enum TooltipName {
   Upgrades,
   PlanetRank,
   MaxLevel,
+  FindArtifact,
+  ArtifactStored,
 
   SelectedSilver,
   SelectedEnergy,
@@ -56,16 +55,23 @@ export enum TooltipName {
   CurrentMining,
   SilverProd,
 
+  // relative orders matter
   BonusEnergyCap,
   BonusEnergyGro,
   BonusRange,
   BonusSpeed,
   BonusDefense,
 
+  // relative orders matter
+  Energy,
+  EnergyGrowth,
+  Range,
+  Speed,
+  Defense,
+
   Clowntown,
 
-  Defense,
-  Speed,
+  ArtifactBuff,
 
   // note that we actually add ModalName to ModalHelp, and that everything after
   // is not referenced directly. for this reason the relative ordring matters.
@@ -76,6 +82,12 @@ export enum TooltipName {
   ModalUpgradeDetails,
   ModalTwitterVerification,
   ModalTwitterBroadcast,
+  ModalHats,
+  ModalSettings,
+  ModalYourArtifacts,
+  ModalFindArtifact,
+  ModalPlugins,
+  ModalDeposit,
 }
 
 // the purpose of this class is to manage all ui pane events
@@ -90,14 +102,14 @@ class WindowManager extends EventEmitter {
 
   private shiftPressed: boolean;
 
-  private tooltipStack: TooltipName[];
+  private currentTooltip: TooltipName;
 
   private constructor() {
     super();
     this.mousePos = { x: 0, y: 0 };
     this.mousedownPos = null;
     this.lastZIndex = 0;
-    this.tooltipStack = [];
+    this.currentTooltip = TooltipName.None;
     this.shiftPressed = false;
 
     // this might be slow, consider refactor
@@ -134,18 +146,17 @@ class WindowManager extends EventEmitter {
 
   // tooltip stuff
   pushTooltip(tooltip: TooltipName): void {
-    this.tooltipStack.push(tooltip);
-    this.emit(WindowManagerEvent.TooltipUpdated, this.getTooltip());
+    this.currentTooltip = tooltip;
+    this.emit(WindowManagerEvent.TooltipUpdated, this.currentTooltip);
   }
 
   popTooltip(): void {
-    this.tooltipStack.pop();
-    this.emit(WindowManagerEvent.TooltipUpdated, this.getTooltip());
+    this.currentTooltip = TooltipName.None;
+    this.emit(WindowManagerEvent.TooltipUpdated, this.currentTooltip);
   }
 
   getTooltip(): TooltipName {
-    if (this.tooltipStack.length === 0) return TooltipName.None;
-    return this.tooltipStack[this.tooltipStack.length - 1];
+    return this.currentTooltip;
   }
 
   // getters

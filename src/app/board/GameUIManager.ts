@@ -42,6 +42,7 @@ import TerminalEmitter from '../../utils/TerminalEmitter';
 import Viewport from './Viewport';
 import { PluginManager } from '../../plugins/PluginManager';
 import { biomeName } from '../../utils/ArtifactUtils';
+import { GameEntityMemoryStore } from '../../api/GameEntityMemoryStore';
 
 export enum GameUIManagerEvent {
   InitializedPlayer = 'InitializedPlayer',
@@ -70,7 +71,11 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
   private sendingCoords: WorldCoords | null = null;
   private isSending = false;
 
+  // Keep this in for now
+  // TODO: Remove later and just use minerLocations array
   private minerLocation: WorldCoords | null = null;
+  // A place to store extra miner locations to be drawn. Useful for plugins
+  private extraMinerLocations: WorldCoords[] = [];
   private isMining = true;
 
   private forcesSending: { [key: string]: number } = {}; // this is a percentage
@@ -546,6 +551,18 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
       ) {
         this.discoverBiome(planet);
       }
+      if (
+        isLocatable(planet) &&
+        GameEntityMemoryStore.isPlanetMineable(planet)
+      ) {
+        if (
+          !this.getUIDataItem(UIDataKey.foundArtifact) &&
+          this.getUIDataItem(UIDataKey.tutorialCompleted)
+        ) {
+          notifManager.foundArtifact(planet);
+          this.setUIDataItem(UIDataKey.foundArtifact, true);
+        }
+      }
     }
 
     if (this.spaceTypeFromPerlin(chunk.perlin) === SpaceType.DEEP_SPACE) {
@@ -569,6 +586,22 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
   getMinerLocation(): WorldCoords | null {
     return this.minerLocation;
+  }
+
+  setExtraMinerLocation(idx: number, coords: WorldCoords): void {
+    this.extraMinerLocations[idx] = coords;
+  }
+
+  removeExtraMinerLocation(idx: number): void {
+    this.extraMinerLocations.splice(idx, 1);
+  }
+
+  getAllMinerLocations(): WorldCoords[] {
+    if (this.minerLocation) {
+      return [this.minerLocation, ...this.extraMinerLocations];
+    } else {
+      return this.extraMinerLocations;
+    }
   }
 
   getMouseDownCoords(): WorldCoords | null {

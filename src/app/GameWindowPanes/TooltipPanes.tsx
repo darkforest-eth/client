@@ -314,8 +314,8 @@ export function PiratesTooltipPane() {
   return (
     <div>
       <Sub>
-        <Red>This planet has space pirates!</Red> Unoccupied planets must first
-        be defeated <br /> before they can be conquered.
+        <Red>This planet has space pirates!</Red> Move energy to unoccupied
+        planets to conquer them!
       </Sub>
     </div>
   );
@@ -444,6 +444,45 @@ function SpeedTooltipPane() {
   );
 }
 
+function ArtifactBuffPane() {
+  return (
+    <div>A powerful artifact on this planet is influencing this stat!</div>
+  );
+}
+
+function PluginsTooltipPane() {
+  return (
+    <div>
+      Manage plugins, which allow you to add functionality to the client.
+    </div>
+  );
+}
+
+function SettingsPane() {
+  return <div>Manage settings - export SKEY, manage maps, and more.</div>;
+}
+
+function YourArtifacts() {
+  return <div>View your artifacts.</div>;
+}
+
+const Deposit = () => (
+  <div>Deposit artifacts to this planet, conferring it buffs.</div>
+);
+
+const Hats = () => <div>Buy hats for this planet.</div>;
+
+const FindArtifact = () => (
+  <div>
+    <Green>This planet has a powerful artifact hidden somewhere!</Green> Maybe
+    you could find it...
+  </div>
+);
+
+const ArtifactStored = () => (
+  <div>This planet has a powerful artifact on it!</div>
+);
+
 export function TooltipContent({ name }: { name: TooltipName }) {
   if (name === TooltipName.SilverGrowth) return <SilverGrowthTooltipPane />;
   if (name === TooltipName.SilverCap) return <SilverCapTooltipPane />;
@@ -489,6 +528,14 @@ export function TooltipContent({ name }: { name: TooltipName }) {
     return <ModalTwitterBroadcastTooltipPane />;
   if (name === TooltipName.Defense) return <DefenseTooltipPane />;
   if (name === TooltipName.Speed) return <SpeedTooltipPane />;
+  if (name === TooltipName.ArtifactBuff) return <ArtifactBuffPane />;
+  if (name === TooltipName.ModalPlugins) return <PluginsTooltipPane />;
+  if (name === TooltipName.ModalSettings) return <SettingsPane />;
+  if (name === TooltipName.ModalYourArtifacts) return <YourArtifacts />;
+  if (name === TooltipName.ModalDeposit) return <Deposit />;
+  if (name === TooltipName.ModalHats) return <Hats />;
+  if (name === TooltipName.FindArtifact) return <FindArtifact />;
+  if (name === TooltipName.ArtifactStored) return <ArtifactStored />;
 
   return <></>;
 }

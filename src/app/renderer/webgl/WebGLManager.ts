@@ -103,7 +103,7 @@ export default class WebGLManager implements TextureGLManager {
   clear() {
     const gl = this.gl;
     gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-    gl.clearColor(0.5, 0.5, 0.5, 1.0);
+    gl.clearColor(0.3, 0.3, 0.35, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
   }
 }

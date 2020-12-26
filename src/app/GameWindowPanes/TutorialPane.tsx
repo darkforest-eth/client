@@ -112,7 +112,7 @@ function TutorialPaneContent({
         <PauseIcon /> button.
         <br />
         <br />
-        <White>Try pausing your miner now.</White>
+        <White>Try pausing your explorer now.</White>
       </div>
     );
   } else if (tutorialState === TutorialState.Sidebar) {

@@ -10,7 +10,13 @@ import {
 } from '../../_types/global/GlobalTypes';
 import { PlanetScape } from '../planetscape/PlanetScape';
 import styled from 'styled-components';
-import { Sub, Green } from '../../components/Text';
+import {
+  Sub,
+  Green,
+  Red,
+  ArtifactNameLink,
+  StyledLink,
+} from '../../components/Text';
 import {
   getFormatProp,
   getPlanetShortHash,
@@ -18,6 +24,7 @@ import {
   getPlanetRank,
   planetCanUpgrade,
   PlanetStatsInfo,
+  getUpgradeStat,
 } from '../../utils/Utils';
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
@@ -75,7 +82,7 @@ const PlanetscapeWrapper = styled.div`
   // stats
   & > div:last-child {
     margin-left: 0.5em;
-    width: 10em;
+    width: 11em;
 
     // stat row
     & > div {
@@ -106,7 +113,7 @@ const PlanetscapeWrapper = styled.div`
 `;
 
 const TimesTwo = () => (
-  <TooltipTrigger name={TooltipName.Bonus}>
+  <TooltipTrigger name={TooltipName.Bonus} style={{ marginRight: '0.5em' }}>
     <Green>x2</Green>
   </TooltipTrigger>
 );
@@ -136,7 +143,7 @@ const ButtonRow = styled(DetailsRow)`
 `;
 
 const StyledPlanetDetails = styled.div`
-  height: 6em;
+  height: 7em;
 `;
 
 const DetailsRowSingle = styled(DetailsRow)`
@@ -151,7 +158,7 @@ const DetailsRowSingle = styled(DetailsRow)`
 const StyledPlanetDetailsPane = styled.div`
   // height: calc(100vh - 8em);
   height: fit-content;
-  width: 31em;
+  width: 32em;
 
   & .margin-top {
     margin-top: 0.5em;
@@ -319,8 +326,24 @@ export function PlanetDetailsPane({
     let append = '';
     if (selected && isLocatable(selected)) {
       append = BiomeNames[selected.biome] + ' ';
+    } else if (selected && !isLocatable(selected)) {
+      return 'Planet (biome unknown)';
     }
     return append + 'Planet';
+  };
+
+  const ArtifactStat = ({ stat }: { stat: StatIdx }) => {
+    const artifactId = selectedStats?.heldArtifactId;
+    const artifact = artifactId && uiManager?.getArtifactWithId(artifactId);
+
+    const buff = artifact ? getUpgradeStat(artifact.upgrade, stat) - 100 : 0;
+
+    return (
+      <>
+        {buff > 0 && <Green>+{buff}%</Green>}
+        {buff < 0 && <Red>{buff}%</Red>}
+      </>
+    );
   };
 
   return (
@@ -350,10 +373,13 @@ export function PlanetDetailsPane({
             <div>
               <div>
                 <span>
-                  <TooltipTrigger name={TooltipName.Energy} needsShift>
+                  <TooltipTrigger name={TooltipName.Energy}>
                     <EnergyIcon />
                   </TooltipTrigger>
                   {bonus && bonus[StatIdx.EnergyCap] && <TimesTwo />}
+                  <TooltipTrigger name={TooltipName.ArtifactBuff}>
+                    <ArtifactStat stat={StatIdx.EnergyCap} />
+                  </TooltipTrigger>
                 </span>
                 <span>
                   {selected?.owner === emptyAddress && selected.energy > 0 ? (
@@ -371,7 +397,7 @@ export function PlanetDetailsPane({
               </div>
               <div>
                 <span>
-                  <TooltipTrigger name={TooltipName.Silver} needsShift>
+                  <TooltipTrigger name={TooltipName.Silver}>
                     <SilverIcon />
                   </TooltipTrigger>
                 </span>
@@ -383,38 +409,50 @@ export function PlanetDetailsPane({
 
               <div className='margin-top'>
                 <span>
-                  <TooltipTrigger name={TooltipName.EnergyGrowth} needsShift>
+                  <TooltipTrigger name={TooltipName.EnergyGrowth}>
                     <EnergyGrowthIcon />
                   </TooltipTrigger>
                   {bonus && bonus[StatIdx.EnergyGro] && <TimesTwo />}
+                  <TooltipTrigger name={TooltipName.ArtifactBuff}>
+                    <ArtifactStat stat={StatIdx.EnergyGro} />
+                  </TooltipTrigger>
                 </span>
                 <span>{getFormatProp(selected, 'energyGrowth')}</span>
               </div>
 
               <div>
                 <span>
-                  <TooltipTrigger name={TooltipName.Range} needsShift>
+                  <TooltipTrigger name={TooltipName.Range}>
                     <RangeIcon />
                   </TooltipTrigger>
                   {bonus && bonus[StatIdx.Range] && <TimesTwo />}
+                  <TooltipTrigger name={TooltipName.ArtifactBuff}>
+                    <ArtifactStat stat={StatIdx.Range} />
+                  </TooltipTrigger>
                 </span>
                 <span>{getFormatProp(selected, 'range')}</span>
               </div>
               <div>
                 <span>
-                  <TooltipTrigger name={TooltipName.Speed} needsShift>
+                  <TooltipTrigger name={TooltipName.Speed}>
                     <SpeedIcon />
                   </TooltipTrigger>
                   {bonus && bonus[StatIdx.Speed] && <TimesTwo />}
+                  <TooltipTrigger name={TooltipName.ArtifactBuff}>
+                    <ArtifactStat stat={StatIdx.Speed} />
+                  </TooltipTrigger>
                 </span>
                 <span>{getFormatProp(selected, 'speed')}</span>
               </div>
               <div>
                 <span>
-                  <TooltipTrigger name={TooltipName.Defense} needsShift>
+                  <TooltipTrigger name={TooltipName.Defense}>
                     <DefenseIcon />
                   </TooltipTrigger>
                   {bonus && bonus[StatIdx.Defense] && <TimesTwo />}
+                  <TooltipTrigger name={TooltipName.ArtifactBuff}>
+                    <ArtifactStat stat={StatIdx.Defense} />
+                  </TooltipTrigger>
                 </span>
                 <span>{getFormatProp(selected, 'defense')}</span>
               </div>
@@ -474,6 +512,19 @@ export function PlanetDetailsPane({
                 <span>{selected.silverGrowth.toFixed(2)}</span>
               </DetailsRowSingle>
             )}
+            <DetailsRowSingle>
+              <Sub>Artifact</Sub>
+              <span>
+                {!selectedStats?.heldArtifactId && (
+                  <StyledLink onClick={() => findArtifactHook[1](true)}>
+                    None
+                  </StyledLink>
+                )}
+                {selectedStats?.heldArtifactId && (
+                  <ArtifactNameLink id={selectedStats.heldArtifactId} />
+                )}
+              </span>
+            </DetailsRowSingle>
             {canUpgrade() && (
               <DetailsRowSingle>
                 <Sub>Silver to Next Rank</Sub>

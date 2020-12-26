@@ -30,6 +30,9 @@ export enum UIEmitterEvent {
 
   DepositArtifact = 'DepositArtifact',
   DepositToPlanet = 'DepositToPlanet',
+
+  SelectArtifact = 'SelectArtifact',
+  ShowArtifact = 'ShowArtifact',
 }
 
 class UIEmitter extends EventEmitter {

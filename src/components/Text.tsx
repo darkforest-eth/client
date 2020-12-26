@@ -1,6 +1,6 @@
 // TODO: improve this file with more usage of styled-components
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import { Link as ReactRouterLink } from 'react-router-dom';
 import styled from 'styled-components';
@@ -9,8 +9,17 @@ import _ from 'lodash';
 import { SubmittedTx } from '../_types/darkforest/api/ContractsAPITypes';
 import Viewport from '../app/board/Viewport';
 import { getPlanetName } from '../utils/ProcgenUtils';
-import { Planet, ExploredChunkData } from '../_types/global/GlobalTypes';
+import {
+  Planet,
+  ExploredChunkData,
+  ArtifactId,
+  Artifact,
+} from '../_types/global/GlobalTypes';
 import { BLOCK_EXPLORER_URL } from '../utils/constants';
+import GameUIManager from '../app/board/GameUIManager';
+import GameUIManagerContext from '../app/board/GameUIManagerContext';
+import { artifactName } from '../utils/ArtifactUtils';
+import UIEmitter, { UIEmitterEvent } from '../utils/UIEmitter';
 
 interface TextProps {
   children: React.ReactNode;
@@ -231,11 +240,31 @@ export function CenterPlanetLink({
 }) {
   return (
     <a>
-      <u onClick={() => Viewport.getInstance().centerPlanet(planet)}>
+      <u onClick={() => Viewport.getInstance().zoomPlanet(planet)}>
         {children}
       </u>
     </a>
   );
+}
+
+export const StyledLink = styled.span`
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+
+export function ArtifactNameLink({ id }: { id: ArtifactId }) {
+  const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
+  const artifact: Artifact | null = uiManager
+    ? uiManager.getArtifactWithId(id)
+    : null;
+
+  const click = () => {
+    UIEmitter.getInstance().emit(UIEmitterEvent.ShowArtifact, artifact);
+  };
+
+  return <StyledLink onClick={click}>{artifactName(artifact)}</StyledLink>;
 }
 
 export function PlanetNameLink({ planet }: { planet: Planet }) {

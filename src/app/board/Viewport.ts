@@ -1,14 +1,31 @@
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
-import { WorldCoords, CanvasCoords, distL2 } from '../../utils/Coordinates';
+import {
+  WorldCoords,
+  CanvasCoords,
+  distL2,
+  vecLen,
+  vecScale,
+} from '../../utils/Coordinates';
 import autoBind from 'auto-bind';
 import AbstractUIManager from './AbstractUIManager';
 import { ExploredChunkData, Planet } from '../../_types/global/GlobalTypes';
 import _ from 'lodash';
+import { UIDataKey } from '../../api/UIStateStorageManager';
 
 export const getDefaultScroll = (): number => {
   const isFirefox = navigator.userAgent.indexOf('Firefox') > 0;
   return isFirefox ? 1.005 : 1.0006;
 };
+
+type ViewportData = {
+  widthInWorldUnits: number;
+  centerWorldCoords: WorldCoords;
+};
+
+// multiplied by init velocity, since mousemove won't always happen at the same rate as rAF
+const BASE_VEL = 1;
+// if vel gets below this, kill it
+const VEL_THRESHOLD = 0.05;
 
 class Viewport {
   // The sole listener for events from Canvas
@@ -33,7 +50,16 @@ class Viewport {
 
   mousedownCoords: CanvasCoords | null = null;
 
+  // for momentum stuff
+  velocity: WorldCoords | null = null;
+  momentum = false;
+  shouldFling: boolean;
+
   mouseSensitivity: number;
+  intervalId: number;
+  frameRequestId: number;
+
+  private isSending = false;
 
   private constructor(
     gameUIManager: AbstractUIManager,
@@ -45,6 +71,8 @@ class Viewport {
   ) {
     this.gameUIManager = gameUIManager;
     this.gameUIManager.setDetailLevel(this.getDetailLevel());
+
+    this.shouldFling = gameUIManager.getUIDataItem(UIDataKey.shouldFling);
 
     // each of these is measured relative to the world coordinate system
     this.centerWorldCoords = centerWorldCoords;
@@ -67,6 +95,20 @@ class Viewport {
 
     this.isPanning = false;
     autoBind(this);
+
+    console.log('constructing viewport');
+
+    // fixes issue where viewport inits weirdly - TODO figure out why
+    this.setWorldWidth(this.widthInWorldUnits);
+    this.onScroll(0);
+  }
+
+  onSendInit() {
+    this.isSending = true;
+  }
+
+  onSendComplete() {
+    this.isSending = false;
   }
 
   get minWorldWidth(): number {
@@ -105,7 +147,13 @@ class Viewport {
         .removeListener(UIEmitterEvent.WindowResize, viewport.onWindowResize)
         .removeListener(UIEmitterEvent.CenterPlanet, viewport.centerPlanet)
         .removeListener(UIEmitterEvent.ZoomIn, viewport.zoomIn)
-        .removeListener(UIEmitterEvent.ZoomOut, viewport.zoomOut);
+        .removeListener(UIEmitterEvent.ZoomOut, viewport.zoomOut)
+        .removeAllListeners(UIEmitterEvent.SendInitiated)
+        .removeAllListeners(UIEmitterEvent.SendCancelled)
+        .removeAllListeners(UIEmitterEvent.SendCompleted)
+        .removeAllListeners(UIEmitterEvent.WindowResize);
+      clearInterval(viewport.intervalId);
+      window.cancelAnimationFrame(viewport.frameRequestId);
     }
     Viewport.instance = null;
   }
@@ -128,23 +176,73 @@ class Viewport {
       canvas
     );
 
-    // later - check if there's a saved viewport state too
-    viewport.zoomPlanet(gameUIManager.getHomePlanet());
+    // set starting position based on storage
+    const stored = viewport.getStorage();
+    if (!stored) {
+      viewport.zoomPlanet(gameUIManager.getHomePlanet());
+    } else {
+      console.log('loading viewport data', stored);
+      viewport.setData(stored);
+    }
 
     uiEmitter
       .on(UIEmitterEvent.CanvasMouseDown, viewport.onMouseDown)
-      .on(UIEmitterEvent.CanvasMouseMove, _.throttle(viewport.onMouseMove, 33))
+      .on(UIEmitterEvent.CanvasMouseMove, viewport.onMouseMove)
       .on(UIEmitterEvent.CanvasMouseUp, viewport.onMouseUp)
       .on(UIEmitterEvent.CanvasMouseOut, viewport.onMouseOut)
       .on(UIEmitterEvent.CanvasScroll, viewport.onScroll)
       .on(UIEmitterEvent.WindowResize, viewport.onWindowResize)
       .on(UIEmitterEvent.CenterPlanet, viewport.centerPlanet)
       .on(UIEmitterEvent.ZoomIn, viewport.zoomIn)
-      .on(UIEmitterEvent.ZoomOut, viewport.zoomOut);
+      .on(UIEmitterEvent.ZoomOut, viewport.zoomOut)
+      .on(UIEmitterEvent.SendInitiated, viewport.onSendInit)
+      .on(UIEmitterEvent.SendCancelled, viewport.onSendComplete)
+      .on(UIEmitterEvent.SendCompleted, viewport.onSendComplete)
+      .on(UIEmitterEvent.WindowResize, viewport.onResize);
+
+    viewport.intervalId = setInterval(viewport.setStorage, 5000);
+    viewport.loop();
 
     Viewport.instance = viewport;
 
     return viewport;
+  }
+
+  onResize() {
+    this.onScroll(0);
+  }
+
+  private getStorageKey(): string {
+    const acc = this.gameUIManager.getAccount();
+    const addr = this.gameUIManager.getContractAddress();
+    return `${acc}-${addr}-viewport`;
+  }
+
+  // returns this viewport's ViewportData, which will let us initialize it at the same zoom / pos
+  getStorage(): ViewportData | null {
+    const key = this.getStorageKey();
+    const stored = localStorage.getItem(key);
+    if (stored) return (JSON.parse(stored) as ViewportData) || null;
+    return null;
+  }
+
+  // stores this viewport's ViewportData into storage
+  setStorage() {
+    const key = this.getStorageKey();
+    const data: ViewportData = {
+      widthInWorldUnits: this.widthInWorldUnits,
+      centerWorldCoords: this.centerWorldCoords,
+    };
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  // set this viewport's zoom and pos to the given ViewportData
+  setData(data: ViewportData) {
+    // lets us prevent the program from crashing if this was called poorly
+    typeof data.widthInWorldUnits === 'number' &&
+      this.setWorldWidth(data.widthInWorldUnits);
+    typeof data.widthInWorldUnits === 'number' &&
+      this.centerCoords(data.centerWorldCoords);
   }
 
   centerPlanet(planet: Planet | null): void {
@@ -186,6 +284,8 @@ class Viewport {
 
   // Event handlers
   onMouseDown(canvasCoords: CanvasCoords) {
+    if (this.isSending) return;
+
     this.mousedownCoords = canvasCoords;
 
     const uiManager = this.gameUIManager;
@@ -197,6 +297,9 @@ class Viewport {
     }
     uiEmitter.emit(UIEmitterEvent.WorldMouseDown, worldCoords);
     this.mouseLastCoords = canvasCoords;
+
+    this.momentum = false;
+    this.velocity = null;
   }
 
   onMouseMove(canvasCoords: CanvasCoords) {
@@ -204,10 +307,13 @@ class Viewport {
 
     if (this.isPanning && this.mouseLastCoords) {
       // if panning, don't need to emit mouse move event
-      const dx = canvasCoords.x - this.mouseLastCoords.x;
-      const dy = canvasCoords.y - this.mouseLastCoords.y;
-      this.centerWorldCoords.x -= dx * this.scale();
-      this.centerWorldCoords.y -= -1 * dy * this.scale();
+      const dx = this.scale() * (this.mouseLastCoords.x - canvasCoords.x);
+      const dy = -this.scale() * (this.mouseLastCoords.y - canvasCoords.y);
+
+      this.velocity = { x: dx * BASE_VEL, y: dy * BASE_VEL };
+
+      this.centerWorldCoords.x += dx;
+      this.centerWorldCoords.y += dy;
     } else {
       const worldCoords = this.canvasToWorldCoords(canvasCoords);
       uiEmitter.emit(UIEmitterEvent.WorldMouseMove, worldCoords);
@@ -229,7 +335,44 @@ class Viewport {
     this.mousedownCoords = null;
     uiEmitter.emit(UIEmitterEvent.WorldMouseUp, worldCoords);
     this.isPanning = false;
+
+    this.momentum = true;
     this.mouseLastCoords = canvasCoords;
+
+    if (this.velocity && vecLen(this.velocity) < VEL_THRESHOLD) {
+      this.velocity = null;
+      this.momentum = false;
+    }
+  }
+
+  setFling(fling: boolean) {
+    this.shouldFling = fling;
+  }
+
+  loop() {
+    if (this.shouldFling) {
+      // do velocity
+      if (this.momentum && this.velocity) {
+        const velX = this.velocity.x;
+        const velY = this.velocity.y;
+
+        if (!isNaN(velX) && !isNaN(velY)) {
+          this.centerWorldCoords = {
+            x: this.centerWorldCoords.x + velX,
+            y: this.centerWorldCoords.y + velY,
+          };
+        }
+
+        this.velocity = vecScale(this.velocity, 0.98);
+
+        if (vecLen(this.velocity) < VEL_THRESHOLD) {
+          this.velocity = null;
+          this.momentum = false;
+        }
+      }
+    }
+
+    this.frameRequestId = window.requestAnimationFrame(this.loop);
   }
 
   onMouseOut() {

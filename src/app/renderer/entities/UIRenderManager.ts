@@ -159,5 +159,8 @@ export class UIRenderManager {
         TextAnchor.Bottom
       );
     }
+
+    // so that it draws below the planets
+    cR.flush();
   }
 }

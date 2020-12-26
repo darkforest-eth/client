@@ -44,10 +44,9 @@ export const Truncate = styled.div`
  */
 export const PluginElements = styled.div`
   color: white;
-  width: 100px;
+  width: 400px;
   min-height: 100px;
   max-height: 600px;
-  max-width: 60vw;  
   overflow: scroll;
 
   button {

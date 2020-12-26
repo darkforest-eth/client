@@ -14,10 +14,13 @@ export enum UIDataKey {
   foundPirates = 'foundPirates',
   foundSilver = 'foundSilver',
   foundComet = 'foundComet',
+  foundArtifact = 'foundArtifact',
 
   notifMove = 'notifMove',
   newPlayer = 'newPlayer',
   highPerf = 'highPerf',
+
+  shouldFling = 'shouldFling', // if viewport should use momentum
 
   /**
    * Whether or not `PluginHost` has added the default plugins to
@@ -46,6 +49,7 @@ export type UIData = {
   foundPirates: boolean;
   foundSilver: boolean;
   foundComet: boolean;
+  foundArtifact: boolean;
 
   notifMove: boolean;
   newPlayer: boolean;
@@ -53,6 +57,7 @@ export type UIData = {
 
   hasAddedReadme: boolean;
   hasAcceptedPluginRisk: boolean;
+  shouldFling: boolean;
 };
 
 export const defaultUserData: UIData = {
@@ -66,6 +71,7 @@ export const defaultUserData: UIData = {
   foundPirates: false,
   foundSilver: false,
   foundComet: false,
+  foundArtifact: false,
 
   notifMove: true,
   newPlayer: true,
@@ -73,6 +79,7 @@ export const defaultUserData: UIData = {
   highPerf: false,
   hasAddedReadme: false,
   hasAcceptedPluginRisk: false,
+  shouldFling: true,
 };
 
 export function useStoredUIState<T extends UIDataValue>(

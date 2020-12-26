@@ -7,16 +7,15 @@ import {
   Biome,
   BiomeNames,
   LocationId,
-  Planet,
   PlanetLevel,
   RarityNames,
 } from '../_types/global/GlobalTypes';
 import { emptyLocationId, emptyAddress } from './CheckedTypeUtils';
 import { artifactRandom, artifactRandomInt } from './ProcgenUtils';
 import tracery from './tracery';
-import { randomHex, titleCase } from './Utils';
+import { PlanetStatsInfo, randomHex, titleCase } from './Utils';
 
-export const hasUnconfirmedArtifactTx = (p: Planet | null): boolean =>
+export const hasUnconfirmedArtifactTx = (p: PlanetStatsInfo | null): boolean =>
   !!(
     p?.unconfirmedDepositArtifact ||
     p?.unconfirmedWithdrawArtifact ||
@@ -30,9 +29,9 @@ export const rarityName = (rarity: ArtifactRarity): string =>
 
 export const rarityFromArtifact = (artifact: Artifact): ArtifactRarity => {
   const l = artifact.planetLevel;
-  if (l <= 2) return ArtifactRarity.Common;
-  else if (l <= 4) return ArtifactRarity.Rare;
-  else if (l <= 6) return ArtifactRarity.Epic;
+  if (l <= 1) return ArtifactRarity.Common;
+  else if (l <= 3) return ArtifactRarity.Rare;
+  else if (l <= 5) return ArtifactRarity.Epic;
   else return ArtifactRarity.Legendary;
 };
 
@@ -43,7 +42,7 @@ export const levelFromRarity = (rarity: ArtifactRarity): PlanetLevel => {
   if (rarity === ArtifactRarity.Legendary) return 7;
   else if (rarity === ArtifactRarity.Epic) return 5;
   else if (rarity === ArtifactRarity.Rare) return 3;
-  else return 0;
+  else return 1;
 };
 
 export const artifactTitle = (artifact: Artifact | null): string => {

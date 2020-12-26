@@ -18,10 +18,17 @@ import {
   getPlanetRank,
 } from '../../utils/Utils';
 import dfstyles from '../../styles/dfstyles';
-import { getPlanetName, getPlanetCosmetic } from '../../utils/ProcgenUtils';
+import {
+  getPlanetName,
+  getPlanetCosmetic,
+  getPlanetClass,
+  rgbStr,
+} from '../../utils/ProcgenUtils';
 import _ from 'lodash';
 import { SelectedContext } from '../GameWindow';
 import { SilverIcon } from '../Icons';
+import { engineConsts } from '../renderer/utils/EngineConsts';
+import { RGBVec } from '../renderer/utils/EngineTypes';
 
 const DexWrapperSmall = styled.div`
   max-height: 12em;
@@ -169,7 +176,7 @@ const DexRow = styled.div`
     }
   }
 `;
-const _PlanetThumb = styled.div`
+const StyledPlanetThumb = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
@@ -195,23 +202,30 @@ const ColorIcon = styled.span<{ color: string }>`
 export function PlanetThumb({ planet }: { planet: Planet }) {
   const radius = 5 + 3 * planet.planetLevel;
   // const radius = 5 + 3 * PlanetLevel.MAX;
-  const { baseStr, bgStr } = getPlanetCosmetic(planet);
+  const { speed, range, defense } = engineConsts.colors.belt;
+  const { baseStr } = getPlanetCosmetic(planet);
+
+  const ringColor = (): string => {
+    const myClass = getPlanetClass(planet);
+    const myColor: RGBVec = [defense, range, speed][myClass];
+    return rgbStr(myColor);
+  };
 
   const ringW = radius * 1.5;
   const ringH = Math.max(2, ringW / 7);
 
   if (planet.planetResource === PlanetResource.SILVER) {
     return (
-      <_PlanetThumb>
+      <StyledPlanetThumb>
         <ColorIcon color={baseStr}>
           <SilverIcon />
         </ColorIcon>
-      </_PlanetThumb>
+      </StyledPlanetThumb>
     );
   }
 
   return (
-    <_PlanetThumb>
+    <StyledPlanetThumb>
       <span>
         <span
           style={{
@@ -228,11 +242,11 @@ export function PlanetThumb({ planet }: { planet: Planet }) {
             width: ringW + 'px',
             height: ringH + 'px',
             borderRadius: ringW * 2 + 'px',
-            background: getPlanetRank(planet) > 0 ? bgStr : 'none',
+            background: getPlanetRank(planet) > 0 ? ringColor() : 'none',
           }}
         ></span>
       </span>
-    </_PlanetThumb>
+    </StyledPlanetThumb>
   );
 }
 

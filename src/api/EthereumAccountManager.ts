@@ -33,7 +33,7 @@ class EthereumAccountManager extends EventEmitter {
     let url: string;
     const isProd = process.env.NODE_ENV === 'production';
     if (isProd) {
-      url = localStorage.getItem('XDAI_RPC_ENDPOINT') || XDAI_DEFAULT_URL;
+      url = localStorage.getItem('XDAI_RPC_ENDPOINT_v5') || XDAI_DEFAULT_URL;
     } else {
       url = 'http://localhost:8545';
     }
@@ -75,7 +75,7 @@ class EthereumAccountManager extends EventEmitter {
       } else {
         this.signer = null;
       }
-      localStorage.setItem('XDAI_RPC_ENDPOINT', this.rpcURL);
+      localStorage.setItem('XDAI_RPC_ENDPOINT_v5', this.rpcURL);
       this.emit('ChangedRPCEndpoint');
     } catch (e) {
       console.error(`error setting rpc endpoint: ${e}`);
@@ -184,18 +184,16 @@ class EthereumAccountManager extends EventEmitter {
       while (!receipt) {
         console.log(`[wait-tx] WAITING ON tx hash: ${txHash} tries ${tries}`);
 
-        receipt = await this.provider
-          .waitForTransaction(
-            txHash,
-            0 /* 0 means no confirmations necessary  */,
-            30 * 1000 /* timeout in ms */
-          )
-          .catch((e) => {
+        receipt = await Promise.race([
+          sleep(30 * 1000, null),
+          this.provider.waitForTransaction(txHash).catch((e) => {
             console.error(
               `[wait-tx] TIMED OUT tx hash: ${txHash} tries ${tries} error:`,
               e
             );
-          });
+            return null;
+          }),
+        ]);
 
         if (receipt) {
           console.log(`[wait-tx] FINISHED tx hash: ${txHash} tries ${tries}`);

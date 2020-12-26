@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
+  isLocatable,
   Planet,
   PlanetLevel,
   PlanetResource,
@@ -20,9 +21,11 @@ import {
   DefenseIcon,
   SpeedIcon,
   EnergyGrowthIcon,
+  ArtifactIcon,
 } from '../Icons';
 import { emptyAddress } from '../../utils/CheckedTypeUtils';
 import dfstyles from '../../styles/dfstyles';
+import { GameEntityMemoryStore } from '../../api/GameEntityMemoryStore';
 
 const StyledPlanetIcons = styled.div`
   position: absolute;
@@ -114,6 +117,18 @@ export function PlanetIcons({ planet }: { planet: Planet | null }) {
       {getPlanetName(planet) === 'Clown Town' && (
         <TooltipTrigger name={TooltipName.Clowntown}>
           <ClownIcon />
+        </TooltipTrigger>
+      )}
+      {isLocatable(planet) &&
+        GameEntityMemoryStore.isPlanetMineable(planet) &&
+        !planet.hasTriedFindingArtifact && (
+          <TooltipTrigger name={TooltipName.FindArtifact}>
+            <ArtifactIcon />
+          </TooltipTrigger>
+        )}
+      {planet.heldArtifactId && (
+        <TooltipTrigger name={TooltipName.ArtifactStored}>
+          <ArtifactIcon />
         </TooltipTrigger>
       )}
     </StyledPlanetIcons>

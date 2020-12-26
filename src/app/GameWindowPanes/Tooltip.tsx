@@ -34,18 +34,18 @@ const fadeShift = keyframes`
   }
 `;
 
-const animation = css`
+const _animation = css`
   animation: ${fadeShift} 1s ${dfstyles.game.styles.animProps};
 `;
 
-// background: ${(props) => props.anim ? dfstyles.colors.dfblue : 'none' };
+// ${(props) => (props.anim ? animation : 'animation: none;')}
 const StyledTooltipTrigger = styled.span<{
   anim: boolean;
   display?: DisplayType;
 }>`
   border-radius: 2px;
   transition: background 0.2s;
-  ${(props) => (props.anim ? animation : 'animation: none;')}
+  background: ${(props) => (props.anim ? dfstyles.colors.dfblue : 'none')};
 
   display: ${(props) => props.display || 'inline'};
 `;

@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 import { ModalPane, ModalHook, ModalName } from './ModalPane';
-import { Sub, White, Red, Green } from '../../components/Text';
+import { Sub, White } from '../../components/Text';
 import _ from 'lodash';
 import {
   Planet,
@@ -38,6 +38,7 @@ import {
   SelectedStatContext,
 } from '../GameWindow';
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
+import { UpgradePreview } from './UpgradePreview';
 
 const UpgradeDetailsWrapper = styled.div`
   min-width: 20em;
@@ -78,49 +79,6 @@ const SectionTitle = styled.div`
 const SectionPreview = styled.div`
   margin-top: ${SECTION_MARGIN};
 `;
-const StatRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-  &.statrow-mtop {
-    margin-top: 0.5em;
-  }
-
-  & > span {
-    margin-left: 0.2em;
-
-    &:nth-child(1) {
-      color: ${dfstyles.colors.subtext};
-      margin-left: 0;
-      width: 9em;
-    }
-    &:nth-child(2),
-    &:nth-child(4) {
-      text-align: center;
-      width: 6em;
-      flex-grow: 1;
-    }
-    &:nth-child(3) {
-      // arrow
-      text-align: center;
-      width: 1.5em;
-      & svg path {
-        fill: ${dfstyles.colors.subtext};
-      }
-    }
-    &:nth-child(5) {
-      width: 5em;
-      text-align: right;
-    }
-  }
-
-  &.upgrade-willupdate {
-    background: ${dfstyles.colors.backgroundlight};
-  }
-`;
-
 const SectionBuy = styled.div`
   margin-top: ${SECTION_MARGIN};
   display: flex;
@@ -276,70 +234,15 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
     if (isFullRank(selected) || selected.planetLevel === 0) setUpgrade(null);
   }, [selected]);
 
-  const getStat = (stat: string): number => {
-    if (!selected) return 0;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mySelected = selected as any;
-
-    if (stat === 'silverGrowth') return mySelected[stat] * 60;
-    else return mySelected[stat];
-  };
-  const stat = (stat: string): string => {
-    const num = getStat(stat);
-    if (num % 1.0 === 0) return num.toFixed(0);
-    else return num.toFixed(2);
-  };
-  const getStatFuture = (stat: string): number => {
-    if (!selected) return 0;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mySelected = selected as any;
-
-    if (!upgrade) return mySelected[stat];
-
-    let mult = 1;
-    if (stat === 'energyCap') {
-      mult = upgrade.energyCapMultiplier / 100;
-    } else if (stat === 'energyGrowth') {
-      mult = upgrade.energyGroMultiplier / 100;
-    } else if (stat === 'range') {
-      mult = upgrade.rangeMultiplier / 100;
-    } else if (stat === 'speed') {
-      mult = upgrade.speedMultiplier / 100;
-    } else if (stat === 'defense') {
-      mult = upgrade.defMultiplier / 100;
-    }
-
-    return getStat(stat) * mult;
-  };
-  const statFuture = (stat: string): string => {
-    const num = getStatFuture(stat);
-    if (num % 1.0 === 0) return num.toFixed(0);
-    else return num.toFixed(2);
-  };
-  const getStatDiff = (stat: string): number => {
-    return getStatFuture(stat) - getStat(stat);
-  };
-  const statDiff = (stat: string): React.ReactNode => {
-    const diff: number = getStatDiff(stat);
-    if (diff < 0) return <Red>{diff.toFixed(2)}</Red>;
-    else if (diff > 0) return <Green>+{diff.toFixed(2)}</Green>;
-    else return <Sub>0</Sub>;
-  };
-
-  const updateClass = (stat: string): string => {
-    if (getStat(stat) !== getStatFuture(stat)) return 'upgrade-willupdate';
-    return '';
-  };
-
   const getSilver = (): number => {
     if (!selectedStats) return 0;
-    return selectedStats.silver;
+    return Math.floor(selectedStats.silver);
   };
 
   const getSilverNeeded = (): number => {
     if (!selected || !uiManager) return 0;
     const totalLevel = selected.upgradeState.reduce((a, b) => a + b);
-    return (totalLevel + 1) * 0.2 * selected.silverCap;
+    return Math.floor((totalLevel + 1) * 0.2 * selected.silverCap);
   };
 
   const canUpgrade = (): boolean => {
@@ -355,28 +258,6 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
     if (!selected) return true;
     if (!selected.unconfirmedUpgrades) return false;
     return selected.unconfirmedUpgrades.length > 0;
-  };
-
-  const StatRowFilled = ({
-    title,
-    stat: myStat,
-    className,
-  }: {
-    title: string;
-    stat: string;
-    className?: string;
-  }) => {
-    return (
-      <StatRow className={[className, updateClass(myStat)].join(' ')}>
-        <span>{title}</span>
-        <span>{stat(myStat)}</span>
-        <span>
-          <RightarrowIcon />
-        </span>
-        <span>{statFuture(myStat)}</span>
-        <span>{statDiff(myStat)}</span>
-      </StatRow>
-    );
   };
 
   const doUpgrade = (_e: React.MouseEvent) => {
@@ -510,23 +391,7 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
           </SectionTitle>
 
           <SectionPreview>
-            <StatRowFilled stat='energyCap' title='Energy Cap' />
-            <StatRowFilled stat='energyGrowth' title='Energy Growth' />
-            <StatRowFilled
-              className='statrow-mtop'
-              title='Range'
-              stat='range'
-            />
-            <StatRowFilled
-              className='statrow-mtop'
-              title='Speed'
-              stat='speed'
-            />
-            <StatRowFilled
-              className='statrow-mtop'
-              title='Defense'
-              stat='defense'
-            />
+            <UpgradePreview upgrade={upgrade} planet={selected} />
           </SectionPreview>
 
           <SectionBuy>
@@ -534,8 +399,7 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
               <Sub>Silver Cost</Sub>
             </span>
             <span>
-              {Math.floor(getSilver())} <Sub>/</Sub>{' '}
-              {Math.ceil(getSilverNeeded())}
+              {getSilver()} <Sub>/</Sub> {getSilverNeeded()}
             </span>
             <span>
               <span

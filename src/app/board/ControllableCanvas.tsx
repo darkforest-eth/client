@@ -58,7 +58,6 @@ export default function ControllableCanvas() {
 
   const evtRef = canvasRef;
 
-  const uiEmitter: UIEmitter = UIEmitter.getInstance();
   const gameUIManager = useContext<GameUIManager | null>(GameUIManagerContext);
 
   const windowManager = WindowManager.getInstance();
@@ -78,13 +77,15 @@ export default function ControllableCanvas() {
   }, [windowManager]);
 
   const doResize = useCallback(() => {
+    const uiEmitter: UIEmitter = UIEmitter.getInstance();
     if (canvasRef.current) {
       setWidth(canvasRef.current.clientWidth);
       setHeight(canvasRef.current.clientHeight);
       uiEmitter.emit(UIEmitterEvent.WindowResize);
     }
-  }, [uiEmitter]);
+  }, [canvasRef]);
 
+  // TODO fix this
   useLayoutEffect(() => {
     if (canvasRef.current) doResize();
   }, [
@@ -99,6 +100,8 @@ export default function ControllableCanvas() {
 
   useEffect(() => {
     if (!gameUIManager) return;
+
+    const uiEmitter: UIEmitter = UIEmitter.getInstance();
 
     function onResize() {
       doResize();
@@ -139,12 +142,14 @@ export default function ControllableCanvas() {
       window.removeEventListener('resize', onResize);
       uiEmitter.removeListener(UIEmitterEvent.UIChange, doResize);
     };
-  }, [gameUIManager, uiEmitter, doResize, canvasRef, glRef, bufferRef, evtRef]);
+  }, [gameUIManager, doResize, canvasRef, glRef, bufferRef, evtRef]);
 
   // attach event listeners
   useEffect(() => {
     if (!evtRef.current) return;
     const canvas = evtRef.current;
+
+    const uiEmitter: UIEmitter = UIEmitter.getInstance();
 
     function onMouseEvent(
       emitEventName: UIEmitterEvent,
@@ -181,7 +186,7 @@ export default function ControllableCanvas() {
       canvas.removeEventListener('mouseup', onMouseUp);
       canvas.removeEventListener('mouseout', onMouseOut);
     };
-  }, [evtRef, uiEmitter]);
+  }, [evtRef]);
 
   return (
     <CanvasWrapper style={{ cursor: targeting ? 'crosshair' : undefined }}>

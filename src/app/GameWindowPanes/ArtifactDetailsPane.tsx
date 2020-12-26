@@ -17,6 +17,7 @@ import {
 } from '../../utils/ProcgenUtils';
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
 import { getUpgradeStat } from '../../utils/Utils';
+import { TooltipName } from '../../utils/WindowManager';
 import {
   Artifact,
   EthAddress,
@@ -29,6 +30,7 @@ import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
 import { StatIcon } from '../Icons';
 import { ModalHook, ModalPane } from './ModalPane';
+import { TooltipTrigger } from './Tooltip';
 
 const { text } = dfstyles.colors;
 const StyledArtifactPane = styled.div`
@@ -82,7 +84,9 @@ export function UpgradeStatInfo({
   const mult = getUpgradeStat(upgrade, stat);
   return (
     <div className='statrow'>
-      <StatIcon stat={stat} />
+      <TooltipTrigger name={TooltipName.Energy + stat}>
+        <StatIcon stat={stat} />
+      </TooltipTrigger>
       <span>
         {mult > 100 && <Green>+{mult - 100}%</Green>}
         {mult === 100 && <Sub>--</Sub>}
@@ -231,13 +235,24 @@ export function ArtifactDetailsPane({
     uiEmitter.emit(UIEmitterEvent.DepositArtifact, artifact);
   }, [artifact, uiEmitter]);
 
-  const [visible] = hook;
+  const [visible, setVisible] = hook;
 
   useEffect(() => {
     if (!visible) {
       setArtifact(null);
     }
   }, [visible, setArtifact]);
+
+  useEffect(() => {
+    const onShow = (a: Artifact | null) => {
+      setVisible(true);
+      setArtifact(a);
+    };
+    uiEmitter.addListener(UIEmitterEvent.ShowArtifact, onShow);
+    return () => {
+      uiEmitter.removeAllListeners(UIEmitterEvent.ShowArtifact);
+    };
+  }, [setVisible, setArtifact, uiEmitter]);
 
   return (
     <ModalPane hook={hook} title={'Artifact Details'}>

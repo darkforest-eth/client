@@ -8,6 +8,7 @@ import CanvasRenderer from '../CanvasRenderer';
 import { engineConsts } from '../utils/EngineConsts';
 import { RenderZIndex, TextAlign, TextAnchor } from '../utils/EngineTypes';
 import { getOwnerColorVec } from '../../../utils/ProcgenUtils';
+import Viewport from '../../board/Viewport';
 
 const { white, gold } = engineConsts.colors;
 
@@ -82,15 +83,27 @@ export default class VoyageRenderManager {
       const timeLeftSeconds = Math.floor(voyage.arrivalTime - now);
       const voyageColor = getVoyageColor(fromPlanet, toPlanet, myMove);
 
-      cR.queueCircleWorldCenterOnly(shipsLocation, 4, [...voyageColor, 255]);
+      // alpha calculation
+      const viewport = Viewport.getInstance();
+      const dx = fromLoc.coords.x - toLoc.coords.x;
+      const dy = fromLoc.coords.y - toLoc.coords.y;
+      const distWorld = Math.sqrt(dx ** 2 + dy ** 2);
+      const dist = viewport.worldToCanvasDist(distWorld);
+      let alpha = 255;
+      if (dist < 300) {
+        alpha = (dist / 300) * 255;
+      }
 
+      cR.queueCircleWorldCenterOnly(shipsLocation, 4, [...voyageColor, alpha]);
+
+      // queue text
       tR.queueTextWorld(
         `${timeLeftSeconds.toString()}s`,
         {
           x: shipsLocationX,
           y: shipsLocationY - 0.5,
         },
-        [...white, 255],
+        [...white, alpha],
         0,
         TextAlign.Center,
         TextAnchor.Top
@@ -101,7 +114,7 @@ export default class VoyageRenderManager {
           x: shipsLocationX,
           y: shipsLocationY + 0.5,
         },
-        [...white, 255],
+        [...white, alpha],
         -0,
         TextAlign.Center,
         TextAnchor.Bottom
@@ -113,7 +126,7 @@ export default class VoyageRenderManager {
             x: shipsLocationX,
             y: shipsLocationY + 0.5,
           },
-          [...gold, 255],
+          [...gold, alpha],
           -1,
           TextAlign.Center,
           TextAnchor.Bottom

@@ -36,6 +36,7 @@ import {
 import { ellipsStrEnd, getPlanetName } from '../../utils/ProcgenUtils';
 import { artifactName } from '../../utils/ArtifactUtils';
 import { Sub } from '../../components/Text';
+import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
 
 const { text, subtext, backgroundlight } = dfstyles.colors;
 
@@ -223,7 +224,7 @@ export function PlayerArtifactsPane({
 } & ArtifactHooks) {
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
   const [renderer, setRenderer] = useState<ArtifactRenderer | null>(null);
-  const [isDex, setIsDex] = useState<boolean>(false);
+  const [isDex, setIsDex] = useState<boolean>(true);
 
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
 
@@ -261,7 +262,7 @@ export function PlayerArtifactsPane({
     };
   }, [canvasRef]);
 
-  const [visible] = hook;
+  const [visible, setVisible] = hook;
 
   // sync values
   useEffect(() => {
@@ -299,6 +300,18 @@ export function PlayerArtifactsPane({
     renderer?.setProjectionMatrix();
   }, [isDex, renderer]);
 
+  useEffect(() => {
+    const uiEmitter = UIEmitter.getInstance();
+    const onSelect = () => {
+      setVisible(true);
+      setIsDex(false);
+    };
+    uiEmitter.addListener(UIEmitterEvent.SelectArtifact, onSelect);
+    return () => {
+      uiEmitter.removeAllListeners(UIEmitterEvent.SelectArtifact);
+    };
+  }, [setVisible, setIsDex]);
+
   return (
     <ModalPane
       title={'Artifacts'}
@@ -307,12 +320,21 @@ export function PlayerArtifactsPane({
       tick={tick}
     >
       <div>
-        <Chooser active={!isDex} onClick={() => setIsDex(false)}>
-          My Artifacts
-        </Chooser>
         <Chooser active={isDex} onClick={() => setIsDex(true)}>
           Artifact Dex
         </Chooser>
+        <Chooser active={!isDex} onClick={() => setIsDex(false)}>
+          My Artifacts
+        </Chooser>
+      </div>
+      <div>
+        {artifacts.length === 0 && (
+          <p>
+            <br />
+            You have no artifacts! Artifacts can be found on planets. Maybe you
+            could use a plugin to help...
+          </p>
+        )}
       </div>
       <ArtifactsHeader>
         {isDex &&
@@ -349,25 +371,16 @@ export function PlayerArtifactsPane({
           })}
 
         {!isDex && (
-          <>
-            {artifacts.length > 0 ? (
-              <ArtifactList onScroll={doScroll} ref={scrollRef}>
-                {artifacts.map((a, i) => (
-                  <ArtifactRow
-                    artifactDetailsHook={artifactDetailsHook}
-                    selectedArtifactHook={selectedArtifactHook}
-                    artifact={a}
-                    key={i}
-                  />
-                ))}
-              </ArtifactList>
-            ) : (
-              <p>
-                You have no artifacts! Artifacts can be found on planets. Maybe
-                you could use a plugin to help...
-              </p>
-            )}
-          </>
+          <ArtifactList onScroll={doScroll} ref={scrollRef}>
+            {artifacts.map((a, i) => (
+              <ArtifactRow
+                artifactDetailsHook={artifactDetailsHook}
+                selectedArtifactHook={selectedArtifactHook}
+                artifact={a}
+                key={i}
+              />
+            ))}
+          </ArtifactList>
         )}
 
         <canvas ref={canvasRef} width={canvasW} height={canvasH}></canvas>

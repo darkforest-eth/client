@@ -69,6 +69,7 @@ const LeaderboardWrapper = styled.div`
   & a {
     &:hover {
       text-decoration: underline;
+      cursor: pointer;
       color: ${dfstyles.colors.subtext};
     }
   }
@@ -192,7 +193,11 @@ export function LeaderboardPane({ hook }: { hook: ModalHook }) {
             </span>
             <span>
               {entry.twitter ? (
-                <a href={`http://twitter.com/${entry.twitter}`}>
+                <a
+                  onClick={() =>
+                    window.open(`http://twitter.com/${entry.twitter}`)
+                  }
+                >
                   @{entry.twitter}
                 </a>
               ) : (

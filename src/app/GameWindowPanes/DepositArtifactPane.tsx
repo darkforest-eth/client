@@ -2,22 +2,25 @@ import React, { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Sub } from '../../components/Text';
+import dfstyles from '../../styles/dfstyles';
 import {
   artifactName,
   hasUnconfirmedArtifactTx,
 } from '../../utils/ArtifactUtils';
 import { getPlanetName } from '../../utils/ProcgenUtils';
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
+import { PlanetStatsInfo } from '../../utils/Utils';
 import { Artifact, Planet } from '../../_types/global/GlobalTypes';
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
-import { ContextMenuType, SelectedContext } from '../GameWindow';
+import { ContextMenuType, SelectedStatContext } from '../GameWindow';
 import { Btn } from '../GameWindowComponents/GameWindowComponents';
 import { ModalHook, ModalName, ModalPane } from './ModalPane';
+import { UpgradePreview } from './UpgradePreview';
 
 const StyledDepositPane = styled.div`
   height: fit-content;
-  width: 24em;
+  width: 32em;
 
   display: flex;
   flex-direction: column;
@@ -32,10 +35,18 @@ const StyledDepositPane = styled.div`
     flex-direction: row;
     justify-content: space-between;
   }
+
+  a {
+    color: ${dfstyles.colors.subtext};
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
 `;
 
 export function DepositArtifactPane({ hook }: { hook: ModalHook }) {
-  const selected = useContext<Planet | null>(SelectedContext);
+  const selectedStats = useContext<PlanetStatsInfo | null>(SelectedStatContext);
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
 
   const uiEmitter = UIEmitter.getInstance();
@@ -43,14 +54,14 @@ export function DepositArtifactPane({ hook }: { hook: ModalHook }) {
   const [artifact, setArtifact] = useState<Artifact | null>(null);
   const [planet, setPlanet] = useState<Planet | null>(null);
 
-  const hasUnconfirmed = () => hasUnconfirmedArtifactTx(selected);
+  const hasUnconfirmed = () => hasUnconfirmedArtifactTx(selectedStats);
 
   function canDeposit(): boolean {
     if (
       artifact &&
-      planet &&
+      selectedStats &&
       !hasUnconfirmed() &&
-      !planet.heldArtifactId &&
+      !selectedStats.heldArtifactId &&
       !artifact.onPlanetId
     )
       return true;
@@ -99,6 +110,10 @@ export function DepositArtifactPane({ hook }: { hook: ModalHook }) {
     };
   });
 
+  const selectArtifact = () => {
+    uiEmitter.emit(UIEmitterEvent.SelectArtifact);
+  };
+
   return (
     <ModalPane hook={hook} title={'Deposit Artifact'} name={ModalName.Deposit}>
       <StyledDepositPane>
@@ -112,7 +127,17 @@ export function DepositArtifactPane({ hook }: { hook: ModalHook }) {
         </div>
         <div>
           <Sub>Selected Artifact</Sub>
-          <span>{artifact ? artifactName(artifact) : 'none'}</span>
+          {artifact ? (
+            <span>{artifactName(artifact)}</span>
+          ) : (
+            <a onClick={selectArtifact}>Select Artifact</a>
+          )}
+        </div>
+        <div>
+          <UpgradePreview
+            planet={planet}
+            upgrade={artifact ? artifact.upgrade : null}
+          />
         </div>
         <div>
           <Btn
@@ -120,7 +145,9 @@ export function DepositArtifactPane({ hook }: { hook: ModalHook }) {
             onClick={deposit}
             className={!canDeposit() ? 'btn-disabled' : ''}
           >
-            Deposit
+            {selectedStats?.unconfirmedDepositArtifact
+              ? 'Depositing...'
+              : 'Deposit'}
           </Btn>
         </div>
       </StyledDepositPane>

@@ -264,14 +264,14 @@ export function PlanetContextPane({ hook }: { hook: ModalHook }) {
       ? uiManager.getForcesSending(selected.locationId)
       : DEFAULT_ENERGY_PERCENT
   );
-  const [energyPercent, _setEnergyPercent] = energyHook;
+  const [energyPercent, setEnergyPercent] = energyHook;
 
   const silverHook = useState<number>(
     selected && uiManager
       ? uiManager.getForcesSending(selected.locationId)
       : DEFAULT_SILVER_PERCENT
   );
-  const [silverPercent, _setSilverPercent] = silverHook;
+  const [silverPercent, setSilverPercent] = silverHook;
 
   const getEnergy = () =>
     selectedStats
@@ -283,20 +283,18 @@ export function PlanetContextPane({ hook }: { hook: ModalHook }) {
       ? formatNumber((silverPercent / 100) * selectedStats.silver)
       : '0';
 
-  /*
   useEffect(() => {
-    console.log('updating percent values');
-    console.log(selected);
     if (!uiManager) return;
+
     if (!selected) {
-      setPopPercent(DEFAULT_POP_PERCENT);
+      setEnergyPercent(DEFAULT_ENERGY_PERCENT);
       setSilverPercent(DEFAULT_SILVER_PERCENT);
     } else {
-      setPopPercent(uiManager.getForcesSending(selected.locationId));
-      setSilverPercent(uiManager.getSilverSending(selected.locationId));
+      // setEnergyPercent(uiManager.getForcesSending(selected.locationId));
+      setEnergyPercent(DEFAULT_ENERGY_PERCENT);
+      setSilverPercent(DEFAULT_SILVER_PERCENT);
     }
-  }, [selected, uiManager, setPopPercent, setSilverPercent]);
-  */
+  }, [selected, uiManager, setEnergyPercent, setSilverPercent]);
 
   useEffect(() => {
     if (!selected || !uiManager) return;

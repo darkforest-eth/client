@@ -22,7 +22,7 @@ import {
   artifactName,
   hasUnconfirmedArtifactTx,
 } from '../../utils/ArtifactUtils';
-import { PlanetStatsInfo } from '../../utils/Utils';
+import { getTimeZone, PlanetStatsInfo } from '../../utils/Utils';
 import dfstyles from '../../styles/dfstyles';
 import { Sub } from '../../components/Text';
 import { GameEntityMemoryStore } from '../../api/GameEntityMemoryStore';
@@ -34,18 +34,22 @@ const StyledFindArtifactPane = styled.div`
   display: flex;
   flex-direction: column;
 
-  p,
-  div {
+  & > p,
+  & > div {
     padding: 0.5em 0;
     &.borderTop {
       border-top: 1px solid ${dfstyles.colors.subtext};
     }
   }
 
-  & > div {
+  & div {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+
+    &.wrapper {
+      flex-direction: column;
+    }
   }
 `;
 const StyleArtifactLink = styled.div`
@@ -98,11 +102,11 @@ export function FindArtifactPane({
   const selected = useContext<Planet | null>(SelectedContext);
   const selectedStats = useContext<PlanetStatsInfo | null>(SelectedStatContext);
 
-  const hasUnconfirmed = () => hasUnconfirmedArtifactTx(selected);
+  const hasUnconfirmed = () => hasUnconfirmedArtifactTx(selectedStats);
 
   const popPercent = (): number => {
     if (!selectedStats || !selected) return 0;
-    return 100 * (selectedStats.energy / selected.energyCap);
+    return Math.max(0, 100 * (selectedStats.energy / selected.energyCap) - 2);
   };
 
   const canFind = (): boolean => {
@@ -118,19 +122,57 @@ export function FindArtifactPane({
     }
   }
 
+  function hasArtifact(): boolean {
+    return !!(
+      selectedStats &&
+      selectedStats.heldArtifactId &&
+      selectedStats.artifactLockedTimestamp
+    );
+  }
+
   function canWithdraw(): boolean {
     if (hasUnconfirmed()) {
       return false;
     }
     if (
-      selected &&
-      selected.heldArtifactId &&
-      selected.artifactLockedTimestamp &&
-      selected.artifactLockedTimestamp < Date.now() / 1000 - 12 * 60 * 60
+      selectedStats &&
+      selectedStats.heldArtifactId &&
+      selectedStats.artifactLockedTimestamp &&
+      selectedStats.artifactLockedTimestamp < Date.now() / 1000 - 12 * 60 * 60
     )
       return true;
 
     return false;
+  }
+
+  function getWithdrawTime(): string {
+    if (
+      !selectedStats ||
+      !selectedStats.heldArtifactId ||
+      !selectedStats.artifactLockedTimestamp
+    )
+      return 'never';
+
+    const date = new Date(
+      1000 * (selectedStats.artifactLockedTimestamp + 12 * 60 * 60)
+    );
+
+    return (
+      date.toLocaleDateString() +
+      ' ' +
+      date.toLocaleTimeString() +
+      ' ' +
+      getTimeZone()
+    );
+  }
+
+  function getMinutes(): number {
+    const timestamp =
+      selectedStats && selectedStats.artifactLockedTimestamp
+        ? selectedStats.artifactLockedTimestamp
+        : 0;
+    const seconds = timestamp + 12 * 60 * 60 - Date.now() / 1000;
+    return Math.max(Math.floor(seconds / 60), 0);
   }
 
   function withdrawArtifact() {
@@ -177,9 +219,7 @@ export function FindArtifactPane({
           a planet locks it up for 12 hours.
         </p>
         <div>
-          <span>
-            <Sub>Current Artifact</Sub>
-          </span>
+          <Sub>Current Artifact</Sub>
           <span>
             {selectedStats?.heldArtifactId ? (
               <ArtifactLink
@@ -188,35 +228,62 @@ export function FindArtifactPane({
                 detailsHook={artifactDetailsHook}
               />
             ) : (
-              'none'
+              <Sub>No Artifact</Sub>
             )}
           </span>
         </div>
-        <div>
-          <span></span>
-          <Btn
-            onClick={withdrawArtifact}
-            className={!canWithdraw() ? 'btn-disabled' : ''}
-          >
-            Withdraw Artifact
-          </Btn>
-        </div>
-        {isMineable() && (
+        {selected && uiManager?.isOwnedByMe(selected) && hasArtifact() && (
+          <div className='wrapper'>
+            <div>
+              <Sub>Unlocked at {getWithdrawTime()}</Sub>
+              <span></span>
+            </div>
+            <div>
+              <Sub>Minutes remaining: {getMinutes()}</Sub>
+              {selectedStats?.unconfirmedWithdrawArtifact ? (
+                <Sub>Withdrawing...</Sub>
+              ) : (
+                <Btn
+                  onClick={withdrawArtifact}
+                  className={!canWithdraw() ? 'btn-disabled' : ''}
+                >
+                  Withdraw Artifact
+                </Btn>
+              )}
+            </div>
+          </div>
+        )}
+        {isMineable() && selected && uiManager?.isOwnedByMe(selected) && (
           <>
             <p className='borderTop'>
               You can find an artifact on this planet! You need 95% energy in
               order to explore a planet.
             </p>
             <div>
-              <span>
-                {Math.round(popPercent())}% <Sub>/</Sub> 95%
-              </span>
-              <Btn
-                onClick={findArtifact}
-                className={!canFind() ? 'btn-disabled' : ''}
-              >
-                Find Artifact
-              </Btn>
+              <span></span>
+              {canFind() && (
+                <Btn
+                  onClick={findArtifact}
+                  className={!canFind() ? 'btn-disabled' : ''}
+                >
+                  Find Artifact
+                </Btn>
+              )}
+              {!canFind() && (
+                <span>
+                  {selectedStats?.hasTriedFindingArtifact ? (
+                    <Sub>Artifact found!</Sub>
+                  ) : selectedStats?.unconfirmedFindArtifact ? (
+                    <>
+                      <Sub>Finding artifact...</Sub>
+                    </>
+                  ) : (
+                    <>
+                      {Math.floor(popPercent())}% <Sub>/</Sub> 95%
+                    </>
+                  )}
+                </span>
+              )}
             </div>
           </>
         )}

@@ -22,8 +22,11 @@ import _ from 'lodash';
 import TerminalEmitter from './TerminalEmitter';
 import {
   UnconfirmedBuyHat,
+  UnconfirmedDepositArtifact,
+  UnconfirmedFindArtifact,
   UnconfirmedMove,
   UnconfirmedUpgrade,
+  UnconfirmedWithdrawArtifact,
 } from '../_types/darkforest/api/ContractsAPITypes';
 import mimcHash from '../miner/mimc';
 import perlin from '../miner/perlin';
@@ -52,6 +55,12 @@ export const hexifyBigIntNestedArray = (
   });
 };
 
+export const getTimeZone = (): string => {
+  const off = -new Date().getTimezoneOffset() / 60;
+  if (off < 0) return 'UTC' + off;
+  else return 'UTC+' + off;
+};
+
 // these are the things we care about refreshing on a loop
 export type PlanetStatsInfo = {
   energy: number;
@@ -62,6 +71,10 @@ export type PlanetStatsInfo = {
   unconfirmedDepartures: UnconfirmedMove[];
   unconfirmedUpgrades: UnconfirmedUpgrade[];
   unconfirmedBuyhats: UnconfirmedBuyHat[];
+  unconfirmedFindArtifact?: UnconfirmedFindArtifact;
+  unconfirmedDepositArtifact?: UnconfirmedDepositArtifact;
+  unconfirmedWithdrawArtifact?: UnconfirmedWithdrawArtifact;
+  artifactLockedTimestamp?: number;
   heldArtifactId: ArtifactId | undefined;
 };
 
@@ -104,6 +117,10 @@ export const copyPlanetStats = (
       unconfirmedDepartures: planet.unconfirmedDepartures,
       unconfirmedUpgrades: planet.unconfirmedUpgrades,
       unconfirmedBuyhats: planet.unconfirmedBuyHats,
+      unconfirmedFindArtifact: planet.unconfirmedFindArtifact,
+      unconfirmedDepositArtifact: planet.unconfirmedDepositArtifact,
+      unconfirmedWithdrawArtifact: planet.unconfirmedWithdrawArtifact,
+      artifactLockedTimestamp: planet.artifactLockedTimestamp,
       heldArtifactId: planet.heldArtifactId,
     };
   }
@@ -276,8 +293,10 @@ export const hasOwner = (planet: Planet) => {
   return planet.owner !== emptyAddress;
 };
 
-export function sleep(timeout: number): Promise<void> {
-  return new Promise<void>((resolve) => setTimeout(resolve, timeout));
+export function sleep<T>(timeout: number, returns?: T): Promise<T> {
+  return new Promise<T>((resolve) =>
+    setTimeout(() => resolve(returns as T), timeout)
+  );
 }
 
 // this is slow, do not call in i.e. render/draw loop

@@ -45,6 +45,8 @@ export default interface AbstractUIManager {
   getHoveringOverPlanet(): Planet | null;
   getHoveringOverCoords(): WorldCoords | null;
 
+  setExtraMinerLocation(index: number, coords: WorldCoords): void;
+  removeExtraMinerLocation(index: number): void;
   setMiningPattern(pattern: MiningPattern): void;
   getMiningPattern(): MiningPattern | null;
   getForcesSending(planetId: LocationId): number;

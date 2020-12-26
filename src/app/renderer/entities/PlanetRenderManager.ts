@@ -133,10 +133,10 @@ export default class PlanetRenderManager {
       if (artifact) {
         tR.queueIconWorld(artifact, iconLoc, radius, 48);
       }
-    } else if (mineable) {
+    } else if (mineable && !planet.hasTriedFindingArtifact) {
       const viewport = Viewport.getInstance();
       const screenRadius = viewport.worldToCanvasDist(radius);
-      if (screenRadius > 40) cM.drawArtifactIcon(iconLoc);
+      if (screenRadius > 15) cM.drawArtifactIcon(iconLoc);
     }
   }
 
@@ -148,10 +148,10 @@ export default class PlanetRenderManager {
   ) {
     const { textRenderer: tR } = this.renderer;
     // now draw silver
-    const silver = (planet ? Math.ceil(planet.silver) : 0).toString();
+    const silver = planet ? Math.ceil(planet.silver) : 0;
     if (planet.silverGrowth > 0 || planet.silver > 0) {
       tR.queueTextWorld(
-        silver,
+        formatNumber(silver),
         { x: center.x, y: center.y + 1.1 * radius + 0.75 },
         [...gold, alpha],
         0,
@@ -335,7 +335,7 @@ export default class PlanetRenderManager {
 
     // construct base energy string
     let energyString = energy <= 0 ? '' : formatNumber(energy);
-    if (lockedEnergy > 0) energyString += ` (-${Math.floor(lockedEnergy)})`;
+    if (lockedEnergy > 0) energyString += ` (-${formatNumber(lockedEnergy)})`;
 
     const playerColor = hasOwner(planet) ? getOwnerColorVec(planet) : barbs;
     const colorSolid = uiManager.isOwnedByMe(planet) ? white : playerColor;
@@ -362,9 +362,9 @@ export default class PlanetRenderManager {
     if (moveHereInProgress && myAtk && toPlanet) {
       let atkString = '';
       if (uiManager.isOwnedByMe(planet) || planet.energy === 0) {
-        atkString += ` (+${Math.floor(myAtk)})`;
+        atkString += ` (+${formatNumber(myAtk)})`;
       } else {
-        atkString += ` (-${Math.floor((myAtk * 100) / toPlanet.defense)})`;
+        atkString += ` (-${formatNumber((myAtk * 100) / toPlanet.defense)})`;
       }
 
       tR.queueTextWorld(atkString, textLoc, color, 1);

@@ -192,7 +192,7 @@ export default class CanvasManager {
     this.ctx.fillText(text, x, y);
   }
 
-  drawArtifactIcon(glassLoc: WorldCoords) {
+  drawArtifactIcon(glassLoc: WorldCoords, color = 'white') {
     const { ctx } = this;
 
     const viewport = Viewport.getInstance();
@@ -207,7 +207,7 @@ export default class CanvasManager {
     );
     ctx.translate(-256, -256);
 
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = color;
     ctx.fill(path);
 
     ctx.restore();
@@ -217,24 +217,29 @@ export default class CanvasManager {
     const { gameUIManager } = this.renderer;
     const { ctx } = this;
 
-    const minerLoc = gameUIManager.getMinerLocation();
-    if (minerLoc === null) return;
+    const minerLocs = gameUIManager.getAllMinerLocations();
+    if (minerLocs.length === 0) return;
 
     const viewport = Viewport.getInstance();
-    const loc = viewport.worldToCanvasCoords(minerLoc);
+    for (const minerLoc of minerLocs) {
+      // Somehow a miner can end up undefined at this point
+      if (!minerLoc) continue;
 
-    ctx.save();
-    ctx.translate(loc.x, loc.y);
-    ctx.scale(1 / 16, 1 / 16);
+      const loc = viewport.worldToCanvasCoords(minerLoc);
 
-    const path = new Path2D(
-      'M512 224h-50.462c-13.82-89.12-84.418-159.718-173.538-173.538v-50.462h-64v50.462c-89.12 13.82-159.718 84.418-173.538 173.538h-50.462v64h50.462c13.82 89.12 84.418 159.718 173.538 173.538v50.462h64v-50.462c89.12-13.82 159.718-84.418 173.538-173.538h50.462v-64zM396.411 224h-49.881c-9.642-27.275-31.255-48.889-58.53-58.53v-49.881c53.757 12.245 96.166 54.655 108.411 108.411zM256 288c-17.673 0-32-14.327-32-32s14.327-32 32-32c17.673 0 32 14.327 32 32s-14.327 32-32 32zM224 115.589v49.881c-27.275 9.641-48.889 31.255-58.53 58.53h-49.881c12.245-53.756 54.655-96.166 108.411-108.411zM115.589 288h49.881c9.641 27.275 31.255 48.889 58.53 58.53v49.881c-53.756-12.245-96.166-54.654-108.411-108.411zM288 396.411v-49.881c27.275-9.642 48.889-31.255 58.53-58.53h49.881c-12.245 53.757-54.654 96.166-108.411 108.411z'
-    );
-    ctx.translate(-256, -256);
+      ctx.save();
+      ctx.translate(loc.x, loc.y);
+      ctx.scale(1 / 16, 1 / 16);
 
-    ctx.fillStyle = 'white';
-    ctx.fill(path);
+      const path = new Path2D(
+        'M512 224h-50.462c-13.82-89.12-84.418-159.718-173.538-173.538v-50.462h-64v50.462c-89.12 13.82-159.718 84.418-173.538 173.538h-50.462v64h50.462c13.82 89.12 84.418 159.718 173.538 173.538v50.462h64v-50.462c89.12-13.82 159.718-84.418 173.538-173.538h50.462v-64zM396.411 224h-49.881c-9.642-27.275-31.255-48.889-58.53-58.53v-49.881c53.757 12.245 96.166 54.655 108.411 108.411zM256 288c-17.673 0-32-14.327-32-32s14.327-32 32-32c17.673 0 32 14.327 32 32s-14.327 32-32 32zM224 115.589v49.881c-27.275 9.641-48.889 31.255-58.53 58.53h-49.881c12.245-53.756 54.655-96.166 108.411-108.411zM115.589 288h49.881c9.641 27.275 31.255 48.889 58.53 58.53v49.881c-53.756-12.245-96.166-54.654-108.411-108.411zM288 396.411v-49.881c27.275-9.642 48.889-31.255 58.53-58.53h49.881c-12.245 53.757-54.654 96.166-108.411 108.411z'
+      );
+      ctx.translate(-256, -256);
 
-    ctx.restore();
+      ctx.fillStyle = 'white';
+      ctx.fill(path);
+
+      ctx.restore();
+    }
   }
 }

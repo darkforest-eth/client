@@ -261,10 +261,10 @@ const fragSrc = glsl`
     vec4 cImage = myMatrix * cPre;
     vec3 cIn3 = cImage.xyz / 1.2;
     cIn3.y = cIn3.y * 5.0;
-    vec4 cIn = vec4(cIn3, noiseW);
 
-    float cn1 = snoise(cIn);
-    float cn2 = snoise(cIn * 2.0) * 0.5;
+    float w = ${v.seed} + noiseW /*+ ${u.time}*/;
+    float cn1 = snoise(vec4(cIn3, w));
+    float cn2 = snoise(vec4(cIn3 * 2.0, w)) * 0.5;
 
     float cn = cn1 + cn2;
 
@@ -292,7 +292,8 @@ const fragSrc = glsl`
     // calculate cloud stuff
     vec4 myColor = planetColor;
     for (float i = 0.; i < ${v.numClouds}; i += 1.) {
-      vec4 cloudColor = getCloudColor(xPre, yPre, i * (0.2 + sin(${u.time})));
+      float cloudW = i * 0.1;
+      vec4 cloudColor = getCloudColor(xPre, yPre, cloudW);
       myColor = blend(myColor, cloudColor);
     }
 

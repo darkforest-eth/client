@@ -33,7 +33,7 @@ export enum NotificationType {
   FoundPirates,
   FoundSilver,
   FoundComet,
-
+  FoundArtifact,
   FoundBiome,
 }
 
@@ -142,13 +142,13 @@ class NotificationManager extends EventEmitter {
     );
   }
 
-  unsubmittedTxFail(txIntent: TxIntent, e: Error): void {
+  unsubmittedTxFail(txIntent: TxIntent, _e: Error): void {
     this.notifyTx(
       txIntent,
       <span>
         Transaction {txIntent.actionId} failed.
         <br />
-        Reason: {e.message}
+        Check the console for more info.
       </span>,
       EthTxStatus.Fail
     );
@@ -235,6 +235,16 @@ class NotificationManager extends EventEmitter {
       NotificationType.FoundBiome,
       <span>
         You have discovered the {biomeName(planet.biome)} biome! <br />
+        Click to view <PlanetNameLink planet={planet} />
+      </span>
+    );
+  }
+
+  foundArtifact(planet: LocatablePlanet): void {
+    this.notify(
+      NotificationType.FoundArtifact,
+      <span>
+        You have found a planet that can produce an artifact! <br />
         Click to view <PlanetNameLink planet={planet} />
       </span>
     );

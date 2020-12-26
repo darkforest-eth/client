@@ -278,6 +278,16 @@ export function SettingsPane({
     Viewport.instance.setMouseSensitivty(scrollSpeed / 10000);
   }, [scrollSpeed]);
 
+  const [fling, setFling] = useStoredUIState<boolean>(
+    UIDataKey.shouldFling,
+    uiManager
+  );
+
+  useEffect(() => {
+    if (!Viewport.instance) return;
+    Viewport.instance.setFling(fling);
+  }, [fling]);
+
   return (
     <ModalPane hook={hook} title={'Settings'} name={ModalName.Hats}>
       <StyledSettingsPane>
@@ -373,6 +383,14 @@ export function SettingsPane({
               type='checkbox'
               checked={notifMove}
               onChange={(e) => setNotifMove(e.target.checked)}
+            />
+          </div>
+          <div className='row'>
+            <Sub>Use viewport momentum</Sub>
+            <input
+              type='checkbox'
+              checked={fling}
+              onChange={(e) => setFling(e.target.checked)}
             />
           </div>
           <div className='row'>

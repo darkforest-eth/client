@@ -69,17 +69,18 @@ export enum ModalName {
   UpgradeDetails,
   TwitterVerify,
   TwitterBroadcast,
-  MapShare,
-  ManageAccount,
   Hats,
   Settings,
-  Onboarding,
-  Private,
   YourArtifacts,
   FindArtifact,
   Plugins,
-  ArtifactDetails,
   Deposit,
+  // don't have tooltips
+  ArtifactDetails,
+  MapShare,
+  ManageAccount,
+  Onboarding,
+  Private,
 }
 
 export function ModalIcon({
@@ -110,7 +111,6 @@ export function ModalIcon({
   return (
     <TooltipTrigger
       name={TooltipName.ModalHelp + modal}
-      needsShift={true}
       display='inline-block'
       style={{ height: '1.5em' }}
     >

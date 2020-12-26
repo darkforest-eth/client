@@ -5,6 +5,7 @@ import {
   isLocatable,
   Biome,
   ArtifactId,
+  UpgradeBranchName,
 } from '../_types/global/GlobalTypes';
 import * as bigInt from 'big-integer';
 import { PlanetCosmeticInfo } from '../_types/darkforest/app/board/utils/UtilsTypes';
@@ -45,6 +46,11 @@ export const hslStr: (h: number, s: number, l: number) => string = (
   l
 ) => {
   return `hsl(${h % 360},${s}%,${l}%)`;
+};
+
+export const rgbStr = (rgb: RGBVec): string => {
+  const [r, g, b] = rgb;
+  return `rgb(${r}, ${g}, ${b})`;
 };
 
 // prettier-ignore
@@ -112,6 +118,20 @@ export const getOwnerColorVec = (planet: Planet): RGBVec => {
 export const getOwnerColor = (planet: Planet): string => {
   if (planet.owner === emptyAddress) return '#996666';
   return getPlayerColor(planet.owner);
+};
+
+export const getPlanetClass = (planet: Planet): UpgradeBranchName => {
+  const upgrade = planet.upgradeState;
+  let maxIdx = 0;
+  let maxVal = -1;
+  for (let i = 0; i < upgrade.length; i++) {
+    if (upgrade[i] > maxVal) {
+      maxIdx = i;
+      maxVal = upgrade[i];
+    }
+  }
+
+  return maxIdx;
 };
 
 export type PixelCoords = {
