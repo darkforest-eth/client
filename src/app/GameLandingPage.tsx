@@ -147,7 +147,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
       TerminalTextStyle.White
     );
     const popup = window.open(
-      'https://tinyletter.com/darkforest-eth',
+      'https://tinyletter.com/darkforest_eth',
       emailPopupWindowName,
       'scrollbars=yes,width=800,height=600'
     );
@@ -946,7 +946,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
       <Hidden>
         <form
-          action={'https://tinyletter.com/darkforest-eth'}
+          action={'https://tinyletter.com/darkforest_eth'}
           method={'post'}
           target={emailPopupWindowName}
           ref={emailFormRef}

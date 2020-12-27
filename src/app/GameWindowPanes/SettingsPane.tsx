@@ -239,9 +239,10 @@ export function SettingsPane({
         return;
       }
 
-      chunks.forEach((chunk: ExploredChunkData) =>
-        uiManager.addNewChunk(chunk)
-      );
+      for (const chunk of chunks) {
+        // Slowly add/refresh planets to avoid crashing the game
+        await uiManager.addNewChunkThrottled(chunk as ExploredChunkData);
+      }
       setSuccess('Successfully imported a map!');
     } else {
       setFailure('Unable to import map right now.');

@@ -377,6 +377,10 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     this.gameManager.addNewChunk(chunk);
   }
 
+  addNewChunkThrottled(chunk: ExploredChunkData): Promise<void> {
+    return this.gameManager.addNewChunkThrottled(chunk);
+  }
+
   // mining stuff
   setMiningPattern(pattern: MiningPattern) {
     this.gameManager.setMiningPattern(pattern);

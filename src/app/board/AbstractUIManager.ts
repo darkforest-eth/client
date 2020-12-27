@@ -92,6 +92,7 @@ export default interface AbstractUIManager {
   startExplore(): void;
   stopExplore(): void;
   addNewChunk(chunk: ExploredChunkData): void;
+  addNewChunkThrottled(chunk: ExploredChunkData): Promise<void>;
   onMouseDown(coords: WorldCoords): void;
   onMouseMove(coords: WorldCoords): void;
   onMouseUp(coords: WorldCoords): void;

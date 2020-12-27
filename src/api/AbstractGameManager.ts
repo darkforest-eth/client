@@ -77,6 +77,7 @@ export default interface AbstractGameManager extends EventEmitter {
   startExplore(): void;
   stopExplore(): void;
   addNewChunk(chunk: ExploredChunkData): AbstractGameManager;
+  addNewChunkThrottled(chunk: ExploredChunkData): Promise<void>;
 
   // account management + chain operations
   findArtifact(planetId: LocationId): AbstractGameManager;

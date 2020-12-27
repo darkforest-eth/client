@@ -30453,77 +30453,11 @@
     "evmVersion": "petersburg"
   },
   "networks": {
-    "100": {
-      "links": {},
-      "events": {},
-      "address": "0x678ACb78948Be7F354B28DaAb79B1ABD81574c1B",
-      "updated_at": 1608911462036
-    },
     "31337": {
       "links": {},
       "events": {},
       "address": "0x71471a7206D0907E1a0cf604d74AF5fdf16EF4ab",
-      "updated_at": 1608911062388
-    },
-    "1600461031869": {
-      "links": {},
-      "events": {},
-      "address": "0x921a88Ae2628a48C78690ffdFd7d840d964D3e99",
-      "updated_at": 1600461073208
-    },
-    "1600463612897": {
-      "links": {},
-      "events": {},
-      "address": "0xbBDec1865F51A0BacdCAaec6162A03A0854DCD7e",
-      "updated_at": 1600463670990
-    },
-    "1601006324932": {
-      "links": {},
-      "events": {},
-      "address": "0x57E55F942CCAc24e510fFEBebc527F847621A030",
-      "updated_at": 1601006660585
-    },
-    "1601008250172": {
-      "links": {},
-      "events": {},
-      "address": "0x57E55F942CCAc24e510fFEBebc527F847621A030",
-      "updated_at": 1601008383971
-    },
-    "1608695165824": {
-      "links": {},
-      "events": {},
-      "address": "0x71471a7206D0907E1a0cf604d74AF5fdf16EF4ab",
-      "updated_at": 1608695278895
-    },
-    "1608698085999": {
-      "links": {},
-      "events": {},
-      "address": "0x71471a7206D0907E1a0cf604d74AF5fdf16EF4ab",
-      "updated_at": 1608698217968
-    },
-    "1608698432455": {
-      "links": {},
-      "events": {},
-      "address": "0x71471a7206D0907E1a0cf604d74AF5fdf16EF4ab",
-      "updated_at": 1608698539971
-    },
-    "1608699842433": {
-      "links": {},
-      "events": {},
-      "address": "0x71471a7206D0907E1a0cf604d74AF5fdf16EF4ab",
-      "updated_at": 1608699943280
-    },
-    "1608700402022": {
-      "links": {},
-      "events": {},
-      "address": "0x71471a7206D0907E1a0cf604d74AF5fdf16EF4ab",
-      "updated_at": 1608700496961
-    },
-    "1608700734547": {
-      "links": {},
-      "events": {},
-      "address": "0x71471a7206D0907E1a0cf604d74AF5fdf16EF4ab",
-      "updated_at": 1608700835043
+      "updated_at": 1609055198141
     }
   }
 }

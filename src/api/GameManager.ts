@@ -781,7 +781,8 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       const perlinThreshold = this.contractConstants.PERLIN_THRESHOLD_1;
       let minedChunksCount = 0;
       // target4 is about 800; universe doesn't expand until virtual radius reaches ~32000
-      const UNIFORM_RANDOM_UNTIL = 34000;
+      const UNIFORM_RANDOM_UNTIL_1 = 34000;
+      const UNIFORM_RANDOM_UNTIL_2 = 68000;
 
       let x: number;
       let y: number;
@@ -801,7 +802,9 @@ class GameManager extends EventEmitter implements AbstractGameManager {
         p >= perlinThreshold || // can't be in space/deepspace
         p < perlinThreshold - 1 || // can't be too deep in nebula
         d >= this.worldRadius || // can't be out of bound
-        (this.worldRadius > UNIFORM_RANDOM_UNTIL && d <= 0.9 * this.worldRadius) // can't be in inner 90%, if worldRadius large enough
+        d <= UNIFORM_RANDOM_UNTIL_1 || // can't be in initial (first 100 players) spawn circle
+        (this.worldRadius > UNIFORM_RANDOM_UNTIL_2 &&
+          d <= 0.9 * this.worldRadius) // can't be in inner 90%, if worldRadius large enough
       );
 
       // when setting up a new account in development mode, you can tell
@@ -1231,6 +1234,19 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       }
     }
     return this;
+  }
+
+  // Used in the map import to avoid crashing the game
+  async addNewChunkThrottled(chunk: ExploredChunkData): Promise<void> {
+    this.persistentChunkStore.updateChunk(chunk, false);
+    for (const planetLocation of chunk.planetLocations) {
+      this.entityStore.addPlanetLocation(planetLocation);
+
+      if (this.entityStore.isPlanetInContract(planetLocation.hash)) {
+        // Await this so we don't crash the game
+        await this.hardRefreshPlanet(planetLocation.hash);
+      }
+    }
   }
 
   // utils - scripting only

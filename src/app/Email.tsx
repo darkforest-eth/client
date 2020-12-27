@@ -54,7 +54,7 @@ export const EmailCTA = () => {
       setEmail('');
     }
     window.open(
-      'https://tinyletter.com/darkforest-eth',
+      'https://tinyletter.com/darkforest_eth',
       emailPopupWindowName,
       'scrollbars=yes,width=800,height=600'
     );
@@ -84,7 +84,7 @@ export const EmailCTA = () => {
         </p>
 
         <form
-          action={'https://tinyletter.com/darkforest-eth'}
+          action={'https://tinyletter.com/darkforest_eth'}
           method={'post'}
           target={emailPopupWindowName}
           ref={emailFormRef}
