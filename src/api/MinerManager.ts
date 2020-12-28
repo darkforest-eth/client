@@ -272,10 +272,8 @@ class MinerManager extends EventEmitter {
     const yMinAbs = Math.abs(yCenter) - sideLength / 2;
     const squareDist = xMinAbs ** 2 + yMinAbs ** 2;
     // should be inbounds, and unexplored
-    return (
-      squareDist < this.worldRadius ** 2 &&
-      !this.minedChunksStore.hasMinedChunk(chunkLocation)
-    );
+    return !this.minedChunksStore.hasMinedChunk(chunkLocation);
+    
   }
 
   private sendMessageToWorkers(

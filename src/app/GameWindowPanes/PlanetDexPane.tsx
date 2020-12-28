@@ -1,14 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState ,SetStateAction, Dispatch} from 'react';
 import styled from 'styled-components';
+import { White} from '../../components/Text';
 import {
   ModalPane,
   ModalHook,
   ModalName,
   ModalPlanetDexIcon,
 } from './ModalPane';
+import {DefenseIcon, RangeIcon, SpeedIcon} from '../Icons'
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
-import { Planet, PlanetResource } from '../../_types/global/GlobalTypes';
+import { Planet, PlanetResource,UpgradeBranchName,SpaceType } from '../../_types/global/GlobalTypes';
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
 import { SidebarPane } from '../GameWindowComponents/GameWindowComponents';
 import { Sub, Space } from '../../components/Text';
@@ -16,6 +18,8 @@ import {
   getPlanetShortHash,
   formatNumber,
   getPlanetRank,
+  planetCanUpgrade,
+  canUpgrade
 } from '../../utils/Utils';
 import dfstyles from '../../styles/dfstyles';
 import {
@@ -131,7 +135,7 @@ const DexRow = styled.div`
     }
     // score
     &:nth-child(7) {
-      width: 7em;
+      width: 10em;
     }
   }
 
@@ -255,6 +259,111 @@ const getPlanetScore = (planet: Planet, rank: number) => {
   const totalSilver = planet.silverSpent + planet.silver;
   return baseScore + totalSilver / 10;
 };
+const StyledUpgradeButton = styled.div<{ active: boolean }>`
+  // flex-grow: 1;
+  &:last-child {
+    margin-right: 0;
+  }
+
+  border-radius: 2px;
+  border: 1px solid ${dfstyles.colors.subtext};
+  padding: 0.2em 0;
+
+  text-align: center;
+
+  &:hover {
+    cursor: pointer;
+    border: 1px solid ${dfstyles.colors.text};
+  }
+
+  background: ${({ active }) => (active ? dfstyles.colors.text : 'none')};
+
+  &,
+  & span {
+    ${({ active }) =>
+      active && `color: ${dfstyles.colors.background} !important`};
+  }
+
+  &.disabled {
+    border: 1px solid ${dfstyles.colors.subtext} !important;
+    &,
+    & span {
+      color: ${dfstyles.colors.subtext} !important;
+      cursor: auto !important;
+    }
+  }
+`;
+
+function UpgradeButton({
+  branch,
+  hook,
+  disabled,
+  planet,
+}: {
+  branch: UpgradeBranchName;
+  hook: BranchHook;
+  disabled: boolean;
+  planet: Planet | null;
+}) {
+  if (!planet) return <></>;
+
+  const [myBranch, setBranch] = hook;
+  const BranchIcon = [DefenseIcon, RangeIcon, SpeedIcon][branch]
+  return (
+    <StyledUpgradeButton
+      onClick={() => disabled || setBranch(branch)}
+      active={branch === myBranch}
+      className={disabled ? 'disabled' : ''}
+    >
+      (lv<White>{planet.upgradeState[branch]}</White>)
+    </StyledUpgradeButton>
+  );
+}
+
+type BranchHook = [
+  UpgradeBranchName | null,
+  Dispatch<SetStateAction<UpgradeBranchName | null>>
+];
+const SectionButtons = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+function UpgradeRow({planet}: {planet: Planet}){
+  const branchHook = useState<UpgradeBranchName | null>(null);
+  const disabled: boolean[] = planetCanUpgrade(planet)
+  ? planet?.upgradeState.map((level, i) => {
+      if (
+        i === UpgradeBranchName.Defense &&
+        planet.spaceType === SpaceType.DEEP_SPACE
+      )
+        return level >= 2;
+      return level >= 4;
+    }) || [true, true, true]
+  : [true, true, true];
+
+          return  <SectionButtons>
+            <UpgradeButton
+              branch={0}
+              hook={branchHook}
+              disabled={disabled[0]}
+              planet={planet}
+            />
+            <UpgradeButton
+              branch={1}
+              hook={branchHook}
+              disabled={disabled[1]}
+              planet={planet}
+            />
+            <UpgradeButton
+              branch={2}
+              hook={branchHook}
+              disabled={disabled[2]}
+              planet={planet}
+            />
+          </SectionButtons>
+}
+
 
 function DexEntry({
   planet,
@@ -282,10 +391,7 @@ function DexEntry({
         </span>
         <span>{formatNumber(planet.energy)}</span>
         <span>{formatNumber(planet.silver)}</span>
-        <span>
-          {formatNumber(score)}
-          <Sub> pts</Sub>
-        </span>
+        <span><UpgradeRow planet={planet}></UpgradeRow></span>
       </DexRow>
     </PlanetLink>
   );

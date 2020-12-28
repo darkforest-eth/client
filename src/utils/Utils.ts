@@ -225,6 +225,27 @@ export const planetCanUpgrade = (planet: Planet | null) => {
     planet.planetResource !== PlanetResource.SILVER
   );
 };
+const getSilverNeeded = (planet: Planet): number => {
+  const totalLevel = planet.upgradeState.reduce((a, b) => a + b);
+  return (totalLevel + 1) * 0.2 * planet.silverCap;
+};
+
+const getSilver = (planet: Planet): number => {
+  return planet.silver
+}
+export const canUpgrade = (planet: Planet): boolean => {
+  
+  const silverNeeded = getSilverNeeded(planet);
+  const silver = getSilver(planet);
+  if (silverNeeded === 0) return false;
+  if (isFullRank(planet)) return false;
+  return silver >= silverNeeded;
+};
+
+const isPending = (planet: Planet): boolean => {
+  if (!planet.unconfirmedUpgrades) return false;
+  return planet.unconfirmedUpgrades.length > 0;
+};
 //https://stackoverflow.com/questions/32589197/how-can-i-capitalize-the-first-letter-of-each-word-in-a-string-using-javascript/45620677#45620677
 export const titleCase = (title: string): string =>
   title

@@ -12,6 +12,13 @@ import Viewport from '../../board/Viewport';
 
 const { white, gold } = engineConsts.colors;
 
+function toMinuteString(seconds: number) :string{
+  const minutes = Math.floor(seconds / 60);
+  const left_over_seconds = Math.floor(seconds % 60);
+
+  return `${minutes}m-${left_over_seconds}s `
+}
+
 function getVoyageColor(fromPlanet: Planet, toPlanet: Planet, isMine: boolean) {
   const { enemy, mine } = engineConsts.colors.voyage;
   if (isMine) {
@@ -59,7 +66,7 @@ export default class VoyageRenderManager {
       const color = myMove ? mine : enemy;
       cR.queueCircleWorld(toLoc.coords, radius, [...color, 255], 0.7, 1, true);
       tR.queueTextWorld(
-        `${Math.floor(timeLeft)}s`,
+        toMinuteString(timeLeft),
         { x: toLoc.coords.x, y: toLoc.coords.y + radius * 1.1 },
         [...color, 255]
       );
@@ -98,7 +105,7 @@ export default class VoyageRenderManager {
 
       // queue text
       tR.queueTextWorld(
-        `${timeLeftSeconds.toString()}s`,
+        toMinuteString(timeLeftSeconds),
         {
           x: shipsLocationX,
           y: shipsLocationY - 0.5,

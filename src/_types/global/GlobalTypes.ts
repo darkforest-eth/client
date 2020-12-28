@@ -88,6 +88,7 @@ declare global {
     // instead of global
     df?: AbstractGameManager;
     ui?: AbstractUIManager;
+    op?: any;
     terminal?: TerminalEmitter;
   }
 }

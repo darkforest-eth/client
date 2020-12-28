@@ -158,8 +158,13 @@ export function NotificationsPane() {
     };
   };
 
+  const removeAll = (): void => {
+      setNotifs([])
+  }
+
   return (
     <StyledNotificationsPane>
+      <button onClick={removeAll}> Remove All </button>
       {notifs.slice(0, Math.min(10, notifs.length)).map((el, i) => (
         <Notification
           notif={el}

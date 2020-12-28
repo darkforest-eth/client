@@ -1,5 +1,5 @@
 import * as stringify from 'json-stable-stringify';
-import { JsonRpcProvider, TransactionReceipt } from '@ethersproject/providers';
+import { WebSocketProvider, TransactionReceipt } from '@ethersproject/providers';
 import {
   providers,
   Contract,
@@ -14,6 +14,7 @@ import { EventEmitter } from 'events';
 import { XDAI_CHAIN_ID } from '../utils/constants';
 import { callWithRetry, sleep } from '../utils/Utils';
 
+<<<<<<< HEAD:src/api/EthConnection.ts
 /**
  * Responsible for
  * 1) loading the contract
@@ -22,13 +23,17 @@ import { callWithRetry, sleep } from '../utils/Utils';
  */
 class EthConnection extends EventEmitter {
   // rpc-df only has CORS enabled for zkga.me, not localhost
-  private static readonly XDAI_DEFAULT_URL = window.origin.includes('localhost')
-    ? 'https://rpc.xdaichain.com/'
-    : 'https://rpc-df.xdaichain.com/';
+
 
   private static instance: EthConnection | null = null;
   private readonly knownAddresses: EthAddress[];
-  private provider: JsonRpcProvider;
+// rpc-df only has CORS enabled for zkga.me, not localhost
+  private static readonly XDAI_DEFAULT_URL = window.origin.includes('localhost')
+  ? 'wss://floral-hidden-river.xdai.quiknode.pro/54bec20110402d8eb8c10f06de906c8a2a87d1c9/'
+  : 'https://rpc-df.xdaichain.com/';
+
+
+  private provider: WebSocketProvider;
   private signer: Wallet | null;
   private rpcURL: string;
 
@@ -69,14 +74,13 @@ class EthConnection extends EventEmitter {
   public async setRpcEndpoint(url: string): Promise<void> {
     try {
       this.rpcURL = url;
-      const newProvider = new providers.JsonRpcProvider(this.rpcURL);
+      const newProvider = new providers.WebSocketProvider(this.rpcURL);
       if (process.env.NODE_ENV === 'production') {
         if ((await newProvider.getNetwork()).chainId !== XDAI_CHAIN_ID) {
           throw new Error('not a valid xDAI RPC URL');
         }
       }
       this.provider = newProvider;
-      this.provider.pollingInterval = 8000;
       if (this.signer) {
         this.signer = new Wallet(this.signer.privateKey, this.provider);
       } else {
