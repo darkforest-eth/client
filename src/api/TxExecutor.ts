@@ -195,6 +195,7 @@ export class TxExecutor extends EventEmitter {
 
     if (txRequest.snarkLogs !== undefined) {
       logEvent.snark_logs = JSON.stringify(txRequest.snarkLogs);
+      logEvent.snark_local_verified = txRequest.snarkLogs.proofVerified;
     }
 
     if (time_called && time_submitted) {
