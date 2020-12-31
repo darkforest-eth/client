@@ -59,7 +59,6 @@ export const PluginElements = styled.div`
     &:hover {
       background-color: white;
       color: black;
-      border: 1px transparent;
     }
   }
 `;
