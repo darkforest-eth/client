@@ -734,11 +734,6 @@ class GameManager extends EventEmitter implements AbstractGameManager {
   }
 
   private checkGameHasEnded(): boolean {
-    if (Date.now() / 1000 > this.endTimeSeconds) {
-      const terminalEmitter = TerminalEmitter.getInstance();
-      terminalEmitter.println('[ERROR] Game has ended.');
-      return true;
-    }
     return false;
   }
 

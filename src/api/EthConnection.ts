@@ -14,7 +14,6 @@ import { EventEmitter } from 'events';
 import { XDAI_CHAIN_ID } from '../utils/constants';
 import { callWithRetry, sleep } from '../utils/Utils';
 
-<<<<<<< HEAD:src/api/EthConnection.ts
 /**
  * Responsible for
  * 1) loading the contract
@@ -30,7 +29,7 @@ class EthConnection extends EventEmitter {
 // rpc-df only has CORS enabled for zkga.me, not localhost
   private static readonly XDAI_DEFAULT_URL = window.origin.includes('localhost')
   ? 'wss://floral-hidden-river.xdai.quiknode.pro/54bec20110402d8eb8c10f06de906c8a2a87d1c9/'
-  : 'https://rpc-df.xdaichain.com/';
+  : 'wss://floral-hidden-river.xdai.quiknode.pro/54bec20110402d8eb8c10f06de906c8a2a87d1c9/';
 
 
   private provider: WebSocketProvider;
