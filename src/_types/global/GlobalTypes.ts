@@ -290,3 +290,11 @@ export interface MinerWorkerMessage {
   jobId: number;
   useMockHash: boolean;
 }
+
+export type SnarkLogData = {
+  expectedSignals: string[];
+  actualSignals: string[];
+  proofVerified: boolean;
+  circuitCRC: number;
+  zkeyCRC: number;
+};

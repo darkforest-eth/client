@@ -9,6 +9,7 @@ import NotificationManager from '../utils/NotificationManager';
 import { PopupManager } from './PopupManager';
 import { promisify, timeoutAfter } from '../utils/Utils';
 import { EventLogger } from '../instrumentation/EventLogger';
+import { SnarkLogData } from '../_types/global/GlobalTypes';
 
 export interface QueuedTxRequest {
   onSubmissionError: (e: Error) => void;
@@ -25,7 +26,7 @@ export interface QueuedTxRequest {
   overrides: providers.TransactionRequest;
 
   /* for debugging snark revert issue */
-  snarkLocalVerified?: boolean;
+  snarkLogs?: SnarkLogData;
 }
 
 export interface PendingTransaction {
@@ -79,7 +80,7 @@ export class TxExecutor extends EventEmitter {
       gasPrice: 1000000000,
       gasLimit: 2000000,
     },
-    snarkLocalVerified?: boolean
+    snarkLogs?: SnarkLogData
   ): PendingTransaction {
     const [txResponse, rejectTxResponse, submittedPromise] = promisify<
       providers.TransactionResponse
@@ -94,7 +95,7 @@ export class TxExecutor extends EventEmitter {
       contract,
       args,
       overrides,
-      snarkLocalVerified,
+      snarkLogs,
       onSubmissionError: rejectTxResponse,
       onReceiptError: rejectTxReceipt,
       onTransactionResponse: txResponse,
@@ -192,8 +193,8 @@ export class TxExecutor extends EventEmitter {
       tx_hash,
     };
 
-    if (txRequest.snarkLocalVerified !== undefined) {
-      logEvent.snark_local_verified = txRequest.snarkLocalVerified;
+    if (txRequest.snarkLogs !== undefined) {
+      logEvent.snark_logs = JSON.stringify(txRequest.snarkLogs);
     }
 
     if (time_called && time_submitted) {

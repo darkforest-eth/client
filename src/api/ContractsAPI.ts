@@ -8,6 +8,7 @@ import {
   Artifact,
   ArtifactId,
   Location,
+  SnarkLogData,
 } from '../_types/global/GlobalTypes';
 // NOTE: DO NOT IMPORT FROM ETHERS SUBPATHS. see https://github.com/ethers-io/ethers.js/issues/349 (these imports trip up webpack)
 // in particular, the below is bad!
@@ -486,7 +487,7 @@ class ContractsAPI extends EventEmitter {
   // otherwise, returns a promise of a submtited (unmined) tx receipt
   async move(
     snarkArgs: MoveSnarkArgs,
-    snarkLocalVerified: boolean,
+    snarkLogs: SnarkLogData,
     shipsMoved: number,
     silverMoved: number,
     actionId: string
@@ -511,7 +512,7 @@ class ContractsAPI extends EventEmitter {
         gasPrice: 1000000000,
         gasLimit: 2000000,
       },
-      snarkLocalVerified
+      snarkLogs
     );
 
     const forcesFloat = parseFloat(args[ZKArgIdx.DATA][MoveArgIdxs.SHIPS_SENT]);

@@ -1164,7 +1164,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
     this.snarkHelper
       .getMoveArgs(oldX, oldY, newX, newY, this.worldRadius, distMax)
-      .then(([callArgs, localVerified]) => {
+      .then(([callArgs, snarkLogs]) => {
         const terminalEmitter = TerminalEmitter.getInstance();
 
         terminalEmitter.println(
@@ -1180,7 +1180,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
         return this.contractsAPI.move(
           callArgs,
-          localVerified,
+          snarkLogs,
           shipsMoved,
           silverMoved,
           actionId

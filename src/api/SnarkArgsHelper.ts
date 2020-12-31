@@ -7,6 +7,7 @@ import {
 import {
   SnarkJSProof,
   SnarkJSProofAndSignals,
+  SnarkLogData,
 } from '../_types/global/GlobalTypes';
 import { BigInteger } from 'big-integer';
 import mimcHash, { modPBigInt, modPBigIntNative } from '../miner/mimc';
@@ -14,6 +15,7 @@ import * as bigInt from 'big-integer';
 import { fakeHash } from '../miner/permutation';
 import TerminalEmitter, { TerminalTextStyle } from '../utils/TerminalEmitter';
 import perlin from '../miner/perlin';
+import * as CRC32 from 'crc-32';
 
 type InitInfo = {
   x: string;
@@ -35,12 +37,19 @@ type FindArtifactInfo = {
   y: string;
 };
 
+type SnarkJSBin = {
+  type: 'mem';
+  data: Uint8Array;
+};
+
 type ZKPTask = {
   taskId: number;
   /* eslint-disable @typescript-eslint/no-explicit-any */
   input: any;
-  circuitPath: string;
-  zkeyPath: string;
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+  circuit: string | SnarkJSBin; // path or uint8array
+  zkey: string | SnarkJSBin; // path or uint8array
+
   onSuccess: (proof: SnarkJSProofAndSignals) => void;
   onError: (e: Error) => void;
 };
@@ -49,6 +58,7 @@ type ZKPTask = {
  * WET; we have an async task execution queue in ContractsAPI also
  * if we have to write a third one then i'll abstract it
  */
+
 class SnarkProverQueue {
   private taskQueue: ZKPTask[];
   private currentlyExecuting: boolean;
@@ -61,16 +71,18 @@ class SnarkProverQueue {
   }
 
   public doProof(
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     input: any,
-    circuitPath: string,
-    zkeyPath: string
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+    circuit: string | SnarkJSBin,
+    zkey: string | SnarkJSBin
   ): Promise<SnarkJSProofAndSignals> {
     return new Promise<SnarkJSProofAndSignals>((resolve, reject) => {
       const taskId = this.taskCount++;
       this.taskQueue.push({
         input,
-        circuitPath,
-        zkeyPath,
+        circuit,
+        zkey,
         taskId,
         onSuccess: resolve,
         onError: reject,
@@ -88,8 +100,8 @@ class SnarkProverQueue {
       console.log(`proving ${task.taskId}`);
       const res = await window.snarkjs.groth16.fullProve(
         task.input,
-        task.circuitPath,
-        task.zkeyPath
+        task.circuit,
+        task.zkey
       );
       console.log(`proved ${task.taskId}`);
       task.onSuccess(res);
@@ -177,7 +189,7 @@ class SnarkArgsHelper {
     y2: number,
     r: number,
     distMax: number
-  ): Promise<[MoveSnarkArgs, boolean]> {
+  ): Promise<[MoveSnarkArgs, SnarkLogData]> {
     try {
       const terminalEmitter = TerminalEmitter.getInstance();
 
@@ -194,13 +206,24 @@ class SnarkArgsHelper {
         r: r.toString(),
         distMax: distMax.toString(),
       };
+      const circuitRaw = await fetch('/public/circuits/move/circuit.wasm?id=5')
+        .then((res) => res.arrayBuffer())
+        .then((ab) => new Uint8Array(ab));
+      const zkeyRaw = await fetch('/public/move.zkey?id=5')
+        .then((res) => res.arrayBuffer())
+        .then((ab) => new Uint8Array(ab));
+      const circuitData: SnarkJSBin = {
+        type: 'mem',
+        data: circuitRaw,
+      };
+      const zkeyData: SnarkJSBin = {
+        type: 'mem',
+        data: zkeyRaw,
+      };
+
       const snarkProof: SnarkJSProofAndSignals = this.useMockHash
         ? SnarkArgsHelper.fakeProof()
-        : await this.snarkProverQueue.doProof(
-            input,
-            '/public/circuits/move/circuit.wasm?id=5',
-            '/public/move.zkey?id=5'
-          );
+        : await this.snarkProverQueue.doProof(input, circuitData, zkeyData);
       const hash1 = this.useMockHash ? fakeHash(x1, y1) : mimcHash(x1, y1);
       const hash2 = this.useMockHash ? fakeHash(x2, y2) : mimcHash(x2, y2);
       const perl2 = perlin({ x: x2, y: y2 });
@@ -228,7 +251,14 @@ class SnarkArgsHelper {
         snarkProof.publicSignals,
         snarkProof.proof
       );
-      return [proofArgs as MoveSnarkArgs, localVerified];
+      const snarkLogs: SnarkLogData = {
+        expectedSignals: snarkProof.publicSignals,
+        actualSignals: publicSignals.map((x) => x.toString()),
+        proofVerified: localVerified,
+        circuitCRC: CRC32.buf(circuitRaw),
+        zkeyCRC: CRC32.buf(zkeyRaw),
+      };
+      return [proofArgs as MoveSnarkArgs, snarkLogs];
     } catch (e) {
       throw e;
     }
