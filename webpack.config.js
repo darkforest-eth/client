@@ -16,7 +16,7 @@ module.exports = {
   entry: './src/index.tsx',
   output: {
     path: path.join(__dirname, '/dist'),
-    filename: 'bundle.min.js',
+    filename: 'bundle-[hash:6].min.js',
     publicPath: '/',
   },
 
@@ -57,10 +57,10 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: 'fonts/'
-            }
-          }
-        ]
+              outputPath: 'fonts/',
+            },
+          },
+        ],
       },
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       {
@@ -72,7 +72,7 @@ module.exports = {
   },
   plugins: [
     new EnvironmentPlugin({
-      NODE_ENV: 'development'
+      NODE_ENV: 'development',
     }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
@@ -85,6 +85,5 @@ module.exports = {
   // assume a corresponding global variable exists and use that instead.
   // This is important because it allows us to avoid bundling all of our
   // dependencies, which allows browsers to cache those libraries between builds.
-  externals: {
-  },
+  externals: {},
 };

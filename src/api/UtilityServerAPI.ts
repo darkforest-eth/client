@@ -1,16 +1,18 @@
-const isProd = process.env.NODE_ENV === 'production';
-const WEBSERVER_URL = isProd ? 'https://zkga.me' : 'http://localhost:3000';
-
-const CACHE_SERVER_URL = isProd
-  ? 'https://df-headless.xyz'
-  : 'http://localhost:3002';
-
 import * as EmailValidator from 'email-validator';
 import {
   AddressTwitterMap,
   ServerScoreboard,
 } from '../_types/darkforest/api/UtilityServerAPITypes';
 import { EthAddress } from '../_types/global/GlobalTypes';
+
+export const isProd = process.env.NODE_ENV === 'production';
+export const WEBSERVER_URL = isProd
+  ? 'https://zkga.me'
+  : 'http://localhost:3000';
+
+export const CACHE_SERVER_URL = isProd
+  ? 'https://df-headless.xyz'
+  : 'http://localhost:3002';
 
 export enum EmailResponse {
   Success,

@@ -299,6 +299,11 @@ export function sleep<T>(timeout: number, returns?: T): Promise<T> {
   );
 }
 
+export async function rejectAfter<T>(ms: number, msg: string): Promise<T> {
+  await sleep(ms);
+  throw new Error(msg);
+}
+
 // this is slow, do not call in i.e. render/draw loop
 export function locationFromCoords(coords: WorldCoords): Location {
   return {
@@ -419,3 +424,26 @@ export const isChrome = () => /Google Inc/.test(navigator.vendor);
 
 export const isBrave = async () =>
   !!((navigator as any).brave && (await (navigator as any).brave.isBrave())); // eslint-disable-line @typescript-eslint/no-explicit-any
+
+export const timeoutAfter = async <T>(
+  promise: Promise<T>,
+  ms: number,
+  timeoutMsg: string
+) => {
+  return Promise.race([promise, rejectAfter<T>(ms, timeoutMsg)]);
+};
+
+export function promisify<T>(): [
+  (t: T) => void,
+  (t: Error) => void,
+  Promise<T>
+] {
+  let resolve: ((t: T) => void) | null = null;
+  let reject: ((t: Error) => void) | null = null;
+  const promise = new Promise<T>((r, rj) => {
+    resolve = (t: T) => r(t);
+    reject = (e: Error) => rj(e);
+  });
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  return [resolve as any, reject as any, promise];
+}

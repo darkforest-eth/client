@@ -420,6 +420,17 @@ export enum EthTxType {
   WITHDRAW_ARTIFACT = 'WITHDRAW_ARTIFACT',
 }
 
+export const TxTypeToEthFunctionName: Record<EthTxType, string> = {
+  [EthTxType.INIT]: 'initializePlayer',
+  [EthTxType.MOVE]: 'move',
+  [EthTxType.UPGRADE]: 'upgradePlanet',
+  [EthTxType.BUY_HAT]: 'buyHat',
+  [EthTxType.PLANET_TRANSFER]: 'transferOwnership',
+  [EthTxType.FIND_ARTIFACT]: 'findArtifact',
+  [EthTxType.DEPOSIT_ARTIFACT]: 'depositArtifact',
+  [EthTxType.WITHDRAW_ARTIFACT]: 'withdrawArtifact',
+};
+
 export enum EthTxStatus {
   Init,
   Submit,

@@ -303,14 +303,14 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.3
+                    <HideSmall>v</HideSmall>0.4
                   </td>
                   <td>
                     10/02/<HideSmall>20</HideSmall>20
                   </td>
                   <td>
                     <a href='https://twitter.com/jacobrosenthal'>
-                      Jake Rosenthal
+                      Jacob Rosenthal
                     </a>
                   </td>
                 </TRow>

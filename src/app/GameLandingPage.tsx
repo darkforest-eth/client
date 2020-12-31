@@ -30,7 +30,7 @@ import {
 } from './GameLandingPageComponents';
 import UIEmitter, { UIEmitterEvent } from '../utils/UIEmitter';
 import { utils, Wallet } from 'ethers';
-import EthereumAccountManager from '../api/EthereumAccountManager';
+import EthConnection from '../api/EthConnection';
 import { address } from '../utils/CheckedTypeUtils';
 import { UIDataKey, useStoredUIState } from '../api/UIStateStorageManager';
 import TutorialManager, { TutorialState } from '../utils/TutorialManager';
@@ -334,7 +334,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     terminalEmitter.print('    v0.4       ');
     terminalEmitter.print('10/02/2020        ', TerminalTextStyle.White);
     terminalEmitter.printLink(
-      'Jake Rosenthal',
+      'Jacob Rosenthal',
       () => {
         window.open('https://twitter.com/jacobrosenthal');
       },
@@ -346,7 +346,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     terminalEmitter.println('<tbd>', TerminalTextStyle.White);
     terminalEmitter.newline();
 
-    const knownAddrs = EthereumAccountManager.getInstance().getKnownAccounts();
+    const knownAddrs = EthConnection.getInstance().getKnownAccounts();
     terminalEmitter.println(
       `Found ${knownAddrs.length} accounts on this device.`
     );
@@ -371,7 +371,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromDisplayAccounts = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const ethConnection = EthereumAccountManager.getInstance();
+    const ethConnection = EthConnection.getInstance();
 
     const knownAddrs = ethConnection.getKnownAccounts();
     terminalEmitter.println(`Select an account.`, TerminalTextStyle.White);
@@ -397,7 +397,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromGenerateAccount = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const ethConnection = EthereumAccountManager.getInstance();
+    const ethConnection = EthConnection.getInstance();
 
     const newWallet = Wallet.createRandom();
     const newSKey = newWallet.privateKey;
@@ -435,7 +435,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromImportAccount = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const ethConnection = EthereumAccountManager.getInstance();
+    const ethConnection = EthConnection.getInstance();
 
     terminalEmitter.println(
       'Enter the 0x-prefixed private key of the account you wish to import',
@@ -465,7 +465,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromAccountSet = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const ethConnection = EthereumAccountManager.getInstance();
+    const ethConnection = EthConnection.getInstance();
 
     const address = ethConnection.getAddress();
     const isWhitelisted = await isAddressWhitelisted(address);
@@ -514,7 +514,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromAskWhitelistKey = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const address = EthereumAccountManager.getInstance().getAddress();
+    const address = EthConnection.getInstance().getAddress();
 
     terminalEmitter.println(
       'Please enter your invite key. (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX)',
@@ -596,7 +596,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromAskPlayerEmail = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const address = EthereumAccountManager.getInstance().getAddress();
+    const address = EthConnection.getInstance().getAddress();
 
     terminalEmitter.print(
       'Enter your email address. ',
@@ -766,6 +766,17 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
       initState = InitState.TERMINATED;
       return;
     }
+
+    terminalEmitter.newline();
+
+    terminalEmitter.println(
+      'We collect a minimal set of statistics such as SNARK proving' +
+        ' times and average transaction times across browsers, to help ' +
+        'us optimize performance and fix bugs. You can opt out of ' +
+        'this in the settings pane.'
+    );
+
+    terminalEmitter.newline();
 
     terminalEmitter.println(
       'Press ENTER to find a home planet. This may take up to 120s.'

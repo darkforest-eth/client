@@ -14,18 +14,23 @@ import { EventEmitter } from 'events';
 import { XDAI_CHAIN_ID } from '../utils/constants';
 import { callWithRetry, sleep } from '../utils/Utils';
 
-// rpc-df only has CORS enabled for zkga.me, not localhost
-const XDAI_DEFAULT_URL = window.origin.includes('localhost')
-  ? 'https://rpc.xdaichain.com/'
-  : 'https://rpc-df.xdaichain.com/';
+/**
+ * Responsible for
+ * 1) loading the contract
+ * 2) the in-memory wallet
+ * 3) connecting to the correct network
+ */
+class EthConnection extends EventEmitter {
+  // rpc-df only has CORS enabled for zkga.me, not localhost
+  private static readonly XDAI_DEFAULT_URL = window.origin.includes('localhost')
+    ? 'https://rpc.xdaichain.com/'
+    : 'https://rpc-df.xdaichain.com/';
 
-class EthereumAccountManager extends EventEmitter {
-  static instance: EthereumAccountManager | null = null;
-
+  private static instance: EthConnection | null = null;
+  private readonly knownAddresses: EthAddress[];
   private provider: JsonRpcProvider;
   private signer: Wallet | null;
   private rpcURL: string;
-  private readonly knownAddresses: EthAddress[];
 
   private constructor() {
     super();
@@ -33,7 +38,9 @@ class EthereumAccountManager extends EventEmitter {
     let url: string;
     const isProd = process.env.NODE_ENV === 'production';
     if (isProd) {
-      url = localStorage.getItem('XDAI_RPC_ENDPOINT_v5') || XDAI_DEFAULT_URL;
+      url =
+        localStorage.getItem('XDAI_RPC_ENDPOINT_v5') ||
+        EthConnection.XDAI_DEFAULT_URL;
     } else {
       url = 'http://localhost:8545';
     }
@@ -48,11 +55,11 @@ class EthereumAccountManager extends EventEmitter {
     }
   }
 
-  static getInstance(): EthereumAccountManager {
-    if (!EthereumAccountManager.instance) {
-      EthereumAccountManager.instance = new EthereumAccountManager();
+  public static getInstance(): EthConnection {
+    if (!EthConnection.instance) {
+      EthConnection.instance = new EthConnection();
     }
-    return EthereumAccountManager.instance;
+    return EthConnection.instance;
   }
 
   public getRpcEndpoint(): string {
@@ -79,7 +86,7 @@ class EthereumAccountManager extends EventEmitter {
       this.emit('ChangedRPCEndpoint');
     } catch (e) {
       console.error(`error setting rpc endpoint: ${e}`);
-      this.setRpcEndpoint(XDAI_DEFAULT_URL);
+      this.setRpcEndpoint(EthConnection.XDAI_DEFAULT_URL);
       return;
     }
   }
@@ -214,4 +221,4 @@ class EthereumAccountManager extends EventEmitter {
   }
 }
 
-export default EthereumAccountManager;
+export default EthConnection;

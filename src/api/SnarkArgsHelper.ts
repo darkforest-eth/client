@@ -151,8 +151,8 @@ class SnarkArgsHelper {
         ? SnarkArgsHelper.fakeProof()
         : await this.snarkProverQueue.doProof(
             input,
-            '/public/circuits/init/circuit.wasm',
-            '/public/init.zkey'
+            '/public/circuits/init/circuit.wasm?id=6',
+            '/public/init.zkey?id=5'
           );
       const ret = this.callArgsFromProofAndSignals(
         snarkProof.proof,
@@ -177,7 +177,7 @@ class SnarkArgsHelper {
     y2: number,
     r: number,
     distMax: number
-  ): Promise<MoveSnarkArgs> {
+  ): Promise<[MoveSnarkArgs, boolean]> {
     try {
       const terminalEmitter = TerminalEmitter.getInstance();
 
@@ -198,8 +198,8 @@ class SnarkArgsHelper {
         ? SnarkArgsHelper.fakeProof()
         : await this.snarkProverQueue.doProof(
             input,
-            '/public/circuits/move/circuit.wasm',
-            '/public/move.zkey'
+            '/public/circuits/move/circuit.wasm?id=5',
+            '/public/move.zkey?id=5'
           );
       const hash1 = this.useMockHash ? fakeHash(x1, y1) : mimcHash(x1, y1);
       const hash2 = this.useMockHash ? fakeHash(x2, y2) : mimcHash(x2, y2);
@@ -220,7 +220,15 @@ class SnarkArgsHelper {
         snarkProof.proof,
         publicSignals.map((x) => modPBigIntNative(x))
       );
-      return proofArgs as MoveSnarkArgs;
+      const vkey = await fetch('public/move_vkey.json').then((res) =>
+        res.json()
+      );
+      const localVerified = await window.snarkjs.groth16.verify(
+        vkey,
+        snarkProof.publicSignals,
+        snarkProof.proof
+      );
+      return [proofArgs as MoveSnarkArgs, localVerified];
     } catch (e) {
       throw e;
     }
@@ -243,8 +251,8 @@ class SnarkArgsHelper {
         ? SnarkArgsHelper.fakeProof()
         : await this.snarkProverQueue.doProof(
             input,
-            '/public/circuits/biomebase/circuit.wasm',
-            '/public/biomebase.zkey'
+            '/public/circuits/biomebase/circuit.wasm?id=5',
+            '/public/biomebase.zkey?id=5'
           );
       const hash = this.useMockHash ? fakeHash(x, y) : mimcHash(x, y);
       const biomebase = bigInt(perlin({ x, y }, true, true));
@@ -290,7 +298,10 @@ class SnarkArgsHelper {
     return [
       snarkProof.pi_a.slice(0, 2), // pi_a
       // genZKSnarkProof reverses values in the inner arrays of pi_b
-      [snarkProof.pi_b[0].reverse(), snarkProof.pi_b[1].reverse()], // pi_b
+      [
+        snarkProof.pi_b[0].slice(0).reverse(),
+        snarkProof.pi_b[1].slice(0).reverse(),
+      ], // pi_b
       snarkProof.pi_c.slice(0, 2), // pi_c
       publicSignals.map((signal) => signal.toString(10)), // input
     ];

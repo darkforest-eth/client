@@ -4,16 +4,10 @@ import {
   Player,
   QueuedArrival,
   Planet,
-  Upgrade,
-  SpaceType,
   LocationId,
   Artifact,
   ArtifactId,
   Location,
-  Biome,
-  ArtifactType,
-  PlanetLevel,
-  VoyageId,
 } from '../_types/global/GlobalTypes';
 // NOTE: DO NOT IMPORT FROM ETHERS SUBPATHS. see https://github.com/ethers-io/ethers.js/issues/349 (these imports trip up webpack)
 // in particular, the below is bad!
@@ -55,7 +49,6 @@ import {
   UpgradeArgs,
   RawUpgradesInfo,
   UpgradesInfo,
-  RawUpgrade,
   UnconfirmedUpgrade,
   UpgradeArgIdxs,
   SubmittedTx,
@@ -77,16 +70,14 @@ import {
   UnconfirmedWithdrawArtifact,
   RawArtifactWithMetadata,
 } from '../_types/darkforest/api/ContractsAPITypes';
-import {
-  aggregateBulkGetter,
-  hexifyBigIntNestedArray,
-  callWithRetry,
-} from '../utils/Utils';
+import { aggregateBulkGetter, callWithRetry } from '../utils/Utils';
 import TerminalEmitter, { TerminalTextStyle } from '../utils/TerminalEmitter';
-import EthereumAccountManager from './EthereumAccountManager';
+import EthConnection from './EthConnection';
 import NotificationManager from '../utils/NotificationManager';
 import { BLOCK_EXPLORER_URL } from '../utils/constants';
 import bigInt from 'big-integer';
+import { EthDecoders } from './EthDecoders';
+import { TxExecutor } from './TxExecutor';
 
 export function isUnconfirmedInit(
   txIntent: TxIntent
@@ -138,247 +129,43 @@ export function isUnconfirmedWithdrawArtifact(
 
 export const contractPrecision = 1000;
 
-type QueuedTxRequest = {
-  actionId: string;
-  contract: Contract;
-  method: string; // make this an enum
-
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  args: any[];
-  overrides: providers.TransactionRequest;
-  onSuccess: (res: providers.TransactionResponse) => void;
-  onError: (e: Error) => void;
-};
-
-class TxExecutor extends EventEmitter {
-  // tx is killed if user doesn't click popup within 20s
-  private readonly POPUP_TIMEOUT = 20000;
-  // tx is considered to have errored if haven't successfully submitted to mempool within 30s
-  private readonly TX_SUBMIT_TIMEOUT = 30000;
-  // refresh nonce if it hasn't been updated in last 20s
-  private readonly NONCE_STALE_AFTER_MS = 20000;
-  // don't allow users to submit txs if balance falls below
-  private readonly MIN_BALANCE_ETH = 0.002;
-
-  private txRequests: QueuedTxRequest[];
-  private currentlyExecuting: boolean;
-  private nonce: number;
-  private nonceLastUpdated: number;
-
-  constructor(nonce: number) {
-    super();
-
-    this.txRequests = [];
-    this.currentlyExecuting = false;
-    this.nonce = nonce;
-    this.nonceLastUpdated = Date.now();
-  }
-
-  /**
-   * Schedules this transaction to execute once all of the transactions
-   * ahead of it have completed.
-   */
-  public makeRequest(
-    actionId: string,
-    contract: Contract,
-    method: string,
-    args: any[],
-    overrides: providers.TransactionRequest
-  ): Promise<providers.TransactionResponse> {
-    return new Promise<providers.TransactionResponse>((resolve, reject) => {
-      const txRequest = {
-        actionId,
-        contract,
-        method,
-        args,
-        overrides,
-        onSuccess: resolve,
-        onError: reject,
-      };
-      this.txRequests.push(txRequest);
-      if (!this.currentlyExecuting) {
-        const toExec = this.txRequests.shift();
-        if (toExec) this.execute(toExec);
-      }
-    });
-  }
-
-  private async popupConfirmationWindow(
-    txRequest: QueuedTxRequest
-  ): Promise<void> {
-    // popup a confirmation window
-    const userAddr = (
-      await callWithRetry<string>(
-        txRequest.contract.signer.getAddress.bind(txRequest.contract)
-      )
-    ).toLowerCase();
-
-    // this guy should get a manager / API so we can actually understand it
-    const enableUntilStr = localStorage.getItem(`wallet-enabled-${userAddr}`);
-
-    if (
-      !enableUntilStr ||
-      Number.isNaN(+enableUntilStr) ||
-      Date.now() > +enableUntilStr ||
-      txRequest.method === 'buyHat'
-    ) {
-      const ethConnection = EthereumAccountManager.getInstance();
-      const balance = await ethConnection.getBalance(
-        ethConnection.getAddress()
-      );
-      const popup = window.open(
-        `/wallet/${userAddr}/${txRequest.actionId}/${balance}/${txRequest.method}`,
-        'confirmationwindow',
-        'width=600,height=420'
-      );
-      if (popup) {
-        const opened = Date.now();
-        await new Promise<void>((resolve, reject) => {
-          const interval = setInterval(() => {
-            if (popup.closed) {
-              const approved =
-                localStorage.getItem(
-                  `tx-approved-${userAddr}-${txRequest.actionId}`
-                ) === 'true';
-              if (approved) {
-                resolve();
-              } else {
-                reject(new Error('User rejected transaction.'));
-              }
-              localStorage.removeItem(
-                `tx-approved-${userAddr}-${txRequest.actionId}`
-              );
-              clearInterval(interval);
-            } else {
-              if (Date.now() > opened + this.POPUP_TIMEOUT) {
-                reject(
-                  new Error(
-                    'Approval window popup timed out; check your popups!'
-                  )
-                );
-                localStorage.removeItem(
-                  `tx-approved-${userAddr}-${txRequest.actionId}`
-                );
-                clearInterval(interval);
-                popup.close();
-              }
-            }
-          }, 100);
-        });
-      } else {
-        throw new Error(
-          'You need to enable popups to confirm this transaction.'
-        );
-      }
-    }
-  }
-
-  private async execute(txRequest: QueuedTxRequest) {
-    this.currentlyExecuting = true;
-    try {
-      const res = await new Promise<providers.TransactionResponse>(
-        async (resolve, reject) => {
-          try {
-            let succeeded = false;
-
-            // check if balance too low
-            const ethConnection = EthereumAccountManager.getInstance();
-            const balance = await ethConnection.getBalance(
-              ethConnection.getAddress()
-            );
-            if (balance < this.MIN_BALANCE_ETH) {
-              const notifsManager = NotificationManager.getInstance();
-              notifsManager.balanceEmpty();
-              throw new Error('xDAI balance too low!');
-            }
-
-            if (
-              Date.now() - this.nonceLastUpdated >
-              this.NONCE_STALE_AFTER_MS
-            ) {
-              this.nonce = await EthereumAccountManager.getInstance().getNonce();
-            }
-
-            await this.popupConfirmationWindow(txRequest);
-
-            // set a failure timeout
-            // if we haven't gotten a response within TX_SUBMIT_TIMEOUT ms, the tx was probably not submitted; give UI feedback
-            const failureTimeout = setTimeout(() => {
-              if (!succeeded) {
-                reject(
-                  new Error(
-                    `tx request ${txRequest.actionId} failed to submit: timed out}`
-                  )
-                );
-              }
-            }, this.TX_SUBMIT_TIMEOUT);
-
-            const res = await txRequest.contract[txRequest.method](
-              ...txRequest.args,
-              {
-                ...txRequest.overrides,
-                nonce: this.nonce,
-              }
-            );
-
-            this.nonce += 1;
-            this.nonceLastUpdated = Date.now();
-            succeeded = true;
-            clearTimeout(failureTimeout);
-            resolve(res);
-          } catch (e) {
-            reject(e);
-          }
-        }
-      );
-      txRequest.onSuccess(res);
-    } catch (e) {
-      const str = String.fromCharCode.apply(null, e.body || []);
-      console.error(str);
-      txRequest.onError(e);
-    }
-    this.currentlyExecuting = false;
-    const next = this.txRequests.shift();
-    if (next) {
-      this.execute(next);
-    }
-  }
-}
-
+/**
+ * Roughly contains methods that map 1:1 with functions that live
+ * in the contract.
+ */
 class ContractsAPI extends EventEmitter {
-  readonly account: EthAddress;
-  private coreContract: Contract;
   private readonly txRequestExecutor: TxExecutor;
+  private readonly terminalEmitter: TerminalEmitter;
+  public readonly account: EthAddress;
+  private coreContract: Contract;
 
   private constructor(
-    account: EthAddress,
     coreContract: Contract,
-    nonce: number
+    nonce: number,
+    account: EthAddress
   ) {
     super();
-    this.account = account;
     this.coreContract = coreContract;
     this.txRequestExecutor = new TxExecutor(nonce);
+    this.account = account;
+    this.terminalEmitter = TerminalEmitter.getInstance();
   }
 
   static async create(): Promise<ContractsAPI> {
-    const ethConnection = EthereumAccountManager.getInstance();
-    const contract: Contract = await ethConnection.loadCoreContract();
-
-    const account: EthAddress = ethConnection.getAddress();
-    const nonce: number = await ethConnection.getNonce();
+    const ethConnection = EthConnection.getInstance();
 
     const contractsAPI: ContractsAPI = new ContractsAPI(
-      account,
-      contract,
-      nonce
+      await ethConnection.loadCoreContract(),
+      await ethConnection.getNonce(),
+      ethConnection.getAddress()
     );
+
     contractsAPI.setupEventListeners();
 
     return contractsAPI;
   }
 
-  destroy(): void {
+  public destroy(): void {
     this.removeEventListeners();
   }
 
@@ -446,14 +233,14 @@ class ContractsAPI extends EventEmitter {
         );
       });
 
-    const ethConnection = EthereumAccountManager.getInstance();
+    const ethConnection = EthConnection.getInstance();
 
     ethConnection.on('ChangedRPCEndpoint', async () => {
       this.coreContract = await ethConnection.loadCoreContract();
     });
   }
 
-  removeEventListeners(): void {
+  public removeEventListeners(): void {
     this.coreContract.removeAllListeners(ContractEvent.PlayerInitialized);
     this.coreContract.removeAllListeners(ContractEvent.ArrivalQueued);
     this.coreContract.removeAllListeners(ContractEvent.PlanetUpgraded);
@@ -470,19 +257,18 @@ class ContractsAPI extends EventEmitter {
 
   public onTxSubmit(unminedTx: SubmittedTx): void {
     // TODO encapsulate this into terminalemitter
-    const terminalEmitter = TerminalEmitter.getInstance();
-    terminalEmitter.print(
+    this.terminalEmitter.print(
       `[TX SUBMIT] ${unminedTx.type} transaction (`,
       TerminalTextStyle.Blue
     );
-    terminalEmitter.printLink(
+    this.terminalEmitter.printLink(
       `${unminedTx.txHash.slice(0, 6)}`,
       () => {
         window.open(`${BLOCK_EXPLORER_URL}/tx/${unminedTx.txHash}`);
       },
       TerminalTextStyle.White
     );
-    terminalEmitter.println(
+    this.terminalEmitter.println(
       `) submitted to blockchain.`,
       TerminalTextStyle.Blue
     );
@@ -491,45 +277,60 @@ class ContractsAPI extends EventEmitter {
     notifManager.txSubmit(unminedTx);
 
     this.emit(ContractsAPIEvent.TxSubmitted, unminedTx);
-    EthereumAccountManager.getInstance()
-      .waitForTransaction(unminedTx.txHash)
+  }
+
+  /**
+   * Given my new `Tx` type, and an `unconfirmed (but submitted) transaction`, emits
+   * the appropriate `ContractsAPIEvent`.
+   */
+  private waitFor(
+    submitted: SubmittedTx,
+    receiptPromise: Promise<providers.TransactionReceipt>
+  ) {
+    this.onTxSubmit(submitted);
+
+    return receiptPromise
       .then((receipt) => {
-        this.onTxConfirmation(unminedTx, receipt.status === 1);
+        this.onTxConfirmed(submitted, receipt.status === 1);
+        return receipt;
+      })
+      .catch((e) => {
+        this.onTxConfirmed(submitted, false);
+        throw e;
       });
   }
 
-  private onTxConfirmation(unminedTx: SubmittedTx, success: boolean) {
-    const terminalEmitter = TerminalEmitter.getInstance();
+  private onTxConfirmed(unminedTx: SubmittedTx, success: boolean) {
     if (success) {
-      terminalEmitter.print(
+      this.terminalEmitter.print(
         `[TX CONFIRM] ${unminedTx.type} transaction (`,
         TerminalTextStyle.Green
       );
-      terminalEmitter.printLink(
+      this.terminalEmitter.printLink(
         `${unminedTx.txHash.slice(0, 6)}`,
         () => {
           window.open(`${BLOCK_EXPLORER_URL}/tx/${unminedTx.txHash}`);
         },
         TerminalTextStyle.White
       );
-      terminalEmitter.println(`) confirmed.`, TerminalTextStyle.Green);
+      this.terminalEmitter.println(`) confirmed.`, TerminalTextStyle.Green);
 
       const notifManager = NotificationManager.getInstance();
       notifManager.txConfirm(unminedTx);
       this.emit(ContractsAPIEvent.TxConfirmed, unminedTx);
     } else {
-      terminalEmitter.print(
+      this.terminalEmitter.print(
         `[TX ERROR] ${unminedTx.type} transaction (`,
         TerminalTextStyle.Red
       );
-      terminalEmitter.printLink(
+      this.terminalEmitter.printLink(
         `${unminedTx.txHash.slice(0, 6)}`,
         () => {
           window.open(`${BLOCK_EXPLORER_URL}/tx/${unminedTx.txHash}`);
         },
         TerminalTextStyle.White
       );
-      terminalEmitter.println(
+      this.terminalEmitter.println(
         `) reverted. Please try again.`,
         TerminalTextStyle.Red
       );
@@ -540,44 +341,24 @@ class ContractsAPI extends EventEmitter {
     }
   }
 
-  // throws if tx initialization fails
-  // otherwise, returns a promise of a submtited (unmined) tx receipt
   async initializePlayer(
     args: InitializePlayerArgs,
     action: UnconfirmedInit
   ): Promise<providers.TransactionReceipt> {
-    const terminalEmitter = TerminalEmitter.getInstance();
-    terminalEmitter.println(
-      'INIT: calculated SNARK with args:',
-      TerminalTextStyle.Sub
-    );
-    terminalEmitter.println(
-      JSON.stringify(hexifyBigIntNestedArray(args.slice(0, 3))),
-      TerminalTextStyle.Sub,
-      true
-    );
-    terminalEmitter.newline();
-
-    const overrides: providers.TransactionRequest = {
-      gasPrice: 1000000000,
-      gasLimit: 2000000,
-    };
-    const tx: providers.TransactionResponse = await this.txRequestExecutor.makeRequest(
+    const tx = this.txRequestExecutor.makeRequest(
+      EthTxType.INIT,
       action.actionId,
       this.coreContract,
-      'initializePlayer',
-      args,
-      overrides
+      args
     );
-    if (tx.hash) {
-      const unminedInitTx: SubmittedInit = {
-        ...action,
-        txHash: tx.hash,
-        sentAtTimestamp: Math.floor(Date.now() / 1000),
-      };
-      this.onTxSubmit(unminedInitTx);
-    }
-    return tx.wait();
+
+    const unminedInitTx: SubmittedInit = {
+      ...action,
+      txHash: (await tx.submitted).hash,
+      sentAtTimestamp: Math.floor(Date.now() / 1000),
+    };
+
+    return this.waitFor(unminedInitTx, tx.confirmed);
   }
 
   async transferOwnership(
@@ -585,31 +366,23 @@ class ContractsAPI extends EventEmitter {
     newOwner: EthAddress,
     actionId: string
   ): Promise<providers.TransactionReceipt> {
-    const overrides: providers.TransactionRequest = {
-      gasPrice: 1000000000,
-      gasLimit: 2000000,
-    };
-
-    const tx = await this.txRequestExecutor.makeRequest(
+    const tx = this.txRequestExecutor.makeRequest(
+      EthTxType.PLANET_TRANSFER,
       actionId,
       this.coreContract,
-      'transferOwnership',
-      [locationIdToDecStr(planetId), newOwner],
-      overrides
+      [locationIdToDecStr(planetId), newOwner]
     );
 
     const unminedTransferTx: SubmittedPlanetTransfer = {
       actionId,
       type: EthTxType.PLANET_TRANSFER,
-      txHash: tx.hash,
+      txHash: (await tx.submitted).hash,
       sentAtTimestamp: Math.floor(Date.now() / 1000),
       planetId,
       newOwner,
     };
 
-    this.onTxSubmit(unminedTransferTx);
-
-    return tx.wait();
+    return this.waitFor(unminedTransferTx, tx.confirmed);
   }
 
   // throws if tx initialization fails
@@ -618,38 +391,23 @@ class ContractsAPI extends EventEmitter {
     args: UpgradeArgs,
     actionId: string
   ): Promise<providers.TransactionReceipt> {
-    const terminalEmitter = TerminalEmitter.getInstance();
-    terminalEmitter.println(
-      'UPGRADE: sending upgrade to blockchain',
-      TerminalTextStyle.Sub
-    );
-    terminalEmitter.newline();
-
-    const overrides: providers.TransactionRequest = {
-      gasPrice: 1000000000,
-      gasLimit: 2000000,
-    };
-    const tx: providers.TransactionResponse = await this.txRequestExecutor.makeRequest(
+    const tx = this.txRequestExecutor.makeRequest(
+      EthTxType.UPGRADE,
       actionId,
       this.coreContract,
-      'upgradePlanet',
-      args,
-      overrides
+      args
     );
-    if (tx.hash) {
-      const unminedUpgradeTx: SubmittedUpgrade = {
-        actionId,
-        type: EthTxType.UPGRADE,
-        txHash: tx.hash,
-        sentAtTimestamp: Math.floor(Date.now() / 1000),
-        locationId: locationIdFromDecStr(args[UpgradeArgIdxs.LOCATION_ID]),
-        upgradeBranch: parseInt(args[UpgradeArgIdxs.UPGRADE_BRANCH]),
-      };
-      this.onTxSubmit(unminedUpgradeTx);
-    } else {
-      throw new Error(`tx ${actionId} failed to submit`);
-    }
-    return tx.wait();
+
+    const unminedUpgradeTx: SubmittedUpgrade = {
+      actionId,
+      type: EthTxType.UPGRADE,
+      txHash: (await tx.submitted).hash,
+      sentAtTimestamp: Math.floor(Date.now() / 1000),
+      locationId: locationIdFromDecStr(args[UpgradeArgIdxs.LOCATION_ID]),
+      upgradeBranch: parseInt(args[UpgradeArgIdxs.UPGRADE_BRANCH]),
+    };
+
+    return this.waitFor(unminedUpgradeTx, tx.confirmed);
   }
 
   // throws if tx initialization fails
@@ -659,86 +417,46 @@ class ContractsAPI extends EventEmitter {
     biomeSnarkArgs: BiomeArgs,
     actionId: string
   ): Promise<providers.TransactionReceipt> {
-    const terminalEmitter = TerminalEmitter.getInstance();
-
-    const overrides: providers.TransactionRequest = {
-      gasPrice: 1000000000,
-      gasLimit: 2000000,
-    };
-
-    terminalEmitter.println(
-      'ARTIFACT: calculated SNARK with args:',
-      TerminalTextStyle.Sub
-    );
-    terminalEmitter.println(
-      JSON.stringify(hexifyBigIntNestedArray(biomeSnarkArgs.slice(0, 3))),
-      TerminalTextStyle.Sub,
-      true
-    );
-    terminalEmitter.newline();
-
-    const tx: providers.TransactionResponse = await this.txRequestExecutor.makeRequest(
+    const tx = this.txRequestExecutor.makeRequest(
+      EthTxType.FIND_ARTIFACT,
       actionId,
       this.coreContract,
-      'findArtifact',
-      biomeSnarkArgs,
-      overrides
+      biomeSnarkArgs
     );
 
-    if (tx.hash) {
-      const unminedFindArtifact: SubmittedFindArtifact = {
-        actionId,
-        type: EthTxType.FIND_ARTIFACT,
-        txHash: tx.hash,
-        sentAtTimestamp: Math.floor(Date.now() / 1000),
-        planetId: location.hash,
-      };
-      this.onTxSubmit(unminedFindArtifact);
-    } else {
-      throw new Error(`tx ${actionId} failed to submit`);
-    }
-    return tx.wait();
+    const unminedFindArtifact: SubmittedFindArtifact = {
+      actionId,
+      type: EthTxType.FIND_ARTIFACT,
+      txHash: (await tx.submitted).hash,
+      sentAtTimestamp: Math.floor(Date.now() / 1000),
+      planetId: location.hash,
+    };
+
+    return this.waitFor(unminedFindArtifact, tx.confirmed);
   }
 
-  // throws if tx initialization fails
-  // otherwise, returns a promise of a submtited (unmined) tx receipt
   async depositArtifact(
     action: UnconfirmedDepositArtifact
   ): Promise<providers.TransactionReceipt> {
-    const terminalEmitter = TerminalEmitter.getInstance();
-    terminalEmitter.println(
-      'DEPOSIT_ARTIFACT: sending deposit to blockchain',
-      TerminalTextStyle.Sub
-    );
-    terminalEmitter.newline();
-
     const args: DepositArtifactArgs = [
       locationIdToDecStr(action.locationId),
       artifactIdToDecStr(action.artifactId),
     ];
 
-    const overrides: providers.TransactionRequest = {
-      gasPrice: 1000000000,
-      gasLimit: 2000000,
-    };
-    const tx: providers.TransactionResponse = await this.txRequestExecutor.makeRequest(
+    const tx = this.txRequestExecutor.makeRequest(
+      EthTxType.DEPOSIT_ARTIFACT,
       action.actionId,
       this.coreContract,
-      'depositArtifact',
-      args,
-      overrides
+      args
     );
-    if (tx.hash) {
-      const submittedTx: SubmittedDepositArtifact = {
-        ...action,
-        txHash: tx.hash,
-        sentAtTimestamp: Math.floor(Date.now() / 1000),
-      };
-      this.onTxSubmit(submittedTx);
-    } else {
-      throw new Error(`tx ${action.actionId} failed to submit`);
-    }
-    return tx.wait();
+
+    const submittedTx: SubmittedDepositArtifact = {
+      ...action,
+      txHash: (await tx.submitted).hash,
+      sentAtTimestamp: Math.floor(Date.now() / 1000),
+    };
+
+    return this.waitFor(submittedTx, tx.confirmed);
   }
 
   // throws if tx initialization fails
@@ -746,53 +464,33 @@ class ContractsAPI extends EventEmitter {
   async withdrawArtifact(
     action: UnconfirmedWithdrawArtifact
   ): Promise<providers.TransactionReceipt> {
-    const terminalEmitter = TerminalEmitter.getInstance();
-    terminalEmitter.println(
-      'WITHDRAW_ARTIFACT: sending withdrawal to blockchain',
-      TerminalTextStyle.Sub
-    );
-    terminalEmitter.newline();
-
     const args: WithdrawArtifactArgs = [locationIdToDecStr(action.locationId)];
 
-    const overrides: providers.TransactionRequest = {
-      gasPrice: 1000000000,
-      gasLimit: 2000000,
-    };
-    const tx: providers.TransactionResponse = await this.txRequestExecutor.makeRequest(
+    const tx = this.txRequestExecutor.makeRequest(
+      EthTxType.WITHDRAW_ARTIFACT,
       action.actionId,
       this.coreContract,
-      'withdrawArtifact',
-      args,
-      overrides
+      args
     );
-    if (tx.hash) {
-      const submittedTx: SubmittedWithdrawArtifact = {
-        ...action,
-        txHash: tx.hash,
-        sentAtTimestamp: Math.floor(Date.now() / 1000),
-      };
-      this.onTxSubmit(submittedTx);
-    } else {
-      throw new Error(`tx ${action.actionId} failed to submit`);
-    }
-    return tx.wait();
+
+    const submittedTx: SubmittedWithdrawArtifact = {
+      ...action,
+      txHash: (await tx.submitted).hash,
+      sentAtTimestamp: Math.floor(Date.now() / 1000),
+    };
+
+    return this.waitFor(submittedTx, tx.confirmed);
   }
 
   // throws if tx initialization fails
   // otherwise, returns a promise of a submtited (unmined) tx receipt
   async move(
     snarkArgs: MoveSnarkArgs,
+    snarkLocalVerified: boolean,
     shipsMoved: number,
     silverMoved: number,
     actionId: string
   ): Promise<providers.TransactionReceipt> {
-    const terminalEmitter = TerminalEmitter.getInstance();
-
-    const overrides: providers.TransactionRequest = {
-      gasPrice: 1000000000,
-      gasLimit: 2000000,
-    };
     const args = [
       snarkArgs[ZKArgIdx.PROOF_A],
       snarkArgs[ZKArgIdx.PROOF_B],
@@ -803,99 +501,70 @@ class ContractsAPI extends EventEmitter {
         (silverMoved * contractPrecision).toString(),
       ],
     ] as MoveArgs;
-    terminalEmitter.println(
-      'MOVE: calculated SNARK with args:',
-      TerminalTextStyle.Sub
-    );
-    terminalEmitter.println(
-      JSON.stringify(hexifyBigIntNestedArray(args.slice(0, 3))),
-      TerminalTextStyle.Sub,
-      true
-    );
-    terminalEmitter.newline();
 
-    const tx: providers.TransactionResponse = await this.txRequestExecutor.makeRequest(
+    const tx = this.txRequestExecutor.makeRequest(
+      EthTxType.MOVE,
       actionId,
       this.coreContract,
-      'move',
       args,
-      overrides
+      {
+        gasPrice: 1000000000,
+        gasLimit: 2000000,
+      },
+      snarkLocalVerified
     );
 
-    if (tx.hash) {
-      const forcesFloat = parseFloat(
-        args[ZKArgIdx.DATA][MoveArgIdxs.SHIPS_SENT]
-      );
-      const silverFloat = parseFloat(
-        args[ZKArgIdx.DATA][MoveArgIdxs.SILVER_SENT]
-      );
+    const forcesFloat = parseFloat(args[ZKArgIdx.DATA][MoveArgIdxs.SHIPS_SENT]);
+    const silverFloat = parseFloat(
+      args[ZKArgIdx.DATA][MoveArgIdxs.SILVER_SENT]
+    );
 
-      const unminedMoveTx: SubmittedMove = {
-        actionId,
-        type: EthTxType.MOVE,
-        txHash: tx.hash,
-        sentAtTimestamp: Math.floor(Date.now() / 1000),
-        from: locationIdFromDecStr(args[ZKArgIdx.DATA][MoveArgIdxs.FROM_ID]),
-        to: locationIdFromDecStr(args[ZKArgIdx.DATA][MoveArgIdxs.TO_ID]),
-        forces: forcesFloat / contractPrecision,
-        silver: silverFloat / contractPrecision,
-      };
-      this.onTxSubmit(unminedMoveTx);
-    } else {
-      throw new Error(`tx ${actionId} failed to submit`);
-    }
-    return tx.wait();
+    const unminedMoveTx: SubmittedMove = {
+      actionId,
+      type: EthTxType.MOVE,
+      txHash: (await tx.submitted).hash,
+      sentAtTimestamp: Math.floor(Date.now() / 1000),
+      from: locationIdFromDecStr(args[ZKArgIdx.DATA][MoveArgIdxs.FROM_ID]),
+      to: locationIdFromDecStr(args[ZKArgIdx.DATA][MoveArgIdxs.TO_ID]),
+      forces: forcesFloat / contractPrecision,
+      silver: silverFloat / contractPrecision,
+    };
+
+    return this.waitFor(unminedMoveTx, tx.confirmed);
   }
 
-  // throws if tx initialization fails
-  // otherwise, returns a promise of a submtited (unmined) tx receipt
   async buyHat(
     planetIdDecStr: string,
     currentHatLevel: number,
     actionId: string
   ) {
-    const terminalEmitter = TerminalEmitter.getInstance();
-    terminalEmitter.println(
-      'BUY HAT: sending request to blockchain',
-      TerminalTextStyle.Sub
-    );
-    terminalEmitter.newline();
-
     const overrides: providers.TransactionRequest = {
-      gasPrice: 1000000000,
       gasLimit: 500000,
       value: bigInt(1000000000000000000)
         .multiply(2 ** currentHatLevel)
         .toString(),
     };
-    const tx: providers.TransactionResponse = await this.txRequestExecutor.makeRequest(
+
+    const tx = this.txRequestExecutor.makeRequest(
+      EthTxType.BUY_HAT,
       actionId,
       this.coreContract,
-      'buyHat',
       [planetIdDecStr],
       overrides
     );
-    if (tx.hash) {
-      const unminedBuyHatTx: SubmittedBuyHat = {
-        actionId,
-        type: EthTxType.BUY_HAT,
-        txHash: tx.hash,
-        sentAtTimestamp: Math.floor(Date.now() / 1000),
-        locationId: locationIdFromDecStr(planetIdDecStr),
-      };
-      this.onTxSubmit(unminedBuyHatTx);
-    }
-    return tx.wait();
+
+    const unminedBuyHatTx: SubmittedBuyHat = {
+      actionId,
+      type: EthTxType.BUY_HAT,
+      txHash: (await tx.submitted).hash,
+      sentAtTimestamp: Math.floor(Date.now() / 1000),
+      locationId: locationIdFromDecStr(planetIdDecStr),
+    };
+
+    return this.waitFor(unminedBuyHatTx, tx.confirmed);
   }
 
   async getConstants(): Promise<ContractConstants> {
-    console.log('getting constants');
-    const terminalEmitter = TerminalEmitter.getInstance();
-    terminalEmitter.println(
-      '(1/7) Getting game constants...',
-      TerminalTextStyle.Sub
-    );
-
     const contract = this.coreContract;
     // break constant calls up into two Promise.all()s
     // xDAI endpoint less likely to freak out
@@ -926,14 +595,10 @@ class ContractsAPI extends EventEmitter {
     const SILVER_RARITY_2 = res2[2].toNumber();
     const SILVER_RARITY_3 = res2[3].toNumber();
     const rawUpgrades = res2[4];
-    const upgrades: UpgradesInfo = this.rawUpgradesInfoToUpgradesInfo(
+    const upgrades: UpgradesInfo = EthDecoders.rawUpgradesInfoToUpgradesInfo(
       rawUpgrades
     );
 
-    terminalEmitter.println(
-      '(2/7) Getting default planet stats...',
-      TerminalTextStyle.Sub
-    );
     const rawDefaults: RawDefaults = await callWithRetry<RawDefaults>(
       contract.getDefaultStats
     );
@@ -979,11 +644,11 @@ class ContractsAPI extends EventEmitter {
     };
   }
 
-  async zkChecksDisabled(): Promise<boolean> {
+  public async zkChecksDisabled(): Promise<boolean> {
     return callWithRetry<boolean>(this.coreContract.DISABLE_ZK_CHECK);
   }
 
-  async getPlayerArtifacts(playerId: EthAddress): Promise<Artifact[]> {
+  public async getPlayerArtifacts(playerId: EthAddress): Promise<Artifact[]> {
     const myArtifactIds = (
       await callWithRetry<EthersBN[]>(this.coreContract.getPlayerArtifactIds, [
         playerId,
@@ -992,7 +657,7 @@ class ContractsAPI extends EventEmitter {
     return this.bulkGetArtifacts(myArtifactIds);
   }
 
-  async getPlayers(): Promise<Map<string, Player>> {
+  public async getPlayers(): Promise<Map<string, Player>> {
     console.log('getting players');
     const contract = this.coreContract;
     const nPlayers: number = (
@@ -1013,14 +678,14 @@ class ContractsAPI extends EventEmitter {
     return playerMap;
   }
 
-  async getWorldRadius(): Promise<number> {
+  public async getWorldRadius(): Promise<number> {
     const radius = (
       await callWithRetry<EthersBN>(this.coreContract.worldRadius)
     ).toNumber();
     return radius;
   }
 
-  async getContractBalance(): Promise<number> {
+  public async getContractBalance(): Promise<number> {
     const rawBalance = await callWithRetry<EthersBN>(
       this.coreContract.getBalance
     );
@@ -1029,36 +694,33 @@ class ContractsAPI extends EventEmitter {
     return numBalance;
   }
 
-  async getArrival(arrivalId: number): Promise<QueuedArrival | null> {
+  public async getArrival(arrivalId: number): Promise<QueuedArrival | null> {
     const contract = this.coreContract;
     const rawArrival: RawArrivalData = await callWithRetry<RawArrivalData>(
       contract.planetArrivals,
       [arrivalId]
     );
-    return this.rawArrivalToObject(rawArrival);
+    return EthDecoders.rawArrivalToObject(rawArrival);
   }
 
-  async getArrivalsForPlanet(planetId: LocationId): Promise<QueuedArrival[]> {
+  public async getArrivalsForPlanet(
+    planetId: LocationId
+  ): Promise<QueuedArrival[]> {
     const contract = this.coreContract;
 
     const events = (
       await callWithRetry<RawArrivalData[]>(contract.getPlanetArrivals, [
         locationIdToDecStr(planetId),
       ])
-    ).map(this.rawArrivalToObject);
+    ).map(EthDecoders.rawArrivalToObject);
 
     return events;
   }
 
-  /**
-   * Loads arrivals for only the given planets
-   */
-  async getAllArrivals(planetsToLoad: LocationId[]): Promise<QueuedArrival[]> {
-    console.log('getting arrivals');
+  public async getAllArrivals(
+    planetsToLoad: LocationId[]
+  ): Promise<QueuedArrival[]> {
     const contract = this.coreContract;
-    const terminalEmitter = TerminalEmitter.getInstance();
-    terminalEmitter.println('(4/7) Getting pending moves...');
-
     const arrivalsUnflattened = await aggregateBulkGetter<QueuedArrival[]>(
       planetsToLoad.length,
       1000,
@@ -1068,7 +730,7 @@ class ContractsAPI extends EventEmitter {
             planetsToLoad.slice(start, end).map((id) => locationIdToDecStr(id))
           )
         ).map((arrivals: RawArrivalData[]) =>
-          arrivals.map(this.rawArrivalToObject)
+          arrivals.map(EthDecoders.rawArrivalToObject)
         );
       },
       true
@@ -1077,9 +739,7 @@ class ContractsAPI extends EventEmitter {
     return _.flatten(arrivalsUnflattened);
   }
 
-  async getTouchedPlanetIds(startingAt: number): Promise<LocationId[]> {
-    const terminalEmitter = TerminalEmitter.getInstance();
-    terminalEmitter.println('(3/7) Getting planet IDs...');
+  public async getTouchedPlanetIds(startingAt: number): Promise<LocationId[]> {
     const contract = this.coreContract;
     const nPlanets: number = (
       await callWithRetry<EthersBN>(contract.getNPlanets)
@@ -1095,17 +755,11 @@ class ContractsAPI extends EventEmitter {
 
     return planetIds.map((id) => locationIdFromEthersBN(id));
   }
-  /**
-   * bulk syncs all the planet data from the contract, for planets that have been mined on this device.
-   */
-  async getTouchedPlanets(
+  public async bulkGetPlanets(
     toLoadPlanets: LocationId[]
   ): Promise<Map<LocationId, Planet>> {
-    console.log('getting planets');
     const contract = this.coreContract;
-    const terminalEmitter = TerminalEmitter.getInstance();
 
-    terminalEmitter.println('(5/7) Getting planet metadata...');
     const rawPlanetsExtendedInfo = await aggregateBulkGetter<
       RawPlanetExtendedInfo
     >(
@@ -1118,7 +772,6 @@ class ContractsAPI extends EventEmitter {
       true
     );
 
-    terminalEmitter.println('(6/7) Getting planet data...');
     const rawPlanets = await aggregateBulkGetter<RawPlanetData>(
       toLoadPlanets.length,
       1000,
@@ -1133,7 +786,7 @@ class ContractsAPI extends EventEmitter {
 
     for (let i = 0; i < toLoadPlanets.length; i += 1) {
       if (!!rawPlanets[i] && !!rawPlanetsExtendedInfo[i]) {
-        const planet = this.rawPlanetToObject(
+        const planet = EthDecoders.rawPlanetToObject(
           locationIdToDecStr(toLoadPlanets[i]),
           rawPlanets[i],
           rawPlanetsExtendedInfo[i]
@@ -1155,7 +808,7 @@ class ContractsAPI extends EventEmitter {
       this.coreContract.planets,
       [decStrId]
     );
-    return this.rawPlanetToObject(decStrId, rawPlanet, rawExtendedInfo);
+    return EthDecoders.rawPlanetToObject(decStrId, rawPlanet, rawExtendedInfo);
   }
 
   public async getArtifactById(
@@ -1171,21 +824,13 @@ class ContractsAPI extends EventEmitter {
       [artifactIdToDecStr(artifactId)]
     );
 
-    return this.rawArtifactWithMetadataToArtifact(rawArtifact);
+    return EthDecoders.rawArtifactWithMetadataToArtifact(rawArtifact);
   }
 
-  /**
-   * Bulk get artifacts.
-   */
   public async bulkGetArtifacts(
     artifactIds: ArtifactId[],
     printProgress = false
   ): Promise<Artifact[]> {
-    if (printProgress) {
-      const terminalEmitter = TerminalEmitter.getInstance();
-      terminalEmitter.println('(7/7) Getting artifacts...');
-    }
-
     const contract = this.coreContract;
     const rawArtifacts: RawArtifactWithMetadata[] = await aggregateBulkGetter<
       RawArtifactWithMetadata
@@ -1200,158 +845,10 @@ class ContractsAPI extends EventEmitter {
     );
 
     const ret: Artifact[] = rawArtifacts.map(
-      this.rawArtifactWithMetadataToArtifact.bind(this)
+      EthDecoders.rawArtifactWithMetadataToArtifact
     );
 
     return ret;
-  }
-
-  // not strictly necessary but it's cleaner
-  private rawArrivalToObject(rawArrival: RawArrivalData): QueuedArrival {
-    const rawId = rawArrival[0];
-    const rawPlayer = rawArrival[1];
-    const rawFromPlanet = rawArrival[2];
-    const rawToPlanet = rawArrival[3];
-    const rawPopArriving = rawArrival[4];
-    const rawSilverMoved = rawArrival[5];
-    const rawDepartureTime = rawArrival[6];
-    const rawArrivalTime = rawArrival[7];
-
-    const arrival: QueuedArrival = {
-      eventId: rawId.toString() as VoyageId,
-      player: address(rawPlayer),
-      fromPlanet: locationIdFromDecStr(rawFromPlanet.toString()),
-      toPlanet: locationIdFromDecStr(rawToPlanet.toString()),
-      energyArriving: rawPopArriving.toNumber() / contractPrecision,
-      silverMoved: rawSilverMoved.toNumber() / contractPrecision,
-      departureTime: rawDepartureTime.toNumber(),
-      arrivalTime: rawArrivalTime.toNumber(),
-    };
-
-    return arrival;
-  }
-
-  private rawArtifactWithMetadataToArtifact(
-    rawArtifactWithMetadata: RawArtifactWithMetadata
-  ): Artifact {
-    const rawArtifact = rawArtifactWithMetadata[0];
-    const rawUpgrade = rawArtifactWithMetadata[1];
-    const rawOwner = rawArtifactWithMetadata[2];
-    const rawLocationId = rawArtifactWithMetadata[3];
-    const planetLevel = rawArtifact[2].toNumber() as PlanetLevel;
-    const planetBiome = rawArtifact[3] as Biome;
-    const artifactType = rawArtifact[6] as ArtifactType;
-    const ret: Artifact = {
-      id: artifactIdFromEthersBN(rawArtifact[0]),
-      planetDiscoveredOn: locationIdFromDecStr(rawArtifact[1].toString()),
-      planetLevel,
-      planetBiome,
-      mintedAtTimestamp: rawArtifact[4].toNumber(),
-      discoverer: address(rawArtifact[5]),
-      currentOwner: address(rawOwner),
-      artifactType,
-      upgrade: this.rawUpgradeToUpgrade(rawUpgrade),
-    };
-    if (!rawLocationId.eq(0)) {
-      ret.onPlanetId = locationIdFromEthersBN(rawLocationId);
-    }
-    return ret;
-  }
-
-  private rawPlanetToObject(
-    rawLocationId: string,
-    rawPlanet: RawPlanetData,
-    rawPlanetExtendedInfo: RawPlanetExtendedInfo
-  ): Planet {
-    const rawOwner = rawPlanet[0];
-    const rawRange = rawPlanet[1];
-    const rawSpeed = rawPlanet[2];
-    const rawDefense = rawPlanet[3];
-    const rawPopulation = rawPlanet[4];
-    const rawPopulationCap = rawPlanet[5];
-    const rawPopulationGrowth = rawPlanet[6];
-    const rawPlanetResource = rawPlanet[7];
-    const rawSilverCap = rawPlanet[8];
-    const rawSilverGrowth = rawPlanet[9];
-    const rawSilver = rawPlanet[10];
-    const rawPlanetLevel = rawPlanet[11];
-
-    const rawLastUpdated = rawPlanetExtendedInfo[2];
-    const rawPerlin = rawPlanetExtendedInfo[3];
-    const rawSpaceType = rawPlanetExtendedInfo[4] as SpaceType;
-    const rawUpgradeState = [
-      rawPlanetExtendedInfo[5],
-      rawPlanetExtendedInfo[6],
-      rawPlanetExtendedInfo[7],
-    ];
-    const rawHatLevel = rawPlanetExtendedInfo[8];
-
-    const planet: Planet = {
-      locationId: locationIdFromDecStr(rawLocationId.toString()),
-      perlin: rawPerlin.toNumber(),
-      spaceType: rawSpaceType,
-      owner: address(rawOwner),
-      hatLevel: rawHatLevel.toNumber(),
-
-      planetLevel: rawPlanetLevel.toNumber(),
-      planetResource: rawPlanetResource,
-
-      energyCap: rawPopulationCap.toNumber() / contractPrecision,
-      energyGrowth: rawPopulationGrowth.toNumber() / contractPrecision,
-
-      silverCap: rawSilverCap.toNumber() / contractPrecision,
-      silverGrowth: rawSilverGrowth.toNumber() / contractPrecision,
-
-      energy: rawPopulation.toNumber() / contractPrecision,
-      silver: rawSilver.toNumber() / contractPrecision,
-
-      range: rawRange.toNumber(),
-      speed: rawSpeed.toNumber(),
-      defense: rawDefense.toNumber(),
-
-      // metadata
-      lastUpdated: rawLastUpdated.toNumber(),
-      upgradeState: [
-        rawUpgradeState[0].toNumber(),
-        rawUpgradeState[1].toNumber(),
-        rawUpgradeState[2].toNumber(),
-      ],
-
-      unconfirmedDepartures: [],
-      unconfirmedUpgrades: [],
-      unconfirmedBuyHats: [],
-      unconfirmedPlanetTransfers: [],
-      unconfirmedFindArtifact: undefined,
-      silverSpent: 0, // this is stale and will be updated in entitystore
-
-      isInContract: true,
-      syncedWithContract: true,
-      hasTriedFindingArtifact: rawPlanetExtendedInfo[9],
-    };
-
-    if (!rawPlanetExtendedInfo[10].eq(0)) {
-      planet.heldArtifactId = artifactIdFromEthersBN(rawPlanetExtendedInfo[10]);
-      planet.artifactLockedTimestamp = rawPlanetExtendedInfo[11].toNumber();
-    }
-    return planet;
-  }
-
-  private rawUpgradeToUpgrade(rawUpgrade: RawUpgrade): Upgrade {
-    return {
-      energyCapMultiplier: rawUpgrade[0].toNumber(),
-      energyGroMultiplier: rawUpgrade[1].toNumber(),
-      rangeMultiplier: rawUpgrade[2].toNumber(),
-      speedMultiplier: rawUpgrade[3].toNumber(),
-      defMultiplier: rawUpgrade[4].toNumber(),
-    };
-  }
-
-  private rawUpgradesInfoToUpgradesInfo(
-    rawUpgradesInfo: RawUpgradesInfo
-  ): UpgradesInfo {
-    return rawUpgradesInfo.map((a) =>
-      a.map((b) => this.rawUpgradeToUpgrade(b))
-    ) as UpgradesInfo;
   }
 }
 

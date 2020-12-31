@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { FormEvent } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
-import EthereumAccountManager from '../../api/EthereumAccountManager';
+import EthConnection from '../../api/EthConnection';
 import { useStoredUIState, UIDataKey } from '../../api/UIStateStorageManager';
 import { Sub, Red, White } from '../../components/Text';
 import dfstyles from '../../styles/dfstyles';
@@ -113,6 +113,13 @@ export function SettingsPane({
 
   const [_hiPerf, _setHiPerf] = hiPerfHook;
 
+  const [optOutMetrics, setOptOutMetrics] = useState<boolean | undefined>();
+  const updateOptOutMetrics = (newVal: boolean): void => {
+    if (!account) return;
+    localStorage.setItem(`optout-metrics-${account}`, JSON.stringify(newVal));
+    setOptOutMetrics(newVal);
+  };
+
   const [allowTx, setAllowTx] = useState<boolean>(false);
   const updateAllowTx = (newVal: boolean): void => {
     if (!account) return;
@@ -153,7 +160,7 @@ export function SettingsPane({
   }, [account]);
 
   // RPC URL
-  const ethManager = EthereumAccountManager.getInstance();
+  const ethManager = EthConnection.getInstance();
   const [rpcURLText, setRpcURLText] = useState<string>(
     ethManager.getRpcEndpoint()
   );
@@ -171,6 +178,13 @@ export function SettingsPane({
   // balance stuff
 
   const [balance, setBalance] = useState<number>(0);
+
+  useEffect(() => {
+    if (typeof optOutMetrics === 'undefined' && account) {
+      const fromDisk = localStorage.getItem(`optout-metrics-${account}`);
+      setOptOutMetrics(fromDisk === 'true');
+    }
+  }, [optOutMetrics, account]);
 
   useEffect(() => {
     if (!uiManager) return;
@@ -238,11 +252,7 @@ export function SettingsPane({
         setFailure('Invalid map data. Check the data in your clipboard.');
         return;
       }
-
-      for (const chunk of chunks) {
-        // Slowly add/refresh planets to avoid crashing the game
-        await uiManager.addNewChunkThrottled(chunk as ExploredChunkData);
-      }
+      await uiManager.bulkAddNewChunks(chunks as ExploredChunkData[]);
       setSuccess('Successfully imported a map!');
     } else {
       setFailure('Unable to import map right now.');
@@ -373,6 +383,23 @@ export function SettingsPane({
             <span>
               <Btn onClick={onChangeRpc}>Change RPC URL</Btn>
             </span>
+          </div>
+        </div>
+
+        <div className='section'>
+          <p>
+            We collect a minimal set of data and statistics such as SNARK
+            proving times, average transaction times across browsers, and xDAI
+            transaction errors, to help us optimize performance and fix bugs.
+            This does not include personal data like email or IP address.
+          </p>
+          <div className='row'>
+            <Sub>Opt out of metrics</Sub>
+            <input
+              type='checkbox'
+              checked={optOutMetrics}
+              onChange={(e) => updateOptOutMetrics(e.target.checked)}
+            />
           </div>
         </div>
 

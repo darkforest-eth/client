@@ -68,9 +68,10 @@ export enum GameManagerEvent {
 
 import TerminalEmitter, { TerminalTextStyle } from '../utils/TerminalEmitter';
 import { getAllTwitters, verifyTwitterHandle } from './UtilityServerAPI';
-import EthereumAccountManager from './EthereumAccountManager';
+import EthConnection from './EthConnection';
 import {
   getRandomActionId,
+  hexifyBigIntNestedArray,
   locationFromCoords,
   moveShipsDecay,
 } from '../utils/Utils';
@@ -103,7 +104,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     return this.contractConstants.PLANET_RARITY;
   }
 
-  private readonly endTimeSeconds: number = 1609372800;
+  private readonly endTimeSeconds: number = 1643587533; // jan 2022
 
   private constructor(
     account: EthAddress | null,
@@ -150,7 +151,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
     this.balanceInterval = setInterval(() => {
       if (this.account) {
-        EthereumAccountManager.getInstance()
+        EthConnection.getInstance()
           .getBalance(this.account)
           .then((balance) => {
             this.balance = balance;
@@ -186,9 +187,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
     // then we initialize the local storage manager and SNARK helper
     const account = contractsAPI.account;
-    const balance = await EthereumAccountManager.getInstance().getBalance(
-      account
-    );
+    const balance = await EthConnection.getInstance().getBalance(account);
     const persistentChunkStore = await PersistentChunkStore.create(account);
     const possibleHomes = await persistentChunkStore.getHomeLocations();
     const storedTouchedPlanetIds = await persistentChunkStore.getSavedTouchedPlanetIds();
@@ -196,6 +195,11 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     const snarkHelper = SnarkHelper.create(useMockHash);
 
     // get data from the contract
+    const terminalEmitter = TerminalEmitter.getInstance();
+    terminalEmitter.println(
+      '(1/5) Getting game constants...',
+      TerminalTextStyle.Sub
+    );
     const contractConstants = await contractsAPI.getConstants();
     const players = await contractsAPI.getPlayers();
     const worldRadius = await contractsAPI.getWorldRadius();
@@ -207,6 +211,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     const minedPlanetIds = _.flatMap(minedChunks, (c) => c.planetLocations).map(
       (l) => l.hash
     );
+    terminalEmitter.println('(2/5) Getting planet IDs...');
     const loadedPlanetIds = await contractsAPI.getTouchedPlanetIds(
       storedTouchedPlanetIds.length
     );
@@ -221,8 +226,10 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
     // fetch planets after allArrivals, since an arrival to a new planet might be sent
     // while we are fetching
+    terminalEmitter.println('(3/5) Getting pending moves...');
     const allArrivals = await contractsAPI.getAllArrivals(planetsToLoad);
-    const touchedAndMinedPlanets = await contractsAPI.getTouchedPlanets(
+    terminalEmitter.println('(4/5) Getting planet metadata...');
+    const touchedAndMinedPlanets = await contractsAPI.bulkGetPlanets(
       planetsToLoad
     );
 
@@ -249,6 +256,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
         heldArtifactIds.push(planet.heldArtifactId);
       }
     });
+    terminalEmitter.println('(5/5) Getting artifacts...');
     const heldArtifacts = await contractsAPI.bulkGetArtifacts(
       heldArtifactIds,
       true
@@ -332,7 +340,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
         }
         gameManager.entityStore.clearUnconfirmedTxIntent(unconfirmedTx);
         if (gameManager.account) {
-          gameManager.balance = await EthereumAccountManager.getInstance().getBalance(
+          gameManager.balance = await EthConnection.getInstance().getBalance(
             gameManager.account
           );
         }
@@ -341,7 +349,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
         gameManager.entityStore.clearUnconfirmedTxIntent(unconfirmedTx);
         gameManager.persistentChunkStore.onEthTxComplete(unconfirmedTx.txHash);
         if (gameManager.account) {
-          gameManager.balance = await EthereumAccountManager.getInstance().getBalance(
+          gameManager.balance = await EthConnection.getInstance().getBalance(
             gameManager.account
           );
         }
@@ -371,6 +379,37 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     if (!planet) return;
     const arrivals = await this.contractsAPI.getArrivalsForPlanet(planetId);
     this.entityStore.replacePlanetFromContractData(planet, arrivals);
+  }
+
+  private async bulkHardRefreshPlanets(planetIds: LocationId[]): Promise<void> {
+    const planetVoyageMap: Map<LocationId, QueuedArrival[]> = new Map();
+
+    const allVoyages = await this.contractsAPI.getAllArrivals(planetIds);
+    const planetsToUpdate = await this.contractsAPI.bulkGetPlanets(planetIds);
+
+    planetsToUpdate.forEach((planet, locId) => {
+      if (planetsToUpdate.has(locId)) {
+        planetVoyageMap.set(locId, []);
+      }
+    });
+
+    for (const voyage of allVoyages) {
+      const voyagesForToPlanet = planetVoyageMap.get(voyage.toPlanet);
+      if (voyagesForToPlanet) {
+        voyagesForToPlanet.push(voyage);
+        planetVoyageMap.set(voyage.toPlanet, voyagesForToPlanet);
+      }
+    }
+
+    for (const planet of planetsToUpdate.values()) {
+      const voyagesForPlanet = planetVoyageMap.get(planet.locationId);
+      if (voyagesForPlanet) {
+        this.entityStore.replacePlanetFromContractData(
+          planet,
+          voyagesForPlanet
+        );
+      }
+    }
   }
 
   private async hardRefreshArtifact(artifactId: ArtifactId): Promise<void> {
@@ -612,11 +651,11 @@ class GameManager extends EventEmitter implements AbstractGameManager {
   }
 
   async getSignedTwitter(twitter: string): Promise<string> {
-    return EthereumAccountManager.getInstance().signMessage(twitter);
+    return EthConnection.getInstance().signMessage(twitter);
   }
 
   getPrivateKey(): string {
-    return EthereumAccountManager.getInstance().getPrivateKey();
+    return EthConnection.getInstance().getPrivateKey();
   }
 
   getMyBalance(): number {
@@ -738,6 +777,17 @@ class GameManager extends EventEmitter implements AbstractGameManager {
         // `beforeRetry` is undefined, then don't retry and throw an exception.
         while (true) {
           try {
+            const terminalEmitter = TerminalEmitter.getInstance();
+            terminalEmitter.println(
+              'INIT: calculated SNARK with args:',
+              TerminalTextStyle.Sub
+            );
+            terminalEmitter.println(
+              JSON.stringify(hexifyBigIntNestedArray(callArgs.slice(0, 3))),
+              TerminalTextStyle.Sub,
+              true
+            );
+            terminalEmitter.newline();
             await this.contractsAPI.initializePlayer(callArgs, txIntent);
             break;
           } catch (e) {
@@ -780,7 +830,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     return new Promise<Location>((resolve) => {
       const perlinThreshold = this.contractConstants.PERLIN_THRESHOLD_1;
       let minedChunksCount = 0;
-      // target4 is about 800; universe doesn't expand until virtual radius reaches ~32000
+      // target4 is about 32000 in v0.5 prod; universe doesn't expand until virtual radius reaches ~64000
       const UNIFORM_RANDOM_UNTIL_1 = 34000;
       const UNIFORM_RANDOM_UNTIL_2 = 68000;
 
@@ -792,6 +842,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       // only initialize in areas with perlin = PERLIN_THRESHOLD_1 - 1
       // contract will only enforce <= PERLIN_THRESHOLD_1 but there's no reason to
       // initialize in a lower perlin area
+      const isProd = process.env.NODE_ENV === 'production';
       do {
         // sample from square
         x = Math.random() * this.worldRadius * 2 - this.worldRadius;
@@ -802,9 +853,10 @@ class GameManager extends EventEmitter implements AbstractGameManager {
         p >= perlinThreshold || // can't be in space/deepspace
         p < perlinThreshold - 1 || // can't be too deep in nebula
         d >= this.worldRadius || // can't be out of bound
-        d <= UNIFORM_RANDOM_UNTIL_1 || // can't be in initial (first 100 players) spawn circle
-        (this.worldRadius > UNIFORM_RANDOM_UNTIL_2 &&
-          d <= 0.9 * this.worldRadius) // can't be in inner 90%, if worldRadius large enough
+        (isProd &&
+          (d <= UNIFORM_RANDOM_UNTIL_1 || // can't be in initial (first 100 players) spawn circle
+            (this.worldRadius > UNIFORM_RANDOM_UNTIL_2 &&
+              d <= 0.9 * this.worldRadius))) // can't be in inner 90%, if worldRadius large enough
       );
 
       // when setting up a new account in development mode, you can tell
@@ -932,9 +984,25 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
     this.snarkHelper
       .getFindArtifactArgs(planet.location.coords.x, planet.location.coords.y)
-      .then((snarkArgs) =>
-        this.contractsAPI.findArtifact(planet.location, snarkArgs, actionId)
-      )
+      .then((snarkArgs) => {
+        const terminalEmitter = TerminalEmitter.getInstance();
+        terminalEmitter.println(
+          'ARTIFACT: calculated SNARK with args:',
+          TerminalTextStyle.Sub
+        );
+        terminalEmitter.println(
+          JSON.stringify(hexifyBigIntNestedArray(snarkArgs.slice(0, 3))),
+          TerminalTextStyle.Sub,
+          true
+        );
+        terminalEmitter.newline();
+
+        return this.contractsAPI.findArtifact(
+          planet.location,
+          snarkArgs,
+          actionId
+        );
+      })
       .catch((err) => {
         this.onTxIntentFail(txIntent, err);
       });
@@ -963,6 +1031,12 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     };
     this.handleTxIntent(txIntent);
 
+    const terminalEmitter = TerminalEmitter.getInstance();
+    terminalEmitter.println(
+      'DEPOSIT_ARTIFACT: sending deposit to blockchain',
+      TerminalTextStyle.Sub
+    );
+    terminalEmitter.newline();
     try {
       this.contractsAPI.depositArtifact(txIntent);
     } catch (e) {
@@ -1009,6 +1083,13 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       artifactId,
     };
     this.handleTxIntent(txIntent);
+
+    const terminalEmitter = TerminalEmitter.getInstance();
+    terminalEmitter.println(
+      'WITHDRAW_ARTIFACT: sending withdrawal to blockchain',
+      TerminalTextStyle.Sub
+    );
+    terminalEmitter.newline();
 
     try {
       this.contractsAPI.withdrawArtifact(txIntent);
@@ -1078,13 +1159,28 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       forces: shipsMoved,
       silver: silverMoved,
     };
+
     this.handleTxIntent(txIntent);
 
     this.snarkHelper
       .getMoveArgs(oldX, oldY, newX, newY, this.worldRadius, distMax)
-      .then((callArgs) => {
+      .then(([callArgs, localVerified]) => {
+        const terminalEmitter = TerminalEmitter.getInstance();
+
+        terminalEmitter.println(
+          'MOVE: calculated SNARK with args:',
+          TerminalTextStyle.Sub
+        );
+        terminalEmitter.println(
+          JSON.stringify(hexifyBigIntNestedArray(callArgs)),
+          TerminalTextStyle.Sub,
+          true
+        );
+        terminalEmitter.newline();
+
         return this.contractsAPI.move(
           callArgs,
+          localVerified,
           shipsMoved,
           silverMoved,
           actionId
@@ -1122,6 +1218,12 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     this.handleTxIntent(txIntent);
 
     try {
+      const terminalEmitter = TerminalEmitter.getInstance();
+      terminalEmitter.println(
+        'UPGRADE: sending upgrade to blockchain',
+        TerminalTextStyle.Sub
+      );
+      terminalEmitter.newline();
       this.contractsAPI.upgradePlanet(upgradeArgs, actionId);
     } catch (e) {
       this.onTxIntentFail(txIntent, e);
@@ -1162,6 +1264,12 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       locationId: planetId,
     };
     this.handleTxIntent(txIntent);
+
+    terminalEmitter.println(
+      'BUY HAT: sending request to blockchain',
+      TerminalTextStyle.Sub
+    );
+    terminalEmitter.newline();
 
     try {
       this.contractsAPI.buyHat(
@@ -1237,16 +1345,29 @@ class GameManager extends EventEmitter implements AbstractGameManager {
   }
 
   // Used in the map import to avoid crashing the game
-  async addNewChunkThrottled(chunk: ExploredChunkData): Promise<void> {
-    this.persistentChunkStore.updateChunk(chunk, false);
-    for (const planetLocation of chunk.planetLocations) {
-      this.entityStore.addPlanetLocation(planetLocation);
+  // bulk fetches the planets
+  async bulkAddNewChunks(chunks: ExploredChunkData[]): Promise<void> {
+    const terminalEmitter = TerminalEmitter.getInstance();
+    terminalEmitter.println(
+      'IMPORTING MAP: if you are importing a large map, this may take a while...'
+    );
+    const planetIdsToUpdate: LocationId[] = [];
+    for (const chunk of chunks) {
+      this.persistentChunkStore.updateChunk(chunk, false);
+      for (const planetLocation of chunk.planetLocations) {
+        this.entityStore.addPlanetLocation(planetLocation);
 
-      if (this.entityStore.isPlanetInContract(planetLocation.hash)) {
-        // Await this so we don't crash the game
-        await this.hardRefreshPlanet(planetLocation.hash);
+        if (this.entityStore.isPlanetInContract(planetLocation.hash)) {
+          // Await this so we don't crash the game
+          planetIdsToUpdate.push(planetLocation.hash);
+        }
       }
     }
+    terminalEmitter.println(
+      `downloading data for ${planetIdsToUpdate.length} planets...`,
+      TerminalTextStyle.Sub
+    );
+    this.bulkHardRefreshPlanets(planetIdsToUpdate);
   }
 
   // utils - scripting only
