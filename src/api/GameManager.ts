@@ -208,9 +208,9 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     const planetVoyageIdMap: Map<LocationId, VoyageId[]> = new Map();
 
     const minedChunks = Array.from(await persistentChunkStore.allChunks());
-    const minedPlanetIds = _.flatMap(minedChunks, (c) => c.planetLocations).map(
+    const minedPlanetIds = new Set(_.flatMap(minedChunks, (c) => c.planetLocations).map(
       (l) => l.hash
-    );
+    ));
     terminalEmitter.println('(2/5) Getting planet IDs...');
     const loadedPlanetIds = await contractsAPI.getTouchedPlanetIds(
       storedTouchedPlanetIds.length
@@ -221,7 +221,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
     // only load {arrival data, planet data} for planets that we have mined on this device.
     const planetsToLoad = allTouchedPlanetIds.filter((id) =>
-      minedPlanetIds.some((p) => id === p)
+      minedPlanetIds.has(id)
     );
 
     // fetch planets after allArrivals, since an arrival to a new planet might be sent
