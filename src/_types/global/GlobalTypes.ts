@@ -297,4 +297,5 @@ export type SnarkLogData = {
   proofVerified: boolean;
   circuitCRC: number;
   zkeyCRC: number;
+  snarkjsCRC: number;
 };

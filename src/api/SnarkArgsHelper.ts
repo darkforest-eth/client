@@ -212,6 +212,9 @@ class SnarkArgsHelper {
       const zkeyRaw = await fetch('/public/move.zkey?id=5')
         .then((res) => res.arrayBuffer())
         .then((ab) => new Uint8Array(ab));
+      const snarkjsRaw = await fetch('/public/snarkjs.min.js')
+        .then((res) => res.arrayBuffer())
+        .then((ab) => new Uint8Array(ab));
       const circuitData: SnarkJSBin = {
         type: 'mem',
         data: circuitRaw,
@@ -257,6 +260,7 @@ class SnarkArgsHelper {
         proofVerified: localVerified,
         circuitCRC: CRC32.buf(circuitRaw),
         zkeyCRC: CRC32.buf(zkeyRaw),
+        snarkjsCRC: CRC32.buf(snarkjsRaw),
       };
       return [proofArgs as MoveSnarkArgs, snarkLogs];
     } catch (e) {

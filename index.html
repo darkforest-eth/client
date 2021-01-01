@@ -114,6 +114,9 @@
   <meta name="msapplication-TileImage" content="./public/icons/ms-icon-144x144.png">
   <meta name="theme-color" content="#080808">
 
+  <!-- need this since snarkjs 0.3.51 refers to `global` -->  
+  <script>var global = window</script>
+
   <script src="./public/snarkjs.min.js"></script>
   <title>Dark Forest</title>
   </head>
