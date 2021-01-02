@@ -1,6 +1,6 @@
 import { WorldCoords } from '../utils/Coordinates';
 import { Location, ChunkFootprint } from '../_types/global/GlobalTypes';
-import { locationIdFromBigInt } from '../utils/CheckedTypeUtils';
+import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
 import bigInt from 'big-integer';
 import perlin from './perlin';
 import { seededRandom } from '../utils/Utils';
@@ -132,7 +132,7 @@ export const getPlanetLocations = (
     )
     .map((coords) => ({
       coords,
-      hash: locationIdFromBigInt(fakeHash(coords.x, coords.y)),
+      hash: CheckedTypeUtils.locationIdFromBigInt(fakeHash(coords.x, coords.y)),
       perlin: perlin(coords),
       biomebase: perlin(coords, true, true),
     }));

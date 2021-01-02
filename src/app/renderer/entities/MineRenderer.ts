@@ -1,6 +1,6 @@
 import autoBind from 'auto-bind';
 import { CanvasCoords, WorldCoords } from '../../../utils/Coordinates';
-import { getPlanetCosmetic, hslToRgb } from '../../../utils/ProcgenUtils';
+import { ProcgenUtils } from '../../../utils/ProcgenUtils';
 import { Planet } from '../../../_types/global/GlobalTypes';
 import Viewport from '../../board/Viewport';
 import {
@@ -90,7 +90,7 @@ export class MineRenderer {
     radius: number,
     z: number
   ) {
-    const cosmetic = getPlanetCosmetic(planet);
+    const cosmetic = ProcgenUtils.getPlanetCosmetic(planet);
     const { seed } = cosmetic;
     const numAsteroids = planet.planetLevel + 1;
     const interval = (2 * Math.PI) / numAsteroids;
@@ -106,7 +106,7 @@ export class MineRenderer {
       const delS = -20 + rand1 * 40;
       const delL = -20 + rand2 * 40;
 
-      const ptColor = hslToRgb([h, s + delS, l + delL]);
+      const ptColor = ProcgenUtils.hslToRgb([h, s + delS, l + delL]);
       this.queuePoint(center, z, radius, ptColor, seed + i, offset);
     }
   }

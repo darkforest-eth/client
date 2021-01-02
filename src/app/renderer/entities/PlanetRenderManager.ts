@@ -1,9 +1,5 @@
 import { WorldCoords } from '../../../utils/Coordinates';
 import {
-  getOwnerColorVec,
-  getPlanetCosmetic,
-} from '../../../utils/ProcgenUtils';
-import {
   bonusFromHex,
   formatNumber,
   hasOwner,
@@ -23,6 +19,7 @@ import { RGBAVec, RGBVec, TextAlign, TextAnchor } from '../utils/EngineTypes';
 import { getNow } from '../utils/EngineUtils';
 import { GameEntityMemoryStore } from '../../../api/GameEntityMemoryStore';
 import { HatType } from '../../../utils/Hats';
+import { ProcgenUtils } from '../../../utils/ProcgenUtils';
 
 const { white, barbs, gold } = engineConsts.colors;
 const { maxRadius } = engineConsts.planet;
@@ -86,7 +83,7 @@ export default class PlanetRenderManager {
     if (hasOwner(planet)) {
       const color = uiManager.isOwnedByMe(planet)
         ? white
-        : getOwnerColorVec(planet);
+        : ProcgenUtils.getOwnerColorVec(planet);
 
       cR.queueCircleWorld(centerW, radiusW * 1.1, [...color, cA * 120], 0.5);
       const pct = planet.energy / planet.energyCap;
@@ -297,7 +294,7 @@ export default class PlanetRenderManager {
 
     const hatLevel = planet.hatLevel;
 
-    const cosmetic = getPlanetCosmetic(planet);
+    const cosmetic = ProcgenUtils.getPlanetCosmetic(planet);
 
     if (hatLevel > 0) {
       let bg = cosmetic.bgStr;
@@ -337,7 +334,9 @@ export default class PlanetRenderManager {
     let energyString = energy <= 0 ? '' : formatNumber(energy);
     if (lockedEnergy > 0) energyString += ` (-${formatNumber(lockedEnergy)})`;
 
-    const playerColor = hasOwner(planet) ? getOwnerColorVec(planet) : barbs;
+    const playerColor = hasOwner(planet)
+      ? ProcgenUtils.getOwnerColorVec(planet)
+      : barbs;
     const colorSolid = uiManager.isOwnedByMe(planet) ? white : playerColor;
     const color: RGBAVec = [...colorSolid, alpha];
 

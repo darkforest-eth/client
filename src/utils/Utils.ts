@@ -13,11 +13,7 @@ import {
   StatIdx,
   Upgrade,
 } from '../_types/global/GlobalTypes';
-import {
-  address,
-  emptyAddress,
-  locationIdFromBigInt,
-} from './CheckedTypeUtils';
+import { CheckedTypeUtils } from './CheckedTypeUtils';
 import _ from 'lodash';
 import TerminalEmitter from './TerminalEmitter';
 import {
@@ -237,7 +233,7 @@ export const titleCase = (title: string): string =>
     .join(' ');
 
 export const randomAddress = (): string => {
-  return address(
+  return CheckedTypeUtils.address(
     '0x' +
       _.join(
         _.times(40, () => _.random(0, 15).toString(16)),
@@ -290,7 +286,7 @@ export const planetHasBonus = (planet: Planet | null): boolean => {
 
 export const hasOwner = (planet: Planet) => {
   // planet.owner should never be null
-  return planet.owner !== emptyAddress;
+  return planet.owner !== CheckedTypeUtils.EMPTY_ADDRESS;
 };
 
 export function sleep<T>(timeout: number, returns?: T): Promise<T> {
@@ -308,7 +304,7 @@ export async function rejectAfter<T>(ms: number, msg: string): Promise<T> {
 export function locationFromCoords(coords: WorldCoords): Location {
   return {
     coords,
-    hash: locationIdFromBigInt(mimcHash(coords.x, coords.y)),
+    hash: CheckedTypeUtils.locationIdFromBigInt(mimcHash(coords.x, coords.y)),
     perlin: perlin(coords),
     biomebase: perlin(coords, true, true),
   };

@@ -8,7 +8,7 @@ import {
   MinerWorkerMessage,
   ChunkFootprint,
 } from '../_types/global/GlobalTypes';
-import { locationIdFromBigInt } from '../utils/CheckedTypeUtils';
+import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
 import { getPlanetLocations } from './permutation';
 import perlin from './perlin';
 
@@ -40,7 +40,7 @@ const exploreChunk = (
           if (hash.lesser(LOCATION_ID_UB.divide(planetRarityBI))) {
             planetLocations.push({
               coords: { x, y },
-              hash: locationIdFromBigInt(hash),
+              hash: CheckedTypeUtils.locationIdFromBigInt(hash),
               perlin: perlin({ x, y }),
               biomebase: perlin({ x, y }, true, true),
             });

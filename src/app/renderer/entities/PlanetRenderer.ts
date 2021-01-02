@@ -1,4 +1,3 @@
-import { getPlanetCosmetic } from '../../../utils/ProcgenUtils';
 import { mat4 } from 'gl-matrix';
 import AttribManager from '../webgl/AttribManager';
 import {
@@ -24,6 +23,7 @@ import { AbstractGLManager } from '../webgl/WebGLManager';
 import Viewport from '../../board/Viewport';
 import { Planet } from '../../../_types/global/GlobalTypes';
 import { engineConsts } from '../utils/EngineConsts';
+import { ProcgenUtils } from '../../../utils/ProcgenUtils';
 
 const { maxRadius } = engineConsts.planet;
 
@@ -141,7 +141,7 @@ export default class PlanetRenderer {
     x2: number,
     y2: number
   ) {
-    const cosmetic = getPlanetCosmetic(planet);
+    const cosmetic = ProcgenUtils.getPlanetCosmetic(planet);
 
     // auto-sorts on GPU
     const z = getPlanetZIndex(planet);

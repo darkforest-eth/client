@@ -15,6 +15,7 @@ import { RemoteModal } from './RemoteModal';
 import { PluginId, SerializedPlugin } from './SerializedPlugin';
 import { UIDataKey } from '../api/UIStateStorageManager';
 import dfstyles from '../styles/dfstyles';
+import { ReactSortable } from 'react-sortablejs';
 
 /**
  * This modal presents an overview of all of the player's plugins. Has a button
@@ -136,6 +137,11 @@ export function PluginLibraryView({
     }
   }
 
+  function onPluginReorder(newOrder: SerializedPlugin[]) {
+    pluginManager?.reorderPlugins(newOrder.map((p) => p.id));
+    setSavedPlugins(pluginManager?.getLibrary() || []);
+  }
+
   /**
    * The Dark Forest process list.
    */
@@ -146,16 +152,18 @@ export function PluginLibraryView({
 
     return (
       <>
-        {savedPlugins.map((plugin) => (
-          <OwnedPluginView
-            key={plugin.id + plugin.lastEdited}
-            pluginManager={pluginManager}
-            plugin={plugin}
-            openEditorForPlugin={openEditorForPlugin}
-            deletePlugin={deletePluginClicked}
-            modalsContainer={modalsContainer}
-          />
-        ))}
+        <ReactSortable list={savedPlugins} setList={onPluginReorder}>
+          {savedPlugins.map((plugin) => (
+            <OwnedPluginView
+              key={plugin.id + plugin.lastEdited}
+              pluginManager={pluginManager}
+              plugin={plugin}
+              openEditorForPlugin={openEditorForPlugin}
+              deletePlugin={deletePluginClicked}
+              modalsContainer={modalsContainer}
+            />
+          ))}
+        </ReactSortable>
       </>
     );
   }

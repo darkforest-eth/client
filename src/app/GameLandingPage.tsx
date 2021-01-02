@@ -31,7 +31,7 @@ import {
 import UIEmitter, { UIEmitterEvent } from '../utils/UIEmitter';
 import { utils, Wallet } from 'ethers';
 import EthConnection from '../api/EthConnection';
-import { address } from '../utils/CheckedTypeUtils';
+import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
 import { UIDataKey, useStoredUIState } from '../api/UIStateStorageManager';
 import TutorialManager, { TutorialState } from '../utils/TutorialManager';
 import { TerminalPromptType } from '../_types/darkforest/app/board/utils/TerminalTypes';
@@ -401,7 +401,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
     const newWallet = Wallet.createRandom();
     const newSKey = newWallet.privateKey;
-    const newAddr = address(newWallet.address);
+    const newAddr = CheckedTypeUtils.address(newWallet.address);
     try {
       ethConnection.addAccount(newSKey);
       ethConnection.setAccount(newAddr);
@@ -450,7 +450,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     );
     const newSKey = await getUserInput();
     try {
-      const newAddr = address(utils.computeAddress(newSKey));
+      const newAddr = CheckedTypeUtils.address(utils.computeAddress(newSKey));
       ethConnection.addAccount(newSKey);
       ethConnection.setAccount(newAddr);
       terminalEmitter.println(`Imported account with address ${newAddr}.`);

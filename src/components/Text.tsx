@@ -8,7 +8,6 @@ import dfstyles from '../styles/dfstyles';
 import _ from 'lodash';
 import { SubmittedTx } from '../_types/darkforest/api/ContractsAPITypes';
 import Viewport from '../app/board/Viewport';
-import { getPlanetName } from '../utils/ProcgenUtils';
 import {
   Planet,
   ExploredChunkData,
@@ -20,6 +19,7 @@ import GameUIManager from '../app/board/GameUIManager';
 import GameUIManagerContext from '../app/board/GameUIManagerContext';
 import { artifactName } from '../utils/ArtifactUtils';
 import UIEmitter, { UIEmitterEvent } from '../utils/UIEmitter';
+import { ProcgenUtils } from '../utils/ProcgenUtils';
 
 interface TextProps {
   children: React.ReactNode;
@@ -269,7 +269,9 @@ export function ArtifactNameLink({ id }: { id: ArtifactId }) {
 
 export function PlanetNameLink({ planet }: { planet: Planet }) {
   return (
-    <CenterPlanetLink planet={planet}>{getPlanetName(planet)}</CenterPlanetLink>
+    <CenterPlanetLink planet={planet}>
+      {ProcgenUtils.getPlanetName(planet)}
+    </CenterPlanetLink>
   );
 }
 

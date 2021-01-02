@@ -10,11 +10,7 @@ import {
   dateMintedAt,
   rarityNameFromArtifact,
 } from '../../utils/ArtifactUtils';
-import {
-  ellipsisStr,
-  getPlanetName,
-  getPlanetNameHash,
-} from '../../utils/ProcgenUtils';
+import { ProcgenUtils } from '../../utils/ProcgenUtils';
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
 import { getUpgradeStat } from '../../utils/Utils';
 import { TooltipName } from '../../utils/WindowManager';
@@ -140,7 +136,7 @@ export function ArtifactDetailsBody({
     if (twitter) {
       return '@' + twitter;
     }
-    return ellipsisStr(artifact.discoverer, 20);
+    return ProcgenUtils.ellipsisStr(artifact.discoverer, 20);
   };
 
   const owner = () => {
@@ -157,7 +153,7 @@ export function ArtifactDetailsBody({
   const planetArtifactName = (a: Artifact): string | null => {
     const onPlanet = uiManager?.getArtifactPlanet(a);
     if (!onPlanet) return null;
-    return getPlanetName(onPlanet);
+    return ProcgenUtils.getPlanetName(onPlanet);
   };
 
   const planetClicked = (): void => {
@@ -198,7 +194,7 @@ export function ArtifactDetailsBody({
         </div>
         <div className='row mtop'>
           <span>Artifact ID</span>
-          <span>{ellipsisStr(artifact.id, 20)}</span>
+          <span>{ProcgenUtils.ellipsisStr(artifact.id, 20)}</span>
         </div>
         <div className='row'>
           <span>Owner</span>
@@ -206,7 +202,9 @@ export function ArtifactDetailsBody({
         </div>
         <div className='row mtop'>
           <span>Discovered On</span>
-          <span>{getPlanetNameHash(artifact.planetDiscoveredOn)}</span>
+          <span>
+            {ProcgenUtils.getPlanetNameHash(artifact.planetDiscoveredOn)}
+          </span>
         </div>
         <div className='row'>
           <span>Discovered By</span>

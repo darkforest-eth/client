@@ -33,7 +33,7 @@ import {
   rarityName,
   rarityNameFromArtifact,
 } from '../../utils/ArtifactUtils';
-import { ellipsStrEnd, getPlanetName } from '../../utils/ProcgenUtils';
+import { ProcgenUtils } from '../../utils/ProcgenUtils';
 import { artifactName } from '../../utils/ArtifactUtils';
 import { Sub } from '../../components/Text';
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
@@ -137,7 +137,7 @@ function ArtifactRow({
   const planetArtifactName = (a: Artifact): string | null => {
     const onPlanet = uiManager?.getArtifactPlanet(a);
     if (!onPlanet) return null;
-    return getPlanetName(onPlanet);
+    return ProcgenUtils.getPlanetName(onPlanet);
   };
 
   const [_selected, setSelected] = selectedArtifactHook;
@@ -173,7 +173,7 @@ function ArtifactRow({
       onMouseOut={() => setRowHover(false)}
       hover={rowHover && !planetHover}
     >
-      <span>{ellipsStrEnd(artifactName(artifact), 20)}</span>
+      <span>{ProcgenUtils.ellipsStrEnd(artifactName(artifact), 20)}</span>
       <span>{rarityNameFromArtifact(artifact)}</span>
       <span>{artifactTitle(artifact)}</span>
       {planetArtifactName(artifact) ? (

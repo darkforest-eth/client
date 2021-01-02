@@ -7,8 +7,8 @@ import {
 import CanvasRenderer from '../CanvasRenderer';
 import { engineConsts } from '../utils/EngineConsts';
 import { RenderZIndex, TextAlign, TextAnchor } from '../utils/EngineTypes';
-import { getOwnerColorVec } from '../../../utils/ProcgenUtils';
 import Viewport from '../../board/Viewport';
+import { ProcgenUtils } from '../../../utils/ProcgenUtils';
 
 const { white, gold } = engineConsts.colors;
 
@@ -23,7 +23,7 @@ function getVoyageColor(fromPlanet: Planet, toPlanet: Planet, isMine: boolean) {
     return enemy;
   }
 
-  return getOwnerColorVec(fromPlanet);
+  return ProcgenUtils.getOwnerColorVec(fromPlanet);
 }
 
 /* responsible for calling renderers in order to draw voyages */

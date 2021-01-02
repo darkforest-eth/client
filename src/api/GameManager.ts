@@ -55,7 +55,7 @@ import {
 } from '../_types/darkforest/api/ContractsAPITypes';
 import perlin from '../miner/perlin';
 import { GameEntityMemoryStore } from './GameEntityMemoryStore';
-import { address, locationIdToDecStr } from '../utils/CheckedTypeUtils';
+import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
 
 export enum GameManagerEvent {
   PlanetUpdate = 'PlanetUpdate',
@@ -77,34 +77,30 @@ import {
 } from '../utils/Utils';
 import NotificationManager from '../utils/NotificationManager';
 import { SerializedPlugin } from '../plugins/SerializedPlugin';
+import { ProcgenUtils } from '../utils/ProcgenUtils';
+import UIEmitter from '../utils/UIEmitter';
 
 class GameManager extends EventEmitter implements AbstractGameManager {
   private readonly account: EthAddress | null;
-  private balance: number;
-  private balanceInterval: number;
   private readonly players: Map<string, Player>;
-
   private readonly contractsAPI: ContractsAPI;
   private readonly persistentChunkStore: PersistentChunkStore;
   private readonly snarkHelper: SnarkHelper;
   private readonly entityStore: GameEntityMemoryStore;
-
   private readonly useMockHash: boolean;
+  private readonly contractConstants: ContractConstants;
+  private readonly endTimeSeconds: number = 1643587533; // jan 2022
 
+  private balance: number;
+  private balanceInterval: number;
   private minerManager?: MinerManager;
   private hashRate: number;
-
   private homeLocation: Location | null;
-
-  private readonly contractConstants: ContractConstants;
-
   private worldRadius: number;
 
   private get planetRarity(): number {
     return this.contractConstants.PLANET_RARITY;
   }
-
-  private readonly endTimeSeconds: number = 1643587533; // jan 2022
 
   private constructor(
     account: EthAddress | null,
@@ -208,8 +204,8 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     const planetVoyageIdMap: Map<LocationId, VoyageId[]> = new Map();
 
     const minedChunks = Array.from(await persistentChunkStore.allChunks());
-    const minedPlanetIds = _.flatMap(minedChunks, (c) => c.planetLocations).map(
-      (l) => l.hash
+    const minedPlanetIds = new Set(
+      _.flatMap(minedChunks, (c) => c.planetLocations).map((l) => l.hash)
     );
     terminalEmitter.println('(2/5) Getting planet IDs...');
     const loadedPlanetIds = await contractsAPI.getTouchedPlanetIds(
@@ -221,7 +217,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
     // only load {arrival data, planet data} for planets that we have mined on this device.
     const planetsToLoad = allTouchedPlanetIds.filter((id) =>
-      minedPlanetIds.some((p) => id === p)
+      minedPlanetIds.has(id)
     );
 
     // fetch planets after allArrivals, since an arrival to a new planet might be sent
@@ -720,7 +716,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     // get twitter handles
     const addressTwitters = await getAllTwitters();
     for (const key of Object.keys(addressTwitters)) {
-      const addr = address(key);
+      const addr = CheckedTypeUtils.address(key);
       const player = this.players.get(addr);
       if (player) player.twitter = addressTwitters[addr];
     }
@@ -810,13 +806,6 @@ class GameManager extends EventEmitter implements AbstractGameManager {
   }
 
   async addAccount(coords: WorldCoords): Promise<boolean> {
-    /*
-    const homePlanetId = locationIdFromBigInt(mimcHash(coords.x, coords.y));
-    const planet = this.getPlanetWithId(homePlanetId);
-    if (!planet || planet.owner !== this.account) {
-      return Promise.resolve(false);
-    }
-    */
     const loc: Location = locationFromCoords(coords);
     await this.persistentChunkStore.addHomeLocation(loc);
     this.initMiningManager(coords);
@@ -831,8 +820,8 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       const perlinThreshold = this.contractConstants.PERLIN_THRESHOLD_1;
       let minedChunksCount = 0;
       // target4 is about 32000 in v0.5 prod; universe doesn't expand until virtual radius reaches ~64000
-      const UNIFORM_RANDOM_UNTIL_1 = 34000;
-      const UNIFORM_RANDOM_UNTIL_2 = 68000;
+      const UNIFORM_RANDOM_UNTIL_1 = 80000;
+      const UNIFORM_RANDOM_UNTIL_2 = 115000;
 
       let x: number;
       let y: number;
@@ -856,7 +845,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
         (isProd &&
           (d <= UNIFORM_RANDOM_UNTIL_1 || // can't be in initial (first 100 players) spawn circle
             (this.worldRadius > UNIFORM_RANDOM_UNTIL_2 &&
-              d <= 0.9 * this.worldRadius))) // can't be in inner 90%, if worldRadius large enough
+              d <= 0.95 * this.worldRadius))) // can't be in inner 90%, if worldRadius large enough
       );
 
       // when setting up a new account in development mode, you can tell
@@ -1205,7 +1194,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     );
 
     const upgradeArgs: UpgradeArgs = [
-      locationIdToDecStr(planetId),
+      CheckedTypeUtils.locationIdToDecStr(planetId),
       branch.toString(),
     ];
     const actionId = getRandomActionId();
@@ -1273,7 +1262,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
     try {
       this.contractsAPI.buyHat(
-        locationIdToDecStr(planetId),
+        CheckedTypeUtils.locationIdToDecStr(planetId),
         planet.hatLevel,
         actionId
       );
@@ -1465,6 +1454,33 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     }
 
     return false;
+  }
+
+  public getConstructors() {
+    return {
+      MinerManager,
+      SpiralPattern,
+    };
+  }
+
+  public getPerlin(coords: WorldCoords): number {
+    return perlin(coords);
+  }
+
+  public getBiomePerlin(coords: WorldCoords): number {
+    return perlin(coords, true, true);
+  }
+
+  public getProcgenUtils() {
+    return ProcgenUtils;
+  }
+
+  public getCheckedTypeUtils() {
+    return CheckedTypeUtils;
+  }
+
+  public getUIEventEmitter() {
+    return UIEmitter.getInstance();
   }
 }
 

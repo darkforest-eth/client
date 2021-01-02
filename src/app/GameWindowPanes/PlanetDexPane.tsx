@@ -18,12 +18,7 @@ import {
   getPlanetRank,
 } from '../../utils/Utils';
 import dfstyles from '../../styles/dfstyles';
-import {
-  getPlanetName,
-  getPlanetCosmetic,
-  getPlanetClass,
-  rgbStr,
-} from '../../utils/ProcgenUtils';
+import { ProcgenUtils } from '../../utils/ProcgenUtils';
 import _ from 'lodash';
 import { SelectedContext } from '../GameWindow';
 import { SilverIcon } from '../Icons';
@@ -69,7 +64,7 @@ function DexSmallRow({
   className: string;
 }) {
   const getFormatName = (planet: Planet): string => {
-    const myName = getPlanetName(planet);
+    const myName = ProcgenUtils.getPlanetName(planet);
     if (myName.length >= 20) return myName.substring(0, 17) + '...';
     else return myName;
   };
@@ -203,12 +198,12 @@ export function PlanetThumb({ planet }: { planet: Planet }) {
   const radius = 5 + 3 * planet.planetLevel;
   // const radius = 5 + 3 * PlanetLevel.MAX;
   const { speed, range, defense } = engineConsts.colors.belt;
-  const { baseStr } = getPlanetCosmetic(planet);
+  const { baseStr } = ProcgenUtils.getPlanetCosmetic(planet);
 
   const ringColor = (): string => {
-    const myClass = getPlanetClass(planet);
+    const myClass = ProcgenUtils.getPlanetClass(planet);
     const myColor: RGBVec = [defense, range, speed][myClass];
-    return rgbStr(myColor);
+    return ProcgenUtils.rgbStr(myColor);
   };
 
   const ringW = radius * 1.5;
@@ -275,7 +270,7 @@ function DexEntry({
           <Sub>{getPlanetShortHash(planet)}</Sub>
         </span>
         <span>
-          <span>{getPlanetName(planet)}</span>
+          <span>{ProcgenUtils.getPlanetName(planet)}</span>
         </span>
         <span>
           <Sub>lv</Sub> {planet.planetLevel}
@@ -340,7 +335,10 @@ export function PlanetDexPane({
   };
 
   const nameFn = (a: [Planet, number], b: [Planet, number]): number => {
-    const [nameA, nameB] = [getPlanetName(a[0]), getPlanetName(b[0])];
+    const [nameA, nameB] = [
+      ProcgenUtils.getPlanetName(a[0]),
+      ProcgenUtils.getPlanetName(b[0]),
+    ];
     return nameA.localeCompare(nameB);
   };
 

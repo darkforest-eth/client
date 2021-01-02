@@ -1,5 +1,5 @@
 import { LocationId } from '../_types/global/GlobalTypes';
-import { planetRandomInt } from './ProcgenUtils';
+import { ProcgenUtils } from './ProcgenUtils';
 
 export type Hat = {
   topLayer: Array<string>;
@@ -124,7 +124,7 @@ export const hats: Record<HatType, Hat> = {
 export const hatFromType = (type: HatType): Hat => hats[type];
 
 export const hatTypeFromHash = (hash: LocationId): HatType => {
-  const rand = planetRandomInt(hash);
+  const rand = ProcgenUtils.planetRandomInt(hash);
   if (rand() % 69 === 0) return HatType.Fish;
   if (rand() % 16 === 0) return HatType.SantaHat;
 

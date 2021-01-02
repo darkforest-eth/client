@@ -9,12 +9,7 @@ import {
   StatIdx,
 } from '../../_types/global/GlobalTypes';
 import { mat4 } from 'gl-matrix';
-import {
-  getPlanetCosmetic,
-  PixelCoords,
-  planetPerlin,
-  planetRandom,
-} from '../../utils/ProcgenUtils';
+import { PixelCoords, ProcgenUtils } from '../../utils/ProcgenUtils';
 import { RGBVec } from '../renderer/utils/EngineTypes';
 import { PathRenderer } from './PathRenderer';
 import { TextureGLManager } from '../renderer/webgl/WebGLManager';
@@ -157,9 +152,11 @@ export class PlanetscapeRenderer implements TextureGLManager {
 
     const { height } = this.canvas;
 
-    const cosmetic = getPlanetCosmetic(planet);
+    const cosmetic = ProcgenUtils.getPlanetCosmetic(planet);
 
-    const perlin: (x: PixelCoords) => number = planetPerlin(planet.locationId);
+    const perlin: (x: PixelCoords) => number = ProcgenUtils.planetPerlin(
+      planet.locationId
+    );
     // const rand: () => number = planetRandom(planet.locationId);
 
     const oct1 = (p: PixelCoords) => 0.5 * perlin({ x: 2 * p.x, y: 2 * p.y });
@@ -236,10 +233,10 @@ export class PlanetscapeRenderer implements TextureGLManager {
     const planet = this.planet;
     if (!planet) return;
 
-    const cosmetic = getPlanetCosmetic(planet);
+    const cosmetic = ProcgenUtils.getPlanetCosmetic(planet);
     const bonuses = bonusFromHex(planet.locationId);
 
-    const rand = planetRandom(planet.locationId);
+    const rand = ProcgenUtils.planetRandom(planet.locationId);
 
     const ctx = this.moonCtx;
     const canvas = this.canvas;

@@ -160,6 +160,25 @@ export class PluginManager {
   }
 
   /**
+   * Reorders the current plugins. plugin ids in `newPluginIdOrder` must correspond
+   * 1:1 to plugins in the plugin library.
+   */
+  public reorderPlugins(newPluginIdOrder: string[]) {
+    const newPluginsList = newPluginIdOrder
+      .map((id) => this.pluginLibrary.find((p) => p.id === id))
+      .filter((p) => !!p) as SerializedPlugin[];
+
+    if (newPluginsList.length !== this.pluginLibrary.length) {
+      throw new Error(
+        'to reorder the plugins, you must pass in precisely one id for each plugin'
+      );
+    }
+
+    this.pluginLibrary = newPluginsList;
+    this.gameManager.savePlugins(this.pluginLibrary);
+  }
+
+  /**
    * adds a new plugin into the plugin library.
    */
   public addPluginToLibrary(name: string, code: string): SerializedPlugin {

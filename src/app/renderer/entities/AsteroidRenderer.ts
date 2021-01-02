@@ -1,6 +1,7 @@
 import autoBind from 'auto-bind';
 import { CanvasCoords } from '../../../utils/Coordinates';
-import { getPlanetCosmetic } from '../../../utils/ProcgenUtils';
+import { ProcgenUtils } from '../../../utils/ProcgenUtils';
+
 import { Planet } from '../../../_types/global/GlobalTypes';
 import Viewport from '../../board/Viewport';
 import {
@@ -81,7 +82,7 @@ export default class AsteroidRenderer {
     const center = this.viewport.worldToCanvasCoords(centerW);
     const radius = this.viewport.worldToCanvasDist(radiusW);
 
-    const cosmetic = getPlanetCosmetic(planet);
+    const cosmetic = ProcgenUtils.getPlanetCosmetic(planet);
 
     const { x, y } = center;
 

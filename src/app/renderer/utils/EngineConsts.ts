@@ -1,4 +1,4 @@
-import { hslToRgb } from '../../../utils/ProcgenUtils';
+import { ProcgenUtils } from '../../../utils/ProcgenUtils';
 import { RGBVec } from './EngineTypes';
 
 export const engineConsts = {
@@ -32,17 +32,17 @@ export const engineConsts = {
       mine: [0, 0, 255] as RGBVec,
     },
     bonus: {
-      energyCap: hslToRgb([360, 73, 70]) as RGBVec,
-      energyGro: hslToRgb([136, 73, 70]) as RGBVec,
-      speed: hslToRgb([290, 73, 70]) as RGBVec,
-      range: hslToRgb([50, 73, 70]) as RGBVec,
-      defense: hslToRgb([231, 73, 70]) as RGBVec,
+      energyCap: ProcgenUtils.hslToRgb([360, 73, 70]) as RGBVec,
+      energyGro: ProcgenUtils.hslToRgb([136, 73, 70]) as RGBVec,
+      speed: ProcgenUtils.hslToRgb([290, 73, 70]) as RGBVec,
+      range: ProcgenUtils.hslToRgb([50, 73, 70]) as RGBVec,
+      defense: ProcgenUtils.hslToRgb([231, 73, 70]) as RGBVec,
     },
     belt: {
       silver: [240, 180, 50] as RGBVec,
-      speed: hslToRgb([290, 85, 80]) as RGBVec,
-      range: hslToRgb([50, 85, 80]) as RGBVec,
-      defense: hslToRgb([231, 85, 80]) as RGBVec,
+      speed: ProcgenUtils.hslToRgb([290, 85, 80]) as RGBVec,
+      range: ProcgenUtils.hslToRgb([50, 85, 80]) as RGBVec,
+      defense: ProcgenUtils.hslToRgb([231, 85, 80]) as RGBVec,
     },
   },
 };

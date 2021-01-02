@@ -4,11 +4,7 @@ import styled from 'styled-components';
 import { Planet } from '../_types/global/GlobalTypes';
 import { PlanetScape } from './planetscape/PlanetScape';
 import { getPlanetShortHash } from '../utils/Utils';
-import {
-  getPlanetName,
-  getPlanetBlurb,
-  getPlanetTagline,
-} from '../utils/ProcgenUtils';
+import { ProcgenUtils } from '../utils/ProcgenUtils';
 import LandingPageCanvas from './LandingPageCanvas';
 import dfstyles from '../styles/dfstyles';
 import { Sub } from '../components/Text';
@@ -70,16 +66,16 @@ export function SharePlanet({ match }: RouteComponentProps) {
       >
         <PlanetCard>
           <div>
-            {getPlanetShortHash(planet)} {getPlanetName(planet)}
+            {getPlanetShortHash(planet)} {ProcgenUtils.getPlanetName(planet)}
           </div>
           <div>
             <PlanetScape planet={planet} info={null} keepDrawing={true} />
           </div>
           <div>
             <p>
-              <em>A {getPlanetTagline(planet)}...</em>
+              <em>A {ProcgenUtils.getPlanetTagline(planet)}...</em>
               <p>
-                <Sub>{getPlanetBlurb(planet)}</Sub>
+                <Sub>{ProcgenUtils.getPlanetBlurb(planet)}</Sub>
               </p>
             </p>
             <p>

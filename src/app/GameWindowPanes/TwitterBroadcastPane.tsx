@@ -7,8 +7,8 @@ import GameUIManagerContext from '../board/GameUIManagerContext';
 import dfstyles from '../../styles/dfstyles';
 import { Btn } from '../GameWindowComponents/GameWindowComponents';
 import { Sub, Red } from '../../components/Text';
-import { emptyAddress } from '../../utils/CheckedTypeUtils';
-import { getPlanetName } from '../../utils/ProcgenUtils';
+import { CheckedTypeUtils } from '../../utils/CheckedTypeUtils';
+import { ProcgenUtils } from '../../utils/ProcgenUtils';
 import { getPlanetShortHash } from '../../utils/Utils';
 import { SelectedContext } from '../GameWindow';
 
@@ -88,7 +88,7 @@ export function TwitterBroadcastPane({ hook }: { hook: ModalHook }) {
     if (!selected || !account) return str;
     if (selected.owner !== account) return str;
 
-    const planetname = getPlanetName(selected);
+    const planetname = ProcgenUtils.getPlanetName(selected);
     const shorthash = getPlanetShortHash(selected);
 
     return `${shorthash} ${planetname} - ${str}`;
@@ -96,7 +96,7 @@ export function TwitterBroadcastPane({ hook }: { hook: ModalHook }) {
 
   return (
     <ModalPane hook={hook} title={windowName()} name={ModalName.TwitterVerify}>
-      {selected && selected.owner !== emptyAddress ? (
+      {selected && selected.owner !== CheckedTypeUtils.EMPTY_ADDRESS ? (
         <BroadcastWrapper>
           <div className='row'>
             <span>Coordinates</span>

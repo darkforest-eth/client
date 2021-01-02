@@ -10,8 +10,8 @@ import {
   PlanetLevel,
   RarityNames,
 } from '../_types/global/GlobalTypes';
-import { emptyLocationId, emptyAddress } from './CheckedTypeUtils';
-import { artifactRandom, artifactRandomInt } from './ProcgenUtils';
+import { CheckedTypeUtils } from './CheckedTypeUtils';
+import { ProcgenUtils } from './ProcgenUtils';
 import tracery from './tracery';
 import { PlanetStatsInfo, randomHex, titleCase } from './Utils';
 
@@ -80,11 +80,11 @@ const coolNameGrammar = {
 */
 
 const monolithName = (id: ArtifactId): string => {
-  const randInt = artifactRandomInt(id);
+  const randInt = ProcgenUtils.artifactRandomInt(id);
   if (randInt() % 1024 === 0) {
     return 'The Great Clown Tower';
   }
-  tracery.setRng(artifactRandom(id));
+  tracery.setRng(ProcgenUtils.artifactRandom(id));
 
   const grammar = {
     ...godGrammar,
@@ -96,7 +96,7 @@ const monolithName = (id: ArtifactId): string => {
 };
 
 const colossusName = (id: ArtifactId): string => {
-  const randInt = artifactRandomInt(id);
+  const randInt = ProcgenUtils.artifactRandomInt(id);
   if (randInt() % 1024 === 0) {
     return 'The Great Pip';
   } else if (randInt() % 1024 === 0) {
@@ -105,7 +105,7 @@ const colossusName = (id: ArtifactId): string => {
     return 'The Great Clown';
   }
 
-  tracery.setRng(artifactRandom(id));
+  tracery.setRng(ProcgenUtils.artifactRandom(id));
 
   const grammar = {
     ...godGrammar,
@@ -116,12 +116,12 @@ const colossusName = (id: ArtifactId): string => {
   return titleCase(tracery.createGrammar(grammar).flatten('#origin#'));
 };
 const pyramidName = (id: ArtifactId): string => {
-  const randInt = artifactRandomInt(id);
+  const randInt = ProcgenUtils.artifactRandomInt(id);
   if (randInt() % 1024 === 0) {
     return 'The Big Top';
   }
 
-  tracery.setRng(artifactRandom(id));
+  tracery.setRng(ProcgenUtils.artifactRandom(id));
 
   const grammar = {
     ...godGrammar,
@@ -132,7 +132,7 @@ const pyramidName = (id: ArtifactId): string => {
   return titleCase(tracery.createGrammar(grammar).flatten('#origin#'));
 };
 const spaceshipName = (id: ArtifactId): string => {
-  const randInt = artifactRandomInt(id);
+  const randInt = ProcgenUtils.artifactRandomInt(id);
   if (randInt() % 2048 === 0) {
     return 'Millennium Falcon';
   } else if (randInt() % 2048 === 1) {
@@ -153,7 +153,7 @@ const spaceshipName = (id: ArtifactId): string => {
     return 'UNSC Infinity';
   }
 
-  tracery.setRng(artifactRandom(id));
+  tracery.setRng(ProcgenUtils.artifactRandom(id));
 
   const grammar = {
     ...godGrammar,
@@ -236,12 +236,12 @@ const randomBiome = () =>
 export const mockArtifact = (): Artifact =>
   ({
     id: randomHex(64) as ArtifactId,
-    planetDiscoveredOn: emptyLocationId,
+    planetDiscoveredOn: CheckedTypeUtils.EMPTY_LOCATION_ID,
     planetLevel: randomLevel(),
     planetBiome: randomBiome(),
     mintedAtTimestamp: Date.now(),
-    discoverer: emptyAddress,
-    currentOwner: emptyAddress,
+    discoverer: CheckedTypeUtils.EMPTY_ADDRESS,
+    currentOwner: CheckedTypeUtils.EMPTY_ADDRESS,
     artifactType: randomType(),
     upgrade: {
       energyCapMultiplier: 120,

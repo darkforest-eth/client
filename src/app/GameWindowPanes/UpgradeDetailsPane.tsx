@@ -27,8 +27,8 @@ import { RightarrowIcon } from '../Icons';
 import dfstyles from '../../styles/dfstyles';
 import GameUIManagerContext from '../board/GameUIManagerContext';
 import GameUIManager from '../board/GameUIManager';
-import { getPlanetTitle, getPlanetName } from '../../utils/ProcgenUtils';
-import { emptyAddress } from '../../utils/CheckedTypeUtils';
+import { ProcgenUtils } from '../../utils/ProcgenUtils';
+import { CheckedTypeUtils } from '../../utils/CheckedTypeUtils';
 import { TooltipTrigger } from './Tooltip';
 import { TooltipName } from '../../utils/WindowManager';
 import {
@@ -282,25 +282,25 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
   };
 
   const getTitle = (): string => {
-    return getPlanetTitle(selected);
+    return ProcgenUtils.getPlanetTitle(selected);
   };
 
   const getTitleFuture = (): string => {
     if (!selected || branch === null) return getTitle();
     const myObj = _.cloneDeep(selected);
     myObj.upgradeState[branch]++;
-    return getPlanetTitle(myObj);
+    return ProcgenUtils.getPlanetTitle(myObj);
   };
 
   const windowName = (): string => {
     const str = 'Upgrade Details';
     if (!uiManager) return str;
     if (!selected || !account) return str;
-    const planetname = getPlanetName(selected);
+    const planetname = ProcgenUtils.getPlanetName(selected);
     const shorthash = getPlanetShortHash(selected);
     const twitter = uiManager.getTwitter(selected.owner);
 
-    if (selected.owner === emptyAddress)
+    if (selected.owner === CheckedTypeUtils.EMPTY_ADDRESS)
       return `Unclaimed ${shorthash} ${planetname} - ${str}`;
 
     if (!twitter) return `${shorthash} ${planetname} - ${str}`;

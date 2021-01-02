@@ -26,7 +26,7 @@ import {
 import bigInt from 'big-integer';
 import _ from 'lodash';
 import { WorldCoords } from '../utils/Coordinates';
-import { emptyAddress } from '../utils/CheckedTypeUtils';
+import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
 import { hasOwner, getBytesFromHex, bonusFromHex } from '../utils/Utils';
 import PersistentChunkStore from './PersistentChunkStore';
 import {
@@ -435,7 +435,6 @@ export class GameEntityMemoryStore {
   }
 
   public getAllVoyages(): QueuedArrival[] {
-    // there are not many voyages
     return Array.from(this.arrivals.values()).map((awt) => awt.arrivalData);
   }
 
@@ -918,7 +917,7 @@ export class GameEntityMemoryStore {
       locationId: hex,
       perlin,
       spaceType,
-      owner: emptyAddress,
+      owner: CheckedTypeUtils.EMPTY_ADDRESS,
       hatLevel: 0,
 
       planetLevel,
@@ -977,10 +976,11 @@ export class GameEntityMemoryStore {
     return planet.energyCap / denominator;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /**
+   * returns timestamp (seconds) that planet will reach percent% of energycap
+   * time may be in the past
+   */
   public getEnergyCurveAtPercent(planet: Planet, percent: number): number {
-    // returns timestamp (seconds) that planet will reach percent% of energycap
-    // time may be in the past
     const p1 = (percent / 100) * planet.energyCap;
     const c = planet.energyCap;
     const p0 = planet.energy;
@@ -992,14 +992,15 @@ export class GameEntityMemoryStore {
     return t1;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /**
+   * returns timestamp (seconds) that planet will reach percent% of silcap if
+   * doesn't produce silver, returns nullif already over percent% of silcap,
+   * returns null
+   */
   public getSilverCurveAtPercent(
     planet: Planet,
     percent: number
   ): number | null {
-    // returns timestamp (seconds) that planet will reach percent% of silcap
-    // if doesn't produce silver, returns null
-    // if already over percent% of silcap, returns null
     if (
       planet.silverGrowth === 0 ||
       planet.planetResource === PlanetResource.NONE

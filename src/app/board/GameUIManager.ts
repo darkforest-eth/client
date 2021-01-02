@@ -37,7 +37,7 @@ import UIStateStorageManager, {
   UIDataValue,
 } from '../../api/UIStateStorageManager';
 import NotificationManager from '../../utils/NotificationManager';
-import { emptyAddress } from '../../utils/CheckedTypeUtils';
+import { CheckedTypeUtils } from '../../utils/CheckedTypeUtils';
 import TerminalEmitter from '../../utils/TerminalEmitter';
 import Viewport from './Viewport';
 import { PluginManager } from '../../plugins/PluginManager';
@@ -188,7 +188,11 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
   centerCoords(coords: WorldCoords) {
     const planet = this.gameManager.getPlanetWithCoords(coords);
-    this.centerPlanet(planet);
+    if (planet) {
+      this.centerPlanet(planet);
+    } else {
+      Viewport.getInstance().centerCoords(coords);
+    }
   }
 
   centerLocationId(planetId: LocationId) {
@@ -521,7 +525,10 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
       const planet = this.getPlanetWithId(loc.hash);
       if (!planet) break;
 
-      if (planet.owner === emptyAddress && planet.energy > 0) {
+      if (
+        planet.owner === CheckedTypeUtils.EMPTY_ADDRESS &&
+        planet.energy > 0
+      ) {
         if (
           !this.getUIDataItem(UIDataKey.foundPirates) &&
           this.getUIDataItem(UIDataKey.tutorialCompleted)

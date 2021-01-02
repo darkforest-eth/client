@@ -1,9 +1,4 @@
-import {
-  address,
-  locationIdFromDecStr,
-  artifactIdFromEthersBN,
-  locationIdFromEthersBN,
-} from '../utils/CheckedTypeUtils';
+import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
 import {
   RawArrivalData,
   RawArtifactWithMetadata,
@@ -42,9 +37,11 @@ export class EthDecoders {
 
     const arrival: QueuedArrival = {
       eventId: rawId.toString() as VoyageId,
-      player: address(rawPlayer),
-      fromPlanet: locationIdFromDecStr(rawFromPlanet.toString()),
-      toPlanet: locationIdFromDecStr(rawToPlanet.toString()),
+      player: CheckedTypeUtils.address(rawPlayer),
+      fromPlanet: CheckedTypeUtils.locationIdFromDecStr(
+        rawFromPlanet.toString()
+      ),
+      toPlanet: CheckedTypeUtils.locationIdFromDecStr(rawToPlanet.toString()),
       energyArriving: rawPopArriving.toNumber() / contractPrecision,
       silverMoved: rawSilverMoved.toNumber() / contractPrecision,
       departureTime: rawDepartureTime.toNumber(),
@@ -65,18 +62,20 @@ export class EthDecoders {
     const planetBiome = rawArtifact[3] as Biome;
     const artifactType = rawArtifact[6] as ArtifactType;
     const ret: Artifact = {
-      id: artifactIdFromEthersBN(rawArtifact[0]),
-      planetDiscoveredOn: locationIdFromDecStr(rawArtifact[1].toString()),
+      id: CheckedTypeUtils.artifactIdFromEthersBN(rawArtifact[0]),
+      planetDiscoveredOn: CheckedTypeUtils.locationIdFromDecStr(
+        rawArtifact[1].toString()
+      ),
       planetLevel,
       planetBiome,
       mintedAtTimestamp: rawArtifact[4].toNumber(),
-      discoverer: address(rawArtifact[5]),
-      currentOwner: address(rawOwner),
+      discoverer: CheckedTypeUtils.address(rawArtifact[5]),
+      currentOwner: CheckedTypeUtils.address(rawOwner),
       artifactType,
       upgrade: EthDecoders.rawUpgradeToUpgrade(rawUpgrade),
     };
     if (!rawLocationId.eq(0)) {
-      ret.onPlanetId = locationIdFromEthersBN(rawLocationId);
+      ret.onPlanetId = CheckedTypeUtils.locationIdFromEthersBN(rawLocationId);
     }
     return ret;
   }
@@ -110,10 +109,12 @@ export class EthDecoders {
     const rawHatLevel = rawPlanetExtendedInfo[8];
 
     const planet: Planet = {
-      locationId: locationIdFromDecStr(rawLocationId.toString()),
+      locationId: CheckedTypeUtils.locationIdFromDecStr(
+        rawLocationId.toString()
+      ),
       perlin: rawPerlin.toNumber(),
       spaceType: rawSpaceType,
-      owner: address(rawOwner),
+      owner: CheckedTypeUtils.address(rawOwner),
       hatLevel: rawHatLevel.toNumber(),
 
       planetLevel: rawPlanetLevel.toNumber(),
@@ -153,7 +154,9 @@ export class EthDecoders {
     };
 
     if (!rawPlanetExtendedInfo[10].eq(0)) {
-      planet.heldArtifactId = artifactIdFromEthersBN(rawPlanetExtendedInfo[10]);
+      planet.heldArtifactId = CheckedTypeUtils.artifactIdFromEthersBN(
+        rawPlanetExtendedInfo[10]
+      );
       planet.artifactLockedTimestamp = rawPlanetExtendedInfo[11].toNumber();
     }
     return planet;

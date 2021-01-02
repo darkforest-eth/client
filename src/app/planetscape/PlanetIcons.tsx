@@ -7,7 +7,7 @@ import {
   PlanetResource,
   StatIdx,
 } from '../../_types/global/GlobalTypes';
-import { getPlanetName } from '../../utils/ProcgenUtils';
+import { ProcgenUtils } from '../../utils/ProcgenUtils';
 import { bonusFromHex, getPlanetRank } from '../../utils/Utils';
 import { TooltipTrigger } from '../GameWindowPanes/Tooltip';
 import { TooltipName } from '../../utils/WindowManager';
@@ -23,7 +23,7 @@ import {
   EnergyGrowthIcon,
   ArtifactIcon,
 } from '../Icons';
-import { emptyAddress } from '../../utils/CheckedTypeUtils';
+import { CheckedTypeUtils } from '../../utils/CheckedTypeUtils';
 import dfstyles from '../../styles/dfstyles';
 import { GameEntityMemoryStore } from '../../api/GameEntityMemoryStore';
 
@@ -69,7 +69,7 @@ export function PlanetIcons({ planet }: { planet: Planet | null }) {
 
   return (
     <StyledPlanetIcons>
-      {planet.owner === emptyAddress && planet.energy > 0 && (
+      {planet.owner === CheckedTypeUtils.EMPTY_ADDRESS && planet.energy > 0 && (
         <TooltipTrigger name={TooltipName.Pirates}>
           <PiratesIcon />
         </TooltipTrigger>
@@ -114,7 +114,7 @@ export function PlanetIcons({ planet }: { planet: Planet | null }) {
           <RankIcon planet={planet} />
         </TooltipTrigger>
       )}
-      {getPlanetName(planet) === 'Clown Town' && (
+      {ProcgenUtils.getPlanetName(planet) === 'Clown Town' && (
         <TooltipTrigger name={TooltipName.Clowntown}>
           <ClownIcon />
         </TooltipTrigger>

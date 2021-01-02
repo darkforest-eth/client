@@ -9,7 +9,7 @@ import styled, { css } from 'styled-components';
 import { EthAddress, Planet } from '../../_types/global/GlobalTypes';
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
-import { getPlanetName } from '../../utils/ProcgenUtils';
+import { ProcgenUtils } from '../../utils/ProcgenUtils';
 import {
   formatNumber,
   getFormatProp,
@@ -17,7 +17,7 @@ import {
   getPlayerShortHash,
   PlanetStatsInfo,
 } from '../../utils/Utils';
-import { emptyAddress } from '../../utils/CheckedTypeUtils';
+import { CheckedTypeUtils } from '../../utils/CheckedTypeUtils';
 import dfstyles from '../../styles/dfstyles';
 import { EnergyIcon, SilverIcon } from '../Icons';
 import { ModalHook, ModalPlanetDetailsIcon } from './ModalPane';
@@ -246,11 +246,11 @@ export function PlanetContextPane({ hook }: { hook: ModalHook }) {
   const planetName = (): string => {
     if (!uiManager || !selected) return 'No planet selected.';
 
-    const planetname = getPlanetName(selected);
+    const planetname = ProcgenUtils.getPlanetName(selected);
     const shorthash = getPlanetShortHash(selected);
     const shortaddress = getPlayerShortHash(selected.owner);
 
-    if (selected.owner === emptyAddress)
+    if (selected.owner === CheckedTypeUtils.EMPTY_ADDRESS)
       return `Unclaimed ${shorthash} ${planetname}`;
     if (selected.owner === account) return `${shorthash} ${planetname}`;
 
@@ -390,7 +390,10 @@ export function PlanetContextPane({ hook }: { hook: ModalHook }) {
           </div>
         </StyledPlanetInfo>
         <StyledFleets
-          visible={selected !== null && selected.owner !== emptyAddress}
+          visible={
+            selected !== null &&
+            selected.owner !== CheckedTypeUtils.EMPTY_ADDRESS
+          }
         >
           <p>Send Resources</p>
           <div className='statselect'>

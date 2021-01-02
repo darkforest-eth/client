@@ -38,13 +38,8 @@ import {
   ModalArtifactIcon,
   ModalDepositIcon,
 } from './ModalPane';
-import {
-  getPlanetBlurb,
-  getPlanetName,
-  getPlanetTagline,
-  getPlanetTitle,
-} from '../../utils/ProcgenUtils';
-import { emptyAddress } from '../../utils/CheckedTypeUtils';
+import { ProcgenUtils } from '../../utils/ProcgenUtils';
+import { CheckedTypeUtils } from '../../utils/CheckedTypeUtils';
 import { TooltipTrigger } from './Tooltip';
 import { TooltipName } from '../../utils/WindowManager';
 import { Btn } from '../GameWindowComponents/Btn';
@@ -262,11 +257,11 @@ export function PlanetDetailsPane({
     const str = 'Planet Details';
     if (!uiManager) return str;
     if (!selected || !account) return str;
-    const planetname = getPlanetName(selected);
+    const planetname = ProcgenUtils.getPlanetName(selected);
     const shorthash = getPlanetShortHash(selected);
     const twitter = uiManager.getTwitter(selected.owner);
 
-    if (selected.owner === emptyAddress)
+    if (selected.owner === CheckedTypeUtils.EMPTY_ADDRESS)
       return `Unclaimed ${shorthash} ${planetname} - ${str}`;
 
     if (!twitter) return `${shorthash} ${planetname} - ${str}`;
@@ -382,7 +377,8 @@ export function PlanetDetailsPane({
                   </TooltipTrigger>
                 </span>
                 <span>
-                  {selected?.owner === emptyAddress && selected.energy > 0 ? (
+                  {selected?.owner === CheckedTypeUtils.EMPTY_ADDRESS &&
+                  selected.energy > 0 ? (
                     <TooltipTrigger
                       name={TooltipName.Pirates}
                       display='inline-flex'
@@ -492,7 +488,8 @@ export function PlanetDetailsPane({
                 Rank
               </Sub>
               <span>
-                Rank {getPlanetRank(selected)} ({getPlanetTitle(selected)})
+                Rank {getPlanetRank(selected)} (
+                {ProcgenUtils.getPlanetTitle(selected)})
               </span>
             </DetailsRowSingle>
             <DetailsRowSingle>
@@ -544,8 +541,8 @@ export function PlanetDetailsPane({
             <p className='margin-top'>Captain's Log</p>
 
             <div>
-              <p>{getPlanetTagline(selected)}.</p>
-              <p>{getPlanetBlurb(selected)}</p>
+              <p>{ProcgenUtils.getPlanetTagline(selected)}.</p>
+              <p>{ProcgenUtils.getPlanetBlurb(selected)}</p>
             </div>
           </StyledPlanetLore>
 

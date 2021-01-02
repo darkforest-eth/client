@@ -1,4 +1,4 @@
-import { emptyAddress } from '../../../utils/CheckedTypeUtils';
+import { CheckedTypeUtils } from '../../../utils/CheckedTypeUtils';
 import { WorldCoords } from '../../../utils/Coordinates';
 import { formatNumber, moveShipsDecay } from '../../../utils/Utils';
 import { Planet } from '../../../_types/global/GlobalTypes';
@@ -137,7 +137,7 @@ export class UIRenderManager {
     drawRangeAtPercent(50);
     drawRangeAtPercent(25);
 
-    if (selected.owner === emptyAddress) return;
+    if (selected.owner === CheckedTypeUtils.EMPTY_ADDRESS) return;
 
     const forcesSending = gameUIManager.getForcesSending(selected.locationId); // [0, 100]
     const totalForces = (forcesSending / 100) * selected.energy;

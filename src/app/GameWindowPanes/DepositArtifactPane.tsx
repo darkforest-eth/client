@@ -7,7 +7,7 @@ import {
   artifactName,
   hasUnconfirmedArtifactTx,
 } from '../../utils/ArtifactUtils';
-import { getPlanetName } from '../../utils/ProcgenUtils';
+import { ProcgenUtils } from '../../utils/ProcgenUtils';
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
 import { PlanetStatsInfo } from '../../utils/Utils';
 import { Artifact, Planet } from '../../_types/global/GlobalTypes';
@@ -123,7 +123,7 @@ export function DepositArtifactPane({ hook }: { hook: ModalHook }) {
         </p>
         <div>
           <Sub>Selected Planet</Sub>
-          <span>{planet ? getPlanetName(planet) : 'none'}</span>
+          <span>{planet ? ProcgenUtils.getPlanetName(planet) : 'none'}</span>
         </div>
         <div>
           <Sub>Selected Artifact</Sub>

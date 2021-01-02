@@ -9,7 +9,7 @@ import {
   BigNumber,
 } from 'ethers';
 import { EthAddress } from '../_types/global/GlobalTypes';
-import { address } from '../utils/CheckedTypeUtils';
+import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
 import { EventEmitter } from 'events';
 import { XDAI_CHAIN_ID } from '../utils/constants';
 import { callWithRetry, sleep } from '../utils/Utils';
@@ -50,7 +50,7 @@ class EthConnection extends EventEmitter {
     if (knownAddressesStr) {
       const addrStrs = JSON.parse(knownAddressesStr) as string[];
       for (const addrStr of addrStrs) {
-        this.knownAddresses.push(address(addrStr));
+        this.knownAddresses.push(CheckedTypeUtils.address(addrStr));
       }
     }
   }
@@ -120,7 +120,7 @@ class EthConnection extends EventEmitter {
     if (!this.signer) {
       throw new Error('account not selected yet');
     }
-    return address(this.signer.address);
+    return CheckedTypeUtils.address(this.signer.address);
   }
 
   public getNonce(): Promise<number> {
@@ -146,7 +146,7 @@ class EthConnection extends EventEmitter {
 
   public addAccount(skey: string): void {
     // throws if invalid secret key
-    const addr = address(utils.computeAddress(skey));
+    const addr = CheckedTypeUtils.address(utils.computeAddress(skey));
     localStorage.setItem(`skey-${addr}`, skey);
     this.knownAddresses.push(addr);
     localStorage.setItem('KNOWN_ADDRESSES', stringify(this.knownAddresses));
