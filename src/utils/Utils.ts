@@ -319,7 +319,8 @@ export const aggregateBulkGetter = async <T>(
   total: number,
   querySize: number,
   getterFn: (startIdx: number, endIdx: number) => Promise<T[]>,
-  printProgress = false
+  printProgress = false,
+  spacedInMs = 0
 ) => {
   const terminalEmitter = TerminalEmitter.getInstance();
   const promises: Promise<T[]>[] = [];
@@ -328,6 +329,9 @@ export const aggregateBulkGetter = async <T>(
   for (let i = 0; i < total / querySize; i += 1) {
     const start = i * querySize;
     const end = Math.min((i + 1) * querySize, total);
+    if (spacedInMs > 0) {
+      await sleep(spacedInMs);
+    }
     promises.push(
       new Promise<T[]>(async (resolve) => {
         let res: T[] = [];

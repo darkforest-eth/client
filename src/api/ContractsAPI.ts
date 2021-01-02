@@ -756,7 +756,8 @@ class ContractsAPI extends EventEmitter {
           arrivals.map(EthDecoders.rawArrivalToObject)
         );
       },
-      true
+      true,
+      100
     );
 
     return _.flatten(arrivalsUnflattened);
@@ -773,7 +774,8 @@ class ContractsAPI extends EventEmitter {
       2000,
       async (start, end) =>
         await contract.bulkGetPlanetIds(start + startingAt, end + startingAt),
-      true
+      true,
+      100
     );
 
     return planetIds.map((id) => CheckedTypeUtils.locationIdFromEthersBN(id));
@@ -794,7 +796,8 @@ class ContractsAPI extends EventEmitter {
             .slice(start, end)
             .map((id) => CheckedTypeUtils.locationIdToDecStr(id))
         ),
-      true
+      true,
+      100
     );
 
     const rawPlanets = await aggregateBulkGetter<RawPlanetData>(
@@ -806,7 +809,8 @@ class ContractsAPI extends EventEmitter {
             .slice(start, end)
             .map((id) => CheckedTypeUtils.locationIdToDecStr(id))
         ),
-      true
+      true,
+      100
     );
 
     const planets: Map<LocationId, Planet> = new Map();
@@ -868,7 +872,8 @@ class ContractsAPI extends EventEmitter {
         await contract.bulkGetArtifactsByIds(
           artifactIds.slice(start, end).map(CheckedTypeUtils.artifactIdToDecStr)
         ),
-      printProgress
+      printProgress,
+      100
     );
 
     const ret: Artifact[] = rawArtifacts.map(
