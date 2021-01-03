@@ -363,7 +363,11 @@ export function PlanetDetailsPane({
         >
           <PlanetscapeWrapper>
             <div>
-              <PlanetScape planet={selected} info={selectedStats} />
+              <PlanetScape
+                keepDrawing={visible && hook[0]}
+                planet={selected}
+                info={selectedStats}
+              />
             </div>
             <div>
               <div>

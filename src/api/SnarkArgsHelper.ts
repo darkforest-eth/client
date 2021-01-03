@@ -111,10 +111,17 @@ class SnarkProverQueue {
       task.onError(e);
     }
     this.currentlyExecuting = false;
-    const next = this.taskQueue.shift();
-    if (next) {
-      this.execute(next);
-    }
+    this.scheduleNext();
+  }
+
+  // so that the calling context variable don't stay in memory
+  private async scheduleNext() {
+    setTimeout(() => {
+      const next = this.taskQueue.shift();
+      if (next) {
+        this.execute(next);
+      }
+    }, 0);
   }
 }
 

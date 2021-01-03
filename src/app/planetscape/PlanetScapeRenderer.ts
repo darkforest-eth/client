@@ -42,6 +42,8 @@ export class PlanetscapeRenderer implements TextureGLManager {
 
   private texIdx = 0;
 
+  private isPaused: boolean;
+
   constructor(
     canvas: HTMLCanvasElement,
     moonCanvas: HTMLCanvasElement,
@@ -78,7 +80,12 @@ export class PlanetscapeRenderer implements TextureGLManager {
 
     gl.enable(gl.STENCIL_TEST);
 
+    this.isPaused = false;
     this.loop();
+  }
+
+  setPaused(isPaused?: boolean) {
+    this.isPaused = !!isPaused;
   }
 
   public getTexIdx(): number {
@@ -112,9 +119,11 @@ export class PlanetscapeRenderer implements TextureGLManager {
   private loop(): void {
     this.frameCount++;
 
-    this.clear();
-    this.setProjectionMatrix();
-    this.draw();
+    if (!this.isPaused) {
+      this.clear();
+      this.setProjectionMatrix();
+      this.draw();
+    }
 
     this.frameRequestId = window.requestAnimationFrame(this.loop);
   }

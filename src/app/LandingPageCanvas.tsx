@@ -338,6 +338,7 @@ export default function LandingPageCanvas() {
     window.addEventListener('resize', onResize);
     return () => {
       window.removeEventListener('resize', onResize);
+      LandingPageCanvasRenderer.destroyInstance();
     };
   }, []);
 

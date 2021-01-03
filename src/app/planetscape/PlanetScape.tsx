@@ -52,6 +52,11 @@ export function PlanetScape({
 
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
 
+  useEffect(() => {
+    if (!renderer) return;
+    renderer.setPaused(!keepDrawing);
+  }, [keepDrawing, renderer]);
+
   // sync renderer to canvas
   useEffect(() => {
     if (!scapeRef.current || !uiManager || !moonRef.current) return;
@@ -61,13 +66,14 @@ export function PlanetScape({
       moonRef.current,
       uiManager
     );
+    newRenderer.setPaused(!keepDrawing);
     setRenderer(newRenderer);
 
     return () => {
       newRenderer.destroy();
       setRenderer(null);
     };
-  }, [scapeRef, moonRef, uiManager]);
+  }, [scapeRef, moonRef, uiManager, keepDrawing]);
 
   // sync renderer to planet
   useEffect(() => {
