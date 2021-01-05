@@ -16,6 +16,7 @@ import { fakeHash } from '../miner/permutation';
 import TerminalEmitter, { TerminalTextStyle } from '../utils/TerminalEmitter';
 import perlin from '../miner/perlin';
 import * as CRC32 from 'crc-32';
+import FastQueue from 'fastq';
 
 type InitInfo = {
   x: string;
@@ -60,13 +61,11 @@ type ZKPTask = {
  */
 
 class SnarkProverQueue {
-  private taskQueue: ZKPTask[];
-  private currentlyExecuting: boolean;
+  private taskQueue: FastQueue.queue;
   private taskCount: number;
 
   constructor() {
-    this.taskQueue = [];
-    this.currentlyExecuting = false;
+    this.taskQueue = FastQueue(this.execute, 1);
     this.taskCount = 0;
   }
 
@@ -77,25 +76,29 @@ class SnarkProverQueue {
     circuit: string | SnarkJSBin,
     zkey: string | SnarkJSBin
   ): Promise<SnarkJSProofAndSignals> {
+    const taskId = this.taskCount++;
+    const task = {
+      input,
+      circuit,
+      zkey,
+      taskId,
+    };
+
     return new Promise<SnarkJSProofAndSignals>((resolve, reject) => {
-      const taskId = this.taskCount++;
-      this.taskQueue.push({
-        input,
-        circuit,
-        zkey,
-        taskId,
-        onSuccess: resolve,
-        onError: reject,
+      this.taskQueue.push(task, function (err, result) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
       });
-      if (!this.currentlyExecuting) {
-        const toExec = this.taskQueue.shift();
-        if (toExec) this.execute(toExec);
-      }
     });
   }
 
-  private async execute(task: ZKPTask) {
-    this.currentlyExecuting = true;
+  private async execute(
+    task: ZKPTask,
+    cb: (err: Error | null, result: SnarkJSProofAndSignals | null) => void
+  ) {
     try {
       console.log(`proving ${task.taskId}`);
       const res = await window.snarkjs.groth16.fullProve(
@@ -104,24 +107,12 @@ class SnarkProverQueue {
         task.zkey
       );
       console.log(`proved ${task.taskId}`);
-      task.onSuccess(res);
+      cb(null, res);
     } catch (e) {
       console.error('error while calculating SNARK proof:');
       console.error(e);
-      task.onError(e);
+      cb(e, null);
     }
-    this.currentlyExecuting = false;
-    this.scheduleNext();
-  }
-
-  // so that the calling context variable don't stay in memory
-  private async scheduleNext() {
-    setTimeout(() => {
-      const next = this.taskQueue.shift();
-      if (next) {
-        this.execute(next);
-      }
-    }, 0);
   }
 }
 

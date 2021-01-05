@@ -210,7 +210,8 @@ class EthConnection extends EventEmitter {
 
         // exponential backoff, in seconds:
         // 1, 1, 2, 3, 4, 6, 9, 13, 19, 29, 43, 65 ...
-        const sleepTime = 5000 * 1.5 ** tries;
+        // But never more than a minute
+        const sleepTime = Math.min(5000 * 1.5 ** tries, 60000);
         console.log(
           `[wait-tx] SLEEPING tx hash: ${txHash} tries ${tries} sleeping for: ${sleepTime} `
         );

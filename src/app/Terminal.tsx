@@ -57,6 +57,7 @@ type FragmentData = {
   fragment: React.ReactNode;
   skipTyping: boolean;
   typistProps: TypistProps;
+  id: number;
 };
 
 export const defaultTypistProps = {
@@ -78,33 +79,30 @@ export const shellProps = defaultTypistProps;
 const ENTER_KEY_CODE = 13;
 const UP_ARROW_KEY_CODE = 38;
 
-type FragmentHook = [number, (fn: (x: number) => number) => void];
-
 function TerminalFragment({
   fragment,
-  fragmentHook,
   skipAllTyping,
-  idx,
+  idToType,
   onCharTyped,
+  onDone,
 }: {
   fragment: FragmentData;
-  fragmentHook: FragmentHook;
   skipAllTyping: boolean;
-  idx: number;
+  idToType: number;
   onCharTyped: () => void;
+  onDone: (nextId: number) => void;
 }) {
-  const [fragmentNo, setFragmentNo] = fragmentHook;
-
-  if (idx < fragmentNo) {
+  if (fragment.id < idToType) {
     return <span>{fragment.fragment}</span>;
   }
-  if (idx === fragmentNo) {
+
+  if (fragment.id === idToType) {
     if (!fragment.skipTyping && !skipAllTyping) {
       return (
         <Typist
           onCharacterTyped={onCharTyped}
           onTypingDone={() => {
-            setFragmentNo((x) => x + 1);
+            onDone(fragment.id + 1);
           }}
           {...fragment.typistProps}
         >
@@ -112,13 +110,15 @@ function TerminalFragment({
         </Typist>
       );
     } else {
-      setFragmentNo((x) => x + 1);
+      onDone(fragment.id + 1);
       return <span></span>;
     }
   }
 
   return <span></span>;
 }
+
+let fragmentId = 0;
 
 export default function Terminal() {
   const ref = useRef(document.createElement('div'));
@@ -133,8 +133,7 @@ export default function Terminal() {
   const [alwaysFocusInput, setAlwaysFocusInput] = useState<boolean>(true);
   const [userInputEnabled, setUserInputEnabled] = useState<boolean>(false);
   const [inputText, setInputText] = useState<string>('');
-  const fragmentHook = useState<number>(0);
-  const [fragmentNo, _setFragmentNo] = fragmentHook;
+  const [idToType, setIdToType] = useState<number>(0);
   const [inputHeight, setInputHeight] = useState<number>(1);
 
   const [previousInput, setPreviousInput] = useState<string>('');
@@ -142,15 +141,17 @@ export default function Terminal() {
   const [skipAllTyping, setSkipAllTyping] = useState<boolean>(false);
 
   const newline = () => {
-    setFragments((lines) =>
-      _.concat(lines, [
+    setFragments((lines) => {
+      return [
+        ...lines.slice(-199),
         {
           fragment: <br />,
           skipTyping: true,
           typistProps: defaultTypistProps,
+          id: fragmentId++,
         },
-      ])
-    );
+      ];
+    });
   };
 
   const print = (
@@ -203,13 +204,15 @@ export default function Terminal() {
       if (recordAsInput !== null) {
         setPreviousInput(recordAsInput);
       }
-      return _.concat(fragments, [
+      return [
+        ...fragments.slice(-199),
         {
           fragment,
           skipTyping,
           typistProps: typistProps || defaultTypistProps,
+          id: fragmentId++,
         },
-      ]);
+      ];
     });
   };
 
@@ -310,9 +313,9 @@ export default function Terminal() {
   };
 
   useEffect(() => {
-    setIsTyping(fragmentNo < fragments.length);
+    setIsTyping(idToType < fragmentId);
     scrollToEnd();
-  }, [fragmentNo, fragments]);
+  }, [idToType, fragments]);
 
   useEffect(() => {
     setInputHeight(heightMeasureRef.current.scrollHeight);
@@ -320,21 +323,17 @@ export default function Terminal() {
 
   return (
     <TerminalContainer ref={ref}>
-      {fragments.map(
-        // this allows us to print only the last 200 messages without react yelling at us
-        (fragment, idx) =>
-          idx > fragments.length - 200 && (
-            <span key={idx}>
-              <TerminalFragment
-                fragment={fragment}
-                fragmentHook={fragmentHook}
-                skipAllTyping={skipAllTyping}
-                idx={idx}
-                onCharTyped={scrollToEnd}
-              />
-            </span>
-          )
-      )}
+      {fragments.map((fragment) => (
+        <span key={fragment.id}>
+          <TerminalFragment
+            fragment={fragment}
+            skipAllTyping={skipAllTyping}
+            idToType={idToType}
+            onDone={setIdToType}
+            onCharTyped={scrollToEnd}
+          />
+        </span>
+      ))}
 
       {/* User input prompt */}
 
