@@ -168,6 +168,11 @@ class CanvasRenderer {
     this.rectRenderer.flush();
     this.textRenderer.flush();
     this.thumbRenderer.flush();
+
+    // render all of the plugins
+    this.gameUIManager
+      .getPluginManager()
+      ?.drawAllRunningPlugins(this.canvasManager.ctx);
   }
 
   // for throttled debugging: renderer.debug() && console.log(...);

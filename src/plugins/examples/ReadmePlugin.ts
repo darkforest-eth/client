@@ -45,9 +45,7 @@ export const README_PLUGIN = dedent`
 
     /**
      * A plugin's render function is called once.
-     *
-     * Here, you can insert custom html into a modal game modal.
-     *
+     * Here, you can insert custom html into a game modal.
      * You render any sort of UI that makes sense for the plugin!
      */
     async render(div) {

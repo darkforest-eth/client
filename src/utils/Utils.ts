@@ -433,7 +433,7 @@ export const timeoutAfter = async <T>(
   return Promise.race([promise, rejectAfter<T>(ms, timeoutMsg)]);
 };
 
-export function promisify<T>(): [
+export function deferred<T>(): [
   (t: T) => void,
   (t: Error) => void,
   Promise<T>

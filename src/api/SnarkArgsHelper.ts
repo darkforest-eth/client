@@ -247,11 +247,13 @@ class SnarkArgsHelper {
       const vkey = await fetch('public/move_vkey.json').then((res) =>
         res.json()
       );
-      const localVerified = await window.snarkjs.groth16.verify(
-        vkey,
-        snarkProof.publicSignals,
-        snarkProof.proof
-      );
+      const localVerified =
+        this.useMockHash ||
+        (await window.snarkjs.groth16.verify(
+          vkey,
+          snarkProof.publicSignals,
+          snarkProof.proof
+        ));
       const snarkLogs: SnarkLogData = {
         expectedSignals: snarkProof.publicSignals,
         actualSignals: publicSignals.map((x) => x.toString()),

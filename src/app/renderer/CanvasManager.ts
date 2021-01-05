@@ -56,24 +56,49 @@ export default class CanvasManager {
   }
   drawHat(
     hatType: HatType,
-    pathHeight: number,
-    pathWidth: number,
-    center: WorldCoords,
-    width: number,
-    height: number,
-    radius: number,
-    rotation: number,
-    fill1: string | CanvasPattern = 'white',
-    fill2: string | CanvasPattern = 'red'
+    pathHeight: number, // height of svg path
+    pathWidth: number, // width of svg path
+    center: WorldCoords, // center of planet
+    width: number, // width of hat
+    height: number, // height of hat
+    radius: number, // radius of planet
+    rotation: number, // rotation of planet / hat (no-op right now)
+    fill1: string | CanvasPattern = 'white', // hat fill color for bottom layer
+    fill2: string | CanvasPattern = 'red', // hat fill color for top layer
+    hoverCoords: WorldCoords | null = null
   ) {
     const { ctx } = this;
     const viewport = Viewport.getInstance();
     const hat = hatFromType(hatType);
 
+    const offY = radius + height / 4;
+
     const trueCenter = viewport.worldToCanvasCoords(center);
-    const trueRadius = viewport.worldToCanvasDist(radius);
     const trueWidth = viewport.worldToCanvasDist(width);
     const trueHeight = viewport.worldToCanvasDist(height);
+    const trueOffY = -1 * viewport.worldToCanvasDist(offY);
+
+    // calculate hat hover
+
+    // TODO when we add planet rotation back in we'll need to use sin/cos to calculate hat center...
+    const hatCenter: WorldCoords = {
+      x: center.x,
+      y: center.y + offY,
+    };
+
+    const hatTopLeft = {
+      x: hatCenter.x - width / 2,
+      y: hatCenter.y - height / 2,
+    };
+
+    const hovering =
+      hoverCoords &&
+      hoverCoords.x > hatTopLeft.x &&
+      hoverCoords.x < hatTopLeft.x + width &&
+      hoverCoords.y > hatTopLeft.y &&
+      hoverCoords.y < hatTopLeft.y + height;
+
+    // now draw the hat
 
     ctx.save();
 
@@ -82,11 +107,13 @@ export default class CanvasManager {
 
     // extrude out to outside
     ctx.rotate(rotation);
-    ctx.translate(0, -trueRadius - trueHeight / 4);
+    ctx.translate(0, trueOffY);
 
     // move to svg center
     ctx.scale(trueWidth / pathWidth, trueHeight / pathHeight);
     ctx.translate(-pathWidth / 2, -pathHeight / 2);
+
+    ctx.globalAlpha = hovering ? 0.3 : 1;
 
     ctx.fillStyle = fill1;
     for (const pathStr of hat.bottomLayer) {
@@ -97,6 +124,8 @@ export default class CanvasManager {
     for (const pathStr of hat.topLayer) {
       ctx.fill(new Path2D(pathStr));
     }
+
+    ctx.globalAlpha = 1;
 
     ctx.restore();
   }

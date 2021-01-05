@@ -718,6 +718,12 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     return { locations, chunks };
   }
 
+  getPlanetsInViewport(): Planet[] {
+    return Array.from(this.getLocationsAndChunks().locations).map((loc) =>
+      this.gameManager.getPlanetWithCoords(loc.coords)
+    ) as Planet[];
+  }
+
   getWorldRadius(): number {
     return this.gameManager.getWorldRadius();
   }
@@ -794,6 +800,10 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
   }
   getUIDataItem(key: UIDataKey): UIDataValue {
     return this.uiStateStorageManager.getUIDataItem(key);
+  }
+
+  getViewport(): Viewport {
+    return Viewport.getInstance();
   }
 
   // internal utils

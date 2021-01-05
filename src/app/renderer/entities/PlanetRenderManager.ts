@@ -290,6 +290,7 @@ export default class PlanetRenderManager {
   }
 
   private queueHat(planet: Planet, center: WorldCoords, radius: number) {
+    const { gameUIManager: uiManager } = this.renderer;
     const myRotation = 0;
 
     const hatLevel = planet.hatLevel;
@@ -297,6 +298,8 @@ export default class PlanetRenderManager {
     const cosmetic = ProcgenUtils.getPlanetCosmetic(planet);
 
     if (hatLevel > 0) {
+      const hoverCoords = uiManager.getHoveringOverCoords();
+
       let bg = cosmetic.bgStr;
       let base = cosmetic.baseStr;
       if (cosmetic.hatType === HatType.SantaHat) {
@@ -315,7 +318,8 @@ export default class PlanetRenderManager {
         radius,
         myRotation,
         bg,
-        base
+        base,
+        hoverCoords
       );
     }
   }

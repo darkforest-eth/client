@@ -52,7 +52,7 @@ export function ScoreTooltipPane() {
       <Sub>
         Your current score. <White>Score</White> is calculated as the sum of the
         total <br />
-        <White>Energy Cap</White> of your top 10 planets plus 10 percent of your{' '}
+        <White>Energy Cap</White> of your top 10 planets plus 30 percent of your{' '}
         <br />
         planets' <White>total silver value</White>. (Cost of upgrades + current
         silver)

@@ -18,6 +18,7 @@ import { UnconfirmedMove } from '../../_types/darkforest/api/ContractsAPITypes';
 import { MiningPattern } from '../../utils/MiningPatterns';
 import { UIDataKey, UIDataValue } from '../../api/UIStateStorageManager';
 import { PluginManager } from '../../plugins/PluginManager';
+import Viewport from './Viewport';
 
 export default interface AbstractUIManager {
   destroy(): void;
@@ -104,4 +105,7 @@ export default interface AbstractUIManager {
   getUIDataItem(key: UIDataKey): UIDataValue;
 
   spaceTypeFromPerlin(perlin: number): SpaceType;
+
+  getViewport(): Viewport;
+  getPlanetsInViewport(): Planet[];
 }

@@ -11,6 +11,12 @@ export interface PluginProcess {
   render?: (into: HTMLDivElement) => void;
 
   /**
+   * If present, called at the same framerate the the game is running at,
+   * and allows you to draw on top of the game UI.
+   */
+  draw?: (ctx: CanvasRenderingContext2D) => void;
+
+  /**
    * Called when the plugin is unloaded. Plugins unload whenever the
    * plugin is edited (modified and saved, or deleted).
    */

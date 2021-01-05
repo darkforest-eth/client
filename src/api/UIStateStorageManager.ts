@@ -20,14 +20,20 @@ export enum UIDataKey {
   newPlayer = 'newPlayer',
   highPerf = 'highPerf',
 
-  shouldFling = 'shouldFling', // if viewport should use momentum
+  shouldFling = 'shouldFling',
 
   /**
-   * Whether or not `PluginHost` has added the default plugins to
+   * Whether or not `PluginManager` has added the default plugins to
    * this user's plugin library. We need to keep track of this so
    * that we only do it the first time that the plugins UI is opened.
    */
   hasAddedDefaultPlugins = 'hasAddedReadme',
+
+  /**
+   * Same as above, except for a plugin that shows off a brand new
+   * plugin capability - drawing on top of the game
+   */
+  hasAddedCanvasPlugin = 'hasAddedCanvasPlugin',
 
   /**
    * Has this use acknowledged the fact that downloading and running
@@ -56,6 +62,7 @@ export type UIData = {
   highPerf: boolean;
 
   hasAddedReadme: boolean;
+  hasAddedCanvasPlugin: boolean;
   hasAcceptedPluginRisk: boolean;
   shouldFling: boolean;
 };
@@ -78,8 +85,9 @@ export const defaultUserData: UIData = {
 
   highPerf: false,
   hasAddedReadme: false,
+  hasAddedCanvasPlugin: false,
   hasAcceptedPluginRisk: false,
-  shouldFling: true,
+  shouldFling: false,
 };
 
 export function useStoredUIState<T extends UIDataValue>(

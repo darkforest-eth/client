@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { callbackify } from 'util';
 import { Contract, providers } from 'ethers';
 import {
   EthTxType,
@@ -7,9 +8,10 @@ import {
 import EthConnection from './EthConnection';
 import NotificationManager from '../utils/NotificationManager';
 import { PopupManager } from './PopupManager';
-import { promisify, timeoutAfter } from '../utils/Utils';
+import { deferred, timeoutAfter } from '../utils/Utils';
 import { EventLogger } from '../instrumentation/EventLogger';
 import { SnarkLogData } from '../_types/global/GlobalTypes';
+import FastQueue from 'fastq';
 
 export interface QueuedTxRequest {
   onSubmissionError: (e: Error) => void;
@@ -34,6 +36,13 @@ export interface PendingTransaction {
   confirmed: Promise<providers.TransactionReceipt>;
 }
 
+// We handle queue lifecyles with deferreds
+function noop(err: Error | null) {
+  if (err) {
+    console.error('How did we get here?', err);
+  }
+}
+
 export class TxExecutor extends EventEmitter {
   /**
    * tx is considered to have errored if haven't successfully
@@ -51,8 +60,7 @@ export class TxExecutor extends EventEmitter {
    */
   private static readonly MIN_BALANCE_ETH = 0.002;
 
-  private txRequests: QueuedTxRequest[];
-  private currentlyExecuting: boolean;
+  private txRequests: FastQueue.queue;
   private lastTransaction: number;
   private nonce: number;
   private eth: EthConnection;
@@ -60,8 +68,7 @@ export class TxExecutor extends EventEmitter {
   constructor(nonce: number) {
     super();
 
-    this.txRequests = [];
-    this.currentlyExecuting = false;
+    this.txRequests = FastQueue(callbackify(this.execute), 1);
     this.nonce = nonce;
     this.lastTransaction = Date.now();
     this.eth = EthConnection.getInstance();
@@ -82,39 +89,33 @@ export class TxExecutor extends EventEmitter {
     },
     snarkLogs?: SnarkLogData
   ): PendingTransaction {
-    const [txResponse, rejectTxResponse, submittedPromise] = promisify<
+    const [txResponse, rejectTxResponse, submittedPromise] = deferred<
       providers.TransactionResponse
     >();
-    const [txReceipt, rejectTxReceipt, receiptPromise] = promisify<
+    const [txReceipt, rejectTxReceipt, receiptPromise] = deferred<
       providers.TransactionReceipt
     >();
 
-    this.txRequests.push({
-      type,
-      actionId,
-      contract,
-      args,
-      overrides,
-      snarkLogs,
-      onSubmissionError: rejectTxResponse,
-      onReceiptError: rejectTxReceipt,
-      onTransactionResponse: txResponse,
-      onTransactionReceipt: txReceipt,
-    });
-
-    this.queueNextExecution();
+    this.txRequests.push(
+      {
+        type,
+        actionId,
+        contract,
+        args,
+        overrides,
+        snarkLogs,
+        onSubmissionError: rejectTxResponse,
+        onReceiptError: rejectTxReceipt,
+        onTransactionResponse: txResponse,
+        onTransactionReceipt: txReceipt,
+      },
+      noop
+    );
 
     return {
       submitted: submittedPromise,
       confirmed: receiptPromise,
     };
-  }
-
-  private queueNextExecution() {
-    if (!this.currentlyExecuting) {
-      const request = this.txRequests.shift();
-      request && this.execute(request);
-    }
   }
 
   private async maybeUpdateNonce() {
@@ -133,9 +134,7 @@ export class TxExecutor extends EventEmitter {
     }
   }
 
-  private async execute(txRequest: QueuedTxRequest) {
-    this.currentlyExecuting = true;
-
+  private execute = async (txRequest: QueuedTxRequest) => {
     let time_called: number | undefined = undefined;
     let error: Error | undefined = undefined;
     let time_submitted: number | undefined = undefined;
@@ -227,9 +226,5 @@ export class TxExecutor extends EventEmitter {
     ) {
       EventLogger.getInstance().logEvent(logEvent);
     }
-    /* eslint-enable @typescript-eslint/no-explicit-any */
-
-    this.currentlyExecuting = false;
-    this.queueNextExecution();
-  }
+  };
 }

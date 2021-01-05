@@ -7,6 +7,7 @@ import { UIDataKey } from '../api/UIStateStorageManager';
 import { PluginHelpers } from './PluginHelpers';
 import { README_PLUGIN } from './examples/ReadmePlugin';
 import { ARTIFACT_FINDER_PLUGIN } from './examples/ArtifactsFinderPlugin';
+import { CANVAS_PLUGIN } from './examples/ExampleCanvasPlugin';
 
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
@@ -104,19 +105,23 @@ export class PluginManager {
   }
 
   /**
-   * Load all plugins from this disk into `pluginLibrary`. If it's
-   * this player's first time loading the game, then insert the README
-   * plugin into their plugin library. Effectively idempotent after the
-   * first time you call it.
+   * Load all plugins from this disk into `pluginLibrary`. Insert the default
+   * plugins into the player's library if the default plugins have never been
+   * added before. Effectively idempotent after the first time you call it.
    */
   public async load(): Promise<void> {
+    this.pluginLibrary = await this.gameManager.loadPlugins();
+
     if (!this.uiManager.getUIDataItem(UIDataKey.hasAddedDefaultPlugins)) {
       this.uiManager.setUIDataItem(UIDataKey.hasAddedDefaultPlugins, true);
       this.addPluginToLibrary('README', README_PLUGIN);
       this.addPluginToLibrary('Artifacts Finder', ARTIFACT_FINDER_PLUGIN);
     }
 
-    this.pluginLibrary = await this.gameManager.loadPlugins();
+    if (!this.uiManager.getUIDataItem(UIDataKey.hasAddedCanvasPlugin)) {
+      this.uiManager.setUIDataItem(UIDataKey.hasAddedCanvasPlugin, true);
+      this.addPluginToLibrary('Rage Cage', CANVAS_PLUGIN);
+    }
   }
 
   /**
@@ -283,6 +288,30 @@ export class PluginManager {
     }
 
     return map;
+  }
+
+  /**
+   * For each currently running plugin, if the plugin has a 'draw'
+   * function, then draw that plugin to the screen.
+   */
+  public drawAllRunningPlugins(ctx: CanvasRenderingContext2D) {
+    for (const plugin of this.pluginLibrary) {
+      const processInfo = this.pluginProcessInfos[plugin.id];
+      const pluginInstance = this.pluginProcesses[plugin.id];
+
+      if (
+        pluginInstance &&
+        typeof pluginInstance.draw === 'function' &&
+        !processInfo.hasError
+      ) {
+        try {
+          pluginInstance.draw(ctx);
+        } catch (e) {
+          console.log('failed to draw plugin', e);
+          processInfo.hasError = true;
+        }
+      }
+    }
   }
 
   /**

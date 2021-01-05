@@ -11,8 +11,6 @@ import {
   TextAnchor,
 } from '../utils/EngineTypes';
 
-/* responsible for drawing all the UI bits, calls primitive renderers */
-
 const {
   red,
   white,
