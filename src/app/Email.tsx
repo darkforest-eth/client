@@ -1,7 +1,16 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Button from '../components/Button';
 import dfstyles from '../styles/dfstyles';
-import { EmailResponse, submitInterestedEmail } from '../api/UtilityServerAPI';
+import {
+  EmailResponse,
+  submitInterestedEmail,
+  submitUnsubscribeEmail,
+} from '../api/UtilityServerAPI';
+
+export enum EmailCTAMode {
+  SUBSCRIBE,
+  UNSUBSCRIBE,
+}
 
 const styles: {
   [name: string]: React.CSSProperties;
@@ -38,33 +47,31 @@ const styles: {
   },
 };
 
-export const EmailCTA = () => {
+export const EmailCTA = ({ mode }: { mode: EmailCTAMode }) => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<EmailResponse | null>(null);
 
   const [focus, setFocus] = useState<boolean>(false);
 
-  const emailPopupWindowName = 'popupwindow';
-  const emailFormRef = useRef<HTMLFormElement>(document.createElement('form'));
-
   const doSubmit = async () => {
-    const response = await submitInterestedEmail(email);
+    const response =
+      mode === EmailCTAMode.SUBSCRIBE
+        ? await submitInterestedEmail(email)
+        : await submitUnsubscribeEmail(email);
     setStatus(response);
     if (response === EmailResponse.Success) {
       setEmail('');
     }
-    window.open(
-      'https://tinyletter.com/darkforest_eth',
-      emailPopupWindowName,
-      'scrollbars=yes,width=800,height=600'
-    );
-    emailFormRef.current.submit();
   };
 
   const responseToMessage = (response: EmailResponse): string => {
-    if (response === EmailResponse.Success)
-      return 'email successfully recorded';
-    else if (response === EmailResponse.Invalid) return 'invalid address';
+    if (response === EmailResponse.Success) {
+      if (mode === EmailCTAMode.SUBSCRIBE) {
+        return 'email successfully recorded';
+      } else {
+        return 'successfully unsubscribed';
+      }
+    } else if (response === EmailResponse.Invalid) return 'invalid address';
     else if (response === EmailResponse.ServerError) return 'server error';
     else {
       console.error('invalid email outcome');
@@ -80,40 +87,34 @@ export const EmailCTA = () => {
             marginRight: '14pt',
           }}
         >
-          info:
+          {mode === EmailCTAMode.SUBSCRIBE ? 'info' : 'unsubscribe'}:
         </p>
 
-        <form
-          action={'https://tinyletter.com/darkforest_eth'}
-          method={'post'}
-          target={emailPopupWindowName}
-          ref={emailFormRef}
-        >
-          <input
-            style={{
-              ...styles.input,
-              color: focus ? dfstyles.colors.text : dfstyles.colors.subtext,
-              background: focus
-                ? dfstyles.colors.backgroundlighter
-                : 'rgba(0, 0, 0, 0)',
-              width: focus ? '9em' : '7em',
-            }}
-            type='text'
-            name={email}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={'name@email.com'}
-            onKeyDown={(e) => {
-              if (e.keyCode === 13) e.preventDefault();
-            }}
-            onKeyUp={(e) => {
-              e.preventDefault();
-              if (e.keyCode === 13) doSubmit();
-            }}
-            onFocus={() => setFocus(true)}
-            onBlur={() => setFocus(false)}
-          />
-        </form>
+        <input
+          style={{
+            ...styles.input,
+            color: focus ? dfstyles.colors.text : dfstyles.colors.subtext,
+            background: focus
+              ? dfstyles.colors.backgroundlighter
+              : 'rgba(0, 0, 0, 0)',
+            width: focus ? '9em' : '7em',
+          }}
+          type='text'
+          name={email}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder={'name@email.com'}
+          onKeyDown={(e) => {
+            if (e.keyCode === 13) e.preventDefault();
+          }}
+          onKeyUp={(e) => {
+            e.preventDefault();
+            if (e.keyCode === 13) doSubmit();
+          }}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
+        />
+
         <Button
           onClick={doSubmit}
           style={styles.btn}

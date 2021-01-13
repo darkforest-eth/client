@@ -26,4 +26,11 @@ export const HAT_SIZES = [
   'Legendary HAT',
   'Almighty HAT',
   'Cosmic HAT',
+  'Celestial HAT',
+  'Empyrean HAT',
+  'Ethereal HAT',
+  'Transcendental HAT',
+  'haaaaat',
+  'HAAAAAT',
+  'HAAAAAAAAAAAAAT',
 ];

@@ -152,7 +152,7 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
   const hatPlanet = localStorage.getItem(`${addr.toLowerCase()}-hatPlanet`);
   const hatLevel = localStorage.getItem(`${addr.toLowerCase()}-hatLevel`);
   const hatCost: number =
-    method === 'buyHat' && hatLevel ? 2 ** (parseInt(hatLevel) - 1) : 0;
+    method === 'buyHat' && hatLevel ? 2 ** parseInt(hatLevel) : 0;
 
   const txCost: number = 0.002 + hatCost;
 
@@ -300,6 +300,18 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
           <b>Total Transaction Cost</b>
           <span>{txCost.toFixed(8)} xDAI</span>
         </div>
+        {method === 'buyHat' && hatLevel && +hatLevel > 6 && (
+          <div>
+            <b
+              style={{
+                color: 'red',
+              }}
+            >
+              WARNING: You are buying a very expensive HAT! Check the price and
+              make sure you intend to do this!
+            </b>
+          </div>
+        )}
         <div className='mtop'>
           <b>Account Balance</b>
           <span>{parseFloat(balance).toFixed(8)} xDAI</span>

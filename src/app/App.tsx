@@ -7,6 +7,7 @@ import dfstyles from '../styles/dfstyles';
 import styled from 'styled-components';
 import { SharePlanet } from './SharePlanet';
 import { TxConfirmPopup } from './TxConfirmPopup';
+import UnsubscribePage from './UnsubscribePage';
 
 function App() {
   return (
@@ -18,11 +19,12 @@ function App() {
           render={() => <GameLandingPage replayMode={true} />}
         />
         <Route path='/' exact component={LandingPage} />
-        <Route path='/planet:location' component={SharePlanet} />
+        <Route path='/planet/:locationId' component={SharePlanet} />
         <Route
           path='/wallet/:addr/:actionId/:balance/:method'
           component={TxConfirmPopup}
         />
+        <Route path='/unsubscribe' component={UnsubscribePage} />
       </Switch>
     </Router>
   );

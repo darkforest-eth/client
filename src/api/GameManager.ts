@@ -137,7 +137,6 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       unprocessedArrivals,
       unprocessedPlanetArrivalIds,
       contractConstants,
-      this.endTimeSeconds,
       this.getAccount()
     );
     this.contractsAPI = contractsAPI;
@@ -182,7 +181,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     const useMockHash = await contractsAPI.zkChecksDisabled();
 
     // then we initialize the local storage manager and SNARK helper
-    const account = contractsAPI.account;
+    const account = await EthConnection.getInstance().getAddress();
     const balance = await EthConnection.getInstance().getBalance(account);
     const persistentChunkStore = await PersistentChunkStore.create(account);
     const possibleHomes = await persistentChunkStore.getHomeLocations();
@@ -1026,11 +1025,9 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       TerminalTextStyle.Sub
     );
     terminalEmitter.newline();
-    try {
-      this.contractsAPI.depositArtifact(txIntent);
-    } catch (e) {
-      this.onTxIntentFail(txIntent, e);
-    }
+    this.contractsAPI
+      .depositArtifact(txIntent)
+      .catch((e) => this.onTxIntentFail(txIntent, e));
     return this;
   }
 
@@ -1080,11 +1077,9 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     );
     terminalEmitter.newline();
 
-    try {
-      this.contractsAPI.withdrawArtifact(txIntent);
-    } catch (e) {
-      this.onTxIntentFail(txIntent, e);
-    }
+    this.contractsAPI
+      .withdrawArtifact(txIntent)
+      .catch((e) => this.onTxIntentFail(txIntent, e));
     return this;
   }
 
@@ -1206,17 +1201,16 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     };
     this.handleTxIntent(txIntent);
 
-    try {
-      const terminalEmitter = TerminalEmitter.getInstance();
-      terminalEmitter.println(
-        'UPGRADE: sending upgrade to blockchain',
-        TerminalTextStyle.Sub
-      );
-      terminalEmitter.newline();
-      this.contractsAPI.upgradePlanet(upgradeArgs, actionId);
-    } catch (e) {
-      this.onTxIntentFail(txIntent, e);
-    }
+    const terminalEmitter = TerminalEmitter.getInstance();
+    terminalEmitter.println(
+      'UPGRADE: sending upgrade to blockchain',
+      TerminalTextStyle.Sub
+    );
+    terminalEmitter.newline();
+    this.contractsAPI
+      .upgradePlanet(upgradeArgs, actionId)
+      .catch((e) => this.onTxIntentFail(txIntent, e));
+
     return this;
   }
 
@@ -1260,15 +1254,15 @@ class GameManager extends EventEmitter implements AbstractGameManager {
     );
     terminalEmitter.newline();
 
-    try {
-      this.contractsAPI.buyHat(
+    this.contractsAPI
+      .buyHat(
         CheckedTypeUtils.locationIdToDecStr(planetId),
         planet.hatLevel,
         actionId
-      );
-    } catch (e) {
-      this.onTxIntentFail(txIntent, e);
-    }
+      )
+      .catch((e) => {
+        this.onTxIntentFail(txIntent, e);
+      });
     return this;
   }
 
@@ -1309,11 +1303,9 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
     console.log(planet);
 
-    try {
-      this.contractsAPI.transferOwnership(planetId, newOwner, actionId);
-    } catch (e) {
-      this.onTxIntentFail(txIntent, e);
-    }
+    this.contractsAPI
+      .transferOwnership(planetId, newOwner, actionId)
+      .catch((e) => this.onTxIntentFail(txIntent, e));
     return this;
   }
 

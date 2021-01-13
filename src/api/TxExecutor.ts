@@ -147,7 +147,10 @@ export class TxExecutor extends EventEmitter {
     try {
       await this.checkBalance();
       await this.maybeUpdateNonce();
-      await PopupManager.openConfirmationWindowForTransaction(txRequest);
+      await PopupManager.openConfirmationWindowForTransaction(
+        txRequest,
+        this.eth.getAddress()
+      );
 
       time_called = Date.now();
       const methodName = TxTypeToEthFunctionName[txRequest.type];
@@ -176,6 +179,7 @@ export class TxExecutor extends EventEmitter {
         error = new Error('transaction reverted');
       }
     } catch (e) {
+      console.error(e);
       time_errored = Date.now();
       error = e;
       if (!time_submitted) {

@@ -75,19 +75,6 @@ const EmailWrapper = styled.div`
   flex-direction: row;
 `;
 
-const TRow = styled.tr`
-  & td:first-child {
-    color: ${dfstyles.colors.subtext};
-  }
-  & td:nth-child(2) {
-    padding-left: 12pt;
-  }
-  & td:nth-child(3) {
-    text-align: right;
-    padding-left: 16pt;
-  }
-`;
-
 const Footer = styled.div`
   display: flex;
   flex-direction: column;
@@ -147,20 +134,6 @@ const IconLinks = styled.div`
   }
 `;
 
-const CTA = styled.div`
-  display: inline-block;
-  font-size: ${dfstyles.fontH2};
-  border-bottom: 1px solid ${dfstyles.colors.text};
-  line-height: 1em;
-  margin-top: 16px;
-  cursor: pointer;
-  transition: color 0.2s, border-bottom 0.2s;
-  &:hover {
-    color: ${dfstyles.colors.dfgreen};
-    border-bottom: 1px solid ${dfstyles.colors.dfgreen};
-  }
-`;
-
 const Title = styled.div`
   font-size: ${dfstyles.fontH1};
   font-family: ${dfstyles.titleFont};
@@ -209,8 +182,7 @@ const typistProps = {
   cursor: { show: false },
 };
 
-export default function LandingPage() {
-  const history = useHistory();
+export default function UnsubscribePage() {
   return (
     <div style={styles.wrapper}>
       <div style={styles.background} />
@@ -252,76 +224,15 @@ export default function LandingPage() {
               </Sub>
             </p>
           </Typist>
-          <CTA
-            onClick={() => {
-              history.push('/game1');
-            }}
-          >
-            <Typist {...typistProps}>Enter</Typist>
-          </CTA>
         </Header>
+
+        {/* Email CTA */}
+        <EmailWrapper>
+          <EmailCTA mode={EmailCTAMode.UNSUBSCRIBE} />
+        </EmailWrapper>
 
         {/* Footer */}
         <Footer>
-          {/* Hall of Fame */}
-          <div>
-            <p style={styles.hofTitle}>Space Masters</p>
-            <table>
-              <tbody>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.1
-                  </td>
-                  <td>
-                    02/22/<HideSmall>20</HideSmall>20
-                  </td>
-                  <td>
-                    <a href='https://twitter.com/zoink'>Dylan Field</a>
-                  </td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.2
-                  </td>
-                  <td>
-                    06/24/<HideSmall>20</HideSmall>20
-                  </td>
-                  <td>Nate Foss</td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.3
-                  </td>
-                  <td>
-                    08/07/<HideSmall>20</HideSmall>20
-                  </td>
-                  <td>
-                    <a href='https://twitter.com/hideandcleanse'>
-                      @HideAndCleanse
-                    </a>
-                  </td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.4
-                  </td>
-                  <td>
-                    10/02/<HideSmall>20</HideSmall>20
-                  </td>
-                  <td>
-                    <a href='https://twitter.com/jacobrosenthal'>
-                      Jacob Rosenthal
-                    </a>
-                  </td>
-                </TRow>
-              </tbody>
-            </table>
-          </div>
-
-          {/* Email CTA */}
-          <EmailWrapper>
-            <EmailCTA mode={EmailCTAMode.SUBSCRIBE} />
-          </EmailWrapper>
           <TextLinks>
             <a href={links.email}>email</a>
             <a href={links.blog}>blog</a>

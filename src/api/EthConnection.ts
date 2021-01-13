@@ -66,10 +66,23 @@ class EthConnection extends EventEmitter {
     return this.rpcURL;
   }
 
+  public hasSigner(): boolean {
+    return !!this.signer;
+  }
+
   public async setRpcEndpoint(url: string): Promise<void> {
     try {
       this.rpcURL = url;
       const newProvider = new providers.JsonRpcProvider(this.rpcURL);
+      /**
+       * this.provider needs to get set to nonnull value immediately (synchronously)
+       * otherwise other classes which call loadContract() immediately on app load might
+       * load a contract without a provider.
+       * if there ends up being an error with the RPC URL, we emit event and reload contract into ContractsAPI
+       * This is hacky / bad practice and this whole getInstance() pattern should get refactored
+       * but for now it is what it is ¯\_(ツ)_/¯
+       */
+      this.provider = newProvider;
       if (process.env.NODE_ENV === 'production') {
         if ((await newProvider.getNetwork()).chainId !== XDAI_CHAIN_ID) {
           throw new Error('not a valid xDAI RPC URL');
@@ -87,6 +100,7 @@ class EthConnection extends EventEmitter {
     } catch (e) {
       console.error(`error setting rpc endpoint: ${e}`);
       this.setRpcEndpoint(EthConnection.XDAI_DEFAULT_URL);
+      this.emit('ChangedRPCEndpoint');
       return;
     }
   }
@@ -98,7 +112,8 @@ class EthConnection extends EventEmitter {
     if (this.signer) {
       return new Contract(contractAddress, contractABI, this.signer);
     } else {
-      throw new Error('no signer found');
+      console.log('WARNING: loading contract from provider (no signer)');
+      return new Contract(contractAddress, contractABI, this.provider);
     }
   }
 
@@ -116,7 +131,6 @@ class EthConnection extends EventEmitter {
   }
 
   public getAddress(): EthAddress {
-    // throws if no account has been set yet
     if (!this.signer) {
       throw new Error('account not selected yet');
     }

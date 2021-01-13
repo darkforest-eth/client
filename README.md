@@ -4,20 +4,20 @@
 
 ### Installing Core Dependencies
 
--   Node (v12.18.0)
+-   Node (v14.15.x)
 -   Yarn (Javascript Package Manager)
 -   Ganache CLI
 
 #### Installing The Correct Node Version Using NVM
 
-Dark Forest is built and tested using Node.js v12.18.0 and might not run properly on other Node.js versions. We recommend using NVM to switch between multiple Node.js version on your machine.
+Dark Forest is built and tested using Node.js v14.15.x and might not run properly on other Node.js versions. We recommend using NVM to switch between multiple Node.js version on your machine.
 
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 nvm install
 ```
 
-After the installation is finished, you can run `node --version` to verify that you are running v12.18.0
+After the installation is finished, you can run `node --version` to verify that you are running v14.15.x
 
 #### Installing Yarn & Other Dev Dependencies
 

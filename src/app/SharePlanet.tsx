@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
-import { Planet } from '../_types/global/GlobalTypes';
+import { isLocatable, LocationId, Planet } from '../_types/global/GlobalTypes';
 import { PlanetScape } from './planetscape/PlanetScape';
 import { getPlanetShortHash } from '../utils/Utils';
 import { ProcgenUtils } from '../utils/ProcgenUtils';
 import LandingPageCanvas from './LandingPageCanvas';
 import dfstyles from '../styles/dfstyles';
 import { Sub } from '../components/Text';
+import SinglePlanetDataStore, {
+  SinglePlanetDataStoreEvent,
+} from '../api/SinglePlanetDataStore';
+import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
+import EthConnection from '../api/EthConnection';
 
 const PlanetCard = styled.div`
   width: 36em;
@@ -49,11 +54,44 @@ const SharePlanetWrapper = styled.div`
 
 export function SharePlanet({ match }: RouteComponentProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { location } = match.params as any;
+  const { locationId } = match.params as { locationId: LocationId };
 
-  const planet = { locationId: location } as Planet;
+  const [loading, setLoading] = useState<boolean>(true);
+  const [
+    planetDataStore,
+    setPlanetDataStore,
+  ] = useState<SinglePlanetDataStore | null>(null);
+  const [planet, setPlanet] = useState<Planet | null>(null);
+  const [biome, setBiome] = useState<number | null>(null);
+  const [ownerTwitter, setOwnerTwitter] = useState<string | null>(null);
 
-  return (
+  const knownAddrs = EthConnection.getInstance().getKnownAccounts();
+
+  /**
+   * 2nd order function because u need to pass in a function for click handler
+   */
+  const selectAccount = (addr: string) => () => {
+    planetDataStore?.switchAccount(CheckedTypeUtils.address(addr));
+  };
+
+  useEffect(() => {
+    SinglePlanetDataStore.create(locationId).then((store) => {
+      setPlanetDataStore(store);
+      setLoading(false);
+      store.on(SinglePlanetDataStoreEvent.REFRESHED_PLANET, () => {
+        const refreshedPlanet = store.getPlanet();
+        if (refreshedPlanet) {
+          setPlanet(refreshedPlanet);
+          if (isLocatable(refreshedPlanet)) setBiome(refreshedPlanet.biome);
+          setOwnerTwitter(store.getPlanetOwnerTwitter());
+        }
+      });
+    });
+  }, [locationId]);
+
+  return loading ? (
+    <p>loading...</p>
+  ) : (
     <SharePlanetWrapper>
       <LandingPageCanvas />
       <div
@@ -64,6 +102,14 @@ export function SharePlanet({ match }: RouteComponentProps) {
           zIndex: 2,
         }}
       >
+        <div>
+          <p>view as account...</p>
+          {knownAddrs.map((addr, i) => (
+            <p onClick={selectAccount(addr)} key={i}>
+              {addr}
+            </p>
+          ))}
+        </div>
         <PlanetCard>
           <div>
             {getPlanetShortHash(planet)} {ProcgenUtils.getPlanetName(planet)}
@@ -73,11 +119,14 @@ export function SharePlanet({ match }: RouteComponentProps) {
           </div>
           <div>
             <p>
-              <em>A {ProcgenUtils.getPlanetTagline(planet)}...</em>
+              <em>{ProcgenUtils.getPlanetTagline(planet)}...</em>
               <p>
                 <Sub>{ProcgenUtils.getPlanetBlurb(planet)}</Sub>
               </p>
             </p>
+            <p>{`Owner: ${ownerTwitter || planet?.owner}`}</p>
+            <p>{`Energy: ${planet?.energy}`}</p>
+            <p>{`Biome: ${biome || 'unknown'}`}</p>
             <p>
               Find this planet in-game at <a href='/'>http://zkga.me</a> to read
               more!

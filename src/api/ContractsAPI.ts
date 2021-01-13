@@ -128,30 +128,30 @@ export const contractPrecision = 1000;
  * in the contract.
  */
 class ContractsAPI extends EventEmitter {
-  private readonly txRequestExecutor: TxExecutor;
+  private readonly txRequestExecutor: TxExecutor | null;
   private readonly terminalEmitter: TerminalEmitter;
-  public readonly account: EthAddress;
   private coreContract: Contract;
 
-  private constructor(
-    coreContract: Contract,
-    nonce: number,
-    account: EthAddress
-  ) {
+  private constructor(coreContract: Contract, nonce: number) {
     super();
     this.coreContract = coreContract;
     this.txRequestExecutor = new TxExecutor(nonce);
-    this.account = account;
     this.terminalEmitter = TerminalEmitter.getInstance();
   }
 
   static async create(): Promise<ContractsAPI> {
     const ethConnection = EthConnection.getInstance();
 
+    let nonce = 0;
+    try {
+      nonce = await ethConnection.getNonce();
+    } catch (e) {
+      console.log('WARNING: creating TxExecutor with no account/signer');
+    }
+
     const contractsAPI: ContractsAPI = new ContractsAPI(
       await ethConnection.loadCoreContract(),
-      await ethConnection.getNonce(),
-      ethConnection.getAddress()
+      nonce
     );
 
     contractsAPI.setupEventListeners();
@@ -354,6 +354,9 @@ class ContractsAPI extends EventEmitter {
     args: InitializePlayerArgs,
     action: UnconfirmedInit
   ): Promise<providers.TransactionReceipt> {
+    if (!this.txRequestExecutor) {
+      throw new Error('no signer, cannot execute tx');
+    }
     const tx = this.txRequestExecutor.makeRequest(
       EthTxType.INIT,
       action.actionId,
@@ -375,6 +378,9 @@ class ContractsAPI extends EventEmitter {
     newOwner: EthAddress,
     actionId: string
   ): Promise<providers.TransactionReceipt> {
+    if (!this.txRequestExecutor) {
+      throw new Error('no signer, cannot execute tx');
+    }
     const tx = this.txRequestExecutor.makeRequest(
       EthTxType.PLANET_TRANSFER,
       actionId,
@@ -400,6 +406,9 @@ class ContractsAPI extends EventEmitter {
     args: UpgradeArgs,
     actionId: string
   ): Promise<providers.TransactionReceipt> {
+    if (!this.txRequestExecutor) {
+      throw new Error('no signer, cannot execute tx');
+    }
     const tx = this.txRequestExecutor.makeRequest(
       EthTxType.UPGRADE,
       actionId,
@@ -428,6 +437,9 @@ class ContractsAPI extends EventEmitter {
     biomeSnarkArgs: BiomeArgs,
     actionId: string
   ): Promise<providers.TransactionReceipt> {
+    if (!this.txRequestExecutor) {
+      throw new Error('no signer, cannot execute tx');
+    }
     const tx = this.txRequestExecutor.makeRequest(
       EthTxType.FIND_ARTIFACT,
       actionId,
@@ -449,6 +461,9 @@ class ContractsAPI extends EventEmitter {
   async depositArtifact(
     action: UnconfirmedDepositArtifact
   ): Promise<providers.TransactionReceipt> {
+    if (!this.txRequestExecutor) {
+      throw new Error('no signer, cannot execute tx');
+    }
     const args: DepositArtifactArgs = [
       CheckedTypeUtils.locationIdToDecStr(action.locationId),
       CheckedTypeUtils.artifactIdToDecStr(action.artifactId),
@@ -475,6 +490,9 @@ class ContractsAPI extends EventEmitter {
   async withdrawArtifact(
     action: UnconfirmedWithdrawArtifact
   ): Promise<providers.TransactionReceipt> {
+    if (!this.txRequestExecutor) {
+      throw new Error('no signer, cannot execute tx');
+    }
     const args: WithdrawArtifactArgs = [
       CheckedTypeUtils.locationIdToDecStr(action.locationId),
     ];
@@ -504,6 +522,9 @@ class ContractsAPI extends EventEmitter {
     silverMoved: number,
     actionId: string
   ): Promise<providers.TransactionReceipt> {
+    if (!this.txRequestExecutor) {
+      throw new Error('no signer, cannot execute tx');
+    }
     const args = [
       snarkArgs[ZKArgIdx.PROOF_A],
       snarkArgs[ZKArgIdx.PROOF_B],
@@ -555,6 +576,9 @@ class ContractsAPI extends EventEmitter {
     currentHatLevel: number,
     actionId: string
   ) {
+    if (!this.txRequestExecutor) {
+      throw new Error('no signer, cannot execute tx');
+    }
     const overrides: providers.TransactionRequest = {
       gasLimit: 500000,
       value: bigInt(1000000000000000000)

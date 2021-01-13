@@ -119,9 +119,10 @@ export function HatPane({ hook }: { hook: ModalHook }) {
         </div>
         <div>
           <Btn
-            onClick={() =>
-              enabled() && uiManager && selected && uiManager.buyHat(selected)
-            }
+            onClick={() => {
+              if (!enabled() || !uiManager || !selected) return;
+              uiManager.buyHat(selected);
+            }}
             className={!enabled() ? 'btn-disabled' : ''}
           >
             {selected && selected.hatLevel > 0 ? 'Upgrade' : 'Buy'} HAT

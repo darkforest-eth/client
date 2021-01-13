@@ -37,6 +37,23 @@ export const submitInterestedEmail = async (
   return success ? EmailResponse.Success : EmailResponse.ServerError;
 };
 
+export const submitUnsubscribeEmail = async (
+  email: string
+): Promise<EmailResponse> => {
+  if (!EmailValidator.validate(email)) {
+    return EmailResponse.Invalid;
+  }
+  const { success } = await fetch(`${WEBSERVER_URL}/email/unsubscribe`, {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
+
+  return success ? EmailResponse.Success : EmailResponse.ServerError;
+};
+
 export const submitPlayerEmail = async (
   email: string,
   ethAddress: EthAddress

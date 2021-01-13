@@ -1,8 +1,8 @@
-import { callWithRetry } from '../utils/Utils';
 import {
   EthTxType,
   TxTypeToEthFunctionName,
 } from '../_types/darkforest/api/ContractsAPITypes';
+import { EthAddress } from '../_types/global/GlobalTypes';
 import EthConnection from './EthConnection';
 import { QueuedTxRequest } from './TxExecutor';
 
@@ -11,17 +11,13 @@ export class PopupManager {
   private static readonly POPUP_TIMEOUT = 20000;
 
   public static async openConfirmationWindowForTransaction(
-    txRequest: QueuedTxRequest
+    txRequest: QueuedTxRequest,
+    from: EthAddress
   ): Promise<void> {
     // popup a confirmation window
-    const userAddr = (
-      await callWithRetry<string>(
-        txRequest.contract.signer.getAddress.bind(txRequest.contract)
-      )
-    ).toLowerCase();
 
     // this guy should get a manager / API so we can actually understand it
-    const enableUntilStr = localStorage.getItem(`wallet-enabled-${userAddr}`);
+    const enableUntilStr = localStorage.getItem(`wallet-enabled-${from}`);
 
     if (
       !enableUntilStr ||
@@ -30,14 +26,13 @@ export class PopupManager {
       txRequest.type === EthTxType.BUY_HAT
     ) {
       const ethConnection = EthConnection.getInstance();
-      const balance = await ethConnection.getBalance(
-        ethConnection.getAddress()
-      );
+      const account = ethConnection.getAddress();
+      const balance = await ethConnection.getBalance(account);
       const method = TxTypeToEthFunctionName[txRequest.type];
       const popup = window.open(
-        `/wallet/${userAddr}/${txRequest.actionId}/${balance}/${method}`,
+        `/wallet/${from}/${txRequest.actionId}/${balance}/${method}`,
         'confirmationwindow',
-        'width=600,height=420'
+        'width=600,height=440'
       );
       if (popup) {
         const opened = Date.now();
@@ -46,7 +41,7 @@ export class PopupManager {
             if (popup.closed) {
               const approved =
                 localStorage.getItem(
-                  `tx-approved-${userAddr}-${txRequest.actionId}`
+                  `tx-approved-${from}-${txRequest.actionId}`
                 ) === 'true';
               if (approved) {
                 resolve();
@@ -54,7 +49,7 @@ export class PopupManager {
                 reject(new Error('User rejected transaction.'));
               }
               localStorage.removeItem(
-                `tx-approved-${userAddr}-${txRequest.actionId}`
+                `tx-approved-${from}-${txRequest.actionId}`
               );
               clearInterval(interval);
             } else {
@@ -65,7 +60,7 @@ export class PopupManager {
                   )
                 );
                 localStorage.removeItem(
-                  `tx-approved-${userAddr}-${txRequest.actionId}`
+                  `tx-approved-${from}-${txRequest.actionId}`
                 );
                 clearInterval(interval);
                 popup.close();

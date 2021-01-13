@@ -72,6 +72,9 @@
       "last 1 safari version"
     ]
   },
+  "engines": {
+    "node": "14.15.*"
+  },
   "devDependencies": {
     "@babel/preset-react": "^7.8.3",
     "@types/prismjs": "^1.16.2",
