@@ -121,8 +121,8 @@ const IconLinks = styled.div`
       &.link-github {
         color: ${dfstyles.colors.icons.github};
       }
-      &.link-telegram {
-        color: ${dfstyles.colors.icons.telegram};
+      &.link-discord {
+        color: ${dfstyles.colors.icons.discord};
       }
       &.link-blog {
         color: ${dfstyles.colors.icons.blog};
@@ -241,8 +241,8 @@ export default function UnsubscribePage() {
             <a className={'link-twitter'} href={links.twitter}>
               <span className={'icon-twitter'}></span>
             </a>
-            <a className={'link-telegram'} href={links.telegram}>
-              <span className={'icon-telegram'}></span>
+            <a className={'link-discord'} href={links.telegram}>
+              <span className={'icon-discord'}></span>
             </a>
             <a className={'link-github'} href={links.github}>
               <span className={'icon-github'}></span>

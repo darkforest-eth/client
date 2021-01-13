@@ -61,7 +61,7 @@ const links = {
   twitter: 'http://twitter.com/darkforest_eth',
   email: 'mailto:contact@zkga.me',
   blog: 'https://blog.zkga.me/',
-  telegram: 'https://t.me/zk_forest',
+  discord: 'https://discord.gg/2u2TN6v8r6',
   github: 'https://github.com/darkforest-eth',
 };
 
@@ -134,8 +134,8 @@ const IconLinks = styled.div`
       &.link-github {
         color: ${dfstyles.colors.icons.github};
       }
-      &.link-telegram {
-        color: ${dfstyles.colors.icons.telegram};
+      &.link-discord {
+        color: ${dfstyles.colors.icons.discord};
       }
       &.link-blog {
         color: ${dfstyles.colors.icons.blog};
@@ -330,8 +330,8 @@ export default function LandingPage() {
             <a className={'link-twitter'} href={links.twitter}>
               <span className={'icon-twitter'}></span>
             </a>
-            <a className={'link-telegram'} href={links.telegram}>
-              <span className={'icon-telegram'}></span>
+            <a className={'link-discord'} href={links.discord}>
+              <span className={'icon-discord'}></span>
             </a>
             <a className={'link-github'} href={links.github}>
               <span className={'icon-github'}></span>

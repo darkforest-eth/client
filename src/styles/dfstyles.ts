@@ -20,7 +20,7 @@ const dfstyles = {
     icons: {
       twitter: '#1DA1F2',
       github: '#8e65db',
-      telegram: '#0088CC',
+      discord: '#7289da',
       email: '#D44638',
       blog: '#ffcb1f',
     },

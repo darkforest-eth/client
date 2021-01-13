@@ -44,23 +44,17 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
   return (
     <ModalPane hook={hook} title='Help' name={ModalName.Help}>
       <HelpWrapper>
-        <p className='title'>Patch Notes</p>
-        <ul>
-          <li>
-            Added PLUGINS: You can now write and share arbitrary client tools
-            and customizations.
-          </li>
-          <li>
-            Upgraded Graphics: Planets are no longer solid-colored circles.
-          </li>
-          <li>
-            Added Artifacts: Collect Dark Forest NFTs by exploring the universe.
-          </li>
-          <li>
-            Improved performance: Sped up loading times, reduced frequency of
-            errors and network failure.
-          </li>
-        </ul>
+        <p className='title'>Plugins Contest</p>
+        <p>
+          Thanks so much for playing in Dark Forest v0.5! We've launched a
+          plugins contest, where you'll be able to win ultra-rare Mythic
+          Artifacts and hopefully have a good time. For more information, please
+          visit <a href='https://blog.zkga.me/v05-plugins-contest'>the blog</a>.
+        </p>
+        <p>
+          For examples of plugins, please view the{' '}
+          <a href='http://plugins.zkga.me'>community plugins showcase</a>.
+        </p>
 
         <p className='title'>Tutorial</p>
         <p>
