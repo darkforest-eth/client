@@ -5,11 +5,11 @@ import {
   getGenericProgramAndUniforms,
 } from '../programs/GenericProgram';
 import AttribManager from '../webgl/AttribManager';
-import WebGLManager from '../webgl/WebGLManager';
+import { GameGLManager } from '../webgl/GameGLManager';
 
 // isn't used anywhere, mostly this is used for copy-pasting. later we will make it a proper class
 export class GenericRenderer {
-  manager: WebGLManager;
+  manager: GameGLManager;
   program: WebGLProgram;
 
   posA: AttribManager;
@@ -19,7 +19,7 @@ export class GenericRenderer {
 
   matrixULoc: WebGLUniformLocation | null; // screenspace to clipspace
 
-  constructor(manager: WebGLManager) {
+  constructor(manager: GameGLManager) {
     autoBind(this);
 
     this.verts = 0;

@@ -881,6 +881,7 @@ export class GameEntityMemoryStore {
       location,
       biome,
       hasTriedFindingArtifact: false,
+      bonus: bonusFromHex(hex),
     };
   }
 

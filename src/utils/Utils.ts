@@ -87,16 +87,6 @@ export const getUpgradeStat = (upgrade: Upgrade, stat: StatIdx): number => {
   else return upgrade.energyCapMultiplier;
 };
 
-export const randomHex = (len: number): string => {
-  let str = '';
-  const chars = 'abcdef0123456789'.split('');
-  while (str.length < len) {
-    str = str + chars[Math.floor(Math.random() * chars.length)];
-  }
-
-  return str;
-};
-
 // this function exists because Object.assign() and _.clone() seem to be slow
 // i suspect they also copy prototypes etc somehow?
 export const copyPlanetStats = (
@@ -213,14 +203,15 @@ export const isFullRank = (planet: Planet | null): boolean => {
   else return rank >= 5;
 };
 
-export const planetCanUpgrade = (planet: Planet | null) => {
-  return (
+export const planetCanUpgrade = (planet: Planet | null): boolean => {
+  return !!(
     planet &&
     !isFullRank(planet) &&
     planet.planetLevel !== 0 &&
     planet.planetResource !== PlanetResource.SILVER
   );
 };
+
 //https://stackoverflow.com/questions/32589197/how-can-i-capitalize-the-first-letter-of-each-word-in-a-string-using-javascript/45620677#45620677
 export const titleCase = (title: string): string =>
   title

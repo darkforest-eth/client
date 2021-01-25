@@ -1,12 +1,7 @@
 import { AttribProps, AttribType } from '../utils/EngineTypes';
-import {
-  glsl,
-  mod2pi,
-  noiseVec3,
-  programFromSources,
-  radAtAngle,
-  shaderSeededRandom,
-} from '../utils/EngineUtils';
+import { glsl } from '../utils/EngineUtils';
+import ProgramUtils from '../webgl/ProgramUtils';
+import { ShaderMixins } from '../webgl/ShaderMixins';
 // isn't used anywhere, mostly this is used for copy-pasting. later we will make it a proper class
 const a = {
   position: 'a_position',
@@ -70,7 +65,7 @@ const vert = glsl`
   out float ${v.darken}; // between 0 and 1
   out float ${v.seed};
 
-  ${mod2pi}
+  ${ShaderMixins.mod2pi}
 
   void main() {
     float radius = ${a.radius} * 0.5;
@@ -106,10 +101,10 @@ const frag = glsl`
   in float ${v.darken};
   in float ${v.seed};
 
-  ${noiseVec3}
-  ${radAtAngle}
-  ${mod2pi}
-  ${shaderSeededRandom}
+  ${ShaderMixins.noiseVec3}
+  ${ShaderMixins.radAtAngle}
+  ${ShaderMixins.mod2pi}
+  ${ShaderMixins.seededRandom}
 
   void main() {
     vec2 rectPos = 2.0 * gl_PointCoord - vec2(1.0);
@@ -138,7 +133,7 @@ export type MineProgramWithUniforms = {
 export const getMineProgramAndUniforms = (
   gl: WebGL2RenderingContext
 ): MineProgramWithUniforms => {
-  const program = programFromSources(gl, vert, frag);
+  const program = ProgramUtils.programFromSources(gl, vert, frag);
   if (program === null) throw 'error compiling mine program';
 
   gl.useProgram(program); // may be superfluous;

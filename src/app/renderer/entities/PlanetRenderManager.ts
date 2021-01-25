@@ -1,10 +1,5 @@
 import { WorldCoords } from '../../../utils/Coordinates';
-import {
-  bonusFromHex,
-  formatNumber,
-  hasOwner,
-  moveShipsDecay,
-} from '../../../utils/Utils';
+import { formatNumber, hasOwner, moveShipsDecay } from '../../../utils/Utils';
 import {
   isLocatable,
   Planet,
@@ -15,13 +10,13 @@ import Viewport from '../../board/Viewport';
 import CanvasRenderer from '../CanvasRenderer';
 import { engineConsts } from '../utils/EngineConsts';
 import { Location } from '../../../_types/global/GlobalTypes';
-import { RGBAVec, RGBVec, TextAlign, TextAnchor } from '../utils/EngineTypes';
-import { getNow } from '../utils/EngineUtils';
+import { RGBVec, TextAlign, TextAnchor } from '../utils/EngineTypes';
 import { GameEntityMemoryStore } from '../../../api/GameEntityMemoryStore';
 import { HatType } from '../../../utils/Hats';
 import { ProcgenUtils } from '../../../utils/ProcgenUtils';
+import EngineUtils from '../utils/EngineUtils';
 
-const { white, barbs, gold } = engineConsts.colors;
+const { whiteA, barbsA, gold } = engineConsts.colors;
 const { maxRadius } = engineConsts.planet;
 /* responsible for rendering planets by calling primitive renderers */
 
@@ -82,12 +77,14 @@ export default class PlanetRenderManager {
 
     if (hasOwner(planet)) {
       const color = uiManager.isOwnedByMe(planet)
-        ? white
+        ? whiteA
         : ProcgenUtils.getOwnerColorVec(planet);
 
-      cR.queueCircleWorld(centerW, radiusW * 1.1, [...color, cA * 120], 0.5);
+      color[3] = cA * 120;
+      cR.queueCircleWorld(centerW, radiusW * 1.1, color, 0.5);
       const pct = planet.energy / planet.energyCap;
-      cR.queueCircleWorld(centerW, radiusW * 1.1, [...color, cA * 255], 2, pct);
+      color[3] = cA * 255;
+      cR.queueCircleWorld(centerW, radiusW * 1.1, color, 2, pct);
     }
 
     /* draw hat */
@@ -197,22 +194,18 @@ export default class PlanetRenderManager {
   }
 
   private queueBelt(planet: Planet, center: WorldCoords, radius: number) {
-    // if (planet.planetResource === PlanetResource.SILVER) return;
-
     const { beltRenderer } = this.renderer;
     let idx = 0;
 
     const { defense, range, speed } = engineConsts.colors.belt;
 
-    const [defU, rangeU, speedU] = planet.upgradeState;
-
-    for (let i = 0; i < defU; i++) {
+    for (let i = 0; i < planet.upgradeState[0]; i++) {
       beltRenderer.queueBeltAtIdx(planet, center, radius, defense, idx++);
     }
-    for (let i = 0; i < rangeU; i++) {
+    for (let i = 0; i < planet.upgradeState[1]; i++) {
       beltRenderer.queueBeltAtIdx(planet, center, radius, range, idx++);
     }
-    for (let i = 0; i < speedU; i++) {
+    for (let i = 0; i < planet.upgradeState[2]; i++) {
       beltRenderer.queueBeltAtIdx(planet, center, radius, speed, idx++);
     }
   }
@@ -245,15 +238,15 @@ export default class PlanetRenderManager {
     mineRenderer.queueMine(planet, centerW, radiusW);
     const level = planet.planetLevel;
 
-    const now = getNow();
+    const now = EngineUtils.getNow();
 
     const queue = (color: RGBVec, idx: number, angle: number) => {
       beltRenderer.queueBeltAtIdx(planet, centerW, radiusW, color, idx, angle);
     };
     if (level >= 2) queue(white, 0, now * 0.5);
-    if (level >= 4) queue(white, 0, -getNow() * 0.5);
-    if (level >= 5) queue(white, 0, -getNow() * 0.3);
-    if (level >= 6) queue(white, 0, getNow() * 0.3);
+    if (level >= 4) queue(white, 0, -now * 0.5);
+    if (level >= 5) queue(white, 0, -now * 0.3);
+    if (level >= 6) queue(white, 0, now * 0.3);
     if (level === PlanetLevel.MAX) {
       queue(silver, 2, 0);
     }
@@ -264,27 +257,19 @@ export default class PlanetRenderManager {
 
     const { bonus } = engineConsts.colors;
 
-    const [
-      energyCapBonus,
-      energyGroBonus,
-      rangeBonus,
-      speedBonus,
-      defBonus,
-    ] = bonusFromHex(planet.locationId);
-
-    if (energyCapBonus) {
+    if (planet.bonus[0]) {
       aR.queueAsteroid(planet, center, radius, bonus.energyCap);
     }
-    if (energyGroBonus) {
+    if (planet.bonus[1]) {
       aR.queueAsteroid(planet, center, radius, bonus.energyGro);
     }
-    if (rangeBonus) {
+    if (planet.bonus[2]) {
       aR.queueAsteroid(planet, center, radius, bonus.range);
     }
-    if (speedBonus) {
+    if (planet.bonus[3]) {
       aR.queueAsteroid(planet, center, radius, bonus.speed);
     }
-    if (defBonus) {
+    if (planet.bonus[4]) {
       aR.queueAsteroid(planet, center, radius, bonus.defense);
     }
   }
@@ -340,9 +325,9 @@ export default class PlanetRenderManager {
 
     const playerColor = hasOwner(planet)
       ? ProcgenUtils.getOwnerColorVec(planet)
-      : barbs;
-    const colorSolid = uiManager.isOwnedByMe(planet) ? white : playerColor;
-    const color: RGBAVec = [...colorSolid, alpha];
+      : barbsA;
+    const color = uiManager.isOwnedByMe(planet) ? whiteA : playerColor;
+    color[3] = alpha;
 
     const textLoc: WorldCoords = {
       x: center.x,

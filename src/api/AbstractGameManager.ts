@@ -28,6 +28,8 @@ import { SerializedPlugin } from '../plugins/SerializedPlugin';
 import { ProcgenUtils } from '../utils/ProcgenUtils';
 import UIEmitter from '../utils/UIEmitter';
 import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
+import { Contract, ContractInterface } from 'ethers';
+import NotificationManager from '../utils/NotificationManager';
 
 export default interface AbstractGameManager extends EventEmitter {
   destroy(): void;
@@ -460,4 +462,28 @@ export default interface AbstractGameManager extends EventEmitter {
    * Helpful for listening to user input events.
    */
   getUIEventEmitter(): UIEmitter;
+
+  /**
+   * Gets the chunk at the given location, if we've mined this chunk
+   */
+  getChunk(chunkFootprint: ChunkFootprint): ExploredChunkData | null;
+
+  /**
+   * Whether or not this planet is upgradeable.
+   */
+  planetCanUpgrade(planet: Planet): boolean;
+
+  /**
+   * Allows you to load an ethereum contract in so that you can execute transactions
+   * on behalf of your burner wallet account.
+   */
+  loadContract(
+    contractAddress: string,
+    contractABI: ContractInterface
+  ): Promise<Contract>;
+
+  /**
+   * Gets a reference to the notifications manager.
+   */
+  getNotificationsManager(): NotificationManager;
 }

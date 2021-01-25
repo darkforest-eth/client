@@ -1,7 +1,6 @@
 import GameUIManager from '../board/GameUIManager';
 import autoBind from 'auto-bind';
 import BackgroundRenderer from './entities/BackgroundRenderer';
-import WebGLManager from './webgl/WebGLManager';
 import CanvasManager from './CanvasManager';
 import PlanetRenderer from './entities/PlanetRenderer';
 import VoyageRenderManager from './entities/VoyageRenderManager';
@@ -14,7 +13,8 @@ import PlanetRenderManager from './entities/PlanetRenderManager';
 import AsteroidRenderer from './entities/AsteroidRenderer';
 import BeltRenderer from './entities/BeltRenderer';
 import { MineRenderer } from './entities/MineRenderer';
-import { SpriteRenderer } from '../planetscape/SpriteRenderer';
+import { SpriteRenderer } from './entities/SpriteRenderer';
+import { GameGLManager } from './webgl/GameGLManager';
 
 class CanvasRenderer {
   static instance: CanvasRenderer | null;
@@ -31,7 +31,7 @@ class CanvasRenderer {
   now: number; // so that we only need to compute Date.now() once per frame
 
   // render engines
-  glManager: WebGLManager;
+  glManager: GameGLManager;
   canvasManager: CanvasManager;
 
   // primitives
@@ -63,7 +63,7 @@ class CanvasRenderer {
     this.glCanvas = glCanvas;
     this.bufferCanvas = bufferCanvas;
 
-    this.glManager = new WebGLManager(this, this.glCanvas);
+    this.glManager = new GameGLManager(this, this.glCanvas);
     this.canvasManager = new CanvasManager(this, this.canvas);
 
     this.gameUIManager = gameUIManager;

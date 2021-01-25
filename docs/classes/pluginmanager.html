@@ -1,0 +1,784 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>PluginManager | client</title>
+	<meta name="description" content="Documentation for client">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">client</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="pluginmanager.html">PluginManager</a>
+				</li>
+			</ul>
+			<h1>Class PluginManager</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>This class keeps track of all the plugins that this player has loaded
+							into their game. Acts as a task manager, supports all CRUD operations
+							for plugins, as well as instantiating and destroying running plugins.
+						All library operations are also persisted to IndexDB.</p>
+					</div>
+					<p>Important! Does not run plugins until the user clicks &#39;run&#39; somewhere in
+						this UI. This is important, because if someone develops a buggy plugin,
+					it would suck if that bricked their game.</p>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">PluginManager</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="pluginmanager.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="pluginmanager.html#gamemanager" class="tsd-kind-icon">game<wbr>Manager</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="pluginmanager.html#pluginlibrary" class="tsd-kind-icon">plugin<wbr>Library</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="pluginmanager.html#pluginprocessinfos" class="tsd-kind-icon">plugin<wbr>Process<wbr>Infos</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="pluginmanager.html#pluginprocesses" class="tsd-kind-icon">plugin<wbr>Processes</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="pluginmanager.html#uimanager" class="tsd-kind-icon">ui<wbr>Manager</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pluginmanager.html#addplugintolibrary" class="tsd-kind-icon">add<wbr>Plugin<wbr>ToLibrary</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pluginmanager.html#deleteplugin" class="tsd-kind-icon">delete<wbr>Plugin</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pluginmanager.html#destroy" class="tsd-kind-icon">destroy</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pluginmanager.html#drawallrunningplugins" class="tsd-kind-icon">draw<wbr>All<wbr>Running<wbr>Plugins</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pluginmanager.html#getallprocessinfos" class="tsd-kind-icon">get<wbr>All<wbr>Process<wbr>Infos</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pluginmanager.html#getlibrary" class="tsd-kind-icon">get<wbr>Library</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pluginmanager.html#getpluginfromlibrary" class="tsd-kind-icon">get<wbr>Plugin<wbr>From<wbr>Library</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pluginmanager.html#getprocessinfo" class="tsd-kind-icon">get<wbr>Process<wbr>Info</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pluginmanager.html#load" class="tsd-kind-icon">load</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pluginmanager.html#overwriteplugin" class="tsd-kind-icon">overwrite<wbr>Plugin</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pluginmanager.html#render" class="tsd-kind-icon">render</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pluginmanager.html#reorderplugins" class="tsd-kind-icon">reorder<wbr>Plugins</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pluginmanager.html#spawn" class="tsd-kind-icon">spawn</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static"><a href="pluginmanager.html#copy" class="tsd-kind-icon">copy</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Plugin<wbr>Manager<span class="tsd-signature-symbol">(</span>gameManager<span class="tsd-signature-symbol">: </span><a href="../interfaces/abstractgamemanager.html" class="tsd-signature-type">AbstractGameManager</a>, uiManager<span class="tsd-signature-symbol">: </span><a href="../interfaces/abstractuimanager.html" class="tsd-signature-type">AbstractUIManager</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="pluginmanager.html" class="tsd-signature-type">PluginManager</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L72">src/plugins/PluginManager.tsx:72</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>gameManager: <a href="../interfaces/abstractgamemanager.html" class="tsd-signature-type">AbstractGameManager</a></h5>
+								</li>
+								<li>
+									<h5>uiManager: <a href="../interfaces/abstractuimanager.html" class="tsd-signature-type">AbstractUIManager</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="pluginmanager.html" class="tsd-signature-type">PluginManager</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="gamemanager" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> game<wbr>Manager</h3>
+					<div class="tsd-signature tsd-kind-icon">game<wbr>Manager<span class="tsd-signature-symbol">:</span> <a href="../interfaces/abstractgamemanager.html" class="tsd-signature-type">AbstractGameManager</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L44">src/plugins/PluginManager.tsx:44</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>We want to give plugins access to the game state, so we must store
+							a reference to this game&#39;s <a href="gamemanager.html">GameManager</a> instance.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="pluginlibrary" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> plugin<wbr>Library</h3>
+					<div class="tsd-signature tsd-kind-icon">plugin<wbr>Library<span class="tsd-signature-symbol">:</span> <a href="../interfaces/serializedplugin.html" class="tsd-signature-type">SerializedPlugin</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L58">src/plugins/PluginManager.tsx:58</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>All the plugins in the player&#39;s library. Not all of the player&#39;s plugins
+								are running, and therefore not all exist in <code>pluginInstances</code>.
+								<code>PluginsManager</code> keeps this field in sync with the plugins the user has
+							saved in the IndexDB via <a href="persistentchunkstore.html">PersistentChunkStore</a></p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="pluginprocessinfos" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> plugin<wbr>Process<wbr>Infos</h3>
+					<div class="tsd-signature tsd-kind-icon">plugin<wbr>Process<wbr>Infos<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="processinfo.html" class="tsd-signature-type">ProcessInfo</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L72">src/plugins/PluginManager.tsx:72</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>parallel to pluginProcesses</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="pluginprocesses" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> plugin<wbr>Processes</h3>
+					<div class="tsd-signature tsd-kind-icon">plugin<wbr>Processes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="../interfaces/pluginprocess.html" class="tsd-signature-type">PluginProcess</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L67">src/plugins/PluginManager.tsx:67</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Plugins that are currently loaded into the game, and are rendering into a
+								window. <code>PluginsManager</code> makes sure that when a plugin starts executing, it
+								is added into <code>pluginInstances</code>, and that once a plugin is unloaded, its
+								<code>.destroy()</code> method is called, and that the plugin is removed from
+							<code>pluginInstances</code>.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="uimanager" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> ui<wbr>Manager</h3>
+					<div class="tsd-signature tsd-kind-icon">ui<wbr>Manager<span class="tsd-signature-symbol">:</span> <a href="../interfaces/abstractuimanager.html" class="tsd-signature-type">AbstractUIManager</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L50">src/plugins/PluginManager.tsx:50</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Same as <code>gameManager</code> -we want to give plugins access to the game ui,
+							so we must store a reference to this game&#39;s <a href="gamemanager.html">GameManager</a> instance.</p>
+						</div>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="addplugintolibrary" class="tsd-anchor"></a>
+					<h3>add<wbr>Plugin<wbr>ToLibrary</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Plugin<wbr>ToLibrary<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/serializedplugin.html" class="tsd-signature-type">SerializedPlugin</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L189">src/plugins/PluginManager.tsx:189</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>adds a new plugin into the plugin library.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>code: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/serializedplugin.html" class="tsd-signature-type">SerializedPlugin</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="deleteplugin" class="tsd-anchor"></a>
+					<h3>delete<wbr>Plugin</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">delete<wbr>Plugin<span class="tsd-signature-symbol">(</span>pluginId<span class="tsd-signature-symbol">: </span><a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L131">src/plugins/PluginManager.tsx:131</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Remove the given plugin both from the player&#39;s library, and kills
+									the plugin if it is running.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>pluginId: <a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="destroy" class="tsd-anchor"></a>
+					<h3>destroy</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">destroy<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L89">src/plugins/PluginManager.tsx:89</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>If a plugin with the given id is running, call its <code>.destroy()</code> method,
+									and remove it from <code>pluginInstances</code>.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>id: <a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="drawallrunningplugins" class="tsd-anchor"></a>
+					<h3>draw<wbr>All<wbr>Running<wbr>Plugins</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">draw<wbr>All<wbr>Running<wbr>Plugins<span class="tsd-signature-symbol">(</span>ctx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">CanvasRenderingContext2D</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L297">src/plugins/PluginManager.tsx:297</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>For each currently running plugin, if the plugin has a &#39;draw&#39;
+									function, then draw that plugin to the screen.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>ctx: <span class="tsd-signature-type">CanvasRenderingContext2D</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getallprocessinfos" class="tsd-anchor"></a>
+					<h3>get<wbr>All<wbr>Process<wbr>Infos</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>All<wbr>Process<wbr>Infos<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a><span class="tsd-signature-symbol">, </span><a href="processinfo.html" class="tsd-signature-type">ProcessInfo</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L283">src/plugins/PluginManager.tsx:283</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets a map of all the currently running processes</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a><span class="tsd-signature-symbol">, </span><a href="processinfo.html" class="tsd-signature-type">ProcessInfo</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getlibrary" class="tsd-anchor"></a>
+					<h3>get<wbr>Library</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Library<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/serializedplugin.html" class="tsd-signature-type">SerializedPlugin</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L269">src/plugins/PluginManager.tsx:269</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets all the plugins in this player&#39;s library.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/serializedplugin.html" class="tsd-signature-type">SerializedPlugin</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getpluginfromlibrary" class="tsd-anchor"></a>
+					<h3>get<wbr>Plugin<wbr>From<wbr>Library</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Plugin<wbr>From<wbr>Library<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">?: </span><a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/serializedplugin.html" class="tsd-signature-type">SerializedPlugin</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L141">src/plugins/PluginManager.tsx:141</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the serialized plugin with the given id from the player&#39;s plugin
+									library. <code>undefined</code> if no plugin exists.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> id: <a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/serializedplugin.html" class="tsd-signature-type">SerializedPlugin</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getprocessinfo" class="tsd-anchor"></a>
+					<h3>get<wbr>Process<wbr>Info</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Process<wbr>Info<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="processinfo.html" class="tsd-signature-type">ProcessInfo</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L276">src/plugins/PluginManager.tsx:276</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>If this process has been started, gets its info</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>id: <a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="processinfo.html" class="tsd-signature-type">ProcessInfo</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="load" class="tsd-anchor"></a>
+					<h3>load</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L112">src/plugins/PluginManager.tsx:112</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Load all plugins from this disk into <code>pluginLibrary</code>. Insert the default
+										plugins into the player&#39;s library if the default plugins have never been
+									added before. Effectively idempotent after the first time you call it.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="overwriteplugin" class="tsd-anchor"></a>
+					<h3>overwrite<wbr>Plugin</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">overwrite<wbr>Plugin<span class="tsd-signature-symbol">(</span>newName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, pluginCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, id<span class="tsd-signature-symbol">: </span><a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L150">src/plugins/PluginManager.tsx:150</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<ol>
+										<li>kills the plugin if it&#39;s running</li>
+										<li>edits the plugin-library version of this plugin</li>
+										<li>if a plugin was edited, save the plugin library to disk</li>
+									</ol>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>newName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>pluginCode: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>id: <a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="render" class="tsd-anchor"></a>
+					<h3>render</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">render<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLDivElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L244">src/plugins/PluginManager.tsx:244</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>If this plugin&#39;s <code>render</code> method has not been called yet, then
+									call it! Remembers that this plugin has been rendered.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>id: <a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a></h5>
+								</li>
+								<li>
+									<h5>element: <span class="tsd-signature-type">HTMLDivElement</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="reorderplugins" class="tsd-anchor"></a>
+					<h3>reorder<wbr>Plugins</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">reorder<wbr>Plugins<span class="tsd-signature-symbol">(</span>newPluginIdOrder<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L171">src/plugins/PluginManager.tsx:171</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Reorders the current plugins. plugin ids in <code>newPluginIdOrder</code> must correspond
+									1:1 to plugins in the plugin library.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>newPluginIdOrder: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="spawn" class="tsd-anchor"></a>
+					<h3>spawn</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">spawn<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/pluginprocess.html" class="tsd-signature-type">PluginProcess</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L209">src/plugins/PluginManager.tsx:209</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Either spawns the given plugin by evaluating its <code>pluginCode</code>, or
+										returns the already running plugin instance. If starting a plugin
+									throws an error then returns <code>undefined</code>.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>id: <a href="../globals.html#pluginid" class="tsd-signature-type">PluginId</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/pluginprocess.html" class="tsd-signature-type">PluginProcess</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static">
+					<a name="copy" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> copy</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">copy&lt;T&gt;<span class="tsd-signature-symbol">(</span>plugin<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/plugins/PluginManager.tsx#L323">src/plugins/PluginManager.tsx:323</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>To prevent users of this class from modifying our plugins library,
+										we return clones of the plugins. This should probably be a function
+										in a Utils file somewhere, but I thought I should leave a good comment
+									about why we return copies of the plugins from the library.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>plugin: <span class="tsd-signature-type">T</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
+						<a href="pluginmanager.html" class="tsd-kind-icon">Plugin<wbr>Manager</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="pluginmanager.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="pluginmanager.html#gamemanager" class="tsd-kind-icon">game<wbr>Manager</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="pluginmanager.html#pluginlibrary" class="tsd-kind-icon">plugin<wbr>Library</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="pluginmanager.html#pluginprocessinfos" class="tsd-kind-icon">plugin<wbr>Process<wbr>Infos</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="pluginmanager.html#pluginprocesses" class="tsd-kind-icon">plugin<wbr>Processes</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="pluginmanager.html#uimanager" class="tsd-kind-icon">ui<wbr>Manager</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="pluginmanager.html#addplugintolibrary" class="tsd-kind-icon">add<wbr>Plugin<wbr>ToLibrary</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="pluginmanager.html#deleteplugin" class="tsd-kind-icon">delete<wbr>Plugin</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="pluginmanager.html#destroy" class="tsd-kind-icon">destroy</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="pluginmanager.html#drawallrunningplugins" class="tsd-kind-icon">draw<wbr>All<wbr>Running<wbr>Plugins</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="pluginmanager.html#getallprocessinfos" class="tsd-kind-icon">get<wbr>All<wbr>Process<wbr>Infos</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="pluginmanager.html#getlibrary" class="tsd-kind-icon">get<wbr>Library</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="pluginmanager.html#getpluginfromlibrary" class="tsd-kind-icon">get<wbr>Plugin<wbr>From<wbr>Library</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="pluginmanager.html#getprocessinfo" class="tsd-kind-icon">get<wbr>Process<wbr>Info</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="pluginmanager.html#load" class="tsd-kind-icon">load</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="pluginmanager.html#overwriteplugin" class="tsd-kind-icon">overwrite<wbr>Plugin</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="pluginmanager.html#render" class="tsd-kind-icon">render</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="pluginmanager.html#reorderplugins" class="tsd-kind-icon">reorder<wbr>Plugins</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="pluginmanager.html#spawn" class="tsd-kind-icon">spawn</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static">
+								<a href="pluginmanager.html#copy" class="tsd-kind-icon">copy</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

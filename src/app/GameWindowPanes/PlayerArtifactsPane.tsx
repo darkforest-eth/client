@@ -225,12 +225,13 @@ export function PlayerArtifactsPane({
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
   const [renderer, setRenderer] = useState<ArtifactRenderer | null>(null);
   const [isDex, setIsDex] = useState<boolean>(true);
-
+  const [visible, setVisible] = hook;
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
 
   // sync artifacts
   useEffect(() => {
     const updateArtifacts = () => {
+      if (!visible) return;
       if (!uiManager) return;
       const myAddr = uiManager.getAccount();
       if (!myAddr) return;
@@ -242,7 +243,7 @@ export function PlayerArtifactsPane({
     updateArtifacts();
 
     return () => clearInterval(intervalId);
-  }, [uiManager]);
+  }, [uiManager, visible]);
 
   useEffect(() => {
     renderer?.setArtifacts(artifacts);
@@ -261,8 +262,6 @@ export function PlayerArtifactsPane({
       setRenderer(null);
     };
   }, [canvasRef]);
-
-  const [visible, setVisible] = hook;
 
   // sync values
   useEffect(() => {

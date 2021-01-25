@@ -11,7 +11,7 @@ import WindowManager, {
   TooltipName,
   WindowManagerEvent,
 } from '../../utils/WindowManager';
-import { GameWindowZIndex, HiPerfContext } from '../GameWindow';
+import { CtrlContext, GameWindowZIndex, HiPerfContext } from '../GameWindow';
 import { TooltipContent } from './TooltipPanes';
 
 // activate TooltipName on mouseenter, deactivate on mouse leave
@@ -19,13 +19,13 @@ type DisplayType = 'inline' | 'block' | 'inline-block' | 'inline-flex' | 'flex';
 type TooltipProps = {
   children: React.ReactNode;
   name: TooltipName;
-  needsShift?: boolean;
+  needsCtrl?: boolean;
   display?: DisplayType;
   style?: React.CSSProperties;
   className?: string;
 };
 
-const fadeShift = keyframes`
+const fade = keyframes`
   from {
     background: ${dfstyles.colors.dfblue}; 
   }
@@ -35,7 +35,7 @@ const fadeShift = keyframes`
 `;
 
 const _animation = css`
-  animation: ${fadeShift} 1s ${dfstyles.game.styles.animProps};
+  animation: ${fade} 1s ${dfstyles.game.styles.animProps};
 `;
 
 // ${(props) => (props.anim ? animation : 'animation: none;')}
@@ -53,13 +53,14 @@ const StyledTooltipTrigger = styled.span<{
 export function TooltipTrigger({
   children,
   name,
-  needsShift,
+  needsCtrl,
   display,
   style,
   className,
 }: TooltipProps) {
   // the model for this is a state machine on the state of {shift, hovering}
-  const [shift, setShift] = useState<boolean>(false);
+  const ctrl = useContext<boolean>(CtrlContext);
+
   const [hovering, setHovering] = useState<boolean>(false);
 
   const [pushed, setPushed] = useState<boolean>(false);
@@ -68,46 +69,34 @@ export function TooltipTrigger({
 
   const windowManager = WindowManager.getInstance();
 
-  useEffect(() => {
-    const doShiftDown = () => setShift(true);
-    const doShiftUp = () => setShift(false);
-
-    windowManager.on(WindowManagerEvent.ShiftDown, doShiftDown);
-    windowManager.on(WindowManagerEvent.ShiftUp, doShiftUp);
-    return () => {
-      windowManager.removeListener(WindowManagerEvent.ShiftDown, doShiftDown);
-      windowManager.removeListener(WindowManagerEvent.ShiftUp, doShiftUp);
-    };
-  }, [windowManager]);
-
   // manage state machine
   useEffect(() => {
-    const getShift = () => {
-      if (!needsShift) return true;
-      else return shift;
+    const getCtrl = () => {
+      if (!needsCtrl) return true;
+      else return ctrl;
     };
 
     if (!pushed) {
       // not pushed yet
-      if (hovering && getShift()) {
+      if (hovering && getCtrl()) {
         windowManager.pushTooltip(name);
         setPushed(true);
       }
     } else {
       // is pushed already
-      if (!hovering || !getShift()) {
+      if (!hovering || !getCtrl()) {
         windowManager.popTooltip();
         setPushed(false);
       }
     }
-  }, [hovering, shift, pushed, windowManager, name, needsShift]);
+  }, [hovering, ctrl, pushed, windowManager, name, needsCtrl]);
 
   return (
     <StyledTooltipTrigger
       display={display}
       style={{ ...style }}
       className={className}
-      anim={shift && !hiPerf}
+      anim={ctrl && !hiPerf}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >

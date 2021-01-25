@@ -1,28 +1,22 @@
-import { rarityFromArtifact } from '../../utils/ArtifactUtils';
-import { CanvasCoords, WorldCoords } from '../../utils/Coordinates';
+import { rarityFromArtifact } from '../../../utils/ArtifactUtils';
+import { CanvasCoords, WorldCoords } from '../../../utils/Coordinates';
 import {
   Artifact,
   ArtifactRarity,
   ArtifactType,
   Biome,
-} from '../../_types/global/GlobalTypes';
-import Viewport from '../board/Viewport';
-import { engineConsts } from '../renderer/utils/EngineConsts';
-import { RGBAVec, RGBVec } from '../renderer/utils/EngineTypes';
-import {
-  fillTexture,
-  getNow,
-  makeQuadVec2,
-  makeQuadVec2Buffered,
-} from '../renderer/utils/EngineUtils';
+} from '../../../_types/global/GlobalTypes';
+import Viewport from '../../board/Viewport';
+import { engineConsts } from '../utils/EngineConsts';
+import { RGBAVec, RGBVec } from '../utils/EngineTypes';
+import EngineUtils from '../utils/EngineUtils';
 import {
   AtlasInfo,
   getSpriteInfo,
   loadArtifactAtlas,
   loadArtifactThumbAtlas,
-} from '../renderer/utils/TextureManager';
-import AttribManager from '../renderer/webgl/AttribManager';
-import { TextureGLManager } from '../renderer/webgl/WebGLManager';
+} from '../utils/TextureManager';
+import AttribManager from '../webgl/AttribManager';
 import {
   getSpriteProgramAndUniforms,
   spriteColorProps,
@@ -31,10 +25,11 @@ import {
   spriteRectPosProps,
   spriteShineProps,
   spriteTexProps,
-} from './SpriteProgram';
+} from '../programs/SpriteProgram';
+import { WebGLManager } from '../webgl/WebGLManager';
 
 export class SpriteRenderer {
-  private manager: TextureGLManager;
+  private manager: WebGLManager;
 
   private program: WebGLProgram;
   private matrixULoc: WebGLUniformLocation | null;
@@ -59,7 +54,7 @@ export class SpriteRenderer {
 
   private verts = 0;
 
-  constructor(manager: TextureGLManager, thumb = false, flip = false) {
+  constructor(manager: WebGLManager, thumb = false, flip = false) {
     this.thumb = thumb;
 
     this.flip = flip;
@@ -83,7 +78,7 @@ export class SpriteRenderer {
 
     this.texBuffer = Array(6 * 2).fill(0);
     this.posBuffer = Array(6 * 3).fill(0);
-    this.rectposBuffer = makeQuadVec2(0, 0, 1, 1);
+    this.rectposBuffer = EngineUtils.makeQuadVec2(0, 0, 1, 1);
 
     this.spriteInfo = getSpriteInfo();
 
@@ -108,7 +103,7 @@ export class SpriteRenderer {
 
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    fillTexture(gl);
+    EngineUtils.fillTexture(gl);
 
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
     gl.generateMipmap(gl.TEXTURE_2D);
@@ -123,7 +118,8 @@ export class SpriteRenderer {
     artifact: Artifact,
     pos: CanvasCoords,
     width = 128,
-    alpha = 255
+    alpha = 255,
+    atFrame: number | null = null
   ) {
     const type = artifact.artifactType;
     const rarity = rarityFromArtifact(artifact);
@@ -146,7 +142,8 @@ export class SpriteRenderer {
       null,
       shine,
       shiny,
-      invert
+      invert,
+      atFrame
     );
   }
 
@@ -159,7 +156,8 @@ export class SpriteRenderer {
     color: RGBVec | null = null,
     shine = false,
     shiny = false,
-    invert = false
+    invert = false,
+    atFrame: number | null = null
   ) {
     if (!this.loaded) return;
 
@@ -167,8 +165,16 @@ export class SpriteRenderer {
     // we'll always want pixel-perfect icons
     const { x, y } = { x: Math.floor(topLeft.x), y: Math.floor(topLeft.y) };
 
-    const now = -getNow() * 15;
-    const shineVal = (now % 30) + 10; // i eyeballed this lol
+    const totalDur = 3;
+    const totalFrames = totalDur * 60;
+
+    // [0, totalFrames]
+    const nowFrame = Math.floor((EngineUtils.getNow() % totalDur) * 60);
+
+    const frameNo = atFrame === null ? nowFrame : atFrame;
+    const shineVal = frameNo / totalFrames;
+
+    // [0, 1] or null - gets mapped to [-0.5, 2] in the shader
     const shineLoc = shine ? shineVal : -1000;
 
     const info = this.spriteInfo[type][biome];
@@ -177,12 +183,12 @@ export class SpriteRenderer {
     const { x1, x2, y1, y2 } = tex;
 
     const dim = width;
-    makeQuadVec2Buffered(this.posBuffer, x, y, x + dim, y + dim);
+    EngineUtils.makeQuadVec2Buffered(this.posBuffer, x, y, x + dim, y + dim);
 
     if (this.flip) {
-      makeQuadVec2Buffered(this.texBuffer, x1, 1 - y1, x2, 1 - y2);
+      EngineUtils.makeQuadVec2Buffered(this.texBuffer, x1, 1 - y1, x2, 1 - y2);
     } else {
-      makeQuadVec2Buffered(this.texBuffer, x1, y1, x2, y2);
+      EngineUtils.makeQuadVec2Buffered(this.texBuffer, x1, y1, x2, y2);
     }
 
     // 0, 0, 0, 0 is a special color; the program looks for it
@@ -215,6 +221,13 @@ export class SpriteRenderer {
       this.queueSprite(type, 1, { x, y: y + del }, width, alpha, color);
       this.queueSprite(type, 1, { x: x + del, y }, width, alpha, color);
       this.queueSprite(type, 1, { x: x - del, y }, width, alpha, color);
+    }
+
+    if (iters === 2) {
+      this.queueSprite(type, 1, { x: x - 1, y: y - 1 }, width, alpha, color);
+      this.queueSprite(type, 1, { x: x - 1, y: y + 1 }, width, alpha, color);
+      this.queueSprite(type, 1, { x: x + 1, y: y - 1 }, width, alpha, color);
+      this.queueSprite(type, 1, { x: x + 1, y: y + 1 }, width, alpha, color);
     }
   }
 

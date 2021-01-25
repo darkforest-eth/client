@@ -1,5 +1,3 @@
-import autoBind from 'auto-bind';
-import { RefObject } from 'react';
 import {
   Artifact,
   ArtifactType,
@@ -12,25 +10,21 @@ import { mat4 } from 'gl-matrix';
 import { PixelCoords, ProcgenUtils } from '../../utils/ProcgenUtils';
 import { RGBVec } from '../renderer/utils/EngineTypes';
 import { PathRenderer } from './PathRenderer';
-import { TextureGLManager } from '../renderer/webgl/WebGLManager';
-import { SpriteRenderer } from './SpriteRenderer';
+import { WebGLManager } from '../renderer/webgl/WebGLManager';
+import { SpriteRenderer } from '../renderer/entities/SpriteRenderer';
 import AbstractUIManager from '../board/AbstractUIManager';
 import { mockCommon } from '../../utils/ArtifactUtils';
 import { bonusFromHex, PlanetStatsInfo } from '../../utils/Utils';
 import dfstyles from '../../styles/dfstyles';
 
-export class PlanetscapeRenderer implements TextureGLManager {
-  private canvasRef: RefObject<HTMLCanvasElement>;
-  gl: WebGL2RenderingContext;
+export class PlanetscapeRenderer extends WebGLManager {
   private planet: Planet | null;
   private info: PlanetStatsInfo | null;
-  private canvas: HTMLCanvasElement;
 
   private moonCtx: CanvasRenderingContext2D;
   moonCanvas: HTMLCanvasElement;
 
   private frameRequestId: number;
-  private frameCount = 0;
   projectionMatrix: mat4;
 
   private TICK_SIZE = 3;
@@ -40,8 +34,6 @@ export class PlanetscapeRenderer implements TextureGLManager {
 
   private uiManager: AbstractUIManager;
 
-  private texIdx = 0;
-
   private isPaused: boolean;
 
   constructor(
@@ -49,12 +41,11 @@ export class PlanetscapeRenderer implements TextureGLManager {
     moonCanvas: HTMLCanvasElement,
     uiManager: AbstractUIManager
   ) {
-    autoBind(this);
+    super(canvas);
 
     this.uiManager = uiManager;
 
     this.planet = null;
-    this.canvas = canvas;
     this.moonCanvas = moonCanvas;
 
     const ctx = moonCanvas.getContext('2d');
@@ -64,21 +55,13 @@ export class PlanetscapeRenderer implements TextureGLManager {
     }
     this.moonCtx = ctx;
 
-    const gl = canvas.getContext('webgl2');
-    if (!gl) {
-      console.error('error getting webgl2 context');
-      return;
-    }
-    this.gl = gl;
+    const { gl } = this;
 
-    this.projectionMatrix = mat4.create();
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     this.pathRenderer = new PathRenderer(this);
     this.spriteRenderer = new SpriteRenderer(this);
-
-    gl.enable(gl.STENCIL_TEST);
 
     this.isPaused = false;
     this.loop();
@@ -88,37 +71,11 @@ export class PlanetscapeRenderer implements TextureGLManager {
     this.isPaused = !!isPaused;
   }
 
-  public getTexIdx(): number {
-    return this.texIdx++;
-  }
-
-  private setProjectionMatrix(): void {
-    const height = this.canvas.height;
-    const width = this.canvas.width;
-
-    // prettier-ignore
-    mat4.set(this.projectionMatrix, 
-      2 / width, 0, 0, 0,
-      0, -2 / height, 0, 0,
-      0, 0, 0, 0,
-      -1, 1, 0, 1,
-    );
-  }
-
   public destroy(): void {
     window.cancelAnimationFrame(this.frameRequestId);
   }
 
-  private clear(): void {
-    const gl = this.gl;
-    gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-  }
-
   private loop(): void {
-    this.frameCount++;
-
     if (!this.isPaused) {
       this.clear();
       this.setProjectionMatrix();

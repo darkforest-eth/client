@@ -120,7 +120,7 @@ export function ExploreContextPane() {
       headerItems={
         <>
           <TooltipTrigger
-            needsShift
+            needsCtrl
             name={TooltipName.MiningTarget}
             style={{
               height: '1.5em',
@@ -138,7 +138,7 @@ export function ExploreContextPane() {
             </span>
           </TooltipTrigger>
           <TooltipTrigger
-            needsShift
+            needsCtrl
             name={TooltipName.MiningPause}
             style={{ height: '1.5em' }}
           >

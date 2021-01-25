@@ -135,6 +135,15 @@ export interface Location {
   biomebase: number; // biome perlin value. combined with spaceType to get the actual biome
 }
 
+/**
+ * [
+ *     energyCapBonus,
+ *     energyGroBonus,
+ *     rangeBonus,
+ *     speedBonus,
+ *     defBonus,
+ * ]
+ */
 export type Bonus = [boolean, boolean, boolean, boolean, boolean];
 export enum StatIdx {
   EnergyCap,
@@ -151,6 +160,14 @@ export type Upgrade = {
   speedMultiplier: number;
   defMultiplier: number;
 };
+
+/**
+ * [
+ *     defU,
+ *     rangeU,
+ *     speedU,
+ * ]
+ */
 export type UpgradeState = [number, number, number];
 export const enum UpgradeBranchName {
   Defense = 0,
@@ -221,7 +238,6 @@ export type Planet = {
   energy: number;
   silver: number;
 
-  // metadata stuff
   lastUpdated: number;
   upgradeState: UpgradeState;
   hasTriedFindingArtifact: boolean;
@@ -239,6 +255,8 @@ export type Planet = {
 
   isInContract: boolean;
   syncedWithContract: boolean;
+
+  bonus: Bonus;
 };
 
 export type LocatablePlanet = Planet & {

@@ -205,19 +205,28 @@ class PersistentChunkStore implements ChunkStore {
     await this.setKey('touchedPlanetIds', stringify(ids));
   }
 
-  public hasMinedChunk(chunkLoc: ChunkFootprint): boolean {
+  public getChunkByFootprint(
+    chunkLoc: ChunkFootprint
+  ): ExploredChunkData | null {
     let sideLength = chunkLoc.sideLength;
+
     while (sideLength <= MAX_CHUNK_SIZE) {
       const testChunkLoc = getChunkOfSideLength(
         chunkLoc.bottomLeft,
         sideLength
       );
-      if (this.getChunkById(getChunkKey(testChunkLoc))) {
-        return true;
+      const chunk = this.getChunkById(getChunkKey(testChunkLoc));
+      if (chunk) {
+        return chunk;
       }
       sideLength *= 2;
     }
-    return !!this.chunkMap.get(getChunkKey(chunkLoc));
+
+    return null;
+  }
+
+  public hasMinedChunk(chunkLoc: ChunkFootprint): boolean {
+    return !!this.getChunkByFootprint(chunkLoc);
   }
 
   private getChunkById(chunkId: string): ExploredChunkData | null {

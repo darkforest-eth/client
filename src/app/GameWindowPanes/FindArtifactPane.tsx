@@ -24,8 +24,11 @@ import {
 } from '../../utils/ArtifactUtils';
 import { getTimeZone, PlanetStatsInfo } from '../../utils/Utils';
 import dfstyles from '../../styles/dfstyles';
-import { Sub } from '../../components/Text';
+import { Red, Sub } from '../../components/Text';
 import { GameEntityMemoryStore } from '../../api/GameEntityMemoryStore';
+import { useState } from 'react';
+
+const MINT_END = 1611584314 * 1000;
 
 const StyledFindArtifactPane = styled.div`
   width: 30em;
@@ -210,28 +213,57 @@ export function FindArtifactPane({
     return false;
   }
 
+  const [canMint, setCanMint] = useState<boolean>(true);
+  useEffect(() => {
+    const interval = setInterval(() => setCanMint(Date.now() < MINT_END), 5000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
     <ModalPane hook={hook} title='Artifact' name={ModalName.FindArtifact}>
       <StyledFindArtifactPane>
+        <p>
+          <Red>
+            {canMint ? (
+              'NOTE: You will no longer be able to mint new artifacts after Jan 25!'
+            ) : (
+              <span>
+                NOTE: You can no longer mint new artifacts! Join us in v0.6 at @
+                <a
+                  href={'#'}
+                  onClick={() =>
+                    window.open('https://twitter.com/darkforest_eth')
+                  }
+                >
+                  darkforest_eth
+                </a>
+              </span>
+            )}
+          </Red>
+        </p>
         <p>
           Artifacts confer bonuses when placed on planets. They are obtained by
           exploring certain planets - look out for them! Placing an artifact on
           a planet locks it up for 12 hours.
         </p>
-        <div>
-          <Sub>Current Artifact</Sub>
-          <span>
-            {selectedStats?.heldArtifactId ? (
-              <ArtifactLink
-                id={selectedStats?.heldArtifactId}
-                hook={selectedArtifactHook}
-                detailsHook={artifactDetailsHook}
-              />
-            ) : (
-              <Sub>No Artifact</Sub>
-            )}
-          </span>
-        </div>
+        {canMint && (
+          <div>
+            <Sub>Current Artifact</Sub>
+            <span>
+              {selectedStats?.heldArtifactId ? (
+                <ArtifactLink
+                  id={selectedStats?.heldArtifactId}
+                  hook={selectedArtifactHook}
+                  detailsHook={artifactDetailsHook}
+                />
+              ) : (
+                <Sub>No Artifact</Sub>
+              )}
+            </span>
+          </div>
+        )}
         {selected && uiManager?.isOwnedByMe(selected) && hasArtifact() && (
           <div className='wrapper'>
             <div>

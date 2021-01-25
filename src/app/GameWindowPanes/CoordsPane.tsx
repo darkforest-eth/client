@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { WorldCoords } from '../../utils/Coordinates';
 import UIEmitter, { UIEmitterEvent } from '../../utils/UIEmitter';
 import styled from 'styled-components';
@@ -7,54 +7,79 @@ import { SpaceType } from '../../_types/global/GlobalTypes';
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
 import { MIN_CHUNK_SIZE } from '../../utils/constants';
+import AbstractUIManager from '../board/AbstractUIManager';
 
-export function CoordsText() {
-  const uiEmitter = UIEmitter.getInstance();
-  const [coords, setCoords] = useState<WorldCoords | null>(null);
+interface Props {
+  uiManager: AbstractUIManager | null;
+}
 
-  const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
+class CoordsText extends React.Component<Props, never> {
+  private coordsRef = React.createRef<HTMLSpanElement>();
+  private spacetypeRef = React.createRef<HTMLSpanElement>();
+  private uiEmitter = UIEmitter.getInstance();
 
-  useEffect(() => {
-    uiEmitter.on(UIEmitterEvent.WorldMouseMove, setCoords);
-    return () => {
-      uiEmitter.removeListener(UIEmitterEvent.WorldMouseMove, setCoords);
-    };
-  }, [uiEmitter]);
+  componentDidMount() {
+    this.uiEmitter.on(UIEmitterEvent.WorldMouseMove, this.update);
+  }
 
-  const p = (vec: WorldCoords): string => {
-    if (uiManager) {
+  componentWillUnmount() {
+    this.uiEmitter.removeListener(UIEmitterEvent.WorldMouseMove, this.update);
+  }
+
+  update = (coords: WorldCoords) => {
+    this.setCoords(coords);
+    this.setSpacetype(coords);
+  };
+
+  setCoords(coords: WorldCoords) {
+    if (this.coordsRef.current) {
+      this.coordsRef.current.innerText = coords
+        ? `(${Math.round(coords.x)}, ${Math.round(coords.y)})`
+        : '(x, y)';
+    }
+  }
+
+  setSpacetype(coords: WorldCoords) {
+    let spacetypeText = '???';
+
+    if (this.props.uiManager) {
       const chunkLoc = {
         bottomLeft: {
-          x: Math.floor(vec.x / MIN_CHUNK_SIZE) * MIN_CHUNK_SIZE,
-          y: Math.floor(vec.y / MIN_CHUNK_SIZE) * MIN_CHUNK_SIZE,
+          x: Math.floor(coords.x / MIN_CHUNK_SIZE) * MIN_CHUNK_SIZE,
+          y: Math.floor(coords.y / MIN_CHUNK_SIZE) * MIN_CHUNK_SIZE,
         },
         sideLength: MIN_CHUNK_SIZE,
       };
-      if (!uiManager.hasMinedChunk(chunkLoc)) return '???';
 
-      const per = perlin(vec, false);
-      const spaceType = uiManager.spaceTypeFromPerlin(per);
+      const minedChunk = this.props.uiManager.getChunk(chunkLoc);
 
-      let suff = '';
-      if (spaceType === SpaceType.NEBULA) suff = '\u00b0 (NEBULA)';
-      else if (spaceType === SpaceType.SPACE) suff = '\u00b0 (SPACE)';
-      else if (spaceType === SpaceType.DEEP_SPACE) suff = '\u00b0 (DEEP SPACE)';
+      if (minedChunk) {
+        const per = minedChunk ? minedChunk.perlin : perlin(coords, false);
+        const spaceType = this.props.uiManager.spaceTypeFromPerlin(per);
 
-      return `${Math.floor((16 - per) * 16)}${suff}`;
+        let suff = '';
+        if (spaceType === SpaceType.NEBULA) suff = '\u00b0 (NEBULA)';
+        else if (spaceType === SpaceType.SPACE) suff = '\u00b0 (SPACE)';
+        else if (spaceType === SpaceType.DEEP_SPACE)
+          suff = '\u00b0 (DEEP SPACE)';
+
+        spacetypeText = `${Math.floor((16 - per) * 16)}${suff}`;
+      }
     }
-    return '???';
-  };
 
-  return (
-    <>
-      <span>
-        {coords
-          ? `(${Math.round(coords.x)}, ${Math.round(coords.y)})`
-          : '(x, y)'}
-      </span>
-      <span>TEMP: {coords ? p(coords) : '???'}</span>
-    </>
-  );
+    if (this.spacetypeRef.current) {
+      this.spacetypeRef.current.innerText = 'TEMP: ' + spacetypeText;
+    }
+  }
+
+  render() {
+    return (
+      <>
+        <span ref={this.coordsRef}></span>
+        <span ref={this.spacetypeRef}></span>
+      </>
+    );
+  }
 }
 
 const StyledCoordsPane = styled.div`
@@ -71,9 +96,11 @@ const StyledCoordsPane = styled.div`
   width: 16em;
   height: 4em;
 `;
+
 export function CoordsPane({ hiPerf }: { hiPerf: boolean }) {
   const [hovering, setHovering] = useState<boolean>(false);
   const [hidden, setHidden] = useState<boolean>(false);
+  const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
 
   if (hiPerf) return <></>;
 
@@ -88,7 +115,7 @@ export function CoordsPane({ hiPerf }: { hiPerf: boolean }) {
       ) : hovering ? (
         <span>Click to hide</span>
       ) : (
-        <CoordsText />
+        <CoordsText uiManager={uiManager} />
       )}
     </StyledCoordsPane>
   );

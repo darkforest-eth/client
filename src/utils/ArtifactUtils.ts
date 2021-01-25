@@ -13,7 +13,7 @@ import {
 import { CheckedTypeUtils } from './CheckedTypeUtils';
 import { ProcgenUtils } from './ProcgenUtils';
 import tracery from './tracery';
-import { PlanetStatsInfo, randomHex, titleCase } from './Utils';
+import { PlanetStatsInfo, titleCase } from './Utils';
 
 export const hasUnconfirmedArtifactTx = (p: PlanetStatsInfo | null): boolean =>
   !!(
@@ -204,45 +204,30 @@ export const artifactName = (artifact: Artifact | null): string => {
   return name;
 };
 
-export const mockLegendary = {
-  planetLevel: 7,
-  artifactType: ArtifactType.Spaceship,
-  planetBiome: Biome.WASTELAND,
-} as Artifact;
+const randomHex = (len: number): string => {
+  let str = '';
+  const chars = 'abcdef0123456789'.split('');
+  while (str.length < len) {
+    str = str + chars[Math.floor(Math.random() * chars.length)];
+  }
 
-export const mockEpic = {
-  planetLevel: 6,
-  artifactType: ArtifactType.Spaceship,
-  planetBiome: Biome.WASTELAND,
-} as Artifact;
+  return str;
+};
 
-export const mockRare = {
-  planetLevel: 4,
-  artifactType: ArtifactType.Spaceship,
-  planetBiome: Biome.WASTELAND,
-} as Artifact;
-
-export const mockCommon = {
-  planetLevel: 2,
-  artifactType: ArtifactType.Spaceship,
-  planetBiome: Biome.WASTELAND,
-} as Artifact;
-
-const randomLevel = () => Math.floor(Math.random() * (PlanetLevel.MAX + 1));
-const randomType = () => Math.floor(1 + Math.random() * 4);
-const randomBiome = () =>
-  Math.floor(Biome.MIN + Math.random() * (Biome.MAX - Biome.MIN + 1));
-
-export const mockArtifact = (): Artifact =>
+export const mockArtifact = (
+  planetLevel: PlanetLevel = 1,
+  artifactType: ArtifactType = ArtifactType.Spaceship,
+  planetBiome: Biome = Biome.WASTELAND
+): Artifact =>
   ({
     id: randomHex(64) as ArtifactId,
     planetDiscoveredOn: CheckedTypeUtils.EMPTY_LOCATION_ID,
-    planetLevel: randomLevel(),
-    planetBiome: randomBiome(),
+    planetLevel,
+    planetBiome,
     mintedAtTimestamp: Date.now(),
     discoverer: CheckedTypeUtils.EMPTY_ADDRESS,
     currentOwner: CheckedTypeUtils.EMPTY_ADDRESS,
-    artifactType: randomType(),
+    artifactType,
     upgrade: {
       energyCapMultiplier: 120,
       energyGroMultiplier: 100,
@@ -252,3 +237,33 @@ export const mockArtifact = (): Artifact =>
     },
     onPlanetId: undefined,
   } as Artifact);
+
+export const mockArtifactWithRarity = (
+  rarity: ArtifactRarity = ArtifactRarity.Common,
+  artifactType: ArtifactType = ArtifactType.Spaceship,
+  planetBiome: Biome = Biome.WASTELAND
+): Artifact => mockArtifact([1, 3, 5, 7][rarity], artifactType, planetBiome);
+
+export const mockCommon = mockArtifactWithRarity(
+  ArtifactRarity.Common,
+  ArtifactType.Spaceship,
+  Biome.WASTELAND
+);
+
+export const mockRare = mockArtifactWithRarity(
+  ArtifactRarity.Rare,
+  ArtifactType.Spaceship,
+  Biome.WASTELAND
+);
+
+export const mockEpic = mockArtifactWithRarity(
+  ArtifactRarity.Epic,
+  ArtifactType.Spaceship,
+  Biome.WASTELAND
+);
+
+export const mockLegendary = mockArtifactWithRarity(
+  ArtifactRarity.Legendary,
+  ArtifactType.Spaceship,
+  Biome.WASTELAND
+);

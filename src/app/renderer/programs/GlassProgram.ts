@@ -1,5 +1,6 @@
 import { AttribProps, AttribType } from '../utils/EngineTypes';
-import { glsl, programFromSources } from '../utils/EngineUtils';
+import { glsl } from '../utils/EngineUtils';
+import ProgramUtils from '../webgl/ProgramUtils';
 
 const a = {
   position: 'a_position',
@@ -71,7 +72,7 @@ export type GlassProgramWithUniforms = {
 export const getGlassProgramAndUniforms = (
   gl: WebGL2RenderingContext
 ): GlassProgramWithUniforms => {
-  const program = programFromSources(gl, vert, frag);
+  const program = ProgramUtils.programFromSources(gl, vert, frag);
   if (program === null) throw 'error compiling planet program';
 
   gl.useProgram(program); // may be superfluous;

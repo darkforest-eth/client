@@ -58,6 +58,7 @@ export enum ContractsAPIEvent {
   TxSubmitted = 'TxSubmitted',
   TxConfirmed = 'TxConfirmed',
   TxReverted = 'TxReverted',
+  PlanetTransferred = 'PlanetTransferred',
 }
 
 export type InitializePlayerArgs = [

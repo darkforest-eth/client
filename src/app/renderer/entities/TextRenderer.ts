@@ -15,9 +15,9 @@ import {
   TextAlign,
   TextAnchor,
 } from '../utils/EngineTypes';
-import { makeQuadBuffered, makeQuadVec2Buffered } from '../utils/EngineUtils';
+import EngineUtils from '../utils/EngineUtils';
 import AttribManager from '../webgl/AttribManager';
-import { TextureGLManager } from '../webgl/WebGLManager';
+import { WebGLManager } from '../webgl/WebGLManager';
 
 /* renders text */
 
@@ -31,7 +31,7 @@ const screenW = glyphW / scale;
 const screenH = glyphH / scale;
 
 export default class TextRenderer {
-  glManager: TextureGLManager;
+  glManager: WebGLManager;
   bufferCanvas: HTMLCanvasElement;
   verts: number;
 
@@ -52,7 +52,7 @@ export default class TextRenderer {
 
   texIdx: number;
 
-  constructor(glManager: TextureGLManager, bufferCanvas: HTMLCanvasElement) {
+  constructor(glManager: WebGLManager, bufferCanvas: HTMLCanvasElement) {
     autoBind(this);
 
     this.bufferCanvas = bufferCanvas;
@@ -206,7 +206,7 @@ export default class TextRenderer {
 
     const { x1, y1 } = { x1: x, y1: y };
     const { x2, y2 } = { x2: x + screenW, y2: y + screenH };
-    makeQuadBuffered(this.quad3Buffer, x1, y1, x2, y2, zIdx);
+    EngineUtils.makeQuadBuffered(this.quad3Buffer, x1, y1, x2, y2, zIdx);
     this.posA.setVertex(this.quad3Buffer, this.verts);
 
     const { x: gx, y: gy } = info;
@@ -214,7 +214,7 @@ export default class TextRenderer {
     const ty1 = gy / canvasDim;
     const tx2 = (gx + glyphW) / canvasDim;
     const ty2 = (gy + glyphH) / canvasDim;
-    makeQuadVec2Buffered(this.quad2Buffer, tx1, ty1, tx2, ty2);
+    EngineUtils.makeQuadVec2Buffered(this.quad2Buffer, tx1, ty1, tx2, ty2);
     this.texcoordA.setVertex(this.quad2Buffer, this.verts);
 
     for (let i = 0; i < 6; i++) this.colorA.setVertex(color, this.verts + i);

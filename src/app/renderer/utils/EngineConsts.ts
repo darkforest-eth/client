@@ -1,5 +1,5 @@
 import { ProcgenUtils } from '../../../utils/ProcgenUtils';
-import { RGBVec } from './EngineTypes';
+import { RGBAVec, RGBVec } from './EngineTypes';
 
 export const engineConsts = {
   fontStyle: '64px monospace',
@@ -21,15 +21,20 @@ export const engineConsts = {
     },
     gold: [255, 221, 48] as RGBVec,
     barbs: [153, 102, 102] as RGBVec,
+    barbsA: [153, 102, 102, 255] as RGBAVec,
     white: [255, 255, 255] as RGBVec,
+    whiteA: [255, 255, 255, 255] as RGBAVec,
     red: [255, 0, 0] as RGBVec,
+    redA: [255, 0, 0, 255] as RGBAVec,
     range: {
       dash: [150, 145, 191] as RGBVec,
       energy: [245, 180, 130] as RGBVec,
     },
     voyage: {
       enemy: [255, 0, 0] as RGBVec,
+      enemyA: [255, 0, 0, 255] as RGBAVec,
       mine: [0, 0, 255] as RGBVec,
+      mineA: [0, 0, 255, 255] as RGBAVec,
     },
     bonus: {
       energyCap: ProcgenUtils.hslToRgb([360, 73, 70]) as RGBVec,

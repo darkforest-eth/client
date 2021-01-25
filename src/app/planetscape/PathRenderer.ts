@@ -1,7 +1,7 @@
 import { PixelCoords } from '../../utils/ProcgenUtils';
 import { RGBVec } from '../renderer/utils/EngineTypes';
 import AttribManager from '../renderer/webgl/AttribManager';
-import { AbstractGLManager } from '../renderer/webgl/WebGLManager';
+import { WebGLManager } from '../renderer/webgl/WebGLManager';
 import {
   getPathProgramAndUniforms,
   scapePosProps,
@@ -9,7 +9,7 @@ import {
 } from './PathProgram';
 
 export class PathRenderer {
-  private manager: AbstractGLManager;
+  private manager: WebGLManager;
 
   private program: WebGLProgram;
   private matrixULoc: WebGLUniformLocation | null;
@@ -17,7 +17,7 @@ export class PathRenderer {
   private posA: AttribManager;
   private colorA: AttribManager;
 
-  constructor(manager: AbstractGLManager) {
+  constructor(manager: WebGLManager) {
     this.manager = manager;
 
     const { gl } = this.manager;

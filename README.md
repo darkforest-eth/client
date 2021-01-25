@@ -4,9 +4,9 @@
 
 ### Installing Core Dependencies
 
--   Node (v14.15.x)
--   Yarn (Javascript Package Manager)
--   Ganache CLI
+- Node (v14.15.x)
+- Yarn (Javascript Package Manager)
+- Ganache CLI
 
 #### Installing The Correct Node Version Using NVM
 

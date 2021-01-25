@@ -1,10 +1,7 @@
-import { AttribProps, AttribType } from '../renderer/utils/EngineTypes';
-import {
-  desaturate,
-  glsl,
-  invertColors,
-  programFromSources,
-} from '../renderer/utils/EngineUtils';
+import { AttribProps, AttribType } from '../utils/EngineTypes';
+import { glsl } from '../utils/EngineUtils';
+import ProgramUtils from '../webgl/ProgramUtils';
+import { ShaderMixins } from '../webgl/ShaderMixins';
 
 const a = {
   position: 'a_position',
@@ -101,8 +98,8 @@ const frag = glsl`
 
   uniform sampler2D ${u.texture};
 
-  ${invertColors}
-  ${desaturate}
+  ${ShaderMixins.invertColors}
+  ${ShaderMixins.desaturate}
 
   void main() {
     vec4 texel = texture(${u.texture}, ${v.texcoord});
@@ -118,13 +115,12 @@ const frag = glsl`
 
 
     // shine
-    float x = ${v.rectPos}.x - 0.5;
-    float y = ${v.rectPos}.y - 0.5;
-
-    if (abs((-4. * x + y) - ${v.shine}) < 0.15) {
+    float shine = -0.5 + 12. * ${v.shine};
+    float x = ${v.rectPos}.x;
+    float y = ${v.rectPos}.y;
+    if (abs((x - shine) - 0.25 * (y - 0.5)) < 0.05) {
       texel = vec4(1., 1., 1., 1.);
     }
-
 
     // desaturate + darken for artifact dex
     float alpha = ${v.color}.a;
@@ -150,7 +146,7 @@ export type SpriteProgramWithUniforms = {
 export const getSpriteProgramAndUniforms = (
   gl: WebGL2RenderingContext
 ): SpriteProgramWithUniforms => {
-  const program = programFromSources(gl, vert, frag);
+  const program = ProgramUtils.programFromSources(gl, vert, frag);
   if (program === null) throw 'error compiling planet program';
 
   gl.useProgram(program); // may be superfluous;

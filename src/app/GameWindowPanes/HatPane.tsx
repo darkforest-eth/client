@@ -42,11 +42,14 @@ export function HatPane({ hook }: { hook: ModalHook }) {
   const uiManager = useContext<GameUIManager | null>(GameUIManagerContext);
 
   const [balance, setBalance] = useState<number>(0);
+  const [visible, setVisible] = hook;
 
   useEffect(() => {
     if (!uiManager) return;
     const updateBalance = () => {
-      setBalance(uiManager.getMyBalance());
+      if (visible) {
+        setBalance(uiManager.getMyBalance());
+      }
     };
 
     updateBalance();
@@ -55,10 +58,9 @@ export function HatPane({ hook }: { hook: ModalHook }) {
     return () => {
       clearInterval(intervalId);
     };
-  }, [uiManager]);
+  }, [uiManager, visible]);
 
   useEffect(() => {
-    const [, setVisible] = hook;
     const doChange = (type: ContextMenuType) => {
       if (type === ContextMenuType.None) {
         setVisible(false);

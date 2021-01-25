@@ -24,7 +24,7 @@ import tracery from './tracery';
 import { baseEngModifiers } from './tracery-modifiers';
 import { hatTypeFromHash, HatType } from './Hats';
 import { CheckedTypeUtils } from './CheckedTypeUtils';
-import { HSLVec, RGBVec } from '../app/renderer/utils/EngineTypes';
+import { HSLVec, RGBAVec, RGBVec } from '../app/renderer/utils/EngineTypes';
 
 export type PixelCoords = {
   x: number;
@@ -87,6 +87,7 @@ export class ProcgenUtils {
   private static namesById = new Map<LocationId, string>();
   private static taglinesById = new Map<LocationId, string>();
   private static huesByHash = new Map<string, number>();
+  private static rgbsByHash = new Map<string, RGBAVec>();
 
   /* fixes long strings to be maxLen long as in 0xabc...123 */
   static ellipsisStr(str: string, maxLen: number): string {
@@ -166,16 +167,24 @@ export class ProcgenUtils {
     ); // remove 0x
   }
 
-  public static getPlayerColorVec(player: EthAddress): RGBVec {
-    return ProcgenUtils.hslToRgb([
-      ProcgenUtils.hashToHue(player.slice(2)),
-      100,
-      70,
-    ]);
+  public static getPlayerColorVec(player: EthAddress): RGBAVec {
+    if (!this.rgbsByHash.has(player)) {
+      const noAlpha = ProcgenUtils.hslToRgb([
+        ProcgenUtils.hashToHue(player.slice(2)),
+        100,
+        70,
+      ]);
+
+      const withAlpha = [...noAlpha, 1] as RGBAVec;
+      this.rgbsByHash.set(player, withAlpha);
+    }
+
+    return this.rgbsByHash.get(player) as RGBAVec;
   }
 
-  public static getOwnerColorVec(planet: Planet): RGBVec {
-    if (planet.owner === CheckedTypeUtils.EMPTY_ADDRESS) return [153, 153, 102];
+  public static getOwnerColorVec(planet: Planet): RGBAVec {
+    if (planet.owner === CheckedTypeUtils.EMPTY_ADDRESS)
+      return [153, 153, 102, 255];
     return ProcgenUtils.getPlayerColorVec(planet.owner);
   }
 

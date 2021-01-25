@@ -207,10 +207,11 @@ class ContractsAPI extends EventEmitter {
       })
       .on(
         ContractEvent.PlanetTransferred,
-        async (planetId, _playerAddress, _: Event) => {
+        async (planetId, playerAddress: string, _: Event) => {
           this.emit(
-            ContractsAPIEvent.PlanetUpdate,
-            CheckedTypeUtils.locationIdFromEthersBN(planetId)
+            ContractsAPIEvent.PlanetTransferred,
+            CheckedTypeUtils.locationIdFromEthersBN(planetId),
+            playerAddress.toLowerCase() as EthAddress
           );
         }
       )

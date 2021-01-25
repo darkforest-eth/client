@@ -11,12 +11,12 @@ import {
 } from '../programs/CircleProgram';
 import { engineConsts } from '../utils/EngineConsts';
 import { RGBAVec } from '../utils/EngineTypes';
-import { makeDoubleQuadBuffered } from '../utils/EngineUtils';
+import EngineUtils from '../utils/EngineUtils';
 import AttribManager from '../webgl/AttribManager';
-import WebGLManager from '../webgl/WebGLManager';
+import { GameGLManager } from '../webgl/GameGLManager';
 
 export default class CircleRenderer {
-  glManager: WebGLManager;
+  glManager: GameGLManager;
   verts: number;
 
   program: WebGLProgram;
@@ -33,7 +33,7 @@ export default class CircleRenderer {
 
   viewport: Viewport;
 
-  constructor(glManager: WebGLManager) {
+  constructor(glManager: GameGLManager) {
     autoBind(this);
     this.viewport = Viewport.getInstance();
 
@@ -80,7 +80,12 @@ export default class CircleRenderer {
     const { x1, y1 } = { x1: x - r, y1: y - r };
     const { x2, y2 } = { x2: x + r, y2: y + r };
 
-    makeDoubleQuadBuffered(this.quadBuffer, x1, y1, x2, y2, -1, -1, 1, 1);
+    // prettier-ignore
+    EngineUtils.makeDoubleQuadBuffered(
+      this.quadBuffer, 
+      x1, y1, x2, y2, -1, -1, 1, 1
+    );
+
     this.posA.setVertex(this.quadBuffer, this.verts);
 
     const strokePct = stroke / radius;

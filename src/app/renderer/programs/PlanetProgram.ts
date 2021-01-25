@@ -1,11 +1,8 @@
 import { Biome, isLocatable, Planet } from '../../../_types/global/GlobalTypes';
 import { AttribProps, AttribType } from '../utils/EngineTypes';
-import {
-  glsl,
-  programFromSources,
-  shaderSeededRandom,
-  simplex4,
-} from '../utils/EngineUtils';
+import { glsl } from '../utils/EngineUtils';
+import ProgramUtils from '../webgl/ProgramUtils';
+import { ShaderMixins } from '../webgl/ShaderMixins';
 
 const a = {
   position: 'a_position',
@@ -205,8 +202,8 @@ const fragSrc = glsl`
 
   out vec4 outColor;
 
-  ${simplex4}
-  ${shaderSeededRandom}
+  ${ShaderMixins.simplex4}
+  ${ShaderMixins.seededRandom}
 
   float r = 1.0;
   float inR = 0.9;
@@ -319,7 +316,7 @@ export type PlanetProgramWithUniforms = {
 export const getPlanetProgramAndUniforms = (
   gl: WebGL2RenderingContext
 ): PlanetProgramWithUniforms => {
-  const program = programFromSources(gl, vertSrc, fragSrc);
+  const program = ProgramUtils.programFromSources(gl, vertSrc, fragSrc);
   if (program === null) throw 'error compiling planet program';
 
   gl.useProgram(program); // may be superfluous;

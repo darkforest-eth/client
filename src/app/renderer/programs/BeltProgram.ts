@@ -1,11 +1,7 @@
 import { AttribProps, AttribType, ProgramClosure } from '../utils/EngineTypes';
-import {
-  glsl,
-  noiseVec3,
-  programFromSources,
-  radAtAngle,
-  shaderSeededRandom,
-} from '../utils/EngineUtils';
+import { glsl } from '../utils/EngineUtils';
+import ProgramUtils from '../webgl/ProgramUtils';
+import { ShaderMixins } from '../webgl/ShaderMixins';
 
 const a = {
   position: 'a_position',
@@ -110,9 +106,9 @@ const frag = glsl`
   in float ${v.perturb};
   in float ${v.astRad};
 
-  ${noiseVec3}
-  ${radAtAngle}
-  ${shaderSeededRandom}
+  ${ShaderMixins.noiseVec3}
+  ${ShaderMixins.radAtAngle}
+  ${ShaderMixins.seededRandom}
 
   float rand(float i, float iter) {
     return seededRandom(i + iter * 100.);
@@ -201,7 +197,7 @@ export const getBeltProgram: ProgramClosure = (() => {
 
   return (gl: WebGL2RenderingContext) => {
     if (program === null) {
-      program = programFromSources(gl, vert, frag);
+      program = ProgramUtils.programFromSources(gl, vert, frag);
       if (program === null) throw 'error compiling belt program';
     }
 

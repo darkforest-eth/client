@@ -12,12 +12,12 @@ import {
   mineOffsetProps,
 } from '../programs/MineProgram';
 import { RGBVec } from '../utils/EngineTypes';
-import { getNow, getPlanetZIndex } from '../utils/EngineUtils';
+import EngineUtils from '../utils/EngineUtils';
 import AttribManager from '../webgl/AttribManager';
-import { AbstractGLManager } from '../webgl/WebGLManager';
+import { WebGLManager } from '../webgl/WebGLManager';
 
 export class MineRenderer {
-  manager: AbstractGLManager;
+  manager: WebGLManager;
   program: WebGLProgram;
 
   posA: AttribManager;
@@ -32,7 +32,7 @@ export class MineRenderer {
   nowULoc: WebGLUniformLocation | null;
   viewport: Viewport;
 
-  constructor(manager: AbstractGLManager) {
+  constructor(manager: WebGLManager) {
     autoBind(this);
 
     this.viewport = Viewport.getInstance();
@@ -114,7 +114,7 @@ export class MineRenderer {
   queueMine(planet: Planet, centerW: WorldCoords, radiusW: number) {
     const center = this.viewport.worldToCanvasCoords(centerW);
     const radius = this.viewport.worldToCanvasDist(radiusW);
-    const z = getPlanetZIndex(planet);
+    const z = EngineUtils.getPlanetZIndex(planet);
 
     this.queueMineScreen(planet, center, radius, z);
   }
@@ -134,7 +134,7 @@ export class MineRenderer {
 
     // set uniforms
     gl.uniformMatrix4fv(this.matrixULoc, false, this.manager.projectionMatrix);
-    gl.uniform1f(this.nowULoc, getNow());
+    gl.uniform1f(this.nowULoc, EngineUtils.getNow());
 
     // draw
     gl.drawArrays(gl.POINTS, 0, this.verts);

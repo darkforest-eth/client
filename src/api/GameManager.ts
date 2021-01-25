@@ -74,11 +74,13 @@ import {
   hexifyBigIntNestedArray,
   locationFromCoords,
   moveShipsDecay,
+  planetCanUpgrade,
 } from '../utils/Utils';
 import NotificationManager from '../utils/NotificationManager';
 import { SerializedPlugin } from '../plugins/SerializedPlugin';
 import { ProcgenUtils } from '../utils/ProcgenUtils';
 import UIEmitter from '../utils/UIEmitter';
+import { Contract, ContractInterface } from 'ethers';
 
 class GameManager extends EventEmitter implements AbstractGameManager {
   private readonly account: EthAddress | null;
@@ -92,7 +94,7 @@ class GameManager extends EventEmitter implements AbstractGameManager {
   private readonly endTimeSeconds: number = 1643587533; // jan 2022
 
   private balance: number;
-  private balanceInterval: number;
+  private balanceInterval: ReturnType<typeof setInterval>;
   private minerManager?: MinerManager;
   private hashRate: number;
   private homeLocation: Location | null;
@@ -302,6 +304,17 @@ class GameManager extends EventEmitter implements AbstractGameManager {
       .on(ContractsAPIEvent.PlayerInit, (player: Player) => {
         gameManager.players.set(player.address, player);
       })
+      .on(
+        ContractsAPIEvent.PlanetTransferred,
+        async (planetId: LocationId, newOwner: EthAddress) => {
+          await gameManager.hardRefreshPlanet(planetId);
+          const planetAfter = gameManager.getPlanetWithId(planetId);
+
+          if (planetAfter && newOwner === gameManager.account) {
+            NotificationManager.getInstance().receivedPlanet(planetAfter);
+          }
+        }
+      )
       .on(ContractsAPIEvent.PlanetUpdate, async (planetId: LocationId) => {
         await gameManager.hardRefreshPlanet(planetId);
         gameManager.emit(GameManagerEvent.PlanetUpdate);
@@ -681,6 +694,10 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
   hasMinedChunk(chunkLocation: ChunkFootprint): boolean {
     return this.persistentChunkStore.hasMinedChunk(chunkLocation);
+  }
+
+  getChunk(chunkFootprint: ChunkFootprint): ExploredChunkData | null {
+    return this.persistentChunkStore.getChunkByFootprint(chunkFootprint);
   }
 
   getPerlinThresholds(): [number, number] {
@@ -1473,6 +1490,24 @@ class GameManager extends EventEmitter implements AbstractGameManager {
 
   public getUIEventEmitter() {
     return UIEmitter.getInstance();
+  }
+
+  public getNotificationsManager() {
+    return NotificationManager.getInstance();
+  }
+
+  public planetCanUpgrade(planet: Planet) {
+    return planetCanUpgrade(planet);
+  }
+
+  public loadContract(
+    contractAddress: string,
+    contractABI: ContractInterface
+  ): Promise<Contract> {
+    return EthConnection.getInstance().loadContract(
+      contractAddress,
+      contractABI
+    );
   }
 }
 

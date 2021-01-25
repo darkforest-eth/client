@@ -14,12 +14,12 @@ import {
   getAsteroidUniforms,
 } from '../programs/AsteroidProgram';
 import { RGBVec } from '../utils/EngineTypes';
-import { getNow, getPlanetZIndex } from '../utils/EngineUtils';
+import EngineUtils from '../utils/EngineUtils';
 import AttribManager from '../webgl/AttribManager';
-import WebGLManager from '../webgl/WebGLManager';
+import { GameGLManager } from '../webgl/GameGLManager';
 
 export default class AsteroidRenderer {
-  manager: WebGLManager;
+  manager: GameGLManager;
   program: WebGLProgram;
 
   posA: AttribManager;
@@ -37,7 +37,7 @@ export default class AsteroidRenderer {
 
   time: number;
 
-  constructor(manager: WebGLManager) {
+  constructor(manager: GameGLManager) {
     autoBind(this);
     this.viewport = Viewport.getInstance();
 
@@ -86,7 +86,7 @@ export default class AsteroidRenderer {
 
     const { x, y } = center;
 
-    const z = getPlanetZIndex(planet);
+    const z = EngineUtils.getPlanetZIndex(planet);
 
     // initial asteroid offset
     const theta = (color[0] * 255 ** 2 + color[1] * 255 + color[2]) % 10000;
@@ -101,7 +101,7 @@ export default class AsteroidRenderer {
   }
 
   flush() {
-    this.time = getNow();
+    this.time = EngineUtils.getNow();
 
     if (this.verts === 0) return;
 

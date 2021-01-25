@@ -1,5 +1,6 @@
 import { AttribProps, AttribType } from '../renderer/utils/EngineTypes';
-import { glsl, programFromSources } from '../renderer/utils/EngineUtils';
+import { glsl } from '../renderer/utils/EngineUtils';
+import ProgramUtils from '../renderer/webgl/ProgramUtils';
 
 // isn't used anywhere, mostly this is used for copy-pasting. later we will make it a proper class
 const a = {
@@ -63,7 +64,7 @@ export type PathProgramWithUniforms = {
 export const getPathProgramAndUniforms = (
   gl: WebGL2RenderingContext
 ): PathProgramWithUniforms => {
-  const program = programFromSources(gl, vert, frag);
+  const program = ProgramUtils.programFromSources(gl, vert, frag);
   if (program === null) throw 'error compiling planet program';
 
   gl.useProgram(program); // may be superfluous;

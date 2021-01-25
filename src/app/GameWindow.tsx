@@ -4,6 +4,7 @@ import AbstractGameManager from '../api/AbstractGameManager';
 import { useStoredUIState, UIDataKey } from '../api/UIStateStorageManager';
 import UIEmitter, { UIEmitterEvent } from '../utils/UIEmitter';
 import { copyPlanetStats, PlanetStatsInfo } from '../utils/Utils';
+import WindowManager, { WindowManagerEvent } from '../utils/WindowManager';
 import { EthAddress, Planet } from '../_types/global/GlobalTypes';
 import GameUIManager from './board/GameUIManager';
 import { GameWindowLayout } from './GameWindowLayout';
@@ -32,6 +33,8 @@ export const SelectedContext = createContext<Planet | null>(null);
 export const SelectedStatContext = createContext<PlanetStatsInfo | null>(null);
 
 export const HiPerfContext = createContext<boolean | null>(null);
+
+export const CtrlContext = createContext<boolean>(false);
 
 export default function GameWindow({
   uiManager,
@@ -133,16 +136,35 @@ export default function GameWindow({
   // make this into a context (fix this later)
   const hiPerfHook = useStoredUIState<boolean>(UIDataKey.highPerf, uiManager);
 
+  // for tooltips
+  const [ctrl, setCtrl] = useState<boolean>(false);
+  useEffect(() => {
+    const windowManager = WindowManager.getInstance();
+
+    const onKeyDown = () => setCtrl(true);
+    const onKeyUp = () => setCtrl(false);
+
+    windowManager.on(WindowManagerEvent.CtrlDown, onKeyDown);
+    windowManager.on(WindowManagerEvent.CtrlUp, onKeyUp);
+
+    return () => {
+      windowManager.removeAllListeners(WindowManagerEvent.CtrlDown);
+      windowManager.removeAllListeners(WindowManagerEvent.CtrlUp);
+    };
+  }, [setCtrl]);
+
   return (
     <SelectedContext.Provider value={selected}>
       <ContextMenuContext.Provider value={contextMenu}>
         <AccountContext.Provider value={account}>
           <SelectedStatContext.Provider value={planetStats}>
             <HiPerfContext.Provider value={hiPerfHook[0]}>
-              <GameWindowLayout
-                hiPerfHook={hiPerfHook}
-                gameUIManager={uiManager}
-              />
+              <CtrlContext.Provider value={ctrl}>
+                <GameWindowLayout
+                  hiPerfHook={hiPerfHook}
+                  gameUIManager={uiManager}
+                />
+              </CtrlContext.Provider>
             </HiPerfContext.Provider>
           </SelectedStatContext.Provider>
         </AccountContext.Provider>

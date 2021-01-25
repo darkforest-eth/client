@@ -1,12 +1,7 @@
 import { AttribProps, AttribType, ProgramClosure } from '../utils/EngineTypes';
-import {
-  glsl,
-  mod2pi,
-  noiseVec3,
-  programFromSources,
-  radAtAngle,
-  shaderSeededRandom,
-} from '../utils/EngineUtils';
+import { glsl } from '../utils/EngineUtils';
+import ProgramUtils from '../webgl/ProgramUtils';
+import { ShaderMixins } from '../webgl/ShaderMixins';
 
 const a = {
   position: 'a_position',
@@ -70,7 +65,7 @@ const astVert = glsl`
   out float ${v.darken}; // between 0 and 1
   out float ${v.seed};
 
-  ${mod2pi}
+  ${ShaderMixins.mod2pi}
 
   void main() {
     float radius = ${a.radius} * 0.3;
@@ -116,10 +111,10 @@ const astFrag = glsl`
   in float ${v.darken};
   in float ${v.seed};
 
-  ${noiseVec3}
-  ${radAtAngle}
-  ${mod2pi}
-  ${shaderSeededRandom}
+  ${ShaderMixins.noiseVec3}
+  ${ShaderMixins.radAtAngle}
+  ${ShaderMixins.mod2pi}
+  ${ShaderMixins.seededRandom}
 
   void main() {
     vec2 rectPos = 2.0 * gl_PointCoord - vec2(1.0);
@@ -140,7 +135,7 @@ export const getAsteroidProgram: ProgramClosure = (() => {
 
   return (gl: WebGL2RenderingContext) => {
     if (program === null) {
-      program = programFromSources(gl, astVert, astFrag);
+      program = ProgramUtils.programFromSources(gl, astVert, astFrag);
       if (program === null) throw 'error compiling rect program';
     }
 

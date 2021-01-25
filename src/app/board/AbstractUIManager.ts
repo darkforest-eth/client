@@ -80,6 +80,7 @@ export default interface AbstractUIManager {
   getHomePlanet(): Planet | null;
   isOwnedByMe(planet: Planet): boolean;
   hasMinedChunk(chunkLocation: ChunkFootprint): boolean;
+  getChunk(chunkFootprint: ChunkFootprint): ExploredChunkData | null;
 
   getHashesPerSec(): number;
   generateVerificationTweet(twitter: string): Promise<string>;

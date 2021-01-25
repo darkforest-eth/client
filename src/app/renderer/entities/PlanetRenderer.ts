@@ -11,15 +11,10 @@ import {
   planetRectPosProps,
   propsFromPlanet,
 } from '../programs/PlanetProgram';
-import {
-  getNow,
-  getPlanetZIndex,
-  makeQuadBuffered,
-  makeQuadVec2Buffered,
-} from '../utils/EngineUtils';
+import EngineUtils from '../utils/EngineUtils';
 import autoBind from 'auto-bind';
 import { CanvasCoords } from '../../../utils/Coordinates';
-import { AbstractGLManager } from '../webgl/WebGLManager';
+import { WebGLManager } from '../webgl/WebGLManager';
 import Viewport from '../../board/Viewport';
 import { Planet } from '../../../_types/global/GlobalTypes';
 import { engineConsts } from '../utils/EngineConsts';
@@ -47,12 +42,12 @@ export default class PlanetRenderer {
   quad3Buffer: number[];
   quad2Buffer: number[];
 
-  manager: AbstractGLManager;
+  manager: WebGLManager;
   verts: number;
   viewport: Viewport;
   time: number;
 
-  constructor(manager: AbstractGLManager) {
+  constructor(manager: WebGLManager) {
     autoBind(this);
 
     this.time = 0;
@@ -88,7 +83,7 @@ export default class PlanetRenderer {
       this.quad3Buffer = Array(6 * 3).fill(0);
       this.quad2Buffer = Array(6 * 2).fill(0);
 
-      makeQuadVec2Buffered(this.quad2Buffer, -1, -1, 1, 1);
+      EngineUtils.makeQuadVec2Buffered(this.quad2Buffer, -1, -1, 1, 1);
       this.beginFrame();
     } catch (e) {
       console.error(e);
@@ -101,7 +96,7 @@ export default class PlanetRenderer {
 
   // this guy should only be called by PlanetRenderManager
   flush(): void {
-    this.time = getNow();
+    this.time = EngineUtils.getNow();
 
     const { gl } = this.manager;
 
@@ -144,9 +139,9 @@ export default class PlanetRenderer {
     const cosmetic = ProcgenUtils.getPlanetCosmetic(planet);
 
     // auto-sorts on GPU
-    const z = getPlanetZIndex(planet);
+    const z = EngineUtils.getPlanetZIndex(planet);
 
-    makeQuadBuffered(this.quad3Buffer, x1, y1, x2, y2, z);
+    EngineUtils.makeQuadBuffered(this.quad3Buffer, x1, y1, x2, y2, z);
     this.posA.setVertex(this.quad3Buffer, this.verts);
     this.rectPosA.setVertex(this.quad2Buffer, this.verts);
 

@@ -8,7 +8,11 @@ import {
 } from '../../utils/Coordinates';
 import autoBind from 'auto-bind';
 import AbstractUIManager from './AbstractUIManager';
-import { ExploredChunkData, Planet } from '../../_types/global/GlobalTypes';
+import {
+  ExploredChunkData,
+  isLocatable,
+  Planet,
+} from '../../_types/global/GlobalTypes';
 import _ from 'lodash';
 import { UIDataKey } from '../../api/UIStateStorageManager';
 
@@ -56,9 +60,10 @@ class Viewport {
   shouldFling: boolean;
 
   mouseSensitivity: number;
-  intervalId: number;
+  intervalId: ReturnType<typeof setTimeout>;
   frameRequestId: number;
 
+  scale: number;
   private isSending = false;
 
   private constructor(
@@ -255,7 +260,7 @@ class Viewport {
 
   // centers on a planet and makes it fill the viewport
   zoomPlanet(planet: Planet | null): void {
-    if (!planet) return;
+    if (!planet || !isLocatable(planet)) return;
     this.centerPlanet(planet);
     // in world coords
     const rad = this.gameUIManager.getRadiusOfPlanetLevel(planet.planetLevel);
@@ -307,8 +312,8 @@ class Viewport {
 
     if (this.isPanning && this.mouseLastCoords) {
       // if panning, don't need to emit mouse move event
-      const dx = this.scale() * (this.mouseLastCoords.x - canvasCoords.x);
-      const dy = -this.scale() * (this.mouseLastCoords.y - canvasCoords.y);
+      const dx = this.scale * (this.mouseLastCoords.x - canvasCoords.x);
+      const dy = -this.scale * (this.mouseLastCoords.y - canvasCoords.y);
 
       this.velocity = { x: dx * BASE_VEL, y: dy * BASE_VEL };
 
@@ -418,13 +423,10 @@ class Viewport {
   onWindowResize() {
     this.viewportHeight = this.canvas.height;
     this.viewportWidth = this.canvas.width;
+    this.updateScale();
   }
 
   // Camera utility functions
-  scale(): number {
-    return this.widthInWorldUnits / this.viewportWidth;
-  }
-
   canvasToWorldCoords(canvasCoords: CanvasCoords): WorldCoords {
     const worldX = this.canvasToWorldX(canvasCoords.x);
     const worldY = this.canvasToWorldY(canvasCoords.y);
@@ -437,37 +439,32 @@ class Viewport {
     return { x: canvasX, y: canvasY };
   }
 
-  worldToCanvasDist(d: number): number {
-    return d / this.scale();
+  public worldToCanvasDist(d: number): number {
+    return d / this.scale;
   }
 
-  canvasToWorldDist(d: number): number {
-    return d * this.scale();
+  public canvasToWorldDist(d: number): number {
+    return d * this.scale;
   }
 
   worldToCanvasX(x: number): number {
-    return (
-      (x - this.centerWorldCoords.x) / this.scale() + this.viewportWidth / 2
-    );
+    return (x - this.centerWorldCoords.x) / this.scale + this.viewportWidth / 2;
   }
 
   canvasToWorldX(x: number): number {
-    return (
-      (x - this.viewportWidth / 2) * this.scale() + this.centerWorldCoords.x
-    );
+    return (x - this.viewportWidth / 2) * this.scale + this.centerWorldCoords.x;
   }
 
   worldToCanvasY(y: number): number {
     return (
-      (-1 * (y - this.centerWorldCoords.y)) / this.scale() +
+      (-1 * (y - this.centerWorldCoords.y)) / this.scale +
       this.viewportHeight / 2
     );
   }
 
   canvasToWorldY(y: number): number {
     return (
-      -1 * (y - this.viewportHeight / 2) * this.scale() +
-      this.centerWorldCoords.y
+      -1 * (y - this.viewportHeight / 2) * this.scale + this.centerWorldCoords.y
     );
   }
 
@@ -519,7 +516,13 @@ class Viewport {
       this.widthInWorldUnits = width;
       this.heightInWorldUnits =
         (width * this.viewportHeight) / this.viewportWidth;
+
+      this.updateScale();
     }
+  }
+
+  private updateScale() {
+    this.scale = this.widthInWorldUnits / this.viewportWidth;
   }
 
   private setWorldHeight(height: number): void {

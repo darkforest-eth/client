@@ -14,6 +14,8 @@ import {
 const {
   red,
   white,
+  redA,
+  whiteA,
   range: { dash, energy },
 } = engineConsts.colors;
 
@@ -27,7 +29,8 @@ export class UIRenderManager {
   queueBorders() {
     const { circleRenderer, gameUIManager } = this.renderer;
     const radius = gameUIManager.getWorldRadius();
-    circleRenderer.queueCircleWorld({ x: 0, y: 0 }, radius, [...white, 255], 2);
+    whiteA[3] = 255;
+    circleRenderer.queueCircleWorld({ x: 0, y: 0 }, radius, whiteA, 2);
   }
 
   queueMousePath() {
@@ -48,7 +51,7 @@ export class UIRenderManager {
 
       const myPlanet = uiManager.isOverOwnPlanet(from);
       if (myPlanet && to !== from) {
-        lR.queueLineWorld(from, to, white, 2, RenderZIndex.Voyages);
+        lR.queueLineWorld(from, to, whiteA, 2, RenderZIndex.Voyages);
         let effectiveEnergy = myPlanet.energy;
         for (const unconfirmedMove of myPlanet.unconfirmedDepartures) {
           effectiveEnergy -= unconfirmedMove.forces;
@@ -61,10 +64,12 @@ export class UIRenderManager {
 
         const myAtk: number = moveShipsDecay(shipsMoved, myPlanet, dist);
         if (!uiManager.getHoveringOverPlanet()) {
+          const color = myAtk > 0 ? whiteA : redA;
+          color[3] = 255;
           tR.queueTextWorld(
             `Energy: ${Math.round(myAtk)}`,
             { x: to.x, y: to.y },
-            [...(myAtk > 0 ? white : red), 255]
+            color
           );
         }
       }
@@ -89,6 +94,7 @@ export class UIRenderManager {
     const selectedPlanet = uiManager.getSelectedPlanet();
     if (!selectedPlanet || !selectedCoords) return;
 
+    redA[3] = 255;
     this.queueRectAtPlanet(selectedPlanet, selectedCoords, red);
   }
 

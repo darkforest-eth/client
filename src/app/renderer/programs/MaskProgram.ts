@@ -1,5 +1,6 @@
 import { AttribProps, AttribType, ProgramClosure } from '../utils/EngineTypes';
-import { glsl, programFromSources } from '../utils/EngineUtils';
+import { glsl } from '../utils/EngineUtils';
+import ProgramUtils from '../webgl/ProgramUtils';
 
 // mask shader - takes in world coords and spits out red rects
 const a = {
@@ -59,7 +60,7 @@ export const getMaskProgram: ProgramClosure = (() => {
 
   return (gl: WebGL2RenderingContext) => {
     if (maskProgram === null) {
-      maskProgram = programFromSources(gl, maskVert, maskFrag);
+      maskProgram = ProgramUtils.programFromSources(gl, maskVert, maskFrag);
       if (maskProgram === null) throw 'error compiling mask program';
     }
 

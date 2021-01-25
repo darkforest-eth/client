@@ -15,6 +15,7 @@ import {
 } from '../components/Text';
 import {
   ExploredChunkData,
+  isLocatable,
   LocatablePlanet,
   Planet,
 } from '../_types/global/GlobalTypes';
@@ -35,6 +36,7 @@ export enum NotificationType {
   FoundComet,
   FoundArtifact,
   FoundBiome,
+  ReceivedPlanet,
 }
 
 export type NotificationInfo = {
@@ -266,6 +268,17 @@ class NotificationManager extends EventEmitter {
         Your xDAI account is out of balance!
         <br />
         Click <FAQ04Link>here</FAQ04Link> to learn how to get more.
+      </span>
+    );
+  }
+
+  receivedPlanet(planet: Planet) {
+    this.notify(
+      NotificationType.ReceivedPlanet,
+      <span>
+        Someone just sent you their planet: <PlanetNameLink planet={planet} />.{' '}
+        {!isLocatable(planet) &&
+          "You'll need to ask the person who sent it for its location."}
       </span>
     );
   }

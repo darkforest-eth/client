@@ -11,16 +11,16 @@ import Viewport from '../../board/Viewport';
 import { ProcgenUtils } from '../../../utils/ProcgenUtils';
 
 const { white, gold } = engineConsts.colors;
+const { enemyA, mineA } = engineConsts.colors.voyage;
 
 function getVoyageColor(fromPlanet: Planet, toPlanet: Planet, isMine: boolean) {
-  const { enemy, mine } = engineConsts.colors.voyage;
   if (isMine) {
-    return mine;
+    return mineA;
   }
 
   const isAttack = hasOwner(toPlanet) && fromPlanet.owner !== toPlanet.owner;
   if (isAttack) {
-    return enemy;
+    return enemyA;
   }
 
   return ProcgenUtils.getOwnerColorVec(fromPlanet);
@@ -55,13 +55,14 @@ export default class VoyageRenderManager {
       const now = nowMs / 1000;
       const timeLeft = voyage.arrivalTime - now;
       const radius = (timeLeft * fromPlanet.speed) / 100;
-      const { mine, enemy } = engineConsts.colors.voyage;
-      const color = myMove ? mine : enemy;
-      cR.queueCircleWorld(toLoc.coords, radius, [...color, 255], 0.7, 1, true);
+      const color = myMove ? mineA : enemyA;
+      color[3] = 255;
+
+      cR.queueCircleWorld(toLoc.coords, radius, color, 0.7, 1, true);
       tR.queueTextWorld(
         `${Math.floor(timeLeft)}s`,
         { x: toLoc.coords.x, y: toLoc.coords.y + radius * 1.1 },
-        [...color, 255]
+        color
       );
     } else if (fromLoc && fromPlanet && toLoc && toPlanet) {
       // know source and destination locations
@@ -94,7 +95,8 @@ export default class VoyageRenderManager {
         alpha = (dist / 300) * 255;
       }
 
-      cR.queueCircleWorldCenterOnly(shipsLocation, 4, [...voyageColor, alpha]);
+      voyageColor[3] = alpha;
+      cR.queueCircleWorldCenterOnly(shipsLocation, 4, voyageColor);
 
       // queue text
       tR.queueTextWorld(

@@ -13,19 +13,12 @@ import {
   BeltProps,
 } from '../programs/BeltProgram';
 import { RGBVec } from '../utils/EngineTypes';
-import {
-  getNow,
-  getPlanetZIndex,
-  makeQuadBuffered,
-  makeQuadVec2Buffered,
-  rotateQuad,
-  translateQuad,
-} from '../utils/EngineUtils';
+import EngineUtils from '../utils/EngineUtils';
 import AttribManager from '../webgl/AttribManager';
-import WebGLManager from '../webgl/WebGLManager';
+import { GameGLManager } from '../webgl/GameGLManager';
 
 export default class BeltRenderer {
-  manager: WebGLManager;
+  manager: GameGLManager;
   program: WebGLProgram;
 
   posA: AttribManager;
@@ -46,7 +39,7 @@ export default class BeltRenderer {
 
   time: number;
 
-  constructor(manager: WebGLManager) {
+  constructor(manager: GameGLManager) {
     this.time = 0;
     autoBind(this);
     this.viewport = Viewport.getInstance();
@@ -113,8 +106,8 @@ export default class BeltRenderer {
     props: BeltProps = [10, 1, 1, 0.05],
     angle = 0
   ) {
-    makeQuadVec2Buffered(this.topRectPosBuffer, -l, l, l, 0);
-    makeQuadVec2Buffered(this.botRectPosBuffer, -l, 0, l, -l);
+    EngineUtils.makeQuadVec2Buffered(this.topRectPosBuffer, -l, l, l, 0);
+    EngineUtils.makeQuadVec2Buffered(this.botRectPosBuffer, -l, 0, l, -l);
     const sideLength = l * radius;
 
     const d1: [number, number] = [-sideLength, -sideLength];
@@ -126,9 +119,9 @@ export default class BeltRenderer {
     const y2 = d2[1];
 
     // buffer top half
-    makeQuadBuffered(this.posBuffer, x1, y1, x2, 0, z + delZ);
-    rotateQuad(this.posBuffer, angle);
-    translateQuad(this.posBuffer, [center.x, center.y]);
+    EngineUtils.makeQuadBuffered(this.posBuffer, x1, y1, x2, 0, z + delZ);
+    EngineUtils.rotateQuad(this.posBuffer, angle);
+    EngineUtils.translateQuad(this.posBuffer, [center.x, center.y]);
     this.posA.setVertex(this.posBuffer, this.verts);
     this.rectPosA.setVertex(this.topRectPosBuffer, this.verts);
 
@@ -139,9 +132,9 @@ export default class BeltRenderer {
     this.verts += 6;
 
     // buffer bottom half
-    makeQuadBuffered(this.posBuffer, x1, 0, x2, y2, z - delZ);
-    rotateQuad(this.posBuffer, angle);
-    translateQuad(this.posBuffer, [center.x, center.y]);
+    EngineUtils.makeQuadBuffered(this.posBuffer, x1, 0, x2, y2, z - delZ);
+    EngineUtils.rotateQuad(this.posBuffer, angle);
+    EngineUtils.translateQuad(this.posBuffer, [center.x, center.y]);
     this.posA.setVertex(this.posBuffer, this.verts);
     this.rectPosA.setVertex(this.botRectPosBuffer, this.verts);
 
@@ -163,14 +156,14 @@ export default class BeltRenderer {
     const delZ = 0.01 * (beltIdx + 1);
 
     const props = propsFromIdx(beltIdx);
-    const z = getPlanetZIndex(planet);
+    const z = EngineUtils.getPlanetZIndex(planet);
     const l = 3.0 + beltIdx * 1.5;
 
     this.queueBeltWorld(centerW, radiusW, color, l, z, delZ, props, angle);
   }
 
   flush() {
-    this.time = getNow();
+    this.time = EngineUtils.getNow();
 
     if (this.verts === 0) return;
 

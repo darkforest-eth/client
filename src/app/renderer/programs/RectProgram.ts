@@ -1,5 +1,6 @@
 import { AttribProps, AttribType, ProgramClosure } from '../utils/EngineTypes';
-import { glsl, programFromSources } from '../utils/EngineUtils';
+import { glsl } from '../utils/EngineUtils';
+import ProgramUtils from '../webgl/ProgramUtils';
 
 const a = {
   position: 'a_position',
@@ -105,7 +106,7 @@ export const getRectProgram: ProgramClosure = (() => {
 
   return (gl: WebGL2RenderingContext) => {
     if (program === null) {
-      program = programFromSources(gl, rectVert, rectFrag);
+      program = ProgramUtils.programFromSources(gl, rectVert, rectFrag);
       if (program === null) throw 'error compiling rect program';
     }
 

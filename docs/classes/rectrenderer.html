@@ -1,0 +1,543 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>RectRenderer | client</title>
+	<meta name="description" content="Documentation for client">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">client</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="rectrenderer.html">RectRenderer</a>
+				</li>
+			</ul>
+			<h1>Class RectRenderer</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">RectRenderer</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="rectrenderer.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rectrenderer.html#colora" class="tsd-kind-icon">colorA</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rectrenderer.html#gl" class="tsd-kind-icon">gl</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rectrenderer.html#glmanager" class="tsd-kind-icon">gl<wbr>Manager</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rectrenderer.html#matrixuloc" class="tsd-kind-icon">matrixULoc</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rectrenderer.html#posa" class="tsd-kind-icon">posA</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rectrenderer.html#program" class="tsd-kind-icon">program</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rectrenderer.html#quad2buffer" class="tsd-kind-icon">quad2<wbr>Buffer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rectrenderer.html#quad3buffer" class="tsd-kind-icon">quad3<wbr>Buffer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rectrenderer.html#rectposa" class="tsd-kind-icon">rect<wbr>PosA</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rectrenderer.html#strokexa" class="tsd-kind-icon">strokeXA</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rectrenderer.html#strokeya" class="tsd-kind-icon">strokeYA</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="rectrenderer.html#verts" class="tsd-kind-icon">verts</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rectrenderer.html#beginframe" class="tsd-kind-icon">begin<wbr>Frame</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rectrenderer.html#flush" class="tsd-kind-icon">flush</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rectrenderer.html#queuerect" class="tsd-kind-icon">queue<wbr>Rect</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rectrenderer.html#queuerectcenterworld" class="tsd-kind-icon">queue<wbr>Rect<wbr>Center<wbr>World</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="rectrenderer.html#queuerectworld" class="tsd-kind-icon">queue<wbr>Rect<wbr>World</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Rect<wbr>Renderer<span class="tsd-signature-symbol">(</span>glManager<span class="tsd-signature-symbol">: </span><a href="gameglmanager.html" class="tsd-signature-type">GameGLManager</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="rectrenderer.html" class="tsd-signature-type">RectRenderer</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L34">src/app/renderer/entities/RectRenderer.ts:34</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>glManager: <a href="gameglmanager.html" class="tsd-signature-type">GameGLManager</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="rectrenderer.html" class="tsd-signature-type">RectRenderer</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="colora" class="tsd-anchor"></a>
+					<h3>colorA</h3>
+					<div class="tsd-signature tsd-kind-icon">colorA<span class="tsd-signature-symbol">:</span> <a href="attribmanager.html" class="tsd-signature-type">AttribManager</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L24">src/app/renderer/entities/RectRenderer.ts:24</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="gl" class="tsd-anchor"></a>
+					<h3>gl</h3>
+					<div class="tsd-signature tsd-kind-icon">gl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGL2RenderingContext</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L34">src/app/renderer/entities/RectRenderer.ts:34</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="glmanager" class="tsd-anchor"></a>
+					<h3>gl<wbr>Manager</h3>
+					<div class="tsd-signature tsd-kind-icon">gl<wbr>Manager<span class="tsd-signature-symbol">:</span> <a href="gameglmanager.html" class="tsd-signature-type">GameGLManager</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L19">src/app/renderer/entities/RectRenderer.ts:19</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="matrixuloc" class="tsd-anchor"></a>
+					<h3>matrixULoc</h3>
+					<div class="tsd-signature tsd-kind-icon">matrixULoc<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGLUniformLocation</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L29">src/app/renderer/entities/RectRenderer.ts:29</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="posa" class="tsd-anchor"></a>
+					<h3>posA</h3>
+					<div class="tsd-signature tsd-kind-icon">posA<span class="tsd-signature-symbol">:</span> <a href="attribmanager.html" class="tsd-signature-type">AttribManager</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L23">src/app/renderer/entities/RectRenderer.ts:23</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="program" class="tsd-anchor"></a>
+					<h3>program</h3>
+					<div class="tsd-signature tsd-kind-icon">program<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGLProgram</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L22">src/app/renderer/entities/RectRenderer.ts:22</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="quad2buffer" class="tsd-anchor"></a>
+					<h3>quad2<wbr>Buffer</h3>
+					<div class="tsd-signature tsd-kind-icon">quad2<wbr>Buffer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L32">src/app/renderer/entities/RectRenderer.ts:32</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="quad3buffer" class="tsd-anchor"></a>
+					<h3>quad3<wbr>Buffer</h3>
+					<div class="tsd-signature tsd-kind-icon">quad3<wbr>Buffer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L31">src/app/renderer/entities/RectRenderer.ts:31</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="rectposa" class="tsd-anchor"></a>
+					<h3>rect<wbr>PosA</h3>
+					<div class="tsd-signature tsd-kind-icon">rect<wbr>PosA<span class="tsd-signature-symbol">:</span> <a href="attribmanager.html" class="tsd-signature-type">AttribManager</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L25">src/app/renderer/entities/RectRenderer.ts:25</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="strokexa" class="tsd-anchor"></a>
+					<h3>strokeXA</h3>
+					<div class="tsd-signature tsd-kind-icon">strokeXA<span class="tsd-signature-symbol">:</span> <a href="attribmanager.html" class="tsd-signature-type">AttribManager</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L26">src/app/renderer/entities/RectRenderer.ts:26</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="strokeya" class="tsd-anchor"></a>
+					<h3>strokeYA</h3>
+					<div class="tsd-signature tsd-kind-icon">strokeYA<span class="tsd-signature-symbol">:</span> <a href="attribmanager.html" class="tsd-signature-type">AttribManager</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L27">src/app/renderer/entities/RectRenderer.ts:27</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="verts" class="tsd-anchor"></a>
+					<h3>verts</h3>
+					<div class="tsd-signature tsd-kind-icon">verts<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L20">src/app/renderer/entities/RectRenderer.ts:20</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="beginframe" class="tsd-anchor"></a>
+					<h3>begin<wbr>Frame</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">begin<wbr>Frame<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L65">src/app/renderer/entities/RectRenderer.ts:65</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="flush" class="tsd-anchor"></a>
+					<h3>flush</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">flush<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L126">src/app/renderer/entities/RectRenderer.ts:126</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="queuerect" class="tsd-anchor"></a>
+					<h3>queue<wbr>Rect</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">queue<wbr>Rect<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span>, width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, color<span class="tsd-signature-symbol">?: </span><a href="../globals.html#rgbvec" class="tsd-signature-type">RGBVec</a>, stroke<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, zIdx<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L69">src/app/renderer/entities/RectRenderer.ts:69</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<h5>width: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>height: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> color: <a href="../globals.html#rgbvec" class="tsd-signature-type">RGBVec</a><span class="tsd-signature-symbol"> = [255, 0, 0]</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> stroke: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = -1</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> zIdx: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = RenderZIndex.DEFAULT</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="queuerectcenterworld" class="tsd-anchor"></a>
+					<h3>queue<wbr>Rect<wbr>Center<wbr>World</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">queue<wbr>Rect<wbr>Center<wbr>World<span class="tsd-signature-symbol">(</span>center<span class="tsd-signature-symbol">: </span><a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a>, width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, color<span class="tsd-signature-symbol">?: </span><a href="../globals.html#rgbvec" class="tsd-signature-type">RGBVec</a>, stroke<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, zIdx<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L110">src/app/renderer/entities/RectRenderer.ts:110</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>center: <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a></h5>
+								</li>
+								<li>
+									<h5>width: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>height: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> color: <a href="../globals.html#rgbvec" class="tsd-signature-type">RGBVec</a><span class="tsd-signature-symbol"> = [255, 0, 0]</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> stroke: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = -1</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> zIdx: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = RenderZIndex.DEFAULT</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="queuerectworld" class="tsd-anchor"></a>
+					<h3>queue<wbr>Rect<wbr>World</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">queue<wbr>Rect<wbr>World<span class="tsd-signature-symbol">(</span>coords<span class="tsd-signature-symbol">: </span><a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a>, width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, color<span class="tsd-signature-symbol">?: </span><a href="../globals.html#rgbvec" class="tsd-signature-type">RGBVec</a>, stroke<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, zIdx<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/e561185/client/src/app/renderer/entities/RectRenderer.ts#L94">src/app/renderer/entities/RectRenderer.ts:94</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>coords: <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a></h5>
+								</li>
+								<li>
+									<h5>width: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>height: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> color: <a href="../globals.html#rgbvec" class="tsd-signature-type">RGBVec</a><span class="tsd-signature-symbol"> = [255, 0, 0]</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> stroke: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = -1</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> zIdx: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = RenderZIndex.DEFAULT</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
+						<a href="rectrenderer.html" class="tsd-kind-icon">Rect<wbr>Renderer</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="rectrenderer.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rectrenderer.html#colora" class="tsd-kind-icon">colorA</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rectrenderer.html#gl" class="tsd-kind-icon">gl</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rectrenderer.html#glmanager" class="tsd-kind-icon">gl<wbr>Manager</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rectrenderer.html#matrixuloc" class="tsd-kind-icon">matrixULoc</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rectrenderer.html#posa" class="tsd-kind-icon">posA</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rectrenderer.html#program" class="tsd-kind-icon">program</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rectrenderer.html#quad2buffer" class="tsd-kind-icon">quad2<wbr>Buffer</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rectrenderer.html#quad3buffer" class="tsd-kind-icon">quad3<wbr>Buffer</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rectrenderer.html#rectposa" class="tsd-kind-icon">rect<wbr>PosA</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rectrenderer.html#strokexa" class="tsd-kind-icon">strokeXA</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rectrenderer.html#strokeya" class="tsd-kind-icon">strokeYA</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="rectrenderer.html#verts" class="tsd-kind-icon">verts</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="rectrenderer.html#beginframe" class="tsd-kind-icon">begin<wbr>Frame</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="rectrenderer.html#flush" class="tsd-kind-icon">flush</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="rectrenderer.html#queuerect" class="tsd-kind-icon">queue<wbr>Rect</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="rectrenderer.html#queuerectcenterworld" class="tsd-kind-icon">queue<wbr>Rect<wbr>Center<wbr>World</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="rectrenderer.html#queuerectworld" class="tsd-kind-icon">queue<wbr>Rect<wbr>World</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

@@ -368,7 +368,7 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
               <br />
               <Sub>
                 (Rank{' '}
-                <TooltipTrigger needsShift name={TooltipName.Upgrades}>
+                <TooltipTrigger needsCtrl name={TooltipName.Upgrades}>
                   {getRank()}
                 </TooltipTrigger>
                 )
@@ -382,7 +382,7 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
               <br />
               <Sub>
                 (Rank{' '}
-                <TooltipTrigger needsShift name={TooltipName.Upgrades}>
+                <TooltipTrigger needsCtrl name={TooltipName.Upgrades}>
                   {getRankFuture()}
                 </TooltipTrigger>
                 )

@@ -8,12 +8,12 @@ import {
   lineDistProps,
   linePosProps,
 } from '../programs/LineProgram';
-import { RenderZIndex, RGBVec } from '../utils/EngineTypes';
+import { RenderZIndex, RGBAVec } from '../utils/EngineTypes';
 import AttribManager from '../webgl/AttribManager';
-import WebGLManager from '../webgl/WebGLManager';
+import { GameGLManager } from '../webgl/GameGLManager';
 
 export default class LineRenderer {
-  glManager: WebGLManager;
+  glManager: GameGLManager;
   verts: number;
 
   program: WebGLProgram;
@@ -25,7 +25,7 @@ export default class LineRenderer {
 
   gl: WebGL2RenderingContext;
 
-  constructor(glManager: WebGLManager) {
+  constructor(glManager: GameGLManager) {
     autoBind(this);
 
     this.glManager = glManager;
@@ -68,7 +68,7 @@ export default class LineRenderer {
   queueLine(
     start: CanvasCoords,
     end: CanvasCoords,
-    color: RGBVec = [255, 0, 0],
+    color: RGBAVec = [255, 0, 0, 255],
     width = 1,
     zIdx: number = RenderZIndex.DEFAULT,
     dashed = false
@@ -91,7 +91,11 @@ export default class LineRenderer {
         ],
         this.verts
       );
-      this.colorA.setVertex([...color, ...color], this.verts);
+
+      this.colorA.setVertex(
+        [color[0], color[1], color[2], color[0], color[1], color[2]],
+        this.verts
+      );
       this.distA.setVertex([0, dist], this.verts);
       this.verts += 2;
     }
@@ -100,7 +104,7 @@ export default class LineRenderer {
   queueLineWorld(
     start: WorldCoords,
     end: WorldCoords,
-    color: RGBVec = [255, 0, 0],
+    color: RGBAVec = [255, 0, 0, 255],
     width = 1,
     zIdx: number = RenderZIndex.DEFAULT,
     dashed = false
@@ -115,7 +119,7 @@ export default class LineRenderer {
     center: WorldCoords,
     width: number, // worldcoords
     height: number,
-    color: RGBVec = [255, 0, 0],
+    color: RGBAVec = [255, 0, 0, 255],
     zIdx: number = RenderZIndex.DEFAULT,
     weight = 2
   ) {
@@ -134,7 +138,7 @@ export default class LineRenderer {
     y: number,
     width: number,
     height: number,
-    color: RGBVec = [255, 0, 0],
+    color: RGBAVec = [255, 0, 0, 255],
     zIdx: number = RenderZIndex.DEFAULT,
     weight = 1
   ) {

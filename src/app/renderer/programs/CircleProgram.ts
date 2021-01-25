@@ -1,5 +1,6 @@
 import { AttribProps, AttribType, ProgramClosure } from '../utils/EngineTypes';
-import { glsl, programFromSources } from '../utils/EngineUtils';
+import { glsl } from '../utils/EngineUtils';
+import ProgramUtils from '../webgl/ProgramUtils';
 
 const a = {
   position: 'a_position', // as [posx, posy, rectposx, rectposy]
@@ -143,7 +144,7 @@ export const getCircleProgram: ProgramClosure = (() => {
 
   return (gl: WebGL2RenderingContext) => {
     if (program === null) {
-      program = programFromSources(gl, circVert, circFrag);
+      program = ProgramUtils.programFromSources(gl, circVert, circFrag);
       if (program === null) throw 'error compiling circle program';
     }
 

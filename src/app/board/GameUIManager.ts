@@ -503,6 +503,10 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     return this.gameManager.hasMinedChunk(chunkLocation);
   }
 
+  getChunk(chunkFootprint: ChunkFootprint): ExploredChunkData | null {
+    return this.gameManager.getChunk(chunkFootprint);
+  }
+
   spaceTypeFromPerlin(perlin: number): SpaceType {
     return this.gameManager.spaceTypeFromPerlin(perlin);
   }

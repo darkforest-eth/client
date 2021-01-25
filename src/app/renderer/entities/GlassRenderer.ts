@@ -6,18 +6,14 @@ import {
   glassPosProps,
   glassTexProps,
 } from '../programs/GlassProgram';
-import {
-  fillTexture,
-  makeQuadVec2,
-  makeQuadVec2Buffered,
-} from '../utils/EngineUtils';
+import EngineUtils from '../utils/EngineUtils';
 import { glassSprite, loadSprite } from '../utils/TextureManager';
 import AttribManager from '../webgl/AttribManager';
-import WebGLManager from '../webgl/WebGLManager';
+import { GameGLManager } from '../webgl/GameGLManager';
 
 // isn't used anywhere, mostly this is used for copy-pasting. later we will make it a proper class
 export class GlassRenderer {
-  manager: WebGLManager;
+  manager: GameGLManager;
   program: WebGLProgram;
 
   posA: AttribManager;
@@ -35,7 +31,7 @@ export class GlassRenderer {
 
   texIdx: number;
 
-  constructor(manager: WebGLManager) {
+  constructor(manager: GameGLManager) {
     autoBind(this);
 
     this.loaded = false;
@@ -59,7 +55,7 @@ export class GlassRenderer {
     }
 
     this.posBuffer = Array(6 * 2).fill(0);
-    this.texBuffer = makeQuadVec2(0, 1, 1, 0);
+    this.texBuffer = EngineUtils.makeQuadVec2(0, 1, 1, 0);
 
     this.beginFrame();
 
@@ -85,7 +81,7 @@ export class GlassRenderer {
     const texture = gl.createTexture();
     gl.activeTexture(gl.TEXTURE0 + texIdx);
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    fillTexture(gl);
+    EngineUtils.fillTexture(gl);
 
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
@@ -100,7 +96,7 @@ export class GlassRenderer {
   queueGlass({ x, y }: CanvasCoords) {
     if (!this.loaded) return;
 
-    makeQuadVec2Buffered(this.posBuffer, x, y, x + 16, y + 16);
+    EngineUtils.makeQuadVec2Buffered(this.posBuffer, x, y, x + 16, y + 16);
     this.posA.setVertex(this.posBuffer, this.verts);
     this.texA.setVertex(this.texBuffer, this.verts);
 

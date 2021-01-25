@@ -1,53 +1,31 @@
-import CanvasRenderer from '../CanvasRenderer';
+import autoBind from 'auto-bind';
 import { mat4 } from 'gl-matrix';
+import { RGBAVec } from '../utils/EngineTypes';
 
-export interface AbstractGLManager {
-  gl: WebGL2RenderingContext;
-  projectionMatrix: mat4;
-}
+export class WebGLManager {
+  public gl: WebGL2RenderingContext;
+  public projectionMatrix: mat4;
 
-export interface TextureGLManager extends AbstractGLManager {
-  gl: WebGL2RenderingContext;
-  projectionMatrix: mat4;
-  getTexIdx: () => number;
-}
-
-export default class WebGLManager implements TextureGLManager {
-  renderer: CanvasRenderer;
-  canvas: HTMLCanvasElement;
-  gl: WebGL2RenderingContext;
-
-  stencil: boolean;
-
-  projectionMatrix: mat4;
+  public canvas: HTMLCanvasElement;
 
   private texIdx = 0;
 
-  constructor(engine: CanvasRenderer, glCanvas: HTMLCanvasElement) {
-    this.renderer = engine;
-    this.canvas = glCanvas;
+  constructor(canvas: HTMLCanvasElement, attr?: WebGLContextAttributes) {
+    autoBind(this);
 
-    const gl = this.canvas.getContext('webgl2', { stencil: true });
+    this.canvas = canvas;
+    const gl = this.canvas.getContext('webgl2', attr);
     if (!gl) {
       console.error('error getting webgl2 context');
       return;
     }
     this.gl = gl;
 
-    this.stencil = false;
-
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
     this.projectionMatrix = mat4.create();
     this.setProjectionMatrix();
   }
 
-  public getTexIdx(): number {
-    return this.texIdx++;
-  }
-
-  setProjectionMatrix(): void {
+  public setProjectionMatrix(): void {
     const height = this.canvas.height;
     const width = this.canvas.width;
     const depth = 100; // arbitrary # which represents max zidx
@@ -65,45 +43,17 @@ export default class WebGLManager implements TextureGLManager {
     // the reason we don't put -1/depth is because it breaks RHR; we need to reverse all of our triangles
   }
 
-  // we'll need this code later for improved perlin
-  /*
-  setStencil(stencil: boolean) {
-    this.stencil = stencil;
-    if (stencil) this.gl.enable(this.gl.STENCIL_TEST);
-    else this.gl.disable(this.gl.STENCIL_TEST);
+  public clear(bits?: number, color?: RGBAVec) {
+    const { gl, canvas } = this;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+
+    if (color) gl.clearColor(...color);
+    else gl.clearColor(0, 0, 0, 0);
+
+    gl.clear(bits || gl.COLOR_BUFFER_BIT);
   }
 
-  private checkStencil(): boolean {
-    if (!this.stencil) {
-      console.error('stencil not enabled!');
-    }
-
-    return this.stencil;
-  }
-
-  startMasking() {
-    if (!this.checkStencil()) return;
-
-    const gl = this.gl;
-    gl.stencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE); // always update stencil
-    gl.stencilFunc(gl.ALWAYS, 1, 0xff); // everything passes stencil test
-    gl.stencilMask(0xff); // enable stencil writes
-  }
-
-  stopMasking() {
-    if (!this.checkStencil()) return;
-
-    const gl = this.gl;
-    gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP); // never update stencil
-    gl.stencilFunc(gl.EQUAL, 1, 0xff); // only pass if eq
-    gl.stencilMask(0x00); // disable stencil writes
-  }
-  */
-
-  clear() {
-    const gl = this.gl;
-    gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-    gl.clearColor(0.3, 0.3, 0.35, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+  public getTexIdx(): number {
+    return this.texIdx++;
   }
 }

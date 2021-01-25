@@ -1,0 +1,3402 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>client</title>
+	<meta name="description" content="Documentation for client">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">client</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>client</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#dark-forest-client" id="dark-forest-client" style="color: inherit; text-decoration: none;">
+					<h1>Dark Forest Client</h1>
+				</a>
+				<a href="#development-guide" id="development-guide" style="color: inherit; text-decoration: none;">
+					<h2>Development Guide</h2>
+				</a>
+				<a href="#installing-core-dependencies" id="installing-core-dependencies" style="color: inherit; text-decoration: none;">
+					<h3>Installing Core Dependencies</h3>
+				</a>
+				<ul>
+					<li>Node (v14.15.x)</li>
+					<li>Yarn (Javascript Package Manager)</li>
+					<li>Ganache CLI</li>
+				</ul>
+				<a href="#installing-the-correct-node-version-using-nvm" id="installing-the-correct-node-version-using-nvm" style="color: inherit; text-decoration: none;">
+					<h4>Installing The Correct Node Version Using NVM</h4>
+				</a>
+				<p>Dark Forest is built and tested using Node.js v14.15.x and might not run properly on other Node.js versions. We recommend using NVM to switch between multiple Node.js version on your machine.</p>
+				<pre><code>curl -o- https:<span class="hljs-regexp">//</span>raw.githubusercontent.com<span class="hljs-regexp">/nvm-sh/</span>nvm<span class="hljs-regexp">/v0.35.3/i</span>nstall.sh | bash
+nvm install</code></pre>
+				<p>After the installation is finished, you can run <code>node --version</code> to verify that you are running v14.15.x</p>
+				<a href="#installing-yarn-amp-other-dev-dependencies" id="installing-yarn-amp-other-dev-dependencies" style="color: inherit; text-decoration: none;">
+					<h4>Installing Yarn &amp; Other Dev Dependencies</h4>
+				</a>
+				<p>Refer to <a href="https://classic.yarnpkg.com/en/docs/install">Yarn&#39;s official documentation</a> for the installation guide.</p>
+				<p>After you have Yarn installed, run the following commands in the root director install the remaining dev depencies:</p>
+				<pre><code>yarn <span class="hljs-meta">global</span> <span class="hljs-keyword">add</span> ganache-<span class="hljs-keyword">cli</span>
+yarn install</code></pre>
+				<a href="#client-development-setup" id="client-development-setup" style="color: inherit; text-decoration: none;">
+					<h3>Client Development Setup</h3>
+				</a>
+				<p>All of our client related code are located in the <code>/client</code> directory.</p>
+				<p>Currently, after following the setup below, you will be able to have a locally running client that will point towards the current playtest contract on Ropsten. The production contract address is stored in <code>/client/src/utils/prod_contract_addr.ts</code>.</p>
+				<p><strong>Navigate to the <code>/client</code> folder and run the following commands:</strong></p>
+				<pre><code>yarn install
+yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</span></code></pre>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_snarkjs_.html">&quot;snarkjs&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_worker_loader___.html">&quot;worker-<wbr>loader!*&quot;</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="modules/__global.html">__global</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="enums/artifactrarity.html" class="tsd-kind-icon">Artifact<wbr>Rarity</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/artifacttype.html" class="tsd-kind-icon">Artifact<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/attribtype.html" class="tsd-kind-icon">Attrib<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/biome.html" class="tsd-kind-icon">Biome</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/columns.html" class="tsd-kind-icon">Columns</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/contextmenutype.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/contractevent.html" class="tsd-kind-icon">Contract<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/contractsapievent.html" class="tsd-kind-icon">ContractsAPIEvent</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/cursorstate.html" class="tsd-kind-icon">Cursor<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/dbactiontype.html" class="tsd-kind-icon">DBAction<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/emailctamode.html" class="tsd-kind-icon">EmailCTAMode</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/emailresponse.html" class="tsd-kind-icon">Email<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/ethtxstatus.html" class="tsd-kind-icon">Eth<wbr>TxStatus</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/ethtxtype.html" class="tsd-kind-icon">Eth<wbr>TxType</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/gamemanagerevent.html" class="tsd-kind-icon">Game<wbr>Manager<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/gameuimanagerevent.html" class="tsd-kind-icon">GameUIManager<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/gamewindowzindex.html" class="tsd-kind-icon">Game<wbr>WindowZIndex</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/hattype.html" class="tsd-kind-icon">Hat<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/incompatibility.html" class="tsd-kind-icon">Incompatibility</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/initargidxs.html" class="tsd-kind-icon">Init<wbr>Arg<wbr>Idxs</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/initrenderstate.html" class="tsd-kind-icon">Init<wbr>Render<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/initstate.html" class="tsd-kind-icon">Init<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/landingpagezindex.html" class="tsd-kind-icon">Landing<wbr>PageZIndex</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/minermanagerevent.html" class="tsd-kind-icon">Miner<wbr>Manager<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/miningpatterntype.html" class="tsd-kind-icon">Mining<wbr>Pattern<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/mockchainevents.html" class="tsd-kind-icon">Mockchain<wbr>Events</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/mockchainresponsetype.html" class="tsd-kind-icon">Mockchain<wbr>Response<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/modalname.html" class="tsd-kind-icon">Modal<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/modalstate.html" class="tsd-kind-icon">Modal<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/moveargidxs.html" class="tsd-kind-icon">Move<wbr>Arg<wbr>Idxs</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/notificationmanagerevent.html" class="tsd-kind-icon">Notification<wbr>Manager<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/notificationtype.html" class="tsd-kind-icon">Notification<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/objectstore.html" class="tsd-kind-icon">Object<wbr>Store</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/onboardstate.html" class="tsd-kind-icon">Onboard<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/planeteventtype.html" class="tsd-kind-icon">Planet<wbr>Event<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/planetlevel.html" class="tsd-kind-icon">Planet<wbr>Level</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/planetresource.html" class="tsd-kind-icon">Planet<wbr>Resource</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/previewtype.html" class="tsd-kind-icon">Preview<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/renderzindex.html" class="tsd-kind-icon">RenderZIndex</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/singleplanetdatastoreevent.html" class="tsd-kind-icon">Single<wbr>Planet<wbr>Data<wbr>Store<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/spacetype.html" class="tsd-kind-icon">Space<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/statidx.html" class="tsd-kind-icon">Stat<wbr>Idx</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/terminalevent.html" class="tsd-kind-icon">Terminal<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/terminalprompttype.html" class="tsd-kind-icon">Terminal<wbr>Prompt<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/terminaltextstyle.html" class="tsd-kind-icon">Terminal<wbr>Text<wbr>Style</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/textalign.html" class="tsd-kind-icon">Text<wbr>Align</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/textanchor.html" class="tsd-kind-icon">Text<wbr>Anchor</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/tooltipname.html" class="tsd-kind-icon">Tooltip<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/tutorialmanagerevent.html" class="tsd-kind-icon">Tutorial<wbr>Manager<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/tutorialstate.html" class="tsd-kind-icon">Tutorial<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/uidatakey.html" class="tsd-kind-icon">UIData<wbr>Key</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/uiemitterevent.html" class="tsd-kind-icon">UIEmitter<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/upgradeargidxs.html" class="tsd-kind-icon">Upgrade<wbr>Arg<wbr>Idxs</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/upgradebranchname.html" class="tsd-kind-icon">Upgrade<wbr>Branch<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/windowmanagerevent.html" class="tsd-kind-icon">Window<wbr>Manager<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/zkargidx.html" class="tsd-kind-icon">ZKArg<wbr>Idx</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/artifactdetailsrenderer.html" class="tsd-kind-icon">Artifact<wbr>Details<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/artifactrenderer.html" class="tsd-kind-icon">Artifact<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/asteroidrenderer.html" class="tsd-kind-icon">Asteroid<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/attribarray.html" class="tsd-kind-icon">Attrib<wbr>Array</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/attribmanager.html" class="tsd-kind-icon">Attrib<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/backgroundrenderer.html" class="tsd-kind-icon">Background<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/beltrenderer.html" class="tsd-kind-icon">Belt<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/canvasmanager.html" class="tsd-kind-icon">Canvas<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/canvasrenderer.html" class="tsd-kind-icon">Canvas<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/checkedtypeutils.html" class="tsd-kind-icon">Checked<wbr>Type<wbr>Utils</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/circlerenderer.html" class="tsd-kind-icon">Circle<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/contractsapi.html" class="tsd-kind-icon">ContractsAPI</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/coordstext.html" class="tsd-kind-icon">Coords<wbr>Text</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/engineutils.html" class="tsd-kind-icon">Engine<wbr>Utils</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/ethconnection.html" class="tsd-kind-icon">Eth<wbr>Connection</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/ethdecoders.html" class="tsd-kind-icon">Eth<wbr>Decoders</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/eventlogger.html" class="tsd-kind-icon">Event<wbr>Logger</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/exploredchunkdata.html" class="tsd-kind-icon">Explored<wbr>Chunk<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/feistelstate.html" class="tsd-kind-icon">Feistel<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/gameentitymemorystore.html" class="tsd-kind-icon">Game<wbr>Entity<wbr>Memory<wbr>Store</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/gameglmanager.html" class="tsd-kind-icon">GameGLManager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/gamemanager.html" class="tsd-kind-icon">Game<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/gameuimanager.html" class="tsd-kind-icon">GameUIManager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/genericrenderer.html" class="tsd-kind-icon">Generic<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/gifrenderer.html" class="tsd-kind-icon">Gif<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/glassrenderer.html" class="tsd-kind-icon">Glass<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/homeplanetminerchunkstore.html" class="tsd-kind-icon">Home<wbr>Planet<wbr>Miner<wbr>Chunk<wbr>Store</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/landingpagecanvasrenderer.html" class="tsd-kind-icon">Landing<wbr>Page<wbr>Canvas<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/linerenderer.html" class="tsd-kind-icon">Line<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/minerenderer.html" class="tsd-kind-icon">Mine<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/minermanager.html" class="tsd-kind-icon">Miner<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/mockcontract.html" class="tsd-kind-icon">Mock<wbr>Contract</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/mockprovider.html" class="tsd-kind-icon">Mock<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/mocksigner.html" class="tsd-kind-icon">Mock<wbr>Signer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/noise.html" class="tsd-kind-icon">Noise</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/notificationmanager.html" class="tsd-kind-icon">Notification<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/ownedpluginview.html" class="tsd-kind-icon">Owned<wbr>Plugin<wbr>View</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/pathrenderer.html" class="tsd-kind-icon">Path<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/persistentchunkstore.html" class="tsd-kind-icon">Persistent<wbr>Chunk<wbr>Store</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/planetpreviewrenderer.html" class="tsd-kind-icon">Planet<wbr>Preview<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/planetrendermanager.html" class="tsd-kind-icon">Planet<wbr>Render<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/planetrenderer.html" class="tsd-kind-icon">Planet<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/planetscaperenderer.html" class="tsd-kind-icon">Planetscape<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/pluginhelpers.html" class="tsd-kind-icon">Plugin<wbr>Helpers</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/pluginmanager.html" class="tsd-kind-icon">Plugin<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/popupmanager.html" class="tsd-kind-icon">Popup<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/processinfo.html" class="tsd-kind-icon">Process<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/procgenutils.html" class="tsd-kind-icon">Procgen<wbr>Utils</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/programutils.html" class="tsd-kind-icon">Program<wbr>Utils</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/rectrenderer.html" class="tsd-kind-icon">Rect<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/shadermixins.html" class="tsd-kind-icon">Shader<wbr>Mixins</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/singleplanetdatastore.html" class="tsd-kind-icon">Single<wbr>Planet<wbr>Data<wbr>Store</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/snarkargshelper.html" class="tsd-kind-icon">Snark<wbr>Args<wbr>Helper</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/snarkproverqueue.html" class="tsd-kind-icon">Snark<wbr>Prover<wbr>Queue</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/spiralpattern.html" class="tsd-kind-icon">Spiral<wbr>Pattern</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/spriterenderer.html" class="tsd-kind-icon">Sprite<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/terminalemitter.html" class="tsd-kind-icon">Terminal<wbr>Emitter</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/textrenderer.html" class="tsd-kind-icon">Text<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/tutorialmanager.html" class="tsd-kind-icon">Tutorial<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/txexecutor.html" class="tsd-kind-icon">Tx<wbr>Executor</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/uiemitter.html" class="tsd-kind-icon">UIEmitter</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/uirendermanager.html" class="tsd-kind-icon">UIRender<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/uistatestoragemanager.html" class="tsd-kind-icon">UIState<wbr>Storage<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/viewport.html" class="tsd-kind-icon">Viewport</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/voyagerendermanager.html" class="tsd-kind-icon">Voyage<wbr>Render<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/webglmanager.html" class="tsd-kind-icon">WebGLManager</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/windowmanager.html" class="tsd-kind-icon">Window<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/abstractcontract.html" class="tsd-kind-icon">Abstract<wbr>Contract</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/abstractgamemanager.html" class="tsd-kind-icon">Abstract<wbr>Game<wbr>Manager</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/abstractprovider.html" class="tsd-kind-icon">Abstract<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/abstractsigner.html" class="tsd-kind-icon">Abstract<wbr>Signer</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/abstractuimanager.html" class="tsd-kind-icon">AbstractUIManager</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/arrivalwithtimer.html" class="tsd-kind-icon">Arrival<wbr>With<wbr>Timer</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/attributes.html" class="tsd-kind-icon">Attributes</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/buttonprops.html" class="tsd-kind-icon">Button<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/canvascoords.html" class="tsd-kind-icon">Canvas<wbr>Coords</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/chunkfootprint.html" class="tsd-kind-icon">Chunk<wbr>Footprint</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/chunkstore.html" class="tsd-kind-icon">Chunk<wbr>Store</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/contractconstants.html" class="tsd-kind-icon">Contract<wbr>Constants</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/coordinates.html" class="tsd-kind-icon">Coordinates</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/cornerprops.html" class="tsd-kind-icon">Corner<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/dbaction.html" class="tsd-kind-icon">DBAction</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/gradientatpoint.html" class="tsd-kind-icon">Gradient<wbr>AtPoint</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/integervector.html" class="tsd-kind-icon">Integer<wbr>Vector</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/lsmchunkdata.html" class="tsd-kind-icon">LSMChunk<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/lsmloc.html" class="tsd-kind-icon">LSMLoc</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/linkprops.html" class="tsd-kind-icon">Link<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/location.html" class="tsd-kind-icon">Location</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/minerworkermessage.html" class="tsd-kind-icon">Miner<wbr>Worker<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/miningpattern.html" class="tsd-kind-icon">Mining<wbr>Pattern</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/mockchainresponse.html" class="tsd-kind-icon">Mockchain<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/pendingtransaction.html" class="tsd-kind-icon">Pending<wbr>Transaction</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/planetcosmeticinfo.html" class="tsd-kind-icon">Planet<wbr>Cosmetic<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/player.html" class="tsd-kind-icon">Player</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/pluginprocess.html" class="tsd-kind-icon">Plugin<wbr>Process</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/props.html" class="tsd-kind-icon">Props</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/queuedtxrequest.html" class="tsd-kind-icon">Queued<wbr>TxRequest</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/rawartifactdata.html" class="tsd-kind-icon">Raw<wbr>Artifact<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/rawartifactwithmetadata.html" class="tsd-kind-icon">Raw<wbr>Artifact<wbr>With<wbr>Metadata</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/rawplanetdata.html" class="tsd-kind-icon">Raw<wbr>Planet<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/rawplanetextendedinfo.html" class="tsd-kind-icon">Raw<wbr>Planet<wbr>Extended<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/serializedplugin.html" class="tsd-kind-icon">Serialized<wbr>Plugin</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/snarkjsproof.html" class="tsd-kind-icon">SnarkJSProof</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/snarkjsproofandsignals.html" class="tsd-kind-icon">SnarkJSProof<wbr>And<wbr>Signals</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/state.html" class="tsd-kind-icon">State</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/textprops.html" class="tsd-kind-icon">Text<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/typedbignum.html" class="tsd-kind-icon">Typed<wbr>Big<wbr>Num</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/uniforms.html" class="tsd-kind-icon">Uniforms</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/vector.html" class="tsd-kind-icon">Vector</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/web3object.html" class="tsd-kind-icon">Web3<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/windowethereumobject.html" class="tsd-kind-icon">Window<wbr>Ethereum<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/worldcoords.html" class="tsd-kind-icon">World<wbr>Coords</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#addresstwittermap" class="tsd-kind-icon">Address<wbr>Twitter<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#artifact" class="tsd-kind-icon">Artifact</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#artifacthooks" class="tsd-kind-icon">Artifact<wbr>Hooks</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#artifactid" class="tsd-kind-icon">Artifact<wbr>Id</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#artifactinfo" class="tsd-kind-icon">Artifact<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#asteroiduniforms" class="tsd-kind-icon">Asteroid<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#atlasinfo" class="tsd-kind-icon">Atlas<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#attribprops" class="tsd-kind-icon">Attrib<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#attributesetters" class="tsd-kind-icon">Attribute<wbr>Setters</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#beltprops" class="tsd-kind-icon">Belt<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#beltuniforms" class="tsd-kind-icon">Belt<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#biomeargs" class="tsd-kind-icon">Biome<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#biomeinfo" class="tsd-kind-icon">Biome<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#bonus" class="tsd-kind-icon">Bonus</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#branchhook" class="tsd-kind-icon">Branch<wbr>Hook</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#circleuniforms" class="tsd-kind-icon">Circle<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#clientmockchaindata" class="tsd-kind-icon">Client<wbr>Mockchain<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#compiledprogram" class="tsd-kind-icon">Compiled<wbr>Program</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#contractcallargs" class="tsd-kind-icon">Contract<wbr>Call<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#coords" class="tsd-kind-icon">Coords</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#coordsstring" class="tsd-kind-icon">Coords<wbr>String</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#dbtx" class="tsd-kind-icon">DBTx</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#datatype" class="tsd-kind-icon">Data<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#depositartifactargs" class="tsd-kind-icon">Deposit<wbr>Artifact<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#displaytype" class="tsd-kind-icon">Display<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#edge" class="tsd-kind-icon">Edge</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#ethaddress" class="tsd-kind-icon">Eth<wbr>Address</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#featurelist" class="tsd-kind-icon">Feature<wbr>List</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#findartifactinfo" class="tsd-kind-icon">Find<wbr>Artifact<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#fragmentdata" class="tsd-kind-icon">Fragment<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#glarray" class="tsd-kind-icon">GLArray</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#glarrayconstructor" class="tsd-kind-icon">GLArray<wbr>Constructor</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#genericprogramwithuniforms" class="tsd-kind-icon">Generic<wbr>Program<wbr>With<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#genericuniforms" class="tsd-kind-icon">Generic<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#glassprogramwithuniforms" class="tsd-kind-icon">Glass<wbr>Program<wbr>With<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#glassuniforms" class="tsd-kind-icon">Glass<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#glyphinfo" class="tsd-kind-icon">Glyph<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#hslvec" class="tsd-kind-icon">HSLVec</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#hashfn" class="tsd-kind-icon">Hash<wbr>Fn</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#hat" class="tsd-kind-icon">Hat</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#hook" class="tsd-kind-icon">Hook</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#idxwithrand" class="tsd-kind-icon">Idx<wbr>With<wbr>Rand</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#initinfo" class="tsd-kind-icon">Init<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#initializeplayerargs" class="tsd-kind-icon">Initialize<wbr>Player<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#lsmbucket" class="tsd-kind-icon">LSMBucket</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#landingwrapperprops" class="tsd-kind-icon">Landing<wbr>Wrapper<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#lineuniforms" class="tsd-kind-icon">Line<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#locatableplanet" class="tsd-kind-icon">Locatable<wbr>Planet</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#locationid" class="tsd-kind-icon">Location<wbr>Id</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#maskuniforms" class="tsd-kind-icon">Mask<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#memoizedcoordhashes" class="tsd-kind-icon">Memoized<wbr>Coord<wbr>Hashes</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#mineprogramwithuniforms" class="tsd-kind-icon">Mine<wbr>Program<wbr>With<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#mineuniforms" class="tsd-kind-icon">Mine<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#mockminedblock" class="tsd-kind-icon">Mock<wbr>Mined<wbr>Block</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#modalhook" class="tsd-kind-icon">Modal<wbr>Hook</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#modaliconstatefn" class="tsd-kind-icon">Modal<wbr>Icon<wbr>State<wbr>Fn</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#modalprops" class="tsd-kind-icon">Modal<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#mousepos" class="tsd-kind-icon">Mouse<wbr>Pos</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#moveargs" class="tsd-kind-icon">Move<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#moveinfo" class="tsd-kind-icon">Move<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#movesnarkargs" class="tsd-kind-icon">Move<wbr>Snark<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#nestedbigintarray" class="tsd-kind-icon">Nested<wbr>Big<wbr>Int<wbr>Array</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#nestedstringarray" class="tsd-kind-icon">Nested<wbr>String<wbr>Array</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#notificationinfo" class="tsd-kind-icon">Notification<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#numberhook" class="tsd-kind-icon">Number<wbr>Hook</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#openeditor" class="tsd-kind-icon">Open<wbr>Editor</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#paneprops" class="tsd-kind-icon">Pane<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#pathprogramwithuniforms" class="tsd-kind-icon">Path<wbr>Program<wbr>With<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#pixelcoords" class="tsd-kind-icon">Pixel<wbr>Coords</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#planet" class="tsd-kind-icon">Planet</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#planetprogramwithuniforms" class="tsd-kind-icon">Planet<wbr>Program<wbr>With<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#planetstatsinfo" class="tsd-kind-icon">Planet<wbr>Stats<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#planetuniforms" class="tsd-kind-icon">Planet<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#pluginid" class="tsd-kind-icon">Plugin<wbr>Id</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#point" class="tsd-kind-icon">Point</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#position" class="tsd-kind-icon">Position</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#programclosure" class="tsd-kind-icon">Program<wbr>Closure</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#programinfo" class="tsd-kind-icon">Program<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#queuedarrival" class="tsd-kind-icon">Queued<wbr>Arrival</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#quotedata" class="tsd-kind-icon">Quote<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#rgbavec" class="tsd-kind-icon">RGBAVec</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#rgbvec" class="tsd-kind-icon">RGBVec</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#rawarrivaldata" class="tsd-kind-icon">Raw<wbr>Arrival<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#rawdefaults" class="tsd-kind-icon">Raw<wbr>Defaults</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#rawplaneteventmetadata" class="tsd-kind-icon">Raw<wbr>Planet<wbr>Event<wbr>Metadata</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#rawupgrade" class="tsd-kind-icon">Raw<wbr>Upgrade</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#rawupgradesinfo" class="tsd-kind-icon">Raw<wbr>Upgrades<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#rectuniforms" class="tsd-kind-icon">Rect<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#retryerrorhandler" class="tsd-kind-icon">Retry<wbr>Error<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#scaling" class="tsd-kind-icon">Scaling</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#scapeuniforms" class="tsd-kind-icon">Scape<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#scoreboardentry" class="tsd-kind-icon">Scoreboard<wbr>Entry</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#serializedmockchaindata" class="tsd-kind-icon">Serialized<wbr>Mockchain<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#servermockchaindata" class="tsd-kind-icon">Server<wbr>Mockchain<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#serverscoreboard" class="tsd-kind-icon">Server<wbr>Scoreboard</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#serverscoreboardentry" class="tsd-kind-icon">Server<wbr>Scoreboard<wbr>Entry</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#setfn" class="tsd-kind-icon">Set<wbr>Fn</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#snarkjsbin" class="tsd-kind-icon">SnarkJSBin</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#snarklogdata" class="tsd-kind-icon">Snark<wbr>Log<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#spriteinfo" class="tsd-kind-icon">Sprite<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#spriteprogramwithuniforms" class="tsd-kind-icon">Sprite<wbr>Program<wbr>With<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#spriteuniforms" class="tsd-kind-icon">Sprite<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#submittedbuyhat" class="tsd-kind-icon">Submitted<wbr>Buy<wbr>Hat</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#submitteddepositartifact" class="tsd-kind-icon">Submitted<wbr>Deposit<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#submittedfindartifact" class="tsd-kind-icon">Submitted<wbr>Find<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#submittedinit" class="tsd-kind-icon">Submitted<wbr>Init</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#submittedmove" class="tsd-kind-icon">Submitted<wbr>Move</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#submittedplanettransfer" class="tsd-kind-icon">Submitted<wbr>Planet<wbr>Transfer</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#submittedtx" class="tsd-kind-icon">Submitted<wbr>Tx</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#submittedupgrade" class="tsd-kind-icon">Submitted<wbr>Upgrade</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#submittedwithdrawartifact" class="tsd-kind-icon">Submitted<wbr>Withdraw<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#tooltipprops" class="tsd-kind-icon">Tooltip<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#translation" class="tsd-kind-icon">Translation</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#txintent" class="tsd-kind-icon">Tx<wbr>Intent</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#typistprops" class="tsd-kind-icon">Typist<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#uidata" class="tsd-kind-icon">UIData</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#uidatavalue" class="tsd-kind-icon">UIData<wbr>Value</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#unconfirmedbuyhat" class="tsd-kind-icon">Unconfirmed<wbr>Buy<wbr>Hat</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#unconfirmeddepositartifact" class="tsd-kind-icon">Unconfirmed<wbr>Deposit<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#unconfirmedfindartifact" class="tsd-kind-icon">Unconfirmed<wbr>Find<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#unconfirmedinit" class="tsd-kind-icon">Unconfirmed<wbr>Init</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#unconfirmedmove" class="tsd-kind-icon">Unconfirmed<wbr>Move</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#unconfirmedplanettransfer" class="tsd-kind-icon">Unconfirmed<wbr>Planet<wbr>Transfer</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#unconfirmedupgrade" class="tsd-kind-icon">Unconfirmed<wbr>Upgrade</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#unconfirmedwithdrawartifact" class="tsd-kind-icon">Unconfirmed<wbr>Withdraw<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#uniformsetters" class="tsd-kind-icon">Uniform<wbr>Setters</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#upgrade" class="tsd-kind-icon">Upgrade</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#upgradeargs" class="tsd-kind-icon">Upgrade<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#upgradebranch" class="tsd-kind-icon">Upgrade<wbr>Branch</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#upgradestate" class="tsd-kind-icon">Upgrade<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#upgradesinfo" class="tsd-kind-icon">Upgrades<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#viewportdata" class="tsd-kind-icon">Viewport<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#voyageid" class="tsd-kind-icon">Voyage<wbr>Id</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#withdrawartifactargs" class="tsd-kind-icon">Withdraw<wbr>Artifact<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#zkptask" class="tsd-kind-icon">ZKPTask</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifact_finder_plugin" class="tsd-kind-icon">ARTIFACT_<wbr>FINDER_<wbr>PLUGIN</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifact_row_h" class="tsd-kind-icon">ARTIFACT_<wbr>ROW_<wbr>H</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#atlas_w" class="tsd-kind-icon">ATLAS_<wbr>W</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#accountcontext" class="tsd-kind-icon">Account<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#actions" class="tsd-kind-icon">Actions</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#appcontainer" class="tsd-kind-icon">App<wbr>Container</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactdetailsheader" class="tsd-kind-icon">Artifact<wbr>Details<wbr>Header</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactlist" class="tsd-kind-icon">Artifact<wbr>List</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactnames" class="tsd-kind-icon">Artifact<wbr>Names</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactsbody" class="tsd-kind-icon">Artifacts<wbr>Body</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactsheader" class="tsd-kind-icon">Artifacts<wbr>Header</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#asyncfunction" class="tsd-kind-icon">Async<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#base_vel" class="tsd-kind-icon">BASE_<wbr>VEL</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#biome_key" class="tsd-kind-icon">BIOME_<wbr>KEY</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#block_explorer_url" class="tsd-kind-icon">BLOCK_<wbr>EXPLORER_<wbr>URL</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#basiclink" class="tsd-kind-icon">Basic<wbr>Link</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#biomenames" class="tsd-kind-icon">Biome<wbr>Names</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#blue" class="tsd-kind-icon">Blue</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#bluebg" class="tsd-kind-icon">BlueBG</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#broadcastwrapper" class="tsd-kind-icon">Broadcast<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#btn" class="tsd-kind-icon">Btn</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#buttonrow" class="tsd-kind-icon">Button<wbr>Row</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#cache_server_url" class="tsd-kind-icon">CACHE_<wbr>SERVER_<wbr>URL</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#canvas_plugin" class="tsd-kind-icon">CANVAS_<wbr>PLUGIN</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#cta" class="tsd-kind-icon">CTA</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#canvascontainer" class="tsd-kind-icon">Canvas<wbr>Container</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#canvaswrapper" class="tsd-kind-icon">Canvas<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#chooser" class="tsd-kind-icon">Chooser</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#closebutton" class="tsd-kind-icon">Close<wbr>Button</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#clownicon" class="tsd-kind-icon">Clown<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#coloricon" class="tsd-kind-icon">Color<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#confirmicon" class="tsd-kind-icon">Confirm<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#contextmenu" class="tsd-kind-icon">Context<wbr>Menu</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#contextmenucontext" class="tsd-kind-icon">Context<wbr>Menu<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#ctrlcontext" class="tsd-kind-icon">Ctrl<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#default_energy_percent" class="tsd-kind-icon">DEFAULT_<wbr>ENERGY_<wbr>PERCENT</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#default_silver_percent" class="tsd-kind-icon">DEFAULT_<wbr>SILVER_<wbr>PERCENT</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#detailsrow" class="tsd-kind-icon">Details<wbr>Row</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#detailsrowsingle" class="tsd-kind-icon">Details<wbr>Row<wbr>Single</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#dexrow" class="tsd-kind-icon">Dex<wbr>Row</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#dexwrapper" class="tsd-kind-icon">Dex<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#dexwrappersmall" class="tsd-kind-icon">Dex<wbr>Wrapper<wbr>Small</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#enter_key_code" class="tsd-kind-icon">ENTER_<wbr>KEY_<wbr>CODE</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#editorcontainer" class="tsd-kind-icon">Editor<wbr>Container</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#emailwrapper" class="tsd-kind-icon">Email<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#error" class="tsd-kind-icon">Error</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#fat" class="tsd-kind-icon">Fat</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#filesaver" class="tsd-kind-icon">File<wbr>Saver</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#footer" class="tsd-kind-icon">Footer</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#gif_dim" class="tsd-kind-icon">GIF_<wbr>DIM</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#gameuimanagercontext" class="tsd-kind-icon">GameUIManager<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#green" class="tsd-kind-icon">Green</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#hat_sizes" class="tsd-kind-icon">HAT_<wbr>SIZES</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#helpwrapper" class="tsd-kind-icon">Help<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#hiperfcontext" class="tsd-kind-icon">Hi<wbr>Perf<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#hidden" class="tsd-kind-icon">Hidden</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#hidesmall" class="tsd-kind-icon">Hide<wbr>Small</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#iconbutton" class="tsd-kind-icon">Icon<wbr>Button</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#iconlinks" class="tsd-kind-icon">Icon<wbr>Links</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#input" class="tsd-kind-icon">Input</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#invisible" class="tsd-kind-icon">Invisible</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#item" class="tsd-kind-icon">Item</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#key" class="tsd-kind-icon">KEY</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#lhswrapper" class="tsd-kind-icon">LHSWrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#location_id_ub" class="tsd-kind-icon">LOCATION_<wbr>ID_<wbr>UB</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#leaderboardwrapper" class="tsd-kind-icon">Leaderboard<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#list" class="tsd-kind-icon">List</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#margin" class="tsd-kind-icon">MARGIN</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#max_chunk_size" class="tsd-kind-icon">MAX_<wbr>CHUNK_<wbr>SIZE</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#max_perlin_value" class="tsd-kind-icon">MAX_<wbr>PERLIN_<wbr>VALUE</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#mint_end" class="tsd-kind-icon">MINT_<wbr>END</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#min_chunk_size" class="tsd-kind-icon">MIN_<wbr>CHUNK_<wbr>SIZE</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#mainwindow" class="tsd-kind-icon">Main<wbr>Window</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#maxwidth" class="tsd-kind-icon">Max<wbr>Width</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#menubar" class="tsd-kind-icon">Menu<wbr>Bar</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#message" class="tsd-kind-icon">Message</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#modalbackground" class="tsd-kind-icon">Modal<wbr>Background</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#modalcontent" class="tsd-kind-icon">Modal<wbr>Content</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#modalwrapper" class="tsd-kind-icon">Modal<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#notif_size" class="tsd-kind-icon">NOTIF_<wbr>SIZE</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#num_biomes" class="tsd-kind-icon">NUM_<wbr>BIOMES</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#one_day" class="tsd-kind-icon">ONE_<wbr>DAY</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#paragraph" class="tsd-kind-icon">Paragraph</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#planetcard" class="tsd-kind-icon">Planet<wbr>Card</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#planetscapecontainer" class="tsd-kind-icon">Planet<wbr>Scape<wbr>Container</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#planetscapewrapper" class="tsd-kind-icon">Planetscape<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#playerinfowrapper" class="tsd-kind-icon">Player<wbr>Info<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#pluginelements" class="tsd-kind-icon">Plugin<wbr>Elements</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#readme_plugin" class="tsd-kind-icon">README_<wbr>PLUGIN</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#rarity" class="tsd-kind-icon">Rarity</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#raritynames" class="tsd-kind-icon">Rarity<wbr>Names</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#red" class="tsd-kind-icon">Red</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#scape_height" class="tsd-kind-icon">SCAPE_<wbr>HEIGHT</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#scape_scale" class="tsd-kind-icon">SCAPE_<wbr>SCALE</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#scape_width" class="tsd-kind-icon">SCAPE_<wbr>WIDTH</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#section_margin" class="tsd-kind-icon">SECTION_<wbr>MARGIN</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#size" class="tsd-kind-icon">SIZE</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#sprite_w" class="tsd-kind-icon">SPRITE_<wbr>W</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#stwinit" class="tsd-kind-icon">STWInit</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#stwnoinit" class="tsd-kind-icon">STWNo<wbr>Init</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#svgwrapper" class="tsd-kind-icon">SVGWrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#sectionbuttons" class="tsd-kind-icon">Section<wbr>Buttons</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#sectionbuy" class="tsd-kind-icon">Section<wbr>Buy</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#sectionpreview" class="tsd-kind-icon">Section<wbr>Preview</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#sectiontitle" class="tsd-kind-icon">Section<wbr>Title</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#selectedcontext" class="tsd-kind-icon">Selected<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#selectedstatcontext" class="tsd-kind-icon">Selected<wbr>Stat<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#shareplanetwrapper" class="tsd-kind-icon">Share<wbr>Planet<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#sidebarcontent" class="tsd-kind-icon">Sidebar<wbr>Content</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#spacer" class="tsd-kind-icon">Spacer</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#statrow" class="tsd-kind-icon">Stat<wbr>Row</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styleartifactlink" class="tsd-kind-icon">Style<wbr>Artifact<wbr>Link</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledartifactcanvas" class="tsd-kind-icon">Styled<wbr>Artifact<wbr>Canvas</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledartifactdetailsbody" class="tsd-kind-icon">Styled<wbr>Artifact<wbr>Details<wbr>Body</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledartifactpane" class="tsd-kind-icon">Styled<wbr>Artifact<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledcontextmenupane" class="tsd-kind-icon">Styled<wbr>Context<wbr>Menu<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledcoordspane" class="tsd-kind-icon">Styled<wbr>Coords<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styleddepositpane" class="tsd-kind-icon">Styled<wbr>Deposit<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledexplorecontextpane" class="tsd-kind-icon">Styled<wbr>Explore<wbr>Context<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledfindartifactpane" class="tsd-kind-icon">Styled<wbr>Find<wbr>Artifact<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledfleets" class="tsd-kind-icon">Styled<wbr>Fleets</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledgamewindowwrapper" class="tsd-kind-icon">Styled<wbr>Game<wbr>Window<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledgifmaker" class="tsd-kind-icon">Styled<wbr>Gif<wbr>Maker</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledhatpane" class="tsd-kind-icon">Styled<wbr>Hat<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#stylediconselector" class="tsd-kind-icon">Styled<wbr>Icon<wbr>Selector</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledlink" class="tsd-kind-icon">Styled<wbr>Link</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledmodalpane" class="tsd-kind-icon">Styled<wbr>Modal<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#stylednotification" class="tsd-kind-icon">Styled<wbr>Notification</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#stylednotificationspane" class="tsd-kind-icon">Styled<wbr>Notifications<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledonboardingcontent" class="tsd-kind-icon">Styled<wbr>Onboarding<wbr>Content</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledpane" class="tsd-kind-icon">Styled<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledplanetcontextpane" class="tsd-kind-icon">Styled<wbr>Planet<wbr>Context<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledplanetdetails" class="tsd-kind-icon">Styled<wbr>Planet<wbr>Details</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledplanetdetailspane" class="tsd-kind-icon">Styled<wbr>Planet<wbr>Details<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledplaneticons" class="tsd-kind-icon">Styled<wbr>Planet<wbr>Icons</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledplanetinfo" class="tsd-kind-icon">Styled<wbr>Planet<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledplanetlore" class="tsd-kind-icon">Styled<wbr>Planet<wbr>Lore</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledplanetpreview" class="tsd-kind-icon">Styled<wbr>Planet<wbr>Preview</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledplanetthumb" class="tsd-kind-icon">Styled<wbr>Planet<wbr>Thumb</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledprivatepane" class="tsd-kind-icon">Styled<wbr>Private<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledsettingspane" class="tsd-kind-icon">Styled<wbr>Settings<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledsidebar" class="tsd-kind-icon">Styled<wbr>Sidebar</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledsidebarpane" class="tsd-kind-icon">Styled<wbr>Sidebar<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledspinner" class="tsd-kind-icon">Styled<wbr>Spinner</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledterminaltoggler" class="tsd-kind-icon">Styled<wbr>Terminal<wbr>Toggler</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledterminalwrapper" class="tsd-kind-icon">Styled<wbr>Terminal<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledtoggler" class="tsd-kind-icon">Styled<wbr>Toggler</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledtoolbar" class="tsd-kind-icon">Styled<wbr>Toolbar</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledtoolbarpane" class="tsd-kind-icon">Styled<wbr>Toolbar<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledtooltip" class="tsd-kind-icon">Styled<wbr>Tooltip</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledtooltiptrigger" class="tsd-kind-icon">Styled<wbr>Tooltip<wbr>Trigger</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledtutorialpane" class="tsd-kind-icon">Styled<wbr>Tutorial<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledtxconfirmpopup" class="tsd-kind-icon">Styled<wbr>TxConfirm<wbr>Popup</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledupgradebutton" class="tsd-kind-icon">Styled<wbr>Upgrade<wbr>Button</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledupgradepreview" class="tsd-kind-icon">Styled<wbr>Upgrade<wbr>Preview</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#styledwrapper" class="tsd-kind-icon">Styled<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#sub" class="tsd-kind-icon">Sub</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#toggler_width" class="tsd-kind-icon">TOGGLER_<wbr>WIDTH</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#track_lcm" class="tsd-kind-icon">TRACK_<wbr>LCM</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#trow" class="tsd-kind-icon">TRow</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#tablerow" class="tsd-kind-icon">Table<wbr>Row</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#terminalcontainer" class="tsd-kind-icon">Terminal<wbr>Container</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#textlinks" class="tsd-kind-icon">Text<wbr>Links</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#tooltipinfo" class="tsd-kind-icon">Tooltip<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#truncate" class="tsd-kind-icon">Truncate</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#twitterwrapper" class="tsd-kind-icon">Twitter<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#typistwrapper" class="tsd-kind-icon">Typist<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#up_arrow_key_code" class="tsd-kind-icon">UP_<wbr>ARROW_<wbr>KEY_<wbr>CODE</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#upgradedetailswrapper" class="tsd-kind-icon">Upgrade<wbr>Details<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#upperleft" class="tsd-kind-icon">Upper<wbr>Left</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#vel_threshold" class="tsd-kind-icon">VEL_<wbr>THRESHOLD</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#webserver_url" class="tsd-kind-icon">WEBSERVER_<wbr>URL</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#white" class="tsd-kind-icon">White</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#windowwrapper" class="tsd-kind-icon">Window<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#xdai_chain_id" class="tsd-kind-icon">XDAI_<wbr>CHAIN_<wbr>ID</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#_zoompane" class="tsd-kind-icon">_<wbr>Zoom<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#_animation" class="tsd-kind-icon">_animation</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#_noisefrag" class="tsd-kind-icon">_noise<wbr>Frag</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#_noisevert" class="tsd-kind-icon">_noise<wbr>Vert</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#adexcanvash" class="tsd-kind-icon">a<wbr>Dex<wbr>CanvasH</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#adexcanvasw" class="tsd-kind-icon">a<wbr>Dex<wbr>CanvasW</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#alistcanvash" class="tsd-kind-icon">a<wbr>List<wbr>CanvasH</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#alistcanvasw" class="tsd-kind-icon">a<wbr>List<wbr>CanvasW</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#anim" class="tsd-kind-icon">anim</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#animation" class="tsd-kind-icon">animation</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#arr" class="tsd-kind-icon">arr</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactcanvasdim" class="tsd-kind-icon">artifact<wbr>Canvas<wbr>Dim</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactcolm" class="tsd-kind-icon">artifact<wbr>ColM</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactcolw" class="tsd-kind-icon">artifact<wbr>ColW</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactdexh" class="tsd-kind-icon">artifact<wbr>DexH</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactdexw" class="tsd-kind-icon">artifact<wbr>DexW</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactlisth" class="tsd-kind-icon">artifact<wbr>ListH</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactlistw" class="tsd-kind-icon">artifact<wbr>ListW</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactm" class="tsd-kind-icon">artifactM</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactthumbs" class="tsd-kind-icon">artifact<wbr>Thumbs</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifactw" class="tsd-kind-icon">artifactW</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#artifacts" class="tsd-kind-icon">artifacts</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#astfrag" class="tsd-kind-icon">ast<wbr>Frag</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#astvert" class="tsd-kind-icon">ast<wbr>Vert</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#backgroundlight" class="tsd-kind-icon">backgroundlight</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#barbsa" class="tsd-kind-icon">barbsA</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#biomehash" class="tsd-kind-icon">biome<wbr>Hash</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#bonusbyid" class="tsd-kind-icon">bonus<wbr>ById</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#c" class="tsd-kind-icon">c</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#canvasdim" class="tsd-kind-icon">canvas<wbr>Dim</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#canvasstyle" class="tsd-kind-icon">canvas<wbr>Style</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#celldim" class="tsd-kind-icon">cell<wbr>Dim</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#circfrag" class="tsd-kind-icon">circ<wbr>Frag</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#circvert" class="tsd-kind-icon">circ<wbr>Vert</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#colorother" class="tsd-kind-icon">color<wbr>Other</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#contractaddress" class="tsd-kind-icon">contract<wbr>Address</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#contractprecision" class="tsd-kind-icon">contract<wbr>Precision</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#ctx" class="tsd-kind-icon">ctx</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#dash" class="tsd-kind-icon">dash</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#defaultscroll" class="tsd-kind-icon">default<wbr>Scroll</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#defaulttransform" class="tsd-kind-icon">default<wbr>Transform</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#dexstart" class="tsd-kind-icon">dex<wbr>Start</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#dflaunch" class="tsd-kind-icon">dflaunch</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#enemya" class="tsd-kind-icon">enemyA</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#energy" class="tsd-kind-icon">energy</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#fade" class="tsd-kind-icon">fade</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#fadebrightness" class="tsd-kind-icon">fade<wbr>Brightness</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#frag" class="tsd-kind-icon">frag</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#fragsrc" class="tsd-kind-icon">frag<wbr>Src</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#fragmentid" class="tsd-kind-icon">fragment<wbr>Id</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#genericadj" class="tsd-kind-icon">generic<wbr>Adj</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#genericnoun" class="tsd-kind-icon">generic<wbr>Noun</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#genericverb" class="tsd-kind-icon">generic<wbr>Verb</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#getasteroidprogram" class="tsd-kind-icon">get<wbr>Asteroid<wbr>Program</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#getbeltprogram" class="tsd-kind-icon">get<wbr>Belt<wbr>Program</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#getcircleprogram" class="tsd-kind-icon">get<wbr>Circle<wbr>Program</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#getlineprogram" class="tsd-kind-icon">get<wbr>Line<wbr>Program</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#getmaskprogram" class="tsd-kind-icon">get<wbr>Mask<wbr>Program</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#getrectprogram" class="tsd-kind-icon">get<wbr>Rect<wbr>Program</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#gettextprogram" class="tsd-kind-icon">get<wbr>Text<wbr>Program</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#glasssprite" class="tsd-kind-icon">glass<wbr>Sprite</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#globalseed" class="tsd-kind-icon">global<wbr>Seed</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#glyphh" class="tsd-kind-icon">glyphH</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#glyphw" class="tsd-kind-icon">glyphW</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#gold" class="tsd-kind-icon">gold</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#imagebyname" class="tsd-kind-icon">image<wbr>ByName</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#isprod" class="tsd-kind-icon">is<wbr>Prod</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#keys" class="tsd-kind-icon">keys</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#linefrag" class="tsd-kind-icon">line<wbr>Frag</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#linevert" class="tsd-kind-icon">line<wbr>Vert</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#lookup" class="tsd-kind-icon">lookup</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#lookupinv" class="tsd-kind-icon">lookup<wbr>Inv</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#mtop" class="tsd-kind-icon">m<wbr>Top</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#maskfrag" class="tsd-kind-icon">mask<wbr>Frag</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#maskvert" class="tsd-kind-icon">mask<wbr>Vert</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#maxradius" class="tsd-kind-icon">max<wbr>Radius</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#mimchash" class="tsd-kind-icon">mimc<wbr>Hash</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#minea" class="tsd-kind-icon">mineA</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#mockcommon" class="tsd-kind-icon">mock<wbr>Common</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#mockepic" class="tsd-kind-icon">mock<wbr>Epic</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#mocklegendary" class="tsd-kind-icon">mock<wbr>Legendary</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#mockrare" class="tsd-kind-icon">mock<wbr>Rare</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#namesbyid" class="tsd-kind-icon">names<wbr>ById</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#p" class="tsd-kind-icon">p</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#planetnamewords" class="tsd-kind-icon">planet<wbr>Name<wbr>Words</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#planettagadj" class="tsd-kind-icon">planet<wbr>Tag<wbr>Adj</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#planettagnoun" class="tsd-kind-icon">planet<wbr>Tag<wbr>Noun</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#range" class="tsd-kind-icon">range</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#rectfrag" class="tsd-kind-icon">rect<wbr>Frag</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#rectvert" class="tsd-kind-icon">rect<wbr>Vert</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#red" class="tsd-kind-icon">red</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#reda" class="tsd-kind-icon">redA</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#rowl" class="tsd-kind-icon">rowL</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#runninglcm" class="tsd-kind-icon">runningLCM</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#scale" class="tsd-kind-icon">scale</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#scalefactor" class="tsd-kind-icon">scale<wbr>Factor</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#screenh" class="tsd-kind-icon">screenH</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#screenw" class="tsd-kind-icon">screenW</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#scrollmax" class="tsd-kind-icon">scroll<wbr>Max</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#scrollmin" class="tsd-kind-icon">scroll<wbr>Min</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#shellprops" class="tsd-kind-icon">shell<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#spacetypehash" class="tsd-kind-icon">space<wbr>Type<wbr>Hash</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#spritebase" class="tsd-kind-icon">sprite<wbr>Base</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#subtext" class="tsd-kind-icon">subtext</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#template" class="tsd-kind-icon">template</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#text" class="tsd-kind-icon">text</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#textfrag" class="tsd-kind-icon">text<wbr>Frag</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#textvert" class="tsd-kind-icon">text<wbr>Vert</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#thumbdim" class="tsd-kind-icon">thumb<wbr>Dim</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#tokenscontract" class="tsd-kind-icon">tokens<wbr>Contract</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#tracery" class="tsd-kind-icon">tracery</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#vecs" class="tsd-kind-icon">vecs</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#vert" class="tsd-kind-icon">vert</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#vertsrc" class="tsd-kind-icon">vert<wbr>Src</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#white" class="tsd-kind-icon">white</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#whitea" class="tsd-kind-icon">whiteA</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#app" class="tsd-kind-icon">App</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#artifactbuffpane" class="tsd-kind-icon">Artifact<wbr>Buff<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#artifactcanvas" class="tsd-kind-icon">Artifact<wbr>Canvas</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#artifactdetailsbody" class="tsd-kind-icon">Artifact<wbr>Details<wbr>Body</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#artifactdetailspane" class="tsd-kind-icon">Artifact<wbr>Details<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#artifacticon" class="tsd-kind-icon">Artifact<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#artifactlink" class="tsd-kind-icon">Artifact<wbr>Link</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#artifactnamelink" class="tsd-kind-icon">Artifact<wbr>Name<wbr>Link</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#artifactrow" class="tsd-kind-icon">Artifact<wbr>Row</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#artifactsvg" class="tsd-kind-icon">ArtifactSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#artifactstored" class="tsd-kind-icon">Artifact<wbr>Stored</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#bashprompt" class="tsd-kind-icon">Bash<wbr>Prompt</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#blinkcursor" class="tsd-kind-icon">Blink<wbr>Cursor</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#bonusdefensetooltippane" class="tsd-kind-icon">Bonus<wbr>Defense<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#bonusenergycaptooltippane" class="tsd-kind-icon">Bonus<wbr>Energy<wbr>Cap<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#bonusenergygrotooltippane" class="tsd-kind-icon">Bonus<wbr>Energy<wbr>Gro<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#bonusrangetooltippane" class="tsd-kind-icon">Bonus<wbr>Range<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#bonusspeedtooltippane" class="tsd-kind-icon">Bonus<wbr>Speed<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#bonustooltippane" class="tsd-kind-icon">Bonus<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#branchicon" class="tsd-kind-icon">Branch<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#broadcasticon" class="tsd-kind-icon">Broadcast<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#broadcastsvg" class="tsd-kind-icon">BroadcastSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#button" class="tsd-kind-icon">Button</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#centerchunklink" class="tsd-kind-icon">Center<wbr>Chunk<wbr>Link</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#centerplanetlink" class="tsd-kind-icon">Center<wbr>Planet<wbr>Link</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#clowntowntooltippane" class="tsd-kind-icon">Clowntown<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#contextpane" class="tsd-kind-icon">Context<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#controllablecanvas" class="tsd-kind-icon">Controllable<wbr>Canvas</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#coordspane" class="tsd-kind-icon">Coords<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#corner" class="tsd-kind-icon">Corner</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#currentminingtooltippane" class="tsd-kind-icon">Current<wbr>Mining<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#defaultsvg" class="tsd-kind-icon">DefaultSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#defenseicon" class="tsd-kind-icon">Defense<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#defensesvg" class="tsd-kind-icon">DefenseSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#defensetooltippane" class="tsd-kind-icon">Defense<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#deposit" class="tsd-kind-icon">Deposit</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#depositartifactpane" class="tsd-kind-icon">Deposit<wbr>Artifact<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#depositicon" class="tsd-kind-icon">Deposit<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#depositsvg" class="tsd-kind-icon">DepositSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#dexentry" class="tsd-kind-icon">Dex<wbr>Entry</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#dexsmallrow" class="tsd-kind-icon">Dex<wbr>Small<wbr>Row</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#emailcta" class="tsd-kind-icon">EmailCTA</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#energygrowthicon" class="tsd-kind-icon">Energy<wbr>Growth<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#energygrowthsvg" class="tsd-kind-icon">Energy<wbr>GrowthSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#energygrowthtooltippane" class="tsd-kind-icon">Energy<wbr>Growth<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#energyicon" class="tsd-kind-icon">Energy<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#energysvg" class="tsd-kind-icon">EnergySVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#energytooltippane" class="tsd-kind-icon">Energy<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#ethicon" class="tsd-kind-icon">Eth<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#ethsvg" class="tsd-kind-icon">EthSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#explorecontextpane" class="tsd-kind-icon">Explore<wbr>Context<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#faq04link" class="tsd-kind-icon">FAQ04<wbr>Link</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#fakeline" class="tsd-kind-icon">Fake<wbr>Line</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#findartifact" class="tsd-kind-icon">Find<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#findartifactpane" class="tsd-kind-icon">Find<wbr>Artifact<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#fullrankicon" class="tsd-kind-icon">Full<wbr>Rank<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#fullranksvg" class="tsd-kind-icon">Full<wbr>RankSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#gamelandingpage" class="tsd-kind-icon">Game<wbr>Landing<wbr>Page</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#gamewindow" class="tsd-kind-icon">Game<wbr>Window</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#gamewindowlayout" class="tsd-kind-icon">Game<wbr>Window<wbr>Layout</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#gamewindowwrapper" class="tsd-kind-icon">Game<wbr>Window<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#gifmaker" class="tsd-kind-icon">Gif<wbr>Maker</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#hashespersectooltippane" class="tsd-kind-icon">Hashes<wbr>Per<wbr>Sec<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#haticon" class="tsd-kind-icon">Hat<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#hatpane" class="tsd-kind-icon">Hat<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#hatsvg" class="tsd-kind-icon">HatSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#hats" class="tsd-kind-icon">Hats</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#header" class="tsd-kind-icon">Header</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#helpicon" class="tsd-kind-icon">Help<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#helppane" class="tsd-kind-icon">Help<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#helpsvg" class="tsd-kind-icon">HelpSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#iconselector" class="tsd-kind-icon">Icon<wbr>Selector</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#jsprompt" class="tsd-kind-icon">JSPrompt</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#landingpage" class="tsd-kind-icon">Landing<wbr>Page</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#landingpagecanvas" class="tsd-kind-icon">Landing<wbr>Page<wbr>Canvas</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#leaderboardicon" class="tsd-kind-icon">Leaderboard<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#leaderboardpane" class="tsd-kind-icon">Leaderboard<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#leaderboardsvg" class="tsd-kind-icon">LeaderboardSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#link" class="tsd-kind-icon">Link</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#loadingpage" class="tsd-kind-icon">Loading<wbr>Page</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#locationviewer" class="tsd-kind-icon">Location<wbr>Viewer</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#lockicon" class="tsd-kind-icon">Lock<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#locksvg" class="tsd-kind-icon">LockSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#maxlevelicon" class="tsd-kind-icon">Max<wbr>Level<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#maxlevelsvg" class="tsd-kind-icon">Max<wbr>LevelSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#maxleveltooltippane" class="tsd-kind-icon">Max<wbr>Level<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#minenergytooltippane" class="tsd-kind-icon">Min<wbr>Energy<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#miningpausetooltippane" class="tsd-kind-icon">Mining<wbr>Pause<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#miningtargettooltippane" class="tsd-kind-icon">Mining<wbr>Target<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalaccounticon" class="tsd-kind-icon">Modal<wbr>Account<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalartifacticon" class="tsd-kind-icon">Modal<wbr>Artifact<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modaldepositicon" class="tsd-kind-icon">Modal<wbr>Deposit<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalhaticon" class="tsd-kind-icon">Modal<wbr>Hat<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalhelpicon" class="tsd-kind-icon">Modal<wbr>Help<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalhelptooltippane" class="tsd-kind-icon">Modal<wbr>Help<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalicon" class="tsd-kind-icon">Modal<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalleaderboardicon" class="tsd-kind-icon">Modal<wbr>Leaderboard<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalleaderboardtooltippane" class="tsd-kind-icon">Modal<wbr>Leaderboard<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalmapshareicon" class="tsd-kind-icon">Modal<wbr>Map<wbr>Share<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalpane" class="tsd-kind-icon">Modal<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalplanetdetailsicon" class="tsd-kind-icon">Modal<wbr>Planet<wbr>Details<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalplanetdetailstooltippane" class="tsd-kind-icon">Modal<wbr>Planet<wbr>Details<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalplanetdexicon" class="tsd-kind-icon">Modal<wbr>Planet<wbr>Dex<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalplanetdextooltippane" class="tsd-kind-icon">Modal<wbr>Planet<wbr>Dex<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalpluginicon" class="tsd-kind-icon">Modal<wbr>Plugin<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalsettingsicon" class="tsd-kind-icon">Modal<wbr>Settings<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modaltwitterbroadcasticon" class="tsd-kind-icon">Modal<wbr>Twitter<wbr>Broadcast<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modaltwitterbroadcasttooltippane" class="tsd-kind-icon">Modal<wbr>Twitter<wbr>Broadcast<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modaltwitterverificationtooltippane" class="tsd-kind-icon">Modal<wbr>Twitter<wbr>Verification<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modaltwitterverifyicon" class="tsd-kind-icon">Modal<wbr>Twitter<wbr>Verify<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalupgradedetailsicon" class="tsd-kind-icon">Modal<wbr>Upgrade<wbr>Details<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalupgradedetailstooltippane" class="tsd-kind-icon">Modal<wbr>Upgrade<wbr>Details<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalwindow" class="tsd-kind-icon">Modal<wbr>Window</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modalyourartifactsicon" class="tsd-kind-icon">Modal<wbr>Your<wbr>Artifacts<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#notification" class="tsd-kind-icon">Notification</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#notificationspane" class="tsd-kind-icon">Notifications<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#onboardfinished" class="tsd-kind-icon">Onboard<wbr>Finished</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#onboardkeys" class="tsd-kind-icon">Onboard<wbr>Keys</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#onboardmoney" class="tsd-kind-icon">Onboard<wbr>Money</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#onboardstorage" class="tsd-kind-icon">Onboard<wbr>Storage</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#onboardingpane" class="tsd-kind-icon">Onboarding<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#pauseicon" class="tsd-kind-icon">Pause<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#pausesvg" class="tsd-kind-icon">PauseSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#piratesicon" class="tsd-kind-icon">Pirates<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#piratessvg" class="tsd-kind-icon">PiratesSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#piratestooltippane" class="tsd-kind-icon">Pirates<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planetcontextpane" class="tsd-kind-icon">Planet<wbr>Context<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planetdetailspane" class="tsd-kind-icon">Planet<wbr>Details<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planetdexpane" class="tsd-kind-icon">Planet<wbr>Dex<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planeticon" class="tsd-kind-icon">Planet<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planeticons" class="tsd-kind-icon">Planet<wbr>Icons</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planetlink" class="tsd-kind-icon">Planet<wbr>Link</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planetnamelink" class="tsd-kind-icon">Planet<wbr>Name<wbr>Link</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planetpreview" class="tsd-kind-icon">Planet<wbr>Preview</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planetranktooltippane" class="tsd-kind-icon">Planet<wbr>Rank<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planetsvg" class="tsd-kind-icon">PlanetSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planetscape" class="tsd-kind-icon">Planet<wbr>Scape</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planetthumb" class="tsd-kind-icon">Planet<wbr>Thumb</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planetdexicon" class="tsd-kind-icon">Planetdex<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planetdexsvg" class="tsd-kind-icon">PlanetdexSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#playicon" class="tsd-kind-icon">Play<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#playsvg" class="tsd-kind-icon">PlaySVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#playerartifactspane" class="tsd-kind-icon">Player<wbr>Artifacts<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#playerinfopane" class="tsd-kind-icon">Player<wbr>Info<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#plugineditor" class="tsd-kind-icon">Plugin<wbr>Editor</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#pluginicon" class="tsd-kind-icon">Plugin<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#pluginlibraryview" class="tsd-kind-icon">Plugin<wbr>Library<wbr>View</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#pluginsvg" class="tsd-kind-icon">PluginSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#pluginstooltippane" class="tsd-kind-icon">Plugins<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#privatepane" class="tsd-kind-icon">Private<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rangeicon" class="tsd-kind-icon">Range<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rangesvg" class="tsd-kind-icon">RangeSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rangetooltippane" class="tsd-kind-icon">Range<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rank1icon" class="tsd-kind-icon">Rank1<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rank1svg" class="tsd-kind-icon">Rank1SVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rank2icon" class="tsd-kind-icon">Rank2<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rank2svg" class="tsd-kind-icon">Rank2SVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rank3icon" class="tsd-kind-icon">Rank3<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rank3svg" class="tsd-kind-icon">Rank3SVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rank4icon" class="tsd-kind-icon">Rank4<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rank4svg" class="tsd-kind-icon">Rank4SVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rankicon" class="tsd-kind-icon">Rank<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#ranktooltippane" class="tsd-kind-icon">Rank<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#remotemodal" class="tsd-kind-icon">Remote<wbr>Modal</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rightarrowicon" class="tsd-kind-icon">Rightarrow<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rightarrowsvg" class="tsd-kind-icon">RightarrowSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#scoretooltippane" class="tsd-kind-icon">Score<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#selectedenergytooltippane" class="tsd-kind-icon">Selected<wbr>Energy<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#selectedsilvertooltippane" class="tsd-kind-icon">Selected<wbr>Silver<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#settingsicon" class="tsd-kind-icon">Settings<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#settingspane" class="tsd-kind-icon">Settings<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#settingssvg" class="tsd-kind-icon">SettingsSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#shareicon" class="tsd-kind-icon">Share<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#shareplanet" class="tsd-kind-icon">Share<wbr>Planet</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sharesvg" class="tsd-kind-icon">ShareSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#shell" class="tsd-kind-icon">Shell</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#shellprompt" class="tsd-kind-icon">Shell<wbr>Prompt</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sidebar" class="tsd-kind-icon">Sidebar</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sidebarpane" class="tsd-kind-icon">Sidebar<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#silvercaptooltippane" class="tsd-kind-icon">Silver<wbr>Cap<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#silvergrowthicon" class="tsd-kind-icon">Silver<wbr>Growth<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#silvergrowthsvg" class="tsd-kind-icon">Silver<wbr>GrowthSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#silvergrowthtooltippane" class="tsd-kind-icon">Silver<wbr>Growth<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#silvericon" class="tsd-kind-icon">Silver<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#silverprodicon" class="tsd-kind-icon">Silver<wbr>Prod<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#silverprodsvg" class="tsd-kind-icon">Silver<wbr>ProdSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#silverprodtooltippane" class="tsd-kind-icon">Silver<wbr>Prod<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#silversvg" class="tsd-kind-icon">SilverSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#silvertooltippane" class="tsd-kind-icon">Silver<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#space" class="tsd-kind-icon">Space</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#speedicon" class="tsd-kind-icon">Speed<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#speedsvg" class="tsd-kind-icon">SpeedSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#speedtooltippane" class="tsd-kind-icon">Speed<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#spinner" class="tsd-kind-icon">Spinner</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#staticon" class="tsd-kind-icon">Stat<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#statrowfilled" class="tsd-kind-icon">Stat<wbr>Row<wbr>Filled</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#tab" class="tsd-kind-icon">Tab</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#targeticon" class="tsd-kind-icon">Target<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#targetsvg" class="tsd-kind-icon">TargetSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#terminal" class="tsd-kind-icon">Terminal</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#terminalfragment" class="tsd-kind-icon">Terminal<wbr>Fragment</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#terminaltoggler" class="tsd-kind-icon">Terminal<wbr>Toggler</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#terminalwrapper" class="tsd-kind-icon">Terminal<wbr>Wrapper</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#text" class="tsd-kind-icon">Text</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#time50tooltippane" class="tsd-kind-icon">Time50<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#time90tooltippane" class="tsd-kind-icon">Time90<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#timestwo" class="tsd-kind-icon">Times<wbr>Two</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#title" class="tsd-kind-icon">Title</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#toggler" class="tsd-kind-icon">Toggler</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#toolbar" class="tsd-kind-icon">Toolbar</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#toolbarpane" class="tsd-kind-icon">Toolbar<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#tooltip" class="tsd-kind-icon">Tooltip</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#tooltipcontent" class="tsd-kind-icon">Tooltip<wbr>Content</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#tooltiptrigger" class="tsd-kind-icon">Tooltip<wbr>Trigger</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#tutorialpane" class="tsd-kind-icon">Tutorial<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#tutorialpanecontent" class="tsd-kind-icon">Tutorial<wbr>Pane<wbr>Content</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#twitterbroadcastpane" class="tsd-kind-icon">Twitter<wbr>Broadcast<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#twitterhandletooltippane" class="tsd-kind-icon">Twitter<wbr>Handle<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#twittericon" class="tsd-kind-icon">Twitter<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#twittersvg" class="tsd-kind-icon">TwitterSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#twitterverifypane" class="tsd-kind-icon">Twitter<wbr>Verify<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#txconfirmpopup" class="tsd-kind-icon">Tx<wbr>Confirm<wbr>Popup</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#txlink" class="tsd-kind-icon">Tx<wbr>Link</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#unsubscribepage" class="tsd-kind-icon">Unsubscribe<wbr>Page</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#upgradebutton" class="tsd-kind-icon">Upgrade<wbr>Button</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#upgradedetailspane" class="tsd-kind-icon">Upgrade<wbr>Details<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#upgradeicon" class="tsd-kind-icon">Upgrade<wbr>Icon</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#upgradepreview" class="tsd-kind-icon">Upgrade<wbr>Preview</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#upgradesvg" class="tsd-kind-icon">UpgradeSVG</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#upgradestatinfo" class="tsd-kind-icon">Upgrade<wbr>Stat<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#upgradestooltippane" class="tsd-kind-icon">Upgrades<wbr>Tooltip<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#wrapper" class="tsd-kind-icon">Wrapper</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#yourartifacts" class="tsd-kind-icon">Your<wbr>Artifacts</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#zoompane" class="tsd-kind-icon">Zoom<wbr>Pane</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#_app" class="tsd-kind-icon">_<wbr>App</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#_gamestable" class="tsd-kind-icon">_<wbr>Games<wbr>Table</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#addtochunkmap" class="tsd-kind-icon">add<wbr>ToChunk<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#aggregatebulkgetter" class="tsd-kind-icon">aggregate<wbr>Bulk<wbr>Getter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#arrive" class="tsd-kind-icon">arrive</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#artifactname" class="tsd-kind-icon">artifact<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#artifacttitle" class="tsd-kind-icon">artifact<wbr>Title</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#beachfromplanet" class="tsd-kind-icon">beach<wbr>From<wbr>Planet</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#biomename" class="tsd-kind-icon">biome<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#biomerandom" class="tsd-kind-icon">biome<wbr>Random</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#bonusfromhex" class="tsd-kind-icon">bonus<wbr>From<wbr>Hex</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#calculaterankandscore" class="tsd-kind-icon">calculate<wbr>Rank<wbr>And<wbr>Score</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#callwithretry" class="tsd-kind-icon">call<wbr>With<wbr>Retry</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#checkfeatures" class="tsd-kind-icon">check<wbr>Features</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#clipx" class="tsd-kind-icon">clipX</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#clipy" class="tsd-kind-icon">clipY</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#cloudsfromplanet" class="tsd-kind-icon">clouds<wbr>From<wbr>Planet</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#colossusname" class="tsd-kind-icon">colossus<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#compareworldcoords" class="tsd-kind-icon">compare<wbr>World<wbr>Coords</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#copyplanetstats" class="tsd-kind-icon">copy<wbr>Planet<wbr>Stats</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#cyc" class="tsd-kind-icon">cyc</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#cycinv" class="tsd-kind-icon">cyc<wbr>Inv</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#datemintedat" class="tsd-kind-icon">date<wbr>Minted<wbr>At</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#deferred" class="tsd-kind-icon">deferred</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#distl2" class="tsd-kind-icon">dist<wbr>L2</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#dot" class="tsd-kind-icon">dot</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#escaperegexp" class="tsd-kind-icon">escape<wbr>Reg<wbr>Exp</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#explorechunk" class="tsd-kind-icon">explore<wbr>Chunk</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#fakehash" class="tsd-kind-icon">fake<wbr>Hash</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#formatlocid" class="tsd-kind-icon">format<wbr>Loc<wbr>Id</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#formatnumber" class="tsd-kind-icon">format<wbr>Number</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getalltwitters" class="tsd-kind-icon">get<wbr>All<wbr>Twitters</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getasteroiduniforms" class="tsd-kind-icon">get<wbr>Asteroid<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getattribtypesize" class="tsd-kind-icon">get<wbr>Attrib<wbr>Type<wbr>Size</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getbeltuniforms" class="tsd-kind-icon">get<wbr>Belt<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getbucket" class="tsd-kind-icon">get<wbr>Bucket</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getbytesfromhex" class="tsd-kind-icon">get<wbr>Bytes<wbr>From<wbr>Hex</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getcachedscoreboard" class="tsd-kind-icon">get<wbr>Cached<wbr>Scoreboard</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getchunkkey" class="tsd-kind-icon">get<wbr>Chunk<wbr>Key</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getchunkofsidelength" class="tsd-kind-icon">get<wbr>Chunk<wbr>OfSide<wbr>Length</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getcircleuniforms" class="tsd-kind-icon">get<wbr>Circle<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getconstructor" class="tsd-kind-icon">get<wbr>Constructor</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getcoordsstring" class="tsd-kind-icon">get<wbr>Coords<wbr>String</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getdefaultscroll" class="tsd-kind-icon">get<wbr>Default<wbr>Scroll</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getenergyattime" class="tsd-kind-icon">get<wbr>Energy<wbr>AtTime</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getformatprop" class="tsd-kind-icon">get<wbr>Format<wbr>Prop</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getgenericprogramanduniforms" class="tsd-kind-icon">get<wbr>Generic<wbr>Program<wbr>And<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getglassprogramanduniforms" class="tsd-kind-icon">get<wbr>Glass<wbr>Program<wbr>And<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getlineuniforms" class="tsd-kind-icon">get<wbr>Line<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getmaskuniforms" class="tsd-kind-icon">get<wbr>Mask<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getmineprogramanduniforms" class="tsd-kind-icon">get<wbr>Mine<wbr>Program<wbr>And<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getnotifcolor" class="tsd-kind-icon">get<wbr>Notif<wbr>Color</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getownercolor" class="tsd-kind-icon">get<wbr>Owner<wbr>Color</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getpathprogramanduniforms" class="tsd-kind-icon">get<wbr>Path<wbr>Program<wbr>And<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getplanetlocations" class="tsd-kind-icon">get<wbr>Planet<wbr>Locations</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getplanetprogramanduniforms" class="tsd-kind-icon">get<wbr>Planet<wbr>Program<wbr>And<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getplanetrank" class="tsd-kind-icon">get<wbr>Planet<wbr>Rank</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getplanetscore" class="tsd-kind-icon">get<wbr>Planet<wbr>Score</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getplanetshorthash" class="tsd-kind-icon">get<wbr>Planet<wbr>Short<wbr>Hash</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getplayercolor" class="tsd-kind-icon">get<wbr>Player<wbr>Color</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getplayershorthash" class="tsd-kind-icon">get<wbr>Player<wbr>Short<wbr>Hash</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getrandomactionid" class="tsd-kind-icon">get<wbr>Random<wbr>Action<wbr>Id</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getrandomgradientat" class="tsd-kind-icon">get<wbr>Random<wbr>Gradient<wbr>At</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getrectuniforms" class="tsd-kind-icon">get<wbr>Rect<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getscoreboard" class="tsd-kind-icon">get<wbr>Scoreboard</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getsiblinglocations" class="tsd-kind-icon">get<wbr>Sibling<wbr>Locations</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getsilverovertime" class="tsd-kind-icon">get<wbr>Silver<wbr>Over<wbr>Time</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getspriteinfo" class="tsd-kind-icon">get<wbr>Sprite<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getspriteprogramanduniforms" class="tsd-kind-icon">get<wbr>Sprite<wbr>Program<wbr>And<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#gettextuniforms" class="tsd-kind-icon">get<wbr>Text<wbr>Uniforms</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#gettimezone" class="tsd-kind-icon">get<wbr>Time<wbr>Zone</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getupgradestat" class="tsd-kind-icon">get<wbr>Upgrade<wbr>Stat</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getvoyagecolor" class="tsd-kind-icon">get<wbr>Voyage<wbr>Color</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getweight" class="tsd-kind-icon">get<wbr>Weight</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#globalrandom" class="tsd-kind-icon">global<wbr>Random</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#glsl" class="tsd-kind-icon">glsl</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#hasowner" class="tsd-kind-icon">has<wbr>Owner</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#hastouchscreen" class="tsd-kind-icon">has<wbr>Touchscreen</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#hasunconfirmedartifacttx" class="tsd-kind-icon">has<wbr>Unconfirmed<wbr>Artifact<wbr>Tx</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#hashtohue" class="tsd-kind-icon">hash<wbr>ToHue</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#hatfromtype" class="tsd-kind-icon">hat<wbr>From<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#hattypefromhash" class="tsd-kind-icon">hat<wbr>Type<wbr>From<wbr>Hash</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#hexifybigintnestedarray" class="tsd-kind-icon">hexify<wbr>Big<wbr>Int<wbr>Nested<wbr>Array</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#hslstr" class="tsd-kind-icon">hsl<wbr>Str</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#imguri" class="tsd-kind-icon">img<wbr>Uri</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isaddresswhitelisted" class="tsd-kind-icon">is<wbr>Address<wbr>Whitelisted</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isalphanum" class="tsd-kind-icon">is<wbr>Alpha<wbr>Num</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isbrave" class="tsd-kind-icon">is<wbr>Brave</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#ischrome" class="tsd-kind-icon">is<wbr>Chrome</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isfirefox" class="tsd-kind-icon">is<wbr>Firefox</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isfullrank" class="tsd-kind-icon">is<wbr>Full<wbr>Rank</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#islocatable" class="tsd-kind-icon">is<wbr>Locatable</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#ismobileortablet" class="tsd-kind-icon">is<wbr>Mobile<wbr>OrTablet</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#issupportedbrowser" class="tsd-kind-icon">is<wbr>Supported<wbr>Browser</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#istypedbignum" class="tsd-kind-icon">is<wbr>Typed<wbr>Big<wbr>Num</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isunconfirmedbuyhat" class="tsd-kind-icon">is<wbr>Unconfirmed<wbr>Buy<wbr>Hat</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isunconfirmeddepositartifact" class="tsd-kind-icon">is<wbr>Unconfirmed<wbr>Deposit<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isunconfirmedfindartifact" class="tsd-kind-icon">is<wbr>Unconfirmed<wbr>Find<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isunconfirmedinit" class="tsd-kind-icon">is<wbr>Unconfirmed<wbr>Init</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isunconfirmedmove" class="tsd-kind-icon">is<wbr>Unconfirmed<wbr>Move</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isunconfirmedtransfer" class="tsd-kind-icon">is<wbr>Unconfirmed<wbr>Transfer</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isunconfirmedupgrade" class="tsd-kind-icon">is<wbr>Unconfirmed<wbr>Upgrade</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isunconfirmedwithdrawartifact" class="tsd-kind-icon">is<wbr>Unconfirmed<wbr>Withdraw<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isvowel" class="tsd-kind-icon">is<wbr>Vowel</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#levelfromrarity" class="tsd-kind-icon">level<wbr>From<wbr>Rarity</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#loadartifactatlas" class="tsd-kind-icon">load<wbr>Artifact<wbr>Atlas</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#loadartifactthumbatlas" class="tsd-kind-icon">load<wbr>Artifact<wbr>Thumb<wbr>Atlas</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#loadsprite" class="tsd-kind-icon">load<wbr>Sprite</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#locationfromcoords" class="tsd-kind-icon">location<wbr>From<wbr>Coords</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#makepluginfn" class="tsd-kind-icon">make<wbr>Plugin<wbr>Fn</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#mimcsponge" class="tsd-kind-icon">mimc<wbr>Sponge</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#mimcwithrounds" class="tsd-kind-icon">mimc<wbr>With<wbr>Rounds</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#minus" class="tsd-kind-icon">minus</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#mockartifact" class="tsd-kind-icon">mock<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#mockartifactwithrarity" class="tsd-kind-icon">mock<wbr>Artifact<wbr>With<wbr>Rarity</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#mockchaindeserialize" class="tsd-kind-icon">mockchain<wbr>Deserialize</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modpbigint" class="tsd-kind-icon">modPBig<wbr>Int</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#modpbigintnative" class="tsd-kind-icon">modPBig<wbr>Int<wbr>Native</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#monolithname" class="tsd-kind-icon">monolith<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#morphfromplanet" class="tsd-kind-icon">morph<wbr>From<wbr>Planet</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#moveshipsdecay" class="tsd-kind-icon">move<wbr>Ships<wbr>Decay</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#neverresolves" class="tsd-kind-icon">never<wbr>Resolves</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#noop" class="tsd-kind-icon">noop</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#normalize" class="tsd-kind-icon">normalize</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#octavesfromplanet" class="tsd-kind-icon">octaves<wbr>From<wbr>Planet</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#perlin" class="tsd-kind-icon">perlin</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#perlinvalue" class="tsd-kind-icon">perlin<wbr>Value</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planetcanupgrade" class="tsd-kind-icon">planet<wbr>Can<wbr>Upgrade</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#planethasbonus" class="tsd-kind-icon">planet<wbr>Has<wbr>Bonus</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#posmod" class="tsd-kind-icon">pos<wbr>Mod</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#post" class="tsd-kind-icon">post</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#propsfromidx" class="tsd-kind-icon">props<wbr>From<wbr>Idx</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#propsfromplanet" class="tsd-kind-icon">props<wbr>From<wbr>Planet</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#pyramidname" class="tsd-kind-icon">pyramid<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#randomaddress" class="tsd-kind-icon">random<wbr>Address</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#randomhex" class="tsd-kind-icon">random<wbr>Hex</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rarityfromartifact" class="tsd-kind-icon">rarity<wbr>From<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rarityname" class="tsd-kind-icon">rarity<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#raritynamefromartifact" class="tsd-kind-icon">rarity<wbr>Name<wbr>From<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#realmod" class="tsd-kind-icon">real<wbr>Mod</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#rejectafter" class="tsd-kind-icon">reject<wbr>After</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#requestdevfaucet" class="tsd-kind-icon">request<wbr>Dev<wbr>Faucet</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#scalarmultiply" class="tsd-kind-icon">scalar<wbr>Multiply</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#seededrandom" class="tsd-kind-icon">seeded<wbr>Random</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#serializerequestargs" class="tsd-kind-icon">serialize<wbr>Request<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sigma" class="tsd-kind-icon">sigma</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sigmainv" class="tsd-kind-icon">sigma<wbr>Inv</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#sleep" class="tsd-kind-icon">sleep</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#smoothstep" class="tsd-kind-icon">smooth<wbr>Step</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#spacetyperandom" class="tsd-kind-icon">space<wbr>Type<wbr>Random</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#spaceshipname" class="tsd-kind-icon">spaceship<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#submitinterestedemail" class="tsd-kind-icon">submit<wbr>Interested<wbr>Email</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#submitplayeremail" class="tsd-kind-icon">submit<wbr>Player<wbr>Email</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#submitunsubscribeemail" class="tsd-kind-icon">submit<wbr>Unsubscribe<wbr>Email</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#submitwhitelistkey" class="tsd-kind-icon">submit<wbr>Whitelist<wbr>Key</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#supportsidb" class="tsd-kind-icon">supportsIDB</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#timeoutafter" class="tsd-kind-icon">timeout<wbr>After</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#titlecase" class="tsd-kind-icon">title<wbr>Case</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#toexploredchunk" class="tsd-kind-icon">to<wbr>Explored<wbr>Chunk</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#tolsmchunk" class="tsd-kind-icon">toLSMChunk</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#tostrsafe" class="tsd-kind-icon">to<wbr>Str<wbr>Safe</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#unsupportedfeatures" class="tsd-kind-icon">unsupported<wbr>Features</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#updatelcm" class="tsd-kind-icon">updateLCM</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#updateplanettotime" class="tsd-kind-icon">update<wbr>Planet<wbr>ToTime</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#usestoreduistate" class="tsd-kind-icon">use<wbr>StoredUIState</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#valueat" class="tsd-kind-icon">value<wbr>At</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#veclen" class="tsd-kind-icon">vec<wbr>Len</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#vecscale" class="tsd-kind-icon">vec<wbr>Scale</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#verifytwitterhandle" class="tsd-kind-icon">verify<wbr>Twitter<wbr>Handle</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#withlinenums" class="tsd-kind-icon">with<wbr>Line<wbr>Nums</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#txtypetoethfunctionname" class="tsd-kind-icon">Tx<wbr>Type<wbr>ToEth<wbr>Function<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#a" class="tsd-kind-icon">a</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#astcolorprops" class="tsd-kind-icon">ast<wbr>Color<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#astposprops" class="tsd-kind-icon">ast<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#astradiusprops" class="tsd-kind-icon">ast<wbr>Radius<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#astseedprops" class="tsd-kind-icon">ast<wbr>Seed<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#astthetaprops" class="tsd-kind-icon">ast<wbr>Theta<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#baseengmodifiers" class="tsd-kind-icon">base<wbr>Eng<wbr>Modifiers</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#beltcolorprops" class="tsd-kind-icon">belt<wbr>Color<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#beltposprops" class="tsd-kind-icon">belt<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#beltpropsprops" class="tsd-kind-icon">belt<wbr>Props<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#beltrectposprops" class="tsd-kind-icon">belt<wbr>Rect<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#blurb2grammar" class="tsd-kind-icon">blurb2grammar</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#blurbgrammar" class="tsd-kind-icon">blurb<wbr>Grammar</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#chefhat" class="tsd-kind-icon">chef<wbr>Hat</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#circcolorprops" class="tsd-kind-icon">circ<wbr>Color<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#circepsprops" class="tsd-kind-icon">circ<wbr>Eps<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#circposprops" class="tsd-kind-icon">circ<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#circpropsprops" class="tsd-kind-icon">circ<wbr>Props<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#cornerstyle" class="tsd-kind-icon">corner<wbr>Style</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#cowboyhat" class="tsd-kind-icon">cowboy<wbr>Hat</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#defaulttypistprops" class="tsd-kind-icon">default<wbr>Typist<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#defaultuserdata" class="tsd-kind-icon">default<wbr>User<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#dfstyles" class="tsd-kind-icon">dfstyles</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#emptyinfo" class="tsd-kind-icon">empty<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#engineconsts" class="tsd-kind-icon">engine<wbr>Consts</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#fez" class="tsd-kind-icon">fez</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#fishhat" class="tsd-kind-icon">fish<wbr>Hat</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#fontsizes" class="tsd-kind-icon">font<wbr>Sizes</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#gencolorprops" class="tsd-kind-icon">gen<wbr>Color<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#genposprops" class="tsd-kind-icon">gen<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#glassposprops" class="tsd-kind-icon">glass<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#glasstexprops" class="tsd-kind-icon">glass<wbr>Tex<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#godgrammar" class="tsd-kind-icon">god<wbr>Grammar</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#graduationcap" class="tsd-kind-icon">graduation<wbr>Cap</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#hats" class="tsd-kind-icon">hats</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#linecolorprops" class="tsd-kind-icon">line<wbr>Color<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#linedistprops" class="tsd-kind-icon">line<wbr>Dist<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#lineposprops" class="tsd-kind-icon">line<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#links" class="tsd-kind-icon">links</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#maskposprops" class="tsd-kind-icon">mask<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#minecolorprops" class="tsd-kind-icon">mine<wbr>Color<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#mineoffsetprops" class="tsd-kind-icon">mine<wbr>Offset<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#mineposprops" class="tsd-kind-icon">mine<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#mineradiusprops" class="tsd-kind-icon">mine<wbr>Radius<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#mineseedprops" class="tsd-kind-icon">mine<wbr>Seed<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#na" class="tsd-kind-icon">nA</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#nv" class="tsd-kind-icon">nV</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#partyhat" class="tsd-kind-icon">party<wbr>Hat</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#planetcolor2props" class="tsd-kind-icon">planet<wbr>Color2<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#planetcolor3props" class="tsd-kind-icon">planet<wbr>Color3<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#planetcolorprops" class="tsd-kind-icon">planet<wbr>Color<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#planetposprops" class="tsd-kind-icon">planet<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#planetprops2props" class="tsd-kind-icon">planet<wbr>Props2<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#planetpropsprops" class="tsd-kind-icon">planet<wbr>Props<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#planetrectposprops" class="tsd-kind-icon">planet<wbr>Rect<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#popehat" class="tsd-kind-icon">pope<wbr>Hat</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#rectcolorprops" class="tsd-kind-icon">rect<wbr>Color<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#rectposprops" class="tsd-kind-icon">rect<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#rectrectposprops" class="tsd-kind-icon">rect<wbr>Rect<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#rectstrokexprops" class="tsd-kind-icon">rect<wbr>StrokeXProps</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#rectstrokeyprops" class="tsd-kind-icon">rect<wbr>StrokeYProps</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#santahat" class="tsd-kind-icon">santa<wbr>Hat</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#scapecolorprops" class="tsd-kind-icon">scape<wbr>Color<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#scapeposprops" class="tsd-kind-icon">scape<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#spritecolorprops" class="tsd-kind-icon">sprite<wbr>Color<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#spriteinvertprops" class="tsd-kind-icon">sprite<wbr>Invert<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#spriteposprops" class="tsd-kind-icon">sprite<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#spriterectposprops" class="tsd-kind-icon">sprite<wbr>Rect<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#spriteshineprops" class="tsd-kind-icon">sprite<wbr>Shine<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#spritetexprops" class="tsd-kind-icon">sprite<wbr>Tex<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#squid" class="tsd-kind-icon">squid</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#styles" class="tsd-kind-icon">styles</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#textcolorprops" class="tsd-kind-icon">text<wbr>Color<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#textposprops" class="tsd-kind-icon">text<wbr>Pos<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#texttexcoordprops" class="tsd-kind-icon">text<wbr>Texcoord<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#tophat" class="tsd-kind-icon">top<wbr>Hat</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#typistprops" class="tsd-kind-icon">typist<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#u" class="tsd-kind-icon">u</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#v" class="tsd-kind-icon">v</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

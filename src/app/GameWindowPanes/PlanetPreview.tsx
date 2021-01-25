@@ -1,10 +1,9 @@
-import autoBind from 'auto-bind';
 import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import dfstyles from '../../styles/dfstyles';
 import { Planet, PlanetResource } from '../../_types/global/GlobalTypes';
 import { mat4 } from 'gl-matrix';
-import { AbstractGLManager } from '../renderer/webgl/WebGLManager';
+import { WebGLManager } from '../renderer/webgl/WebGLManager';
 import PlanetRenderer from '../renderer/entities/PlanetRenderer';
 import { MineRenderer } from '../renderer/entities/MineRenderer';
 import { PlanetIcons } from '../planetscape/PlanetIcons';
@@ -32,21 +31,17 @@ const StyledPlanetPreview = styled.div`
  * Renders the planet preview (thumb in planet context menu)
  */
 
-class PlanetPreviewRenderer implements AbstractGLManager {
+class PlanetPreviewRenderer extends WebGLManager {
   planet: Planet | null;
-
-  canvas: HTMLCanvasElement;
-  gl: WebGL2RenderingContext;
 
   frameRequestId: number;
 
-  projectionMatrix: mat4;
   planetRenderer: PlanetRenderer;
 
   mineRenderer: MineRenderer;
 
   constructor(canvas: HTMLCanvasElement) {
-    autoBind(this);
+    super(canvas);
 
     this.canvas = canvas;
     const gl = canvas.getContext('webgl2');
@@ -74,20 +69,6 @@ class PlanetPreviewRenderer implements AbstractGLManager {
     this.planet = planet;
   }
 
-  private setProjectionMatrix(): void {
-    const height = this.canvas.height;
-    const width = this.canvas.width;
-    const depth = 100;
-
-    // prettier-ignore
-    mat4.set(this.projectionMatrix, 
-      2 / width, 0, 0, 0,
-      0, -2 / height, 0, 0,
-      0, 0, 1 / depth, 0, // TODO make it so that positive is in front
-      -1, 1, 0, 1,
-    );
-  }
-
   public loop() {
     this.clear();
     this.draw();
@@ -95,11 +76,9 @@ class PlanetPreviewRenderer implements AbstractGLManager {
     this.frameRequestId = window.requestAnimationFrame(this.loop);
   }
 
-  private clear(): void {
+  public clear(): void {
     const gl = this.gl;
-    gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    super.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   }
 
   private draw(): void {

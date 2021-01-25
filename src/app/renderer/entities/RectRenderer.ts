@@ -11,12 +11,12 @@ import {
   rectStrokeYProps,
 } from '../programs/RectProgram';
 import { RenderZIndex, RGBVec } from '../utils/EngineTypes';
-import { makeQuadBuffered, makeQuadVec2 } from '../utils/EngineUtils';
+import EngineUtils from '../utils/EngineUtils';
 import AttribManager from '../webgl/AttribManager';
-import WebGLManager from '../webgl/WebGLManager';
+import { GameGLManager } from '../webgl/GameGLManager';
 
 export default class RectRenderer {
-  glManager: WebGLManager;
+  glManager: GameGLManager;
   verts: number;
 
   program: WebGLProgram;
@@ -33,7 +33,7 @@ export default class RectRenderer {
 
   gl: WebGL2RenderingContext;
 
-  constructor(glManager: WebGLManager) {
+  constructor(glManager: GameGLManager) {
     autoBind(this);
 
     this.glManager = glManager;
@@ -54,7 +54,7 @@ export default class RectRenderer {
       this.matrixULoc = getRectUniforms(gl).matrix;
 
       this.quad3Buffer = Array(6 * 3).fill(0);
-      this.quad2Buffer = makeQuadVec2(0, 0, 1, 1);
+      this.quad2Buffer = EngineUtils.makeQuadVec2(0, 0, 1, 1);
     } catch (e) {
       console.error(e);
     }
@@ -78,7 +78,7 @@ export default class RectRenderer {
     const { x1, y1 } = { x1: x, y1: y };
     const { x2, y2 } = { x2: x + width, y2: y + height };
 
-    makeQuadBuffered(this.quad3Buffer, x1, y1, x2, y2, zIdx);
+    EngineUtils.makeQuadBuffered(this.quad3Buffer, x1, y1, x2, y2, zIdx);
     this.posA.setVertex(this.quad3Buffer, this.verts);
     this.rectPosA.setVertex(this.quad2Buffer, this.verts);
 

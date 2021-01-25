@@ -1,4 +1,5 @@
 import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
+import { bonusFromHex } from '../utils/Utils';
 import {
   RawArrivalData,
   RawArtifactWithMetadata,
@@ -108,10 +109,11 @@ export class EthDecoders {
     ];
     const rawHatLevel = rawPlanetExtendedInfo[8];
 
+    const locationId = CheckedTypeUtils.locationIdFromDecStr(
+      rawLocationId.toString()
+    );
     const planet: Planet = {
-      locationId: CheckedTypeUtils.locationIdFromDecStr(
-        rawLocationId.toString()
-      ),
+      locationId: locationId,
       perlin: rawPerlin.toNumber(),
       spaceType: rawSpaceType,
       owner: CheckedTypeUtils.address(rawOwner),
@@ -151,6 +153,7 @@ export class EthDecoders {
       isInContract: true,
       syncedWithContract: true,
       hasTriedFindingArtifact: rawPlanetExtendedInfo[9],
+      bonus: bonusFromHex(locationId),
     };
 
     if (!rawPlanetExtendedInfo[10].eq(0)) {

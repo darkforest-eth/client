@@ -1,7 +1,5 @@
 import autoBind from 'auto-bind';
-import { TextureGLManager } from '../renderer/webgl/WebGLManager';
-import { mat4 } from 'gl-matrix';
-import { SpriteRenderer } from '../planetscape/SpriteRenderer';
+import { SpriteRenderer } from '../renderer/entities/SpriteRenderer';
 import { levelFromRarity, rarityFromArtifact } from '../../utils/ArtifactUtils';
 import { ARTIFACT_ROW_H } from '../../styles/dfstyles';
 import {
@@ -10,6 +8,7 @@ import {
   ArtifactType,
   Biome,
 } from '../../_types/global/GlobalTypes';
+import { WebGLManager } from '../renderer/webgl/WebGLManager';
 
 const NUM_BIOMES = Biome.MAX;
 
@@ -26,13 +25,8 @@ export const aDexCanvasH = NUM_BIOMES * cellDim;
 export const aListCanvasW = cellDim;
 export const aListCanvasH = 400;
 
-export class ArtifactRenderer implements TextureGLManager {
-  private canvas: HTMLCanvasElement;
+export class ArtifactRenderer extends WebGLManager {
   private frameRequestId: number;
-  private texIdx = 0;
-
-  public projectionMatrix: mat4;
-  public gl: WebGL2RenderingContext;
 
   private spriteRenderer: SpriteRenderer;
 
@@ -42,19 +36,11 @@ export class ArtifactRenderer implements TextureGLManager {
   private scroll = 0;
 
   constructor(canvas: HTMLCanvasElement, isDex = true) {
+    super(canvas);
+
     autoBind(this);
 
-    this.canvas = canvas;
     this.setIsDex(isDex);
-
-    this.projectionMatrix = mat4.create();
-
-    const gl = canvas.getContext('webgl2');
-    if (!gl) {
-      console.error('error getting webgl2 context');
-      return;
-    }
-    this.gl = gl;
 
     this.spriteRenderer = new SpriteRenderer(this, true);
 
@@ -63,10 +49,6 @@ export class ArtifactRenderer implements TextureGLManager {
 
   public setIsDex(isDex: boolean) {
     this.isDex = isDex;
-  }
-
-  public getTexIdx(): number {
-    return this.texIdx++;
   }
 
   public setScroll(scroll: number) {
@@ -79,26 +61,6 @@ export class ArtifactRenderer implements TextureGLManager {
 
   public setArtifacts(artifacts: Artifact[]): void {
     this.artifacts = artifacts;
-  }
-
-  setProjectionMatrix(): void {
-    const height = this.canvas.height;
-    const width = this.canvas.width;
-
-    // prettier-ignore
-    mat4.set(this.projectionMatrix, 
-      2 / width, 0, 0, 0,
-      0, -2 / height, 0, 0,
-      0, 0, 0, 0,
-      -1, 1, 0, 1,
-    );
-  }
-
-  private clear() {
-    const gl = this.gl;
-    gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
   }
 
   private queueRarityColumn(rarity: ArtifactRarity, startX: number) {
@@ -164,8 +126,6 @@ export class ArtifactRenderer implements TextureGLManager {
   }
 
   private draw() {
-    if (!this.visible) return;
-
     if (this.isDex) this.drawDex();
     else this.drawList();
 
@@ -173,9 +133,12 @@ export class ArtifactRenderer implements TextureGLManager {
   }
 
   private loop() {
-    this.setProjectionMatrix();
-    this.clear();
-    this.draw();
+    if (this.visible) {
+      this.setProjectionMatrix();
+      this.clear();
+      this.draw();
+    }
+
     this.frameRequestId = window.requestAnimationFrame(this.loop);
   }
 

@@ -142,13 +142,13 @@ export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
           <TooltipTrigger name={TooltipName.Score}>
             <span>Score</span>
           </TooltipTrigger>
-          <span>{Math.floor(score)}</span>
+          <span>{score === -1 ? 'n/a' : Math.floor(score)}</span>
         </div>
         <div>
           <TooltipTrigger name={TooltipName.Rank}>
             <span>Rank</span>
           </TooltipTrigger>
-          <span>{rank}</span>
+          <span>{rank === -1 ? 'unranked' : rank}</span>
         </div>
       </PlayerInfoWrapper>
     </SidebarPane>
