@@ -130,6 +130,32 @@ class EthConnection extends EventEmitter {
     return this.loadContract(contractAddress, contractABI);
   }
 
+  public async loadWhitelistContract(): Promise<Contract> {
+    const whitelistABI = (
+      await fetch('/public/contracts/Whitelist.json').then((x) => x.json())
+    ).abi;
+
+    const isProd = process.env.NODE_ENV === 'production';
+    const whitelistAddress = isProd
+      ? require('../utils/prod_contract_addr').whitelistContract
+      : require('../utils/local_contract_addr').whitelistContract;
+
+    return this.loadContract(whitelistAddress, whitelistABI);
+  }
+
+  // TODO: This should be moved to ContractReader once we split ContractsAPI out
+  // it's here because we need access to this function before GameManager
+  // (and therefore ContractsAPI) is loaded in GameLandingPage.tsx
+  public async isWhitelisted(address: EthAddress): Promise<boolean> {
+    const whitelist = await this.loadWhitelistContract();
+    return callWithRetry<boolean>(
+      whitelist.isWhitelisted,
+      [address],
+      () => {},
+      3
+    );
+  }
+
   public getAddress(): EthAddress {
     if (!this.signer) {
       throw new Error('account not selected yet');

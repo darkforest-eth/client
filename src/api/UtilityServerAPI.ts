@@ -96,21 +96,6 @@ export const submitWhitelistKey = async (
   }
 };
 
-export const isAddressWhitelisted = async (
-  address: EthAddress
-): Promise<boolean> => {
-  try {
-    const { whitelisted } = await fetch(
-      `${WEBSERVER_URL}/whitelist/address/${address}/isWhitelisted`
-    ).then((x) => x.json());
-    return whitelisted;
-  } catch (e) {
-    console.log('Whitelist internal error, returning true.');
-    console.error(e);
-    return false;
-  }
-};
-
 export const requestDevFaucet = async (
   address: EthAddress
 ): Promise<boolean> => {

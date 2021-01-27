@@ -5,7 +5,6 @@ import GameUIManager, { GameUIManagerEvent } from './board/GameUIManager';
 import AbstractGameManager from '../api/AbstractGameManager';
 import { unsupportedFeatures, Incompatibility } from '../api/BrowserChecks';
 import {
-  isAddressWhitelisted,
   submitWhitelistKey,
   submitInterestedEmail,
   submitPlayerEmail,
@@ -467,30 +466,39 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     const terminalEmitter = TerminalEmitter.getInstance();
     const ethConnection = EthConnection.getInstance();
 
-    const address = ethConnection.getAddress();
-    const isWhitelisted = await isAddressWhitelisted(address);
+    try {
+      const address = ethConnection.getAddress();
+      const isWhitelisted = await ethConnection.isWhitelisted(address);
 
-    terminalEmitter.bashShell('df join v0.5');
-    terminalEmitter.print('Checking if whitelisted... (address ');
-    terminalEmitter.print(address, TerminalTextStyle.White);
-    terminalEmitter.println(')');
+      terminalEmitter.bashShell('df join v0.5');
+      terminalEmitter.print('Checking if whitelisted... (address ');
+      terminalEmitter.print(address, TerminalTextStyle.White);
+      terminalEmitter.println(')');
 
-    if (isWhitelisted) {
-      terminalEmitter.println('Player whitelisted.', TerminalTextStyle.Green);
-      terminalEmitter.println(
-        `Welcome, player ${address}.`,
-        TerminalTextStyle.White
-      );
-      if (!isProd) {
-        // in development, automatically get some ether from faucet
-        const balance = await ethConnection.getBalance(address);
-        if (balance === 0) {
-          await requestDevFaucet(address);
+      if (isWhitelisted) {
+        terminalEmitter.println('Player whitelisted.', TerminalTextStyle.Green);
+        terminalEmitter.println(
+          `Welcome, player ${address}.`,
+          TerminalTextStyle.White
+        );
+        if (!isProd) {
+          // in development, automatically get some ether from faucet
+          const balance = await ethConnection.getBalance(address);
+          if (balance === 0) {
+            await requestDevFaucet(address);
+          }
         }
+        initState = InitState.FETCHING_ETH_DATA;
+      } else {
+        initState = InitState.ASKING_HAS_WHITELIST_KEY;
       }
-      initState = InitState.FETCHING_ETH_DATA;
-    } else {
-      initState = InitState.ASKING_HAS_WHITELIST_KEY;
+    } catch (e) {
+      console.error(`error connecting to whitelist: ${e}`);
+      terminalEmitter.println(
+        'ERROR: Could not connect to whitelist contract. Please refresh and try again in a few minutes.',
+        TerminalTextStyle.Red
+      );
+      initState = InitState.TERMINATED;
     }
   };
 
