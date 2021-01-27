@@ -13,12 +13,9 @@ export const artifactThumbs = 'artifactthumbs.png';
 const imageByName = new Map<string, HTMLImageElement>();
 
 export async function loadSprite(name: string): Promise<HTMLImageElement> {
-  console.log('loading image: ', name);
-
   const cachedImg = imageByName.get(name);
   // this won't fire if things are super fast, but might be a marginal speedup in some cases
   if (cachedImg) {
-    console.log('using cached image!');
     return cachedImg;
   }
 
@@ -105,8 +102,6 @@ export const getSpriteInfo = (): AtlasInfo => {
 
     atlas[type] = biomeInfo as BiomeInfo;
   }
-
-  console.log(atlas);
 
   return atlas as AtlasInfo;
 };

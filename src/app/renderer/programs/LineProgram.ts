@@ -1,7 +1,6 @@
 import { engineConsts } from '../utils/EngineConsts';
-import { AttribProps, AttribType, ProgramClosure } from '../utils/EngineTypes';
+import { AttribType, UniformType } from '../utils/EngineTypes';
 import { glsl } from '../utils/EngineUtils';
-import ProgramUtils from '../webgl/ProgramUtils';
 
 const a = {
   position: 'a_position',
@@ -16,85 +15,61 @@ const v = {
   dist: 'v_dist',
 };
 
-// TODO combine this with getMaskProgram in this file somewhere
-export const linePosProps: AttribProps = {
-  dim: 3,
-  type: AttribType.Float,
-  normalize: false,
-  name: a.position,
-};
+export const LINE_PROGRAM_DEFINITION = {
+  uniforms: {
+    matrix: { name: u.matrix, type: UniformType.Mat4 },
+  },
+  attribs: {
+    position: {
+      dim: 3,
+      type: AttribType.Float,
+      normalize: false,
+      name: a.position,
+    },
+    color: {
+      dim: 3,
+      type: AttribType.UByte,
+      normalize: true,
+      name: a.color,
+    },
+    dist: {
+      dim: 1,
+      type: AttribType.Float,
+      normalize: false,
+      name: a.dist,
+    },
+  },
+  vertexShader: glsl`
+    in vec4 ${a.position};
+    in vec4 ${a.color};
+    in float ${a.dist};
 
-export const lineColorProps: AttribProps = {
-  dim: 3,
-  type: AttribType.UByte,
-  normalize: true,
-  name: a.color,
-};
+    uniform mat4 ${u.matrix};
 
-export const lineDistProps: AttribProps = {
-  dim: 1,
-  type: AttribType.Float,
-  normalize: false,
-  name: a.dist,
-};
+    out vec4 ${v.color};
+    out float ${v.dist};
 
-const lineVert = glsl`
-  in vec4 ${a.position};
-  in vec4 ${a.color};
-  in float ${a.dist};
+    void main() {
+      gl_Position = ${u.matrix} * ${a.position};
 
-  uniform mat4 ${u.matrix};
-
-  out vec4 ${v.color};
-  out float ${v.dist};
-
-  void main() {
-    gl_Position = ${u.matrix} * ${a.position};
-
-    ${v.color} = ${a.color};
-    ${v.dist} = ${a.dist};
-  }
-`;
-
-const lineFrag = glsl`
-  precision highp float;
-  out vec4 outColor;
-
-  in vec4 ${v.color};
-  in float ${v.dist};
-
-  void main() {
-    // solid in the 0 regions
-    float interval = ${v.dist} / ${engineConsts.dashLength.toFixed(1)};
-    float modulo = interval - 2.0 * floor(interval / 2.0);
-    bool isGap = modulo > 1.0;
-
-    outColor = isGap ? vec4(0.0, 0.0, 0.0, 0.0) : ${v.color};
-  }
-`;
-
-export const getLineProgram: ProgramClosure = (() => {
-  let program: WebGLProgram | null = null;
-
-  return (gl: WebGL2RenderingContext) => {
-    if (program === null) {
-      program = ProgramUtils.programFromSources(gl, lineVert, lineFrag);
-      if (program === null) throw 'error compiling line program';
+      ${v.color} = ${a.color};
+      ${v.dist} = ${a.dist};
     }
+  `,
+  fragmentShader: glsl`
+    precision highp float;
+    out vec4 outColor;
 
-    return program;
-  };
-})();
+    in vec4 ${v.color};
+    in float ${v.dist};
 
-export type LineUniforms = {
-  matrix: WebGLUniformLocation | null;
+    void main() {
+      // solid in the 0 regions
+      float interval = ${v.dist} / ${engineConsts.dashLength.toFixed(1)};
+      float modulo = interval - 2.0 * floor(interval / 2.0);
+      bool isGap = modulo > 1.0;
+
+      outColor = isGap ? vec4(0.0, 0.0, 0.0, 0.0) : ${v.color};
+    }
+  `,
 };
-
-// TODO combine this with getMaskProgram
-export function getLineUniforms(gl: WebGL2RenderingContext): LineUniforms {
-  const program = getLineProgram(gl);
-  gl.useProgram(program); // may be superfluous;
-  return {
-    matrix: gl.getUniformLocation(program, u.matrix),
-  };
-}

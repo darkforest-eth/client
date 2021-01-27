@@ -64,6 +64,16 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Responsible for queuing data about a webgl attribute and then writing to it.
+							Does this by maintaining a persistent AttribArray and WebGLBuffer reference,
+							and then calling bufferData on n vertices at a time. Allows us to upload
+						whole arrays of objects at once, providing speed boost.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -82,21 +92,20 @@
 								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="attribmanager.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section ">
+						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="attribmanager.html#attribarray" class="tsd-kind-icon">attrib<wbr>Array</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="attribmanager.html#buffer" class="tsd-kind-icon">buffer</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="attribmanager.html#gl" class="tsd-kind-icon">gl</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="attribmanager.html#loc" class="tsd-kind-icon">loc</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="attribmanager.html#props" class="tsd-kind-icon">props</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="attribmanager.html#attribarray" class="tsd-kind-icon">attrib<wbr>Array</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="attribmanager.html#buffer" class="tsd-kind-icon">buffer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="attribmanager.html#gl" class="tsd-kind-icon">gl</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="attribmanager.html#loc" class="tsd-kind-icon">loc</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="attribmanager.html#props" class="tsd-kind-icon">props</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="attribmanager.html#bufferdata" class="tsd-kind-icon">buffer<wbr>Data</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="attribmanager.html#getarray" class="tsd-kind-icon">get<wbr>Array</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="attribmanager.html#setvertex" class="tsd-kind-icon">set<wbr>Vertex</a></li>
 							</ul>
 						</section>
@@ -115,22 +124,47 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/webgl/AttribManager.ts#L14">src/app/renderer/webgl/AttribManager.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/AttribManager.ts#L34">src/app/renderer/webgl/AttribManager.ts:34</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>For a given attribute on a program on a context, create an AttribManager.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>gl: <span class="tsd-signature-type">WebGL2RenderingContext</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The WebGL context to generate this attrib on.</p>
+										</div>
+									</div>
 								</li>
 								<li>
 									<h5>program: <span class="tsd-signature-type">WebGLProgram</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The program corresponding to this attrib.</p>
+										</div>
+									</div>
 								</li>
 								<li>
 									<h5>props: <a href="../globals.html#attribprops" class="tsd-signature-type">AttribProps</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>An AttribProps object, containing the attrib name and other info.</p>
+										</div>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> enable: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Should we call gl.enableVertexAttribArray? (default true)</p>
+										</div>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="attribmanager.html" class="tsd-signature-type">AttribManager</a></h4>
@@ -138,57 +172,82 @@
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group ">
+			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="attribarray" class="tsd-anchor"></a>
-					<h3>attrib<wbr>Array</h3>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> attrib<wbr>Array</h3>
 					<div class="tsd-signature tsd-kind-icon">attrib<wbr>Array<span class="tsd-signature-symbol">:</span> <a href="attribarray.html" class="tsd-signature-type">AttribArray</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/webgl/AttribManager.ts#L14">src/app/renderer/webgl/AttribManager.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/AttribManager.ts#L34">src/app/renderer/webgl/AttribManager.ts:34</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>An internally managed AttribArray, which is a typed mutable array.</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="buffer" class="tsd-anchor"></a>
-					<h3>buffer</h3>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> buffer</h3>
 					<div class="tsd-signature tsd-kind-icon">buffer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGLBuffer</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/webgl/AttribManager.ts#L12">src/app/renderer/webgl/AttribManager.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/AttribManager.ts#L29">src/app/renderer/webgl/AttribManager.ts:29</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The WebGLBuffer associated with this attribute.</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="gl" class="tsd-anchor"></a>
-					<h3>gl</h3>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> gl</h3>
 					<div class="tsd-signature tsd-kind-icon">gl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGL2RenderingContext</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/webgl/AttribManager.ts#L8">src/app/renderer/webgl/AttribManager.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/AttribManager.ts#L14">src/app/renderer/webgl/AttribManager.ts:14</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The WebGL rendering context.</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="loc" class="tsd-anchor"></a>
-					<h3>loc</h3>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> loc</h3>
 					<div class="tsd-signature tsd-kind-icon">loc<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/webgl/AttribManager.ts#L11">src/app/renderer/webgl/AttribManager.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/AttribManager.ts#L24">src/app/renderer/webgl/AttribManager.ts:24</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Attrib loc, returned by gl.getAttribLocation().</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="props" class="tsd-anchor"></a>
-					<h3>props</h3>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> props</h3>
 					<div class="tsd-signature tsd-kind-icon">props<span class="tsd-signature-symbol">:</span> <a href="../globals.html#attribprops" class="tsd-signature-type">AttribProps</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/webgl/AttribManager.ts#L9">src/app/renderer/webgl/AttribManager.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/AttribManager.ts#L19">src/app/renderer/webgl/AttribManager.ts:19</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>AttribProps object for this attribute, containing name, dimension, and more.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -203,33 +262,24 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/webgl/AttribManager.ts#L50">src/app/renderer/webgl/AttribManager.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/AttribManager.ts#L83">src/app/renderer/webgl/AttribManager.ts:83</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Send vertices [0, n - 1] through the buffer - bufferData(1) will send one vertex (only vertex #0)</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>n: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The number of vertices to send through the buffer.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getarray" class="tsd-anchor"></a>
-					<h3>get<wbr>Array</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Array<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../globals.html#glarray" class="tsd-signature-type">GLArray</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/webgl/AttribManager.ts#L44">src/app/renderer/webgl/AttribManager.ts:44</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="../globals.html#glarray" class="tsd-signature-type">GLArray</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -243,16 +293,29 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/webgl/AttribManager.ts#L40">src/app/renderer/webgl/AttribManager.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/AttribManager.ts#L75">src/app/renderer/webgl/AttribManager.ts:75</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set vertices starting from vertex #idx - writing to vertex #0 will write to the first vertex.</p>
+								</div>
+								<p>Note that you can write multiple vertices at once - if you write a 6-long array into a 2D
+								attribute at vertex 0, you will write 3 vertices at once.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>els: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The data to write into the vertices.</p>
+									</div>
 								</li>
 								<li>
 									<h5>idx: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The starting vertex # to write to.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -279,26 +342,23 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="attribmanager.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="attribmanager.html#attribarray" class="tsd-kind-icon">attrib<wbr>Array</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="attribmanager.html#buffer" class="tsd-kind-icon">buffer</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="attribmanager.html#gl" class="tsd-kind-icon">gl</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="attribmanager.html#loc" class="tsd-kind-icon">loc</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="attribmanager.html#props" class="tsd-kind-icon">props</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="attribmanager.html#bufferdata" class="tsd-kind-icon">buffer<wbr>Data</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="attribmanager.html#getarray" class="tsd-kind-icon">get<wbr>Array</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="attribmanager.html#setvertex" class="tsd-kind-icon">set<wbr>Vertex</a>

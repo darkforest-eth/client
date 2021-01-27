@@ -1,84 +1,37 @@
-import autoBind from 'auto-bind';
 import { CanvasCoords } from '../../../utils/Coordinates';
 import { ProcgenUtils } from '../../../utils/ProcgenUtils';
-
 import { Planet } from '../../../_types/global/GlobalTypes';
 import Viewport from '../../board/Viewport';
-import {
-  astColorProps,
-  astPosProps,
-  astRadiusProps,
-  astSeedProps,
-  astThetaProps,
-  getAsteroidProgram,
-  getAsteroidUniforms,
-} from '../programs/AsteroidProgram';
-import { RGBVec } from '../utils/EngineTypes';
+import { ASTEROID_PROGRAM_DEFINITION as ASTEROID_PROGRAM_DEFNITION } from '../programs/AsteroidProgram';
+import { DrawMode, RGBVec } from '../utils/EngineTypes';
 import EngineUtils from '../utils/EngineUtils';
-import AttribManager from '../webgl/AttribManager';
 import { GameGLManager } from '../webgl/GameGLManager';
+import { GenericRenderer } from '../webgl/GenericRenderer';
 
-export default class AsteroidRenderer {
-  manager: GameGLManager;
-  program: WebGLProgram;
-
-  posA: AttribManager;
-  colorA: AttribManager;
-  radiusA: AttribManager;
-  thetaA: AttribManager;
-  seedA: AttribManager;
-
-  verts: number;
-
-  matrixULoc: WebGLUniformLocation | null; // screenspace to clipspace
-  nowULoc: WebGLUniformLocation | null;
-
+export default class AsteroidRenderer extends GenericRenderer<
+  typeof ASTEROID_PROGRAM_DEFNITION
+> {
   viewport: Viewport;
 
-  time: number;
-
   constructor(manager: GameGLManager) {
-    autoBind(this);
+    super(manager, ASTEROID_PROGRAM_DEFNITION);
     this.viewport = Viewport.getInstance();
-
-    this.verts = 0;
-    this.time = 0;
-
-    this.manager = manager;
-
-    const { gl } = this.manager;
-
-    try {
-      const program = getAsteroidProgram(gl);
-      this.program = program;
-      gl.useProgram(program);
-
-      this.posA = new AttribManager(gl, program, astPosProps);
-      this.colorA = new AttribManager(gl, program, astColorProps);
-      this.radiusA = new AttribManager(gl, program, astRadiusProps);
-      this.thetaA = new AttribManager(gl, program, astThetaProps);
-      this.seedA = new AttribManager(gl, program, astSeedProps);
-
-      const uniforms = getAsteroidUniforms(gl);
-      this.matrixULoc = uniforms.matrix;
-      this.nowULoc = uniforms.now;
-    } catch (e) {
-      console.error(e);
-    }
-
-    this.beginFrame();
   }
 
-  private beginFrame() {
-    this.verts = 0;
-  }
-
-  queueAsteroid(
+  public queueAsteroid(
     planet: Planet,
     centerW: CanvasCoords,
     radiusW: number,
     color: RGBVec
   ) {
+    const {
+      position: posA,
+      color: colorA,
+      radius: radiusA,
+      theta: thetaA,
+      seed: seedA,
+    } = this.attribManagers;
+
     const center = this.viewport.worldToCanvasCoords(centerW);
     const radius = this.viewport.worldToCanvasDist(radiusW);
 
@@ -91,38 +44,21 @@ export default class AsteroidRenderer {
     // initial asteroid offset
     const theta = (color[0] * 255 ** 2 + color[1] * 255 + color[2]) % 10000;
 
-    this.posA.setVertex([x, y, z], this.verts);
-    this.colorA.setVertex(color, this.verts);
-    this.radiusA.setVertex([radius], this.verts);
-    this.thetaA.setVertex([theta], this.verts);
-    this.seedA.setVertex([cosmetic.seed], this.verts);
+    posA.setVertex([x, y, z], this.verts);
+    colorA.setVertex(color, this.verts);
+    radiusA.setVertex([radius], this.verts);
+    thetaA.setVertex([theta], this.verts);
+    seedA.setVertex([cosmetic.seed], this.verts);
 
     this.verts += 1;
   }
 
-  flush() {
-    this.time = EngineUtils.getNow();
+  public setUniforms() {
+    this.uniformSetters.matrix(this.manager.projectionMatrix);
+    this.uniformSetters.now(EngineUtils.getNow());
+  }
 
-    if (this.verts === 0) return;
-
-    const { gl } = this.manager;
-
-    gl.useProgram(this.program);
-
-    this.posA.bufferData(this.verts);
-    this.colorA.bufferData(this.verts);
-    this.radiusA.bufferData(this.verts);
-    this.thetaA.bufferData(this.verts);
-    this.seedA.bufferData(this.verts);
-
-    // using Date.now() instead of renderer.now avoids a weird vsync issue
-    // set uniforms
-    gl.uniformMatrix4fv(this.matrixULoc, false, this.manager.projectionMatrix);
-    gl.uniform1f(this.nowULoc, this.time);
-
-    // draw
-    gl.drawArrays(gl.POINTS, 0, this.verts);
-
-    this.beginFrame();
+  public flush() {
+    super.flush(DrawMode.Points);
   }
 }

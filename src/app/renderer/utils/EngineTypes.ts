@@ -1,3 +1,44 @@
+import { mat4, mat3 } from 'gl-matrix';
+
+export enum AttribType {
+  Float = window.WebGL2RenderingContext && WebGL2RenderingContext['FLOAT'],
+  UByte = window.WebGL2RenderingContext &&
+    WebGL2RenderingContext['UNSIGNED_BYTE'],
+}
+
+export enum DrawMode {
+  Triangles = window.WebGL2RenderingContext &&
+    WebGL2RenderingContext['TRIANGLES'],
+  Lines = window.WebGL2RenderingContext && WebGL2RenderingContext['LINES'],
+  Points = window.WebGL2RenderingContext && WebGL2RenderingContext['POINTS'],
+}
+
+export type AttribProps = {
+  dim: number;
+  type: AttribType; // gl.FLOAT, etc
+  normalize: boolean;
+  name: string;
+};
+
+export enum UniformType {
+  Mat4,
+  Mat3,
+  UByte,
+  Float,
+  Texture,
+}
+
+export type UniformJSType = mat4 | mat3 | number;
+
+export type UniformProps = {
+  name: string;
+  type: UniformType;
+};
+
+export type RGBVec = [number, number, number];
+
+export type RGBAVec = [number, number, number, number];
+
 export type Translation = {
   x: number;
   y: number;
@@ -7,32 +48,6 @@ export type Scaling = {
   x: number;
   y: number;
 };
-
-export enum AttribType {
-  Float = window.WebGL2RenderingContext && WebGL2RenderingContext['FLOAT'],
-  UByte = window.WebGL2RenderingContext &&
-    WebGL2RenderingContext['UNSIGNED_BYTE'],
-}
-
-export type GLArray = Float32Array | Uint8Array;
-
-export type GLArrayConstructor =
-  | Float32ArrayConstructor
-  | Uint8ArrayConstructor;
-
-export type AttribProps = {
-  dim: number;
-  type: AttribType; // gl.FLOAT, etc
-  normalize: boolean;
-  name: string;
-};
-
-export type ProgramClosure = (gl: WebGL2RenderingContext) => WebGLProgram;
-
-export type RGBVec = [number, number, number];
-
-export type RGBAVec = [number, number, number, number];
-
 export type HSLVec = [number, number, number];
 
 export enum TextAlign {
@@ -57,13 +72,3 @@ export enum RenderZIndex {
   DEFAULT = -98,
   MAX = -99,
 }
-/*
-export enum BeltType {
-  Silver,
-  EnergyCap,
-  EnergyGro,
-  Range,
-  Speed,
-  Defense,
-}
-*/

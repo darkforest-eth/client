@@ -1,56 +1,15 @@
-import autoBind from 'auto-bind';
 import { CanvasCoords, WorldCoords } from '../../../utils/Coordinates';
 import Viewport from '../../board/Viewport';
-import {
-  getLineProgram,
-  getLineUniforms,
-  lineColorProps,
-  lineDistProps,
-  linePosProps,
-} from '../programs/LineProgram';
-import { RenderZIndex, RGBAVec } from '../utils/EngineTypes';
-import AttribManager from '../webgl/AttribManager';
+import { LINE_PROGRAM_DEFINITION } from '../programs/LineProgram';
+import { DrawMode, RenderZIndex, RGBAVec } from '../utils/EngineTypes';
 import { GameGLManager } from '../webgl/GameGLManager';
+import { GenericRenderer } from '../webgl/GenericRenderer';
 
-export default class LineRenderer {
-  glManager: GameGLManager;
-  verts: number;
-
-  program: WebGLProgram;
-  posA: AttribManager;
-  colorA: AttribManager;
-  distA: AttribManager;
-
-  matrixULoc: WebGLUniformLocation | null;
-
-  gl: WebGL2RenderingContext;
-
+export default class LineRenderer extends GenericRenderer<
+  typeof LINE_PROGRAM_DEFINITION
+> {
   constructor(glManager: GameGLManager) {
-    autoBind(this);
-
-    this.glManager = glManager;
-    const { gl } = glManager;
-    this.gl = gl;
-
-    try {
-      const program = getLineProgram(gl);
-      this.program = program;
-      gl.useProgram(program);
-
-      this.posA = new AttribManager(gl, program, linePosProps);
-      this.colorA = new AttribManager(gl, program, lineColorProps);
-      this.distA = new AttribManager(gl, program, lineDistProps);
-
-      this.matrixULoc = getLineUniforms(gl).matrix;
-    } catch (e) {
-      console.error(e);
-    }
-
-    this.beginFrame();
-  }
-
-  beginFrame(): void {
-    this.verts = 0;
+    super(glManager, LINE_PROGRAM_DEFINITION);
   }
 
   private getOffset(start: CanvasCoords, end: CanvasCoords): CanvasCoords {
@@ -65,7 +24,7 @@ export default class LineRenderer {
     return { x: vX / norm, y: vY / norm };
   }
 
-  queueLine(
+  public queueLine(
     start: CanvasCoords,
     end: CanvasCoords,
     color: RGBAVec = [255, 0, 0, 255],
@@ -73,6 +32,8 @@ export default class LineRenderer {
     zIdx: number = RenderZIndex.DEFAULT,
     dashed = false
   ): void {
+    const { position: posA, color: colorA, dist: distA } = this.attribManagers;
+
     const { x: x1, y: y1 } = start;
     const { x: x2, y: y2 } = end;
 
@@ -83,7 +44,7 @@ export default class LineRenderer {
 
     // note that width actually scales 2x - it goes 1, 3, 5, etc
     for (let i = -width; i <= width; i++) {
-      this.posA.setVertex(
+      posA.setVertex(
         // prettier-ignore
         [
           x1 + dX, y1 + dY, zIdx,
@@ -92,16 +53,16 @@ export default class LineRenderer {
         this.verts
       );
 
-      this.colorA.setVertex(
+      colorA.setVertex(
         [color[0], color[1], color[2], color[0], color[1], color[2]],
         this.verts
       );
-      this.distA.setVertex([0, dist], this.verts);
+      distA.setVertex([0, dist], this.verts);
       this.verts += 2;
     }
   }
 
-  queueLineWorld(
+  public queueLineWorld(
     start: WorldCoords,
     end: WorldCoords,
     color: RGBAVec = [255, 0, 0, 255],
@@ -115,60 +76,11 @@ export default class LineRenderer {
     this.queueLine(startC, endC, color, width, zIdx, dashed);
   }
 
-  queueRectStrokeAtCenterWorld(
-    center: WorldCoords,
-    width: number, // worldcoords
-    height: number,
-    color: RGBAVec = [255, 0, 0, 255],
-    zIdx: number = RenderZIndex.DEFAULT,
-    weight = 2
-  ) {
-    const viewport = Viewport.getInstance();
-    const centerC = viewport.worldToCanvasCoords(center);
-    const widthC = viewport.worldToCanvasDist(width);
-    const heightC = viewport.worldToCanvasDist(height);
-    const x = centerC.x - widthC / 2;
-    const y = centerC.y - heightC / 2;
-
-    this.queueRectStroke(x, y, widthC, heightC, color, zIdx, weight);
+  public setUniforms(): void {
+    this.uniformSetters.matrix(this.manager.projectionMatrix);
   }
 
-  queueRectStroke(
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    color: RGBAVec = [255, 0, 0, 255],
-    zIdx: number = RenderZIndex.DEFAULT,
-    weight = 1
-  ) {
-    const upLeft = { x, y };
-    const upRight = { x: x + width, y };
-    const botLeft = { x, y: y + height };
-    const botRight = { x: x + width, y: y + height };
-
-    this.queueLine(upLeft, upRight, color, zIdx, weight);
-    this.queueLine(upRight, botRight, color, zIdx, weight);
-    this.queueLine(botRight, botLeft, color, zIdx, weight);
-    this.queueLine(botLeft, upLeft, color, zIdx, weight);
-  }
-
-  flush(): void {
-    if (this.verts === 0) return;
-
-    const { gl, glManager } = this;
-    gl.useProgram(this.program);
-
-    // write uniforms
-    gl.uniformMatrix4fv(this.matrixULoc, false, glManager.projectionMatrix);
-
-    // write buffers
-    this.posA.bufferData(this.verts);
-    this.colorA.bufferData(this.verts);
-    this.distA.bufferData(this.verts);
-
-    gl.drawArrays(gl.LINES, 0, this.verts);
-
-    this.beginFrame();
+  public flush(): void {
+    super.flush(DrawMode.Lines);
   }
 }

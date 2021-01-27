@@ -1,6 +1,5 @@
-import { AttribProps, AttribType, ProgramClosure } from '../utils/EngineTypes';
+import { AttribType, UniformType } from '../utils/EngineTypes';
 import { glsl } from '../utils/EngineUtils';
-import ProgramUtils from '../webgl/ProgramUtils';
 
 const a = {
   position: 'a_position',
@@ -19,109 +18,85 @@ const v = {
   strokeY: 'v_strokeY',
 };
 
-export const rectPosProps: AttribProps = {
-  dim: 3,
-  type: AttribType.Float,
-  normalize: false,
-  name: a.position,
-};
+export const RECT_PROGRAM_DEFINITION = {
+  uniforms: {
+    matrix: { name: u.matrix, type: UniformType.Mat4 },
+  },
+  attribs: {
+    position: {
+      dim: 3,
+      type: AttribType.Float,
+      normalize: false,
+      name: a.position,
+    },
+    color: {
+      dim: 3,
+      type: AttribType.UByte,
+      normalize: true,
+      name: a.color,
+    },
+    rectPos: {
+      dim: 2,
+      type: AttribType.Float,
+      normalize: false,
+      name: a.rectPos,
+    },
+    strokeX: {
+      dim: 1,
+      type: AttribType.Float,
+      normalize: false,
+      name: a.strokeX,
+    },
+    strokeY: {
+      dim: 1,
+      type: AttribType.Float,
+      normalize: false,
+      name: a.strokeY,
+    },
+  },
+  vertexShader: glsl`
+    in vec4 ${a.position};
+    in vec4 ${a.color};
+    in vec2 ${a.rectPos};
+    in float ${a.strokeX};
+    in float ${a.strokeY};
 
-export const rectColorProps: AttribProps = {
-  dim: 3,
-  type: AttribType.UByte,
-  normalize: true,
-  name: a.color,
-};
+    uniform mat4 ${u.matrix};
 
-export const rectRectPosProps: AttribProps = {
-  dim: 2,
-  type: AttribType.Float,
-  normalize: false,
-  name: a.rectPos,
-};
+    out vec4 ${v.color};
+    out vec2 ${v.rectPos};
+    out float ${v.strokeX};
+    out float ${v.strokeY};
 
-export const rectStrokeXProps: AttribProps = {
-  dim: 1,
-  type: AttribType.Float,
-  normalize: false,
-  name: a.strokeX,
-};
+    void main() {
+      gl_Position = ${u.matrix} * ${a.position};
 
-export const rectStrokeYProps: AttribProps = {
-  dim: 1,
-  type: AttribType.Float,
-  normalize: false,
-  name: a.strokeY,
-};
-
-const rectVert = glsl`
-  in vec4 ${a.position};
-  in vec4 ${a.color};
-  in vec2 ${a.rectPos};
-  in float ${a.strokeX};
-  in float ${a.strokeY};
-
-  uniform mat4 ${u.matrix};
-
-  out vec4 ${v.color};
-  out vec2 ${v.rectPos};
-  out float ${v.strokeX};
-  out float ${v.strokeY};
-
-  void main() {
-    gl_Position = ${u.matrix} * ${a.position};
-
-    ${v.color} = ${a.color};
-    ${v.rectPos} = ${a.rectPos};
-    ${v.strokeX} = ${a.strokeX};
-    ${v.strokeY} = ${a.strokeY};
-  }
-`;
-
-const rectFrag = glsl`
-  precision highp float;
-  out vec4 outColor;
-
-  in vec4 ${v.color};
-  in vec2 ${v.rectPos};
-  in float ${v.strokeX}; // pct of width that should be stroke
-  in float ${v.strokeY}; // pct of height that should be stroke
-
-  void main() {
-    bool hasStroke = ${v.strokeX} > 0.0;
-    float rx = ${v.rectPos}.x;
-    float ry = ${v.rectPos}.y;
-
-    bool xTest = rx > ${v.strokeX} && rx < 1.0 - ${v.strokeX};
-    bool yTest = ry > ${v.strokeY} && ry < 1.0 - ${v.strokeY};
-
-    if (hasStroke && xTest && yTest) discard;
-
-    outColor = ${v.color};
-  }
-`;
-
-export const getRectProgram: ProgramClosure = (() => {
-  let program: WebGLProgram | null = null;
-
-  return (gl: WebGL2RenderingContext) => {
-    if (program === null) {
-      program = ProgramUtils.programFromSources(gl, rectVert, rectFrag);
-      if (program === null) throw 'error compiling rect program';
+      ${v.color} = ${a.color};
+      ${v.rectPos} = ${a.rectPos};
+      ${v.strokeX} = ${a.strokeX};
+      ${v.strokeY} = ${a.strokeY};
     }
+  `,
+  fragmentShader: glsl`
+    precision highp float;
+    out vec4 outColor;
 
-    return program;
-  };
-})();
+    in vec4 ${v.color};
+    in vec2 ${v.rectPos};
+    in float ${v.strokeX}; // pct of width that should be stroke
+    in float ${v.strokeY}; // pct of height that should be stroke
 
-export type RectUniforms = {
-  matrix: WebGLUniformLocation | null;
+    void main() {
+      bool hasStroke = ${v.strokeX} > 0.0;
+      float rx = ${v.rectPos}.x;
+      float ry = ${v.rectPos}.y;
+
+      bool xTest = rx > ${v.strokeX} && rx < 1.0 - ${v.strokeX};
+      bool yTest = ry > ${v.strokeY} && ry < 1.0 - ${v.strokeY};
+
+      if (hasStroke && xTest && yTest) discard;
+
+      outColor = ${v.color};
+    }
+  `,
 };
-
-export function getRectUniforms(gl: WebGL2RenderingContext): RectUniforms {
-  const program = getRectProgram(gl);
-  gl.useProgram(program); // may be superfluous;
-  return {
-    matrix: gl.getUniformLocation(program, u.matrix),
-  };
-}

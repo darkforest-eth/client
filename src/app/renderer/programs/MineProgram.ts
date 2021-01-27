@@ -1,6 +1,5 @@
-import { AttribProps, AttribType } from '../utils/EngineTypes';
+import { AttribType, UniformType } from '../utils/EngineTypes';
 import { glsl } from '../utils/EngineUtils';
-import ProgramUtils from '../webgl/ProgramUtils';
 import { ShaderMixins } from '../webgl/ShaderMixins';
 // isn't used anywhere, mostly this is used for copy-pasting. later we will make it a proper class
 const a = {
@@ -20,130 +19,108 @@ const v = {
   seed: 'v_seed',
 };
 
-export const minePosProps: AttribProps = {
-  dim: 3,
-  type: AttribType.Float,
-  normalize: false,
-  name: a.position,
-};
-export const mineColorProps: AttribProps = {
-  dim: 3,
-  type: AttribType.UByte,
-  normalize: true,
-  name: a.color,
-};
-export const mineRadiusProps: AttribProps = {
-  dim: 1,
-  type: AttribType.Float,
-  normalize: false,
-  name: a.radius,
-};
-export const mineSeedProps: AttribProps = {
-  dim: 1,
-  type: AttribType.Float,
-  normalize: false,
-  name: a.seed,
-};
-export const mineOffsetProps: AttribProps = {
-  dim: 1,
-  type: AttribType.Float,
-  normalize: false,
-  name: a.offset,
-};
-
-const vert = glsl`
-  in vec4 ${a.position};
-  in vec4 ${a.color};
-  in float ${a.radius};
-  in float ${a.seed};
-  in float ${a.offset};
-
-  uniform mat4 ${u.matrix};
-  uniform float ${u.now};
-
-  out vec4 ${v.color};
-  out float ${v.darken}; // between 0 and 1
-  out float ${v.seed};
-
-  ${ShaderMixins.mod2pi}
-
-  void main() {
-    float radius = ${a.radius} * 0.5;
-
-    float theta = mod2pi(${u.now} + ${a.offset});
-
-    // these are all in screen coords
-    float dX = 0.7 * ${a.radius} * cos(theta);
-    float dY = 0.35 * ${a.radius} * sin(theta);
-    float dZ = -0.00001 * sin(theta); // essentially flat
-
-    vec4 dVec = vec4(dX, dY, dZ, 0.0);
-    vec4 realPos = ${a.position} + dVec;
-
-    gl_Position = ${u.matrix} * realPos;
-    ${v.color} = ${a.color};
-
-    float delRad = 1.0 + 0.3 * sin(theta);
-    ${v.darken} = 0.7 + 0.3 * sin(theta);
-    gl_PointSize = 2.0 * radius * delRad;
-
-    ${v.seed} = ${a.seed};
-  }
-`;
-
-const frag = glsl`
-  precision highp float;
-  out vec4 outColor;
-
-  uniform float ${u.now};
-
-  in vec4 ${v.color};
-  in float ${v.darken};
-  in float ${v.seed};
-
-  ${ShaderMixins.noiseVec3}
-  ${ShaderMixins.radAtAngle}
-  ${ShaderMixins.mod2pi}
-  ${ShaderMixins.seededRandom}
-
-  void main() {
-    vec2 rectPos = 2.0 * gl_PointCoord - vec2(1.0);
-
-
-    float angle = atan(rectPos.y, rectPos.x) + ${u.now};
-    angle = mod2pi(angle);
-    float radAtAngle = radAtAngle(angle, 10. * seededRandom(${v.seed} + length(${v.color})));
-
-    if (length(rectPos) > pow(radAtAngle, 2.0)) discard;
-
-    outColor = vec4(${v.darken} * ${v.color}.xyz, 1.0);
-  }
-`;
-
-export type MineUniforms = {
-  matrix: WebGLUniformLocation | null;
-  now: WebGLUniformLocation | null;
-};
-
-export type MineProgramWithUniforms = {
-  program: WebGLProgram;
-  uniforms: MineUniforms;
-};
-
-export const getMineProgramAndUniforms = (
-  gl: WebGL2RenderingContext
-): MineProgramWithUniforms => {
-  const program = ProgramUtils.programFromSources(gl, vert, frag);
-  if (program === null) throw 'error compiling mine program';
-
-  gl.useProgram(program); // may be superfluous;
-  const uniforms = {
-    matrix: gl.getUniformLocation(program, u.matrix),
-    now: gl.getUniformLocation(program, u.now),
-  };
-
-  return {
-    program,
-    uniforms,
-  };
+export const MINE_PROGRAM_DEFINITION = {
+  uniforms: {
+    matrix: { name: u.matrix, type: UniformType.Mat4 },
+    now: { name: u.now, type: UniformType.Float },
+  },
+  attribs: {
+    position: {
+      dim: 3,
+      type: AttribType.Float,
+      normalize: false,
+      name: a.position,
+    },
+    color: {
+      dim: 3,
+      type: AttribType.UByte,
+      normalize: true,
+      name: a.color,
+    },
+    radius: {
+      dim: 1,
+      type: AttribType.Float,
+      normalize: false,
+      name: a.radius,
+    },
+    seed: {
+      dim: 1,
+      type: AttribType.Float,
+      normalize: false,
+      name: a.seed,
+    },
+    offset: {
+      dim: 1,
+      type: AttribType.Float,
+      normalize: false,
+      name: a.offset,
+    },
+  },
+  vertexShader: glsl`
+    in vec4 ${a.position};
+    in vec4 ${a.color};
+    in float ${a.radius};
+    in float ${a.seed};
+    in float ${a.offset};
+  
+    uniform mat4 ${u.matrix};
+    uniform float ${u.now};
+  
+    out vec4 ${v.color};
+    out float ${v.darken}; // between 0 and 1
+    out float ${v.seed};
+  
+    ${ShaderMixins.mod2pi}
+  
+    void main() {
+      float radius = ${a.radius} * 0.5;
+  
+      float theta = mod2pi(${u.now} + ${a.offset});
+  
+      // these are all in screen coords
+      float dX = 0.7 * ${a.radius} * cos(theta);
+      float dY = 0.35 * ${a.radius} * sin(theta);
+      float dZ = -0.00001 * sin(theta); // essentially flat
+  
+      vec4 dVec = vec4(dX, dY, dZ, 0.0);
+      vec4 realPos = ${a.position} + dVec;
+  
+      gl_Position = ${u.matrix} * realPos;
+      ${v.color} = ${a.color};
+  
+      float delRad = 1.0 + 0.3 * sin(theta);
+      ${v.darken} = 0.7 + 0.3 * sin(theta);
+      gl_PointSize = 2.0 * radius * delRad;
+  
+      ${v.seed} = ${a.seed};
+    }
+  `,
+  fragmentShader: glsl`
+    precision highp float;
+    out vec4 outColor;
+  
+    uniform float ${u.now};
+  
+    in vec4 ${v.color};
+    in float ${v.darken};
+    in float ${v.seed};
+  
+    ${ShaderMixins.noiseVec3}
+    ${ShaderMixins.radAtAngle}
+    ${ShaderMixins.mod2pi}
+    ${ShaderMixins.seededRandom}
+  
+    void main() {
+      vec2 rectPos = 2.0 * gl_PointCoord - vec2(1.0);
+  
+  
+      float angle = atan(rectPos.y, rectPos.x) + ${u.now};
+      angle = mod2pi(angle);
+      float radAtAngle = radAtAngle(angle, 10. * seededRandom(${v.seed} + length(${v.color})));
+  
+      if (length(rectPos) > pow(radAtAngle, 2.0)) discard;
+  
+      outColor = vec4(${v.darken} * ${v.color}.xyz, 1.0);
+    }
+  `,
 };

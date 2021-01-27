@@ -1,70 +1,21 @@
-import autoBind from 'auto-bind';
 import { CanvasCoords, WorldCoords } from '../../../utils/Coordinates';
 import { ProcgenUtils } from '../../../utils/ProcgenUtils';
 import { Planet } from '../../../_types/global/GlobalTypes';
 import Viewport from '../../board/Viewport';
-import {
-  minePosProps,
-  mineColorProps,
-  mineRadiusProps,
-  getMineProgramAndUniforms,
-  mineSeedProps,
-  mineOffsetProps,
-} from '../programs/MineProgram';
-import { RGBVec } from '../utils/EngineTypes';
+import { MINE_PROGRAM_DEFINITION } from '../programs/MineProgram';
+import { DrawMode, RGBVec } from '../utils/EngineTypes';
 import EngineUtils from '../utils/EngineUtils';
-import AttribManager from '../webgl/AttribManager';
+import { GenericRenderer } from '../webgl/GenericRenderer';
 import { WebGLManager } from '../webgl/WebGLManager';
 
-export class MineRenderer {
-  manager: WebGLManager;
-  program: WebGLProgram;
-
-  posA: AttribManager;
-  colorA: AttribManager;
-  radiusA: AttribManager;
-  seedA: AttribManager;
-  offsetA: AttribManager;
-
-  verts: number;
-
-  matrixULoc: WebGLUniformLocation | null; // screenspace to clipspace
-  nowULoc: WebGLUniformLocation | null;
+export class MineRenderer extends GenericRenderer<
+  typeof MINE_PROGRAM_DEFINITION
+> {
   viewport: Viewport;
 
   constructor(manager: WebGLManager) {
-    autoBind(this);
-
+    super(manager, MINE_PROGRAM_DEFINITION);
     this.viewport = Viewport.getInstance();
-
-    this.verts = 0;
-
-    this.manager = manager;
-
-    const { gl } = this.manager;
-
-    try {
-      const { program, uniforms } = getMineProgramAndUniforms(gl);
-      this.program = program;
-      gl.useProgram(program);
-
-      this.posA = new AttribManager(gl, program, minePosProps);
-      this.colorA = new AttribManager(gl, program, mineColorProps);
-      this.radiusA = new AttribManager(gl, program, mineRadiusProps);
-      this.seedA = new AttribManager(gl, program, mineSeedProps);
-      this.offsetA = new AttribManager(gl, program, mineOffsetProps);
-
-      this.matrixULoc = uniforms.matrix;
-      this.nowULoc = uniforms.now;
-    } catch (e) {
-      console.error(e);
-    }
-
-    this.beginFrame();
-  }
-
-  private beginFrame() {
-    this.verts = 0;
   }
 
   private queuePoint(
@@ -75,11 +26,19 @@ export class MineRenderer {
     seed: number,
     offset: number
   ) {
-    this.posA.setVertex([x, y, z], this.verts);
-    this.radiusA.setVertex([radius], this.verts);
-    this.colorA.setVertex(color, this.verts);
-    this.seedA.setVertex([seed], this.verts);
-    this.offsetA.setVertex([offset], this.verts);
+    const {
+      position: posA,
+      radius: radiusA,
+      color: colorA,
+      seed: seedA,
+      offset: offsetA,
+    } = this.attribManagers;
+
+    posA.setVertex([x, y, z], this.verts);
+    radiusA.setVertex([radius], this.verts);
+    colorA.setVertex(color, this.verts);
+    seedA.setVertex([seed], this.verts);
+    offsetA.setVertex([offset], this.verts);
 
     this.verts += 1;
   }
@@ -119,26 +78,12 @@ export class MineRenderer {
     this.queueMineScreen(planet, center, radius, z);
   }
 
+  public setUniforms() {
+    this.uniformSetters.matrix(this.manager.projectionMatrix);
+    this.uniformSetters.now(EngineUtils.getNow());
+  }
+
   flush() {
-    if (this.verts === 0) return;
-
-    const { gl } = this.manager;
-
-    gl.useProgram(this.program);
-
-    this.posA.bufferData(this.verts);
-    this.colorA.bufferData(this.verts);
-    this.radiusA.bufferData(this.verts);
-    this.seedA.bufferData(this.verts);
-    this.offsetA.bufferData(this.verts);
-
-    // set uniforms
-    gl.uniformMatrix4fv(this.matrixULoc, false, this.manager.projectionMatrix);
-    gl.uniform1f(this.nowULoc, EngineUtils.getNow());
-
-    // draw
-    gl.drawArrays(gl.POINTS, 0, this.verts);
-
-    this.beginFrame();
+    super.flush(DrawMode.Points);
   }
 }

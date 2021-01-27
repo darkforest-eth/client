@@ -150,6 +150,9 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="enums/dbactiontype.html" class="tsd-kind-icon">DBAction<wbr>Type</a>
 					</li>
 					<li class=" tsd-kind-enum">
+						<a href="enums/drawmode.html" class="tsd-kind-icon">Draw<wbr>Mode</a>
+					</li>
+					<li class=" tsd-kind-enum">
 						<a href="enums/emailctamode.html" class="tsd-kind-icon">EmailCTAMode</a>
 					</li>
 					<li class=" tsd-kind-enum">
@@ -276,6 +279,9 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="enums/uiemitterevent.html" class="tsd-kind-icon">UIEmitter<wbr>Event</a>
 					</li>
 					<li class=" tsd-kind-enum">
+						<a href="enums/uniformtype.html" class="tsd-kind-icon">Uniform<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
 						<a href="enums/upgradeargidxs.html" class="tsd-kind-icon">Upgrade<wbr>Arg<wbr>Idxs</a>
 					</li>
 					<li class=" tsd-kind-enum">
@@ -356,7 +362,7 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					<li class=" tsd-kind-class">
 						<a href="classes/gameuimanager.html" class="tsd-kind-icon">GameUIManager</a>
 					</li>
-					<li class=" tsd-kind-class">
+					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/genericrenderer.html" class="tsd-kind-icon">Generic<wbr>Renderer</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -534,6 +540,9 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="interfaces/dbaction.html" class="tsd-kind-icon">DBAction</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="interfaces/engineprogramdefinition.html" class="tsd-kind-icon">Engine<wbr>Program<wbr>Definition</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/gradientatpoint.html" class="tsd-kind-icon">Gradient<wbr>AtPoint</a>
 					</li>
 					<li class=" tsd-kind-interface">
@@ -639,10 +648,13 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#artifactinfo" class="tsd-kind-icon">Artifact<wbr>Info</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#asteroiduniforms" class="tsd-kind-icon">Asteroid<wbr>Uniforms</a>
+						<a href="globals.html#atlasinfo" class="tsd-kind-icon">Atlas<wbr>Info</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#atlasinfo" class="tsd-kind-icon">Atlas<wbr>Info</a>
+						<a href="globals.html#attribdata" class="tsd-kind-icon">Attrib<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#attribmanagers" class="tsd-kind-icon">Attrib<wbr>Managers</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#attribprops" class="tsd-kind-icon">Attrib<wbr>Props</a>
@@ -652,9 +664,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#beltprops" class="tsd-kind-icon">Belt<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#beltuniforms" class="tsd-kind-icon">Belt<wbr>Uniforms</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#biomeargs" class="tsd-kind-icon">Biome<wbr>Args</a>
@@ -667,9 +676,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#branchhook" class="tsd-kind-icon">Branch<wbr>Hook</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#circleuniforms" class="tsd-kind-icon">Circle<wbr>Uniforms</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#clientmockchaindata" class="tsd-kind-icon">Client<wbr>Mockchain<wbr>Data</a>
@@ -720,12 +726,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#glarrayconstructor" class="tsd-kind-icon">GLArray<wbr>Constructor</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#genericprogramwithuniforms" class="tsd-kind-icon">Generic<wbr>Program<wbr>With<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#genericuniforms" class="tsd-kind-icon">Generic<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#glassprogramwithuniforms" class="tsd-kind-icon">Glass<wbr>Program<wbr>With<wbr>Uniforms</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
@@ -762,25 +762,13 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#landingwrapperprops" class="tsd-kind-icon">Landing<wbr>Wrapper<wbr>Props</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#lineuniforms" class="tsd-kind-icon">Line<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#locatableplanet" class="tsd-kind-icon">Locatable<wbr>Planet</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#locationid" class="tsd-kind-icon">Location<wbr>Id</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#maskuniforms" class="tsd-kind-icon">Mask<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#memoizedcoordhashes" class="tsd-kind-icon">Memoized<wbr>Coord<wbr>Hashes</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#mineprogramwithuniforms" class="tsd-kind-icon">Mine<wbr>Program<wbr>With<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#mineuniforms" class="tsd-kind-icon">Mine<wbr>Uniforms</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#mockminedblock" class="tsd-kind-icon">Mock<wbr>Mined<wbr>Block</a>
@@ -834,13 +822,7 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#planet" class="tsd-kind-icon">Planet</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#planetprogramwithuniforms" class="tsd-kind-icon">Planet<wbr>Program<wbr>With<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#planetstatsinfo" class="tsd-kind-icon">Planet<wbr>Stats<wbr>Info</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#planetuniforms" class="tsd-kind-icon">Planet<wbr>Uniforms</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#pluginid" class="tsd-kind-icon">Plugin<wbr>Id</a>
@@ -850,9 +832,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#position" class="tsd-kind-icon">Position</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#programclosure" class="tsd-kind-icon">Program<wbr>Closure</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#programinfo" class="tsd-kind-icon">Program<wbr>Info</a>
@@ -883,9 +862,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#rawupgradesinfo" class="tsd-kind-icon">Raw<wbr>Upgrades<wbr>Info</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#rectuniforms" class="tsd-kind-icon">Rect<wbr>Uniforms</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#retryerrorhandler" class="tsd-kind-icon">Retry<wbr>Error<wbr>Handler</a>
@@ -922,12 +898,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#spriteinfo" class="tsd-kind-icon">Sprite<wbr>Info</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#spriteprogramwithuniforms" class="tsd-kind-icon">Sprite<wbr>Program<wbr>With<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#spriteuniforms" class="tsd-kind-icon">Sprite<wbr>Uniforms</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#submittedbuyhat" class="tsd-kind-icon">Submitted<wbr>Buy<wbr>Hat</a>
@@ -997,6 +967,21 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#unconfirmedwithdrawartifact" class="tsd-kind-icon">Unconfirmed<wbr>Withdraw<wbr>Artifact</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#uniformdata" class="tsd-kind-icon">Uniform<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#uniformjstype" class="tsd-kind-icon">UniformJSType</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#uniformlocs" class="tsd-kind-icon">Uniform<wbr>Locs</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#uniformprops" class="tsd-kind-icon">Uniform<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#uniformsetter" class="tsd-kind-icon">Uniform<wbr>Setter</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="globals.html#uniformsetters" class="tsd-kind-icon">Uniform<wbr>Setters</a>
@@ -1620,12 +1605,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#artifacts" class="tsd-kind-icon">artifacts</a>
 					</li>
 					<li class=" tsd-kind-variable">
-						<a href="globals.html#astfrag" class="tsd-kind-icon">ast<wbr>Frag</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#astvert" class="tsd-kind-icon">ast<wbr>Vert</a>
-					</li>
-					<li class=" tsd-kind-variable">
 						<a href="globals.html#backgroundlight" class="tsd-kind-icon">backgroundlight</a>
 					</li>
 					<li class=" tsd-kind-variable">
@@ -1648,12 +1627,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#celldim" class="tsd-kind-icon">cell<wbr>Dim</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#circfrag" class="tsd-kind-icon">circ<wbr>Frag</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#circvert" class="tsd-kind-icon">circ<wbr>Vert</a>
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#colorother" class="tsd-kind-icon">color<wbr>Other</a>
@@ -1698,9 +1671,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#frag" class="tsd-kind-icon">frag</a>
 					</li>
 					<li class=" tsd-kind-variable">
-						<a href="globals.html#fragsrc" class="tsd-kind-icon">frag<wbr>Src</a>
-					</li>
-					<li class=" tsd-kind-variable">
 						<a href="globals.html#fragmentid" class="tsd-kind-icon">fragment<wbr>Id</a>
 					</li>
 					<li class=" tsd-kind-variable">
@@ -1711,27 +1681,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#genericverb" class="tsd-kind-icon">generic<wbr>Verb</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#getasteroidprogram" class="tsd-kind-icon">get<wbr>Asteroid<wbr>Program</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#getbeltprogram" class="tsd-kind-icon">get<wbr>Belt<wbr>Program</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#getcircleprogram" class="tsd-kind-icon">get<wbr>Circle<wbr>Program</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#getlineprogram" class="tsd-kind-icon">get<wbr>Line<wbr>Program</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#getmaskprogram" class="tsd-kind-icon">get<wbr>Mask<wbr>Program</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#getrectprogram" class="tsd-kind-icon">get<wbr>Rect<wbr>Program</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#gettextprogram" class="tsd-kind-icon">get<wbr>Text<wbr>Program</a>
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#glasssprite" class="tsd-kind-icon">glass<wbr>Sprite</a>
@@ -1758,12 +1707,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#keys" class="tsd-kind-icon">keys</a>
 					</li>
 					<li class=" tsd-kind-variable">
-						<a href="globals.html#linefrag" class="tsd-kind-icon">line<wbr>Frag</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#linevert" class="tsd-kind-icon">line<wbr>Vert</a>
-					</li>
-					<li class=" tsd-kind-variable">
 						<a href="globals.html#lookup" class="tsd-kind-icon">lookup</a>
 					</li>
 					<li class=" tsd-kind-variable">
@@ -1771,12 +1714,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#mtop" class="tsd-kind-icon">m<wbr>Top</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#maskfrag" class="tsd-kind-icon">mask<wbr>Frag</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#maskvert" class="tsd-kind-icon">mask<wbr>Vert</a>
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#maxradius" class="tsd-kind-icon">max<wbr>Radius</a>
@@ -1816,12 +1753,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#range" class="tsd-kind-icon">range</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#rectfrag" class="tsd-kind-icon">rect<wbr>Frag</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#rectvert" class="tsd-kind-icon">rect<wbr>Vert</a>
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#red" class="tsd-kind-icon">red</a>
@@ -1872,12 +1803,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#text" class="tsd-kind-icon">text</a>
 					</li>
 					<li class=" tsd-kind-variable">
-						<a href="globals.html#textfrag" class="tsd-kind-icon">text<wbr>Frag</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#textvert" class="tsd-kind-icon">text<wbr>Vert</a>
-					</li>
-					<li class=" tsd-kind-variable">
 						<a href="globals.html#thumbdim" class="tsd-kind-icon">thumb<wbr>Dim</a>
 					</li>
 					<li class=" tsd-kind-variable">
@@ -1891,9 +1816,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#vert" class="tsd-kind-icon">vert</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#vertsrc" class="tsd-kind-icon">vert<wbr>Src</a>
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#white" class="tsd-kind-icon">white</a>
@@ -2703,13 +2625,7 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#getalltwitters" class="tsd-kind-icon">get<wbr>All<wbr>Twitters</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="globals.html#getasteroiduniforms" class="tsd-kind-icon">get<wbr>Asteroid<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-function">
 						<a href="globals.html#getattribtypesize" class="tsd-kind-icon">get<wbr>Attrib<wbr>Type<wbr>Size</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#getbeltuniforms" class="tsd-kind-icon">get<wbr>Belt<wbr>Uniforms</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#getbucket" class="tsd-kind-icon">get<wbr>Bucket</a>
@@ -2727,9 +2643,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#getchunkofsidelength" class="tsd-kind-icon">get<wbr>Chunk<wbr>OfSide<wbr>Length</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="globals.html#getcircleuniforms" class="tsd-kind-icon">get<wbr>Circle<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-function">
 						<a href="globals.html#getconstructor" class="tsd-kind-icon">get<wbr>Constructor</a>
 					</li>
 					<li class=" tsd-kind-function">
@@ -2745,19 +2658,7 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#getformatprop" class="tsd-kind-icon">get<wbr>Format<wbr>Prop</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="globals.html#getgenericprogramanduniforms" class="tsd-kind-icon">get<wbr>Generic<wbr>Program<wbr>And<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-function">
 						<a href="globals.html#getglassprogramanduniforms" class="tsd-kind-icon">get<wbr>Glass<wbr>Program<wbr>And<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#getlineuniforms" class="tsd-kind-icon">get<wbr>Line<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#getmaskuniforms" class="tsd-kind-icon">get<wbr>Mask<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#getmineprogramanduniforms" class="tsd-kind-icon">get<wbr>Mine<wbr>Program<wbr>And<wbr>Uniforms</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#getnotifcolor" class="tsd-kind-icon">get<wbr>Notif<wbr>Color</a>
@@ -2770,9 +2671,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#getplanetlocations" class="tsd-kind-icon">get<wbr>Planet<wbr>Locations</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#getplanetprogramanduniforms" class="tsd-kind-icon">get<wbr>Planet<wbr>Program<wbr>And<wbr>Uniforms</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#getplanetrank" class="tsd-kind-icon">get<wbr>Planet<wbr>Rank</a>
@@ -2796,9 +2694,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#getrandomgradientat" class="tsd-kind-icon">get<wbr>Random<wbr>Gradient<wbr>At</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="globals.html#getrectuniforms" class="tsd-kind-icon">get<wbr>Rect<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-function">
 						<a href="globals.html#getscoreboard" class="tsd-kind-icon">get<wbr>Scoreboard</a>
 					</li>
 					<li class=" tsd-kind-function">
@@ -2811,13 +2706,10 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#getspriteinfo" class="tsd-kind-icon">get<wbr>Sprite<wbr>Info</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="globals.html#getspriteprogramanduniforms" class="tsd-kind-icon">get<wbr>Sprite<wbr>Program<wbr>And<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#gettextuniforms" class="tsd-kind-icon">get<wbr>Text<wbr>Uniforms</a>
-					</li>
-					<li class=" tsd-kind-function">
 						<a href="globals.html#gettimezone" class="tsd-kind-icon">get<wbr>Time<wbr>Zone</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getuniformsetter" class="tsd-kind-icon">get<wbr>Uniform<wbr>Setter</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#getupgradestat" class="tsd-kind-icon">get<wbr>Upgrade<wbr>Stat</a>
@@ -3114,40 +3006,43 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#withlinenums" class="tsd-kind-icon">with<wbr>Line<wbr>Nums</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#asteroid_program_definition" class="tsd-kind-icon">ASTEROID_<wbr>PROGRAM_<wbr>DEFINITION</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#belt_program_definition" class="tsd-kind-icon">BELT_<wbr>PROGRAM_<wbr>DEFINITION</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#circle_program_definition" class="tsd-kind-icon">CIRCLE_<wbr>PROGRAM_<wbr>DEFINITION</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#line_program_definition" class="tsd-kind-icon">LINE_<wbr>PROGRAM_<wbr>DEFINITION</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#mask_program_definition" class="tsd-kind-icon">MASK_<wbr>PROGRAM_<wbr>DEFINITION</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#mine_program_definition" class="tsd-kind-icon">MINE_<wbr>PROGRAM_<wbr>DEFINITION</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#planet_program_definition" class="tsd-kind-icon">PLANET_<wbr>PROGRAM_<wbr>DEFINITION</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#rect_program_definition" class="tsd-kind-icon">RECT_<wbr>PROGRAM_<wbr>DEFINITION</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#sprite_program_definition" class="tsd-kind-icon">SPRITE_<wbr>PROGRAM_<wbr>DEFINITION</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#text_program_definition" class="tsd-kind-icon">TEXT_<wbr>PROGRAM_<wbr>DEFINITION</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#txtypetoethfunctionname" class="tsd-kind-icon">Tx<wbr>Type<wbr>ToEth<wbr>Function<wbr>Name</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#a" class="tsd-kind-icon">a</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#astcolorprops" class="tsd-kind-icon">ast<wbr>Color<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#astposprops" class="tsd-kind-icon">ast<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#astradiusprops" class="tsd-kind-icon">ast<wbr>Radius<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#astseedprops" class="tsd-kind-icon">ast<wbr>Seed<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#astthetaprops" class="tsd-kind-icon">ast<wbr>Theta<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#baseengmodifiers" class="tsd-kind-icon">base<wbr>Eng<wbr>Modifiers</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#beltcolorprops" class="tsd-kind-icon">belt<wbr>Color<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#beltposprops" class="tsd-kind-icon">belt<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#beltpropsprops" class="tsd-kind-icon">belt<wbr>Props<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#beltrectposprops" class="tsd-kind-icon">belt<wbr>Rect<wbr>Pos<wbr>Props</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#blurb2grammar" class="tsd-kind-icon">blurb2grammar</a>
@@ -3157,18 +3052,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 					</li>
 					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#chefhat" class="tsd-kind-icon">chef<wbr>Hat</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#circcolorprops" class="tsd-kind-icon">circ<wbr>Color<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#circepsprops" class="tsd-kind-icon">circ<wbr>Eps<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#circposprops" class="tsd-kind-icon">circ<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#circpropsprops" class="tsd-kind-icon">circ<wbr>Props<wbr>Props</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#cornerstyle" class="tsd-kind-icon">corner<wbr>Style</a>
@@ -3201,12 +3084,6 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#fontsizes" class="tsd-kind-icon">font<wbr>Sizes</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#gencolorprops" class="tsd-kind-icon">gen<wbr>Color<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#genposprops" class="tsd-kind-icon">gen<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#glassposprops" class="tsd-kind-icon">glass<wbr>Pos<wbr>Props</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
@@ -3222,34 +3099,7 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#hats" class="tsd-kind-icon">hats</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#linecolorprops" class="tsd-kind-icon">line<wbr>Color<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#linedistprops" class="tsd-kind-icon">line<wbr>Dist<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#lineposprops" class="tsd-kind-icon">line<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#links" class="tsd-kind-icon">links</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#maskposprops" class="tsd-kind-icon">mask<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#minecolorprops" class="tsd-kind-icon">mine<wbr>Color<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#mineoffsetprops" class="tsd-kind-icon">mine<wbr>Offset<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#mineposprops" class="tsd-kind-icon">mine<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#mineradiusprops" class="tsd-kind-icon">mine<wbr>Radius<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#mineseedprops" class="tsd-kind-icon">mine<wbr>Seed<wbr>Props</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#na" class="tsd-kind-icon">nA</a>
@@ -3261,43 +3111,7 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#partyhat" class="tsd-kind-icon">party<wbr>Hat</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#planetcolor2props" class="tsd-kind-icon">planet<wbr>Color2<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#planetcolor3props" class="tsd-kind-icon">planet<wbr>Color3<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#planetcolorprops" class="tsd-kind-icon">planet<wbr>Color<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#planetposprops" class="tsd-kind-icon">planet<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#planetprops2props" class="tsd-kind-icon">planet<wbr>Props2<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#planetpropsprops" class="tsd-kind-icon">planet<wbr>Props<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#planetrectposprops" class="tsd-kind-icon">planet<wbr>Rect<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#popehat" class="tsd-kind-icon">pope<wbr>Hat</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#rectcolorprops" class="tsd-kind-icon">rect<wbr>Color<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#rectposprops" class="tsd-kind-icon">rect<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#rectrectposprops" class="tsd-kind-icon">rect<wbr>Rect<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#rectstrokexprops" class="tsd-kind-icon">rect<wbr>StrokeXProps</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#rectstrokeyprops" class="tsd-kind-icon">rect<wbr>StrokeYProps</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#santahat" class="tsd-kind-icon">santa<wbr>Hat</a>
@@ -3309,37 +3123,10 @@ yarn <span class="hljs-keyword">star</span><span class="hljs-variable">t:prod</s
 						<a href="globals.html#scapeposprops" class="tsd-kind-icon">scape<wbr>Pos<wbr>Props</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#spritecolorprops" class="tsd-kind-icon">sprite<wbr>Color<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#spriteinvertprops" class="tsd-kind-icon">sprite<wbr>Invert<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#spriteposprops" class="tsd-kind-icon">sprite<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#spriterectposprops" class="tsd-kind-icon">sprite<wbr>Rect<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#spriteshineprops" class="tsd-kind-icon">sprite<wbr>Shine<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#spritetexprops" class="tsd-kind-icon">sprite<wbr>Tex<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#squid" class="tsd-kind-icon">squid</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#styles" class="tsd-kind-icon">styles</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#textcolorprops" class="tsd-kind-icon">text<wbr>Color<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#textposprops" class="tsd-kind-icon">text<wbr>Pos<wbr>Props</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#texttexcoordprops" class="tsd-kind-icon">text<wbr>Texcoord<wbr>Props</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#tophat" class="tsd-kind-icon">top<wbr>Hat</a>

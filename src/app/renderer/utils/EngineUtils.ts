@@ -71,6 +71,18 @@ export default class EngineUtils {
     EngineUtils.translateIndices(b, 15, 16, t);
   }
 
+  public static makeEmptyQuad(): number[] {
+    return Array(6 * 3).fill(0);
+  }
+
+  public static makeEmptyQuadVec2(): number[] {
+    return Array(6 * 2).fill(0);
+  }
+
+  public static makeEmptyDoubleQuad(): number[] {
+    return Array(6 * 2 * 2).fill(0);
+  }
+
   /* makes a 3d quad */
   public static makeQuad(
     x1: number,

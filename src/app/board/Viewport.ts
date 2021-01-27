@@ -101,8 +101,6 @@ class Viewport {
     this.isPanning = false;
     autoBind(this);
 
-    console.log('constructing viewport');
-
     // fixes issue where viewport inits weirdly - TODO figure out why
     this.setWorldWidth(this.widthInWorldUnits);
     this.onScroll(0);
@@ -186,7 +184,6 @@ class Viewport {
     if (!stored) {
       viewport.zoomPlanet(gameUIManager.getHomePlanet());
     } else {
-      console.log('loading viewport data', stored);
       viewport.setData(stored);
     }
 

@@ -7,6 +7,7 @@ import {
   Biome,
 } from '../../../_types/global/GlobalTypes';
 import Viewport from '../../board/Viewport';
+import { SPRITE_PROGRAM_DEFINITION } from '../programs/SpriteProgram';
 import { engineConsts } from '../utils/EngineConsts';
 import { RGBAVec, RGBVec } from '../utils/EngineTypes';
 import EngineUtils from '../utils/EngineUtils';
@@ -16,32 +17,12 @@ import {
   loadArtifactAtlas,
   loadArtifactThumbAtlas,
 } from '../utils/TextureManager';
-import AttribManager from '../webgl/AttribManager';
-import {
-  getSpriteProgramAndUniforms,
-  spriteColorProps,
-  spriteInvertProps,
-  spritePosProps,
-  spriteRectPosProps,
-  spriteShineProps,
-  spriteTexProps,
-} from '../programs/SpriteProgram';
+import { GenericRenderer } from '../webgl/GenericRenderer';
 import { WebGLManager } from '../webgl/WebGLManager';
 
-export class SpriteRenderer {
-  private manager: WebGLManager;
-
-  private program: WebGLProgram;
-  private matrixULoc: WebGLUniformLocation | null;
-  private textureULoc: WebGLUniformLocation | null;
-
-  private posA: AttribManager;
-  private texA: AttribManager;
-  private colorA: AttribManager;
-  private shineA: AttribManager;
-  private invertA: AttribManager;
-  private rectPosA: AttribManager;
-
+export class SpriteRenderer extends GenericRenderer<
+  typeof SPRITE_PROGRAM_DEFINITION
+> {
   private posBuffer: number[];
   private texBuffer: number[];
   private rectposBuffer: number[];
@@ -52,32 +33,16 @@ export class SpriteRenderer {
   private texIdx: number;
   private flip: boolean;
 
-  private verts = 0;
-
   constructor(manager: WebGLManager, thumb = false, flip = false) {
-    this.thumb = thumb;
+    super(manager, SPRITE_PROGRAM_DEFINITION);
 
+    this.thumb = thumb;
     this.flip = flip;
 
-    this.manager = manager;
     this.loaded = false;
 
-    const { gl } = this.manager;
-
-    const { program, uniforms } = getSpriteProgramAndUniforms(gl);
-    this.program = program;
-    this.matrixULoc = uniforms.matrix;
-    this.textureULoc = uniforms.texture;
-
-    this.posA = new AttribManager(gl, program, spritePosProps);
-    this.rectPosA = new AttribManager(gl, program, spriteRectPosProps);
-    this.texA = new AttribManager(gl, program, spriteTexProps);
-    this.colorA = new AttribManager(gl, program, spriteColorProps);
-    this.shineA = new AttribManager(gl, program, spriteShineProps);
-    this.invertA = new AttribManager(gl, program, spriteInvertProps);
-
-    this.texBuffer = Array(6 * 2).fill(0);
-    this.posBuffer = Array(6 * 3).fill(0);
+    this.texBuffer = EngineUtils.makeEmptyQuadVec2();
+    this.posBuffer = EngineUtils.makeEmptyQuad();
     this.rectposBuffer = EngineUtils.makeQuadVec2(0, 0, 1, 1);
 
     this.spriteInfo = getSpriteInfo();
@@ -161,6 +126,15 @@ export class SpriteRenderer {
   ) {
     if (!this.loaded) return;
 
+    const {
+      position: posA,
+      texcoord: texA,
+      rectPos: rectPosA,
+      color: colorA,
+      shine: shineA,
+      invert: invertA,
+    } = this.attribManagers;
+
     /* set up attributes */
     // we'll always want pixel-perfect icons
     const { x, y } = { x: Math.floor(topLeft.x), y: Math.floor(topLeft.y) };
@@ -195,14 +169,14 @@ export class SpriteRenderer {
     const myColor: RGBAVec = [...(color || [0, 0, 0]), alpha];
 
     /* buffer attributes */
-    this.posA.setVertex(this.posBuffer, this.verts);
-    this.texA.setVertex(this.texBuffer, this.verts);
-    this.rectPosA.setVertex(this.rectposBuffer, this.verts);
+    posA.setVertex(this.posBuffer, this.verts);
+    texA.setVertex(this.texBuffer, this.verts);
+    rectPosA.setVertex(this.rectposBuffer, this.verts);
 
     for (let i = 0; i < 6; i++) {
-      this.colorA.setVertex(myColor, this.verts + i);
-      this.shineA.setVertex([shineLoc], this.verts + i);
-      this.invertA.setVertex([invert ? 1 : 0], this.verts + i);
+      colorA.setVertex(myColor, this.verts + i);
+      shineA.setVertex([shineLoc], this.verts + i);
+      invertA.setVertex([invert ? 1 : 0], this.verts + i);
     }
     this.verts += 6;
   }
@@ -249,25 +223,17 @@ export class SpriteRenderer {
     this.queueArtifact(artifact, pos, dim);
   }
 
+  public setUniforms() {
+    this.uniformSetters.texture(this.texIdx);
+    this.uniformSetters.matrix(this.manager.projectionMatrix);
+  }
+
   flush() {
     if (!this.loaded || this.verts === 0) return;
 
-    const { gl, projectionMatrix } = this.manager;
-    gl.useProgram(this.program);
-    /* first do uniforms */
-
+    const { gl } = this.manager;
     gl.activeTexture(gl.TEXTURE0 + this.texIdx);
-    gl.uniform1i(this.textureULoc, this.texIdx);
-    gl.uniformMatrix4fv(this.matrixULoc, false, projectionMatrix);
-
-    this.posA.bufferData(this.verts);
-    this.texA.bufferData(this.verts);
-    this.rectPosA.bufferData(this.verts);
-    this.colorA.bufferData(this.verts);
-    this.shineA.bufferData(this.verts);
-    this.invertA.bufferData(this.verts);
-
-    gl.drawArrays(gl.TRIANGLES, 0, this.verts);
+    super.flush();
 
     this.verts = 0;
   }

@@ -1,18 +1,45 @@
-import { AttribProps, GLArray } from '../utils/EngineTypes';
+import { AttribProps } from '../utils/EngineTypes';
 import { AttribArray } from './AttribArray';
 
-/* responsible for queuing data about a webgl attribute and then writing to it. does this by maintaining a persistent 
-   AttribArray and WebGLBuffer reference, and then calling bufferData on n vertices at a time */
-
+/**
+ * Responsible for queuing data about a webgl attribute and then writing to it.
+ * Does this by maintaining a persistent AttribArray and WebGLBuffer reference,
+ * and then calling bufferData on n vertices at a time. Allows us to upload
+ * whole arrays of objects at once, providing speed boost.
+ */
 export default class AttribManager {
-  gl: WebGL2RenderingContext;
-  props: AttribProps;
+  /**
+   * The WebGL rendering context.
+   */
+  private gl: WebGL2RenderingContext;
 
-  loc: number;
-  buffer: WebGLBuffer;
+  /**
+   * AttribProps object for this attribute, containing name, dimension, and more.
+   */
+  private props: AttribProps;
 
-  attribArray: AttribArray;
+  /**
+   * Attrib loc, returned by gl.getAttribLocation().
+   */
+  private loc: number;
 
+  /**
+   * The WebGLBuffer associated with this attribute.
+   */
+  private buffer: WebGLBuffer;
+
+  /**
+   * An internally managed AttribArray, which is a typed mutable array.
+   */
+  private attribArray: AttribArray;
+
+  /**
+   * For a given attribute on a program on a context, create an AttribManager.
+   * @param gl - The WebGL context to generate this attrib on.
+   * @param program - The program corresponding to this attrib.
+   * @param props - An AttribProps object, containing the attrib name and other info.
+   * @param enable - Should we call gl.enableVertexAttribArray? (default true)
+   */
   constructor(
     gl: WebGL2RenderingContext,
     program: WebGLProgram,
@@ -26,7 +53,7 @@ export default class AttribManager {
 
     const loc = gl.getAttribLocation(program, props.name);
     const buffer = gl.createBuffer();
-    if (!buffer) throw 'error creating buffer with name: ' + props.name;
+    if (!buffer) throw 'Error creating buffer for attrib: ' + props.name;
 
     if (enable) gl.enableVertexAttribArray(loc);
 
@@ -36,18 +63,24 @@ export default class AttribManager {
     this.attribArray = new AttribArray(props.type);
   }
 
-  // set starting from the # idx vertex
-  setVertex(els: number[], idx: number): void {
+  /**
+   * Set vertices starting from vertex #idx - writing to vertex #0 will write to the first vertex.
+   *
+   * Note that you can write multiple vertices at once - if you write a 6-long array into a 2D
+   * attribute at vertex 0, you will write 3 vertices at once.
+   *
+   * @param els - The data to write into the vertices.
+   * @param idx - The starting vertex # to write to.
+   */
+  public setVertex(els: number[], idx: number): void {
     this.attribArray.set(els, idx * this.props.dim);
   }
 
-  getArray(): GLArray {
-    return this.attribArray.array;
-  }
-
-  // TODO add support for STATIC_DRAW (if we ever have those)
-  // send vertices 0 through n to the buffer
-  bufferData(n: number): void {
+  /**
+   * Send vertices [0, n - 1] through the buffer - bufferData(1) will send one vertex (only vertex #0)
+   * @param n The number of vertices to send through the buffer.
+   */
+  public bufferData(n: number): void {
     const { gl, loc } = this;
     const { dim, type, normalize } = this.props;
 

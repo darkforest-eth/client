@@ -68,7 +68,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">MineRenderer</span>
+						<a href="genericrenderer.html" class="tsd-signature-type">GenericRenderer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">typeof </span><span class="tsd-signature-type">MINE_PROGRAM_DEFINITION</span><span class="tsd-signature-symbol">&gt;</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">MineRenderer</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -79,33 +84,31 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="minerenderer.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="minerenderer.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="minerenderer.html#colora" class="tsd-kind-icon">colorA</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="minerenderer.html#manager" class="tsd-kind-icon">manager</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="minerenderer.html#matrixuloc" class="tsd-kind-icon">matrixULoc</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="minerenderer.html#nowuloc" class="tsd-kind-icon">nowULoc</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="minerenderer.html#offseta" class="tsd-kind-icon">offsetA</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="minerenderer.html#posa" class="tsd-kind-icon">posA</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="minerenderer.html#program" class="tsd-kind-icon">program</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="minerenderer.html#radiusa" class="tsd-kind-icon">radiusA</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="minerenderer.html#seeda" class="tsd-kind-icon">seedA</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="minerenderer.html#verts" class="tsd-kind-icon">verts</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="minerenderer.html#attribdata" class="tsd-kind-icon">attrib<wbr>Data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="minerenderer.html#attribmanagers" class="tsd-kind-icon">attrib<wbr>Managers</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="minerenderer.html#manager" class="tsd-kind-icon">manager</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="minerenderer.html#program" class="tsd-kind-icon">program</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="minerenderer.html#uniformdata" class="tsd-kind-icon">uniform<wbr>Data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="minerenderer.html#uniformlocs" class="tsd-kind-icon">uniform<wbr>Locs</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="minerenderer.html#uniformsetters" class="tsd-kind-icon">uniform<wbr>Setters</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="minerenderer.html#verts" class="tsd-kind-icon">verts</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="minerenderer.html#viewport" class="tsd-kind-icon">viewport</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="minerenderer.html#beginframe" class="tsd-kind-icon">begin<wbr>Frame</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="minerenderer.html#flush" class="tsd-kind-icon">flush</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="minerenderer.html#flush" class="tsd-kind-icon">flush</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="minerenderer.html#queuemine" class="tsd-kind-icon">queue<wbr>Mine</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="minerenderer.html#queueminescreen" class="tsd-kind-icon">queue<wbr>Mine<wbr>Screen</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="minerenderer.html#queuepoint" class="tsd-kind-icon">queue<wbr>Point</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="minerenderer.html#setuniforms" class="tsd-kind-icon">set<wbr>Uniforms</a></li>
 							</ul>
 						</section>
 					</div>
@@ -113,17 +116,18 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 						<li class="tsd-signature tsd-kind-icon">new <wbr>Mine<wbr>Renderer<span class="tsd-signature-symbol">(</span>manager<span class="tsd-signature-symbol">: </span><a href="webglmanager.html" class="tsd-signature-type">WebGLManager</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="minerenderer.html" class="tsd-signature-type">MineRenderer</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Overrides <a href="genericrenderer.html">GenericRenderer</a>.<a href="genericrenderer.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L33">src/app/renderer/entities/MineRenderer.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/entities/MineRenderer.ts#L14">src/app/renderer/entities/MineRenderer.ts:14</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -139,105 +143,136 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="colora" class="tsd-anchor"></a>
-					<h3>colorA</h3>
-					<div class="tsd-signature tsd-kind-icon">colorA<span class="tsd-signature-symbol">:</span> <a href="attribmanager.html" class="tsd-signature-type">AttribManager</a></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="attribdata" class="tsd-anchor"></a>
+					<h3>attrib<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">attrib<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="../globals.html#attribdata" class="tsd-signature-type">AttribData</a></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="genericrenderer.html">GenericRenderer</a>.<a href="genericrenderer.html#attribdata">attribData</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L24">src/app/renderer/entities/MineRenderer.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/GenericRenderer.ts#L111">src/app/renderer/webgl/GenericRenderer.ts:111</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Uniform data for this program. Typically not used after construction.
+							Kept for use in inherited classes.</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="attribmanagers" class="tsd-anchor"></a>
+					<h3>attrib<wbr>Managers</h3>
+					<div class="tsd-signature tsd-kind-icon">attrib<wbr>Managers<span class="tsd-signature-symbol">:</span> <a href="../globals.html#attribmanagers" class="tsd-signature-type">AttribManagers</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">typeof </span><span class="tsd-signature-type">MINE_PROGRAM_DEFINITION</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="genericrenderer.html">GenericRenderer</a>.<a href="genericrenderer.html#attribmanagers">attribManagers</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/GenericRenderer.ts#L100">src/app/renderer/webgl/GenericRenderer.ts:100</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A dictionary of attrib managers, keyed by attrib name.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 					<a name="manager" class="tsd-anchor"></a>
 					<h3>manager</h3>
 					<div class="tsd-signature tsd-kind-icon">manager<span class="tsd-signature-symbol">:</span> <a href="webglmanager.html" class="tsd-signature-type">WebGLManager</a></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="genericrenderer.html">GenericRenderer</a>.<a href="genericrenderer.html#manager">manager</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L20">src/app/renderer/entities/MineRenderer.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/GenericRenderer.ts#L120">src/app/renderer/webgl/GenericRenderer.ts:120</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>WebGLManager corresponding to this program.</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="matrixuloc" class="tsd-anchor"></a>
-					<h3>matrixULoc</h3>
-					<div class="tsd-signature tsd-kind-icon">matrixULoc<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGLUniformLocation</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L31">src/app/renderer/entities/MineRenderer.ts:31</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="nowuloc" class="tsd-anchor"></a>
-					<h3>nowULoc</h3>
-					<div class="tsd-signature tsd-kind-icon">nowULoc<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGLUniformLocation</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L32">src/app/renderer/entities/MineRenderer.ts:32</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="offseta" class="tsd-anchor"></a>
-					<h3>offsetA</h3>
-					<div class="tsd-signature tsd-kind-icon">offsetA<span class="tsd-signature-symbol">:</span> <a href="attribmanager.html" class="tsd-signature-type">AttribManager</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L27">src/app/renderer/entities/MineRenderer.ts:27</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="posa" class="tsd-anchor"></a>
-					<h3>posA</h3>
-					<div class="tsd-signature tsd-kind-icon">posA<span class="tsd-signature-symbol">:</span> <a href="attribmanager.html" class="tsd-signature-type">AttribManager</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L23">src/app/renderer/entities/MineRenderer.ts:23</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 					<a name="program" class="tsd-anchor"></a>
 					<h3>program</h3>
 					<div class="tsd-signature tsd-kind-icon">program<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGLProgram</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="genericrenderer.html">GenericRenderer</a>.<a href="genericrenderer.html#program">program</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L21">src/app/renderer/entities/MineRenderer.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/GenericRenderer.ts#L94">src/app/renderer/webgl/GenericRenderer.ts:94</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The program corresponding to this renderer.</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="radiusa" class="tsd-anchor"></a>
-					<h3>radiusA</h3>
-					<div class="tsd-signature tsd-kind-icon">radiusA<span class="tsd-signature-symbol">:</span> <a href="attribmanager.html" class="tsd-signature-type">AttribManager</a></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="uniformdata" class="tsd-anchor"></a>
+					<h3>uniform<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">uniform<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="../globals.html#uniformdata" class="tsd-signature-type">UniformData</a></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="genericrenderer.html">GenericRenderer</a>.<a href="genericrenderer.html#uniformdata">uniformData</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L25">src/app/renderer/entities/MineRenderer.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/GenericRenderer.ts#L106">src/app/renderer/webgl/GenericRenderer.ts:106</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Uniform data for this program. Typically not used after construction.
+							Kept for use in inherited classes.</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="seeda" class="tsd-anchor"></a>
-					<h3>seedA</h3>
-					<div class="tsd-signature tsd-kind-icon">seedA<span class="tsd-signature-symbol">:</span> <a href="attribmanager.html" class="tsd-signature-type">AttribManager</a></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="uniformlocs" class="tsd-anchor"></a>
+					<h3>uniform<wbr>Locs</h3>
+					<div class="tsd-signature tsd-kind-icon">uniform<wbr>Locs<span class="tsd-signature-symbol">:</span> <a href="../globals.html#uniformlocs" class="tsd-signature-type">UniformLocs</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">typeof </span><span class="tsd-signature-type">MINE_PROGRAM_DEFINITION</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="genericrenderer.html">GenericRenderer</a>.<a href="genericrenderer.html#uniformlocs">uniformLocs</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L26">src/app/renderer/entities/MineRenderer.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/GenericRenderer.ts#L117">src/app/renderer/webgl/GenericRenderer.ts:117</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Uniform locs for this program. Typically not referenced directly,
+							but rather through generated uniformSetters. Kept for use in inherited classes.</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="uniformsetters" class="tsd-anchor"></a>
+					<h3>uniform<wbr>Setters</h3>
+					<div class="tsd-signature tsd-kind-icon">uniform<wbr>Setters<span class="tsd-signature-symbol">:</span> <a href="../globals.html#uniformsetters" class="tsd-signature-type">UniformSetters</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">typeof </span><span class="tsd-signature-type">MINE_PROGRAM_DEFINITION</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="genericrenderer.html">GenericRenderer</a>.<a href="genericrenderer.html#uniformsetters">uniformSetters</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/GenericRenderer.ts#L97">src/app/renderer/webgl/GenericRenderer.ts:97</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A dictionary of uniform setters, keyed by uniform name.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 					<a name="verts" class="tsd-anchor"></a>
 					<h3>verts</h3>
 					<div class="tsd-signature tsd-kind-icon">verts<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="genericrenderer.html">GenericRenderer</a>.<a href="genericrenderer.html#verts">verts</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L29">src/app/renderer/entities/MineRenderer.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/webgl/GenericRenderer.ts#L123">src/app/renderer/webgl/GenericRenderer.ts:123</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The number of queued vertices so far. Used for batch rendering.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="viewport" class="tsd-anchor"></a>
@@ -245,41 +280,25 @@
 					<div class="tsd-signature tsd-kind-icon">viewport<span class="tsd-signature-symbol">:</span> <a href="viewport.html" class="tsd-signature-type">Viewport</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L33">src/app/renderer/entities/MineRenderer.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/entities/MineRenderer.ts#L14">src/app/renderer/entities/MineRenderer.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
-					<a name="beginframe" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> begin<wbr>Frame</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">begin<wbr>Frame<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L66">src/app/renderer/entities/MineRenderer.ts:66</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 					<a name="flush" class="tsd-anchor"></a>
 					<h3>flush</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 						<li class="tsd-signature tsd-kind-icon">flush<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Overrides <a href="genericrenderer.html">GenericRenderer</a>.<a href="genericrenderer.html#flush">flush</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L122">src/app/renderer/entities/MineRenderer.ts:122</a></li>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/entities/MineRenderer.ts#L86">src/app/renderer/entities/MineRenderer.ts:86</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -296,7 +315,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L114">src/app/renderer/entities/MineRenderer.ts:114</a></li>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/entities/MineRenderer.ts#L73">src/app/renderer/entities/MineRenderer.ts:73</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -325,7 +344,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L87">src/app/renderer/entities/MineRenderer.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/entities/MineRenderer.ts#L46">src/app/renderer/entities/MineRenderer.ts:46</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -357,7 +376,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/ece8f87/client/src/app/renderer/entities/MineRenderer.ts#L70">src/app/renderer/entities/MineRenderer.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/entities/MineRenderer.ts#L21">src/app/renderer/entities/MineRenderer.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -393,6 +412,24 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="setuniforms" class="tsd-anchor"></a>
+					<h3>set<wbr>Uniforms</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Uniforms<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="genericrenderer.html">GenericRenderer</a>.<a href="genericrenderer.html#setuniforms">setUniforms</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/c419e61/client/src/app/renderer/entities/MineRenderer.ts#L81">src/app/renderer/entities/MineRenderer.ts:81</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -410,46 +447,37 @@
 					<li class="current tsd-kind-class">
 						<a href="minerenderer.html" class="tsd-kind-icon">Mine<wbr>Renderer</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 								<a href="minerenderer.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="minerenderer.html#colora" class="tsd-kind-icon">colorA</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="minerenderer.html#attribdata" class="tsd-kind-icon">attrib<wbr>Data</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="minerenderer.html#attribmanagers" class="tsd-kind-icon">attrib<wbr>Managers</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 								<a href="minerenderer.html#manager" class="tsd-kind-icon">manager</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="minerenderer.html#matrixuloc" class="tsd-kind-icon">matrixULoc</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="minerenderer.html#nowuloc" class="tsd-kind-icon">nowULoc</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="minerenderer.html#offseta" class="tsd-kind-icon">offsetA</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="minerenderer.html#posa" class="tsd-kind-icon">posA</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 								<a href="minerenderer.html#program" class="tsd-kind-icon">program</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="minerenderer.html#radiusa" class="tsd-kind-icon">radiusA</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="minerenderer.html#uniformdata" class="tsd-kind-icon">uniform<wbr>Data</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="minerenderer.html#seeda" class="tsd-kind-icon">seedA</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="minerenderer.html#uniformlocs" class="tsd-kind-icon">uniform<wbr>Locs</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="minerenderer.html#uniformsetters" class="tsd-kind-icon">uniform<wbr>Setters</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 								<a href="minerenderer.html#verts" class="tsd-kind-icon">verts</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="minerenderer.html#viewport" class="tsd-kind-icon">viewport</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
-								<a href="minerenderer.html#beginframe" class="tsd-kind-icon">begin<wbr>Frame</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 								<a href="minerenderer.html#flush" class="tsd-kind-icon">flush</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -460,6 +488,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="minerenderer.html#queuepoint" class="tsd-kind-icon">queue<wbr>Point</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="minerenderer.html#setuniforms" class="tsd-kind-icon">set<wbr>Uniforms</a>
 							</li>
 						</ul>
 					</li>

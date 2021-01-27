@@ -1,13 +1,6 @@
-import autoBind from 'auto-bind';
 import { CanvasCoords, WorldCoords } from '../../../utils/Coordinates';
 import Viewport from '../../board/Viewport';
-import {
-  getTextProgram,
-  getTextUniforms,
-  textColorProps,
-  textPosProps,
-  textTexcoordProps,
-} from '../programs/TextProgram';
+import { TEXT_PROGRAM_DEFINITION } from '../programs/TextProgram';
 import { engineConsts } from '../utils/EngineConsts';
 import {
   RenderZIndex,
@@ -16,7 +9,7 @@ import {
   TextAnchor,
 } from '../utils/EngineTypes';
 import EngineUtils from '../utils/EngineUtils';
-import AttribManager from '../webgl/AttribManager';
+import { GenericRenderer } from '../webgl/GenericRenderer';
 import { WebGLManager } from '../webgl/WebGLManager';
 
 /* renders text */
@@ -30,68 +23,34 @@ const { glyphW, glyphH, canvasDim, rowL, scale } = engineConsts.glyphs;
 const screenW = glyphW / scale;
 const screenH = glyphH / scale;
 
-export default class TextRenderer {
-  glManager: WebGLManager;
+export default class TextRenderer extends GenericRenderer<
+  typeof TEXT_PROGRAM_DEFINITION
+> {
   bufferCanvas: HTMLCanvasElement;
-  verts: number;
-
-  program: WebGLProgram;
-  posA: AttribManager;
-  colorA: AttribManager;
-  texcoordA: AttribManager;
-
-  matrixULoc: WebGLUniformLocation | null;
-  textureULoc: WebGLUniformLocation | null;
 
   quad3Buffer: number[];
   quad2Buffer: number[];
-
-  gl: WebGL2RenderingContext;
 
   glyphData: Map<string, GlyphInfo>;
 
   texIdx: number;
 
-  constructor(glManager: WebGLManager, bufferCanvas: HTMLCanvasElement) {
-    autoBind(this);
+  constructor(manager: WebGLManager, bufferCanvas: HTMLCanvasElement) {
+    super(manager, TEXT_PROGRAM_DEFINITION);
 
     this.bufferCanvas = bufferCanvas;
 
-    this.glManager = glManager;
-    const { gl } = glManager;
-    this.gl = gl;
-
     this.glyphData = new Map<string, GlyphInfo>();
-
     this.createGlyphs();
 
-    try {
-      const program = getTextProgram(gl);
-      this.program = program;
-      gl.useProgram(program);
-
-      this.posA = new AttribManager(gl, program, textPosProps);
-      this.colorA = new AttribManager(gl, program, textColorProps);
-      this.texcoordA = new AttribManager(gl, program, textTexcoordProps);
-
-      const uniforms = getTextUniforms(gl);
-
-      this.matrixULoc = uniforms.matrix;
-      this.textureULoc = uniforms.texture;
-
-      this.texIdx = this.glManager.getTexIdx();
-      this.setTexture(this.texIdx);
-      this.quad3Buffer = Array(6 * 3).fill(0);
-      this.quad2Buffer = Array(2 * 3).fill(0);
-    } catch (e) {
-      console.error(e);
-    }
-
-    this.beginFrame();
+    this.texIdx = this.manager.getTexIdx();
+    this.setTexture(this.texIdx);
+    this.quad3Buffer = EngineUtils.makeEmptyQuad();
+    this.quad2Buffer = EngineUtils.makeEmptyQuadVec2();
   }
 
   private setTexture(texIdx: number): void {
-    const gl = this.gl;
+    const { gl } = this.manager;
 
     // gl.useProgram should be called from parent fn
 
@@ -106,7 +65,7 @@ export default class TextRenderer {
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
-    gl.uniform1i(this.textureULoc, this.texIdx);
+    this.uniformSetters.texture(this.texIdx);
   }
 
   private createGlyphs(debug = false): void {
@@ -149,12 +108,8 @@ export default class TextRenderer {
     });
   }
 
-  beginFrame(): void {
-    this.verts = 0;
-  }
-
   /* queues text to be drawn at world coords */
-  queueTextWorld(
+  public queueTextWorld(
     text: string,
     coords: WorldCoords,
     color: RGBAVec = [255, 255, 255, 255],
@@ -173,7 +128,7 @@ export default class TextRenderer {
   }
 
   /* queues text to be drawn at screen coords */
-  queueText(
+  public queueText(
     text: string,
     { x, y }: CanvasCoords,
     color: RGBAVec,
@@ -198,6 +153,12 @@ export default class TextRenderer {
     color: RGBAVec,
     zIdx: number
   ): void {
+    const {
+      position: posA,
+      texcoord: texcoordA,
+      color: colorA,
+    } = this.attribManagers;
+
     const info = this.glyphData.get(glyph);
     if (!info) {
       console.error('could not find glyph: ' + glyph);
@@ -207,7 +168,7 @@ export default class TextRenderer {
     const { x1, y1 } = { x1: x, y1: y };
     const { x2, y2 } = { x2: x + screenW, y2: y + screenH };
     EngineUtils.makeQuadBuffered(this.quad3Buffer, x1, y1, x2, y2, zIdx);
-    this.posA.setVertex(this.quad3Buffer, this.verts);
+    posA.setVertex(this.quad3Buffer, this.verts);
 
     const { x: gx, y: gy } = info;
     const tx1 = gx / canvasDim;
@@ -215,31 +176,21 @@ export default class TextRenderer {
     const tx2 = (gx + glyphW) / canvasDim;
     const ty2 = (gy + glyphH) / canvasDim;
     EngineUtils.makeQuadVec2Buffered(this.quad2Buffer, tx1, ty1, tx2, ty2);
-    this.texcoordA.setVertex(this.quad2Buffer, this.verts);
+    texcoordA.setVertex(this.quad2Buffer, this.verts);
 
-    for (let i = 0; i < 6; i++) this.colorA.setVertex(color, this.verts + i);
+    for (let i = 0; i < 6; i++) colorA.setVertex(color, this.verts + i);
 
     this.verts += 6;
   }
 
+  public setUniforms() {
+    this.uniformSetters.matrix(this.manager.projectionMatrix);
+  }
+
   flush(): void {
-    if (this.verts === 0) return;
-
-    const { gl, glManager } = this;
-    gl.useProgram(this.program);
-
-    // write uniforms
-    gl.uniformMatrix4fv(this.matrixULoc, false, glManager.projectionMatrix);
-
-    // write buffers
-    this.posA.bufferData(this.verts);
-    this.colorA.bufferData(this.verts);
-    this.texcoordA.bufferData(this.verts);
-
-    this.gl.depthMask(false);
-    gl.drawArrays(gl.TRIANGLES, 0, this.verts);
-    this.gl.depthMask(true);
-
-    this.beginFrame();
+    const { gl } = this.manager;
+    gl.depthMask(false);
+    super.flush();
+    gl.depthMask(true);
   }
 }

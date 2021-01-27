@@ -1,6 +1,5 @@
-import { AttribProps, AttribType, ProgramClosure } from '../utils/EngineTypes';
+import { AttribType, UniformType } from '../utils/EngineTypes';
 import { glsl } from '../utils/EngineUtils';
-import ProgramUtils from '../webgl/ProgramUtils';
 
 const a = {
   position: 'a_position',
@@ -16,83 +15,60 @@ const v = {
   texcoord: 'v_texcoord',
 };
 
-export const textPosProps: AttribProps = {
-  dim: 3,
-  type: AttribType.Float,
-  normalize: false,
-  name: a.position,
-};
+export const TEXT_PROGRAM_DEFINITION = {
+  uniforms: {
+    matrix: { name: u.matrix, type: UniformType.Mat4 },
+    texture: { name: u.texture, type: UniformType.Texture },
+  },
+  attribs: {
+    position: {
+      dim: 3,
+      type: AttribType.Float,
+      normalize: false,
+      name: a.position,
+    },
+    color: {
+      dim: 4,
+      type: AttribType.UByte,
+      normalize: true,
+      name: a.color,
+    },
+    texcoord: {
+      dim: 2,
+      type: AttribType.Float,
+      normalize: false,
+      name: a.texcoord,
+    },
+  },
+  vertexShader: glsl`
+    in vec4 ${a.position};
+    in vec4 ${a.color};
+    in vec2 ${a.texcoord};
 
-export const textColorProps: AttribProps = {
-  dim: 4,
-  type: AttribType.UByte,
-  normalize: true,
-  name: a.color,
-};
+    uniform mat4 ${u.matrix};
 
-export const textTexcoordProps: AttribProps = {
-  dim: 2,
-  type: AttribType.Float,
-  normalize: false,
-  name: a.texcoord,
-};
+    out vec4 ${v.color};
+    out vec2 ${v.texcoord};
 
-const textVert = glsl`
-  in vec4 ${a.position};
-  in vec4 ${a.color};
-  in vec2 ${a.texcoord};
+    void main() {
+      gl_Position = ${u.matrix} * ${a.position};
 
-  uniform mat4 ${u.matrix};
-
-  out vec4 ${v.color};
-  out vec2 ${v.texcoord};
-
-  void main() {
-    gl_Position = ${u.matrix} * ${a.position};
-
-    ${v.color} = ${a.color};
-    ${v.texcoord} = ${a.texcoord};
-  }
-`;
-
-const textFrag = glsl`
-  precision highp float;
-  out vec4 outColor;
-
-  uniform sampler2D ${u.texture};
-
-  in vec4 ${v.color};
-  in vec2 ${v.texcoord};
-
-  void main() {
-    vec4 texel = texture(${u.texture}, ${v.texcoord});
-    outColor = texel * ${v.color};
-  }
-`;
-
-export const getTextProgram: ProgramClosure = (() => {
-  let program: WebGLProgram | null = null;
-
-  return (gl: WebGL2RenderingContext) => {
-    if (program === null) {
-      program = ProgramUtils.programFromSources(gl, textVert, textFrag);
-      if (program === null) throw 'error compiling text program';
+      ${v.color} = ${a.color};
+      ${v.texcoord} = ${a.texcoord};
     }
+  `,
+  fragmentShader: glsl`
+    precision highp float;
+    out vec4 outColor;
 
-    return program;
-  };
-})();
+    uniform sampler2D ${u.texture};
 
-export type RectUniforms = {
-  matrix: WebGLUniformLocation | null;
-  texture: WebGLUniformLocation | null;
+    in vec4 ${v.color};
+    in vec2 ${v.texcoord};
+
+    void main() {
+      vec4 texel = texture(${u.texture}, ${v.texcoord});
+      outColor = texel * ${v.color};
+    }
+  `,
 };
-
-export function getTextUniforms(gl: WebGL2RenderingContext): RectUniforms {
-  const program = getTextProgram(gl);
-  gl.useProgram(program); // may be superfluous;
-  return {
-    matrix: gl.getUniformLocation(program, u.matrix),
-    texture: gl.getUniformLocation(program, u.texture),
-  };
-}

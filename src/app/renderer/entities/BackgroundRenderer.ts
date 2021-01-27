@@ -1,21 +1,17 @@
 import Viewport from '../../board/Viewport';
 import { ExploredChunkData } from '../../../_types/global/GlobalTypes';
-import AttribManager from '../webgl/AttribManager';
-import {
-  getMaskProgram,
-  getMaskUniforms,
-  maskPosProps,
-} from '../programs/MaskProgram';
+import { MASK_PROGRAM_DEFINITION } from '../programs/MaskProgram';
 import { GameGLManager } from '../webgl/GameGLManager';
 import EngineUtils from '../utils/EngineUtils';
+import { GenericRenderer } from '../webgl/GenericRenderer';
 
-export default class BackgroundRenderer {
+export default class BackgroundRenderer extends GenericRenderer<
+  typeof MASK_PROGRAM_DEFINITION
+> {
   manager: GameGLManager;
   bgCanvas: HTMLCanvasElement;
 
   maskProgram: WebGLProgram;
-
-  posA: AttribManager;
 
   matrixULoc: WebGLUniformLocation | null;
 
@@ -24,35 +20,13 @@ export default class BackgroundRenderer {
   perlinThresholds: number[];
 
   constructor(manager: GameGLManager) {
-    this.manager = manager;
-
-    const { gl } = manager;
-
-    try {
-      /* create mask program */
-      const maskProgram = getMaskProgram(gl);
-      this.maskProgram = maskProgram;
-      gl.useProgram(maskProgram);
-
-      // attr buffers
-      this.posA = new AttribManager(gl, maskProgram, maskPosProps);
-
-      // uniforms
-      this.matrixULoc = getMaskUniforms(gl).matrix;
-
-      // r/w buffers, etc.
-      this.quadBuffer = Array(6 * 3).fill(0);
-      this.perlinThresholds = this.manager.renderer.gameUIManager.getPerlinThresholds();
-    } catch (e) {
-      console.error(e);
-    }
+    super(manager, MASK_PROGRAM_DEFINITION);
+    this.quadBuffer = EngineUtils.makeEmptyQuad();
+    this.perlinThresholds = this.manager.renderer.gameUIManager.getPerlinThresholds();
   }
 
   drawChunks(exploredChunks: Iterable<ExploredChunkData>): void {
     // upload current camera transform to shader
-    const { gl } = this.manager;
-
-    // glManager.setStencil(true);
 
     /* draw using mask program */
     const viewport = Viewport.getInstance();
@@ -78,27 +52,19 @@ export default class BackgroundRenderer {
         else if (perlin < t2) color = 2;
 
         EngineUtils.makeQuadBuffered(this.quadBuffer, x1, y1, x2, y2, color);
-        this.posA.setVertex(this.quadBuffer, vertCount);
+        this.attribManagers.position.setVertex(this.quadBuffer, vertCount);
 
         vertCount += 6;
       }
     }
 
-    if (vertCount === 0) return;
+    this.verts = vertCount;
 
-    /* draw chunks */
-    gl.useProgram(this.maskProgram);
+    this.flush();
+  }
 
-    // write buffers
-    this.posA.bufferData(vertCount);
-    // this.colorA.bufferData(vertCount);
-
-    // write uniforms
-    // bgManager's matrix doesn't get updated
-    gl.uniformMatrix4fv(this.matrixULoc, false, this.manager.projectionMatrix);
-
-    // now draw
-    gl.drawArrays(gl.TRIANGLES, 0, vertCount);
+  public setUniforms() {
+    this.uniformSetters.matrix(this.manager.projectionMatrix);
   }
 }
 
