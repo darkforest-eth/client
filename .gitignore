@@ -22,3 +22,4 @@ yarn-error.log*
 # compiled contracts
 public/contracts/*.json
 !public/contracts/DarkForestCore.json
+!public/contracts/Whitelist.json
