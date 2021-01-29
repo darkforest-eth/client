@@ -11,7 +11,7 @@ import CanvasRenderer from '../CanvasRenderer';
 import { engineConsts } from '../utils/EngineConsts';
 import { Location } from '../../../_types/global/GlobalTypes';
 import { RGBVec, TextAlign, TextAnchor } from '../utils/EngineTypes';
-import { GameEntityMemoryStore } from '../../../api/GameEntityMemoryStore';
+import { GameObjects } from '../../../api/GameObjects';
 import { HatType } from '../../../utils/Hats';
 import { ProcgenUtils } from '../../../utils/ProcgenUtils';
 import EngineUtils from '../utils/EngineUtils';
@@ -116,7 +116,7 @@ export default class PlanetRenderManager {
     const { canvasManager: cM, thumbRenderer: tR } = this.renderer;
 
     if (!isLocatable(planet)) return;
-    const mineable = GameEntityMemoryStore.isPlanetMineable(planet);
+    const mineable = GameObjects.isPlanetMineable(planet);
 
     const iconLoc = { x: x - radius, y: y + radius };
 

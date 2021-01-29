@@ -12,10 +12,10 @@ import { RGBVec } from '../renderer/utils/EngineTypes';
 import { PathRenderer } from './PathRenderer';
 import { WebGLManager } from '../renderer/webgl/WebGLManager';
 import { SpriteRenderer } from '../renderer/entities/SpriteRenderer';
-import AbstractUIManager from '../board/AbstractUIManager';
 import { mockCommon } from '../../utils/ArtifactUtils';
 import { bonusFromHex, PlanetStatsInfo } from '../../utils/Utils';
 import dfstyles from '../../styles/dfstyles';
+import GameUIManager from '../board/GameUIManager';
 
 export class PlanetscapeRenderer extends WebGLManager {
   private planet: Planet | null;
@@ -32,14 +32,14 @@ export class PlanetscapeRenderer extends WebGLManager {
   private pathRenderer: PathRenderer;
   private spriteRenderer: SpriteRenderer;
 
-  private uiManager: AbstractUIManager;
+  private uiManager: GameUIManager;
 
   private isPaused: boolean;
 
   constructor(
     canvas: HTMLCanvasElement,
     moonCanvas: HTMLCanvasElement,
-    uiManager: AbstractUIManager
+    uiManager: GameUIManager
   ) {
     super(canvas);
 

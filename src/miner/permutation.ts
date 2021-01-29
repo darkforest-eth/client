@@ -1,5 +1,5 @@
 import { WorldCoords } from '../utils/Coordinates';
-import { Location, ChunkFootprint } from '../_types/global/GlobalTypes';
+import { Location, Rectangle } from '../_types/global/GlobalTypes';
 import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
 import bigInt from 'big-integer';
 import perlin from './perlin';
@@ -96,7 +96,7 @@ export const fakeHash = (x: number, y: number) => {
 };
 
 export const getPlanetLocations = (
-  chunkFootprint: ChunkFootprint,
+  chunkFootprint: Rectangle,
   planetRarity: number
 ) => {
   // assume that the chunkFootprint is entirely contained within a 256x256 grid square

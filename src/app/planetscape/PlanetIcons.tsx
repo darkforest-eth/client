@@ -25,7 +25,7 @@ import {
 } from '../Icons';
 import { CheckedTypeUtils } from '../../utils/CheckedTypeUtils';
 import dfstyles from '../../styles/dfstyles';
-import { GameEntityMemoryStore } from '../../api/GameEntityMemoryStore';
+import { GameObjects } from '../../api/GameObjects';
 
 const StyledPlanetIcons = styled.div`
   position: absolute;
@@ -120,7 +120,7 @@ export function PlanetIcons({ planet }: { planet: Planet | null }) {
         </TooltipTrigger>
       )}
       {isLocatable(planet) &&
-        GameEntityMemoryStore.isPlanetMineable(planet) &&
+        GameObjects.isPlanetMineable(planet) &&
         !planet.hasTriedFindingArtifact && (
           <TooltipTrigger name={TooltipName.FindArtifact}>
             <ArtifactIcon />

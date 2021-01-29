@@ -77,12 +77,6 @@
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel">
-				<h3>Implements</h3>
-				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/abstractuimanager.html" class="tsd-signature-type">AbstractUIManager</a></li>
-				</ul>
-			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -153,6 +147,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gameuimanager.html#getendtimeseconds" class="tsd-kind-icon">get<wbr>End<wbr>Time<wbr>Seconds</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gameuimanager.html#getenergycurveatpercent" class="tsd-kind-icon">get<wbr>Energy<wbr>Curve<wbr>AtPercent</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gameuimanager.html#getenergyofplayer" class="tsd-kind-icon">get<wbr>Energy<wbr>OfPlayer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gameuimanager.html#getethconnection" class="tsd-kind-icon">get<wbr>Eth<wbr>Connection</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gameuimanager.html#getexploredchunks" class="tsd-kind-icon">get<wbr>Explored<wbr>Chunks</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gameuimanager.html#getforcessending" class="tsd-kind-icon">get<wbr>Forces<wbr>Sending</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gameuimanager.html#gethashespersec" class="tsd-kind-icon">get<wbr>Hashes<wbr>Per<wbr>Sec</a></li>
@@ -248,20 +243,20 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>GameUIManager<span class="tsd-signature-symbol">(</span>gameManager<span class="tsd-signature-symbol">: </span><a href="../interfaces/abstractgamemanager.html" class="tsd-signature-type">AbstractGameManager</a>, replayMode<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="gameuimanager.html" class="tsd-signature-type">GameUIManager</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>GameUIManager<span class="tsd-signature-symbol">(</span>gameManager<span class="tsd-signature-symbol">: </span><a href="gamemanager.html" class="tsd-signature-type">GameManager</a>, replayMode<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="gameuimanager.html" class="tsd-signature-type">GameUIManager</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="../interfaces/abstractgamemanager.html">AbstractGameManager</a>.<a href="../interfaces/abstractgamemanager.html#constructor">constructor</a></p>
+								<p>Overrides EventEmitter.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L84">src/app/board/GameUIManager.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L74">src/app/board/GameUIManager.ts:74</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>gameManager: <a href="../interfaces/abstractgamemanager.html" class="tsd-signature-type">AbstractGameManager</a></h5>
+									<h5>gameManager: <a href="gamemanager.html" class="tsd-signature-type">GameManager</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> replayMode: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></h5>
@@ -280,7 +275,7 @@
 					<div class="tsd-signature tsd-kind-icon">detail<wbr>Level<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L57">src/app/board/GameUIManager.ts:57</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L56">src/app/board/GameUIManager.ts:56</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -290,7 +285,7 @@
 					<div class="tsd-signature tsd-kind-icon">extra<wbr>Miner<wbr>Locations<span class="tsd-signature-symbol">:</span> <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L78">src/app/board/GameUIManager.ts:78</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L68">src/app/board/GameUIManager.ts:68</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -300,7 +295,7 @@
 					<div class="tsd-signature tsd-kind-icon">forces<wbr>Sending<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L81">src/app/board/GameUIManager.ts:81</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L71">src/app/board/GameUIManager.ts:71</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -315,10 +310,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="gamemanager" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> game<wbr>Manager</h3>
-					<div class="tsd-signature tsd-kind-icon">game<wbr>Manager<span class="tsd-signature-symbol">:</span> <a href="../interfaces/abstractgamemanager.html" class="tsd-signature-type">AbstractGameManager</a></div>
+					<div class="tsd-signature tsd-kind-icon">game<wbr>Manager<span class="tsd-signature-symbol">:</span> <a href="gamemanager.html" class="tsd-signature-type">GameManager</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L53">src/app/board/GameUIManager.ts:53</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L52">src/app/board/GameUIManager.ts:52</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -328,7 +323,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Mining<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L79">src/app/board/GameUIManager.ts:79</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L69">src/app/board/GameUIManager.ts:69</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -338,7 +333,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Sending<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L72">src/app/board/GameUIManager.ts:72</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L65">src/app/board/GameUIManager.ts:65</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -348,7 +343,7 @@
 					<div class="tsd-signature tsd-kind-icon">miner<wbr>Location<span class="tsd-signature-symbol">:</span> <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L76">src/app/board/GameUIManager.ts:76</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L67">src/app/board/GameUIManager.ts:67</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -358,7 +353,7 @@
 					<div class="tsd-signature tsd-kind-icon">mouse<wbr>Down<wbr>Over<wbr>Coords<span class="tsd-signature-symbol">:</span> <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L66">src/app/board/GameUIManager.ts:66</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L60">src/app/board/GameUIManager.ts:60</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -368,7 +363,7 @@
 					<div class="tsd-signature tsd-kind-icon">mouse<wbr>Down<wbr>Over<wbr>Planet<span class="tsd-signature-symbol">:</span> <a href="../globals.html#planet" class="tsd-signature-type">Planet</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L65">src/app/board/GameUIManager.ts:65</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L59">src/app/board/GameUIManager.ts:59</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -378,7 +373,7 @@
 					<div class="tsd-signature tsd-kind-icon">mouse<wbr>Hovering<wbr>Over<wbr>Coords<span class="tsd-signature-symbol">:</span> <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L68">src/app/board/GameUIManager.ts:68</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L62">src/app/board/GameUIManager.ts:62</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -388,7 +383,7 @@
 					<div class="tsd-signature tsd-kind-icon">mouse<wbr>Hovering<wbr>Over<wbr>Planet<span class="tsd-signature-symbol">:</span> <a href="../globals.html#planet" class="tsd-signature-type">Planet</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L67">src/app/board/GameUIManager.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L61">src/app/board/GameUIManager.ts:61</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -398,7 +393,7 @@
 					<div class="tsd-signature tsd-kind-icon">plugins<span class="tsd-signature-symbol">:</span> <a href="pluginmanager.html" class="tsd-signature-type">PluginManager</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L84">src/app/board/GameUIManager.ts:84</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L74">src/app/board/GameUIManager.ts:74</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -408,7 +403,7 @@
 					<div class="tsd-signature tsd-kind-icon">radius<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/planetlevel.html" class="tsd-signature-type">PlanetLevel</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L61">src/app/board/GameUIManager.ts:61</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L53">src/app/board/GameUIManager.ts:53</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -418,7 +413,7 @@
 					<div class="tsd-signature tsd-kind-icon">replay<wbr>Mode<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L56">src/app/board/GameUIManager.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L55">src/app/board/GameUIManager.ts:55</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -428,7 +423,7 @@
 					<div class="tsd-signature tsd-kind-icon">selected<wbr>Coords<span class="tsd-signature-symbol">:</span> <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L64">src/app/board/GameUIManager.ts:64</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L58">src/app/board/GameUIManager.ts:58</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -438,7 +433,7 @@
 					<div class="tsd-signature tsd-kind-icon">selected<wbr>Planet<span class="tsd-signature-symbol">:</span> <a href="../globals.html#planet" class="tsd-signature-type">Planet</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L63">src/app/board/GameUIManager.ts:63</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L57">src/app/board/GameUIManager.ts:57</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -448,7 +443,7 @@
 					<div class="tsd-signature tsd-kind-icon">sending<wbr>Coords<span class="tsd-signature-symbol">:</span> <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L71">src/app/board/GameUIManager.ts:71</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L64">src/app/board/GameUIManager.ts:64</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -458,7 +453,7 @@
 					<div class="tsd-signature tsd-kind-icon">sending<wbr>Planet<span class="tsd-signature-symbol">:</span> <a href="../globals.html#planet" class="tsd-signature-type">Planet</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L70">src/app/board/GameUIManager.ts:70</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L63">src/app/board/GameUIManager.ts:63</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -468,7 +463,7 @@
 					<div class="tsd-signature tsd-kind-icon">silver<wbr>Sending<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L82">src/app/board/GameUIManager.ts:82</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L72">src/app/board/GameUIManager.ts:72</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -486,7 +481,7 @@
 					<div class="tsd-signature tsd-kind-icon">ui<wbr>State<wbr>Storage<wbr>Manager<span class="tsd-signature-symbol">:</span> <a href="uistatestoragemanager.html" class="tsd-signature-type">UIStateStorageManager</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L54">src/app/board/GameUIManager.ts:54</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L54">src/app/board/GameUIManager.ts:54</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -534,9 +529,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#addaccount">addAccount</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L215">src/app/board/GameUIManager.ts:215</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L209">src/app/board/GameUIManager.ts:209</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -603,9 +597,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#addnewchunk">addNewChunk</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L380">src/app/board/GameUIManager.ts:380</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L374">src/app/board/GameUIManager.ts:374</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -627,9 +620,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#bulkaddnewchunks">bulkAddNewChunks</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L384">src/app/board/GameUIManager.ts:384</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L378">src/app/board/GameUIManager.ts:378</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -651,9 +643,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#buyhat">buyHat</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L758">src/app/board/GameUIManager.ts:758</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L749">src/app/board/GameUIManager.ts:749</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -675,9 +666,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#centercoords">centerCoords</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L189">src/app/board/GameUIManager.ts:189</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L183">src/app/board/GameUIManager.ts:183</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -699,9 +689,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#centerlocationid">centerLocationId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L198">src/app/board/GameUIManager.ts:198</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L192">src/app/board/GameUIManager.ts:192</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -724,7 +713,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L182">src/app/board/GameUIManager.ts:182</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L176">src/app/board/GameUIManager.ts:176</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -747,7 +736,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L242">src/app/board/GameUIManager.ts:242</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L236">src/app/board/GameUIManager.ts:236</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -772,9 +761,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#destroy">destroy</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L143">src/app/board/GameUIManager.ts:143</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L133">src/app/board/GameUIManager.ts:133</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -791,7 +779,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L426">src/app/board/GameUIManager.ts:426</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L420">src/app/board/GameUIManager.ts:420</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -859,7 +847,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L235">src/app/board/GameUIManager.ts:235</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L229">src/app/board/GameUIManager.ts:229</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -881,9 +869,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#generateverificationtweet">generateVerificationTweet</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L794">src/app/board/GameUIManager.ts:794</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L785">src/app/board/GameUIManager.ts:785</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -905,9 +892,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getaccount">getAccount</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L398">src/app/board/GameUIManager.ts:398</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L392">src/app/board/GameUIManager.ts:392</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../globals.html#ethaddress" class="tsd-signature-type">EthAddress</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
@@ -924,7 +910,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L614">src/app/board/GameUIManager.ts:614</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L605">src/app/board/GameUIManager.ts:605</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -940,9 +926,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getallownedplanets">getAllOwnedPlanets</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L680">src/app/board/GameUIManager.ts:680</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L671">src/app/board/GameUIManager.ts:671</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../globals.html#planet" class="tsd-signature-type">Planet</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -958,9 +943,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getallplayers">getAllPlayers</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L436">src/app/board/GameUIManager.ts:436</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L430">src/app/board/GameUIManager.ts:430</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/player.html" class="tsd-signature-type">Player</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -976,9 +960,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getallvoyages">getAllVoyages</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L684">src/app/board/GameUIManager.ts:684</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L675">src/app/board/GameUIManager.ts:675</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../globals.html#queuedarrival" class="tsd-signature-type">QueuedArrival</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -994,9 +977,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getartifactplanet">getArtifactPlanet</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L667">src/app/board/GameUIManager.ts:667</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L658">src/app/board/GameUIManager.ts:658</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1018,9 +1000,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getartifactwithid">getArtifactWithId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L663">src/app/board/GameUIManager.ts:663</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L654">src/app/board/GameUIManager.ts:654</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1043,7 +1024,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L414">src/app/board/GameUIManager.ts:414</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L408">src/app/board/GameUIManager.ts:408</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1060,20 +1041,19 @@
 					<a name="getchunk" class="tsd-anchor"></a>
 					<h3>get<wbr>Chunk</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Chunk<span class="tsd-signature-symbol">(</span>chunkFootprint<span class="tsd-signature-symbol">: </span><a href="../interfaces/chunkfootprint.html" class="tsd-signature-type">ChunkFootprint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="exploredchunkdata.html" class="tsd-signature-type">ExploredChunkData</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Chunk<span class="tsd-signature-symbol">(</span>chunkFootprint<span class="tsd-signature-symbol">: </span><a href="../interfaces/rectangle.html" class="tsd-signature-type">Rectangle</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="exploredchunkdata.html" class="tsd-signature-type">ExploredChunkData</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getchunk">getChunk</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L506">src/app/board/GameUIManager.ts:506</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L500">src/app/board/GameUIManager.ts:500</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>chunkFootprint: <a href="../interfaces/chunkfootprint.html" class="tsd-signature-type">ChunkFootprint</a></h5>
+									<h5>chunkFootprint: <a href="../interfaces/rectangle.html" class="tsd-signature-type">Rectangle</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="exploredchunkdata.html" class="tsd-signature-type">ExploredChunkData</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
@@ -1089,9 +1069,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getcontractaddress">getContractAddress</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L176">src/app/board/GameUIManager.ts:176</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L170">src/app/board/GameUIManager.ts:170</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../globals.html#ethaddress" class="tsd-signature-type">EthAddress</a></h4>
@@ -1107,9 +1086,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getdetaillevel">getDetailLevel</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L440">src/app/board/GameUIManager.ts:440</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L434">src/app/board/GameUIManager.ts:434</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1126,7 +1104,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L418">src/app/board/GameUIManager.ts:418</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L412">src/app/board/GameUIManager.ts:412</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1148,9 +1126,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getendtimeseconds">getEndTimeSeconds</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L406">src/app/board/GameUIManager.ts:406</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L400">src/app/board/GameUIManager.ts:400</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1166,9 +1143,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getenergycurveatpercent">getEnergyCurveAtPercent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L782">src/app/board/GameUIManager.ts:782</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L773">src/app/board/GameUIManager.ts:773</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1193,9 +1169,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getenergyofplayer">getEnergyOfPlayer</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L747">src/app/board/GameUIManager.ts:747</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L738">src/app/board/GameUIManager.ts:738</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1209,6 +1184,23 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getethconnection" class="tsd-anchor"></a>
+					<h3>get<wbr>Eth<wbr>Connection</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Eth<wbr>Connection<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ethconnection.html" class="tsd-signature-type">EthConnection</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L166">src/app/board/GameUIManager.ts:166</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="ethconnection.html" class="tsd-signature-type">EthConnection</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="getexploredchunks" class="tsd-anchor"></a>
 					<h3>get<wbr>Explored<wbr>Chunks</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1217,9 +1209,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getexploredchunks">getExploredChunks</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L700">src/app/board/GameUIManager.ts:700</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L691">src/app/board/GameUIManager.ts:691</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><a href="exploredchunkdata.html" class="tsd-signature-type">ExploredChunkData</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1235,9 +1226,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getforcessending">getForcesSending</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L635">src/app/board/GameUIManager.ts:635</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L626">src/app/board/GameUIManager.ts:626</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1259,9 +1249,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#gethashespersec">getHashesPerSec</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L790">src/app/board/GameUIManager.ts:790</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L781">src/app/board/GameUIManager.ts:781</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1277,9 +1266,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#gethomecoords">getHomeCoords</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L766">src/app/board/GameUIManager.ts:766</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L757">src/app/board/GameUIManager.ts:757</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a></h4>
@@ -1295,9 +1283,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#gethomehash">getHomeHash</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L769">src/app/board/GameUIManager.ts:769</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L760">src/app/board/GameUIManager.ts:760</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../globals.html#locationid" class="tsd-signature-type">LocationId</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
@@ -1313,9 +1300,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#gethomeplanet">getHomePlanet</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L772">src/app/board/GameUIManager.ts:772</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L763">src/app/board/GameUIManager.ts:763</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../globals.html#planet" class="tsd-signature-type">Planet</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
@@ -1331,9 +1317,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#gethoveringovercoords">getHoveringOverCoords</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L631">src/app/board/GameUIManager.ts:631</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L622">src/app/board/GameUIManager.ts:622</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
@@ -1349,9 +1334,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#gethoveringoverplanet">getHoveringOverPlanet</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L627">src/app/board/GameUIManager.ts:627</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L618">src/app/board/GameUIManager.ts:618</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../globals.html#planet" class="tsd-signature-type">Planet</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
@@ -1367,9 +1351,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getlocationofplanet">getLocationOfPlanet</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L696">src/app/board/GameUIManager.ts:696</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L687">src/app/board/GameUIManager.ts:687</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1392,7 +1375,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L704">src/app/board/GameUIManager.ts:704</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L695">src/app/board/GameUIManager.ts:695</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span>chunks<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><a href="exploredchunkdata.html" class="tsd-signature-type">ExploredChunkData</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>locations<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/location.html" class="tsd-signature-type">Location</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></h4>
@@ -1435,7 +1418,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L602">src/app/board/GameUIManager.ts:602</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L593">src/app/board/GameUIManager.ts:593</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
@@ -1451,9 +1434,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getminingpattern">getMiningPattern</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L392">src/app/board/GameUIManager.ts:392</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L386">src/app/board/GameUIManager.ts:386</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/miningpattern.html" class="tsd-signature-type">MiningPattern</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
@@ -1469,9 +1451,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getmousedowncoords">getMouseDownCoords</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L622">src/app/board/GameUIManager.ts:622</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L613">src/app/board/GameUIManager.ts:613</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
@@ -1487,9 +1468,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getmousedownplanet">getMouseDownPlanet</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L484">src/app/board/GameUIManager.ts:484</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L478">src/app/board/GameUIManager.ts:478</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../globals.html#planet" class="tsd-signature-type">Planet</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
@@ -1506,7 +1486,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L655">src/app/board/GameUIManager.ts:655</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L646">src/app/board/GameUIManager.ts:646</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../globals.html#artifact" class="tsd-signature-type">Artifact</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -1522,9 +1502,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getmybalance">getMyBalance</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L231">src/app/board/GameUIManager.ts:231</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L225">src/app/board/GameUIManager.ts:225</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1540,9 +1519,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getperlinthresholds">getPerlinThresholds</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L798">src/app/board/GameUIManager.ts:798</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L789">src/app/board/GameUIManager.ts:789</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></h4>
@@ -1558,9 +1536,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getplanetdetaillevel">getPlanetDetailLevel</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L676">src/app/board/GameUIManager.ts:676</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L667">src/app/board/GameUIManager.ts:667</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1582,9 +1559,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getplanetlevel">getPlanetLevel</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L672">src/app/board/GameUIManager.ts:672</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L663">src/app/board/GameUIManager.ts:663</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1606,9 +1582,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getplanetwithid">getPlanetWithId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L659">src/app/board/GameUIManager.ts:659</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L650">src/app/board/GameUIManager.ts:650</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1630,9 +1605,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getplanetsinviewport">getPlanetsInViewport</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L725">src/app/board/GameUIManager.ts:725</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L716">src/app/board/GameUIManager.ts:716</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../globals.html#planet" class="tsd-signature-type">Planet</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -1648,9 +1622,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getpluginmanager">getPluginManager</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L223">src/app/board/GameUIManager.ts:223</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L217">src/app/board/GameUIManager.ts:217</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="pluginmanager.html" class="tsd-signature-type">PluginManager</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
@@ -1666,9 +1639,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getprivatekey">getPrivateKey</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L227">src/app/board/GameUIManager.ts:227</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L221">src/app/board/GameUIManager.ts:221</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -1684,9 +1656,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getradiusofplanetlevel">getRadiusOfPlanetLevel</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L778">src/app/board/GameUIManager.ts:778</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L769">src/app/board/GameUIManager.ts:769</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1708,9 +1679,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getselectedcoords">getSelectedCoords</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L480">src/app/board/GameUIManager.ts:480</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L474">src/app/board/GameUIManager.ts:474</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/worldcoords.html" class="tsd-signature-type">WorldCoords</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
@@ -1726,9 +1696,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getselectedplanet">getSelectedPlanet</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L444">src/app/board/GameUIManager.ts:444</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L438">src/app/board/GameUIManager.ts:438</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../globals.html#planet" class="tsd-signature-type">Planet</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
@@ -1744,9 +1713,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getsilvercurveatpercent">getSilverCurveAtPercent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L786">src/app/board/GameUIManager.ts:786</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L777">src/app/board/GameUIManager.ts:777</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1771,9 +1739,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getsilverofplayer">getSilverOfPlayer</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L743">src/app/board/GameUIManager.ts:743</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L734">src/app/board/GameUIManager.ts:734</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1795,9 +1762,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getsilversending">getSilverSending</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L639">src/app/board/GameUIManager.ts:639</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L630">src/app/board/GameUIManager.ts:630</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1819,9 +1785,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#gettwitter">getTwitter</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L402">src/app/board/GameUIManager.ts:402</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L396">src/app/board/GameUIManager.ts:396</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1843,9 +1808,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getuidataitem">getUIDataItem</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L805">src/app/board/GameUIManager.ts:805</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L796">src/app/board/GameUIManager.ts:796</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1867,9 +1831,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getunconfirmedmoves">getUnconfirmedMoves</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L688">src/app/board/GameUIManager.ts:688</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L679">src/app/board/GameUIManager.ts:679</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../globals.html#unconfirmedmove" class="tsd-signature-type">UnconfirmedMove</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -1886,7 +1849,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L692">src/app/board/GameUIManager.ts:692</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L683">src/app/board/GameUIManager.ts:683</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../globals.html#unconfirmedupgrade" class="tsd-signature-type">UnconfirmedUpgrade</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -1902,9 +1865,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getuniversetotalenergy">getUniverseTotalEnergy</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L739">src/app/board/GameUIManager.ts:739</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L730">src/app/board/GameUIManager.ts:730</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1921,7 +1883,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L410">src/app/board/GameUIManager.ts:410</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L404">src/app/board/GameUIManager.ts:404</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1946,9 +1908,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getviewport">getViewport</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L809">src/app/board/GameUIManager.ts:809</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L800">src/app/board/GameUIManager.ts:800</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="viewport.html" class="tsd-signature-type">Viewport</a></h4>
@@ -1964,9 +1925,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getworldradius">getWorldRadius</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L731">src/app/board/GameUIManager.ts:731</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L722">src/app/board/GameUIManager.ts:722</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1982,9 +1942,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#getworldsilver">getWorldSilver</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L735">src/app/board/GameUIManager.ts:735</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L726">src/app/board/GameUIManager.ts:726</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1995,20 +1954,19 @@
 					<a name="hasminedchunk" class="tsd-anchor"></a>
 					<h3>has<wbr>Mined<wbr>Chunk</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">has<wbr>Mined<wbr>Chunk<span class="tsd-signature-symbol">(</span>chunkLocation<span class="tsd-signature-symbol">: </span><a href="../interfaces/chunkfootprint.html" class="tsd-signature-type">ChunkFootprint</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">has<wbr>Mined<wbr>Chunk<span class="tsd-signature-symbol">(</span>chunkLocation<span class="tsd-signature-symbol">: </span><a href="../interfaces/rectangle.html" class="tsd-signature-type">Rectangle</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#hasminedchunk">hasMinedChunk</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L502">src/app/board/GameUIManager.ts:502</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L496">src/app/board/GameUIManager.ts:496</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>chunkLocation: <a href="../interfaces/chunkfootprint.html" class="tsd-signature-type">ChunkFootprint</a></h5>
+									<h5>chunkLocation: <a href="../interfaces/rectangle.html" class="tsd-signature-type">Rectangle</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -2024,9 +1982,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#isoverownplanet">isOverOwnPlanet</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L643">src/app/board/GameUIManager.ts:643</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L634">src/app/board/GameUIManager.ts:634</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2048,9 +2005,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#isownedbyme">isOwnedByMe</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L372">src/app/board/GameUIManager.ts:372</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L366">src/app/board/GameUIManager.ts:366</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2073,7 +2029,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L203">src/app/board/GameUIManager.ts:203</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L197">src/app/board/GameUIManager.ts:197</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2252,7 +2208,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L514">src/app/board/GameUIManager.ts:514</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L508">src/app/board/GameUIManager.ts:508</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2275,7 +2231,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L855">src/app/board/GameUIManager.ts:855</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L846">src/app/board/GameUIManager.ts:846</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2292,7 +2248,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L859">src/app/board/GameUIManager.ts:859</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L850">src/app/board/GameUIManager.ts:850</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2315,7 +2271,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L257">src/app/board/GameUIManager.ts:257</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L251">src/app/board/GameUIManager.ts:251</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2337,9 +2293,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#onmousedown">onMouseDown</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L246">src/app/board/GameUIManager.ts:246</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L240">src/app/board/GameUIManager.ts:240</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2361,9 +2316,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#onmousemove">onMouseMove</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L264">src/app/board/GameUIManager.ts:264</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L258">src/app/board/GameUIManager.ts:258</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2385,9 +2339,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#onmouseout">onMouseOut</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L346">src/app/board/GameUIManager.ts:346</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L340">src/app/board/GameUIManager.ts:340</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2403,9 +2356,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#onmouseup">onMouseUp</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L268">src/app/board/GameUIManager.ts:268</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L262">src/app/board/GameUIManager.ts:262</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2428,7 +2380,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L496">src/app/board/GameUIManager.ts:496</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L490">src/app/board/GameUIManager.ts:490</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2445,7 +2397,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L489">src/app/board/GameUIManager.ts:489</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L483">src/app/board/GameUIManager.ts:483</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2513,7 +2465,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L851">src/app/board/GameUIManager.ts:851</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L842">src/app/board/GameUIManager.ts:842</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2673,9 +2625,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#removeextraminerlocation">removeExtraMinerLocation</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L610">src/app/board/GameUIManager.ts:610</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L601">src/app/board/GameUIManager.ts:601</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2742,9 +2693,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#setdetaillevel">setDetailLevel</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L376">src/app/board/GameUIManager.ts:376</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L370">src/app/board/GameUIManager.ts:370</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2766,9 +2716,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#setextraminerlocation">setExtraMinerLocation</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L606">src/app/board/GameUIManager.ts:606</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L597">src/app/board/GameUIManager.ts:597</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2793,9 +2742,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#setforcessending">setForcesSending</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L364">src/app/board/GameUIManager.ts:364</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L358">src/app/board/GameUIManager.ts:358</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2844,9 +2792,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#setminingpattern">setMiningPattern</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L389">src/app/board/GameUIManager.ts:389</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L383">src/app/board/GameUIManager.ts:383</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2868,9 +2815,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#setselectedid">setSelectedId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L448">src/app/board/GameUIManager.ts:448</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L442">src/app/board/GameUIManager.ts:442</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2892,9 +2838,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#setselectedplanet">setSelectedPlanet</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L453">src/app/board/GameUIManager.ts:453</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L447">src/app/board/GameUIManager.ts:447</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2916,9 +2861,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#setsilversending">setSilverSending</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L368">src/app/board/GameUIManager.ts:368</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L362">src/app/board/GameUIManager.ts:362</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2943,9 +2887,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#setuidataitem">setUIDataItem</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L802">src/app/board/GameUIManager.ts:802</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L793">src/app/board/GameUIManager.ts:793</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2970,9 +2913,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#spacetypefromperlin">spaceTypeFromPerlin</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L510">src/app/board/GameUIManager.ts:510</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L504">src/app/board/GameUIManager.ts:504</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2994,9 +2936,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#startexplore">startExplore</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L353">src/app/board/GameUIManager.ts:353</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L347">src/app/board/GameUIManager.ts:347</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -3012,9 +2953,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#stopexplore">stopExplore</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L358">src/app/board/GameUIManager.ts:358</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L352">src/app/board/GameUIManager.ts:352</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -3031,7 +2971,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L833">src/app/board/GameUIManager.ts:833</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L824">src/app/board/GameUIManager.ts:824</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3054,7 +2994,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L815">src/app/board/GameUIManager.ts:815</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L806">src/app/board/GameUIManager.ts:806</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -3070,9 +3010,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#upgrade">upgrade</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L751">src/app/board/GameUIManager.ts:751</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L742">src/app/board/GameUIManager.ts:742</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3097,9 +3036,8 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/abstractuimanager.html">AbstractUIManager</a>.<a href="../interfaces/abstractuimanager.html#verifytwitter">verifyTwitter</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L219">src/app/board/GameUIManager.ts:219</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L213">src/app/board/GameUIManager.ts:213</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3122,7 +3060,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L239">src/app/board/GameUIManager.ts:239</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L233">src/app/board/GameUIManager.ts:233</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3139,19 +3077,19 @@
 					<a name="create" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> create</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>gameManager<span class="tsd-signature-symbol">: </span><a href="../interfaces/abstractgamemanager.html" class="tsd-signature-type">AbstractGameManager</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="gameuimanager.html" class="tsd-signature-type">GameUIManager</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>gameManager<span class="tsd-signature-symbol">: </span><a href="gamemanager.html" class="tsd-signature-type">GameManager</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="gameuimanager.html" class="tsd-signature-type">GameUIManager</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/briangu33/darkforest/blob/a57b12c/client/src/app/board/GameUIManager.ts#L117">src/app/board/GameUIManager.ts:117</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/1adf781/client/src/app/board/GameUIManager.ts#L107">src/app/board/GameUIManager.ts:107</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>gameManager: <a href="../interfaces/abstractgamemanager.html" class="tsd-signature-type">AbstractGameManager</a></h5>
+									<h5>gameManager: <a href="gamemanager.html" class="tsd-signature-type">GameManager</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="gameuimanager.html" class="tsd-signature-type">GameUIManager</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -3367,6 +3305,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="gameuimanager.html#getenergyofplayer" class="tsd-kind-icon">get<wbr>Energy<wbr>OfPlayer</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="gameuimanager.html#getethconnection" class="tsd-kind-icon">get<wbr>Eth<wbr>Connection</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="gameuimanager.html#getexploredchunks" class="tsd-kind-icon">get<wbr>Explored<wbr>Chunks</a>
@@ -3640,18 +3581,13 @@
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
 				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>

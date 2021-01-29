@@ -8,19 +8,10 @@ import {
   UnconfirmedUpgrade,
   UnconfirmedWithdrawArtifact,
 } from '../darkforest/api/ContractsAPITypes';
-import { EventEmitter } from 'events';
 import TerminalEmitter from '../../utils/TerminalEmitter';
-import AbstractGameManager from '../../api/AbstractGameManager';
-import AbstractUIManager from '../../app/board/AbstractUIManager';
 import { Dispatch, SetStateAction } from 'react';
-
-interface WindowEthereumObject extends EventEmitter {
-  enable: () => void;
-}
-
-export interface Web3Object {
-  currentProvider: Record<string, unknown>;
-}
+import GameManager from '../../api/GameManager';
+import GameUIManager from '../../app/board/GameUIManager';
 
 export type SetFn<T> = Dispatch<SetStateAction<T>>;
 export type Hook<T> = [T, Dispatch<SetStateAction<T>>];
@@ -79,15 +70,13 @@ export const BiomeNames = [
 
 declare global {
   interface Window {
-    // gameManager: any;
-    // mimcHash: any;
     /* eslint-disable @typescript-eslint/no-explicit-any */
     snarkjs: any;
 
     // TODO: these three should eventually live in some sort of `DFTerminal` namespace
     // instead of global
-    df?: AbstractGameManager;
-    ui?: AbstractUIManager;
+    df?: GameManager;
+    ui?: GameUIManager;
     terminal?: TerminalEmitter;
   }
 }
@@ -122,12 +111,6 @@ export type EthAddress = string & {
   __value__: never;
 }; // this is expected to be 40 chars, lowercase hex. see src/utils/CheckedTypeUtils.ts for constructor
 
-export interface Coordinates {
-  // integers
-  x: number;
-  y: number;
-}
-
 export interface Location {
   coords: WorldCoords;
   hash: LocationId;
@@ -145,12 +128,13 @@ export interface Location {
  * ]
  */
 export type Bonus = [boolean, boolean, boolean, boolean, boolean];
+
 export enum StatIdx {
-  EnergyCap,
-  EnergyGro,
-  Range,
-  Speed,
-  Defense,
+  EnergyCap = 0,
+  EnergyGro = 1,
+  Range = 2,
+  Speed = 3,
+  Defense = 4,
 }
 
 export type Upgrade = {
@@ -196,9 +180,10 @@ export enum ArtifactRarity {
   Rare,
   Epic,
   Legendary,
+  Mythic,
 }
 
-export const RarityNames = ['Common', 'Rare', 'Epic', 'Legendary'];
+export const RarityNames = ['Common', 'Rare', 'Epic', 'Legendary', 'Mythic'];
 
 export type Artifact = {
   id: ArtifactId;
@@ -289,19 +274,19 @@ export interface Player {
   twitter?: string;
 }
 
-export interface ChunkFootprint {
+export interface Rectangle {
   bottomLeft: WorldCoords;
   sideLength: number;
 }
 
 export class ExploredChunkData {
-  chunkFootprint: ChunkFootprint;
+  chunkFootprint: Rectangle;
   planetLocations: Location[];
   perlin: number; // approximate avg perlin value. used for rendering
 }
 
 export interface MinerWorkerMessage {
-  chunkFootprint: ChunkFootprint;
+  chunkFootprint: Rectangle;
   workerIndex: number;
   totalWorkers: number;
   planetRarity: number;

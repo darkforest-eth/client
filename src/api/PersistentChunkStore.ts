@@ -2,7 +2,7 @@ import * as stringify from 'json-stable-stringify';
 import {
   EthAddress,
   ExploredChunkData,
-  ChunkFootprint,
+  Rectangle,
   LocationId,
   Location,
 } from '../_types/global/GlobalTypes';
@@ -205,9 +205,7 @@ class PersistentChunkStore implements ChunkStore {
     await this.setKey('touchedPlanetIds', stringify(ids));
   }
 
-  public getChunkByFootprint(
-    chunkLoc: ChunkFootprint
-  ): ExploredChunkData | null {
+  public getChunkByFootprint(chunkLoc: Rectangle): ExploredChunkData | null {
     let sideLength = chunkLoc.sideLength;
 
     while (sideLength <= MAX_CHUNK_SIZE) {
@@ -225,7 +223,7 @@ class PersistentChunkStore implements ChunkStore {
     return null;
   }
 
-  public hasMinedChunk(chunkLoc: ChunkFootprint): boolean {
+  public hasMinedChunk(chunkLoc: Rectangle): boolean {
     return !!this.getChunkByFootprint(chunkLoc);
   }
 
@@ -303,7 +301,7 @@ class PersistentChunkStore implements ChunkStore {
     ) {
       for (let x = 0; x < e.chunkFootprint.sideLength; x += clearingSideLen) {
         for (let y = 0; y < e.chunkFootprint.sideLength; y += clearingSideLen) {
-          const queryChunk: ChunkFootprint = {
+          const queryChunk: Rectangle = {
             bottomLeft: {
               x: e.chunkFootprint.bottomLeft.x + x,
               y: e.chunkFootprint.bottomLeft.y + y,

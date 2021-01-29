@@ -6,7 +6,7 @@ import {
   ExploredChunkData,
   Location,
   MinerWorkerMessage,
-  ChunkFootprint,
+  Rectangle,
 } from '../_types/global/GlobalTypes';
 import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
 import { getPlanetLocations } from './permutation';
@@ -17,7 +17,7 @@ const ctx: Worker = self as any;
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 const exploreChunk = (
-  chunkFootprint: ChunkFootprint,
+  chunkFootprint: Rectangle,
   workerIndex: number,
   totalWorkers: number,
   planetRarity: number,

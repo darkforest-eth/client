@@ -94,10 +94,12 @@ const StyledSettingsPane = styled.div`
 `;
 
 export function SettingsPane({
+  ethConnection,
   hook,
   privateHook,
   hiPerfHook,
 }: {
+  ethConnection: EthConnection;
   hook: ModalHook;
   privateHook: ModalHook;
   hiPerfHook: Hook<boolean>;
@@ -160,16 +162,16 @@ export function SettingsPane({
   }, [account]);
 
   // RPC URL
-  const ethManager = EthConnection.getInstance();
+
   const [rpcURLText, setRpcURLText] = useState<string>(
-    ethManager.getRpcEndpoint()
+    ethConnection.getRpcEndpoint()
   );
 
-  const [rpcURL, setRpcURL] = useState<string>(ethManager.getRpcEndpoint());
+  const [rpcURL, setRpcURL] = useState<string>(ethConnection.getRpcEndpoint());
 
   const onChangeRpc = () => {
-    ethManager.setRpcEndpoint(rpcURLText).then(() => {
-      const newEndpoint = ethManager.getRpcEndpoint();
+    ethConnection.setRpcEndpoint(rpcURLText).then(() => {
+      const newEndpoint = ethConnection.getRpcEndpoint();
       setRpcURLText(newEndpoint);
       setRpcURL(newEndpoint);
     });

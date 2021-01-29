@@ -7,10 +7,9 @@ import { SpaceType } from '../../_types/global/GlobalTypes';
 import GameUIManager from '../board/GameUIManager';
 import GameUIManagerContext from '../board/GameUIManagerContext';
 import { MIN_CHUNK_SIZE } from '../../utils/constants';
-import AbstractUIManager from '../board/AbstractUIManager';
 
 interface Props {
-  uiManager: AbstractUIManager | null;
+  uiManager: GameUIManager | null;
 }
 
 class CoordsText extends React.Component<Props, never> {

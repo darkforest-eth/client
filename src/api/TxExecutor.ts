@@ -65,13 +65,13 @@ export class TxExecutor extends EventEmitter {
   private nonce: number;
   private eth: EthConnection;
 
-  constructor(nonce: number) {
+  constructor(ethConnection: EthConnection, nonce: number) {
     super();
 
     this.txRequests = FastQueue(callbackify(this.execute), 1);
     this.nonce = nonce;
     this.lastTransaction = Date.now();
-    this.eth = EthConnection.getInstance();
+    this.eth = ethConnection;
   }
 
   /**
@@ -148,6 +148,7 @@ export class TxExecutor extends EventEmitter {
       await this.checkBalance();
       await this.maybeUpdateNonce();
       await PopupManager.openConfirmationWindowForTransaction(
+        this.eth,
         txRequest,
         this.eth.getAddress()
       );
@@ -168,9 +169,7 @@ export class TxExecutor extends EventEmitter {
       this.lastTransaction = time_submitted;
       txRequest.onTransactionResponse(submitted);
 
-      const confirmed = await EthConnection.getInstance().waitForTransaction(
-        submitted.hash
-      );
+      const confirmed = await this.eth.waitForTransaction(submitted.hash);
       time_confirmed = Date.now();
       txRequest.onTransactionReceipt(confirmed);
 
@@ -222,8 +221,8 @@ export class TxExecutor extends EventEmitter {
       } catch (e) {}
     }
 
-    logEvent.rpc_endpoint = EthConnection.getInstance().getRpcEndpoint();
-    logEvent.user_address = EthConnection.getInstance().getAddress();
+    logEvent.rpc_endpoint = this.eth.getRpcEndpoint();
+    logEvent.user_address = this.eth.getAddress();
 
     if (
       localStorage.getItem(`optout-metrics-${logEvent.user_address}`) !== 'true'

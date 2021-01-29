@@ -130,18 +130,22 @@ export const contractPrecision = 1000;
 class ContractsAPI extends EventEmitter {
   private readonly txRequestExecutor: TxExecutor | null;
   private readonly terminalEmitter: TerminalEmitter;
+  private ethConnection: EthConnection;
   private coreContract: Contract;
 
-  private constructor(coreContract: Contract, nonce: number) {
+  private constructor(
+    ethConnection: EthConnection,
+    coreContract: Contract,
+    nonce: number
+  ) {
     super();
     this.coreContract = coreContract;
-    this.txRequestExecutor = new TxExecutor(nonce);
+    this.txRequestExecutor = new TxExecutor(ethConnection, nonce);
     this.terminalEmitter = TerminalEmitter.getInstance();
+    this.ethConnection = ethConnection;
   }
 
-  static async create(): Promise<ContractsAPI> {
-    const ethConnection = EthConnection.getInstance();
-
+  static async create(ethConnection: EthConnection): Promise<ContractsAPI> {
     let nonce = 0;
     try {
       nonce = await ethConnection.getNonce();
@@ -150,6 +154,7 @@ class ContractsAPI extends EventEmitter {
     }
 
     const contractsAPI: ContractsAPI = new ContractsAPI(
+      ethConnection,
       await ethConnection.loadCoreContract(),
       nonce
     );
@@ -243,10 +248,8 @@ class ContractsAPI extends EventEmitter {
         );
       });
 
-    const ethConnection = EthConnection.getInstance();
-
-    ethConnection.on('ChangedRPCEndpoint', async () => {
-      this.coreContract = await ethConnection.loadCoreContract();
+    this.ethConnection.on('ChangedRPCEndpoint', async () => {
+      this.coreContract = await this.ethConnection.loadCoreContract();
     });
   }
 

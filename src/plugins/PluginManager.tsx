@@ -1,5 +1,3 @@
-import AbstractGameManager from '../api/AbstractGameManager';
-import AbstractUIManager from '../app/board/AbstractUIManager';
 import { PluginId, SerializedPlugin } from './SerializedPlugin';
 import { v4 as uuidv4 } from 'uuid';
 import { PluginProcess } from './PluginProcess';
@@ -8,6 +6,8 @@ import { PluginHelpers } from './PluginHelpers';
 import { README_PLUGIN } from './examples/ReadmePlugin';
 import { ARTIFACT_FINDER_PLUGIN } from './examples/ArtifactsFinderPlugin';
 import { CANVAS_PLUGIN } from './examples/ExampleCanvasPlugin';
+import GameManager from '../api/GameManager';
+import GameUIManager from '../app/board/GameUIManager';
 
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
@@ -41,13 +41,13 @@ export class PluginManager {
    * We want to give plugins access to the game state, so we must store
    * a reference to this game's {@link GameManager} instance.
    */
-  private gameManager: AbstractGameManager;
+  private gameManager: GameManager;
 
   /**
    * Same as `gameManager` -we want to give plugins access to the game ui,
    * so we must store a reference to this game's {@link GameManager} instance.
    */
-  private uiManager: AbstractUIManager;
+  private uiManager: GameUIManager;
 
   /**
    * All the plugins in the player's library. Not all of the player's plugins
@@ -71,10 +71,7 @@ export class PluginManager {
    */
   private pluginProcessInfos: Record<string, ProcessInfo>;
 
-  public constructor(
-    gameManager: AbstractGameManager,
-    uiManager: AbstractUIManager
-  ) {
+  public constructor(gameManager: GameManager, uiManager: GameUIManager) {
     this.gameManager = gameManager;
     this.uiManager = uiManager;
     this.pluginLibrary = [];

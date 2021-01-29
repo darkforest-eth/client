@@ -25,8 +25,8 @@ import {
 import { getTimeZone, PlanetStatsInfo } from '../../utils/Utils';
 import dfstyles from '../../styles/dfstyles';
 import { Red, Sub } from '../../components/Text';
-import { GameEntityMemoryStore } from '../../api/GameEntityMemoryStore';
 import { useState } from 'react';
+import { GameObjects } from '../../api/GameObjects';
 
 const MINT_END = 1611584314 * 1000;
 
@@ -207,7 +207,7 @@ export function FindArtifactPane({
     if (
       selected &&
       isLocatable(selected) &&
-      GameEntityMemoryStore.isPlanetMineable(selected)
+      GameObjects.isPlanetMineable(selected)
     )
       return true;
     return false;

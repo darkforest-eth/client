@@ -13,7 +13,7 @@ import {
   UpgradeBranchName,
   SpaceType,
   PlanetResource,
-  ChunkFootprint,
+  Rectangle,
   Artifact,
   ArtifactId,
   LocatablePlanet,
@@ -22,15 +22,13 @@ import {
 } from '../../_types/global/GlobalTypes';
 import autoBind from 'auto-bind';
 import { EventEmitter } from 'events';
-import AbstractUIManager from './AbstractUIManager';
-import AbstractGameManager from '../../api/AbstractGameManager';
 import { moveShipsDecay, planetHasBonus } from '../../utils/Utils';
 import {
   UnconfirmedMove,
   UnconfirmedUpgrade,
 } from '../../_types/darkforest/api/ContractsAPITypes';
 import { MiningPattern } from '../../utils/MiningPatterns';
-import { GameManagerEvent } from '../../api/GameManager';
+import GameManager, { GameManagerEvent } from '../../api/GameManager';
 import TutorialManager, { TutorialState } from '../../utils/TutorialManager';
 import UIStateStorageManager, {
   UIDataKey,
@@ -42,39 +40,31 @@ import TerminalEmitter from '../../utils/TerminalEmitter';
 import Viewport from './Viewport';
 import { PluginManager } from '../../plugins/PluginManager';
 import { biomeName } from '../../utils/ArtifactUtils';
-import { GameEntityMemoryStore } from '../../api/GameEntityMemoryStore';
+import { GameObjects } from '../../api/GameObjects';
+import EthConnection from '../../api/EthConnection';
 
 export enum GameUIManagerEvent {
   InitializedPlayer = 'InitializedPlayer',
   InitializedPlayerError = 'InitializedPlayerError',
 }
 
-class GameUIManager extends EventEmitter implements AbstractUIManager {
-  private gameManager: AbstractGameManager;
+class GameUIManager extends EventEmitter {
+  private gameManager: GameManager;
+  private readonly radiusMap: Record<PlanetLevel, number> = {};
   private uiStateStorageManager: UIStateStorageManager;
-
   private replayMode: boolean;
   private detailLevel: number; // 0 is show everything; higher means show less
-
-  // TODO fix this
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private readonly radiusMap: Record<PlanetLevel, number> = {};
-
   private selectedPlanet: Planet | null = null;
   private selectedCoords: WorldCoords | null = null;
   private mouseDownOverPlanet: Planet | null = null;
   private mouseDownOverCoords: WorldCoords | null = null;
   private mouseHoveringOverPlanet: Planet | null = null;
   private mouseHoveringOverCoords: WorldCoords | null = null;
-
   private sendingPlanet: Planet | null = null;
   private sendingCoords: WorldCoords | null = null;
   private isSending = false;
-
-  // Keep this in for now
   // TODO: Remove later and just use minerLocations array
   private minerLocation: WorldCoords | null = null;
-  // A place to store extra miner locations to be drawn. Useful for plugins
   private extraMinerLocations: WorldCoords[] = [];
   private isMining = true;
 
@@ -85,7 +75,7 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
   // lifecycle methods
 
-  private constructor(gameManager: AbstractGameManager, replayMode = false) {
+  private constructor(gameManager: GameManager, replayMode = false) {
     super();
 
     this.gameManager = gameManager;
@@ -114,7 +104,7 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     autoBind(this);
   }
 
-  static async create(gameManager: AbstractGameManager) {
+  static async create(gameManager: GameManager) {
     const uiEmitter = UIEmitter.getInstance();
 
     const uiManager = new GameUIManager(
@@ -171,6 +161,10 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
 
     this.gameManager.destroy();
     this.uiStateStorageManager.destroy();
+  }
+
+  getEthConnection(): EthConnection {
+    return this.gameManager.getEthConnection();
   }
 
   getContractAddress(): EthAddress {
@@ -499,11 +493,11 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
     this.sendingCoords = null;
   }
 
-  hasMinedChunk(chunkLocation: ChunkFootprint): boolean {
+  hasMinedChunk(chunkLocation: Rectangle): boolean {
     return this.gameManager.hasMinedChunk(chunkLocation);
   }
 
-  getChunk(chunkFootprint: ChunkFootprint): ExploredChunkData | null {
+  getChunk(chunkFootprint: Rectangle): ExploredChunkData | null {
     return this.gameManager.getChunk(chunkFootprint);
   }
 
@@ -566,10 +560,7 @@ class GameUIManager extends EventEmitter implements AbstractUIManager {
       ) {
         this.discoverBiome(planet);
       }
-      if (
-        isLocatable(planet) &&
-        GameEntityMemoryStore.isPlanetMineable(planet)
-      ) {
+      if (isLocatable(planet) && GameObjects.isPlanetMineable(planet)) {
         if (
           !this.getUIDataItem(UIDataKey.foundArtifact) &&
           this.getUIDataItem(UIDataKey.tutorialCompleted)

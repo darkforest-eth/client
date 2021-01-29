@@ -4,13 +4,13 @@ import {
   LSMLoc,
 } from '../_types/darkforest/api/ChunkStoreTypes';
 import {
-  ChunkFootprint,
+  Rectangle,
   ExploredChunkData,
   Location,
 } from '../_types/global/GlobalTypes';
 import { WorldCoords } from './Coordinates';
 
-export const getBucket: (chunk: ChunkFootprint) => LSMBucket = (chunk) => {
+export const getBucket: (chunk: Rectangle) => LSMBucket = (chunk) => {
   const alphanumeric = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let sum =
     (Math.floor(chunk.bottomLeft.x / chunk.sideLength) +
@@ -20,7 +20,7 @@ export const getBucket: (chunk: ChunkFootprint) => LSMBucket = (chunk) => {
   return alphanumeric[sum];
 };
 
-export const getChunkKey = (chunkLoc: ChunkFootprint) => {
+export const getChunkKey = (chunkLoc: Rectangle) => {
   const ret =
     `${getBucket(chunkLoc)},` +
     `${chunkLoc.sideLength},` +
@@ -72,14 +72,14 @@ export const toExploredChunk = (chunk: LSMChunkData) => {
   return ret;
 };
 
-export const getSiblingLocations = (chunkLoc: ChunkFootprint) => {
+export const getSiblingLocations = (chunkLoc: Rectangle) => {
   const doubleSideLen = 2 * chunkLoc.sideLength;
   const newBottomLeftX =
     Math.floor(chunkLoc.bottomLeft.x / doubleSideLen) * doubleSideLen;
   const newBottomLeftY =
     Math.floor(chunkLoc.bottomLeft.y / doubleSideLen) * doubleSideLen;
   const newBottomLeft = { x: newBottomLeftX, y: newBottomLeftY };
-  const siblingLocs: ChunkFootprint[] = [];
+  const siblingLocs: Rectangle[] = [];
   for (let i = 0; i < 2; i += 1) {
     for (let j = 0; j < 2; j += 1) {
       const x = newBottomLeft.x + i * chunkLoc.sideLength;
@@ -93,7 +93,7 @@ export const getSiblingLocations = (chunkLoc: ChunkFootprint) => {
       });
     }
   }
-  const ret: [ChunkFootprint, ChunkFootprint, ChunkFootprint] = [
+  const ret: [Rectangle, Rectangle, Rectangle] = [
     siblingLocs[0],
     siblingLocs[1],
     siblingLocs[2],
@@ -107,7 +107,7 @@ export const getChunkOfSideLength = (
 ) => {
   const oldBottomLeftX = coords.x;
   const oldBottomLeftY = coords.y;
-  const ret: ChunkFootprint = {
+  const ret: Rectangle = {
     sideLength,
     bottomLeft: {
       x: Math.floor(oldBottomLeftX / sideLength) * sideLength,

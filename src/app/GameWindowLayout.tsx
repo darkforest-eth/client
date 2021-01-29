@@ -107,6 +107,7 @@ export function GameWindowLayout({
         />
         <HatPane hook={hatHook} />
         <SettingsPane
+          ethConnection={gameUIManager.getEthConnection()}
           hook={settingsHook}
           privateHook={privateHook}
           hiPerfHook={hiPerfHook}

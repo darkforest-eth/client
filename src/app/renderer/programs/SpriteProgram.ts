@@ -9,6 +9,7 @@ const a = {
   color: 'a_color',
   shine: 'a_shine', // -0.5 to 0.5
   invert: 'a_invert',
+  mythic: 'a_mythic',
 };
 const u = {
   matrix: 'u_matrix', // matrix to convert from screen coords to clipspace
@@ -19,6 +20,7 @@ const v = {
   color: 'v_color',
   shine: 'v_shine',
   invert: 'v_invert',
+  mythic: 'v_mythic',
   rectPos: 'v_rectPos',
 };
 
@@ -64,6 +66,12 @@ export const SPRITE_PROGRAM_DEFINITION = {
       normalize: false,
       name: a.invert,
     },
+    mythic: {
+      dim: 1,
+      type: AttribType.Float,
+      normalize: false,
+      name: a.mythic,
+    },
   },
   vertexShader: glsl`
     in vec4 ${a.position};
@@ -71,6 +79,7 @@ export const SPRITE_PROGRAM_DEFINITION = {
     in vec4 ${a.color};
     in float ${a.shine};
     in float ${a.invert};
+    in float ${a.mythic};
     in vec2 ${a.rectPos};
 
     uniform mat4 ${u.matrix};
@@ -79,6 +88,7 @@ export const SPRITE_PROGRAM_DEFINITION = {
     out vec4 ${v.color};
     out float ${v.shine};
     out float ${v.invert};
+    out float ${v.mythic};
     out vec2 ${v.rectPos};
 
     void main() {
@@ -88,9 +98,12 @@ export const SPRITE_PROGRAM_DEFINITION = {
       ${v.shine} = ${a.shine};
       ${v.invert} = ${a.invert};
       ${v.rectPos} = ${a.rectPos};
+      ${v.mythic} = ${a.mythic};
     }
   `,
   fragmentShader: glsl`
+    ${ShaderMixins.PI}
+
     precision highp float;
     out vec4 outColor;
 
@@ -99,11 +112,13 @@ export const SPRITE_PROGRAM_DEFINITION = {
     in vec4 ${v.color};
     in float ${v.shine};
     in float ${v.invert};
+    in float ${v.mythic};
 
     uniform sampler2D ${u.texture};
 
     ${ShaderMixins.invertColors}
     ${ShaderMixins.desaturate}
+    ${ShaderMixins.simplex4}
 
     void main() {
       vec4 texel = texture(${u.texture}, ${v.texcoord});
@@ -111,12 +126,35 @@ export const SPRITE_PROGRAM_DEFINITION = {
       // initial checks
       if (texel.a < 0.5) discard;
       if (${v.invert} > 0.) texel = invert(texel);
+      if (${v.mythic} > 0.) {
+        float theta = ${v.shine} * 2. * PI;
+
+        float x = 8. * (${v.rectPos}.x);
+        float y = 2. * (${v.rectPos}.y - 0.5);
+        float z = sqrt(1. - y * y);
+
+        float yP = cos(theta) * y + sin(theta) * z;
+        float zP = sin(theta) * y - cos(theta) * z;
+
+        vec4 nIn = vec4(x, yP, zP, 0.);
+
+        float rand = snoise(nIn);
+
+        bool isBlack = texel.r < 0.05 && texel.g < 0.05 && texel.b < 0.05;
+        bool isWhite = texel.r > 0.95 && texel.g > 0.95 && texel.b > 0.95;
+
+        if (isBlack) { } 
+        else if (isWhite) { } 
+        else {
+          texel.rgb = ((texel.rgb - 0.35) * max(3., 0.)) + 0.35;
+          texel.rgb *= 0.5 * rand + 0.6;
+        }
+      }
 
       // see if we should recolor it
       bool shouldColor = ${v.color}.x != 0. || ${v.color}.y != 0. || ${v.color}.z != 0.;
       // if (shouldColor && ${v.color}.a < 1.) discard; // don't do alpha for strokes
       if (shouldColor && texel.a > 0.5) texel = ${v.color};
-
 
       // shine
       float shine = -0.5 + 12. * ${v.shine};

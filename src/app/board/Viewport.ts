@@ -7,7 +7,6 @@ import {
   vecScale,
 } from '../../utils/Coordinates';
 import autoBind from 'auto-bind';
-import AbstractUIManager from './AbstractUIManager';
 import {
   ExploredChunkData,
   isLocatable,
@@ -15,6 +14,7 @@ import {
 } from '../../_types/global/GlobalTypes';
 import _ from 'lodash';
 import { UIDataKey } from '../../api/UIStateStorageManager';
+import GameUIManager from './GameUIManager';
 
 export const getDefaultScroll = (): number => {
   const isFirefox = navigator.userAgent.indexOf('Firefox') > 0;
@@ -50,7 +50,7 @@ class Viewport {
 
   isFirefox: boolean;
 
-  gameUIManager: AbstractUIManager;
+  gameUIManager: GameUIManager;
 
   mousedownCoords: CanvasCoords | null = null;
 
@@ -67,7 +67,7 @@ class Viewport {
   private isSending = false;
 
   private constructor(
-    gameUIManager: AbstractUIManager,
+    gameUIManager: GameUIManager,
     centerWorldCoords: WorldCoords,
     widthInWorldUnits: number,
     viewportWidth: number,
@@ -162,7 +162,7 @@ class Viewport {
   }
 
   static initialize(
-    gameUIManager: AbstractUIManager,
+    gameUIManager: GameUIManager,
     widthInWorldUnits: number,
     canvas: HTMLCanvasElement
   ): Viewport {

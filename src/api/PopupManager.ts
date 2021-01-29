@@ -11,6 +11,7 @@ export class PopupManager {
   private static readonly POPUP_TIMEOUT = 20000;
 
   public static async openConfirmationWindowForTransaction(
+    ethConnection: EthConnection,
     txRequest: QueuedTxRequest,
     from: EthAddress
   ): Promise<void> {
@@ -25,7 +26,6 @@ export class PopupManager {
       Date.now() > +enableUntilStr ||
       txRequest.type === EthTxType.BUY_HAT
     ) {
-      const ethConnection = EthConnection.getInstance();
       const account = ethConnection.getAddress();
       const balance = await ethConnection.getBalance(account);
       const method = TxTypeToEthFunctionName[txRequest.type];

@@ -1,6 +1,6 @@
 import { mat4 } from 'gl-matrix';
 import JSZip from 'jszip';
-import { mockArtifactWithRarity, mockRare } from '../utils/ArtifactUtils';
+import { mockArtifactWithRarity } from '../utils/ArtifactUtils';
 import {
   ArtifactType,
   Biome,
@@ -53,7 +53,13 @@ export class GifRenderer extends WebGLManager {
 
   // https://gist.github.com/ahgood/bfc57a7f44d6ab7803f3ee2ec0abb980
   private start() {
-    this.drawSprite(mockRare, 15);
+    this.drawSprite(
+      mockArtifactWithRarity(
+        ArtifactRarity.Mythic,
+        ArtifactType.Monolith,
+        Biome.ICE
+      )
+    );
     window.requestAnimationFrame(this.start);
   }
 
@@ -148,7 +154,7 @@ export class GifRenderer extends WebGLManager {
       for (let biome = Biome.MIN; biome <= Biome.MAX; biome++) {
         for (
           let rarity = ArtifactRarity.Common;
-          rarity <= ArtifactRarity.Legendary;
+          rarity <= ArtifactRarity.Mythic;
           rarity++
         ) {
           if (videoMode) await this.addVideo(dir, type, biome, rarity);

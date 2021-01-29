@@ -14,6 +14,7 @@ import {
   ArtifactId,
   VoyageId,
   isLocatable,
+  ExploredChunkData,
 } from '../_types/global/GlobalTypes';
 import {
   ContractConstants,
@@ -28,7 +29,6 @@ import _ from 'lodash';
 import { WorldCoords } from '../utils/Coordinates';
 import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
 import { hasOwner, getBytesFromHex, bonusFromHex } from '../utils/Utils';
-import PersistentChunkStore from './PersistentChunkStore';
 import {
   isUnconfirmedBuyHat,
   isUnconfirmedDepositArtifact,
@@ -41,16 +41,14 @@ import {
 import NotificationManager from '../utils/NotificationManager';
 import { arrive, updatePlanetToTime } from '../utils/ArrivalUtils';
 
-type CoordsString = string;
-type MemoizedCoordHashes = Map<CoordsString, Location>;
-
-const getCoordsString = (coords: WorldCoords): CoordsString => {
+const getCoordsString = (coords: WorldCoords): string => {
   return `${coords.x},${coords.y}`;
 };
 
-export class GameEntityMemoryStore {
+export class GameObjects {
   private static GRID_BUCKET_SIZE = 128;
 
+  private readonly address: EthAddress | null;
   private readonly planets: Map<LocationId, Planet>;
   private readonly planetGridBuckets: Record<string, Location[]>;
   private readonly artifacts: Map<ArtifactId, Artifact>;
@@ -59,7 +57,7 @@ export class GameEntityMemoryStore {
   private readonly planetArrivalIds: Map<LocationId, VoyageId[]>;
   private readonly planetLocationMap: Map<LocationId, Location>;
   private readonly contractConstants: ContractConstants;
-  private readonly coordsToLocation: MemoizedCoordHashes;
+  private readonly coordsToLocation: Map<string, Location>;
   private readonly unconfirmedMoves: Record<string, UnconfirmedMove>;
   private readonly unconfirmedUpgrades: Record<string, UnconfirmedUpgrade>;
   private readonly unconfirmedBuyHats: Record<string, UnconfirmedBuyHat>;
@@ -68,17 +66,15 @@ export class GameEntityMemoryStore {
     UnconfirmedPlanetTransfer
   >;
 
-  private address: EthAddress | null;
-
   constructor(
+    address: EthAddress | null,
     touchedPlanets: Map<LocationId, Planet>,
     allTouchedPlanetIds: Set<LocationId>,
     artifacts: Map<ArtifactId, Artifact>,
-    chunkStore: PersistentChunkStore,
+    allChunks: Iterable<ExploredChunkData>,
     unprocessedArrivals: Map<VoyageId, QueuedArrival>,
     unprocessedPlanetArrivalIds: Map<LocationId, VoyageId[]>,
-    contractConstants: ContractConstants,
-    address: EthAddress | null
+    contractConstants: ContractConstants
   ) {
     this.address = address;
     this.planets = touchedPlanets;
@@ -91,7 +87,6 @@ export class GameEntityMemoryStore {
     const planetArrivalIds = new Map();
     const arrivals = new Map();
 
-    const allChunks = chunkStore.allChunks();
     for (const chunk of allChunks) {
       for (const planetLocation of chunk.planetLocations) {
         this.addPlanetLocation(planetLocation);
@@ -199,7 +194,7 @@ export class GameEntityMemoryStore {
     from: WorldCoords,
     radiusMap: Record<PlanetLevel, number>
   ): LocatablePlanet | null {
-    const GRID_BUCKET_SIZE = GameEntityMemoryStore.GRID_BUCKET_SIZE;
+    const GRID_BUCKET_SIZE = GameObjects.GRID_BUCKET_SIZE;
     const candidates: LocatablePlanet[] = [];
     const gridRange = Math.ceil(radiusMap[PlanetLevel.MAX] / GRID_BUCKET_SIZE);
 
@@ -388,7 +383,7 @@ export class GameEntityMemoryStore {
    * This is the only way a LocatablePlanet gets constructed
    */
   public addPlanetLocation(planetLocation: Location): void {
-    const key = GameEntityMemoryStore.getGridBucketKey(planetLocation.coords);
+    const key = GameObjects.getGridBucketKey(planetLocation.coords);
     if (this.planetGridBuckets[key]) {
       this.planetGridBuckets[key].push(planetLocation);
     } else {
@@ -849,6 +844,7 @@ export class GameEntityMemoryStore {
       spaceType,
       owner: CheckedTypeUtils.EMPTY_ADDRESS,
       hatLevel: 0,
+      bonus: bonusFromHex(hex),
 
       planetLevel,
       planetResource, // None or Silver
@@ -881,7 +877,6 @@ export class GameEntityMemoryStore {
       location,
       biome,
       hasTriedFindingArtifact: false,
-      bonus: bonusFromHex(hex),
     };
   }
 
@@ -955,7 +950,7 @@ export class GameEntityMemoryStore {
   }
 
   private static getGridBucketKey(coords: WorldCoords): string {
-    const GRID_BUCKET_SIZE = GameEntityMemoryStore.GRID_BUCKET_SIZE;
+    const GRID_BUCKET_SIZE = GameObjects.GRID_BUCKET_SIZE;
     const gridBucketX = Math.floor(coords.x / GRID_BUCKET_SIZE);
     const gridBucketY = Math.floor(coords.y / GRID_BUCKET_SIZE);
     return `(${gridBucketX},${gridBucketY},${GRID_BUCKET_SIZE})`;

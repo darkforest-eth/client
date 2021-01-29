@@ -3,6 +3,9 @@
  */
 
 export class ShaderMixins {
+  public static PI = `
+    #define PI 3.1415926535
+  `;
   public static desaturate = `
     vec4 desaturate(vec4 color, float factor) {
       vec3 lum = vec3(0.299, 0.587, 0.114);
@@ -160,10 +163,53 @@ export class ShaderMixins {
     }
   `;
 
+  public static seededRandomVec2 = `
+    float seededRandomVec2(vec2 co){
+      return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
+    }
+  `;
+
   // inverts colors
   public static invertColors = `
     vec4 invert(vec4 cin) {
       return vec4(1. - cin.r, 1. - cin.g, 1. - cin.b, cin.a);
+    }
+  `;
+
+  // hue shift
+  // https://gist.github.com/mairod/a75e7b44f68110e1576d77419d608786
+  public static hueShift = `
+    vec3 hueShift(vec3 color, float hueAdjust) {
+      const vec3 kRGBToYPrime = vec3 (0.299, 0.587, 0.114);
+      const vec3 kRGBToI      = vec3 (0.596, -0.275, -0.321);
+      const vec3 kRGBToQ      = vec3 (0.212, -0.523, 0.311);
+
+      const vec3 kYIQToR      = vec3 (1.0, 0.956, 0.621);
+      const vec3 kYIQToG      = vec3 (1.0, -0.272, -0.647);
+      const vec3 kYIQToB      = vec3 (1.0, -1.107, 1.704);
+  
+      float YPrime  = dot (color, kRGBToYPrime);
+      float I       = dot (color, kRGBToI);
+      float Q       = dot (color, kRGBToQ);
+      float hue     = atan (Q, I);
+      float chroma  = sqrt (I * I + Q * Q);
+  
+      hue += hueAdjust;
+  
+      Q = chroma * sin (hue);
+      I = chroma * cos (hue);
+  
+      vec3    yIQ   = vec3 (YPrime, I, Q);
+  
+      return vec3( dot (yIQ, kYIQToR), dot (yIQ, kYIQToG), dot (yIQ, kYIQToB) );
+    }
+  `;
+
+  // needs hueShift and invertColors
+  public static invertBrightness = `
+    vec4 invertBrightness(vec4 cin) {
+      vec4 shifted = vec4(hueShift(cin.rgb, 3.141593), 1.);
+      return invert(shifted);
     }
   `;
 }

@@ -32,14 +32,16 @@ export const rarityFromArtifact = (artifact: Artifact): ArtifactRarity => {
   if (l <= 1) return ArtifactRarity.Common;
   else if (l <= 3) return ArtifactRarity.Rare;
   else if (l <= 5) return ArtifactRarity.Epic;
-  else return ArtifactRarity.Legendary;
+  else if (l <= 7) return ArtifactRarity.Legendary;
+  else return ArtifactRarity.Mythic;
 };
 
 export const rarityNameFromArtifact = (a: Artifact): string =>
   rarityName(rarityFromArtifact(a));
 
 export const levelFromRarity = (rarity: ArtifactRarity): PlanetLevel => {
-  if (rarity === ArtifactRarity.Legendary) return 7;
+  if (rarity === ArtifactRarity.Mythic) return 8;
+  else if (rarity === ArtifactRarity.Legendary) return 7;
   else if (rarity === ArtifactRarity.Epic) return 5;
   else if (rarity === ArtifactRarity.Rare) return 3;
   else return 1;
@@ -242,7 +244,7 @@ export const mockArtifactWithRarity = (
   rarity: ArtifactRarity = ArtifactRarity.Common,
   artifactType: ArtifactType = ArtifactType.Spaceship,
   planetBiome: Biome = Biome.WASTELAND
-): Artifact => mockArtifact([1, 3, 5, 7][rarity], artifactType, planetBiome);
+): Artifact => mockArtifact([1, 3, 5, 7, 9][rarity], artifactType, planetBiome);
 
 export const mockCommon = mockArtifactWithRarity(
   ArtifactRarity.Common,

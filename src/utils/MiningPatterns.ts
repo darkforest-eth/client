@@ -1,4 +1,4 @@
-import { ChunkFootprint } from '../_types/global/GlobalTypes';
+import { Rectangle } from '../_types/global/GlobalTypes';
 import { WorldCoords } from './Coordinates';
 
 export enum MiningPatternType {
@@ -12,13 +12,13 @@ export enum MiningPatternType {
 
 export interface MiningPattern {
   type: MiningPatternType;
-  fromChunk: ChunkFootprint;
-  nextChunk: (prevLoc: ChunkFootprint) => ChunkFootprint;
+  fromChunk: Rectangle;
+  nextChunk: (prevLoc: Rectangle) => Rectangle;
 }
 
 export class SpiralPattern implements MiningPattern {
   type: MiningPatternType = MiningPatternType.Spiral;
-  fromChunk: ChunkFootprint;
+  fromChunk: Rectangle;
   chunkSideLength: number;
 
   constructor(center: WorldCoords, chunkSize: number) {
@@ -32,7 +32,7 @@ export class SpiralPattern implements MiningPattern {
     this.chunkSideLength = chunkSize;
   }
 
-  nextChunk(chunk: ChunkFootprint): ChunkFootprint {
+  nextChunk(chunk: Rectangle): Rectangle {
     const homeX = this.fromChunk.bottomLeft.x;
     const homeY = this.fromChunk.bottomLeft.y;
     const currX = chunk.bottomLeft.x;

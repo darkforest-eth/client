@@ -93,6 +93,7 @@ export class SpriteRenderer extends GenericRenderer<
     const shine = rarity >= ArtifactRarity.Rare;
     const invert = rarity === ArtifactRarity.Legendary;
     const shiny = rarity === ArtifactRarity.Epic;
+    const mythic = rarity === ArtifactRarity.Mythic;
 
     if (rarity >= ArtifactRarity.Rare) {
       this.queueOutline(type, pos, width, alpha);
@@ -108,6 +109,7 @@ export class SpriteRenderer extends GenericRenderer<
       shine,
       shiny,
       invert,
+      mythic,
       atFrame
     );
   }
@@ -122,6 +124,7 @@ export class SpriteRenderer extends GenericRenderer<
     shine = false,
     shiny = false,
     invert = false,
+    mythic = false,
     atFrame: number | null = null
   ) {
     if (!this.loaded) return;
@@ -133,6 +136,7 @@ export class SpriteRenderer extends GenericRenderer<
       color: colorA,
       shine: shineA,
       invert: invertA,
+      mythic: mythicA,
     } = this.attribManagers;
 
     /* set up attributes */
@@ -177,6 +181,7 @@ export class SpriteRenderer extends GenericRenderer<
       colorA.setVertex(myColor, this.verts + i);
       shineA.setVertex([shineLoc], this.verts + i);
       invertA.setVertex([invert ? 1 : 0], this.verts + i);
+      mythicA.setVertex([mythic ? 1 : 0], this.verts + i);
     }
     this.verts += 6;
   }

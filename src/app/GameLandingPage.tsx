@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import GameManager from '../api/GameManager';
 import GameUIManagerContext from './board/GameUIManagerContext';
 import GameUIManager, { GameUIManagerEvent } from './board/GameUIManager';
-import AbstractGameManager from '../api/AbstractGameManager';
 import { unsupportedFeatures, Incompatibility } from '../api/BrowserChecks';
 import {
   submitWhitelistKey,
@@ -72,18 +71,17 @@ export enum InitRenderState {
 }
 
 export default function GameLandingPage(_props: { replayMode: boolean }) {
-  const [gameManager, setGameManager] = useState<
-    AbstractGameManager | undefined
-  >();
+  const [ethConnection, _setEthConnection] = useState(new EthConnection());
+  const [gameManager, setGameManager] = useState<GameManager | undefined>();
 
   const history = useHistory();
-  /* terminal stuff */
   const isProd = process.env.NODE_ENV === 'production';
 
   let initState = InitState.NONE;
   const [initRenderState, setInitRenderState] = useState<InitRenderState>(
     InitRenderState.NONE
   );
+
   useEffect(() => {
     const uiEmitter = UIEmitter.getInstance();
     uiEmitter.emit(UIEmitterEvent.UIChange);
@@ -345,7 +343,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     terminalEmitter.println('<tbd>', TerminalTextStyle.White);
     terminalEmitter.newline();
 
-    const knownAddrs = EthConnection.getInstance().getKnownAccounts();
+    const knownAddrs = ethConnection.getKnownAccounts();
     terminalEmitter.println(
       `Found ${knownAddrs.length} accounts on this device.`
     );
@@ -370,8 +368,6 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromDisplayAccounts = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const ethConnection = EthConnection.getInstance();
-
     const knownAddrs = ethConnection.getKnownAccounts();
     terminalEmitter.println(`Select an account.`, TerminalTextStyle.White);
     for (let i = 0; i < knownAddrs.length; i += 1) {
@@ -396,8 +392,6 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromGenerateAccount = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const ethConnection = EthConnection.getInstance();
-
     const newWallet = Wallet.createRandom();
     const newSKey = newWallet.privateKey;
     const newAddr = CheckedTypeUtils.address(newWallet.address);
@@ -434,8 +428,6 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromImportAccount = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const ethConnection = EthConnection.getInstance();
-
     terminalEmitter.println(
       'Enter the 0x-prefixed private key of the account you wish to import',
       TerminalTextStyle.White
@@ -464,7 +456,6 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromAccountSet = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const ethConnection = EthConnection.getInstance();
 
     try {
       const address = ethConnection.getAddress();
@@ -522,7 +513,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromAskWhitelistKey = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const address = EthConnection.getInstance().getAddress();
+    const address = ethConnection.getAddress();
 
     terminalEmitter.println(
       'Please enter your invite key. (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX)',
@@ -604,7 +595,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
 
   const advanceStateFromAskPlayerEmail = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
-    const address = EthConnection.getInstance().getAddress();
+    const address = ethConnection.getAddress();
 
     terminalEmitter.print(
       'Enter your email address. ',
@@ -639,10 +630,10 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
       'Downloading data from Ethereum blockchain... (the contract is very big. this may take a while)'
     );
 
-    let newGameManager: AbstractGameManager;
+    let newGameManager: GameManager;
 
     try {
-      newGameManager = await GameManager.create();
+      newGameManager = await GameManager.create(ethConnection);
     } catch (e) {
       console.log(e);
 
@@ -945,10 +936,7 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
       >
         <GameUIManagerContext.Provider value={gameUIManagerRef.current}>
           {gameUIManagerRef.current && gameManager && (
-            <GameWindow
-              uiManager={gameUIManagerRef.current}
-              gameManager={gameManager}
-            />
+            <GameWindow uiManager={gameUIManagerRef.current} />
           )}
         </GameUIManagerContext.Provider>
         <TerminalToggler

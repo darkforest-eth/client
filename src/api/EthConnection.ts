@@ -26,13 +26,12 @@ class EthConnection extends EventEmitter {
     ? 'https://rpc.xdaichain.com/'
     : 'https://rpc-df.xdaichain.com/';
 
-  private static instance: EthConnection | null = null;
   private readonly knownAddresses: EthAddress[];
   private provider: JsonRpcProvider;
   private signer: Wallet | null;
   private rpcURL: string;
 
-  private constructor() {
+  public constructor() {
     super();
 
     let url: string;
@@ -53,13 +52,6 @@ class EthConnection extends EventEmitter {
         this.knownAddresses.push(CheckedTypeUtils.address(addrStr));
       }
     }
-  }
-
-  public static getInstance(): EthConnection {
-    if (!EthConnection.instance) {
-      EthConnection.instance = new EthConnection();
-    }
-    return EthConnection.instance;
   }
 
   public getRpcEndpoint(): string {

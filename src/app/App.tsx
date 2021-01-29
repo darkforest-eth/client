@@ -5,9 +5,10 @@ import LandingPage from './LandingPage';
 import GameLandingPage from './GameLandingPage';
 import dfstyles from '../styles/dfstyles';
 import styled from 'styled-components';
-import { SharePlanet } from './SharePlanet';
+import { SharePlanet } from './sharing/SharePlanet';
 import { TxConfirmPopup } from './TxConfirmPopup';
 import UnsubscribePage from './UnsubscribePage';
+import { ShareArtifact } from './sharing/ShareArtifact';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         />
         <Route path='/' exact component={LandingPage} />
         <Route path='/planet/:locationId' component={SharePlanet} />
+        <Route path='/artifact/:artifactId' component={ShareArtifact} />
         <Route
           path='/wallet/:addr/:actionId/:balance/:method'
           component={TxConfirmPopup}

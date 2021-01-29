@@ -1,6 +1,6 @@
 import {
   ExploredChunkData,
-  ChunkFootprint,
+  Rectangle,
   MinerWorkerMessage,
 } from '../_types/global/GlobalTypes';
 import Worker from 'worker-loader!../miner/miner.worker';
@@ -29,7 +29,7 @@ export class HomePlanetMinerChunkStore implements ChunkStore {
     this.minedChunkKeys.add(getChunkKey(exploredChunk.chunkFootprint));
   }
 
-  hasMinedChunk(chunkFootprint: ChunkFootprint) {
+  hasMinedChunk(chunkFootprint: Rectangle) {
     // return true if this chunk mined, or if perlin value >= threshold
     if (this.minedChunkKeys.has(getChunkKey(chunkFootprint))) return true;
     const center = {
@@ -43,11 +43,11 @@ export class HomePlanetMinerChunkStore implements ChunkStore {
 
 class MinerManager extends EventEmitter {
   private readonly minedChunksStore: ChunkStore;
+  private readonly planetRarity: number;
   private isExploring = false;
   private miningPattern: MiningPattern;
   private workers: Worker[];
   private worldRadius: number;
-  private readonly planetRarity: number;
   private cores = 1;
   // chunks we're exploring
   private exploringChunk: { [chunkKey: string]: ExploredChunkData } = {};
@@ -158,9 +158,9 @@ class MinerManager extends EventEmitter {
     }
   }
 
-  private exploreNext(fromChunk: ChunkFootprint, jobId: number) {
+  private exploreNext(fromChunk: Rectangle, jobId: number) {
     this.nextValidExploreTarget(fromChunk, jobId).then(
-      (nextChunk: ChunkFootprint | null) => {
+      (nextChunk: Rectangle | null) => {
         if (!!nextChunk) {
           const nextChunkKey = this.chunkLocationToKey(nextChunk, jobId);
           const center = {
@@ -208,7 +208,7 @@ class MinerManager extends EventEmitter {
     this.isExploring = false;
   }
 
-  public getCurrentlyExploringChunk(): ChunkFootprint | null {
+  public getCurrentlyExploringChunk(): Rectangle | null {
     if (!this.isExploring) {
       return null;
     }
@@ -230,9 +230,9 @@ class MinerManager extends EventEmitter {
   }
 
   private async nextValidExploreTarget(
-    chunkLocation: ChunkFootprint,
+    chunkLocation: Rectangle,
     jobId: number
-  ): Promise<ChunkFootprint | null> {
+  ): Promise<Rectangle | null> {
     // returns the first valid chunk equal to or after `chunk` (in the explore order of mining pattern) that hasn't been explored
     // async because it may take indefinitely long to find the next target. this will block UI if done sync
     // we use this trick to promisify:
@@ -264,7 +264,7 @@ class MinerManager extends EventEmitter {
     });
   }
 
-  private isValidExploreTarget(chunkLocation: ChunkFootprint): boolean {
+  private isValidExploreTarget(chunkLocation: Rectangle): boolean {
     const { bottomLeft, sideLength } = chunkLocation;
     const xCenter = bottomLeft.x + sideLength / 2;
     const yCenter = bottomLeft.y + sideLength / 2;
@@ -278,10 +278,7 @@ class MinerManager extends EventEmitter {
     );
   }
 
-  private sendMessageToWorkers(
-    chunkToExplore: ChunkFootprint,
-    jobId: number
-  ): void {
+  private sendMessageToWorkers(chunkToExplore: Rectangle, jobId: number): void {
     for (
       let workerIndex = 0;
       workerIndex < this.workers.length;
@@ -299,16 +296,14 @@ class MinerManager extends EventEmitter {
     }
   }
 
-  private chunkLocationToKey(chunkLocation: ChunkFootprint, jobId: number) {
+  private chunkLocationToKey(chunkLocation: Rectangle, jobId: number) {
     const x = chunkLocation.bottomLeft.x;
     const y = chunkLocation.bottomLeft.y;
     const sideLength = chunkLocation.sideLength;
     return `${x},${y},${sideLength},${jobId}`;
   }
 
-  private chunkKeyToLocation(
-    chunkKey: string
-  ): [ChunkFootprint, number] | null {
+  private chunkKeyToLocation(chunkKey: string): [Rectangle, number] | null {
     // returns chunk footprint and job id
     try {
       const [x, y, sideLength, jobId] = chunkKey

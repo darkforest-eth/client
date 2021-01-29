@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import React, { useEffect, useState, createContext } from 'react';
-import AbstractGameManager from '../api/AbstractGameManager';
 import { useStoredUIState, UIDataKey } from '../api/UIStateStorageManager';
 import UIEmitter, { UIEmitterEvent } from '../utils/UIEmitter';
 import { copyPlanetStats, PlanetStatsInfo } from '../utils/Utils';
@@ -39,7 +38,6 @@ export const CtrlContext = createContext<boolean>(false);
 export default function GameWindow({
   uiManager,
 }: {
-  gameManager: AbstractGameManager;
   uiManager: GameUIManager;
 }) {
   const [selected, setSelected] = useState<Planet | null>(null);
