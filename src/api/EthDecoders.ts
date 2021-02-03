@@ -20,7 +20,7 @@ import {
   SpaceType,
   Upgrade,
 } from '../_types/global/GlobalTypes';
-import { contractPrecision } from './ContractsAPI';
+import { CONTRACT_PRECISION } from './ContractsAPI';
 
 /**
  * Responsible for deserializing objects received from the blockchain.
@@ -43,8 +43,8 @@ export class EthDecoders {
         rawFromPlanet.toString()
       ),
       toPlanet: CheckedTypeUtils.locationIdFromDecStr(rawToPlanet.toString()),
-      energyArriving: rawPopArriving.toNumber() / contractPrecision,
-      silverMoved: rawSilverMoved.toNumber() / contractPrecision,
+      energyArriving: rawPopArriving.toNumber() / CONTRACT_PRECISION,
+      silverMoved: rawSilverMoved.toNumber() / CONTRACT_PRECISION,
       departureTime: rawDepartureTime.toNumber(),
       arrivalTime: rawArrivalTime.toNumber(),
     };
@@ -122,14 +122,14 @@ export class EthDecoders {
       planetLevel: rawPlanetLevel.toNumber(),
       planetResource: rawPlanetResource,
 
-      energyCap: rawPopulationCap.toNumber() / contractPrecision,
-      energyGrowth: rawPopulationGrowth.toNumber() / contractPrecision,
+      energyCap: rawPopulationCap.toNumber() / CONTRACT_PRECISION,
+      energyGrowth: rawPopulationGrowth.toNumber() / CONTRACT_PRECISION,
 
-      silverCap: rawSilverCap.toNumber() / contractPrecision,
-      silverGrowth: rawSilverGrowth.toNumber() / contractPrecision,
+      silverCap: rawSilverCap.toNumber() / CONTRACT_PRECISION,
+      silverGrowth: rawSilverGrowth.toNumber() / CONTRACT_PRECISION,
 
-      energy: rawPopulation.toNumber() / contractPrecision,
-      silver: rawSilver.toNumber() / contractPrecision,
+      energy: rawPopulation.toNumber() / CONTRACT_PRECISION,
+      silver: rawSilver.toNumber() / CONTRACT_PRECISION,
 
       range: rawRange.toNumber(),
       speed: rawSpeed.toNumber(),

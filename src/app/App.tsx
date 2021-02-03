@@ -9,6 +9,7 @@ import { SharePlanet } from './sharing/SharePlanet';
 import { TxConfirmPopup } from './TxConfirmPopup';
 import UnsubscribePage from './UnsubscribePage';
 import { ShareArtifact } from './sharing/ShareArtifact';
+import { ThrottledConcurrentQueueBenchmark } from './benchmark/ThrottledConcurrentQueueBenchmark';
 
 function App() {
   return (
@@ -27,6 +28,9 @@ function App() {
           component={TxConfirmPopup}
         />
         <Route path='/unsubscribe' component={UnsubscribePage} />
+        {process.env.NODE_ENV === 'development' && (
+          <Route path={'/test'} component={ThrottledConcurrentQueueBenchmark} />
+        )}
       </Switch>
     </Router>
   );

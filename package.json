@@ -4,8 +4,6 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.0.5",
-    "@ethersproject/networks": "^5.0.2",
-    "@ethersproject/providers": "^5.0.5",
     "@metamask/detect-provider": "^1.1.0",
     "@types/big-integer": "^0.0.31",
     "@types/json-stable-stringify": "^1.0.32",
@@ -29,6 +27,7 @@
     "json-stable-stringify": "^1.0.1",
     "lodash": "^4.17.15",
     "lz-string": "^1.4.4",
+    "mnemonist": "^0.38.1",
     "nested-error-stacks": "^2.1.0",
     "normalize.css": "^8.0.1",
     "prismjs": "^1.22.0",

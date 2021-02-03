@@ -1,5 +1,4 @@
 import { EventEmitter } from 'events';
-import { callbackify } from 'util';
 import { Contract, providers } from 'ethers';
 import {
   EthTxType,
@@ -10,8 +9,7 @@ import NotificationManager from '../utils/NotificationManager';
 import { PopupManager } from './PopupManager';
 import { deferred, timeoutAfter } from '../utils/Utils';
 import { EventLogger } from '../instrumentation/EventLogger';
-import { SnarkLogData } from '../_types/global/GlobalTypes';
-import FastQueue from 'fastq';
+import { ThrottledConcurrentQueue } from '../utils/ThrottledConcurrentQueue';
 
 export interface QueuedTxRequest {
   onSubmissionError: (e: Error) => void;
@@ -22,25 +20,13 @@ export interface QueuedTxRequest {
   type: EthTxType;
   actionId: string;
   contract: Contract;
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  args: any[];
-  /* eslint-enable @typescript-eslint/no-explicit-any */
+  args: unknown[];
   overrides: providers.TransactionRequest;
-
-  /* for debugging snark revert issue */
-  snarkLogs?: SnarkLogData;
 }
 
 export interface PendingTransaction {
   submitted: Promise<providers.TransactionResponse>;
   confirmed: Promise<providers.TransactionReceipt>;
-}
-
-// We handle queue lifecyles with deferreds
-function noop(err: Error | null) {
-  if (err) {
-    console.error('How did we get here?', err);
-  }
 }
 
 export class TxExecutor extends EventEmitter {
@@ -60,7 +46,7 @@ export class TxExecutor extends EventEmitter {
    */
   private static readonly MIN_BALANCE_ETH = 0.002;
 
-  private txRequests: FastQueue.queue;
+  private txQueue: ThrottledConcurrentQueue;
   private lastTransaction: number;
   private nonce: number;
   private eth: EthConnection;
@@ -68,7 +54,7 @@ export class TxExecutor extends EventEmitter {
   constructor(ethConnection: EthConnection, nonce: number) {
     super();
 
-    this.txRequests = FastQueue(callbackify(this.execute), 1);
+    this.txQueue = new ThrottledConcurrentQueue(3, 1000, 1);
     this.nonce = nonce;
     this.lastTransaction = Date.now();
     this.eth = ethConnection;
@@ -86,8 +72,7 @@ export class TxExecutor extends EventEmitter {
     overrides: providers.TransactionRequest = {
       gasPrice: 1000000000,
       gasLimit: 2000000,
-    },
-    snarkLogs?: SnarkLogData
+    }
   ): PendingTransaction {
     const [txResponse, rejectTxResponse, submittedPromise] = deferred<
       providers.TransactionResponse
@@ -96,20 +81,18 @@ export class TxExecutor extends EventEmitter {
       providers.TransactionReceipt
     >();
 
-    this.txRequests.push(
-      {
+    this.txQueue.add(() =>
+      this.execute({
         type,
         actionId,
         contract,
         args,
         overrides,
-        snarkLogs,
         onSubmissionError: rejectTxResponse,
         onReceiptError: rejectTxReceipt,
         onTransactionResponse: txResponse,
         onTransactionReceipt: txReceipt,
-      },
-      noop
+      })
     );
 
     return {
@@ -194,11 +177,6 @@ export class TxExecutor extends EventEmitter {
       time_exec_called,
       tx_hash,
     };
-
-    if (txRequest.snarkLogs !== undefined) {
-      logEvent.snark_logs = JSON.stringify(txRequest.snarkLogs);
-      logEvent.snark_local_verified = txRequest.snarkLogs.proofVerified;
-    }
 
     if (time_called && time_submitted) {
       logEvent.wait_submit = time_submitted - time_called;

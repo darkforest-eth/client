@@ -93,7 +93,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="txexecutor.html#eth" class="tsd-kind-icon">eth</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="txexecutor.html#lasttransaction" class="tsd-kind-icon">last<wbr>Transaction</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="txexecutor.html#nonce" class="tsd-kind-icon">nonce</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="txexecutor.html#txrequests" class="tsd-kind-icon">tx<wbr>Requests</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="txexecutor.html#txqueue" class="tsd-kind-icon">tx<wbr>Queue</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="txexecutor.html#min_balance_eth" class="tsd-kind-icon">MIN_<wbr>BALANCE_<wbr>ETH</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="txexecutor.html#nonce_stale_after_ms" class="tsd-kind-icon">NONCE_<wbr>STALE_<wbr>AFTER_<wbr>MS</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="txexecutor.html#tx_submit_timeout" class="tsd-kind-icon">TX_<wbr>SUBMIT_<wbr>TIMEOUT</a></li>
@@ -142,7 +142,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides EventEmitter.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/ff77e88/client/src/api/TxExecutor.ts#L66">src/api/TxExecutor.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/5dc9e38/client/src/api/TxExecutor.ts#L52">src/api/TxExecutor.ts:52</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -167,7 +167,7 @@
 					<div class="tsd-signature tsd-kind-icon">eth<span class="tsd-signature-symbol">:</span> <a href="ethconnection.html" class="tsd-signature-type">EthConnection</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/ff77e88/client/src/api/TxExecutor.ts#L66">src/api/TxExecutor.ts:66</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/5dc9e38/client/src/api/TxExecutor.ts#L52">src/api/TxExecutor.ts:52</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -177,7 +177,7 @@
 					<div class="tsd-signature tsd-kind-icon">last<wbr>Transaction<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/ff77e88/client/src/api/TxExecutor.ts#L64">src/api/TxExecutor.ts:64</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/5dc9e38/client/src/api/TxExecutor.ts#L50">src/api/TxExecutor.ts:50</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -187,17 +187,17 @@
 					<div class="tsd-signature tsd-kind-icon">nonce<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/ff77e88/client/src/api/TxExecutor.ts#L65">src/api/TxExecutor.ts:65</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/5dc9e38/client/src/api/TxExecutor.ts#L51">src/api/TxExecutor.ts:51</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="txrequests" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> tx<wbr>Requests</h3>
-					<div class="tsd-signature tsd-kind-icon">tx<wbr>Requests<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">FastQueue.queue</span></div>
+					<a name="txqueue" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> tx<wbr>Queue</h3>
+					<div class="tsd-signature tsd-kind-icon">tx<wbr>Queue<span class="tsd-signature-symbol">:</span> <a href="throttledconcurrentqueue.html" class="tsd-signature-type">ThrottledConcurrentQueue</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/ff77e88/client/src/api/TxExecutor.ts#L63">src/api/TxExecutor.ts:63</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/5dc9e38/client/src/api/TxExecutor.ts#L49">src/api/TxExecutor.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -207,7 +207,7 @@
 					<div class="tsd-signature tsd-kind-icon">MIN_<wbr>BALANCE_<wbr>ETH<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">0.002</span><span class="tsd-signature-symbol"> = 0.002</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/ff77e88/client/src/api/TxExecutor.ts#L61">src/api/TxExecutor.ts:61</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/5dc9e38/client/src/api/TxExecutor.ts#L47">src/api/TxExecutor.ts:47</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -222,7 +222,7 @@
 					<div class="tsd-signature tsd-kind-icon">NONCE_<wbr>STALE_<wbr>AFTER_<wbr>MS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">20000</span><span class="tsd-signature-symbol"> = 20000</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/ff77e88/client/src/api/TxExecutor.ts#L56">src/api/TxExecutor.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/5dc9e38/client/src/api/TxExecutor.ts#L42">src/api/TxExecutor.ts:42</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -237,7 +237,7 @@
 					<div class="tsd-signature tsd-kind-icon">TX_<wbr>SUBMIT_<wbr>TIMEOUT<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">30000</span><span class="tsd-signature-symbol"> = 30000</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/ff77e88/client/src/api/TxExecutor.ts#L51">src/api/TxExecutor.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/5dc9e38/client/src/api/TxExecutor.ts#L37">src/api/TxExecutor.ts:37</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -337,7 +337,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/ff77e88/client/src/api/TxExecutor.ts#L127">src/api/TxExecutor.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/5dc9e38/client/src/api/TxExecutor.ts#L110">src/api/TxExecutor.ts:110</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -399,7 +399,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/ff77e88/client/src/api/TxExecutor.ts#L137">src/api/TxExecutor.ts:137</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/5dc9e38/client/src/api/TxExecutor.ts#L120">src/api/TxExecutor.ts:120</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -482,13 +482,13 @@
 					<a name="makerequest" class="tsd-anchor"></a>
 					<h3>make<wbr>Request</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">make<wbr>Request&lt;T, U&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><a href="../enums/ethtxtype.html" class="tsd-signature-type">EthTxType</a>, actionId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, contract<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Contract</span>, args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">[]</span>, overrides<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">providers.TransactionRequest</span>, snarkLogs<span class="tsd-signature-symbol">?: </span><a href="../globals.html#snarklogdata" class="tsd-signature-type">SnarkLogData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/pendingtransaction.html" class="tsd-signature-type">PendingTransaction</a></li>
+						<li class="tsd-signature tsd-kind-icon">make<wbr>Request&lt;T, U&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><a href="../enums/ethtxtype.html" class="tsd-signature-type">EthTxType</a>, actionId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, contract<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Contract</span>, args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">[]</span>, overrides<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">providers.TransactionRequest</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/pendingtransaction.html" class="tsd-signature-type">PendingTransaction</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/ff77e88/client/src/api/TxExecutor.ts#L81">src/api/TxExecutor.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/5dc9e38/client/src/api/TxExecutor.ts#L67">src/api/TxExecutor.ts:67</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -523,9 +523,6 @@
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> overrides: <span class="tsd-signature-type">providers.TransactionRequest</span><span class="tsd-signature-symbol"> = {gasPrice: 1000000000,gasLimit: 2000000,}</span></h5>
 								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> snarkLogs: <a href="../globals.html#snarklogdata" class="tsd-signature-type">SnarkLogData</a></h5>
-								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/pendingtransaction.html" class="tsd-signature-type">PendingTransaction</a></h4>
 						</li>
@@ -541,7 +538,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/ff77e88/client/src/api/TxExecutor.ts#L121">src/api/TxExecutor.ts:121</a></li>
+									<li>Defined in <a href="https://github.com/darkforest-eth/darkforest/blob/5dc9e38/client/src/api/TxExecutor.ts#L104">src/api/TxExecutor.ts:104</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -954,7 +951,7 @@
 								<a href="txexecutor.html#nonce" class="tsd-kind-icon">nonce</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="txexecutor.html#txrequests" class="tsd-kind-icon">tx<wbr>Requests</a>
+								<a href="txexecutor.html#txqueue" class="tsd-kind-icon">tx<wbr>Queue</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
 								<a href="txexecutor.html#min_balance_eth" class="tsd-kind-icon">MIN_<wbr>BALANCE_<wbr>ETH</a>

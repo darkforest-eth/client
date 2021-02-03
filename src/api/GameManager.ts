@@ -19,15 +19,7 @@ import {
 } from '../_types/global/GlobalTypes';
 import PersistentChunkStore from './PersistentChunkStore';
 import { MIN_CHUNK_SIZE } from '../utils/constants';
-import ContractsAPI, {
-  isUnconfirmedBuyHat,
-  isUnconfirmedDepositArtifact,
-  isUnconfirmedFindArtifact,
-  isUnconfirmedInit,
-  isUnconfirmedMove,
-  isUnconfirmedUpgrade,
-  isUnconfirmedWithdrawArtifact,
-} from './ContractsAPI';
+import ContractsAPI from './ContractsAPI';
 import MinerManager, {
   HomePlanetMinerChunkStore,
   MinerManagerEvent,
@@ -80,6 +72,16 @@ import { SerializedPlugin } from '../plugins/SerializedPlugin';
 import { ProcgenUtils } from '../utils/ProcgenUtils';
 import UIEmitter from '../utils/UIEmitter';
 import { Contract, ContractInterface } from 'ethers';
+import {
+  isUnconfirmedInit,
+  isUnconfirmedMove,
+  isUnconfirmedUpgrade,
+  isUnconfirmedBuyHat,
+  isUnconfirmedFindArtifact,
+  isUnconfirmedDepositArtifact,
+  isUnconfirmedWithdrawArtifact,
+} from '../utils/TypeAssertions';
+import { ThrottledConcurrentQueue } from '../utils/ThrottledConcurrentQueue';
 
 class GameManager extends EventEmitter {
   private readonly account: EthAddress | null;
@@ -375,9 +377,16 @@ class GameManager extends EventEmitter {
       });
 
     const unconfirmedTxs = await persistentChunkStore.getUnconfirmedSubmittedEthTxs();
+    const confirmationQueue = new ThrottledConcurrentQueue(10, 1000, 1);
+
     for (const unconfirmedTx of unconfirmedTxs) {
       // recommits the tx to storage but whatever
-      gameManager.contractsAPI.onTxSubmit(unconfirmedTx);
+      gameManager.contractsAPI.waitFor(
+        unconfirmedTx,
+        confirmationQueue.add(() =>
+          ethConnection.waitForTransaction(unconfirmedTx.txHash)
+        )
+      );
     }
 
     // we only want to initialize the mining manager if the player has already joined the game
@@ -1354,7 +1363,7 @@ class GameManager extends EventEmitter {
 
     this.snarkHelper
       .getMoveArgs(oldX, oldY, newX, newY, this.worldRadius, distMax)
-      .then(([callArgs, snarkLogs]) => {
+      .then((callArgs) => {
         const terminalEmitter = TerminalEmitter.getInstance();
 
         terminalEmitter.println(
@@ -1370,7 +1379,6 @@ class GameManager extends EventEmitter {
 
         return this.contractsAPI.move(
           callArgs,
-          snarkLogs,
           shipsMoved,
           silverMoved,
           actionId

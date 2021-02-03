@@ -7,7 +7,6 @@ import {
 import {
   SnarkJSProof,
   SnarkJSProofAndSignals,
-  SnarkLogData,
 } from '../_types/global/GlobalTypes';
 import { BigInteger } from 'big-integer';
 import mimcHash, { modPBigInt, modPBigIntNative } from '../miner/mimc';
@@ -15,7 +14,6 @@ import * as bigInt from 'big-integer';
 import { fakeHash } from '../miner/permutation';
 import TerminalEmitter, { TerminalTextStyle } from '../utils/TerminalEmitter';
 import perlin from '../miner/perlin';
-import * as CRC32 from 'crc-32';
 import FastQueue from 'fastq';
 
 type InitInfo = {
@@ -187,7 +185,7 @@ class SnarkArgsHelper {
     y2: number,
     r: number,
     distMax: number
-  ): Promise<[MoveSnarkArgs, SnarkLogData]> {
+  ): Promise<MoveSnarkArgs> {
     try {
       const terminalEmitter = TerminalEmitter.getInstance();
 
@@ -208,9 +206,6 @@ class SnarkArgsHelper {
         .then((res) => res.arrayBuffer())
         .then((ab) => new Uint8Array(ab));
       const zkeyRaw = await fetch('/public/move.zkey?id=5')
-        .then((res) => res.arrayBuffer())
-        .then((ab) => new Uint8Array(ab));
-      const snarkjsRaw = await fetch('/public/snarkjs.min.js')
         .then((res) => res.arrayBuffer())
         .then((ab) => new Uint8Array(ab));
       const circuitData: SnarkJSBin = {
@@ -244,25 +239,7 @@ class SnarkArgsHelper {
         snarkProof.proof,
         publicSignals.map((x) => modPBigIntNative(x))
       );
-      const vkey = await fetch('public/move_vkey.json').then((res) =>
-        res.json()
-      );
-      const localVerified =
-        this.useMockHash ||
-        (await window.snarkjs.groth16.verify(
-          vkey,
-          snarkProof.publicSignals,
-          snarkProof.proof
-        ));
-      const snarkLogs: SnarkLogData = {
-        expectedSignals: snarkProof.publicSignals,
-        actualSignals: publicSignals.map((x) => x.toString()),
-        proofVerified: localVerified,
-        circuitCRC: CRC32.buf(circuitRaw),
-        zkeyCRC: CRC32.buf(zkeyRaw),
-        snarkjsCRC: CRC32.buf(snarkjsRaw),
-      };
-      return [proofArgs as MoveSnarkArgs, snarkLogs];
+      return proofArgs as MoveSnarkArgs;
     } catch (e) {
       throw e;
     }

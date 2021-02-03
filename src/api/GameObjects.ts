@@ -29,17 +29,17 @@ import _ from 'lodash';
 import { WorldCoords } from '../utils/Coordinates';
 import { CheckedTypeUtils } from '../utils/CheckedTypeUtils';
 import { hasOwner, getBytesFromHex, bonusFromHex } from '../utils/Utils';
-import {
-  isUnconfirmedBuyHat,
-  isUnconfirmedDepositArtifact,
-  isUnconfirmedFindArtifact,
-  isUnconfirmedMove,
-  isUnconfirmedTransfer,
-  isUnconfirmedUpgrade,
-  isUnconfirmedWithdrawArtifact,
-} from './ContractsAPI';
 import NotificationManager from '../utils/NotificationManager';
 import { arrive, updatePlanetToTime } from '../utils/ArrivalUtils';
+import {
+  isUnconfirmedMove,
+  isUnconfirmedUpgrade,
+  isUnconfirmedBuyHat,
+  isUnconfirmedTransfer,
+  isUnconfirmedFindArtifact,
+  isUnconfirmedDepositArtifact,
+  isUnconfirmedWithdrawArtifact,
+} from '../utils/TypeAssertions';
 
 const getCoordsString = (coords: WorldCoords): string => {
   return `${coords.x},${coords.y}`;

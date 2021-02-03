@@ -1,4 +1,4 @@
-import { contractPrecision } from '../api/ContractsAPI';
+import { CONTRACT_PRECISION } from '../api/ContractsAPI';
 import { Planet, QueuedArrival } from '../_types/global/GlobalTypes';
 import { hasOwner } from './Utils';
 
@@ -75,24 +75,24 @@ export const arrive = (toPlanet: Planet, arrival: QueuedArrival): void => {
     if (
       toPlanet.energy >
       Math.floor(
-        (energyArriving * contractPrecision * 100) / toPlanet.defense
+        (energyArriving * CONTRACT_PRECISION * 100) / toPlanet.defense
       ) /
-        contractPrecision
+        CONTRACT_PRECISION
     ) {
       // attack reduces target planet's garrison but doesn't conquer it
       toPlanet.energy -=
         Math.floor(
-          (energyArriving * contractPrecision * 100) / toPlanet.defense
-        ) / contractPrecision;
+          (energyArriving * CONTRACT_PRECISION * 100) / toPlanet.defense
+        ) / CONTRACT_PRECISION;
     } else {
       // conquers planet
       toPlanet.owner = arrival.player;
       toPlanet.energy =
         energyArriving -
         Math.floor(
-          (toPlanet.energy * contractPrecision * toPlanet.defense) / 100
+          (toPlanet.energy * CONTRACT_PRECISION * toPlanet.defense) / 100
         ) /
-          contractPrecision;
+          CONTRACT_PRECISION;
     }
   } else {
     // moving between my own planets

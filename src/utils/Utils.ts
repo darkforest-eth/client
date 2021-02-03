@@ -302,8 +302,7 @@ export function locationFromCoords(coords: WorldCoords): Location {
 }
 
 export function neverResolves(): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  return new Promise((resolve, reject) => {});
+  return new Promise(() => {});
 }
 
 export const aggregateBulkGetter = async <T>(
@@ -320,41 +319,26 @@ export const aggregateBulkGetter = async <T>(
   for (let i = 0; i < total / querySize; i += 1) {
     const start = i * querySize;
     const end = Math.min((i + 1) * querySize, total);
-    if (spacedInMs > 0) {
-      await sleep(spacedInMs);
-    }
+
+    await sleep(spacedInMs);
+
     promises.push(
       new Promise<T[]>(async (resolve) => {
         let res: T[] = [];
-        let tries = 0;
         while (res.length === 0) {
-          // retry with exponential backoff if request fails
-          await sleep(Math.min(15, 2 ** tries - 1) * 1000);
-          res = await getterFn(start, end)
-            .then((res) => {
-              if (
-                printProgress &&
-                Math.floor((soFar * 20) / total) !==
-                  Math.floor(((soFar + querySize) * 20) / total)
-              ) {
-                // print every 5%
-                let percent =
-                  Math.floor(((soFar + querySize) * 20) / total) * 5;
-                percent = Math.min(percent, 100);
-                terminalEmitter.print(`${percent}%... `);
-              }
-              soFar += querySize;
-              console.log(`retrieved ${start}-${end}.`);
-              return res;
-            })
-            .catch((e) => {
-              console.log(e);
-              console.error(
-                `error occurred querying ${start}-${end}. retrying...`
-              );
-              return [];
-            });
-          tries += 1;
+          res = await getterFn(start, end);
+          if (
+            printProgress &&
+            Math.floor((soFar * 20) / total) !==
+              Math.floor(((soFar + querySize) * 20) / total)
+          ) {
+            // print every 5%
+            let percent = Math.floor(((soFar + querySize) * 20) / total) * 5;
+            percent = Math.min(percent, 100);
+            terminalEmitter.print(`${percent}%... `);
+          }
+          soFar += querySize;
+          console.log(`retrieved ${start}-${end}.`);
         }
         resolve(res);
       })
@@ -370,10 +354,8 @@ export const aggregateBulkGetter = async <T>(
 export type RetryErrorHandler = (i: number, e: Error) => void;
 
 export const callWithRetry = async <T>(
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  fn: (...args: any[]) => Promise<T>,
-  args: any[] = [],
-  /* eslint-enable @typescript-eslint/no-explicit-any */
+  fn: (...args: unknown[]) => Promise<T>,
+  args: unknown[] = [],
   onError?: RetryErrorHandler,
   maxRetries = 10,
   retryInterval = 1000

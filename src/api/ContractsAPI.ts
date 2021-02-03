@@ -8,17 +8,14 @@ import {
   Artifact,
   ArtifactId,
   Location,
-  SnarkLogData,
 } from '../_types/global/GlobalTypes';
-// NOTE: DO NOT IMPORT FROM ETHERS SUBPATHS. see https://github.com/ethers-io/ethers.js/issues/349 (these imports trip up webpack)
-// in particular, the below is bad!
-// import {TransactionReceipt, Provider, TransactionResponse, Web3Provider} from "ethers/providers";
 import {
   Contract,
   providers,
   utils,
   Event,
   BigNumber as EthersBN,
+  ContractFunction,
 } from 'ethers';
 import _ from 'lodash';
 
@@ -29,10 +26,8 @@ import {
   MoveArgs,
   RawPlanetData,
   RawPlanetExtendedInfo,
-  TxIntent,
   UnconfirmedInit,
   EthTxType,
-  UnconfirmedMove,
   ZKArgIdx,
   MoveArgIdxs,
   ContractEvent,
@@ -43,19 +38,15 @@ import {
   UpgradeArgs,
   RawUpgradesInfo,
   UpgradesInfo,
-  UnconfirmedUpgrade,
   UpgradeArgIdxs,
   SubmittedTx,
   SubmittedInit,
   SubmittedUpgrade,
   SubmittedMove,
   SubmittedBuyHat,
-  UnconfirmedBuyHat,
   SubmittedPlanetTransfer,
-  UnconfirmedPlanetTransfer,
   BiomeArgs,
   SubmittedFindArtifact,
-  UnconfirmedFindArtifact,
   DepositArtifactArgs,
   WithdrawArtifactArgs,
   SubmittedDepositArtifact,
@@ -72,62 +63,16 @@ import { BLOCK_EXPLORER_URL } from '../utils/constants';
 import bigInt from 'big-integer';
 import { EthDecoders } from './EthDecoders';
 import { TxExecutor } from './TxExecutor';
+import { ThrottledConcurrentQueue } from '../utils/ThrottledConcurrentQueue';
 
-export function isUnconfirmedInit(
-  txIntent: TxIntent
-): txIntent is UnconfirmedInit {
-  return txIntent.type === EthTxType.INIT;
-}
-
-export function isUnconfirmedMove(
-  txIntent: TxIntent
-): txIntent is UnconfirmedMove {
-  return txIntent.type === EthTxType.MOVE;
-}
-
-export function isUnconfirmedUpgrade(
-  txIntent: TxIntent
-): txIntent is UnconfirmedUpgrade {
-  return txIntent.type === EthTxType.UPGRADE;
-}
-
-export function isUnconfirmedBuyHat(
-  txIntent: TxIntent
-): txIntent is UnconfirmedBuyHat {
-  return txIntent.type === EthTxType.BUY_HAT;
-}
-
-export function isUnconfirmedTransfer(
-  txIntent: TxIntent
-): txIntent is UnconfirmedPlanetTransfer {
-  return txIntent.type === EthTxType.PLANET_TRANSFER;
-}
-
-export function isUnconfirmedFindArtifact(
-  txIntent: TxIntent
-): txIntent is UnconfirmedFindArtifact {
-  return txIntent.type === EthTxType.FIND_ARTIFACT;
-}
-
-export function isUnconfirmedDepositArtifact(
-  txIntent: TxIntent
-): txIntent is UnconfirmedDepositArtifact {
-  return txIntent.type === EthTxType.DEPOSIT_ARTIFACT;
-}
-
-export function isUnconfirmedWithdrawArtifact(
-  txIntent: TxIntent
-): txIntent is UnconfirmedWithdrawArtifact {
-  return txIntent.type === EthTxType.WITHDRAW_ARTIFACT;
-}
-
-export const contractPrecision = 1000;
+export const CONTRACT_PRECISION = 1000;
 
 /**
  * Roughly contains methods that map 1:1 with functions that live
  * in the contract.
  */
 class ContractsAPI extends EventEmitter {
+  private readonly callQueue = new ThrottledConcurrentQueue(20, 1000);
   private readonly txRequestExecutor: TxExecutor | null;
   private readonly terminalEmitter: TerminalEmitter;
   private ethConnection: EthConnection;
@@ -166,6 +111,15 @@ class ContractsAPI extends EventEmitter {
 
   public destroy(): void {
     this.removeEventListeners();
+  }
+
+  private makeCall<T>(
+    contractViewFunction: ContractFunction<T>,
+    args: unknown[] = []
+  ): Promise<T> {
+    return this.callQueue.add(() =>
+      callWithRetry<T>(contractViewFunction, args)
+    );
   }
 
   private setupEventListeners(): void {
@@ -268,7 +222,7 @@ class ContractsAPI extends EventEmitter {
     return CheckedTypeUtils.address(this.coreContract.address);
   }
 
-  public onTxSubmit(unminedTx: SubmittedTx): void {
+  private onTxSubmit(unminedTx: SubmittedTx): void {
     // TODO encapsulate this into terminalemitter
     this.terminalEmitter.print(
       `[TX SUBMIT] ${unminedTx.type} transaction (`,
@@ -293,10 +247,10 @@ class ContractsAPI extends EventEmitter {
   }
 
   /**
-   * Given my new `Tx` type, and an `unconfirmed (but submitted) transaction`, emits
-   * the appropriate `ContractsAPIEvent`.
+   * Given an unconfirmed (but submitted) transaction, emits the appropriate
+   * [[ContractsAPIEvent]].
    */
-  private waitFor(
+  public waitFor(
     submitted: SubmittedTx,
     receiptPromise: Promise<providers.TransactionReceipt>
   ) {
@@ -521,7 +475,6 @@ class ContractsAPI extends EventEmitter {
   // otherwise, returns a promise of a submtited (unmined) tx receipt
   async move(
     snarkArgs: MoveSnarkArgs,
-    snarkLogs: SnarkLogData,
     shipsMoved: number,
     silverMoved: number,
     actionId: string
@@ -535,8 +488,8 @@ class ContractsAPI extends EventEmitter {
       snarkArgs[ZKArgIdx.PROOF_C],
       [
         ...snarkArgs[ZKArgIdx.DATA],
-        (shipsMoved * contractPrecision).toString(),
-        (silverMoved * contractPrecision).toString(),
+        (shipsMoved * CONTRACT_PRECISION).toString(),
+        (silverMoved * CONTRACT_PRECISION).toString(),
       ],
     ] as MoveArgs;
 
@@ -548,8 +501,7 @@ class ContractsAPI extends EventEmitter {
       {
         gasPrice: 1000000000,
         gasLimit: 2000000,
-      },
-      snarkLogs
+      }
     );
 
     const forcesFloat = parseFloat(args[ZKArgIdx.DATA][MoveArgIdxs.SHIPS_SENT]);
@@ -568,8 +520,8 @@ class ContractsAPI extends EventEmitter {
       to: CheckedTypeUtils.locationIdFromDecStr(
         args[ZKArgIdx.DATA][MoveArgIdxs.TO_ID]
       ),
-      forces: forcesFloat / contractPrecision,
-      silver: silverFloat / contractPrecision,
+      forces: forcesFloat / CONTRACT_PRECISION,
+      silver: silverFloat / CONTRACT_PRECISION,
     };
 
     return this.waitFor(unminedMoveTx, tx.confirmed);
@@ -610,24 +562,25 @@ class ContractsAPI extends EventEmitter {
   }
 
   async getConstants(): Promise<ContractConstants> {
-    const contract = this.coreContract;
-    // break constant calls up into two Promise.all()s
-    // xDAI endpoint less likely to freak out
-    const res1 = await Promise.all([
-      callWithRetry<EthersBN>(contract.TIME_FACTOR_HUNDREDTHS),
-      callWithRetry<EthersBN>(contract.PERLIN_THRESHOLD_1),
-      callWithRetry<EthersBN>(contract.PERLIN_THRESHOLD_2),
-      callWithRetry<EthersBN>(contract.BIOME_THRESHOLD_1),
-      callWithRetry<EthersBN>(contract.BIOME_THRESHOLD_2),
-      callWithRetry<EthersBN>(contract.ARTIFACT_LOCKUP_DURATION_SECONDS),
+    const res1: Array<EthersBN> = await Promise.all([
+      this.makeCall<EthersBN>(this.coreContract.TIME_FACTOR_HUNDREDTHS),
+      this.makeCall<EthersBN>(this.coreContract.PERLIN_THRESHOLD_1),
+      this.makeCall<EthersBN>(this.coreContract.PERLIN_THRESHOLD_2),
+      this.makeCall<EthersBN>(this.coreContract.BIOME_THRESHOLD_1),
+      this.makeCall<EthersBN>(this.coreContract.BIOME_THRESHOLD_2),
+      this.makeCall<EthersBN>(
+        this.coreContract.ARTIFACT_LOCKUP_DURATION_SECONDS
+      ),
+      this.makeCall<EthersBN>(this.coreContract.PLANET_RARITY),
+      this.makeCall<EthersBN>(this.coreContract.SILVER_RARITY_1),
+      this.makeCall<EthersBN>(this.coreContract.SILVER_RARITY_2),
+      this.makeCall<EthersBN>(this.coreContract.SILVER_RARITY_3),
     ]);
-    const res2 = await Promise.all([
-      callWithRetry<EthersBN>(contract.PLANET_RARITY),
-      callWithRetry<EthersBN>(contract.SILVER_RARITY_1),
-      callWithRetry<EthersBN>(contract.SILVER_RARITY_2),
-      callWithRetry<EthersBN>(contract.SILVER_RARITY_3),
-      callWithRetry<RawUpgradesInfo>(contract.getUpgrades),
-    ]);
+
+    const rawUpgrades = await this.makeCall<RawUpgradesInfo>(
+      this.coreContract.getUpgrades
+    );
+
     const TIME_FACTOR_HUNDREDTHS = res1[0].toNumber();
     const PERLIN_THRESHOLD_1 = res1[1].toNumber();
     const PERLIN_THRESHOLD_2 = res1[2].toNumber();
@@ -635,18 +588,30 @@ class ContractsAPI extends EventEmitter {
     const BIOME_THRESHOLD_2 = res1[4].toNumber();
     const ARTIFACT_LOCKUP_DURATION_SECONDS = res1[5].toNumber();
 
-    const PLANET_RARITY = res2[0].toNumber();
-    const SILVER_RARITY_1 = res2[1].toNumber();
-    const SILVER_RARITY_2 = res2[2].toNumber();
-    const SILVER_RARITY_3 = res2[3].toNumber();
-    const rawUpgrades = res2[4];
+    const PLANET_RARITY = res1[5].toNumber();
+    const SILVER_RARITY_1 = res1[6].toNumber();
+    const SILVER_RARITY_2 = res1[7].toNumber();
+    const SILVER_RARITY_3 = res1[8].toNumber();
+
     const upgrades: UpgradesInfo = EthDecoders.rawUpgradesInfoToUpgradesInfo(
       rawUpgrades
     );
 
-    const rawDefaults: RawDefaults = await callWithRetry<RawDefaults>(
-      contract.getDefaultStats
+    const rawDefaults: RawDefaults = await this.makeCall<RawDefaults>(
+      this.coreContract.getDefaultStats
     );
+
+    const planetLevelThresholds = (
+      await this.makeCall<EthersBN[]>(
+        this.coreContract.getPlanetLevelThresholds
+      )
+    ).map((x: EthersBN) => x.toNumber());
+
+    const planetCumulativeRarities = (
+      await this.makeCall<EthersBN[]>(
+        this.coreContract.getPlanetCumulativeRarities
+      )
+    ).map((x: EthersBN) => x.toNumber());
 
     return {
       TIME_FACTOR_HUNDREDTHS,
@@ -662,40 +627,34 @@ class ContractsAPI extends EventEmitter {
       SILVER_RARITY_3,
 
       defaultPopulationCap: rawDefaults.map(
-        (x) => x[1].toNumber() / contractPrecision
+        (x) => x[1].toNumber() / CONTRACT_PRECISION
       ),
       defaultPopulationGrowth: rawDefaults.map(
-        (x) => x[2].toNumber() / contractPrecision
+        (x) => x[2].toNumber() / CONTRACT_PRECISION
       ),
       defaultRange: rawDefaults.map((x) => x[3].toNumber()),
       defaultSpeed: rawDefaults.map((x) => x[4].toNumber()),
       defaultDefense: rawDefaults.map((x) => x[5].toNumber()),
       defaultSilverGrowth: rawDefaults.map(
-        (x) => x[6].toNumber() / contractPrecision
+        (x) => x[6].toNumber() / CONTRACT_PRECISION
       ),
       defaultSilverCap: rawDefaults.map(
-        (x) => x[7].toNumber() / contractPrecision
+        (x) => x[7].toNumber() / CONTRACT_PRECISION
       ),
       defaultBarbarianPercentage: rawDefaults.map((x) => x[8].toNumber()),
-
-      planetLevelThresholds: (
-        await callWithRetry<EthersBN[]>(contract.getPlanetLevelThresholds)
-      ).map((x: EthersBN) => x.toNumber()),
-      planetCumulativeRarities: (
-        await callWithRetry<EthersBN[]>(contract.getPlanetCumulativeRarities)
-      ).map((x: EthersBN) => x.toNumber()),
-
+      planetLevelThresholds,
+      planetCumulativeRarities,
       upgrades,
     };
   }
 
   public async zkChecksDisabled(): Promise<boolean> {
-    return callWithRetry<boolean>(this.coreContract.DISABLE_ZK_CHECK);
+    return this.makeCall<boolean>(this.coreContract.DISABLE_ZK_CHECK);
   }
 
   public async getPlayerArtifacts(playerId: EthAddress): Promise<Artifact[]> {
     const myArtifactIds = (
-      await callWithRetry<EthersBN[]>(this.coreContract.getPlayerArtifactIds, [
+      await this.makeCall<EthersBN[]>(this.coreContract.getPlayerArtifactIds, [
         playerId,
       ])
     ).map(CheckedTypeUtils.artifactIdFromEthersBN);
@@ -704,18 +663,20 @@ class ContractsAPI extends EventEmitter {
 
   public async getPlayers(): Promise<Map<string, Player>> {
     console.log('getting players');
-    const contract = this.coreContract;
     const nPlayers: number = (
-      await callWithRetry<EthersBN>(contract.getNPlayers)
+      await this.makeCall<EthersBN>(this.coreContract.getNPlayers)
     ).toNumber();
 
     const playerIds = await aggregateBulkGetter<EthAddress>(
       nPlayers,
       200,
       async (start, end) =>
-        (await contract.bulkGetPlayers(start, end)).map(
-          CheckedTypeUtils.address
-        )
+        (
+          await this.makeCall<EthAddress[]>(this.coreContract.bulkGetPlayers, [
+            start,
+            end,
+          ])
+        ).map(CheckedTypeUtils.address)
     );
 
     const playerMap: Map<string, Player> = new Map();
@@ -729,13 +690,13 @@ class ContractsAPI extends EventEmitter {
 
   public async getWorldRadius(): Promise<number> {
     const radius = (
-      await callWithRetry<EthersBN>(this.coreContract.worldRadius)
+      await this.makeCall<EthersBN>(this.coreContract.worldRadius)
     ).toNumber();
     return radius;
   }
 
   public async getContractBalance(): Promise<number> {
-    const rawBalance = await callWithRetry<EthersBN>(
+    const rawBalance = await this.makeCall<EthersBN>(
       this.coreContract.getBalance
     );
     const myBalance = utils.formatEther(rawBalance);
@@ -744,9 +705,8 @@ class ContractsAPI extends EventEmitter {
   }
 
   public async getArrival(arrivalId: number): Promise<QueuedArrival | null> {
-    const contract = this.coreContract;
-    const rawArrival: RawArrivalData = await callWithRetry<RawArrivalData>(
-      contract.planetArrivals,
+    const rawArrival: RawArrivalData = await this.makeCall<RawArrivalData>(
+      this.coreContract.planetArrivals,
       [arrivalId]
     );
     return EthDecoders.rawArrivalToObject(rawArrival);
@@ -755,12 +715,11 @@ class ContractsAPI extends EventEmitter {
   public async getArrivalsForPlanet(
     planetId: LocationId
   ): Promise<QueuedArrival[]> {
-    const contract = this.coreContract;
-
     const events = (
-      await callWithRetry<RawArrivalData[]>(contract.getPlanetArrivals, [
-        CheckedTypeUtils.locationIdToDecStr(planetId),
-      ])
+      await this.makeCall<RawArrivalData[]>(
+        this.coreContract.getPlanetArrivals,
+        [CheckedTypeUtils.locationIdToDecStr(planetId)]
+      )
     ).map(EthDecoders.rawArrivalToObject);
 
     return events;
@@ -769,16 +728,18 @@ class ContractsAPI extends EventEmitter {
   public async getAllArrivals(
     planetsToLoad: LocationId[]
   ): Promise<QueuedArrival[]> {
-    const contract = this.coreContract;
     const arrivalsUnflattened = await aggregateBulkGetter<QueuedArrival[]>(
       planetsToLoad.length,
       1000,
       async (start, end) => {
         return (
-          await contract.bulkGetPlanetArrivalsByIds(
-            planetsToLoad
-              .slice(start, end)
-              .map((id) => CheckedTypeUtils.locationIdToDecStr(id))
+          await this.makeCall<RawArrivalData[][]>(
+            this.coreContract.bulkGetPlanetArrivalsByIds,
+            [
+              planetsToLoad
+                .slice(start, end)
+                .map((id) => CheckedTypeUtils.locationIdToDecStr(id)),
+            ]
           )
         ).map((arrivals: RawArrivalData[]) =>
           arrivals.map(EthDecoders.rawArrivalToObject)
@@ -792,16 +753,18 @@ class ContractsAPI extends EventEmitter {
   }
 
   public async getTouchedPlanetIds(startingAt: number): Promise<LocationId[]> {
-    const contract = this.coreContract;
     const nPlanets: number = (
-      await callWithRetry<EthersBN>(contract.getNPlanets)
+      await this.makeCall<EthersBN>(this.coreContract.getNPlanets)
     ).toNumber();
 
     const planetIds = await aggregateBulkGetter<EthersBN>(
       nPlanets - startingAt,
       2000,
       async (start, end) =>
-        await contract.bulkGetPlanetIds(start + startingAt, end + startingAt),
+        await this.makeCall(this.coreContract.bulkGetPlanetIds, [
+          start + startingAt,
+          end + startingAt,
+        ]),
       true,
       100
     );
@@ -811,19 +774,17 @@ class ContractsAPI extends EventEmitter {
   public async bulkGetPlanets(
     toLoadPlanets: LocationId[]
   ): Promise<Map<LocationId, Planet>> {
-    const contract = this.coreContract;
-
     const rawPlanetsExtendedInfo = await aggregateBulkGetter<
       RawPlanetExtendedInfo
     >(
       toLoadPlanets.length,
       1000,
       async (start, end) =>
-        await contract.bulkGetPlanetsExtendedInfoByIds(
+        await this.makeCall(this.coreContract.bulkGetPlanetsExtendedInfoByIds, [
           toLoadPlanets
             .slice(start, end)
-            .map((id) => CheckedTypeUtils.locationIdToDecStr(id))
-        ),
+            .map((id) => CheckedTypeUtils.locationIdToDecStr(id)),
+        ]),
       true,
       100
     );
@@ -832,11 +793,11 @@ class ContractsAPI extends EventEmitter {
       toLoadPlanets.length,
       1000,
       async (start, end) =>
-        await contract.bulkGetPlanetsByIds(
+        await this.makeCall(this.coreContract.bulkGetPlanetsByIds, [
           toLoadPlanets
             .slice(start, end)
-            .map((id) => CheckedTypeUtils.locationIdToDecStr(id))
-        ),
+            .map((id) => CheckedTypeUtils.locationIdToDecStr(id)),
+        ]),
       true,
       100
     );
@@ -858,12 +819,12 @@ class ContractsAPI extends EventEmitter {
 
   public async getPlanetById(planetId: LocationId): Promise<Planet | null> {
     const decStrId = CheckedTypeUtils.locationIdToDecStr(planetId);
-    const rawExtendedInfo = await callWithRetry<RawPlanetExtendedInfo>(
+    const rawExtendedInfo = await this.makeCall<RawPlanetExtendedInfo>(
       this.coreContract.planetsExtendedInfo,
       [decStrId]
     );
     if (!rawExtendedInfo[0]) return null; // planetExtendedInfo.isInitialized is false
-    const rawPlanet: RawPlanetData = await callWithRetry<RawPlanetData>(
+    const rawPlanet: RawPlanetData = await this.makeCall<RawPlanetData>(
       this.coreContract.planets,
       [decStrId]
     );
@@ -873,13 +834,13 @@ class ContractsAPI extends EventEmitter {
   public async getArtifactById(
     artifactId: ArtifactId
   ): Promise<Artifact | null> {
-    const contract = this.coreContract;
-    const exists = await callWithRetry<boolean>(contract.doesArtifactExist, [
-      CheckedTypeUtils.artifactIdToDecStr(artifactId),
-    ]);
+    const exists = await this.makeCall<boolean>(
+      this.coreContract.doesArtifactExist,
+      [CheckedTypeUtils.artifactIdToDecStr(artifactId)]
+    );
     if (!exists) return null;
-    const rawArtifact = await callWithRetry<RawArtifactWithMetadata>(
-      contract.getArtifactById,
+    const rawArtifact = await this.makeCall<RawArtifactWithMetadata>(
+      this.coreContract.getArtifactById,
       [CheckedTypeUtils.artifactIdToDecStr(artifactId)]
     );
 
@@ -890,16 +851,17 @@ class ContractsAPI extends EventEmitter {
     artifactIds: ArtifactId[],
     printProgress = false
   ): Promise<Artifact[]> {
-    const contract = this.coreContract;
     const rawArtifacts: RawArtifactWithMetadata[] = await aggregateBulkGetter<
       RawArtifactWithMetadata
     >(
       artifactIds.length,
       500,
       async (start, end) =>
-        await contract.bulkGetArtifactsByIds(
-          artifactIds.slice(start, end).map(CheckedTypeUtils.artifactIdToDecStr)
-        ),
+        await this.makeCall(this.coreContract.bulkGetArtifactsByIds, [
+          artifactIds
+            .slice(start, end)
+            .map(CheckedTypeUtils.artifactIdToDecStr),
+        ]),
       printProgress,
       100
     );
