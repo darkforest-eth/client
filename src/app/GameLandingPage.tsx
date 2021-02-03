@@ -22,7 +22,6 @@ import GameWindow from './GameWindow';
 import {
   Wrapper,
   TerminalWrapper,
-  Hidden,
   GameWindowWrapper,
   TerminalToggler,
 } from './GameLandingPageComponents';
@@ -105,13 +104,6 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     }
   }, [terminalEnabled]);
 
-  // TODO make these nullable
-  const emailFormRef = useRef<HTMLFormElement>(document.createElement('form'));
-  const emailInputRef = useRef<HTMLInputElement>(
-    document.createElement('input')
-  );
-  const emailPopupWindowName = 'popupwindow';
-
   const getUserInput = async () => {
     const terminalEmitter = TerminalEmitter.getInstance();
     terminalEmitter.enableUserInput();
@@ -134,31 +126,6 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     }
     await wait(delay * 1.5);
     return;
-  };
-
-  const submitHiddenEmailForm = async (email: string) => {
-    const terminalEmitter = TerminalEmitter.getInstance();
-
-    terminalEmitter.println(
-      "Follow the instructions on the email confirmation page. Close the window when you're done.",
-      TerminalTextStyle.White
-    );
-    const popup = window.open(
-      'https://tinyletter.com/darkforest_eth',
-      emailPopupWindowName,
-      'scrollbars=yes,width=800,height=600'
-    );
-    emailInputRef.current.value = email;
-    emailFormRef.current.submit();
-    if (!popup) return;
-    await new Promise<void>((resolve) => {
-      const interval = setInterval(() => {
-        if (popup.closed) {
-          resolve();
-          clearInterval(interval);
-        }
-      }, 100);
-    });
   };
 
   const advanceStateFromNone = async () => {
@@ -564,7 +531,6 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     terminalEmitter.print('Response pending... ');
     const response = await submitInterestedEmail(email);
     if (response === EmailResponse.Success) {
-      await submitHiddenEmailForm(email);
       terminalEmitter.println(
         'Email successfully recorded. ',
         TerminalTextStyle.Green
@@ -607,7 +573,6 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
     const email = await getUserInput();
     const response = await submitPlayerEmail(email, address);
     if (response === EmailResponse.Success) {
-      await submitHiddenEmailForm(email);
       terminalEmitter.println('Email successfully recorded.');
       initState = InitState.FETCHING_ETH_DATA;
     } else if (response === EmailResponse.Invalid) {
@@ -950,17 +915,6 @@ export default function GameLandingPage(_props: { replayMode: boolean }) {
       >
         <Terminal />
       </TerminalWrapper>
-
-      <Hidden>
-        <form
-          action={'https://tinyletter.com/darkforest_eth'}
-          method={'post'}
-          target={emailPopupWindowName}
-          ref={emailFormRef}
-        >
-          <input type='text' name='email' id='tlemail' ref={emailInputRef} />
-        </form>
-      </Hidden>
     </Wrapper>
   );
 }

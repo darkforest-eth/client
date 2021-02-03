@@ -225,7 +225,7 @@ class EthConnection extends EventEmitter {
 
         receipt = await Promise.race([
           sleep(30 * 1000, null),
-          this.provider.waitForTransaction(txHash).catch((e) => {
+          this.provider.getTransactionReceipt(txHash).catch((e) => {
             console.error(
               `[wait-tx] TIMED OUT tx hash: ${txHash} tries ${tries} error:`,
               e
@@ -241,7 +241,7 @@ class EthConnection extends EventEmitter {
         }
 
         // exponential backoff, in seconds:
-        // 1, 1, 2, 3, 4, 6, 9, 13, 19, 29, 43, 65 ...
+        // 5 * (1, 1, 2, 3, 4, 6, 9, 13, 19, 29, 43, 65 ...)
         // But never more than a minute
         const sleepTime = Math.min(5000 * 1.5 ** tries, 60000);
         console.log(
