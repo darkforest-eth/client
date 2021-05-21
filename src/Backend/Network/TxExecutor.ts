@@ -37,7 +37,7 @@ export class TxExecutor extends EventEmitter {
   /**
    * we refresh the nonce if it hasn't been updated in this amount of time
    */
-  private static readonly NONCE_STALE_AFTER_MS = 1000 * 60 * 10;
+  private static readonly NONCE_STALE_AFTER_MS = 1000 * 45;
 
   /**
    * don't allow users to submit txs if balance falls below
