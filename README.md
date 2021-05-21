@@ -22,23 +22,13 @@ After the installation is finished, you can run `node --version` to verify that 
 
 Refer to [Yarn's official documentation](https://classic.yarnpkg.com/en/docs/install) for the installation guide.
 
-After you have Yarn installed, run the following commands in the directory to install the remaining dependencies:
+After you have Yarn installed, run `yarn` to install the dependencies:
 
-```sh
-yarn
-```
+### Running the client
 
-### Client Development Setup
+For connecting to the mainnet client, simply run `yarn start:prod`. When asked you can use your whitelist key or import your mainnet burner secret and Home coordinates.
 
-Assuming you have a local node with game contracts already deployed you can simply start the client with:
+To connect to your own development client, follow directions there to start that node, then run `yarn start:dev`. When the game asks, you won't have access to the whitelist server and can't create a new account or use a whitelist key. Instead import a wallet and use the private key of one of the accounts the hardhat node created and funded, which are printed when you started the node such as:
 
-```
-yarn start:prod
-```
-
-You can import the private key of one of the accounts `hardhat node` created and funded, which are printed when you started the node such as:
-
-```
-Account #2: 0x3097403b64fe672467345bf159f4c9c5464bd89e (100 ETH)
-Private Key: 0x67195c963ff445314e667112ab22f4a7404bad7f9746564eb409b9bb8c6aed32
-```
+> Account #2: 0x3097403b64fe672467345bf159f4c9c5464bd89e (100 ETH)
+> Private Key: 0x67195c963ff445314e667112ab22f4a7404bad7f9746564eb409b9bb8c6aed32
