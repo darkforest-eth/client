@@ -38,7 +38,7 @@ import {
 } from '../../_types/global/GlobalTypes';
 import { MiningPattern } from '../Miner/MiningPatterns';
 import EthConnection from '../Network/EthConnection';
-import UIStateStorageManager, { UIDataKey, UIDataValue } from '../Storage/UIStateStorageManager';
+import { UIDataKey } from '../Storage/UIStateStorageManager';
 import { coordsEqual } from '../Utils/Coordinates';
 import { deferred, moveShipsDecay } from '../Utils/Utils';
 import { biomeName } from './ArtifactUtils';
@@ -58,7 +58,6 @@ class GameUIManager extends EventEmitter {
   private terminal: React.MutableRefObject<TerminalHandle | undefined>;
 
   private readonly radiusMap: Record<PlanetLevel, number>;
-  private uiStateStorageManager: UIStateStorageManager;
   private detailLevel: number; // 0 is show everything; higher means show less
   private previousSelectedPlanet: Planet | undefined;
   private selectedPlanet: Planet | undefined;
@@ -90,6 +89,8 @@ class GameUIManager extends EventEmitter {
 
   public readonly selectedPlanetId$: Monomitter<LocationId | undefined>;
   public readonly selectedPlanet$: Monomitter<Planet | undefined>;
+  public readonly hoverPlanetId$: Monomitter<LocationId | undefined>;
+  public readonly hoverPlanet$: Monomitter<Planet | undefined>;
   public readonly selectedArtifactId$: Monomitter<ArtifactId | undefined>;
   public readonly selectedArtifact$: Monomitter<Artifact | undefined>;
   public readonly myArtifacts$: Monomitter<Map<ArtifactId, Artifact>>;
@@ -124,16 +125,19 @@ class GameUIManager extends EventEmitter {
       [PlanetLevel.NINE]: 1215 * scaleFactor,
     };
 
-    const account = gameManager.getAccount();
-    const contractAddress = gameManager.getContractAddress();
-    this.uiStateStorageManager = UIStateStorageManager.create(account, contractAddress);
-
     this.plugins = new PluginManager(gameManager);
 
     this.selectedPlanetId$ = monomitter<LocationId | undefined>();
     this.selectedPlanet$ = getObjectWithIdFromMap<Planet, LocationId>(
       this.getPlanetMap(),
       this.selectedPlanetId$,
+      this.gameManager.getPlanetUpdated$()
+    );
+
+    this.hoverPlanetId$ = monomitter<LocationId | undefined>();
+    this.hoverPlanet$ = getObjectWithIdFromMap<Planet, LocationId>(
+      this.getPlanetMap(),
+      this.hoverPlanetId$,
       this.gameManager.getPlanetUpdated$()
     );
 
@@ -457,7 +461,7 @@ class GameUIManager extends EventEmitter {
   onMouseOut() {
     this.mouseDownOverPlanet = undefined;
     this.mouseDownOverCoords = undefined;
-    this.mouseHoveringOverPlanet = undefined;
+    this.setHoveringOverPlanet(undefined);
     this.mouseHoveringOverCoords = undefined;
   }
 
@@ -582,7 +586,6 @@ class GameUIManager extends EventEmitter {
 
     const uiEmitter = UIEmitter.getInstance();
     this.selectedPlanet = planet;
-    console.log(planet);
     if (!planet) {
       this.selectedCoords = undefined;
     } else {
@@ -773,6 +776,16 @@ class GameUIManager extends EventEmitter {
   getMouseDownCoords(): WorldCoords | undefined {
     if (this.isSending && this.sendingPlanet) return this.sendingCoords;
     return this.mouseDownOverCoords;
+  }
+
+  private setHoveringOverPlanet(planet: Planet | undefined) {
+    const lastHover = this.mouseHoveringOverPlanet;
+
+    this.mouseHoveringOverPlanet = planet;
+
+    if (lastHover?.locationId !== planet?.locationId) {
+      this.hoverPlanetId$.publish(planet?.locationId);
+    }
   }
 
   getHoveringOverPlanet(): Planet | undefined {
@@ -1002,11 +1015,12 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getHashConfig();
   }
 
-  setUIDataItem(key: UIDataKey, value: UIDataValue): void {
-    this.uiStateStorageManager.setUIDataItem(key, value);
+  setUIDataItem(key: UIDataKey, value: number | boolean): void {
+    this.gameManager.setUIDataItem(key, value);
   }
-  getUIDataItem(key: UIDataKey): UIDataValue {
-    return this.uiStateStorageManager.getUIDataItem(key);
+
+  getUIDataItem(key: UIDataKey): number | boolean {
+    return this.gameManager.getUIDataItem(key);
   }
 
   getViewport(): Viewport {
@@ -1049,8 +1063,8 @@ class GameUIManager extends EventEmitter {
       );
     }
     if (this.mouseHoveringOverPlanet) {
-      this.mouseHoveringOverPlanet = this.gameManager.getPlanetWithId(
-        this.mouseHoveringOverPlanet.locationId
+      this.setHoveringOverPlanet(
+        this.gameManager.getPlanetWithId(this.mouseHoveringOverPlanet.locationId)
       );
     }
   }
@@ -1058,13 +1072,15 @@ class GameUIManager extends EventEmitter {
   private updateMouseHoveringOverCoords(coords: WorldCoords): WorldCoords {
     // if the mouse is inside hitbox of a planet, snaps the mouse to center of planet
     this.mouseHoveringOverCoords = coords;
-    this.mouseHoveringOverPlanet = undefined;
+    let hoveringPlanet = undefined;
 
     const res = this.planetHitboxForCoords(coords);
     if (res) {
-      this.mouseHoveringOverPlanet = res;
+      hoveringPlanet = res;
       this.mouseHoveringOverCoords = res.location.coords;
     }
+
+    this.setHoveringOverPlanet(hoveringPlanet);
 
     this.mouseHoveringOverCoords = {
       x: Math.round(this.mouseHoveringOverCoords.x),

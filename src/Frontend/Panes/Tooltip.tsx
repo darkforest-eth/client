@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import WindowManager, { TooltipName, WindowManagerEvent } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
@@ -50,36 +50,18 @@ export function TooltipTrigger({
   style,
   className,
 }: TooltipProps) {
-  // the model for this is a state machine on the state of {shift, hovering}
+  // the model for this is a state machine on the state of {hovering, ctrl -> shouldShow}
   const ctrl = useControlDown();
-
+  const shouldShow = useMemo(() => !needsCtrl || (needsCtrl && ctrl), [ctrl, needsCtrl]);
   const [hovering, setHovering] = useState<boolean>(false);
 
-  const [pushed, setPushed] = useState<boolean>(false);
+  const active = useMemo(() => shouldShow && hovering, [shouldShow, hovering]);
 
   const windowManager = WindowManager.getInstance();
 
-  // manage state machine
   useEffect(() => {
-    const getCtrl = () => {
-      if (!needsCtrl) return true;
-      else return ctrl;
-    };
-
-    if (!pushed) {
-      // not pushed yet
-      if (hovering && getCtrl()) {
-        windowManager.pushTooltip(name);
-        setPushed(true);
-      }
-    } else {
-      // is pushed already
-      if (!hovering || !getCtrl()) {
-        windowManager.popTooltip();
-        setPushed(false);
-      }
-    }
-  }, [hovering, ctrl, pushed, windowManager, name, needsCtrl]);
+    windowManager.setTooltip(active ? name : TooltipName.None);
+  }, [active, windowManager, name]);
 
   return (
     <StyledTooltipTrigger
@@ -103,7 +85,7 @@ const StyledTooltip = styled.div<{
   height: fit-content;
   min-height: 1em;
   min-width: 5em;
-  border: 1px solid ${dfstyles.colors.text};
+  border: 1px solid ${dfstyles.colors.subtext};
   background: ${dfstyles.colors.background};
   padding: 0.5em;
   border-radius: 3px;

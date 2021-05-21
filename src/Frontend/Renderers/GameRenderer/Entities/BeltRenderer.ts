@@ -4,24 +4,23 @@ import Viewport from '../../../Game/Viewport';
 import { RGBVec } from '../EngineTypes';
 import EngineUtils from '../EngineUtils';
 import { BELT_PROGRAM_DEFINITION, BeltProps, propsFromIdx } from '../Programs/BeltProgram';
-import { GameGLManager } from '../WebGL/GameGLManager';
 import { GenericRenderer } from '../WebGL/GenericRenderer';
+import { WebGLManager } from '../WebGL/WebGLManager';
+import autoBind from 'auto-bind';
 
 export default class BeltRenderer extends GenericRenderer<typeof BELT_PROGRAM_DEFINITION> {
-  viewport: Viewport;
-
   topRectPosBuffer: number[]; // 2d for rect pos
   botRectPosBuffer: number[]; // 2d for rect pos
   posBuffer: number[]; // 3d for writing actual pos
 
-  constructor(manager: GameGLManager) {
+  constructor(manager: WebGLManager) {
     super(manager, BELT_PROGRAM_DEFINITION);
-
-    this.viewport = Viewport.getInstance();
 
     this.topRectPosBuffer = EngineUtils.makeEmptyQuadVec2();
     this.botRectPosBuffer = EngineUtils.makeEmptyQuadVec2();
     this.posBuffer = EngineUtils.makeEmptyQuad();
+
+    autoBind(this);
   }
 
   queueBeltWorld(
@@ -34,8 +33,10 @@ export default class BeltRenderer extends GenericRenderer<typeof BELT_PROGRAM_DE
     props: BeltProps = [10, 1, 1, 0.05],
     angle = 0
   ) {
-    const center = this.viewport.worldToCanvasCoords(centerW);
-    const radius = this.viewport.worldToCanvasDist(radiusW);
+    const viewport = Viewport.getInstance();
+
+    const center = viewport.worldToCanvasCoords(centerW);
+    const radius = viewport.worldToCanvasDist(radiusW);
 
     this.queueBelt(center, radius, color, l, z, delZ, props, angle);
   }
@@ -95,11 +96,12 @@ export default class BeltRenderer extends GenericRenderer<typeof BELT_PROGRAM_DE
 
   queueBeltAtIdx(
     planet: Planet,
-    centerW: WorldCoords,
-    radiusW: number,
+    center: WorldCoords | CanvasCoords,
+    radius: number,
     color: RGBVec,
     beltIdx: number,
-    angle = 0
+    angle = 0,
+    screen = false
   ) {
     const delZ = 0.01 * (beltIdx + 1);
 
@@ -107,7 +109,9 @@ export default class BeltRenderer extends GenericRenderer<typeof BELT_PROGRAM_DE
     const z = EngineUtils.getPlanetZIndex(planet);
     const l = 3.0 + beltIdx * 1.5;
 
-    this.queueBeltWorld(centerW, radiusW, color, l, z, delZ, props, angle);
+    const queue = screen ? this.queueBelt : this.queueBeltWorld;
+
+    queue(center, radius, color, l, z, delZ, props, angle);
   }
 
   public setUniforms() {

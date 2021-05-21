@@ -6,12 +6,18 @@
 
 ### Enumeration members
 
+- [HoverPlanet](frontend_utils_constants.gamewindowzindex.md#hoverplanet)
 - [MenuBar](frontend_utils_constants.gamewindowzindex.md#menubar)
 - [Modal](frontend_utils_constants.gamewindowzindex.md#modal)
-- [Toggler](frontend_utils_constants.gamewindowzindex.md#toggler)
 - [Tooltip](frontend_utils_constants.gamewindowzindex.md#tooltip)
 
 ## Enumeration members
+
+### HoverPlanet
+
+• **HoverPlanet**: = 999
+
+---
 
 ### MenuBar
 
@@ -22,12 +28,6 @@
 ### Modal
 
 • **Modal**: = 1000
-
----
-
-### Toggler
-
-• **Toggler**: = 3
 
 ---
 

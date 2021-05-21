@@ -1,19 +1,16 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { useStoredUIState, UIDataKey } from '../../Backend/Storage/UIStateStorageManager';
-import { ContextMenu } from '../Components/ContextMenu';
 import {
   WindowWrapper,
   MainWindow,
   CanvasContainer,
   UpperLeft,
-  MenuBar,
   CanvasWrapper,
-  LHSWrapper,
 } from '../Components/GameWindowComponents';
 import ControllableCanvas from '../Game/ControllableCanvas';
 import { ArtifactDetailsPane } from '../Panes/ArtifactDetailsPane';
 import { CoordsPane } from '../Panes/CoordsPane';
-import { ExploreContextPane } from '../Panes/ExploreContextPane';
+import { ExplorePane } from '../Panes/ExplorePane';
 import { HatPane } from '../Panes/HatPane';
 import { HelpPane } from '../Panes/HelpPane';
 import { ManagePlanetArtifactsPane } from '../Panes/ManagePlanetArtifacts/ManagePlanetArtifactsPane';
@@ -24,9 +21,14 @@ import {
   ModalSettingsIcon,
   ModalPlanetDexIcon,
   ModalTwitterVerifyIcon,
+  ModalArtifactIcon,
+  ModalHatIcon,
+  ModalPlanetDetailsIcon,
+  ModalTwitterBroadcastIcon,
+  ModalUpgradeDetailsIcon,
+  ModalWithdrawIcon,
 } from './ModalIcon';
 import OnboardingPane from '../Panes/OnboardingPane';
-import { PlanetContextPane } from '../Panes/PlanetContextPane';
 import { PlanetDetailsPane } from '../Panes/PlanetDetailsPane';
 import { PlanetDexPane } from '../Panes/PlanetDexPane';
 import { PlayerArtifactsPane } from '../Panes/PlayerArtifactsPane';
@@ -39,11 +41,11 @@ import { BroadcastPane } from '../Panes/BroadcastPane';
 import { TwitterVerifyPane } from '../Panes/TwitterVerifyPane';
 import { UpgradeDetailsPane } from '../Panes/UpgradeDetailsPane';
 import { ZoomPane } from '../Panes/ZoomPane';
-import { useUIManager } from '../Utils/AppHooks';
+import { useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 import { NotificationsPane } from './Notifications';
 import { useEffect } from 'react';
-import { useEmitterValue } from '../Utils/EmitterHooks';
-import { keyUp$ } from '../Utils/KeyEmitters';
+import { useEmitterSubscribe, useEmitterValue } from '../Utils/EmitterHooks';
+import { escapeDown$, keyUp$ } from '../Utils/KeyEmitters';
 import { ArtifactId } from '@darkforest_eth/types';
 import { PaidArtifactConversationPane } from '../Panes/PaidArtifactConversation/PaidArtifactConversationPane';
 import { WithdrawSilverPane } from '../Panes/WithdrawSilverPane';
@@ -56,6 +58,9 @@ import {
   TOGGLE_PLANET_DEX_PANE,
   TOGGLE_UPGRADES_PANE,
 } from '../Utils/ShortcutConstants';
+import { MenuBar, MenuBarSection } from '../Components/MenuBar';
+import { PlanetContextPane } from '../Panes/PlanetContextPane';
+import { HoverPlanetPane } from '../Panes/HoverPlanetPane';
 
 export function GameWindowLayout() {
   const planetDetHook = useState<boolean>(false);
@@ -75,6 +80,18 @@ export function GameWindowLayout() {
   const newPlayerHook = useStoredUIState<boolean>(UIDataKey.newPlayer, uiManager);
 
   const withdrawSilverHook = useState<boolean>(false);
+
+  const selected = useSelectedPlanet(uiManager).value;
+  const selectedPlanetHook = useState<boolean>(!!selected);
+  const [, setSelectedPlanetVisible] = selectedPlanetHook;
+
+  useEffect(() => setSelectedPlanetVisible(!!selected), [selected, setSelectedPlanetVisible]);
+
+  /* attach key listeners */
+  const onEscapeDown = useCallback(() => {
+    uiManager.selectedPlanetId$.publish(undefined);
+  }, [uiManager]);
+  useEmitterSubscribe(escapeDown$, onEscapeDown);
 
   /* artifact stuff */
   const artifactDetailsHook = useState<boolean>(false);
@@ -162,6 +179,7 @@ export function GameWindowLayout() {
         />
         <PaidArtifactConversationPane hook={artifactConversationHook} artifact={convoArtifact} />
         <WithdrawSilverPane hook={withdrawSilverHook} />
+        <PlanetContextPane hook={selectedPlanetHook} />
 
         {modalsContainerRef.current && (
           <PluginLibraryPane
@@ -178,12 +196,22 @@ export function GameWindowLayout() {
         <CanvasContainer>
           <UpperLeft>
             <MenuBar>
-              <ModalSettingsIcon hook={settingsHook} />
-              <ModalHelpIcon hook={helpHook} />
-              <ModalPluginIcon hook={pluginsHook} />
-              <ModalYourArtifactsIcon hook={yourArtifactsHook} />
-              <ModalPlanetDexIcon hook={planetdexHook} />
-              <ModalTwitterVerifyIcon hook={twitterVerifyHook} />
+              <MenuBarSection>
+                <ModalSettingsIcon hook={settingsHook} />
+                <ModalHelpIcon hook={helpHook} />
+                <ModalPluginIcon hook={pluginsHook} />
+                <ModalYourArtifactsIcon hook={yourArtifactsHook} />
+                <ModalPlanetDexIcon hook={planetdexHook} />
+                <ModalTwitterVerifyIcon hook={twitterVerifyHook} />
+              </MenuBarSection>
+              <MenuBarSection collapsible>
+                <ModalPlanetDetailsIcon hook={planetDetHook} />
+                <ModalArtifactIcon hook={manageArtifactsHook} />
+                <ModalHatIcon hook={hatHook} />
+                <ModalTwitterBroadcastIcon hook={twitterBroadcastHook} />
+                <ModalUpgradeDetailsIcon hook={upgradeDetHook} />
+                <ModalWithdrawIcon hook={withdrawSilverHook} />
+              </MenuBarSection>
             </MenuBar>
             <ZoomPane />
           </UpperLeft>
@@ -194,25 +222,11 @@ export function GameWindowLayout() {
 
           <NotificationsPane />
           <CoordsPane />
-          <TutorialPane newPlayerHook={newPlayerHook} />
+          <ExplorePane />
 
-          <LHSWrapper>
-            <ContextMenu>
-              <ExploreContextPane />
-              {modalsContainerRef.current && (
-                <PlanetContextPane
-                  hook={planetDetHook}
-                  findArtifactHook={manageArtifactsHook}
-                  broadcastHook={twitterBroadcastHook}
-                  hatHook={hatHook}
-                  upgradeDetHook={upgradeDetHook}
-                  modalsContainer={modalsContainerRef.current}
-                  setArtifactDetailsOpen={artifactDetailsHook[1]}
-                  setWithdrawSilver={withdrawSilverHook[1]}
-                />
-              )}
-            </ContextMenu>
-          </LHSWrapper>
+          <HoverPlanetPane />
+
+          <TutorialPane newPlayerHook={newPlayerHook} />
         </CanvasContainer>
       </MainWindow>
     </WindowWrapper>

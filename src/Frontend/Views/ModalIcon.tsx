@@ -14,6 +14,7 @@ import {
   SettingsIcon,
   PluginIcon,
   ArtifactIcon,
+  WithdrawIcon,
 } from '../Components/Icons';
 import { TooltipName } from '../Game/WindowManager';
 import { ModalName, ModalHook } from './ModalPane';
@@ -40,6 +41,7 @@ export function ModalIcon({
     else if (modal === ModalName.Settings) return <SettingsIcon />;
     else if (modal === ModalName.Plugins) return <PluginIcon />;
     else if (modal === ModalName.YourArtifacts) return <ArtifactIcon />;
+    else if (modal === ModalName.WithdrawSilver) return <WithdrawIcon />;
     return <span>T</span>;
   };
 
@@ -120,4 +122,8 @@ export function ModalPluginIcon({ hook }: { hook: ModalHook }) {
 
 export function ModalArtifactsConversationIcon({ hook }: { hook: ModalHook }) {
   return <ModalIcon hook={hook} modal={ModalName.ArtifactConversation} />;
+}
+
+export function ModalWithdrawIcon({ hook }: { hook: ModalHook }) {
+  return <ModalIcon hook={hook} modal={ModalName.WithdrawSilver} />;
 }

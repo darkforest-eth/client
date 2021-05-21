@@ -21,11 +21,11 @@
 - [EnergyGrowth](frontend_game_windowmanager.tooltipname.md#energygrowth)
 - [FindArtifact](frontend_game_windowmanager.tooltipname.md#findartifact)
 - [HashesPerSec](frontend_game_windowmanager.tooltipname.md#hashespersec)
+- [HoverPlanet](frontend_game_windowmanager.tooltipname.md#hoverplanet)
 - [MaxLevel](frontend_game_windowmanager.tooltipname.md#maxlevel)
 - [MinEnergy](frontend_game_windowmanager.tooltipname.md#minenergy)
 - [MiningPause](frontend_game_windowmanager.tooltipname.md#miningpause)
 - [MiningTarget](frontend_game_windowmanager.tooltipname.md#miningtarget)
-- [ModalDeposit](frontend_game_windowmanager.tooltipname.md#modaldeposit)
 - [ModalFindArtifact](frontend_game_windowmanager.tooltipname.md#modalfindartifact)
 - [ModalHats](frontend_game_windowmanager.tooltipname.md#modalhats)
 - [ModalHelp](frontend_game_windowmanager.tooltipname.md#modalhelp)
@@ -37,6 +37,7 @@
 - [ModalTwitterBroadcast](frontend_game_windowmanager.tooltipname.md#modaltwitterbroadcast)
 - [ModalTwitterVerification](frontend_game_windowmanager.tooltipname.md#modaltwitterverification)
 - [ModalUpgradeDetails](frontend_game_windowmanager.tooltipname.md#modalupgradedetails)
+- [ModalWithdrawSilver](frontend_game_windowmanager.tooltipname.md#modalwithdrawsilver)
 - [ModalYourArtifacts](frontend_game_windowmanager.tooltipname.md#modalyourartifacts)
 - [None](frontend_game_windowmanager.tooltipname.md#none)
 - [Pirates](frontend_game_windowmanager.tooltipname.md#pirates)
@@ -60,7 +61,7 @@
 
 ### ArtifactBuff
 
-• **ArtifactBuff**: = 35
+• **ArtifactBuff**: = 36
 
 ---
 
@@ -78,37 +79,37 @@
 
 ### BonusDefense
 
-• **BonusDefense**: = 28
+• **BonusDefense**: = 29
 
 ---
 
 ### BonusEnergyCap
 
-• **BonusEnergyCap**: = 24
+• **BonusEnergyCap**: = 25
 
 ---
 
 ### BonusEnergyGro
 
-• **BonusEnergyGro**: = 25
+• **BonusEnergyGro**: = 26
 
 ---
 
 ### BonusRange
 
-• **BonusRange**: = 26
+• **BonusRange**: = 27
 
 ---
 
 ### BonusSpeed
 
-• **BonusSpeed**: = 27
+• **BonusSpeed**: = 28
 
 ---
 
 ### Clowntown
 
-• **Clowntown**: = 34
+• **Clowntown**: = 35
 
 ---
 
@@ -120,19 +121,19 @@
 
 ### Defense
 
-• **Defense**: = 33
+• **Defense**: = 34
 
 ---
 
 ### Energy
 
-• **Energy**: = 29
+• **Energy**: = 30
 
 ---
 
 ### EnergyGrowth
 
-• **EnergyGrowth**: = 30
+• **EnergyGrowth**: = 31
 
 ---
 
@@ -145,6 +146,12 @@
 ### HashesPerSec
 
 • **HashesPerSec**: = 21
+
+---
+
+### HoverPlanet
+
+• **HoverPlanet**: = 23
 
 ---
 
@@ -172,81 +179,81 @@
 
 ---
 
-### ModalDeposit
-
-• **ModalDeposit**: = 48
-
----
-
 ### ModalFindArtifact
 
-• **ModalFindArtifact**: = 46
+• **ModalFindArtifact**: = 47
 
 ---
 
 ### ModalHats
 
-• **ModalHats**: = 43
+• **ModalHats**: = 44
 
 ---
 
 ### ModalHelp
 
-• **ModalHelp**: = 36
+• **ModalHelp**: = 37
 
 ---
 
 ### ModalLeaderboard
 
-• **ModalLeaderboard**: = 38
+• **ModalLeaderboard**: = 39
 
 ---
 
 ### ModalPlanetDetails
 
-• **ModalPlanetDetails**: = 37
+• **ModalPlanetDetails**: = 38
 
 ---
 
 ### ModalPlanetDex
 
-• **ModalPlanetDex**: = 39
+• **ModalPlanetDex**: = 40
 
 ---
 
 ### ModalPlugins
 
-• **ModalPlugins**: = 47
+• **ModalPlugins**: = 48
 
 ---
 
 ### ModalSettings
 
-• **ModalSettings**: = 44
+• **ModalSettings**: = 45
 
 ---
 
 ### ModalTwitterBroadcast
 
-• **ModalTwitterBroadcast**: = 42
+• **ModalTwitterBroadcast**: = 43
 
 ---
 
 ### ModalTwitterVerification
 
-• **ModalTwitterVerification**: = 41
+• **ModalTwitterVerification**: = 42
 
 ---
 
 ### ModalUpgradeDetails
 
-• **ModalUpgradeDetails**: = 40
+• **ModalUpgradeDetails**: = 41
+
+---
+
+### ModalWithdrawSilver
+
+• **ModalWithdrawSilver**: = 49
 
 ---
 
 ### ModalYourArtifacts
 
-• **ModalYourArtifacts**: = 45
+• **ModalYourArtifacts**: = 46
 
 ---
 
@@ -270,7 +277,7 @@
 
 ### Range
 
-• **Range**: = 31
+• **Range**: = 32
 
 ---
 
@@ -318,13 +325,13 @@
 
 ### SilverProd
 
-• **SilverProd**: = 23
+• **SilverProd**: = 24
 
 ---
 
 ### Speed
 
-• **Speed**: = 32
+• **Speed**: = 33
 
 ---
 

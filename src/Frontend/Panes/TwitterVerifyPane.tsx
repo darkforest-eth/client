@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Btn } from '../Components/Btn';
+import { Input } from '../Components/Input';
 import { Sub, Green, White, Red } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
@@ -52,7 +53,6 @@ export function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
   const uiManager = useUIManager();
   const [twitter, setTwitter] = useState<string | undefined>(undefined);
   const [twitterInput, setTwitterInput] = useState<string>('');
-  const [tweeted, setTweeted] = useState<boolean>(false);
   const [failedVerify, setFailedVerify] = useState<boolean>(false);
 
   useEffect(() => {
@@ -65,7 +65,6 @@ export function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
       const tweetText = await uiManager.generateVerificationTweet(twitterInput);
       const str = `Verifying my @darkforest_eth v0.6 pre-release account (https://zkga.me): ${tweetText}`;
       window.open(`https://twitter.com/intent/tweet?hashtags=darkforest&text=${encodeURI(str)}`);
-      setTweeted(true);
     }
   };
 
@@ -78,10 +77,6 @@ export function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
         setFailedVerify(true);
       }
     }
-  };
-
-  const alreadyTweetedClick = () => {
-    setTweeted(true);
   };
 
   return (
@@ -104,11 +99,8 @@ export function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
               <Sub>Verify using this handle:</Sub>
               <span>
                 @
-                <input
+                <Input
                   className='input-twitter'
-                  style={{
-                    borderRadius: '3px',
-                  }}
                   value={twitterInput}
                   onChange={(e) => setTwitterInput(e.target.value)}
                   placeholder={'my-twitter'}
@@ -116,17 +108,12 @@ export function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
               </span>
             </div>
             <div className='row'>
-              <Sub onClick={alreadyTweetedClick} className='clickable'>
-                (I've already tweeted)
-              </Sub>
               <Btn onClick={onTweetClick}>Tweet</Btn>
             </div>
             <p>Once you've tweeted, you can verify your account.</p>
             <div className='row'>
               <span> </span>
-              <Btn onClick={tweeted ? onVerifyClick : () => {}} disabled={tweeted}>
-                Verify
-              </Btn>
+              <Btn onClick={onVerifyClick}>Verify</Btn>
             </div>
             {failedVerify && (
               <p>

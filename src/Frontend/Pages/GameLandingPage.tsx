@@ -515,7 +515,7 @@ export default function GameLandingPage() {
       try {
         newGameManager = await GameManager.create(ethConnection, terminal);
       } catch (e) {
-        console.log(e);
+        console.error(e);
 
         setStep(TerminalPromptStep.ERROR);
 

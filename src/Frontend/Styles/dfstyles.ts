@@ -1,6 +1,14 @@
+import { SpaceType } from '@darkforest_eth/types';
 import { css } from 'styled-components';
 
 export const ARTIFACT_ROW_H = 48;
+
+export const SPACE_TYPE_COLORS: Record<SpaceType, string> = {
+  [SpaceType.NEBULA]: 'rgb(0, 20.4, 81.6)',
+  [SpaceType.SPACE]: 'rgb(0, 5.4, 43.35)',
+  [SpaceType.DEEP_SPACE]: 'rgb(2.04, 0, 6.12)',
+  [SpaceType.DEAD_SPACE]: 'rgb(37.485, 0, 36)',
+};
 
 const dfstyles = {
   colors: {
@@ -27,6 +35,8 @@ const dfstyles = {
       blog: '#ffcb1f',
     },
   },
+
+  borderRadius: '3px',
 
   fontSize: '16pt',
   fontSizeS: '12pt',

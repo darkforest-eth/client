@@ -1,5 +1,5 @@
 import { Artifact, ArtifactRarity, ArtifactType } from '@darkforest_eth/types';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ArtifactConversationPane } from '../Panes/ArtifactConversation/ArtifactConversationPane';
 import LandingPageCanvas from '../Renderers/LandingPageCanvas';
@@ -14,10 +14,6 @@ export function ConversationTest() {
   const convoHook = useState<boolean>(true);
 
   const [topLevelRef, setTopLevelRef] = useState<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    console.log(topLevelRef);
-  }, [topLevelRef]);
 
   return (
     <StyledConversationTest>

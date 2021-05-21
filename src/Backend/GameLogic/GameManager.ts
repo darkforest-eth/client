@@ -92,6 +92,8 @@ import { isActivated } from './ArtifactUtils';
 import stringify from 'json-stable-stringify';
 import { getConversation, startConversation, stepConversation } from '../Network/ConversationAPI';
 import { address, locationIdToDecStr, locationIdFromBigInt } from '@darkforest_eth/serde';
+import UIStateStorageManager, { UIDataKey } from '../Storage/UIStateStorageManager';
+import { CORE_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 
 export enum GameManagerEvent {
   PlanetUpdate = 'PlanetUpdate',
@@ -114,8 +116,8 @@ class GameManager extends EventEmitter {
   private readonly endTimeSeconds: number = 1643587533; // jan 2022
   private readonly ethConnection: EthConnection;
   private readonly hashConfig: HashConfig;
-  private readonly tokenMintEndTimestamp: number; // seconds since epoch
   private readonly planetHashMimc: (...inputs: number[]) => BigInteger;
+  private readonly uiStateStorageManager: UIStateStorageManager;
 
   private balance: number;
   private myBalance$: Monomitter<number>;
@@ -152,9 +154,9 @@ class GameManager extends EventEmitter {
     useMockHash: boolean,
     artifacts: Map<ArtifactId, Artifact>,
     ethConnection: EthConnection,
-    tokenMintEndTimestamp: number,
     gptCreditPriceEther: number,
-    myGPTCredits: number
+    myGPTCredits: number,
+    uiStateStorageManager: UIStateStorageManager
   ) {
     super();
 
@@ -165,13 +167,13 @@ class GameManager extends EventEmitter {
     this.myBalance$.publish(balance);
     this.players = players;
     this.worldRadius = worldRadius;
-    this.tokenMintEndTimestamp = tokenMintEndTimestamp;
     this.gptCreditPriceEther = gptCreditPriceEther;
     this.myGPTCredits$ = monomitter(true);
     this.gptCreditPriceEtherEmitter$ = monomitter(true);
     this.myGPTCredits = myGPTCredits;
     this.myGPTCredits$.publish(myGPTCredits);
     this.gptCreditPriceEtherEmitter$.publish(gptCreditPriceEther);
+    this.uiStateStorageManager = uiStateStorageManager;
 
     this.hashConfig = {
       planetHashKey: contractConstants.PLANETHASH_KEY,
@@ -251,13 +253,17 @@ class GameManager extends EventEmitter {
   ): Promise<GameManager> {
     // initialize dependencies according to a DAG
 
-    // first we initialize the ContractsAPI and get the user's eth account,
-    // and load contract constants + state
-    const contractsAPI = await ContractsAPI.create(ethConnection, terminal);
-
-    // then we initialize the local storage manager and SNARK helper
     const account = ethConnection.getAddress();
     const balance = await ethConnection.getBalance(account);
+
+    const uiStateStorageManager = UIStateStorageManager.create(account, CORE_CONTRACT_ADDRESS);
+
+    // first we initialize the ContractsAPI and get the user's eth account,
+    // and load contract constants + state
+    const contractsAPI = await ContractsAPI.create(ethConnection, uiStateStorageManager, terminal);
+
+    // then we initialize the local storage manager and SNARK helper
+
     const persistentChunkStore = await PersistentChunkStore.create(account);
     const possibleHomes = await persistentChunkStore.getHomeLocations();
     const storedTouchedPlanetIds = await persistentChunkStore.getSavedTouchedPlanetIds();
@@ -268,7 +274,6 @@ class GameManager extends EventEmitter {
     const contractConstants = await contractsAPI.getConstants();
     const players = await contractsAPI.getPlayers();
     const worldRadius = await contractsAPI.getWorldRadius();
-    const tokenMintEndTimestamp = await contractsAPI.getTokenMintEndTimestamp();
     const gptCreditPriceEther = await contractsAPI.getGPTCreditPriceEther();
     const myGPTCredits = await contractsAPI.getGPTCreditBalance(account);
 
@@ -407,9 +412,9 @@ class GameManager extends EventEmitter {
       useMockHash,
       knownArtifacts,
       ethConnection,
-      tokenMintEndTimestamp,
       gptCreditPriceEther,
-      myGPTCredits
+      myGPTCredits,
+      uiStateStorageManager
     );
 
     // get twitter handles
@@ -653,6 +658,14 @@ class GameManager extends EventEmitter {
       TerminalTextStyle.Red
     );
     this.entityStore.clearUnconfirmedTxIntent(txIntent);
+  }
+
+  public setUIDataItem(key: UIDataKey, value: number | boolean): void {
+    this.uiStateStorageManager.setUIDataItem(key, value);
+  }
+
+  public getUIDataItem(key: UIDataKey): number | boolean {
+    return this.uiStateStorageManager.getUIDataItem(key);
   }
 
   public getGptCreditPriceEmitter(): Monomitter<number> {
@@ -1293,7 +1306,6 @@ class GameManager extends EventEmitter {
           coords: { x, y },
           hash: h,
         } = loc;
-        console.log(x, y);
         this.homeLocation = loc;
         await this.persistentChunkStore.addHomeLocation(loc);
         actionId = getRandomActionId();
@@ -1954,8 +1966,6 @@ class GameManager extends EventEmitter {
       newOwner,
     };
     this.handleTxIntent(txIntent);
-
-    console.log(planet);
 
     this.contractsAPI
       .transferOwnership(planetId, newOwner, actionId)

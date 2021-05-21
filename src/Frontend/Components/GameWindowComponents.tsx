@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import dfstyles from '../../Frontend/Styles/dfstyles';
-import { GameWindowZIndex } from '../Utils/constants';
 
 export const WindowWrapper = styled.div`
   overflow: hidden;
@@ -48,59 +47,11 @@ export const StyledPane = styled.div`
   }
 `;
 
-export const StyledToolbarPane = styled(StyledPane)`
-  justify-content: space-between;
-  height: 100%;
-  & .pane-content {
-    flex-grow: 1;
-    overflow-y: auto;
-  }
-  border-right: 1px solid ${dfstyles.colors.subtext};
-`;
-
-export const StyledSidebarPane = styled(StyledPane)`
-  border-bottom: 1px solid ${dfstyles.colors.subtext};
-  width: 14em;
-
-  & .pane-header:hover {
-    background: ${dfstyles.colors.backgroundlight};
-  }
-
-  // for extra header items
-  & .pane-header > div {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    & > span,
-    & > a {
-      margin-left: 0.5em;
-      &:first-child {
-        margin-left: 0;
-      }
-    }
-  }
-`;
-
 export type PaneProps = {
   title: string;
   children: React.ReactNode;
   headerItems?: React.ReactNode;
 };
-
-// no-op on header style
-export function SidebarPane({ children, title, headerItems }: PaneProps) {
-  const [collapsed, setCollapsed] = useState<boolean>(false);
-  return (
-    <StyledSidebarPane>
-      <div className='pane-header' onClick={() => setCollapsed((b) => !b)}>
-        <p>{title}</p>
-        <div>{headerItems}</div>
-      </div>
-
-      {!collapsed && <div className='pane-content'>{children}</div>}
-    </StyledSidebarPane>
-  );
-}
 
 export const MainWindow = styled.div`
   // position and sizing
@@ -139,34 +90,3 @@ export const UpperLeft = styled.div`
   flex-direction: row;
   justify-content: flex-start;
 `;
-
-export const MenuBar = styled.div`
-  background: ${dfstyles.colors.background};
-  z-index: ${GameWindowZIndex.MenuBar};
-  padding: 0.5em;
-  width: fit-content;
-  border-right: 1px solid ${dfstyles.colors.text};
-  border-bottom: 1px solid ${dfstyles.colors.text};
-
-  display: flex;
-  flex-direction: row;
-
-  & > span {
-    margin-left: 4pt;
-    &:first-child {
-      margin-left: 0;
-    }
-  }
-`;
-
-export const LHSWrapper = styled.div`
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-`;
-
-export * from './Toolbar';
-export * from './Btn';

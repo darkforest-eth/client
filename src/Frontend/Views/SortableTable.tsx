@@ -16,7 +16,7 @@ const Header = styled(TableCell)`
     cursor: pointer;
     ${isActive && 'text-decoration: underline;'}
     ${isActive && 'font-weight: bold;'}
-    ${isReverse && 'transform: rotate(180deg);'}
+    ${isReverse && 'transform: scaleY(-1);'}
 
     &:hover {
       text-decoration: underline;
@@ -77,6 +77,8 @@ export function SortableTable<T>({
     <Table
       headerStyle={{
         backgroundColor: dfstyles.colors.background,
+        position: 'sticky',
+        top: 0,
       }}
       rows={sortedRows}
       headers={headers.map((originalHeader, i) => (

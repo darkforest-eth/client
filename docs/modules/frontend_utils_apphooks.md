@@ -10,9 +10,12 @@
 ### Functions
 
 - [useAccount](frontend_utils_apphooks.md#useaccount)
-- [useContextMenu](frontend_utils_apphooks.md#usecontextmenu)
+- [useActiveArtifact](frontend_utils_apphooks.md#useactiveartifact)
 - [useControlDown](frontend_utils_apphooks.md#usecontroldown)
+- [useHoverPlanet](frontend_utils_apphooks.md#usehoverplanet)
 - [useMyArtifacts](frontend_utils_apphooks.md#usemyartifacts)
+- [usePlanetArtifacts](frontend_utils_apphooks.md#useplanetartifacts)
+- [usePlanetInactiveArtifacts](frontend_utils_apphooks.md#useplanetinactiveartifacts)
 - [useSelectedArtifact](frontend_utils_apphooks.md#useselectedartifact)
 - [useSelectedPlanet](frontend_utils_apphooks.md#useselectedplanet)
 - [useTopLevelDiv](frontend_utils_apphooks.md#usetopleveldiv)
@@ -48,19 +51,18 @@ Get the currently used account on the client.
 
 ---
 
-### useContextMenu
+### useActiveArtifact
 
-▸ **useContextMenu**(`selectedPlanet`: Planet \| _undefined_): [_ContextMenuType_](../enums/frontend_components_contextmenu.contextmenutype.md)
-
-Calculate current context menu from the current UI state
+▸ **useActiveArtifact**(`planet`: [_Wrapper_](../classes/backend_utils_wrapper.wrapper.md)<Planet \| undefined\>, `uiManager`: [_default_](../classes/backend_gamelogic_gameuimanager.default.md)): Artifact \| _undefined_
 
 #### Parameters
 
-| Name             | Type                  | Description                   |
-| :--------------- | :-------------------- | :---------------------------- |
-| `selectedPlanet` | Planet \| _undefined_ | the currently selected planet |
+| Name        | Type                                                                           |
+| :---------- | :----------------------------------------------------------------------------- |
+| `planet`    | [_Wrapper_](../classes/backend_utils_wrapper.wrapper.md)<Planet \| undefined\> |
+| `uiManager` | [_default_](../classes/backend_gamelogic_gameuimanager.default.md)             |
 
-**Returns:** [_ContextMenuType_](../enums/frontend_components_contextmenu.contextmenutype.md)
+**Returns:** Artifact \| _undefined_
 
 ---
 
@@ -71,6 +73,22 @@ Calculate current context menu from the current UI state
 Return a bool that indicates if the control key is pressed.
 
 **Returns:** _boolean_
+
+---
+
+### useHoverPlanet
+
+▸ **useHoverPlanet**(`uiManager`: [_default_](../classes/backend_gamelogic_gameuimanager.default.md)): [_Wrapper_](../classes/backend_utils_wrapper.wrapper.md)<Planet \| undefined\>
+
+Create a subscription to the currently hovering planet.
+
+#### Parameters
+
+| Name        | Type                                                               | Description               |
+| :---------- | :----------------------------------------------------------------- | :------------------------ |
+| `uiManager` | [_default_](../classes/backend_gamelogic_gameuimanager.default.md) | instance of GameUIManager |
+
+**Returns:** [_Wrapper_](../classes/backend_utils_wrapper.wrapper.md)<Planet \| undefined\>
 
 ---
 
@@ -85,6 +103,36 @@ Return a bool that indicates if the control key is pressed.
 | `uiManager` | [_default_](../classes/backend_gamelogic_gameuimanager.default.md) |
 
 **Returns:** [_Wrapper_](../classes/backend_utils_wrapper.wrapper.md)<Map<ArtifactId, Artifact\> \| undefined\>
+
+---
+
+### usePlanetArtifacts
+
+▸ **usePlanetArtifacts**(`planet`: [_Wrapper_](../classes/backend_utils_wrapper.wrapper.md)<Planet \| undefined\>, `uiManager`: [_default_](../classes/backend_gamelogic_gameuimanager.default.md)): Artifact[]
+
+#### Parameters
+
+| Name        | Type                                                                           |
+| :---------- | :----------------------------------------------------------------------------- |
+| `planet`    | [_Wrapper_](../classes/backend_utils_wrapper.wrapper.md)<Planet \| undefined\> |
+| `uiManager` | [_default_](../classes/backend_gamelogic_gameuimanager.default.md)             |
+
+**Returns:** Artifact[]
+
+---
+
+### usePlanetInactiveArtifacts
+
+▸ **usePlanetInactiveArtifacts**(`planet`: [_Wrapper_](../classes/backend_utils_wrapper.wrapper.md)<Planet \| undefined\>, `uiManager`: [_default_](../classes/backend_gamelogic_gameuimanager.default.md)): Artifact[]
+
+#### Parameters
+
+| Name        | Type                                                                           |
+| :---------- | :----------------------------------------------------------------------------- |
+| `planet`    | [_Wrapper_](../classes/backend_utils_wrapper.wrapper.md)<Planet \| undefined\> |
+| `uiManager` | [_default_](../classes/backend_gamelogic_gameuimanager.default.md)             |
+
+**Returns:** Artifact[]
 
 ---
 

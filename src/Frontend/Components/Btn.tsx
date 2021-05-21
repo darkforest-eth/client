@@ -24,7 +24,7 @@ const BtnElement = styled.span`
     border-radius: 3px;
     padding: 0 0.3em;
     border: ${noBorder ? 0 : 1}px solid ${borderColor || color || dfstyles.colors.text};
-    transition: background-color 0.2s, colors 0.2s;
+    transition: background-color 0.2s, color 0.2s;
     justify-content: center;
     align-items: center;
     cursor: pointer;

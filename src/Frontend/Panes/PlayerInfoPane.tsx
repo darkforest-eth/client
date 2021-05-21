@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { formatNumber } from '../../Backend/Utils/Utils';
-import { SidebarPane } from '../Components/GameWindowComponents';
 import { TooltipName } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager, useAccount } from '../Utils/AppHooks';
-import { ModalTwitterVerifyIcon } from '../Views/ModalIcon';
 import { ModalHook } from '../Views/ModalPane';
 import { TooltipTrigger } from './Tooltip';
 
@@ -79,9 +77,8 @@ export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
       clearInterval(intervalId);
     };
   }, [uiManager]);
-
   return (
-    <SidebarPane title='Player Info' headerItems={<ModalTwitterVerifyIcon hook={twitterHook} />}>
+    <>
       <PlayerInfoWrapper>
         <div>
           <TooltipTrigger name={TooltipName.Energy}>
@@ -122,6 +119,6 @@ export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
           <span>{rank === -1 ? 'unranked' : rank}</span>
         </div>
       </PlayerInfoWrapper>
-    </SidebarPane>
+    </>
   );
 }

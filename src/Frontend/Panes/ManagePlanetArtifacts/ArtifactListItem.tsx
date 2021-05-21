@@ -1,9 +1,9 @@
-import { Artifact, ArtifactId, RarityNames } from '@darkforest_eth/types';
+import { Artifact, ArtifactId } from '@darkforest_eth/types';
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { isActivated, getArtifactDebugName } from '../../../Backend/GameLogic/ArtifactUtils';
-import { artifactTitle } from '../../../Backend/Procedural/ArtifactProcgen';
 import { ArtifactImage } from '../../Components/ArtifactImage';
+import { ArtifactRarityBiomeNameLabel } from '../../Components/ArtifactLabels';
 import { Spacer } from '../../Components/CoreUI';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Smaller, Sub } from '../../Components/Text';
@@ -42,7 +42,7 @@ export function ArtifactListItem({
         <Spacer width={8} />
         <Smaller>
           <Sub>
-            {RarityNames[artifact.rarity]} {artifactTitle(artifact)}
+            <ArtifactRarityBiomeNameLabel artifact={artifact} />
           </Sub>
         </Smaller>
         {actions(artifact)}

@@ -21,6 +21,8 @@
 - [extraMinerLocations](backend_gamelogic_gameuimanager.default.md#extraminerlocations)
 - [forcesSending](backend_gamelogic_gameuimanager.default.md#forcessending)
 - [gameManager](backend_gamelogic_gameuimanager.default.md#gamemanager)
+- [hoverPlanet$](backend_gamelogic_gameuimanager.default.md#hoverplanet$)
+- [hoverPlanetId$](backend_gamelogic_gameuimanager.default.md#hoverplanetid$)
 - [isChoosingTargetPlanet](backend_gamelogic_gameuimanager.default.md#ischoosingtargetplanet)
 - [isSending](backend_gamelogic_gameuimanager.default.md#issending)
 - [minerLocation](backend_gamelogic_gameuimanager.default.md#minerlocation)
@@ -43,7 +45,6 @@
 - [sendingPlanet](backend_gamelogic_gameuimanager.default.md#sendingplanet)
 - [silverSending](backend_gamelogic_gameuimanager.default.md#silversending)
 - [terminal](backend_gamelogic_gameuimanager.default.md#terminal)
-- [uiStateStorageManager](backend_gamelogic_gameuimanager.default.md#uistatestoragemanager)
 
 ### Methods
 
@@ -164,6 +165,7 @@
 - [setDetailLevel](backend_gamelogic_gameuimanager.default.md#setdetaillevel)
 - [setExtraMinerLocation](backend_gamelogic_gameuimanager.default.md#setextraminerlocation)
 - [setForcesSending](backend_gamelogic_gameuimanager.default.md#setforcessending)
+- [setHoveringOverPlanet](backend_gamelogic_gameuimanager.default.md#sethoveringoverplanet)
 - [setMiningPattern](backend_gamelogic_gameuimanager.default.md#setminingpattern)
 - [setSelectedId](backend_gamelogic_gameuimanager.default.md#setselectedid)
 - [setSelectedPlanet](backend_gamelogic_gameuimanager.default.md#setselectedplanet)
@@ -233,6 +235,18 @@ Overrides: EventEmitter.constructor
 ### gameManager
 
 • `Private` **gameManager**: [_default_](backend_gamelogic_gamemanager.default.md)
+
+---
+
+### hoverPlanet$
+
+• `Readonly` **hoverPlanet$**: [_Monomitter_](../modules/frontend_utils_monomitter.md#monomitter)<undefined \| Planet\>
+
+---
+
+### hoverPlanetId$
+
+• `Readonly` **hoverPlanetId$**: [_Monomitter_](../modules/frontend_utils_monomitter.md#monomitter)<undefined \| LocationId\>
 
 ---
 
@@ -382,12 +396,6 @@ indicates whether or not the player is currently selecting a target planet.
 ### terminal
 
 • `Private` **terminal**: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>
-
----
-
-### uiStateStorageManager
-
-• `Private` **uiStateStorageManager**: [_default_](backend_storage_uistatestoragemanager.default.md)
 
 ## Methods
 
@@ -1284,7 +1292,7 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### getUIDataItem
 
-▸ **getUIDataItem**(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md)): _boolean_
+▸ **getUIDataItem**(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md)): _number_ \| _boolean_
 
 #### Parameters
 
@@ -1292,7 +1300,7 @@ indicates whether or not the player is currently selecting a target planet.
 | :---- | :------------------------------------------------------------------------- |
 | `key` | [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md) |
 
-**Returns:** _boolean_
+**Returns:** _number_ \| _boolean_
 
 ---
 
@@ -1698,6 +1706,20 @@ indicates whether or not the player is currently selecting a target planet.
 
 ---
 
+### setHoveringOverPlanet
+
+▸ `Private` **setHoveringOverPlanet**(`planet`: _undefined_ \| Planet): _void_
+
+#### Parameters
+
+| Name     | Type                  |
+| :------- | :-------------------- |
+| `planet` | _undefined_ \| Planet |
+
+**Returns:** _void_
+
+---
+
 ### setMiningPattern
 
 ▸ **setMiningPattern**(`pattern`: [_MiningPattern_](../interfaces/backend_miner_miningpatterns.miningpattern.md)): _void_
@@ -1757,14 +1779,14 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### setUIDataItem
 
-▸ **setUIDataItem**(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md), `value`: _boolean_): _void_
+▸ **setUIDataItem**(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md), `value`: _number_ \| _boolean_): _void_
 
 #### Parameters
 
 | Name    | Type                                                                       |
 | :------ | :------------------------------------------------------------------------- |
 | `key`   | [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md) |
-| `value` | _boolean_                                                                  |
+| `value` | _number_ \| _boolean_                                                      |
 
 **Returns:** _void_
 

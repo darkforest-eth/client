@@ -14,7 +14,6 @@
 - [CurrentMiningTooltipPane](frontend_panes_tooltippanes.md#currentminingtooltippane)
 - [EnergyGrowthTooltipPane](frontend_panes_tooltippanes.md#energygrowthtooltippane)
 - [EnergyTooltipPane](frontend_panes_tooltippanes.md#energytooltippane)
-- [HashesPerSecTooltipPane](frontend_panes_tooltippanes.md#hashespersectooltippane)
 - [MaxLevelTooltipPane](frontend_panes_tooltippanes.md#maxleveltooltippane)
 - [MinEnergyTooltipPane](frontend_panes_tooltippanes.md#minenergytooltippane)
 - [MiningPauseTooltipPane](frontend_panes_tooltippanes.md#miningpausetooltippane)
@@ -120,14 +119,6 @@
 ### EnergyTooltipPane
 
 ▸ **EnergyTooltipPane**(): _Element_
-
-**Returns:** _Element_
-
----
-
-### HashesPerSecTooltipPane
-
-▸ **HashesPerSecTooltipPane**(): _Element_
 
 **Returns:** _Element_
 

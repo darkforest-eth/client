@@ -69,7 +69,7 @@ class Viewport {
     this.gameUIManager = gameUIManager;
     this.gameUIManager.setDetailLevel(this.getDetailLevel());
 
-    this.shouldFling = gameUIManager.getUIDataItem(UIDataKey.shouldFling);
+    this.shouldFling = gameUIManager.getUIDataItem(UIDataKey.shouldFling) as boolean;
 
     // each of these is measured relative to the world coordinate system
     this.centerWorldCoords = centerWorldCoords;

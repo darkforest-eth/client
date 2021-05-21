@@ -11,6 +11,7 @@ import UnsubscribePage from './UnsubscribePage';
 import { hot } from 'react-hot-loader/root';
 import { ShareArtifact } from './ShareArtifact';
 import { ConversationTest } from './ConversationTest';
+import { ValhallaPage } from './ValhallaPage';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path='/wallet/:addr/:actionId/:balance/:method' component={TxConfirmPopup} />
           <Route path='/unsubscribe' component={UnsubscribePage} />
           <Route path='/conversation' component={ConversationTest} />
+          <Route path='/valhalla' component={ValhallaPage} />
         </Switch>
       </Router>
     </>

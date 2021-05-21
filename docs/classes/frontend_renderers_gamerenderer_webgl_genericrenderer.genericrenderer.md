@@ -31,7 +31,7 @@ and data about attribs / uniforms and provides:
 
   ↳ [_default_](frontend_renderers_gamerenderer_entities_linerenderer.default.md)
 
-  ↳ [_MineRenderer_](frontend_renderers_gamerenderer_entities_minerenderer.minerenderer.md)
+  ↳ [_MineBodyRenderer_](frontend_renderers_gamerenderer_entities_minebodyrenderer.minebodyrenderer.md)
 
   ↳ [_default_](frontend_renderers_gamerenderer_entities_planetrenderer.default.md)
 

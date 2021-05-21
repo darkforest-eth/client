@@ -75,16 +75,6 @@ export function MiningTargetTooltipPane() {
   );
 }
 
-export function HashesPerSecTooltipPane() {
-  return (
-    <div>
-      <Sub>
-        The speed of your <White>explorer</White>, in <White>hashes</White> per second.
-      </Sub>
-    </div>
-  );
-}
-
 export function CurrentMiningTooltipPane() {
   return (
     <div>
@@ -433,7 +423,7 @@ function YourArtifacts() {
   return <div>View your artifacts.</div>;
 }
 
-const Deposit = () => <div>Deposit artifacts to this planet, conferring it buffs.</div>;
+const ModalWithdrawSilverTooltipPane = () => <div>Withdraw silver to earn score.</div>;
 
 const Hats = () => <div>Buy hats for this planet.</div>;
 
@@ -444,6 +434,8 @@ const FindArtifact = () => (
 );
 
 const ArtifactStored = () => <div>This planet has a powerful artifact on it!</div>;
+
+const HashesPerSec = () => <div>hashes / sec</div>;
 
 export function TooltipContent({ name }: { name: TooltipName }) {
   if (name === TooltipName.SilverGrowth) return <SilverGrowthTooltipPane />;
@@ -467,7 +459,6 @@ export function TooltipContent({ name }: { name: TooltipName }) {
   if (name === TooltipName.Score) return <ScoreTooltipPane />;
   if (name === TooltipName.MiningPause) return <MiningPauseTooltipPane />;
   if (name === TooltipName.MiningTarget) return <MiningTargetTooltipPane />;
-  if (name === TooltipName.HashesPerSec) return <HashesPerSecTooltipPane />;
   if (name === TooltipName.CurrentMining) return <CurrentMiningTooltipPane />;
   if (name === TooltipName.SilverProd) return <SilverProdTooltipPane />;
   if (name === TooltipName.BonusEnergyCap) return <BonusEnergyCapTooltipPane />;
@@ -489,10 +480,11 @@ export function TooltipContent({ name }: { name: TooltipName }) {
   if (name === TooltipName.ModalPlugins) return <PluginsTooltipPane />;
   if (name === TooltipName.ModalSettings) return <SettingsPane />;
   if (name === TooltipName.ModalYourArtifacts) return <YourArtifacts />;
-  if (name === TooltipName.ModalDeposit) return <Deposit />;
   if (name === TooltipName.ModalHats) return <Hats />;
   if (name === TooltipName.FindArtifact) return <FindArtifact />;
   if (name === TooltipName.ArtifactStored) return <ArtifactStored />;
+  if (name === TooltipName.HashesPerSec) return <HashesPerSec />;
+  if (name === TooltipName.ModalWithdrawSilver) return <ModalWithdrawSilverTooltipPane />;
 
   return <></>;
 }

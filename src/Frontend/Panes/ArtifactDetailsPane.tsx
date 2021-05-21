@@ -275,7 +275,9 @@ export function ArtifactDetailsBody({
           </div>
         )}
         <Spacer height={8} />
-        <Btn onClick={openConversation}>Talk to {artifactName(artifact)}</Btn>
+        <Btn wide color={dfstyles.colors.dfyellow} onClick={openConversation}>
+          Talk to {artifactName(artifact)}
+        </Btn>
       </StyledArtifactDetailsBody>
     </StyledArtifactPane>
   );

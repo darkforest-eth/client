@@ -1,21 +1,18 @@
-import { BiomeNames, PlanetTypeNames, Planet } from '@darkforest_eth/types';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
-import { getPlanetRank } from '../../Backend/Utils/Utils';
 import { isLocatable } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import { CenterBackgroundSubtext, Spacer, Underline } from '../Components/CoreUI';
-import { Sub } from '../Components/Text';
+import { Coords, Sub } from '../Components/Text';
 import { TextPreview } from '../Components/TextPreview';
 import { PlanetScape } from '../Renderers/PlanetscapeRenderer/PlanetScape';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager, useSelectedPlanet, useAccount } from '../Utils/AppHooks';
-import { HAT_SIZES } from '../Utils/constants';
 import { ModalHook, ModalName, ModalPane, RECOMMENDED_WIDTH } from '../Views/ModalPane';
-import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
 import { ReadMore } from '../Components/ReadMore';
 import { TOGGLE_PLANET_DETAILS_PANE } from '../Utils/ShortcutConstants';
+import { LevelRankText, PlanetBiomeTypeLabel, PlanetOwnerLabel } from '../Components/PlanetLabels';
 
 const StyledPlanetDetailsPane = styled.div``;
 
@@ -60,21 +57,6 @@ const RightHalf = styled.div`
   display: inline-block;
 `;
 
-function planetTitleWithBiome(selected: Planet): string | undefined {
-  if (!selected) {
-    return;
-  }
-
-  const planetType = PlanetTypeNames[selected.planetType];
-
-  if (isLocatable(selected)) {
-    const biome = BiomeNames[selected.biome];
-    return `${biome} ${planetType}`;
-  }
-
-  return planetType;
-}
-
 /**
  * The ui that is shown when the user clicks the question mark icon in the modal's title bar.
  */
@@ -98,17 +80,8 @@ export function PlanetDetailsPane({ hook, hatHook }: { hook: ModalHook; hatHook:
   const uiManager = useUIManager();
   const selected = useSelectedPlanet(uiManager).value;
   const account = useAccount(uiManager);
-  const [planetOwnerTwitter, setPlanetOwnerTwitter] = useState<string | undefined>(undefined);
 
   const windowName = 'Planet Details';
-
-  useEffect(() => {
-    if (!selected) {
-      setPlanetOwnerTwitter(undefined);
-      return;
-    }
-    setPlanetOwnerTwitter(uiManager.getTwitter(selected.owner));
-  }, [uiManager, selected]);
 
   let content;
 
@@ -117,8 +90,7 @@ export function PlanetDetailsPane({ hook, hatHook }: { hook: ModalHook; hatHook:
       <StyledPlanetDetailsPane>
         <PlanetName>{ProcgenUtils.getPlanetName(selected)}</PlanetName>
         <PlanetNameSubtitle>
-          Level {selected.planetLevel}, Rank {getPlanetRank(selected)}{' '}
-          {planetTitleWithBiome(selected)}
+          <LevelRankText planet={selected} /> <PlanetBiomeTypeLabel planet={selected} />
         </PlanetNameSubtitle>
 
         <PlanetScape planet={selected} />
@@ -138,17 +110,7 @@ export function PlanetDetailsPane({ hook, hatHook }: { hook: ModalHook; hatHook:
           <DetailsRowSingle className='margin-top' style={{ marginTop: '1em' }}>
             <Sub>Owner</Sub>
             <span>
-              {selected ? (
-                planetOwnerTwitter ? (
-                  '@' + planetOwnerTwitter
-                ) : selected.owner === EMPTY_ADDRESS ? (
-                  'Unclaimed'
-                ) : (
-                  <TextPreview text={selected.owner} />
-                )
-              ) : (
-                '0'
-              )}
+              <PlanetOwnerLabel planet={selected} showYours color />
             </span>
           </DetailsRowSingle>
 
@@ -162,7 +124,7 @@ export function PlanetDetailsPane({ hook, hatHook }: { hook: ModalHook; hatHook:
           <DetailsRowSingle>
             <Sub>Hat</Sub>
             <span>
-              {HAT_SIZES[selected ? selected.hatLevel : 0]}{' '}
+              {selected && ProcgenUtils.getHatSizeName(selected)}{' '}
               {selected && selected && selected.owner === account && (
                 <Btn onClick={() => hatHook[1](true)}>
                   {selected.hatLevel > 0 ? 'Upgrade' : 'Buy'}
@@ -179,7 +141,9 @@ export function PlanetDetailsPane({ hook, hatHook }: { hook: ModalHook; hatHook:
           {isLocatable(selected) && (
             <DetailsRowSingle>
               <Sub>Coords</Sub>
-              <span>{`(${selected.location.coords.x}, ${selected.location.coords.y})`}</span>
+              <span>
+                <Coords coords={selected.location.coords} />
+              </span>
             </DetailsRowSingle>
           )}
         </RightHalf>

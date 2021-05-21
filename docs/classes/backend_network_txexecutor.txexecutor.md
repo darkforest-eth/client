@@ -20,6 +20,7 @@
 - [lastTransaction](backend_network_txexecutor.txexecutor.md#lasttransaction)
 - [nonce](backend_network_txexecutor.txexecutor.md#nonce)
 - [txQueue](backend_network_txexecutor.txexecutor.md#txqueue)
+- [uiStateStorageManager](backend_network_txexecutor.txexecutor.md#uistatestoragemanager)
 - [MIN_BALANCE_ETH](backend_network_txexecutor.txexecutor.md#min_balance_eth)
 - [NONCE_STALE_AFTER_MS](backend_network_txexecutor.txexecutor.md#nonce_stale_after_ms)
 - [TX_SUBMIT_TIMEOUT](backend_network_txexecutor.txexecutor.md#tx_submit_timeout)
@@ -35,14 +36,15 @@
 
 ### constructor
 
-\+ **new TxExecutor**(`ethConnection`: [_default_](backend_network_ethconnection.default.md), `nonce`: _number_): [_TxExecutor_](backend_network_txexecutor.txexecutor.md)
+\+ **new TxExecutor**(`ethConnection`: [_default_](backend_network_ethconnection.default.md), `uiStateStorageManager`: [_default_](backend_storage_uistatestoragemanager.default.md), `nonce`: _number_): [_TxExecutor_](backend_network_txexecutor.txexecutor.md)
 
 #### Parameters
 
-| Name            | Type                                                  |
-| :-------------- | :---------------------------------------------------- |
-| `ethConnection` | [_default_](backend_network_ethconnection.default.md) |
-| `nonce`         | _number_                                              |
+| Name                    | Type                                                          |
+| :---------------------- | :------------------------------------------------------------ |
+| `ethConnection`         | [_default_](backend_network_ethconnection.default.md)         |
+| `uiStateStorageManager` | [_default_](backend_storage_uistatestoragemanager.default.md) |
+| `nonce`                 | _number_                                                      |
 
 **Returns:** [_TxExecutor_](backend_network_txexecutor.txexecutor.md)
 
@@ -74,6 +76,12 @@ Overrides: EventEmitter.constructor
 
 ---
 
+### uiStateStorageManager
+
+• `Private` **uiStateStorageManager**: [_default_](backend_storage_uistatestoragemanager.default.md)
+
+---
+
 ### MIN_BALANCE_ETH
 
 ▪ `Static` `Private` `Readonly` **MIN_BALANCE_ETH**: `0.002`= 0.002
@@ -84,9 +92,9 @@ don't allow users to submit txs if balance falls below
 
 ### NONCE_STALE_AFTER_MS
 
-▪ `Static` `Private` `Readonly` **NONCE_STALE_AFTER_MS**: `20000`= 20000
+▪ `Static` `Private` `Readonly` **NONCE_STALE_AFTER_MS**: _number_
 
-we refresh the nonce if it hasn't been updated in last 20s
+we refresh the nonce if it hasn't been updated in this amount of time
 
 ---
 

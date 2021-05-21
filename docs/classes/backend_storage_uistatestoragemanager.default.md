@@ -68,7 +68,13 @@
 
 ### getUIDataItem
 
-▸ **getUIDataItem**(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md)): _boolean_
+▸ **getUIDataItem**<T\>(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md)): T
+
+#### Type parameters
+
+| Name |
+| :--- |
+| `T`  |
 
 #### Parameters
 
@@ -76,7 +82,7 @@
 | :---- | :------------------------------------------------------------------------- |
 | `key` | [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md) |
 
-**Returns:** _boolean_
+**Returns:** T
 
 ---
 
@@ -104,14 +110,20 @@
 
 ### setUIDataItem
 
-▸ **setUIDataItem**(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md), `value`: _boolean_): _void_
+▸ **setUIDataItem**<T\>(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md), `value`: T): _void_
+
+#### Type parameters
+
+| Name |
+| :--- |
+| `T`  |
 
 #### Parameters
 
 | Name    | Type                                                                       |
 | :------ | :------------------------------------------------------------------------- |
 | `key`   | [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md) |
-| `value` | _boolean_                                                                  |
+| `value` | T                                                                          |
 
 **Returns:** _void_
 

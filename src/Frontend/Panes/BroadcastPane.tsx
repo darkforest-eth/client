@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { EthAddress } from '@darkforest_eth/types';
 import { Btn } from '../Components/Btn';
 import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
-import { Blue, Red, Sub, White, Gold } from '../Components/Text';
+import { Blue, Sub, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager, useSelectedPlanet } from '../Utils/AppHooks';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
@@ -37,6 +37,22 @@ const BroadcastWrapper = styled.div`
     }
   }
 `;
+
+function HelpContent() {
+  return (
+    <div>
+      <p>
+        Broadcasting a planet reveals its coordinates on-chain. This means that every single player
+        will be able to see the broadcasted planet on their map, even if they haven't mined it yet.
+      </p>
+      <Spacer height={8} />
+      <p>
+        Broadcasting can be a potent offensive tactic! Reveal a powerful enemy's location, and maybe
+        someone else will take care of them for you?
+      </p>
+    </div>
+  );
+}
 
 export function BroadcastPane({ hook }: { hook: ModalHook }) {
   const uiManager = useUIManager();
@@ -115,17 +131,19 @@ export function BroadcastPane({ hook }: { hook: ModalHook }) {
       )}
       {selected?.owner === account && (
         <p>
-          <Gold>WARNING:</Gold> <Sub>You own this planet!</Sub>
+          <Blue>INFO:</Blue>{' '}
+          <Sub>You own this planet! Revealing its location is a dangerous flex.</Sub>
         </p>
       )}
       {isRevealed && (
         <p>
-          <Red>ERROR:</Red> <Sub>This planet's location is already revealed!</Sub>
+          <Blue>INFO:</Blue>{' '}
+          <Sub>This planet's location is already, and can't be revealed again!</Sub>
         </p>
       )}
       {!broadcastCooldownPassed && (
         <p>
-          <Red>ERROR:</Red>{' '}
+          <Blue>INFO:</Blue>{' '}
           <Sub>
             You must wait{' '}
             <TimeUntil
@@ -140,7 +158,12 @@ export function BroadcastPane({ hook }: { hook: ModalHook }) {
   );
 
   return (
-    <ModalPane hook={hook} title={windowName()} name={ModalName.TwitterVerify}>
+    <ModalPane
+      hook={hook}
+      title={windowName()}
+      name={ModalName.TwitterVerify}
+      helpContent={HelpContent}
+    >
       {selected ? (
         <BroadcastWrapper>
           <div>

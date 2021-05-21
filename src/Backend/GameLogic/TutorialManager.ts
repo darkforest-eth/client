@@ -14,8 +14,9 @@ export enum TutorialState {
   ZoomOut,
   MinerMove,
   MinerPause,
-  Sidebar,
   Terminal,
+  HowToGetScore,
+  Valhalla,
 
   AlmostCompleted,
   Completed,

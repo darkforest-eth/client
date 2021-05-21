@@ -5,7 +5,6 @@ import { Btn } from '../Components/Btn';
 import { CenterBackgroundSubtext } from '../Components/CoreUI';
 import { Sub } from '../Components/Text';
 import { useUIManager, useSelectedPlanet, useAccount } from '../Utils/AppHooks';
-import { HAT_SIZES } from '../Utils/constants';
 import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 
 const StyledHatPane = styled.div`
@@ -78,7 +77,7 @@ export function HatPane({ hook }: { hook: ModalHook }) {
         </div>
         <div>
           <Sub>HAT Level</Sub>
-          <span>{HAT_SIZES[selected ? selected.hatLevel : 0]}</span>
+          <span>{ProcgenUtils.getHatSizeName(selected)}</span>
         </div>
         <div className='margin-top'>
           <Sub>Next Level Cost</Sub>

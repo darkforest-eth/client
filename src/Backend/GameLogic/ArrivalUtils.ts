@@ -123,7 +123,6 @@ export const arrive = (
   arrival: QueuedArrival,
   contractConstants: ContractConstants
 ): void => {
-  console.log(arrival);
   // this function optimistically simulates an arrival
   if (toPlanet.locationId !== arrival.toPlanet) {
     throw new Error(`attempted to apply arrival for wrong toPlanet ${toPlanet.locationId}`);

@@ -19,6 +19,7 @@
 - [namesById](backend_procedural_procgenutils.procgenutils.md#namesbyid)
 - [oceanByBiome](backend_procedural_procgenutils.procgenutils.md#oceanbybiome)
 - [rgbsByHash](backend_procedural_procgenutils.procgenutils.md#rgbsbyhash)
+- [strByBiome](backend_procedural_procgenutils.procgenutils.md#strbybiome)
 - [taglinesById](backend_procedural_procgenutils.procgenutils.md#taglinesbyid)
 
 ### Methods
@@ -27,6 +28,8 @@
 - [artifactRandomInt](backend_procedural_procgenutils.procgenutils.md#artifactrandomint)
 - [ellipsStrEnd](backend_procedural_procgenutils.procgenutils.md#ellipsstrend)
 - [ellipsisStr](backend_procedural_procgenutils.procgenutils.md#ellipsisstr)
+- [getBiomeRgbStr](backend_procedural_procgenutils.procgenutils.md#getbiomergbstr)
+- [getHatSizeName](backend_procedural_procgenutils.procgenutils.md#gethatsizename)
 - [getOwnerColor](backend_procedural_procgenutils.procgenutils.md#getownercolor)
 - [getOwnerColorVec](backend_procedural_procgenutils.procgenutils.md#getownercolorvec)
 - [getPlanetBlurb](backend_procedural_procgenutils.procgenutils.md#getplanetblurb)
@@ -35,7 +38,6 @@
 - [getPlanetCosmetic](backend_procedural_procgenutils.procgenutils.md#getplanetcosmetic)
 - [getPlanetName](backend_procedural_procgenutils.procgenutils.md#getplanetname)
 - [getPlanetNameHash](backend_procedural_procgenutils.procgenutils.md#getplanetnamehash)
-- [getPlanetQuote](backend_procedural_procgenutils.procgenutils.md#getplanetquote)
 - [getPlanetTagline](backend_procedural_procgenutils.procgenutils.md#getplanettagline)
 - [getPlanetTitle](backend_procedural_procgenutils.procgenutils.md#getplanettitle)
 - [getPlayerColor](backend_procedural_procgenutils.procgenutils.md#getplayercolor)
@@ -62,7 +64,7 @@
 
 ### baseByBiome
 
-▪ `Static` `Private` **baseByBiome**: [_HSLVec_](../modules/frontend_renderers_gamerenderer_enginetypes.md#hslvec)[]
+▪ `Static` `Private` **baseByBiome**: _Record_<Biome, [_HSLVec_](../modules/frontend_renderers_gamerenderer_enginetypes.md#hslvec)\>
 
 ---
 
@@ -104,13 +106,19 @@
 
 ### oceanByBiome
 
-▪ `Static` `Private` **oceanByBiome**: [_HSLVec_](../modules/frontend_renderers_gamerenderer_enginetypes.md#hslvec)[]
+▪ `Static` `Private` **oceanByBiome**: _Record_<Biome, [_HSLVec_](../modules/frontend_renderers_gamerenderer_enginetypes.md#hslvec)\>
 
 ---
 
 ### rgbsByHash
 
 ▪ `Static` `Private` **rgbsByHash**: _Map_<string, [_RGBAVec_](../modules/frontend_renderers_gamerenderer_enginetypes.md#rgbavec)\>
+
+---
+
+### strByBiome
+
+▪ `Static` `Private` **strByBiome**: _Map_<Biome, string\>
 
 ---
 
@@ -173,6 +181,34 @@
 | :------- | :------- |
 | `str`    | _string_ |
 | `maxLen` | _number_ |
+
+**Returns:** _string_
+
+---
+
+### getBiomeRgbStr
+
+▸ `Static` **getBiomeRgbStr**(`biome`: Biome): _string_
+
+#### Parameters
+
+| Name    | Type  |
+| :------ | :---- |
+| `biome` | Biome |
+
+**Returns:** _string_
+
+---
+
+### getHatSizeName
+
+▸ `Static` **getHatSizeName**(`planet`: Planet): _string_
+
+#### Parameters
+
+| Name     | Type   |
+| :------- | :----- |
+| `planet` | Planet |
 
 **Returns:** _string_
 
@@ -287,20 +323,6 @@
 | `locId` | LocationId |
 
 **Returns:** _string_
-
----
-
-### getPlanetQuote
-
-▸ `Static` **getPlanetQuote**(`planet`: _undefined_ \| Planet): [_QuoteData_](../modules/backend_procedural_procgenutils.md#quotedata)
-
-#### Parameters
-
-| Name     | Type                  |
-| :------- | :-------------------- |
-| `planet` | _undefined_ \| Planet |
-
-**Returns:** [_QuoteData_](../modules/backend_procedural_procgenutils.md#quotedata)
 
 ---
 

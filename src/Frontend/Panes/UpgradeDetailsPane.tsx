@@ -8,7 +8,7 @@ import {
   getPlanetMaxRank,
   upgradeName,
 } from '../../Backend/Utils/Utils';
-import { CenterBackgroundSubtext, Spacer, Underline } from '../Components/CoreUI';
+import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
 import { Gold, Red, Sub, Subber } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager, useSelectedPlanet, useAccount } from '../Utils/AppHooks';
@@ -41,12 +41,21 @@ const SectionButtons = styled.div`
 const StyledUpgradeButton = styled.div<{ active: boolean }>`
   ${({ active }: { active: boolean }) => css`
     color: ${dfstyles.colors.subtext};
-    ${active && 'color: white;'}
     cursor: pointer;
     text-decoration: underline;
+    padding: 4px 8px;
+    border-radius: 2px;
+    width: 33%;
+    text-align: center;
+
+    ${active &&
+    `
+      color: ${dfstyles.colors.background};
+      background-color: ${dfstyles.colors.dfgreen};`}
 
     &:hover {
-      color: white;
+      color: ${dfstyles.colors.text};
+      ${!active && `background-color: ${dfstyles.colors.backgroundlight};`}
     }
   `}
 `;
@@ -66,7 +75,7 @@ function UpgradeButton({
 
   return (
     <StyledUpgradeButton onClick={() => setBranch(branch)} active={branch === myBranch}>
-      <Underline>{upgradeName(branch)}</Underline>
+      {upgradeName(branch)}
     </StyledUpgradeButton>
   );
 }

@@ -7,6 +7,7 @@ import { ThrottledConcurrentQueue } from './ThrottledConcurrentQueue';
 import { EventLogger } from './EventLogger';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import { openConfirmationWindowForTransaction } from '../../Frontend/Game/Popups';
+import UIStateStorageManager, { UIDataKey } from '../Storage/UIStateStorageManager';
 
 export interface QueuedTxRequest {
   onSubmissionError: (e: Error) => void;
@@ -34,9 +35,9 @@ export class TxExecutor extends EventEmitter {
   private static readonly TX_SUBMIT_TIMEOUT = 30000;
 
   /**
-   * we refresh the nonce if it hasn't been updated in last 20s
+   * we refresh the nonce if it hasn't been updated in this amount of time
    */
-  private static readonly NONCE_STALE_AFTER_MS = 20000;
+  private static readonly NONCE_STALE_AFTER_MS = 1000 * 60 * 10;
 
   /**
    * don't allow users to submit txs if balance falls below
@@ -47,14 +48,20 @@ export class TxExecutor extends EventEmitter {
   private lastTransaction: number;
   private nonce: number;
   private eth: EthConnection;
+  private uiStateStorageManager: UIStateStorageManager;
 
-  constructor(ethConnection: EthConnection, nonce: number) {
+  constructor(
+    ethConnection: EthConnection,
+    uiStateStorageManager: UIStateStorageManager,
+    nonce: number
+  ) {
     super();
 
     this.txQueue = new ThrottledConcurrentQueue(3, 1000, 1);
     this.nonce = nonce;
     this.lastTransaction = Date.now();
     this.eth = ethConnection;
+    this.uiStateStorageManager = uiStateStorageManager;
   }
 
   /**
@@ -67,13 +74,18 @@ export class TxExecutor extends EventEmitter {
     contract: Contract,
     args: unknown[],
     overrides: providers.TransactionRequest = {
-      gasPrice: 1000000000,
+      gasPrice: undefined,
       gasLimit: 2000000,
     }
   ): PendingTransaction {
     const [txResponse, rejectTxResponse, submittedPromise] =
       deferred<providers.TransactionResponse>();
     const [txReceipt, rejectTxReceipt, receiptPromise] = deferred<providers.TransactionReceipt>();
+
+    if (overrides.gasPrice === undefined) {
+      overrides.gasPrice =
+        (this.uiStateStorageManager.getUIDataItem(UIDataKey.gasFeeGwei) as number) * 1000000000;
+    }
 
     this.txQueue.add(() =>
       this.execute({

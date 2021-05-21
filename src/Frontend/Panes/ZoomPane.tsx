@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import { LongDash } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { GameWindowZIndex } from '../Utils/constants';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 
-const _ZoomPane = styled.div`
+const StyledZoomPane = styled.div`
   z-index: ${GameWindowZIndex.MenuBar};
   padding-left: 0.75em;
   padding-top: 0.1em;
@@ -13,12 +14,14 @@ const _ZoomPane = styled.div`
   font-size: 1.5em;
   flex-direction: row;
   justify-content: flex-end;
+  height: fit-content;
   & > a:first-child {
     margin-right: 0.75em;
   }
+  color: ${dfstyles.colors.subtext};
   & > a {
     &:hover {
-      color: ${dfstyles.colors.subtext};
+      color: ${dfstyles.colors.text};
       cursor: pointer;
     }
     &:active {
@@ -30,9 +33,11 @@ const _ZoomPane = styled.div`
 export function ZoomPane() {
   const uiEmitter = UIEmitter.getInstance();
   return (
-    <_ZoomPane>
-      <a onClick={() => uiEmitter.emit(UIEmitterEvent.ZoomOut)}>-</a>
+    <StyledZoomPane>
+      <a onClick={() => uiEmitter.emit(UIEmitterEvent.ZoomOut)}>
+        <LongDash />
+      </a>
       <a onClick={() => uiEmitter.emit(UIEmitterEvent.ZoomIn)}>+</a>
-    </_ZoomPane>
+    </StyledZoomPane>
   );
 }

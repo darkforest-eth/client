@@ -27,7 +27,6 @@
 - [uniformLocs](frontend_renderers_gamerenderer_entities_beltrenderer.default.md#uniformlocs)
 - [uniformSetters](frontend_renderers_gamerenderer_entities_beltrenderer.default.md#uniformsetters)
 - [verts](frontend_renderers_gamerenderer_entities_beltrenderer.default.md#verts)
-- [viewport](frontend_renderers_gamerenderer_entities_beltrenderer.default.md#viewport)
 
 ### Methods
 
@@ -41,13 +40,13 @@
 
 ### constructor
 
-\+ **new default**(`manager`: [_GameGLManager_](frontend_renderers_gamerenderer_webgl_gameglmanager.gameglmanager.md)): [_default_](frontend_renderers_gamerenderer_entities_beltrenderer.default.md)
+\+ **new default**(`manager`: [_WebGLManager_](frontend_renderers_gamerenderer_webgl_webglmanager.webglmanager.md)): [_default_](frontend_renderers_gamerenderer_entities_beltrenderer.default.md)
 
 #### Parameters
 
-| Name      | Type                                                                                    |
-| :-------- | :-------------------------------------------------------------------------------------- |
-| `manager` | [_GameGLManager_](frontend_renderers_gamerenderer_webgl_gameglmanager.gameglmanager.md) |
+| Name      | Type                                                                                 |
+| :-------- | :----------------------------------------------------------------------------------- |
+| `manager` | [_WebGLManager_](frontend_renderers_gamerenderer_webgl_webglmanager.webglmanager.md) |
 
 **Returns:** [_default_](frontend_renderers_gamerenderer_entities_beltrenderer.default.md)
 
@@ -154,12 +153,6 @@ The number of queued vertices so far. Used for batch rendering.
 
 Inherited from: [GenericRenderer](frontend_renderers_gamerenderer_webgl_genericrenderer.genericrenderer.md).[verts](frontend_renderers_gamerenderer_webgl_genericrenderer.genericrenderer.md#verts)
 
----
-
-### viewport
-
-• **viewport**: [_default_](frontend_game_viewport.default.md)
-
 ## Methods
 
 ### flush
@@ -203,18 +196,19 @@ Inherited from: [GenericRenderer](frontend_renderers_gamerenderer_webgl_genericr
 
 ### queueBeltAtIdx
 
-▸ **queueBeltAtIdx**(`planet`: Planet, `centerW`: WorldCoords, `radiusW`: _number_, `color`: [_RGBVec_](../modules/frontend_renderers_gamerenderer_enginetypes.md#rgbvec), `beltIdx`: _number_, `angle?`: _number_): _void_
+▸ **queueBeltAtIdx**(`planet`: Planet, `center`: WorldCoords \| [_CanvasCoords_](../interfaces/backend_utils_coordinates.canvascoords.md), `radius`: _number_, `color`: [_RGBVec_](../modules/frontend_renderers_gamerenderer_enginetypes.md#rgbvec), `beltIdx`: _number_, `angle?`: _number_, `screen?`: _boolean_): _void_
 
 #### Parameters
 
-| Name      | Type                                                                         | Default value |
-| :-------- | :--------------------------------------------------------------------------- | :------------ |
-| `planet`  | Planet                                                                       | -             |
-| `centerW` | WorldCoords                                                                  | -             |
-| `radiusW` | _number_                                                                     | -             |
-| `color`   | [_RGBVec_](../modules/frontend_renderers_gamerenderer_enginetypes.md#rgbvec) | -             |
-| `beltIdx` | _number_                                                                     | -             |
-| `angle`   | _number_                                                                     | 0             |
+| Name      | Type                                                                                     | Default value |
+| :-------- | :--------------------------------------------------------------------------------------- | :------------ |
+| `planet`  | Planet                                                                                   | -             |
+| `center`  | WorldCoords \| [_CanvasCoords_](../interfaces/backend_utils_coordinates.canvascoords.md) | -             |
+| `radius`  | _number_                                                                                 | -             |
+| `color`   | [_RGBVec_](../modules/frontend_renderers_gamerenderer_enginetypes.md#rgbvec)             | -             |
+| `beltIdx` | _number_                                                                                 | -             |
+| `angle`   | _number_                                                                                 | 0             |
+| `screen`  | _boolean_                                                                                | false         |
 
 **Returns:** _void_
 

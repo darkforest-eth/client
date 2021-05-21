@@ -1,22 +1,25 @@
-import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
+import { Planet } from '@darkforest_eth/types';
+import React, { useState, useRef, useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
 import styled, { css } from 'styled-components';
+import { Hook, isLocatable } from '../../_types/global/GlobalTypes';
+import { Btn } from '../Components/Btn';
 import { Spacer, Truncate } from '../Components/CoreUI';
-import { Btn, PaneProps } from '../Components/GameWindowComponents';
+import { PaneProps } from '../Components/GameWindowComponents';
 import {
   CloseCircleIcon,
   MaximizeCircleIcon,
   MinimizeCircleIcon,
   QuestionCircleIcon,
 } from '../Components/Icons';
+import Viewport from '../Game/Viewport';
 import WindowManager from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
+import { useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 import { GameWindowZIndex } from '../Utils/constants';
 
 export const RECOMMENDED_WIDTH = '450px';
 
-type ModalIconStateFn = (arg: ((b: boolean) => boolean) | boolean) => void;
-
-export type ModalHook = [boolean, ModalIconStateFn];
+export type ModalHook = Hook<boolean>;
 
 export enum ModalName {
   Help,
@@ -31,6 +34,8 @@ export enum ModalName {
   YourArtifacts,
   ManageArtifacts,
   Plugins,
+  WithdrawSilver,
+
   ArtifactConversation,
   ArtifactDetails,
   MapShare,
@@ -39,9 +44,17 @@ export enum ModalName {
   Private,
 }
 
-function InformationSection({ children, hide }: { children: React.ReactNode; hide: () => void }) {
+function InformationSection({
+  children,
+  hide,
+  style,
+}: {
+  children: React.ReactNode;
+  hide: () => void;
+  style?: React.CSSProperties;
+}) {
   return (
-    <InfoSectionContainer>
+    <InfoSectionContainer style={style}>
       <InfoSectionContent>
         {children}
         <BtnContainer>
@@ -105,13 +118,9 @@ const ModalButtonsContainer = styled.div`
       ? css`
           margin-left: 8px;
         `
-      : css`
-          position: absolute;
-          top: 0;
-          right: 0;
-          margin-right: 8px;
-        `}
+      : css``}
 
+    flex-grow: 0;
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -130,7 +139,7 @@ const Modal = styled.div`
   width: fit-content;
   height: fit-content;
   background: ${dfstyles.colors.background};
-  border-radius: 3px;
+  border-radius: ${dfstyles.borderRadius};
   border: 1px solid ${dfstyles.colors.subtext};
 `;
 
@@ -144,20 +153,11 @@ const Content = styled.div`
   `}
 `;
 
-/**
- * Contains the text of the title of this modal window.
- */
-const Center = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: ${dfstyles.colors.text};
-`;
-
 const Title = styled(Truncate)`
-  max-width: 300px;
+  flex-grow: 1;
+  padding-left: 16px;
+  padding-right: 16px;
+  text-align: center;
 `;
 
 /**
@@ -173,9 +173,10 @@ const TitleBar = styled.div`
     cursor: grab;
     padding: 8px;
     background-color: ${dfstyles.colors.backgroundlight};
-    position: relative;
     border-bottom: 1px solid ${minimized ? 'transparent' : dfstyles.colors.subtext};
-
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
     &:hover {
       background: ${dfstyles.colors.backgroundlighter};
     }
@@ -209,14 +210,22 @@ export function ModalPane({
   noPadding,
   helpContent,
   width,
+  fixToSelectedPlanet,
+  borderColor,
+  backgroundColor,
+  titlebarColor,
 }: PaneProps & {
-  hook: ModalHook;
+  hook: Hook<boolean>;
   name?: ModalName;
   hideClose?: boolean;
   style?: React.CSSProperties;
   noPadding?: boolean;
   helpContent?: () => React.ReactNode;
   width?: string;
+  fixToSelectedPlanet?: boolean;
+  borderColor?: string;
+  backgroundColor?: string;
+  titlebarColor?: string;
 }) {
   const windowManager = WindowManager.getInstance();
   const [minimized, setMinimized] = useState(false);
@@ -365,6 +374,39 @@ export function ModalPane({
   const showingHelp = helpContent !== undefined && showingInformationSection;
   const currentWidth = minimized || showingHelp ? '' : width;
 
+  /* fix to selected planet (used in `SelectedPlanetPane.tsx`) 
+     this is a really bad way to do it, ModalPane shouldn't have to be aware of any game logic
+     TODO make this kind of logic composable */
+
+  const uiManager = useUIManager();
+  const selected = useSelectedPlanet(uiManager).value;
+
+  const [lastPlanet, setLastPlanet] = useState<Planet | undefined>(selected);
+  useEffect(() => setLastPlanet(selected), [selected]);
+
+  const planetChanged = useMemo(
+    () => selected?.locationId !== lastPlanet?.locationId,
+    [lastPlanet, selected]
+  );
+
+  useLayoutEffect(() => {
+    if (!fixToSelectedPlanet || !containerRef.current || !selected) return;
+
+    if (isLocatable(selected) && planetChanged) {
+      const viewport = Viewport.getInstance();
+      if (viewport.isInViewport(selected.location.coords)) {
+        const canvasCoords = viewport.worldToCanvasCoords(selected.location.coords);
+
+        let offX = 0;
+        let offY = 0;
+        if (canvasCoords.x > window.innerWidth / 2) offX = -containerRef.current.offsetWidth;
+        if (canvasCoords.y > window.innerHeight / 2) offY = -containerRef.current.offsetHeight;
+
+        setCoords({ x: canvasCoords.x + offX, y: canvasCoords.y + offY });
+      }
+    }
+  }, [selected, fixToSelectedPlanet, containerRef, planetChanged]);
+
   return (
     <Modal
       style={{
@@ -374,13 +416,18 @@ export function ModalPane({
         zIndex: visible ? zIndex : -1000,
         width: currentWidth,
         maxWidth: currentWidth,
+        border: borderColor !== undefined ? `1px solid ${borderColor}` : undefined,
+        backgroundColor: backgroundColor !== undefined ? `1px solid ${backgroundColor}` : undefined,
       }}
       ref={containerRef}
       onMouseDown={onMouseDown}
     >
       <TitleBar
         ref={headerRef}
-        style={{ cursor: styleClicking ? 'grabbing' : 'grab' }}
+        style={{
+          cursor: styleClicking ? 'grabbing' : 'grab',
+          backgroundColor: titlebarColor === undefined ? undefined : titlebarColor,
+        }}
         minimized={minimized}
         onMouseLeave={(_e) => {
           setStyleClicking(false);
@@ -395,13 +442,7 @@ export function ModalPane({
           setStyleClicking(true);
         }}
       >
-        {minimized ? (
-          <Title>{title}</Title>
-        ) : (
-          <Center>
-            <Title>{title}</Title>
-          </Center>
-        )}
+        <Title>{title}</Title>
 
         {/* render the 'close' and 'help me' buttons, depending on whether or not they're relevant */}
         <ModalButtonsContainer minimized={minimized}>
@@ -413,31 +454,32 @@ export function ModalPane({
               <Spacer width={4} />
             </>
           )}
-          {!hideClose && (
-            <ModalButton onClick={() => setVisible(false)}>
-              <CloseCircleIcon />
-            </ModalButton>
-          )}
-          <Spacer width={4} />
           <ModalButton onClick={() => setMinimized((minimized) => !minimized)}>
             {minimized ? <MaximizeCircleIcon /> : <MinimizeCircleIcon />}
           </ModalButton>
+          {!hideClose && (
+            <>
+              <Spacer width={4} />
+              <ModalButton onClick={() => setVisible(false)}>
+                <CloseCircleIcon />
+              </ModalButton>
+            </>
+          )}
         </ModalButtonsContainer>
       </TitleBar>
 
-      {/* only render the content if the modal is not minimized */}
-      {!minimized && (
-        <>
-          {/* render the modal's README/help section */}
-          {showingHelp ? (
-            <InformationSection hide={() => setShowingInformationSection(false)}>
-              {helpContent && helpContent()}
-            </InformationSection>
-          ) : (
-            <Content noPadding={noPadding}>{children}</Content>
-          )}
-        </>
-      )}
+      <InformationSection
+        style={{ display: minimized || !showingHelp ? 'none' : undefined }}
+        hide={() => setShowingInformationSection(false)}
+      >
+        {helpContent && helpContent()}
+      </InformationSection>
+      <Content
+        style={{ display: minimized || showingHelp ? 'none' : undefined }}
+        noPadding={noPadding}
+      >
+        {children}
+      </Content>
     </Modal>
   );
 }

@@ -7,6 +7,7 @@ import TutorialManager, {
 import { useStoredUIState, UIDataKey } from '../../Backend/Storage/UIStateStorageManager';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
+import { Underline } from '../Components/CoreUI';
 import { TargetIcon, PauseIcon } from '../Components/Icons';
 import { White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
@@ -97,24 +98,35 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         <White>Try pausing your explorer now.</White>
       </div>
     );
-  } else if (tutorialState === TutorialState.Sidebar) {
-    return (
-      <div>
-        Now you know how the basics of how to play Dark Forest. Before you go, notice that there's
-        additional information in the Sidebar on the left of the screen.
-        <br />
-        <br />
-        You can hide this information by clicking the right edge of the sidebar.{' '}
-        <White>Try hiding the sidebar now.</White>
-      </div>
-    );
   } else if (tutorialState === TutorialState.Terminal) {
     return (
       <div>
-        You can also hide the terminal on the right by clicking on its left edge.
+        You can hide the terminal on the right by clicking on its left edge.
         <br />
         <br />
         <White>Try hiding the terminal now.</White>
+      </div>
+    );
+  } else if (tutorialState === TutorialState.HowToGetScore) {
+    return (
+      <div>
+        To increase your score, <Underline>withdraw</Underline> silver from the universe.
+        <br />
+        <br />
+        You can withdraw silver from the universe by sending silver to a{' '}
+        <Underline>Spacetime Rip</Underline> that you own, and then withdrawing from it using its
+        context menu. Remember, you can only withdraw silver from{' '}
+        <Underline>Spacetime Rips</Underline>.
+      </div>
+    );
+  } else if (tutorialState === TutorialState.Valhalla) {
+    return (
+      <div>
+        Winners of each round of Dark Forest v0.6.x will receive a prize, and be added to the{' '}
+        <Underline>Valhalla</Underline> universe.
+        <br />
+        <br />
+        To win, have the highest score (^:
       </div>
     );
   } else if (tutorialState === TutorialState.AlmostCompleted) {
@@ -126,9 +138,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         <br />
         We hope you enjoy the game!
         <div>
-          <Btn className='btn' onClick={() => tutorialManager.complete()}>
-            Finish
-          </Btn>
+          <Btn onClick={() => tutorialManager.complete()}>Finish</Btn>
         </div>
       </div>
     );
@@ -153,10 +163,6 @@ const StyledTutorialPane = styled.div<{ visible: boolean }>`
   height: fit-content;
 
   z-index: 10;
-
-  & .btn {
-    color: ${dfstyles.colors.text};
-  }
 
   & .tutintro {
     & > div:last-child {

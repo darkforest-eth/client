@@ -105,7 +105,7 @@ export class PluginManager {
         }
       } catch (e) {
         this.pluginProcessInfos[id].hasError = true;
-        console.log('error when destroying plugin', e);
+        console.error('error when destroying plugin', e);
       } finally {
         delete this.pluginProcesses[id];
         delete this.pluginProcessInfos[id];

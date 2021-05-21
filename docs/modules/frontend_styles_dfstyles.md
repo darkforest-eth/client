@@ -5,6 +5,7 @@
 ### Variables
 
 - [ARTIFACT_ROW_H](frontend_styles_dfstyles.md#artifact_row_h)
+- [SPACE_TYPE_COLORS](frontend_styles_dfstyles.md#space_type_colors)
 - [default](frontend_styles_dfstyles.md#default)
 
 ## Variables
@@ -12,6 +13,12 @@
 ### ARTIFACT_ROW_H
 
 • `Const` **ARTIFACT_ROW_H**: `48`= 48
+
+---
+
+### SPACE_TYPE_COLORS
+
+• `Const` **SPACE_TYPE_COLORS**: _Record_<SpaceType, string\>
 
 ---
 
@@ -23,6 +30,7 @@
 
 | Name                           | Type                       |
 | :----------------------------- | :------------------------- |
+| `borderRadius`                 | _string_                   |
 | `colors`                       | _object_                   |
 | `colors.artifactBackground`    | _string_                   |
 | `colors.background`            | _string_                   |

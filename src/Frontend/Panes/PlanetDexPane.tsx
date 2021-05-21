@@ -53,12 +53,13 @@ const ColorIcon = styled.span<{ color: string }>`
 `;
 
 const TableContainer = styled.div`
-  max-height: 400px;
+  max-height: 300px;
+  height: 300px;
   overflow-y: scroll;
 `;
 
 export function PlanetThumb({ planet }: { planet: Planet }) {
-  const radius = 5 + 3 * planet.planetLevel;
+  const radius = 5 + 2 * planet.planetLevel;
   // const radius = 5 + 3 * PlanetLevel.MAX;
   const { speed, range, defense } = engineConsts.colors.belt;
   const { baseStr } = ProcgenUtils.getPlanetCosmetic(planet);

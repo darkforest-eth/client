@@ -1,66 +1,45 @@
-import { ProcgenUtils } from '../../../../Backend/Procedural/ProcgenUtils';
-import { CanvasCoords } from '../../../../Backend/Utils/Coordinates';
-import { Planet, WorldCoords } from '@darkforest_eth/types';
+import { Planet, PlanetLevel, WorldCoords } from '@darkforest_eth/types';
 import Viewport from '../../../Game/Viewport';
-import { RGBVec, DrawMode } from '../EngineTypes';
+import { engineConsts } from '../EngineConsts';
 import EngineUtils from '../EngineUtils';
-import { MINE_PROGRAM_DEFINITION } from '../Programs/MineProgram';
-import { GenericRenderer } from '../WebGL/GenericRenderer';
 import { WebGLManager } from '../WebGL/WebGLManager';
+import BeltRenderer from './BeltRenderer';
+import { MineBodyRenderer } from './MineBodyRenderer';
 
-export class MineRenderer extends GenericRenderer<typeof MINE_PROGRAM_DEFINITION> {
+export class MineRenderer {
+  mineBodyRenderer: MineBodyRenderer;
+  beltRenderer: BeltRenderer;
+
   constructor(manager: WebGLManager) {
-    super(manager, MINE_PROGRAM_DEFINITION);
+    this.mineBodyRenderer = new MineBodyRenderer(manager);
+    this.beltRenderer = new BeltRenderer(manager);
   }
 
-  private queuePoint(
-    { x, y }: CanvasCoords,
-    z: number,
-    radius: number, // canvas coords
-    color: RGBVec,
-    seed: number,
-    offset: number
-  ) {
+  public queueMineScreen(planet: Planet, centerW: WorldCoords, radiusW: number, z: number) {
     const {
-      position: posA,
-      radius: radiusA,
-      color: colorA,
-      seed: seedA,
-      offset: offsetA,
-    } = this.attribManagers;
+      white,
+      belt: { silver },
+    } = engineConsts.colors;
 
-    posA.setVertex([x, y, z], this.verts);
-    radiusA.setVertex([radius], this.verts);
-    colorA.setVertex(color, this.verts);
-    seedA.setVertex([seed], this.verts);
-    offsetA.setVertex([offset], this.verts);
+    this.mineBodyRenderer.queueMineScreen(planet, centerW, radiusW, z);
+    const level = planet.planetLevel;
 
-    this.verts += 1;
-  }
+    const now = EngineUtils.getNow() * 0.3;
 
-  queueMineScreen(planet: Planet, center: WorldCoords, radius: number, z: number) {
-    const cosmetic = ProcgenUtils.getPlanetCosmetic(planet);
-    const { seed } = cosmetic;
-    const numAsteroids = planet.planetLevel + 1;
-    const interval = (2 * Math.PI) / numAsteroids;
-    const [h, s, l] = cosmetic.asteroidHsl;
-
-    const p = 5;
-
-    for (let i = 0; i < numAsteroids; i++) {
-      const offset = i * interval;
-      const rand1 = ((seed + 1741 * i) % p) / p; // bad deterinistic random
-      const rand2 = ((seed + 1741 * (i + 10)) % p) / p; // bad deterinistic random
-
-      const delS = -20 + rand1 * 40;
-      const delL = -20 + rand2 * 40;
-
-      const ptColor = ProcgenUtils.hslToRgb([h, s + delS, l + delL]);
-      this.queuePoint(center, z, radius, ptColor, seed + i, offset);
+    if (level >= 1)
+      this.beltRenderer.queueBeltAtIdx(planet, centerW, radiusW, white, 0, now * 0.5, true);
+    if (level >= 3)
+      this.beltRenderer.queueBeltAtIdx(planet, centerW, radiusW, white, 0, -now * 0.5, true);
+    if (level >= 5)
+      this.beltRenderer.queueBeltAtIdx(planet, centerW, radiusW, white, 0, -now * 0.3, true);
+    if (level >= 7)
+      this.beltRenderer.queueBeltAtIdx(planet, centerW, radiusW, white, 0, now * 0.3, true);
+    if (level === PlanetLevel.MAX) {
+      this.beltRenderer.queueBeltAtIdx(planet, centerW, radiusW, silver, 2, 0, true);
     }
   }
 
-  queueMine(planet: Planet, centerW: WorldCoords, radiusW: number) {
+  public queueMine(planet: Planet, centerW: WorldCoords, radiusW: number) {
     const center = Viewport.getInstance().worldToCanvasCoords(centerW);
     const radius = Viewport.getInstance().worldToCanvasDist(radiusW);
     const z = EngineUtils.getPlanetZIndex(planet);
@@ -68,12 +47,13 @@ export class MineRenderer extends GenericRenderer<typeof MINE_PROGRAM_DEFINITION
     this.queueMineScreen(planet, center, radius, z);
   }
 
-  public setUniforms() {
-    this.uniformSetters.matrix(this.manager.projectionMatrix);
-    this.uniformSetters.now(EngineUtils.getNow());
+  public flush() {
+    this.beltRenderer.flush();
+    this.mineBodyRenderer.flush();
   }
 
-  flush() {
-    super.flush(DrawMode.Points);
+  public setUniforms() {
+    this.mineBodyRenderer.setUniforms();
+    this.beltRenderer.setUniforms();
   }
 }

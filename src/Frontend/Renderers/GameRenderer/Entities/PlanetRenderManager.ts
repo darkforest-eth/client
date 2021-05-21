@@ -13,9 +13,7 @@ import Viewport from '../../../Game/Viewport';
 import { HatType } from '../../../Utils/Hats';
 import Renderer from '../Renderer';
 import { engineConsts } from '../EngineConsts';
-import { TextAlign, TextAnchor, RGBVec } from '../EngineTypes';
-import EngineUtils from '../EngineUtils';
-import { getActiveBlackDomain } from '../../../../Backend/GameLogic/ArtifactUtils';
+import { TextAlign, TextAnchor } from '../EngineTypes';
 
 const { whiteA, barbsA, gold } = engineConsts.colors;
 const { maxRadius } = engineConsts.planet;
@@ -69,25 +67,16 @@ export default class PlanetRenderManager {
     }
 
     const artifacts = uiManager.getArtifactsWithIds(planet.heldArtifactIds);
-    const activeBlackDomain = getActiveBlackDomain(artifacts);
 
     /* draw planet body */
     this.queuePlanetBody(planet, centerW, radiusW);
     this.queueAsteroids(planet, centerW, radiusW);
-    this.queueArtifactsAroundPlanet(
-      planet,
-      artifacts,
-      activeBlackDomain,
-      centerW,
-      radiusW,
-      now,
-      textAlpha
-    );
+    this.queueArtifactsAroundPlanet(planet, artifacts, centerW, radiusW, now, textAlpha);
     this.queueRings(planet, centerW, radiusW);
 
-    if (planet.destroyed && activeBlackDomain) {
+    if (planet.destroyed) {
       // render black domain
-      this.queueBlackDomain(planet, activeBlackDomain, centerW, radiusW);
+      this.queueBlackDomain(planet, centerW, radiusW);
       return;
     }
 
@@ -119,13 +108,12 @@ export default class PlanetRenderManager {
   private queueArtifactsAroundPlanet(
     planet: Planet,
     artifacts: Artifact[],
-    activeBlackDomain: Artifact | undefined,
     centerW: WorldCoords,
     radiusW: number,
     now: number,
     alpha: number
   ) {
-    const numArtifacts = artifacts.length - (activeBlackDomain ? 1 : 0);
+    const numArtifacts = artifacts.length;
 
     const MS_PER_ROTATION = 10 * 1000 * (planet.planetLevel + 1);
     const anglePerArtifact = (Math.PI * 2) / numArtifacts;
@@ -136,8 +124,6 @@ export default class PlanetRenderManager {
     const distanceFromCenterOfPlanet = radiusW * distanceRadiusScale + artifactSize;
 
     for (let i = 0; i < artifacts.length; i++) {
-      if (artifacts[i].id === activeBlackDomain?.id) continue;
-
       const x =
         Math.cos(anglePerArtifact * i + startingAngle + nowAngle) * distanceFromCenterOfPlanet +
         centerW.x;
@@ -242,12 +228,13 @@ export default class PlanetRenderManager {
       planetRenderer: pR,
       spacetimeRipRenderer: sR,
       ruinsRenderer: rR,
+      mineRenderer: mR,
     } = this.renderer;
 
     const { planetType } = planet;
 
     if (planetType === PlanetType.SILVER_MINE) {
-      this.queueSilverMine(planet, centerW, radiusW);
+      mR.queueMine(planet, centerW, radiusW);
     } else if (planetType === PlanetType.TRADING_POST) {
       sR.queueRip(planet, centerW, radiusW);
     } else if (planetType === PlanetType.SILVER_BANK) {
@@ -259,50 +246,10 @@ export default class PlanetRenderManager {
     }
   }
 
-  private queueSilverMine(planet: Planet, centerW: WorldCoords, radiusW: number) {
-    const {
-      white,
-      belt: { silver },
-    } = engineConsts.colors;
-    const { beltRenderer, mineRenderer } = this.renderer;
-
-    mineRenderer.queueMine(planet, centerW, radiusW);
-    const level = planet.planetLevel;
-
-    const now = EngineUtils.getNow() * 0.3;
-
-    const queue = (color: RGBVec, idx: number, angle: number) => {
-      beltRenderer.queueBeltAtIdx(planet, centerW, radiusW, color, idx, angle);
-    };
-
-    if (level >= 1) queue(white, 0, now * 0.5);
-    if (level >= 3) queue(white, 0, -now * 0.5);
-    if (level >= 5) queue(white, 0, -now * 0.3);
-    if (level >= 7) queue(white, 0, now * 0.3);
-    if (level === PlanetLevel.MAX) {
-      queue(silver, 2, 0);
-    }
-  }
-
-  private queueBlackDomain(
-    planet: Planet,
-    activeBlackDomain: Artifact,
-    center: WorldCoords,
-    radius: number,
-    alpha = 255
-  ) {
-    const { blackDomainRenderer: bR, spriteRenderer: sR } = this.renderer;
+  private queueBlackDomain(planet: Planet, center: WorldCoords, radius: number) {
+    const { blackDomainRenderer: bR } = this.renderer;
 
     bR.queueBlackDomain(planet, center, radius);
-    sR.queueArtifactWorld(
-      activeBlackDomain,
-      center,
-      0.8 * radius,
-      alpha,
-      undefined,
-      undefined,
-      EngineUtils.getNow()
-    );
   }
 
   private queueAsteroids(planet: Planet, center: WorldCoords, radius: number) {

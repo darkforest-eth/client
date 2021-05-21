@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { useState, useEffect } from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { SubmittedTx, Planet, ArtifactId, Artifact } from '@darkforest_eth/types';
+import { SubmittedTx, Planet, ArtifactId, Artifact, WorldCoords } from '@darkforest_eth/types';
 import { artifactName } from '../../Backend/Procedural/ArtifactProcgen';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { ExploredChunkData } from '../../_types/global/GlobalTypes';
@@ -142,6 +142,10 @@ export const Gold = styled.span`
   color: ${dfstyles.colors.dfyellow};
 `;
 
+export const Colored = styled.span<{ color: string }>`
+  color: ${({ color }) => color};
+`;
+
 export const Blue = styled.span`
   color: ${dfstyles.colors.dfblue};
 `;
@@ -251,3 +255,13 @@ export function CenterChunkLink({
 export function FAQ04Link({ children }: { children: React.ReactNode }) {
   return <a href={'https://blog.zkga.me/df-04-faq'}>{children} </a>;
 }
+
+export const LongDash = () => (
+  <span style={{ transform: 'scale(1.5, 1)', display: 'inline-block' }}>-</span>
+);
+
+export const Coords = ({ coords: { x, y } }: { coords: WorldCoords }) => (
+  <>
+    ({x}, {y})
+  </>
+);

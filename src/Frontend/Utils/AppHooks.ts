@@ -1,11 +1,11 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { EthAddress, Planet, ArtifactId, Artifact } from '@darkforest_eth/types';
 import { createDefinedContext } from './createDefinedContext';
 import { useKeyPressed, useWrappedEmitter } from './EmitterHooks';
 import { ctrlDown$, ctrlUp$ } from './KeyEmitters';
-import { ContextMenuType } from '../Components/ContextMenu';
+import { getActivatedArtifact, isActivated } from '../../Backend/GameLogic/ArtifactUtils';
 
 export const { useDefinedContext: useUIManager, provider: UIManagerProvider } =
   createDefinedContext<GameUIManager>();
@@ -31,6 +31,14 @@ export function useSelectedPlanet(uiManager: GameUIManager): Wrapper<Planet | un
   return useWrappedEmitter<Planet>(uiManager.selectedPlanet$, undefined);
 }
 
+/**
+ * Create a subscription to the currently hovering planet.
+ * @param uiManager instance of GameUIManager
+ */
+export function useHoverPlanet(uiManager: GameUIManager): Wrapper<Planet | undefined> {
+  return useWrappedEmitter<Planet>(uiManager.hoverPlanet$, undefined);
+}
+
 export function useMyArtifacts(
   uiManager: GameUIManager
 ): Wrapper<Map<ArtifactId, Artifact> | undefined> {
@@ -38,6 +46,37 @@ export function useMyArtifacts(
     uiManager.myArtifacts$,
     uiManager.getMyArtifactMap()
   );
+}
+
+// note that this is going to throw an error if the pointer to `artifacts` changes but not to `planet`
+export function usePlanetArtifacts(
+  planet: Wrapper<Planet | undefined>,
+  uiManager: GameUIManager
+): Artifact[] {
+  const artifacts = useMemo(
+    () => (planet.value ? uiManager.getArtifactsWithIds(planet.value.heldArtifactIds) : []),
+    [planet, uiManager]
+  );
+
+  return artifacts;
+}
+
+export function usePlanetInactiveArtifacts(
+  planet: Wrapper<Planet | undefined>,
+  uiManager: GameUIManager
+): Artifact[] {
+  const artifacts = usePlanetArtifacts(planet, uiManager);
+  const filtered = useMemo(() => artifacts.filter((a) => !isActivated(a)), [artifacts]);
+
+  return filtered;
+}
+
+export function useActiveArtifact(
+  planet: Wrapper<Planet | undefined>,
+  uiManager: GameUIManager
+): Artifact | undefined {
+  const artifacts = usePlanetArtifacts(planet, uiManager);
+  return getActivatedArtifact(artifacts);
 }
 
 /**
@@ -51,20 +90,4 @@ export function useSelectedArtifact(uiManager: GameUIManager): Wrapper<Artifact 
 /** Return a bool that indicates if the control key is pressed. */
 export function useControlDown(): boolean {
   return useKeyPressed(ctrlDown$, ctrlUp$);
-}
-
-// this is only an OK abstraction but it's fine while our context menu is simple
-/**
- * Calculate current context menu from the current UI state
- * @param selectedPlanet the currently selected planet
- */
-export function useContextMenu(selectedPlanet: Planet | undefined): ContextMenuType {
-  const [menu, setMenu] = useState<ContextMenuType>(ContextMenuType.None);
-
-  useEffect(() => {
-    if (!selectedPlanet) setMenu(ContextMenuType.None);
-    else setMenu(ContextMenuType.Planet);
-  }, [selectedPlanet]);
-
-  return menu;
 }

@@ -16,8 +16,8 @@ const HelpWrapper = styled.div`
     margin-top: 0.5em;
     &.title {
       color: ${dfstyles.colors.text};
-      margin: 0.75em 0 0.5em 0;
       text-decoration: underline;
+      font-size: 1.5em;
     }
   }
   & ul {
@@ -40,31 +40,12 @@ const BlueBG = styled.span`
   background: ${dfstyles.colors.dfblue};
   color: ${dfstyles.colors.text};
 `;
+
 export function HelpPane({ hook }: { hook: ModalHook }) {
   return (
     <ModalPane hook={hook} title='Help' name={ModalName.Help}>
       <HelpWrapper>
-        <p className='title'>Plugins Contest</p>
-        <p>
-          Thanks so much for playing in Dark Forest v0.5! We've launched a plugins contest, where
-          you'll be able to win ultra-rare Mythic Artifacts and hopefully have a good time. For more
-          information, please visit <a href='https://blog.zkga.me/v05-plugins-contest'>the blog</a>.
-        </p>
-        <p>
-          For examples of plugins, please view the{' '}
-          <a href='http://plugins.zkga.me'>community plugins showcase</a>.
-        </p>
-
-        <p className='title'>Tutorial</p>
-        <p>
-          <a onClick={() => TutorialManager.getInstance().reset()}>Reset Tutorial</a>
-        </p>
-        <p className='title'>FAQ and Troubleshooting</p>
-        <p>
-          <a onClick={() => window.open('https://blog.zkga.me/df-05-faq')}>FAQ</a>
-        </p>
-        <p></p>
-        <p className='title'>Welcome to Dark Forest v0.5!</p>
+        <p className='title'>Welcome to Dark Forest v0.6.0!</p>
         <p>
           This window gives additional information about the game. When you are done reading, click
           the <White>X</White> in the upper-right corner to close this window.
@@ -101,10 +82,19 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
         </p>
         <p className='title'>Prizes and Scoring</p>
         <p>
-          A snapshot of scores will be taken on 01/08/2021. At that time, the top 15 highest-scoring
-          players will be awarded prizes from a pool of 1024 DAI. Your score is determined by the
-          value of your largest 10 planets, plus the silver you've produced and spent during the
+          A snapshot of scores will be taken on <White>June 6, 2021</White>. At that time, the top
+          15 highest-scoring players will be awarded prizes from a pool 63 prize planets. Your score
+          is determined by the total amount of <White>Silver</White> you have withdrawn from the
+          universe. You can see the current rankings by scrolling down on the landing page of the
           game.
+        </p>
+
+        <p className='title'>Some Links</p>
+        <p>
+          <a onClick={() => TutorialManager.getInstance().reset()}>Reset Tutorial</a>
+        </p>
+        <p>
+          <a onClick={() => window.open('https://blog.zkga.me/df-05-faq')}>FAQ</a>
         </p>
       </HelpWrapper>
     </ModalPane>

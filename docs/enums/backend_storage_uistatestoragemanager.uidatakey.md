@@ -15,9 +15,9 @@
 - [foundSilverBank](backend_storage_uistatestoragemanager.uidatakey.md#foundsilverbank)
 - [foundSpace](backend_storage_uistatestoragemanager.uidatakey.md#foundspace)
 - [foundTradingPost](backend_storage_uistatestoragemanager.uidatakey.md#foundtradingpost)
+- [gasFeeGwei](backend_storage_uistatestoragemanager.uidatakey.md#gasfeegwei)
 - [hasAcceptedPluginRisk](backend_storage_uistatestoragemanager.uidatakey.md#hasacceptedpluginrisk)
 - [hasAddedCanvasPlugin](backend_storage_uistatestoragemanager.uidatakey.md#hasaddedcanvasplugin)
-- [hasAddedDefaultPlugins](backend_storage_uistatestoragemanager.uidatakey.md#hasaddeddefaultplugins)
 - [highPerf](backend_storage_uistatestoragemanager.uidatakey.md#highperf)
 - [newPlayer](backend_storage_uistatestoragemanager.uidatakey.md#newplayer)
 - [notifMove](backend_storage_uistatestoragemanager.uidatakey.md#notifmove)
@@ -83,6 +83,12 @@
 
 ---
 
+### gasFeeGwei
+
+• **gasFeeGwei**: = "gasFeeGwei"
+
+---
+
 ### hasAcceptedPluginRisk
 
 • **hasAcceptedPluginRisk**: = "hasAcceptedPluginRisk"
@@ -98,16 +104,6 @@ plugins from the internet is dangerous?
 
 Same as above, except for a plugin that shows off a brand new
 plugin capability - drawing on top of the game
-
----
-
-### hasAddedDefaultPlugins
-
-• **hasAddedDefaultPlugins**: = "hasAddedReadme"
-
-Whether or not `PluginManager` has added the default plugins to
-this user's plugin library. We need to keep track of this so
-that we only do it the first time that the plugins UI is opened.
 
 ---
 

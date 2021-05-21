@@ -84,6 +84,7 @@ import type {
   MoveSnarkContractCallArgs,
   BiomebaseSnarkContractCallArgs,
 } from '@darkforest_eth/snarks';
+import UIStateStorageManager from '../Storage/UIStateStorageManager';
 
 /**
  * Roughly contains methods that map 1:1 with functions that live
@@ -105,26 +106,28 @@ class ContractsAPI extends EventEmitter {
     coreContract: DarkForestCore,
     gettersContract: DarkForestGetters,
     gptCreditContract: DarkForestGPTCredit,
+    uiStateStorageManager: UIStateStorageManager,
     nonce: number
   ) {
     super();
     this.coreContract = coreContract;
     this.gettersContract = gettersContract;
     this.gptCreditContract = gptCreditContract;
-    this.txRequestExecutor = new TxExecutor(ethConnection, nonce);
+    this.txRequestExecutor = new TxExecutor(ethConnection, uiStateStorageManager, nonce);
     this.terminal = terminal;
     this.ethConnection = ethConnection;
   }
 
   static async create(
     ethConnection: EthConnection,
+    uiStateStorageManager: UIStateStorageManager,
     terminal: React.MutableRefObject<TerminalHandle | undefined>
   ): Promise<ContractsAPI> {
     let nonce = 0;
     try {
       nonce = await ethConnection.getNonce();
     } catch (e) {
-      console.log('WARNING: creating TxExecutor with no account/signer');
+      console.error('WARNING: creating TxExecutor with no account/signer');
     }
 
     const contractsAPI: ContractsAPI = new ContractsAPI(
@@ -133,6 +136,7 @@ class ContractsAPI extends EventEmitter {
       await ethConnection.loadCoreContract(),
       await ethConnection.loadGettersContract(),
       await ethConnection.loadGPTCreditContract(),
+      uiStateStorageManager,
       nonce
     );
 
@@ -660,11 +664,7 @@ class ContractsAPI extends EventEmitter {
       EthTxType.MOVE,
       actionId,
       this.coreContract,
-      args,
-      {
-        gasPrice: 1000000000,
-        gasLimit: 2000000,
-      }
+      args
     );
 
     const forcesFloat = parseFloat(args[ZKArgIdx.DATA][MoveArgIdxs.SHIPS_SENT]);
@@ -866,7 +866,6 @@ class ContractsAPI extends EventEmitter {
   }
 
   public async getPlayers(): Promise<Map<string, Player>> {
-    console.log('getting players');
     const nPlayers: number = (
       await this.makeCall<EthersBN>(this.coreContract.getNPlayers)
     ).toNumber();

@@ -159,7 +159,7 @@ function OnboardKeys({ advance }: { advance: () => void }) {
       <div>
         <span></span>
         <Btn onClick={advance} className='btn'>
-          Next
+          Proceed
         </Btn>
       </div>
     </StyledOnboardingContent>
@@ -171,13 +171,13 @@ function OnboardFinished({ advance }: { advance: () => void }) {
     <StyledOnboardingContent>
       <p>That's all! You're now ready to play the game!</p>
       <p>
-        We invite you to log into the universe. Click <White>NEXT</White> to join the world of{' '}
+        We invite you to log into the universe. Click <White>Proceed</White> to join the world of{' '}
         <White>DARK FOREST...</White>
       </p>
       <div>
         <span></span>
         <Btn onClick={advance} className='btn'>
-          Enter
+          Proceed
         </Btn>
       </div>
     </StyledOnboardingContent>

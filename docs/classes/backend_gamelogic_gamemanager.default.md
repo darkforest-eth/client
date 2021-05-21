@@ -38,7 +38,7 @@
 - [players](backend_gamelogic_gamemanager.default.md#players)
 - [snarkHelper](backend_gamelogic_gamemanager.default.md#snarkhelper)
 - [terminal](backend_gamelogic_gamemanager.default.md#terminal)
-- [tokenMintEndTimestamp](backend_gamelogic_gamemanager.default.md#tokenmintendtimestamp)
+- [uiStateStorageManager](backend_gamelogic_gamemanager.default.md#uistatestoragemanager)
 - [useMockHash](backend_gamelogic_gamemanager.default.md#usemockhash)
 - [worldRadius](backend_gamelogic_gamemanager.default.md#worldradius)
 
@@ -125,6 +125,7 @@
 - [getTemperature](backend_gamelogic_gamemanager.default.md#gettemperature)
 - [getTimeForMove](backend_gamelogic_gamemanager.default.md#gettimeformove)
 - [getTwitter](backend_gamelogic_gamemanager.default.md#gettwitter)
+- [getUIDataItem](backend_gamelogic_gamemanager.default.md#getuidataitem)
 - [getUIEventEmitter](backend_gamelogic_gamemanager.default.md#getuieventemitter)
 - [getUnconfirmedMoves](backend_gamelogic_gamemanager.default.md#getunconfirmedmoves)
 - [getUnconfirmedUpgrades](backend_gamelogic_gamemanager.default.md#getunconfirmedupgrades)
@@ -160,6 +161,7 @@
 - [setMiningPattern](backend_gamelogic_gamemanager.default.md#setminingpattern)
 - [setRadius](backend_gamelogic_gamemanager.default.md#setradius)
 - [setSnarkCacheSize](backend_gamelogic_gamemanager.default.md#setsnarkcachesize)
+- [setUIDataItem](backend_gamelogic_gamemanager.default.md#setuidataitem)
 - [spaceTypeFromPerlin](backend_gamelogic_gamemanager.default.md#spacetypefromperlin)
 - [spaceTypePerlin](backend_gamelogic_gamemanager.default.md#spacetypeperlin)
 - [startConversation](backend_gamelogic_gamemanager.default.md#startconversation)
@@ -177,7 +179,7 @@
 
 ### constructor
 
-\+ `Private` **new default**(`terminal`: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>, `account`: _undefined_ \| EthAddress, `balance`: _number_, `players`: _Map_<string, Player\>, `touchedPlanets`: _Map_<LocationId, Planet\>, `allTouchedPlanetIds`: _Set_<LocationId\>, `revealedCoords`: _Map_<LocationId, WorldCoords\>, `worldRadius`: _number_, `unprocessedArrivals`: _Map_<VoyageId, QueuedArrival\>, `unprocessedPlanetArrivalIds`: _Map_<LocationId, VoyageId[]\>, `contractsAPI`: [_default_](backend_gamelogic_contractsapi.default.md), `contractConstants`: [_ContractConstants_](../interfaces/_types_darkforest_api_contractsapitypes.contractconstants.md), `persistentChunkStore`: [_default_](backend_storage_persistentchunkstore.default.md), `snarkHelper`: [_default_](backend_utils_snarkargshelper.default.md), `homeLocation`: _undefined_ \| WorldLocation, `useMockHash`: _boolean_, `artifacts`: _Map_<ArtifactId, Artifact\>, `ethConnection`: [_default_](backend_network_ethconnection.default.md), `tokenMintEndTimestamp`: _number_, `gptCreditPriceEther`: _number_, `myGPTCredits`: _number_): [_default_](backend_gamelogic_gamemanager.default.md)
+\+ `Private` **new default**(`terminal`: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>, `account`: _undefined_ \| EthAddress, `balance`: _number_, `players`: _Map_<string, Player\>, `touchedPlanets`: _Map_<LocationId, Planet\>, `allTouchedPlanetIds`: _Set_<LocationId\>, `revealedCoords`: _Map_<LocationId, WorldCoords\>, `worldRadius`: _number_, `unprocessedArrivals`: _Map_<VoyageId, QueuedArrival\>, `unprocessedPlanetArrivalIds`: _Map_<LocationId, VoyageId[]\>, `contractsAPI`: [_default_](backend_gamelogic_contractsapi.default.md), `contractConstants`: [_ContractConstants_](../interfaces/_types_darkforest_api_contractsapitypes.contractconstants.md), `persistentChunkStore`: [_default_](backend_storage_persistentchunkstore.default.md), `snarkHelper`: [_default_](backend_utils_snarkargshelper.default.md), `homeLocation`: _undefined_ \| WorldLocation, `useMockHash`: _boolean_, `artifacts`: _Map_<ArtifactId, Artifact\>, `ethConnection`: [_default_](backend_network_ethconnection.default.md), `gptCreditPriceEther`: _number_, `myGPTCredits`: _number_, `uiStateStorageManager`: [_default_](backend_storage_uistatestoragemanager.default.md)): [_default_](backend_gamelogic_gamemanager.default.md)
 
 #### Parameters
 
@@ -201,9 +203,9 @@
 | `useMockHash`                 | _boolean_                                                                                                     |
 | `artifacts`                   | _Map_<ArtifactId, Artifact\>                                                                                  |
 | `ethConnection`               | [_default_](backend_network_ethconnection.default.md)                                                         |
-| `tokenMintEndTimestamp`       | _number_                                                                                                      |
 | `gptCreditPriceEther`         | _number_                                                                                                      |
 | `myGPTCredits`                | _number_                                                                                                      |
+| `uiStateStorageManager`       | [_default_](backend_storage_uistatestoragemanager.default.md)                                                 |
 
 **Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
 
@@ -355,9 +357,9 @@ Overrides: EventEmitter.constructor
 
 ---
 
-### tokenMintEndTimestamp
+### uiStateStorageManager
 
-• `Private` `Readonly` **tokenMintEndTimestamp**: _number_
+• `Private` `Readonly` **uiStateStorageManager**: [_default_](backend_storage_uistatestoragemanager.default.md)
 
 ---
 
@@ -1374,6 +1376,20 @@ with Dark Forest.
 
 ---
 
+### getUIDataItem
+
+▸ **getUIDataItem**(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md)): _number_ \| _boolean_
+
+#### Parameters
+
+| Name  | Type                                                                       |
+| :---- | :------------------------------------------------------------------------- |
+| `key` | [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md) |
+
+**Returns:** _number_ \| _boolean_
+
+---
+
 ### getUIEventEmitter
 
 ▸ **getUIEventEmitter**(): [_default_](frontend_utils_uiemitter.default.md)
@@ -1833,6 +1849,21 @@ Changes the amount of move snark proofs that are cached.
 | Name   | Type     |
 | :----- | :------- |
 | `size` | _number_ |
+
+**Returns:** _void_
+
+---
+
+### setUIDataItem
+
+▸ **setUIDataItem**(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md), `value`: _number_ \| _boolean_): _void_
+
+#### Parameters
+
+| Name    | Type                                                                       |
+| :------ | :------------------------------------------------------------------------- |
+| `key`   | [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md) |
+| `value` | _number_ \| _boolean_                                                      |
 
 **Returns:** _void_
 

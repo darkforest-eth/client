@@ -55,7 +55,6 @@ export function PlanetScape({ planet }: { planet: Planet | undefined }) {
 
   // sync renderer to planet
   useEffect(() => {
-    console.log('planetscape is updating planet!', planet);
     renderer?.setPlanet(planet);
   }, [planet, renderer]);
 

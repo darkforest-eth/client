@@ -2,7 +2,6 @@ import React, { CSSProperties } from 'react';
 import styled from 'styled-components';
 
 const TableElement = styled.table`
-  height: 100%;
   overflow-y: scroll;
   scrollbar-width: initial;
 `;
@@ -10,11 +9,6 @@ const TableElement = styled.table`
 const ScrollableBody = styled.tbody`
   width: 100%;
   max-height: 400px;
-`;
-
-const FixedHeader = styled.thead`
-  position: sticky;
-  top: 0;
 `;
 
 const AlignmentOptions: { [key: string]: CSSProperties['textAlign'] } = {
@@ -47,7 +41,7 @@ export function Table<T>({
 }) {
   return (
     <TableElement>
-      <FixedHeader style={headerStyle}>
+      <thead style={headerStyle}>
         <tr>
           {headers.map((h: string, colIdx: number) => (
             <th
@@ -58,7 +52,7 @@ export function Table<T>({
             </th>
           ))}
         </tr>
-      </FixedHeader>
+      </thead>
 
       <ScrollableBody>
         {rows.map((row: T, rowIdx: number) => (

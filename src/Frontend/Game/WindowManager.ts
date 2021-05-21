@@ -46,6 +46,7 @@ export enum TooltipName {
   MiningTarget,
   HashesPerSec,
   CurrentMining,
+  HoverPlanet,
   SilverProd,
 
   // relative orders matter
@@ -80,7 +81,7 @@ export enum TooltipName {
   ModalYourArtifacts,
   ModalFindArtifact,
   ModalPlugins,
-  ModalDeposit,
+  ModalWithdrawSilver,
 }
 
 class WindowManager extends EventEmitter {
@@ -119,13 +120,8 @@ class WindowManager extends EventEmitter {
     return WindowManager.instance;
   }
 
-  pushTooltip(tooltip: TooltipName): void {
+  setTooltip(tooltip: TooltipName): void {
     this.currentTooltip = tooltip;
-    this.emit(WindowManagerEvent.TooltipUpdated, this.currentTooltip);
-  }
-
-  popTooltip(): void {
-    this.currentTooltip = TooltipName.None;
     this.emit(WindowManagerEvent.TooltipUpdated, this.currentTooltip);
   }
 

@@ -19,6 +19,7 @@
 - [ModalTwitterBroadcastIcon](frontend_views_modalicon.md#modaltwitterbroadcasticon)
 - [ModalTwitterVerifyIcon](frontend_views_modalicon.md#modaltwitterverifyicon)
 - [ModalUpgradeDetailsIcon](frontend_views_modalicon.md#modalupgradedetailsicon)
+- [ModalWithdrawIcon](frontend_views_modalicon.md#modalwithdrawicon)
 - [ModalYourArtifactsIcon](frontend_views_modalicon.md#modalyourartifactsicon)
 
 ## Functions
@@ -237,6 +238,21 @@
 ### ModalUpgradeDetailsIcon
 
 ▸ **ModalUpgradeDetailsIcon**(`__namedParameters`: { `hook`: [_ModalHook_](frontend_views_modalpane.md#modalhook) }): _Element_
+
+#### Parameters
+
+| Name                     | Type                                                 |
+| :----------------------- | :--------------------------------------------------- |
+| `__namedParameters`      | _object_                                             |
+| `__namedParameters.hook` | [_ModalHook_](frontend_views_modalpane.md#modalhook) |
+
+**Returns:** _Element_
+
+---
+
+### ModalWithdrawIcon
+
+▸ **ModalWithdrawIcon**(`__namedParameters`: { `hook`: [_ModalHook_](frontend_views_modalpane.md#modalhook) }): _Element_
 
 #### Parameters
 

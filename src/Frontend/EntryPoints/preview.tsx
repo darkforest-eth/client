@@ -26,7 +26,7 @@ const myPlanet = {
   spaceType: SpaceType.DEEP_SPACE,
 
   planetLevel: 6,
-  planetType: PlanetType.PLANET,
+  planetType: PlanetType.SILVER_MINE,
 
   biome: Biome.CORRUPTED,
   destroyed: false,
@@ -70,7 +70,12 @@ function PreviewPage() {
     <StyledPreviewPage>
       <div className='row'>
         {_.range(PlanetLevel.MIN, PlanetLevel.MAX + 1).map((level) => (
-          <Preview type={PlanetType.PLANET} biome={Biome.CORRUPTED} level={level} key={level} />
+          <Preview
+            type={PlanetType.SILVER_MINE}
+            biome={Biome.CORRUPTED}
+            level={level}
+            key={level}
+          />
         ))}
       </div>
     </StyledPreviewPage>

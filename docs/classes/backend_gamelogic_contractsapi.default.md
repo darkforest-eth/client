@@ -77,18 +77,19 @@ in the contract.
 
 ### constructor
 
-\+ `Private` **new default**(`ethConnection`: [_default_](backend_network_ethconnection.default.md), `terminal`: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>, `coreContract`: _DarkForestCore_, `gettersContract`: _DarkForestGetters_, `gptCreditContract`: _DarkForestGPTCredit_, `nonce`: _number_): [_default_](backend_gamelogic_contractsapi.default.md)
+\+ `Private` **new default**(`ethConnection`: [_default_](backend_network_ethconnection.default.md), `terminal`: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>, `coreContract`: _DarkForestCore_, `gettersContract`: _DarkForestGetters_, `gptCreditContract`: _DarkForestGPTCredit_, `uiStateStorageManager`: [_default_](backend_storage_uistatestoragemanager.default.md), `nonce`: _number_): [_default_](backend_gamelogic_contractsapi.default.md)
 
 #### Parameters
 
-| Name                | Type                                                                                                          |
-| :------------------ | :------------------------------------------------------------------------------------------------------------ |
-| `ethConnection`     | [_default_](backend_network_ethconnection.default.md)                                                         |
-| `terminal`          | _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\> |
-| `coreContract`      | _DarkForestCore_                                                                                              |
-| `gettersContract`   | _DarkForestGetters_                                                                                           |
-| `gptCreditContract` | _DarkForestGPTCredit_                                                                                         |
-| `nonce`             | _number_                                                                                                      |
+| Name                    | Type                                                                                                          |
+| :---------------------- | :------------------------------------------------------------------------------------------------------------ |
+| `ethConnection`         | [_default_](backend_network_ethconnection.default.md)                                                         |
+| `terminal`              | _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\> |
+| `coreContract`          | _DarkForestCore_                                                                                              |
+| `gettersContract`       | _DarkForestGetters_                                                                                           |
+| `gptCreditContract`     | _DarkForestGPTCredit_                                                                                         |
+| `uiStateStorageManager` | [_default_](backend_storage_uistatestoragemanager.default.md)                                                 |
+| `nonce`                 | _number_                                                                                                      |
 
 **Returns:** [_default_](backend_gamelogic_contractsapi.default.md)
 
@@ -696,13 +697,14 @@ Given an unconfirmed (but submitted) transaction, emits the appropriate
 
 ### create
 
-▸ `Static` **create**(`ethConnection`: [_default_](backend_network_ethconnection.default.md), `terminal`: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>): _Promise_<[_default_](backend_gamelogic_contractsapi.default.md)\>
+▸ `Static` **create**(`ethConnection`: [_default_](backend_network_ethconnection.default.md), `uiStateStorageManager`: [_default_](backend_storage_uistatestoragemanager.default.md), `terminal`: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>): _Promise_<[_default_](backend_gamelogic_contractsapi.default.md)\>
 
 #### Parameters
 
-| Name            | Type                                                                                                          |
-| :-------------- | :------------------------------------------------------------------------------------------------------------ |
-| `ethConnection` | [_default_](backend_network_ethconnection.default.md)                                                         |
-| `terminal`      | _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\> |
+| Name                    | Type                                                                                                          |
+| :---------------------- | :------------------------------------------------------------------------------------------------------------ |
+| `ethConnection`         | [_default_](backend_network_ethconnection.default.md)                                                         |
+| `uiStateStorageManager` | [_default_](backend_storage_uistatestoragemanager.default.md)                                                 |
+| `terminal`              | _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\> |
 
 **Returns:** _Promise_<[_default_](backend_gamelogic_contractsapi.default.md)\>

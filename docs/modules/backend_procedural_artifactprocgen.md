@@ -11,8 +11,8 @@
 
 ### Functions
 
+- [artifactBiomeAndName](backend_procedural_artifactprocgen.md#artifactbiomeandname)
 - [artifactName](backend_procedural_artifactprocgen.md#artifactname)
-- [artifactTitle](backend_procedural_artifactprocgen.md#artifacttitle)
 - [dateMintedAt](backend_procedural_artifactprocgen.md#datemintedat)
 - [mockArtifact](backend_procedural_artifactprocgen.md#mockartifact)
 - [mockArtifactWithRarity](backend_procedural_artifactprocgen.md#mockartifactwithrarity)
@@ -43,9 +43,9 @@
 
 ## Functions
 
-### artifactName
+### artifactBiomeAndName
 
-▸ `Const` **artifactName**(`artifact`: _undefined_ \| Artifact): _string_
+▸ `Const` **artifactBiomeAndName**(`artifact`: _undefined_ \| Artifact): _string_
 
 #### Parameters
 
@@ -57,9 +57,9 @@
 
 ---
 
-### artifactTitle
+### artifactName
 
-▸ `Const` **artifactTitle**(`artifact`: _undefined_ \| Artifact): _string_
+▸ `Const` **artifactName**(`artifact`: _undefined_ \| Artifact): _string_
 
 #### Parameters
 

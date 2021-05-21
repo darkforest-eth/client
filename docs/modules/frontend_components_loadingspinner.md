@@ -10,7 +10,7 @@
 
 ### LoadingSpinner
 
-▸ **LoadingSpinner**(`__namedParameters`: { `initialText?`: _string_ }): _Element_
+▸ **LoadingSpinner**(`__namedParameters`: { `initialText?`: _string_ ; `rate?`: _number_ }): _Element_
 
 #### Parameters
 
@@ -18,5 +18,6 @@
 | :------------------------------- | :------- |
 | `__namedParameters`              | _object_ |
 | `__namedParameters.initialText?` | _string_ |
+| `__namedParameters.rate?`        | _number_ |
 
 **Returns:** _Element_

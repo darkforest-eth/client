@@ -68,7 +68,14 @@ export function PaidArtifactConversationPane({
   }
 
   return (
-    <ModalPane title={title} hook={hook} noPadding>
+    <ModalPane
+      title={title}
+      hook={hook}
+      noPadding
+      backgroundColor={dfstyles.colors.dfyellow}
+      titlebarColor={dfstyles.colors.dfyellow}
+      borderColor={'#918d0c'}
+    >
       <ContentContainer>
         {remainingQuestionsSection}
         <TerminalContainer>

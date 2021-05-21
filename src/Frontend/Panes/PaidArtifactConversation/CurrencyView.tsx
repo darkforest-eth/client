@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Btn } from '../../Components/Btn';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Green, Red, Sub } from '../../Components/Text';
+import dfstyles from '../../Styles/dfstyles';
 import { useUIManager } from '../../Utils/AppHooks';
 import { useEmitterValue } from '../../Utils/EmitterHooks';
 
@@ -26,7 +27,7 @@ export function CurrencyView() {
       <span>
         Credit Price: <Green>{currentCreditPrice + ' '}</Green>xDai each
       </span>
-      <Btn onClick={buyMore} disabled={isBuyingCredits}>
+      <Btn color={dfstyles.colors.dfyellow} onClick={buyMore} disabled={isBuyingCredits}>
         {isBuyingCredits ? (
           <LoadingSpinner initialText='buying 5 credits' />
         ) : (

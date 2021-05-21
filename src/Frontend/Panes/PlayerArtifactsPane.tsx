@@ -7,7 +7,7 @@ import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { artifactName } from '../../Backend/Procedural/ArtifactProcgen';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { ArtifactImage } from '../Components/ArtifactImage';
-import { Spacer } from '../Components/CoreUI';
+import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
 import { Sub } from '../Components/Text';
 import { useUIManager } from '../Utils/AppHooks';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
@@ -89,7 +89,7 @@ export function PlayerArtifactsPane({
     };
   }, [setVisible]);
 
-  const headers = ['', 'Name', 'Located On', 'Type', 'Rarity'];
+  const headers = ['', 'Name', 'Location', 'Type', 'Rarity'];
   const alignments: Array<'r' | 'c' | 'l'> = ['r', 'l', 'r', 'r', 'r'];
   const columns = [
     (artifact: Artifact) => (
@@ -116,7 +116,7 @@ export function PlayerArtifactsPane({
               <PlanetName>{planetOnName}</PlanetName>
             </PlanetLink>
           ) : (
-            <span>n / a</span>
+            <Sub>inventory</Sub>
           )}
         </span>
       );
@@ -137,14 +137,16 @@ export function PlayerArtifactsPane({
     (left: Artifact, right: Artifact) => left.rarity - right.rarity,
   ];
 
-  return (
-    <ModalPane
-      title={'Your Artifacts'}
-      hook={hook}
-      name={ModalName.YourArtifacts}
-      width='unset'
-      helpContent={HelpContent}
-    >
+  let content = undefined;
+
+  if (artifacts.length === 0) {
+    content = (
+      <CenterBackgroundSubtext width='300px' height='100px'>
+        You Don't Have <br /> Any Artifacts
+      </CenterBackgroundSubtext>
+    );
+  } else {
+    content = (
       <ArtifactsBody>
         <SortableTable
           rows={artifacts}
@@ -154,6 +156,18 @@ export function PlayerArtifactsPane({
           alignments={alignments}
         />
       </ArtifactsBody>
+    );
+  }
+
+  return (
+    <ModalPane
+      title={'Your Artifacts'}
+      hook={hook}
+      name={ModalName.YourArtifacts}
+      width='unset'
+      helpContent={HelpContent}
+    >
+      {content}
     </ModalPane>
   );
 }

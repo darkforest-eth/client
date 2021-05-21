@@ -25,13 +25,6 @@ export enum UIDataKey {
   shouldFling = 'shouldFling',
 
   /**
-   * Whether or not `PluginManager` has added the default plugins to
-   * this user's plugin library. We need to keep track of this so
-   * that we only do it the first time that the plugins UI is opened.
-   */
-  hasAddedDefaultPlugins = 'hasAddedReadme',
-
-  /**
    * Same as above, except for a plugin that shows off a brand new
    * plugin capability - drawing on top of the game
    */
@@ -42,9 +35,9 @@ export enum UIDataKey {
    * plugins from the internet is dangerous?
    */
   hasAcceptedPluginRisk = 'hasAcceptedPluginRisk',
-}
 
-export type UIDataValue = boolean;
+  gasFeeGwei = 'gasFeeGwei',
+}
 
 export type UIData = {
   sidebarEnabled: boolean;
@@ -70,6 +63,7 @@ export type UIData = {
   hasAddedCanvasPlugin: boolean;
   hasAcceptedPluginRisk: boolean;
   shouldFling: boolean;
+  gasFeeGwei: number;
 };
 
 export const defaultUserData: UIData = {
@@ -96,9 +90,11 @@ export const defaultUserData: UIData = {
   hasAddedCanvasPlugin: false,
   hasAcceptedPluginRisk: false,
   shouldFling: false,
+
+  gasFeeGwei: 1,
 };
 
-export function useStoredUIState<T extends UIDataValue>(
+export function useStoredUIState<T extends number | boolean>(
   key: UIDataKey,
   gameUIManager: GameUIManager | undefined
 ): [T, Dispatch<SetStateAction<T>>] {
@@ -160,15 +156,17 @@ class UIStateStorageManager {
     }
   }
 
-  setUIDataItem(key: UIDataKey, value: UIDataValue): void {
-    const obj = this.load();
+  setUIDataItem<T>(key: UIDataKey, value: T): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const obj = this.load() as any;
     obj[key] = value;
     this.save(obj);
   }
 
-  getUIDataItem(key: UIDataKey): UIDataValue {
+  getUIDataItem<T>(key: UIDataKey): T {
     const val = this.load()[key];
-    return val;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return val as any as T;
   }
 }
 

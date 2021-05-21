@@ -30,9 +30,8 @@
 - [getCursorState](frontend_game_windowmanager.default.md#getcursorstate)
 - [getIndex](frontend_game_windowmanager.default.md#getindex)
 - [getTooltip](frontend_game_windowmanager.default.md#gettooltip)
-- [popTooltip](frontend_game_windowmanager.default.md#poptooltip)
-- [pushTooltip](frontend_game_windowmanager.default.md#pushtooltip)
 - [setCursorState](frontend_game_windowmanager.default.md#setcursorstate)
+- [setTooltip](frontend_game_windowmanager.default.md#settooltip)
 - [getInstance](frontend_game_windowmanager.default.md#getinstance)
 
 ## Constructors
@@ -129,28 +128,6 @@ Overrides: EventEmitter.constructor
 
 ---
 
-### popTooltip
-
-▸ **popTooltip**(): _void_
-
-**Returns:** _void_
-
----
-
-### pushTooltip
-
-▸ **pushTooltip**(`tooltip`: [_TooltipName_](../enums/frontend_game_windowmanager.tooltipname.md)): _void_
-
-#### Parameters
-
-| Name      | Type                                                                 |
-| :-------- | :------------------------------------------------------------------- |
-| `tooltip` | [_TooltipName_](../enums/frontend_game_windowmanager.tooltipname.md) |
-
-**Returns:** _void_
-
----
-
 ### setCursorState
 
 ▸ **setCursorState**(`newstate`: [_CursorState_](../enums/frontend_game_windowmanager.cursorstate.md)): _void_
@@ -160,6 +137,20 @@ Overrides: EventEmitter.constructor
 | Name       | Type                                                                 |
 | :--------- | :------------------------------------------------------------------- |
 | `newstate` | [_CursorState_](../enums/frontend_game_windowmanager.cursorstate.md) |
+
+**Returns:** _void_
+
+---
+
+### setTooltip
+
+▸ **setTooltip**(`tooltip`: [_TooltipName_](../enums/frontend_game_windowmanager.tooltipname.md)): _void_
+
+#### Parameters
+
+| Name      | Type                                                                 |
+| :-------- | :------------------------------------------------------------------- |
+| `tooltip` | [_TooltipName_](../enums/frontend_game_windowmanager.tooltipname.md) |
 
 **Returns:** _void_
 

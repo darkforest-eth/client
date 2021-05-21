@@ -44,6 +44,7 @@ export default class ProgramUtils {
     if (success) return program;
 
     // log errors
+    console.error('error creating program!');
     console.log(gl.getProgramInfoLog(program));
     gl.deleteProgram(program);
     return null;

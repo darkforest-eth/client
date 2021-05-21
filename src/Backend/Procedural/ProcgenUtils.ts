@@ -26,6 +26,7 @@ import { HatType, hatTypeFromHash } from '../../Frontend/Utils/Hats';
 import tracery from './tracery';
 import { baseEngModifiers } from './tracery-modifiers';
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
+import { HAT_SIZES } from '../../Frontend/Utils/constants';
 
 export type PixelCoords = {
   x: number;
@@ -41,7 +42,7 @@ export class ProcgenUtils {
   private static blurbsById = new Map<LocationId, string>();
   private static blurbs2ById = new Map<LocationId, string>();
   private static cosmeticByLocId = new Map<LocationId, PlanetCosmeticInfo>();
-  private static baseByBiome: HSLVec[] = [
+  private static baseByBiome: Record<Biome, HSLVec> = [
     [0, 0, 0], // UNKNOWN
     [213, 100, 50], // OCEAN
     [135, 96, 63], // FOREST
@@ -54,7 +55,7 @@ export class ProcgenUtils {
     [19, 100, 50], // LAVA
     [280, 100, 54], // CORRUPTED
   ];
-  private static oceanByBiome: HSLVec[] = [
+  private static oceanByBiome: Record<Biome, HSLVec> = [
     [0, 0, 0], // UNKNOWN
     [213, 89, 35], // OCEAN
     [193, 96, 43], // FOREST
@@ -67,6 +68,20 @@ export class ProcgenUtils {
     [12, 92, 39], // LAVA
     [308, 90, 63], // CORRUPTED
   ];
+
+  private static strByBiome = new Map<Biome, string>();
+  public static getBiomeRgbStr(biome: Biome): string {
+    if (biome === Biome.WASTELAND) return '#888';
+
+    const s = this.strByBiome.get(biome);
+    if (s) return s;
+
+    const str = this.rgbStr(this.hslToRgb(this.baseByBiome[biome]));
+    this.strByBiome.set(biome, str);
+
+    return str;
+  }
+
   public static grayColors: PlanetCosmeticInfo = {
     baseHue: 0,
     baseStr: '#888',
@@ -494,53 +509,11 @@ export class ProcgenUtils {
     return blurb;
   }
 
-  public static getPlanetQuote(planet: Planet | undefined): QuoteData {
-    if (!planet)
-      return {
-        quote: "What can I say? I just don't know.",
-        author: 'Everyone, probably',
-      };
+  public static getHatSizeName(planet: Planet) {
+    const maxHat = HAT_SIZES.length;
+    const lv = planet.hatLevel;
 
-    const myRank = getPlanetRank(planet);
-
-    if (myRank === 0) {
-      return {
-        quote:
-          'A beginning is the time for taking the most delicate care that the balances are correct.',
-        author: 'Frank Herbert',
-      };
-    } else if (myRank === 1) {
-      return {
-        quote: 'All civilizations become either spacefaring or extinct.',
-        author: 'Carl Sagan',
-      };
-    } else if (myRank === 2) {
-      return {
-        quote: 'Weakness and ignorance are not barriers to survival, but arrogance is.',
-        author: 'Liu Cixin',
-      };
-    } else if (myRank === 3) {
-      return {
-        quote: "Nature can't evolve a species that hasn't the will to survive.",
-        author: 'Orson Scott Card',
-      };
-    } else if (myRank === 4) {
-      return {
-        quote:
-          'Man cannot discover new oceans unless he has the courage to lose sight of the shore.',
-        author: 'Andre Gide',
-      };
-    } else if (myRank === 5) {
-      return {
-        quote:
-          'Each moment and everywhere, civilizations rise and fall, much as the stars are born and die. Time devours all.',
-        author: 'Ken Liu',
-      };
-    }
-
-    return {
-      quote: '99% of quotes on the internet are made up on the spot.',
-      author: 'Abraham Lincoln',
-    };
+    if (lv < maxHat) return HAT_SIZES[lv];
+    else return 'H' + 'A'.repeat(4 * 2 ** (lv - maxHat + 1)) + 'T';
   }
 }

@@ -31,7 +31,6 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 - [queuePlanetSilverText](frontend_renderers_gamerenderer_entities_planetrendermanager.default.md#queueplanetsilvertext)
 - [queuePlanets](frontend_renderers_gamerenderer_entities_planetrendermanager.default.md#queueplanets)
 - [queueRings](frontend_renderers_gamerenderer_entities_planetrendermanager.default.md#queuerings)
-- [queueSilverMine](frontend_renderers_gamerenderer_entities_planetrendermanager.default.md#queuesilvermine)
 
 ## Constructors
 
@@ -103,19 +102,18 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 
 ### queueArtifactsAroundPlanet
 
-▸ `Private` **queueArtifactsAroundPlanet**(`planet`: Planet, `artifacts`: Artifact[], `activeBlackDomain`: _undefined_ \| Artifact, `centerW`: WorldCoords, `radiusW`: _number_, `now`: _number_, `alpha`: _number_): _void_
+▸ `Private` **queueArtifactsAroundPlanet**(`planet`: Planet, `artifacts`: Artifact[], `centerW`: WorldCoords, `radiusW`: _number_, `now`: _number_, `alpha`: _number_): _void_
 
 #### Parameters
 
-| Name                | Type                    |
-| :------------------ | :---------------------- |
-| `planet`            | Planet                  |
-| `artifacts`         | Artifact[]              |
-| `activeBlackDomain` | _undefined_ \| Artifact |
-| `centerW`           | WorldCoords             |
-| `radiusW`           | _number_                |
-| `now`               | _number_                |
-| `alpha`             | _number_                |
+| Name        | Type        |
+| :---------- | :---------- |
+| `planet`    | Planet      |
+| `artifacts` | Artifact[]  |
+| `centerW`   | WorldCoords |
+| `radiusW`   | _number_    |
+| `now`       | _number_    |
+| `alpha`     | _number_    |
 
 **Returns:** _void_
 
@@ -139,17 +137,15 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 
 ### queueBlackDomain
 
-▸ `Private` **queueBlackDomain**(`planet`: Planet, `activeBlackDomain`: Artifact, `center`: WorldCoords, `radius`: _number_, `alpha?`: _number_): _void_
+▸ `Private` **queueBlackDomain**(`planet`: Planet, `center`: WorldCoords, `radius`: _number_): _void_
 
 #### Parameters
 
-| Name                | Type        | Default value |
-| :------------------ | :---------- | :------------ |
-| `planet`            | Planet      | -             |
-| `activeBlackDomain` | Artifact    | -             |
-| `center`            | WorldCoords | -             |
-| `radius`            | _number_    | -             |
-| `alpha`             | _number_    | 255           |
+| Name     | Type        |
+| :------- | :---------- |
+| `planet` | Planet      |
+| `center` | WorldCoords |
+| `radius` | _number_    |
 
 **Returns:** _void_
 
@@ -262,21 +258,5 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 | `planet` | Planet      |
 | `center` | WorldCoords |
 | `radius` | _number_    |
-
-**Returns:** _void_
-
----
-
-### queueSilverMine
-
-▸ `Private` **queueSilverMine**(`planet`: Planet, `centerW`: WorldCoords, `radiusW`: _number_): _void_
-
-#### Parameters
-
-| Name      | Type        |
-| :-------- | :---------- |
-| `planet`  | Planet      |
-| `centerW` | WorldCoords |
-| `radiusW` | _number_    |
 
 **Returns:** _void_

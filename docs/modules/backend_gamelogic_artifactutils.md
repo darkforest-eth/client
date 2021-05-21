@@ -120,7 +120,7 @@ Convert an `artifactId` to an int in [0, 255]
 
 ### getActivatedArtifact
 
-▸ **getActivatedArtifact**(`artifacts`: Artifact[]): _undefined_ \| Artifact
+▸ **getActivatedArtifact**(`artifacts`: Artifact[]): Artifact \| _undefined_
 
 #### Parameters
 
@@ -128,7 +128,7 @@ Convert an `artifactId` to an int in [0, 255]
 | :---------- | :--------- |
 | `artifacts` | Artifact[] |
 
-**Returns:** _undefined_ \| Artifact
+**Returns:** Artifact \| _undefined_
 
 ---
 

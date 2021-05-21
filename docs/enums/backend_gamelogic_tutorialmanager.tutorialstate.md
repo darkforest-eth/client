@@ -10,25 +10,26 @@
 - [Completed](backend_gamelogic_tutorialmanager.tutorialstate.md#completed)
 - [Deselect](backend_gamelogic_tutorialmanager.tutorialstate.md#deselect)
 - [HomePlanet](backend_gamelogic_tutorialmanager.tutorialstate.md#homeplanet)
+- [HowToGetScore](backend_gamelogic_tutorialmanager.tutorialstate.md#howtogetscore)
 - [MinerMove](backend_gamelogic_tutorialmanager.tutorialstate.md#minermove)
 - [MinerPause](backend_gamelogic_tutorialmanager.tutorialstate.md#minerpause)
 - [None](backend_gamelogic_tutorialmanager.tutorialstate.md#none)
 - [SendFleet](backend_gamelogic_tutorialmanager.tutorialstate.md#sendfleet)
-- [Sidebar](backend_gamelogic_tutorialmanager.tutorialstate.md#sidebar)
 - [Terminal](backend_gamelogic_tutorialmanager.tutorialstate.md#terminal)
+- [Valhalla](backend_gamelogic_tutorialmanager.tutorialstate.md#valhalla)
 - [ZoomOut](backend_gamelogic_tutorialmanager.tutorialstate.md#zoomout)
 
 ## Enumeration members
 
 ### AlmostCompleted
 
-• **AlmostCompleted**: = 9
+• **AlmostCompleted**: = 10
 
 ---
 
 ### Completed
 
-• **Completed**: = 10
+• **Completed**: = 11
 
 ---
 
@@ -41,6 +42,12 @@
 ### HomePlanet
 
 • **HomePlanet**: = 1
+
+---
+
+### HowToGetScore
+
+• **HowToGetScore**: = 8
 
 ---
 
@@ -68,15 +75,15 @@
 
 ---
 
-### Sidebar
+### Terminal
 
-• **Sidebar**: = 7
+• **Terminal**: = 7
 
 ---
 
-### Terminal
+### Valhalla
 
-• **Terminal**: = 8
+• **Valhalla**: = 9
 
 ---
 

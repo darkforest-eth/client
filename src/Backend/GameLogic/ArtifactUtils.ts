@@ -94,7 +94,7 @@ export function isActivated(artifact: Artifact | undefined) {
   return artifact.lastActivated > artifact.lastDeactivated;
 }
 
-export function getActivatedArtifact(artifacts: Artifact[]) {
+export function getActivatedArtifact(artifacts: Artifact[]): Artifact | undefined {
   return artifacts.find(isActivated);
 }
 

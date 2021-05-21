@@ -23,19 +23,20 @@
 - [TwitterBroadcast](frontend_views_modalpane.modalname.md#twitterbroadcast)
 - [TwitterVerify](frontend_views_modalpane.modalname.md#twitterverify)
 - [UpgradeDetails](frontend_views_modalpane.modalname.md#upgradedetails)
+- [WithdrawSilver](frontend_views_modalpane.modalname.md#withdrawsilver)
 - [YourArtifacts](frontend_views_modalpane.modalname.md#yourartifacts)
 
 ## Enumeration members
 
 ### ArtifactConversation
 
-• **ArtifactConversation**: = 12
+• **ArtifactConversation**: = 13
 
 ---
 
 ### ArtifactDetails
 
-• **ArtifactDetails**: = 13
+• **ArtifactDetails**: = 14
 
 ---
 
@@ -59,7 +60,7 @@
 
 ### ManageAccount
 
-• **ManageAccount**: = 15
+• **ManageAccount**: = 16
 
 ---
 
@@ -71,13 +72,13 @@
 
 ### MapShare
 
-• **MapShare**: = 14
+• **MapShare**: = 15
 
 ---
 
 ### Onboarding
 
-• **Onboarding**: = 16
+• **Onboarding**: = 17
 
 ---
 
@@ -101,7 +102,7 @@
 
 ### Private
 
-• **Private**: = 17
+• **Private**: = 18
 
 ---
 
@@ -126,6 +127,12 @@
 ### UpgradeDetails
 
 • **UpgradeDetails**: = 4
+
+---
+
+### WithdrawSilver
+
+• **WithdrawSilver**: = 12
 
 ---
 

@@ -6,6 +6,7 @@
 
 - [BasicLink](frontend_components_text.md#basiclink)
 - [Blue](frontend_components_text.md#blue)
+- [Colored](frontend_components_text.md#colored)
 - [Gold](frontend_components_text.md#gold)
 - [Green](frontend_components_text.md#green)
 - [HideSmall](frontend_components_text.md#hidesmall)
@@ -26,10 +27,12 @@
 - [BlinkCursor](frontend_components_text.md#blinkcursor)
 - [CenterChunkLink](frontend_components_text.md#centerchunklink)
 - [CenterPlanetLink](frontend_components_text.md#centerplanetlink)
+- [Coords](frontend_components_text.md#coords)
 - [FAQ04Link](frontend_components_text.md#faq04link)
 - [FakeLine](frontend_components_text.md#fakeline)
 - [Header](frontend_components_text.md#header)
 - [Link](frontend_components_text.md#link)
+- [LongDash](frontend_components_text.md#longdash)
 - [PlanetNameLink](frontend_components_text.md#planetnamelink)
 - [Space](frontend_components_text.md#space)
 - [Tab](frontend_components_text.md#tab)
@@ -48,6 +51,12 @@
 ### Blue
 
 • `Const` **Blue**: _StyledComponent_<`"span"`, any, {}, never\>
+
+---
+
+### Colored
+
+• `Const` **Colored**: _StyledComponent_<`"span"`, any, { `color`: _string_ }, never\>
 
 ---
 
@@ -184,6 +193,21 @@
 
 ---
 
+### Coords
+
+▸ `Const` **Coords**(`__namedParameters`: { `coords`: WorldCoords }): _Element_
+
+#### Parameters
+
+| Name                       | Type        |
+| :------------------------- | :---------- |
+| `__namedParameters`        | _object_    |
+| `__namedParameters.coords` | WorldCoords |
+
+**Returns:** _Element_
+
+---
+
 ### FAQ04Link
 
 ▸ **FAQ04Link**(`__namedParameters`: { `children`: React.ReactNode }): _Element_
@@ -232,6 +256,14 @@
 | Name                | Type      |
 | :------------------ | :-------- |
 | `__namedParameters` | LinkProps |
+
+**Returns:** _Element_
+
+---
+
+### LongDash
+
+▸ `Const` **LongDash**(): _Element_
 
 **Returns:** _Element_
 

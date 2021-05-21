@@ -11,7 +11,7 @@ import {
 import { EMPTY_LOCATION_ID, EMPTY_ADDRESS } from '@darkforest_eth/constants';
 import { artifactBiomeName } from '../GameLogic/ArtifactUtils';
 
-export const artifactTitle = (artifact: Artifact | undefined): string => {
+export const artifactBiomeAndName = (artifact: Artifact | undefined): string => {
   if (!artifact) return '';
   return `${artifactBiomeName(artifact)} ${ArtifactNames[artifact.artifactType]}`;
 };

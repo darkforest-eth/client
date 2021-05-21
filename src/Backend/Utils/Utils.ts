@@ -80,7 +80,7 @@ export const formatNumber = (num: number): string => {
 
   if (log000 === 0) return `${Math.floor(num)}`;
 
-  if (rem < 10) return `${rem.toFixed(2)}${suffixes[log000]}`;
+  if (rem < 10) return `${rem.toFixed(1)}${suffixes[log000]}`;
   else if (rem < 100) return `${rem.toFixed(1)}${suffixes[log000]}`;
   else return `${rem.toFixed(0)}${suffixes[log000]}`;
 };

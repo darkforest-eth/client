@@ -30,14 +30,13 @@ export const HAT_SIZES = [
   'Empyrean HAT',
   'Ethereal HAT',
   'Transcendental HAT',
-  'haaaaat',
-  'HAAAAAT',
-  'HAAAAAAAAAAAAAT',
+  'haaaat',
+  'HAAAAT',
 ];
 
 export const enum GameWindowZIndex {
-  Toggler = 3,
   MenuBar = 4,
+  HoverPlanet = 999,
   Modal = 1000,
   Tooltip = 16000000,
 }

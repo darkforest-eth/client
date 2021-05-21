@@ -11,7 +11,6 @@ import RectRenderer from './Entities/RectRenderer';
 import PlanetRenderManager from './Entities/PlanetRenderManager';
 import AsteroidRenderer from './Entities/AsteroidRenderer';
 import BeltRenderer from './Entities/BeltRenderer';
-import { MineRenderer } from './Entities/MineRenderer';
 import { SpriteRenderer } from './Entities/SpriteRenderer';
 import { GameGLManager } from './WebGL/GameGLManager';
 import { WormholeRenderer } from './Entities/WormholeRenderer';
@@ -21,6 +20,7 @@ import { SpacetimeRipRenderer } from './Entities/SpacetimeRipRenderer';
 import { RuinsRenderer } from './Entities/RuinsRenderer';
 import RingRenderer from './Entities/RingRenderer';
 import BlackDomainRenderer from './Entities/BlackDomainRenderer';
+import { MineRenderer } from './Entities/MineRenderer';
 
 class Renderer {
   static instance: Renderer | null;

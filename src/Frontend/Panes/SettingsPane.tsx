@@ -1,90 +1,66 @@
 import React, { useState, useEffect, FormEvent } from 'react';
+import { useCallback } from 'react';
 import { ChangeEvent } from 'react';
 import styled from 'styled-components';
 import EthConnection from '../../Backend/Network/EthConnection';
 import { useStoredUIState, UIDataKey } from '../../Backend/Storage/UIStateStorageManager';
 import { ONE_DAY } from '../../Backend/Utils/Utils';
 import { ExploredChunkData } from '../../_types/global/GlobalTypes';
-import { Btn } from '../Components/GameWindowComponents';
+import { Btn } from '../Components/Btn';
+import { Spacer } from '../Components/CoreUI';
 import { Input } from '../Components/Input';
-import { Sub, White, Red, Green } from '../Components/Text';
+import { White, Red, Green } from '../Components/Text';
 import Viewport, { getDefaultScroll } from '../Game/Viewport';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager, useAccount } from '../Utils/AppHooks';
 import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 
-const scrollMin = 0.0001 * 10000;
-const scrollMax = 0.01 * 10000;
-const defaultScroll = Math.round(10000 * (getDefaultScroll() - 1));
+const SCROLL_MIN = 0.0001 * 10000;
+const SCROLL_MAX = 0.01 * 10000;
+const DEFAULT_SCROLL = Math.round(10000 * (getDefaultScroll() - 1));
+
+const Range = styled.input``;
 
 const StyledSettingsPane = styled.div`
   width: 32em;
   height: 30em;
   overflow-y: scroll;
-
   display: flex;
   flex-direction: column;
+  color: ${dfstyles.colors.subtext};
+`;
 
-  .link {
-    &:hover {
-      text-decoration: underline;
-      cursor: pointer;
-    }
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  justify-content: space-between;
+  align-items: center;
+
+  & > span:first-child {
+    flex-grow: 1;
   }
+`;
 
-  .section {
-    p,
-    .row {
-      margin: 0.3em auto;
-    }
+const Section = styled.div`
+  padding: 1em 0;
+  border-bottom: 1px solid ${dfstyles.colors.subtext};
 
-    padding: 0.3em 0;
-    border-bottom: 1px solid ${dfstyles.colors.subtext};
-
-    &:last-child {
-      border-bottom: none;
-    }
+  &:last-child {
+    border-bottom: none;
   }
+`;
 
-  .row {
-    display: flex;
-    flex-direction: row;
+const SectionHeader = styled.div`
+  text-decoration: underline;
+  color: white;
+  margin-bottom: 8px;
+`;
 
-    justify-content: space-between;
-
-    & > span:first-child {
-      flex-grow: 1;
-    }
-
-    & .input-text {
-      transition: background 0.2s, color 0.2s, width 0.2s !important;
-      outline: none;
-      background: ${dfstyles.colors.background};
-      color: ${dfstyles.colors.subtext};
-      border-radius: 4px;
-      border: 1px solid ${dfstyles.colors.text};
-      margin-left: 0.75em;
-      width: 16em;
-      padding: 2px 6px;
-      border-radius: 3px;
-
-      &:focus {
-        background: ${dfstyles.colors.backgroundlight};
-        color: ${dfstyles.colors.text};
-        width: 20em;
-      }
-    }
-  }
-
-  .btn-red {
-    color: ${dfstyles.colors.dfred};
-    border: 1px solid ${dfstyles.colors.dfred};
-
-    &:hover {
-      background: ${dfstyles.colors.dfred};
-      color: ${dfstyles.colors.background};
-    }
-  }
+const ScrollSpeedInput = styled(Input)`
+  padding: 2px 2px;
+  width: 4em;
+  height: min-content;
 `;
 
 export function SettingsPane({
@@ -98,9 +74,6 @@ export function SettingsPane({
 }) {
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
-
-  // settings stuff
-  const [notifMove, setNotifMove] = useStoredUIState<boolean>(UIDataKey.notifMove, uiManager);
 
   const [optOutMetrics, setOptOutMetrics] = useState<boolean | undefined>();
   const updateOptOutMetrics = (newVal: boolean): void => {
@@ -132,21 +105,14 @@ export function SettingsPane({
         setAllowTx(true);
       }
     };
+
     checkEnabled();
-
     const intervalId = setInterval(checkEnabled, 1000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
+    return () => clearInterval(intervalId);
   }, [account]);
 
-  // RPC URL
-
   const [rpcURLText, setRpcURLText] = useState<string>(ethConnection.getRpcEndpoint());
-
   const [rpcURL, setRpcURL] = useState<string>(ethConnection.getRpcEndpoint());
-
   const onChangeRpc = () => {
     ethConnection.setRpcEndpoint(rpcURLText).then(() => {
       const newEndpoint = ethConnection.getRpcEndpoint();
@@ -155,17 +121,13 @@ export function SettingsPane({
     });
   };
 
-  // balance stuff
-
   const [balance, setBalance] = useState<number>(0);
-
   useEffect(() => {
     if (typeof optOutMetrics === 'undefined' && account) {
       const fromDisk = localStorage.getItem(`optout-metrics-${account}`);
       setOptOutMetrics(fromDisk === 'true');
     }
   }, [optOutMetrics, account]);
-
   useEffect(() => {
     if (!uiManager) return;
     const updateBalance = () => {
@@ -180,23 +142,19 @@ export function SettingsPane({
     };
   }, [uiManager]);
 
-  // map share stuff
   const [failure, setFailure] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [importMapByTextBoxValue, setImportMapByTextBoxValue] = useState('');
-
   useEffect(() => {
     if (failure) {
       setSuccess('');
     }
   }, [failure]);
-
   useEffect(() => {
     if (success) {
       setFailure('');
     }
   }, [success]);
-
   const onExportMap = async () => {
     if (uiManager) {
       const chunks = uiManager.getExploredChunks();
@@ -213,7 +171,6 @@ export function SettingsPane({
       setFailure('Unable to export map right now.');
     }
   };
-
   const onImportMapFromTextBox = async () => {
     try {
       const chunks = JSON.parse(importMapByTextBoxValue);
@@ -223,7 +180,6 @@ export function SettingsPane({
       setFailure('Invalid map data. Check the data in your clipboard.');
     }
   };
-
   const onImportMap = async () => {
     if (uiManager) {
       let input;
@@ -260,183 +216,163 @@ export function SettingsPane({
     }
   };
 
-  const clipScroll = (v: number) => Math.max(Math.min(v, scrollMax), scrollMin);
-  const [scrollSpeed, setScrollSpeed] = useState<number>(defaultScroll);
-
-  const onChange = (e: FormEvent) => {
+  const clipScroll = (v: number) => Math.max(Math.min(Math.round(v), SCROLL_MAX), SCROLL_MIN);
+  const [scrollSpeed, setScrollSpeed] = useState<number>(DEFAULT_SCROLL);
+  const onScrollChange = (e: FormEvent) => {
     const value = parseFloat((e.target as HTMLInputElement).value);
     if (!isNaN(value)) setScrollSpeed(value);
   };
-
   useEffect(() => {
     const scroll = localStorage.getItem('scrollSpeed');
     if (scroll) {
       setScrollSpeed(10000 * (parseFloat(scroll) - 1));
     }
   }, [setScrollSpeed]);
-
   useEffect(() => {
     if (!Viewport.instance) return;
     Viewport.instance.setMouseSensitivty(scrollSpeed / 10000);
   }, [scrollSpeed]);
 
-  const [fling, setFling] = useStoredUIState<boolean>(UIDataKey.shouldFling, uiManager);
+  const [notifMove, setNotifMove] = useStoredUIState<boolean>(UIDataKey.notifMove, uiManager);
 
-  useEffect(() => {
-    if (!Viewport.instance) return;
-    Viewport.instance.setFling(fling);
-  }, [fling]);
+  const [gasFeeGwei, setGasFeeGwei] = useStoredUIState<number>(UIDataKey.gasFeeGwei, uiManager);
+  const onGasFeeGweiChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setGasFeeGwei(parseInt(e.target.value, 10));
+    },
+    [setGasFeeGwei]
+  );
 
   return (
     <ModalPane hook={hook} title={'Settings'} name={ModalName.Hats}>
       <StyledSettingsPane>
-        <div className='section'>
-          <p>Manage account.</p>
-          <p>
-            <Sub>
-              Your <White>SKEY</White>, or secret key, together with your{' '}
-              <White>home planet's</White> coordinates, grant you access to your Dark Forest account
-              on different browsers (kind of like a password).
-            </Sub>
-          </p>
-          <p>
-            <Red>They should never be viewed by anyone else!</Red>
-          </p>
-          <div className='row'>
-            <span></span>
-            <Btn className='btn-red' onClick={doPrivateClick}>
-              Click {clicks} times to view info
-            </Btn>
-          </div>
-        </div>
+        <Section>
+          <SectionHeader>Manage account</SectionHeader>
+          Your <White>SKEY</White>, or secret key, together with your <White>home planet's</White>{' '}
+          coordinates, grant you access to your Dark Forest account on different browsers (kind of
+          like a password).
+          <Spacer height={8} />
+          <em>
+            <Red>WARNING:</Red> Never ever send this to anyone!
+          </em>
+          <Spacer height={8} />
+          <Row>
+            <Btn onClick={doPrivateClick}>Click {clicks} times to view info</Btn>
+          </Row>
+        </Section>
 
-        <div className='section'>
-          <p>Manage wallet.</p>
-
-          <div className='row'>
-            <Sub>Public Key</Sub>
+        <Section>
+          <SectionHeader>Manage wallet</SectionHeader>
+          <Row>
+            <span>Public Key</span>
             <span>{account}</span>
-          </div>
-          <div className='row'>
-            <Sub>Balance</Sub>
+          </Row>
+          <Row>
+            <span>Balance</span>
             <span>{balance}</span>
-          </div>
-          <div className='row'>
-            <Sub>Auto-confirm txs under $0.01</Sub>
+          </Row>
+          <Row>
+            <span>gas fee (gwei)</span>
+            <Input value={gasFeeGwei} onChange={onGasFeeGweiChange} />
+          </Row>
+          <Row>
+            <span>Auto-confirm txs under $0.01</span>
             <input
               type='checkbox'
               checked={allowTx}
               onChange={(e) => updateAllowTx(e.target.checked)}
             />
-          </div>
-        </div>
+          </Row>
+        </Section>
 
-        <div className='section'>
-          <p>Export and import explored maps.</p>
-          <p>
-            <em>
-              <Red>WARNING:</Red>{' '}
-              <Sub>Maps from others could be altered and are not guaranteed to be correct!</Sub>
-            </em>
-          </p>
+        <Section>
+          <SectionHeader>Export and import explored maps</SectionHeader>
+          <em>
+            <Red>WARNING:</Red> Maps from others could be altered and are not guaranteed to be
+            correct!
+          </em>
+          <Spacer height={8} />
+          <Btn wide onClick={onExportMap}>
+            Copy Map to Clipboard
+          </Btn>
+          <Spacer height={8} />
+          <Btn wide onClick={onImportMap}>
+            Import Map from Clipboard
+          </Btn>
+          <Spacer height={16} />
+          You can also import a map by pasting from your clipboard into the text input below, and
+          clicking the import button below it.
+          <Spacer height={8} />
+          <Input
+            wide
+            value={importMapByTextBoxValue}
+            placeholder={'Paste map contents here'}
+            onInput={(e: ChangeEvent<HTMLInputElement>) =>
+              setImportMapByTextBoxValue(e.target.value)
+            }
+          />
+          <Spacer height={8} />
+          <Btn
+            wide
+            onClick={onImportMapFromTextBox}
+            disabled={importMapByTextBoxValue.length === 0}
+          >
+            Import
+          </Btn>
+          <Spacer height={8} />
+          <Green>{success}</Green>
+          <Red>{failure}</Red>
+        </Section>
 
-          <div className='row'>
-            <span>
-              <Btn onClick={onExportMap}>{'Copy Map to Clipboard'}</Btn>
-            </span>
-            <span>
-              <Btn onClick={onImportMap}>Import Map from Clipboard</Btn>
-            </span>
-          </div>
-          <div>
-            <Input
-              value={importMapByTextBoxValue}
-              onInput={(e: ChangeEvent<HTMLInputElement>) =>
-                setImportMapByTextBoxValue(e.target.value)
-              }
-            />
-            <span>
-              <Btn onClick={onImportMapFromTextBox} disabled={importMapByTextBoxValue.length === 0}>
-                Import Map from Text Box (Warning: Slow)
-              </Btn>
-            </span>
-          </div>
-          <p>
-            <Green>{success}</Green>
-            <Red>{failure}</Red>
-          </p>
-        </div>
+        <Section>
+          <SectionHeader>Change RPC Endpoint</SectionHeader>
+          Current RPC Endpoint: {rpcURL}
+          <Spacer height={8} />
+          <Row>
+            <Input value={rpcURLText} onChange={(e) => setRpcURLText(e.target.value)} />
+            <Btn onClick={onChangeRpc}>Change RPC URL</Btn>
+          </Row>
+        </Section>
 
-        <div className='section'>
-          <p>{`Current RPC Endpoint: ${rpcURL}`}</p>
-          <div className='row'>
-            <span>
-              <Input value={rpcURLText} onChange={(e) => setRpcURLText(e.target.value)} />
-            </span>
-            <span>
-              <Btn onClick={onChangeRpc}>Change RPC URL</Btn>
-            </span>
-          </div>
-        </div>
-
-        <div className='section'>
-          <p>
-            We collect a minimal set of data and statistics such as SNARK proving times, average
-            transaction times across browsers, and xDAI transaction errors, to help us optimize
-            performance and fix bugs. This does not include personal data like email or IP address.
-          </p>
-          <div className='row'>
-            <Sub>Opt out of metrics</Sub>
+        <Section>
+          <SectionHeader>Metrics Opt Out.</SectionHeader>
+          We collect a minimal set of data and statistics such as SNARK proving times, average
+          transaction times across browsers, and xDAI transaction errors, to help us optimize
+          performance and fix bugs. This does not include personal data like email or IP address.
+          <Spacer height={8} />
+          <Row>
+            <span>Opt out of metrics</span>
             <input
               type='checkbox'
               checked={optOutMetrics}
               onChange={(e) => updateOptOutMetrics(e.target.checked)}
             />
-          </div>
-        </div>
+          </Row>
+        </Section>
 
-        <div className='section'>
-          <p>Manage other settings.</p>
-          <div className='row'>
-            <Sub>Show notifications for MOVE</Sub>
+        <Section>
+          <SectionHeader>Manage other settings.</SectionHeader>
+          <Row>
+            <span>Show notifications for MOVE</span>
             <input
               type='checkbox'
               checked={notifMove}
               onChange={(e) => setNotifMove(e.target.checked)}
             />
-          </div>
-          <div className='row'>
-            <Sub>Use viewport momentum</Sub>
-            <input type='checkbox' checked={fling} onChange={(e) => setFling(e.target.checked)} />
-          </div>
-          <div className='row'>
-            <Sub>
-              Scroll speed (
-              <span className='link' onClick={() => setScrollSpeed(defaultScroll)}>
-                default
-              </span>
-              )
-            </Sub>
-            <span>
-              <Input
-                style={{ width: '15em' }}
-                type='range'
-                value={clipScroll(scrollSpeed)}
-                min={scrollMin}
-                max={scrollMax}
-                step={scrollMin / 10}
-                onInput={onChange}
-              />
-              <Input
-                type='text'
-                className='input-text'
-                style={{ width: '4em', color: dfstyles.colors.text }}
-                value={scrollSpeed}
-                onInput={onChange}
-              />
-            </span>
-          </div>
-        </div>
+          </Row>
+          <Row>
+            Scroll speed
+            <Range
+              type='range'
+              value={clipScroll(scrollSpeed)}
+              min={SCROLL_MIN}
+              max={SCROLL_MAX}
+              step={SCROLL_MIN / 10}
+              onInput={onScrollChange}
+            />
+            <ScrollSpeedInput value={scrollSpeed} onInput={onScrollChange} />
+          </Row>
+        </Section>
       </StyledSettingsPane>
     </ModalPane>
   );

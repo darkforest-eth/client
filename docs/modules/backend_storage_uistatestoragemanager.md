@@ -13,7 +13,6 @@
 ### Type aliases
 
 - [UIData](backend_storage_uistatestoragemanager.md#uidata)
-- [UIDataValue](backend_storage_uistatestoragemanager.md#uidatavalue)
 
 ### Variables
 
@@ -42,6 +41,7 @@
 | `foundSilverBank`       | _boolean_ |
 | `foundSpace`            | _boolean_ |
 | `foundTradingPost`      | _boolean_ |
+| `gasFeeGwei`            | _number_  |
 | `hasAcceptedPluginRisk` | _boolean_ |
 | `hasAddedCanvasPlugin`  | _boolean_ |
 | `hasAddedReadme`        | _boolean_ |
@@ -53,12 +53,6 @@
 | `terminalEnabled`       | _boolean_ |
 | `tutorialCompleted`     | _boolean_ |
 | `welcomedPlayer`        | _boolean_ |
-
----
-
-### UIDataValue
-
-Ƭ **UIDataValue**: _boolean_
 
 ## Variables
 
@@ -74,9 +68,9 @@
 
 #### Type parameters
 
-| Name | Type      |
-| :--- | :-------- |
-| `T`  | _boolean_ |
+| Name | Type                  |
+| :--- | :-------------------- |
+| `T`  | _number_ \| _boolean_ |
 
 #### Parameters
 

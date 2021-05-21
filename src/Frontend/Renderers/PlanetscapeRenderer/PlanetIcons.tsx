@@ -29,10 +29,11 @@ const StyledPlanetIcons = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
+  flex-wrap: wrap-reverse;
   padding: 0.1em;
 
   & > span {
+    font-size: 8pt;
     width: 1.5em;
     height: 1.5em;
     border: 1px solid ${dfstyles.colors.text};
@@ -52,9 +53,9 @@ const StyledPlanetIcons = styled.div`
 
 const ClownIcon = styled.span`
   background: red;
-  width: 12px;
-  height: 12px;
-  border-radius: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
 `;
 
 export function PlanetIcons({ planet }: { planet: Planet | undefined }) {
