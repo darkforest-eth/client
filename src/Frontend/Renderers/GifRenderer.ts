@@ -1,0 +1,203 @@
+import JSZip from 'jszip';
+import { Artifact, ArtifactRarity, ArtifactType, Biome } from '@darkforest_eth/types';
+import { mat4 } from 'gl-matrix';
+import { SpriteRenderer } from './GameRenderer/Entities/SpriteRenderer';
+import { WebGLManager } from './GameRenderer/WebGL/WebGLManager';
+import { mockArtifactWithRarity } from '../../Backend/Procedural/ArtifactProcgen';
+import {
+  ArtifactFileColor,
+  artifactFileName,
+  setForceAncient,
+} from '../../Backend/GameLogic/ArtifactUtils';
+import { EMPTY_LOCATION_ID } from '@darkforest_eth/constants';
+
+const FileSaver = require('file-saver');
+
+declare global {
+  interface Window {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    CCapture: any;
+  }
+}
+
+export const GIF_ARTIFACT_COLOR = ArtifactFileColor.APP_BACKGROUND;
+
+const COLORS: Record<ArtifactFileColor, [number, number, number, number]> = [
+  [0.0724, 0.051, 0.3111, 1],
+  [0.031372549, 0.031372549, 0.031372549, 1],
+];
+
+export class GifRenderer extends WebGLManager {
+  public projectionMatrix: mat4;
+  private spriteRenderer: SpriteRenderer;
+  private margin: number;
+  private canvasDim: number;
+  private artifactDim: number;
+  private resolution: number;
+
+  private thumb: boolean;
+
+  constructor(canvas: HTMLCanvasElement, dim: number, isThumb: boolean) {
+    super(canvas, { preserveDrawingBuffer: true });
+
+    this.thumb = isThumb;
+
+    this.spriteRenderer = new SpriteRenderer(this, isThumb);
+    this.setDim(dim);
+
+    // shitty way to make sure texture is loaded first
+    setTimeout(() => this.start(), 1000);
+  }
+
+  setDim(dim: number) {
+    const SPRITE_DIM = this.thumb ? 16 : 64;
+
+    this.canvasDim = dim;
+    this.resolution = Math.floor(this.canvasDim / SPRITE_DIM) - 1;
+    this.artifactDim = this.resolution * SPRITE_DIM;
+
+    this.margin = Math.floor(0.5 * (this.canvasDim - this.artifactDim));
+
+    this.setProjectionMatrix();
+  }
+
+  // https://gist.github.com/ahgood/bfc57a7f44d6ab7803f3ee2ec0abb980
+  private start() {
+    this.drawSprite(
+      mockArtifactWithRarity(ArtifactRarity.Mythic, ArtifactType.PhotoidCannon, Biome.ICE)
+    );
+    window.requestAnimationFrame(this.start);
+  }
+
+  private drawSprite(artifact: Artifact, atFrame: number | undefined = undefined) {
+    this.clear();
+    this.spriteRenderer.queueArtifact(
+      artifact,
+      { x: this.margin, y: this.margin },
+      this.artifactDim,
+      255,
+      atFrame
+    );
+    this.spriteRenderer.flush();
+  }
+
+  private getBase64(): string {
+    const b64 = this.canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, '');
+
+    return b64;
+  }
+
+  private getFileName(
+    video: boolean,
+    type: ArtifactType,
+    biome: Biome,
+    rarity: ArtifactRarity,
+    ancient: boolean
+  ) {
+    return artifactFileName(
+      video,
+      this.thumb,
+      { artifactType: type, planetBiome: biome, rarity, id: EMPTY_LOCATION_ID },
+      GIF_ARTIFACT_COLOR,
+      { skipCaching: true, forceAncient: ancient }
+    );
+  }
+
+  private addSprite(
+    dir: JSZip,
+    type: ArtifactType,
+    biome: Biome,
+    rarity: ArtifactRarity,
+    ancient = false
+  ) {
+    const fileName = this.getFileName(false, type, biome, rarity, ancient);
+    this.drawSprite(mockArtifactWithRarity(rarity, type, biome));
+
+    dir.file(fileName, this.getBase64(), { base64: true });
+  }
+
+  private async addVideo(
+    dir: JSZip,
+    type: ArtifactType,
+    biome: Biome,
+    rarity: ArtifactRarity,
+    ancient = false
+  ) {
+    const fileName = this.getFileName(true, type, biome, rarity, ancient);
+    const artifact = mockArtifactWithRarity(rarity, type, biome);
+
+    const capturer = new window.CCapture({
+      format: 'webm',
+      framerate: 60,
+      quality: 0.999,
+    });
+    capturer.start();
+
+    for (let i = 0; i < 180; i++) {
+      this.drawSprite(artifact, i);
+      capturer.capture(this.canvas);
+    }
+    capturer.stop();
+    return new Promise<void>((resolve) => {
+      capturer.save((blob: Blob) => {
+        dir.file(fileName, blob);
+        console.log('saved ' + fileName + '!');
+        resolve();
+      });
+    });
+  }
+
+  private async addBiomes(videoMode: boolean, dir: JSZip) {
+    setForceAncient(false);
+    // make sure you add `return false` to isAncient
+    for (let type = ArtifactType.MIN; type <= ArtifactType.MAX; type++) {
+      for (let rarity = ArtifactRarity.Common; rarity <= ArtifactRarity.Mythic; rarity++) {
+        for (let biome = Biome.MIN; biome <= Biome.MAX; biome++) {
+          if (videoMode) await this.addVideo(dir, type, biome, rarity, false);
+          else this.addSprite(dir, type, biome, rarity, false);
+        }
+      }
+    }
+  }
+
+  private async addAncient(videoMode: boolean, dir: JSZip) {
+    setForceAncient(true);
+    // make sure you add `return true` to isAncient
+    for (let type = ArtifactType.MIN; type <= ArtifactType.MAX; type++) {
+      for (let rarity = ArtifactRarity.Common; rarity <= ArtifactRarity.Mythic; rarity++) {
+        if (videoMode) await this.addVideo(dir, type, 1, rarity, true);
+        else this.addSprite(dir, type, 1, rarity, true);
+      }
+    }
+  }
+
+  private async getAll(videoMode = false) {
+    const zip = new JSZip();
+
+    zip.folder('img');
+    const dir = zip.folder('img');
+    if (!dir) {
+      console.error('jszip error');
+      return;
+    }
+
+    await this.addBiomes(videoMode, dir);
+    await this.addAncient(videoMode, dir);
+
+    zip.generateAsync({ type: 'blob' }).then((content) => {
+      FileSaver.saveAs(content, 'files.zip');
+    });
+  }
+
+  getAllSprites() {
+    this.getAll(false);
+  }
+
+  getAllVideos() {
+    this.getAll(true);
+  }
+
+  clear() {
+    super.clear(0, COLORS[GIF_ARTIFACT_COLOR]);
+  }
+}

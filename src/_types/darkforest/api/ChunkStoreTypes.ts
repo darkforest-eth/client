@@ -1,4 +1,5 @@
-import { Rectangle, LocationId } from '../../global/GlobalTypes';
+import { Rectangle } from '../../global/GlobalTypes';
+import { LocationId } from '@darkforest_eth/types';
 
 // (capital) alphanumeric character
 // a "bucket" index deterministically generated from chunkX and chunkY

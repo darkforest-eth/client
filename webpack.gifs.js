@@ -2,5 +2,5 @@ const { merge } = require('webpack-merge');
 const common = require('./webpack.config.js');
 
 module.exports = merge(common, {
-  entry: './src/gifs.tsx',
+  entry: './src/Frontend/EntryPoints/gifs.tsx',
 });

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "ES6",
+    "module": "esnext",
     "target": "es2019",
     "outDir": "./dist/",
     "sourceMap": true,
@@ -12,11 +12,19 @@
     "moduleResolution": "Node",
     "lib": ["es2019", "dom"],
     "skipLibCheck": true,
+    "declaration": true,
+    "declarationDir": "./declarations"
   },
-  "include": ["src/**/*"],
-  "exclude": [
-    "./node_modules",
-    "**/*.d.ts",
-    "./dist",
-  ]
+  "include": ["src/**/*", "local_plugins/*"],
+  "exclude": ["./node_modules", "./dist", "./declarations"],
+  "typedocOptions": {
+    "entryPoints": ["src"],
+    "out": "docs",
+    "hideBreadcrumbs": true,
+    "readme": "none",
+    "disableSources": true,
+    "disableOutputCheck": true,
+    "excludeExternals": true,
+    "listInvalidSymbolLinks": true
+  }
 }

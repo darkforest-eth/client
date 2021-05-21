@@ -13,13 +13,20 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# built by local-deploy
-/src/utils/local_contract_addr.ts
-
 # firebase
 .firebase
+
+# local image files for testing
+public/img/artifacts
 
 # compiled contracts
 public/contracts/*.json
 !public/contracts/DarkForestCore.json
+!public/contracts/DarkForestGetters.json
 !public/contracts/Whitelist.json
+!public/contracts/DarkForestGPTCredit.json
+
+declarations
+
+# Local Netlify folder
+.netlify
