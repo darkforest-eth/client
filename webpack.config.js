@@ -93,7 +93,6 @@ module.exports = {
     new EnvironmentPlugin({
       NODE_ENV: 'development',
       DEFAULT_RPC: 'https://rpc.xdaichain.com/', // or 'https://rpc-df.xdaichain.com/'
-      SPAWN_PERCENTAGE: isProd ? '0.6' : '0.0',
       CONVERSATION_API_HOST: isProd ? 'https://api.zkga.me' : 'http://localhost:3000',
       LEADERBOARD_API: isProd ? 'https://api.zkga.me' : 'http://localhost:3000',
       WEBSERVER_URL: isProd ? 'https://api.zkga.me' : 'http://localhost:3000',

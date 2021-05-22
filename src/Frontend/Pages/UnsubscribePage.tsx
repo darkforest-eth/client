@@ -186,7 +186,7 @@ export default function UnsubscribePage() {
 
           <p>
             <Sub>
-              zkSNARK space warfare <HideSmall>(v0.5)</HideSmall>
+              zkSNARK space warfare <HideSmall>(v0.6)</HideSmall>
             </Sub>
           </p>
         </Header>

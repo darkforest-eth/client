@@ -63,7 +63,7 @@ export function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
   const onTweetClick = async () => {
     if (uiManager) {
       const tweetText = await uiManager.generateVerificationTweet(twitterInput);
-      const str = `Verifying my @darkforest_eth v0.6 pre-release account (https://zkga.me): ${tweetText}`;
+      const str = `Verifying my @darkforest_eth v0.6 account (https://zkga.me): ${tweetText}`;
       window.open(`https://twitter.com/intent/tweet?hashtags=darkforest&text=${encodeURI(str)}`);
     }
   };

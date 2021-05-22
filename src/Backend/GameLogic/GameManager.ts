@@ -1393,7 +1393,14 @@ class GameManager extends EventEmitter {
       let d: number;
       let p: number;
 
-      const spawnPercentage = parseInt(process.env.SPAWN_PERCENTAGE as string, 10);
+      const isProd = process.env.NODE_ENV === 'production';
+      let spawnInnerRadius = 0;
+      if (isProd) {
+        // there is always a fixed area for players to spawn in, equal to the
+        // area of a 32 radius disc
+        spawnInnerRadius = Math.sqrt(Math.max(this.worldRadius ** 2 - 32000 ** 2, 0));
+      }
+
       do {
         // sample from square
         x = Math.random() * this.worldRadius * 2 - this.worldRadius;
@@ -1404,7 +1411,7 @@ class GameManager extends EventEmitter {
         p >= initPerlinMax || // keep searching if above or equal to the max
         p < initPerlinMin || // keep searching if below the minimum
         d >= this.worldRadius || // can't be out of bound
-        d <= spawnPercentage * this.worldRadius // can't be inside spawn percentage ring
+        d <= spawnInnerRadius // can't be inside spawn percentage ring
       );
 
       // when setting up a new account in development mode, you can tell
