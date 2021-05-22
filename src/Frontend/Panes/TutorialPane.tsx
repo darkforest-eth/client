@@ -117,6 +117,14 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         <Underline>Spacetime Rip</Underline> that you own, and then withdrawing from it using its
         context menu. Remember, you can only withdraw silver from{' '}
         <Underline>Spacetime Rips</Underline>.
+        <div>
+          <Btn
+            className='btn'
+            onClick={() => tutorialManager.acceptInput(TutorialState.HowToGetScore)}
+          >
+            Next
+          </Btn>
+        </div>
       </div>
     );
   } else if (tutorialState === TutorialState.Valhalla) {
@@ -127,6 +135,11 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         <br />
         <br />
         To win, have the highest score (^:
+        <div>
+          <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.Valhalla)}>
+            Next
+          </Btn>
+        </div>
       </div>
     );
   } else if (tutorialState === TutorialState.AlmostCompleted) {
