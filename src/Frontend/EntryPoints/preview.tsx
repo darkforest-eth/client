@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { Biome, LocatablePlanet, PlanetLevel, PlanetType, SpaceType } from '@darkforest_eth/types';
-import { PlanetPreviewImage } from '../Panes/PlanetPreview';
 import _ from 'lodash';
+import { PlanetPreviewImage } from '../Components/PlanetPreview';
 
 const StyledPreview = styled.div`
   display: inline-block;
@@ -12,6 +12,9 @@ const StyledPreview = styled.div`
     background: black;
   }
 `;
+
+const planetType = PlanetType.PLANET;
+const biome = Biome.CORRUPTED;
 
 const myPlanet = {
   location: {
@@ -26,9 +29,9 @@ const myPlanet = {
   spaceType: SpaceType.DEEP_SPACE,
 
   planetLevel: 6,
-  planetType: PlanetType.SILVER_MINE,
+  planetType: planetType,
 
-  biome: Biome.CORRUPTED,
+  biome: biome,
   destroyed: false,
 } as unknown as LocatablePlanet;
 
@@ -48,7 +51,7 @@ function Preview({ type, biome, level }: { type: PlanetType; biome: Biome; level
   return (
     <div>
       <StyledPreview>
-        <PlanetPreviewImage selected={planet} size={512} />;
+        <PlanetPreviewImage planet={planet} res={512} />;
       </StyledPreview>
     </div>
   );
@@ -70,12 +73,7 @@ function PreviewPage() {
     <StyledPreviewPage>
       <div className='row'>
         {_.range(PlanetLevel.MIN, PlanetLevel.MAX + 1).map((level) => (
-          <Preview
-            type={PlanetType.SILVER_MINE}
-            biome={Biome.CORRUPTED}
-            level={level}
-            key={level}
-          />
+          <Preview type={planetType} biome={biome} level={level} key={level} />
         ))}
       </div>
     </StyledPreviewPage>

@@ -118,7 +118,7 @@ class PlanetPreviewRenderer extends WebGLManager {
       mR.queueMineScreen(this.planet, { x: dim / 2, y: dim / 2 }, (dim - margin) * 0.35, -1);
       mR.flush();
     } else if (this.planet.planetType === PlanetType.SILVER_BANK) {
-      qR.queueQuasarScreen(this.planet, { x: dim / 2, y: dim / 2 }, 0.3 * (dim - margin), -1);
+      qR.queueQuasarScreen(this.planet, { x: dim / 2, y: dim / 2 }, 0.4 * (dim - margin), -1);
       qR.flush();
     } else if (this.planet.planetType === PlanetType.TRADING_POST) {
       sR.queueRipScreen(this.planet, { x: dim / 2, y: dim / 2 }, 0.35 * (dim - margin), -1);
@@ -140,13 +140,19 @@ export function PlanetPreviewImage({ planet, res }: { planet: Planet | undefined
 
   // sync ref to renderer
   useEffect(() => {
-    if (canvasRef.current) setRenderer(new PlanetPreviewRenderer(canvasRef.current));
+    if (!canvasRef.current) return;
+
+    const newRenderer = new PlanetPreviewRenderer(canvasRef.current);
+    setRenderer(newRenderer);
+
+    return () => newRenderer.destroy();
   }, [canvasRef]);
 
   // sync planet to renderer
   useEffect(() => {
     renderer?.setPlanet(planet);
   }, [planet, renderer]);
+
   return <canvas ref={canvasRef} width={res} height={res}></canvas>;
 }
 

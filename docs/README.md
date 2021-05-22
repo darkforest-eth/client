@@ -117,7 +117,6 @@
 - [Frontend/Panes/PlanetContextPane](modules/frontend_panes_planetcontextpane.md)
 - [Frontend/Panes/PlanetDetailsPane](modules/frontend_panes_planetdetailspane.md)
 - [Frontend/Panes/PlanetDexPane](modules/frontend_panes_planetdexpane.md)
-- [Frontend/Panes/PlanetPreview](modules/frontend_panes_planetpreview.md)
 - [Frontend/Panes/PlayerArtifactsPane](modules/frontend_panes_playerartifactspane.md)
 - [Frontend/Panes/PlayerInfoPane](modules/frontend_panes_playerinfopane.md)
 - [Frontend/Panes/PluginEditorPane](modules/frontend_panes_plugineditorpane.md)
