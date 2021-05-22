@@ -81,8 +81,12 @@ export function HoverPlanetPane() {
   }, [paneRef]);
 
   const beVisible = useMemo(
-    () => !!hovering && hovering?.locationId !== selected?.locationId && !sending,
-    [hovering, selected, sending]
+    () =>
+      !!hovering &&
+      hovering?.locationId !== selected?.locationId &&
+      !sending &&
+      !uiManager.getMouseDownCoords(),
+    [hovering, selected, sending, uiManager]
   );
 
   const visible = beVisible;

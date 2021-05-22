@@ -42,9 +42,8 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   } else if (tutorialState === TutorialState.SendFleet) {
     return (
       <div>
-        Well done! On the right, you'll see more information about your planet. In the bottom-left,
-        you'll see a <White>context menu</White>, showing quick information about your planet and
-        the ability to send resources.
+        Well done! In the Selected Planet pane, you'll see more information about your planet. This
+        pane displays quick information about your planet and the ability to send resources.
         <br />
         <br />
         <White>Try sending energy to another planet.</White> You can click and drag to look for
@@ -58,7 +57,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         lines. Accepted moves are shown as solid lines.
         <br />
         <br />
-        <White>Try deselecting a planet now. Press ESC or click in empty space.</White>
+        <White>Try deselecting a planet now. Click in empty space to deselect.</White>
       </div>
     );
   } else if (tutorialState === TutorialState.ZoomOut) {
