@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import { useStoredUIState, UIDataKey } from '../../Backend/Storage/UIStateStorageManager';
 import {
   WindowWrapper,
@@ -26,7 +26,6 @@ import {
   ModalPlanetDetailsIcon,
   ModalTwitterBroadcastIcon,
   ModalUpgradeDetailsIcon,
-  ModalWithdrawIcon,
 } from './ModalIcon';
 import OnboardingPane from '../Panes/OnboardingPane';
 import { PlanetDetailsPane } from '../Panes/PlanetDetailsPane';
@@ -44,11 +43,10 @@ import { ZoomPane } from '../Panes/ZoomPane';
 import { useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 import { NotificationsPane } from './Notifications';
 import { useEffect } from 'react';
-import { useEmitterSubscribe, useEmitterValue } from '../Utils/EmitterHooks';
-import { escapeDown$, keyUp$ } from '../Utils/KeyEmitters';
+import { useEmitterValue } from '../Utils/EmitterHooks';
+import { keyUp$ } from '../Utils/KeyEmitters';
 import { ArtifactId } from '@darkforest_eth/types';
 import { PaidArtifactConversationPane } from '../Panes/PaidArtifactConversation/PaidArtifactConversationPane';
-import { WithdrawSilverPane } from '../Panes/WithdrawSilverPane';
 import {
   TOGGLE_ARTIFACTS_DEX_PANE,
   TOGGLE_BROADCAST_PANE,
@@ -58,9 +56,10 @@ import {
   TOGGLE_PLANET_DEX_PANE,
   TOGGLE_UPGRADES_PANE,
 } from '../Utils/ShortcutConstants';
-import { MenuBar, MenuBarSection } from '../Components/MenuBar';
+import { MenuBar, MenuBarSection } from './MenuBar';
 import { PlanetContextPane } from '../Panes/PlanetContextPane';
 import { HoverPlanetPane } from '../Panes/HoverPlanetPane';
+import { TopBar } from './TopBar';
 
 export function GameWindowLayout() {
   const planetDetHook = useState<boolean>(false);
@@ -79,19 +78,11 @@ export function GameWindowLayout() {
   const uiManager = useUIManager();
   const newPlayerHook = useStoredUIState<boolean>(UIDataKey.newPlayer, uiManager);
 
-  const withdrawSilverHook = useState<boolean>(false);
-
   const selected = useSelectedPlanet(uiManager).value;
   const selectedPlanetHook = useState<boolean>(!!selected);
   const [, setSelectedPlanetVisible] = selectedPlanetHook;
 
   useEffect(() => setSelectedPlanetVisible(!!selected), [selected, setSelectedPlanetVisible]);
-
-  /* attach key listeners */
-  const onEscapeDown = useCallback(() => {
-    uiManager.selectedPlanetId$.publish(undefined);
-  }, [uiManager]);
-  useEmitterSubscribe(escapeDown$, onEscapeDown);
 
   /* artifact stuff */
   const artifactDetailsHook = useState<boolean>(false);
@@ -178,8 +169,7 @@ export function GameWindowLayout() {
           openConversationForArtifact={openConversationForArtifact}
         />
         <PaidArtifactConversationPane hook={artifactConversationHook} artifact={convoArtifact} />
-        <WithdrawSilverPane hook={withdrawSilverHook} />
-        <PlanetContextPane hook={selectedPlanetHook} />
+        <PlanetContextPane hook={selectedPlanetHook} upgradeDetHook={upgradeDetHook} />
 
         {modalsContainerRef.current && (
           <PluginLibraryPane
@@ -194,6 +184,7 @@ export function GameWindowLayout() {
 
       <MainWindow>
         <CanvasContainer>
+          <TopBar />
           <UpperLeft>
             <MenuBar>
               <MenuBarSection>
@@ -210,7 +201,6 @@ export function GameWindowLayout() {
                 <ModalHatIcon hook={hatHook} />
                 <ModalTwitterBroadcastIcon hook={twitterBroadcastHook} />
                 <ModalUpgradeDetailsIcon hook={upgradeDetHook} />
-                <ModalWithdrawIcon hook={withdrawSilverHook} />
               </MenuBarSection>
             </MenuBar>
             <ZoomPane />

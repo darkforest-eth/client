@@ -38,7 +38,7 @@ const Anim = styled.span`
   left: 0;
 `;
 
-export function SpacetimeRipLabel() {
+function SpacetimeRipLabelRaw() {
   const component = useMemo(
     () => (
       <Wrap>
@@ -57,3 +57,5 @@ export function SpacetimeRipLabel() {
 
   return component;
 }
+
+export const SpacetimeRipLabel = React.memo(SpacetimeRipLabelRaw);

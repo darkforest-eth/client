@@ -13,6 +13,7 @@ export function TextPreview({
   text: string;
   unFocusedWidthPx?: number;
   focusedWidthPx?: number;
+  maxLength?: number;
 }) {
   const [isTextBox, setIsTextbox] = useState(false);
   const [inputRef, setInputRef] = useState<HTMLInputElement | null>(null);

@@ -953,7 +953,7 @@ export class GameObjects {
             );
 
             const notifManager = NotificationManager.getInstance();
-            if (this.planetCanUpgrade(planet) && planet.owner === this.address) {
+            if (GameObjects.planetCanUpgrade(planet) && planet.owner === this.address) {
               notifManager.planetCanUpgrade(planet);
             }
           }, arrival.arrivalTime * 1000 - Date.now());
@@ -1030,12 +1030,12 @@ export class GameObjects {
     }
   }
 
-  private getSilverNeeded(planet: Planet): number {
+  public static getSilverNeeded(planet: Planet): number {
     const totalLevel = planet.upgradeState.reduce((a, b) => a + b);
     return (totalLevel + 1) * 0.2 * planet.silverCap;
   }
 
-  private planetCanUpgrade(planet: Planet): boolean {
+  public static planetCanUpgrade(planet: Planet): boolean {
     const totalRank = planet.upgradeState.reduce((a, b) => a + b);
     if (planet.spaceType === SpaceType.NEBULA && totalRank >= 3) return false;
     if (planet.spaceType === SpaceType.SPACE && totalRank >= 4) return false;

@@ -2,9 +2,19 @@
 
 ## Table of contents
 
+### Variables
+
+- [ARTIFACT_URL](frontend_components_artifactimage.md#artifact_url)
+
 ### Functions
 
 - [ArtifactImage](frontend_components_artifactimage.md#artifactimage)
+
+## Variables
+
+### ARTIFACT_URL
+
+• `Const` **ARTIFACT_URL**: `"https://d2wspbczt15cqu.cloudfront.net/v0.6.0-artifacts/"`= 'https://d2wspbczt15cqu.cloudfront.net/v0.6.0-artifacts/'
 
 ## Functions
 

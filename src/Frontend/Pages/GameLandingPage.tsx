@@ -435,7 +435,7 @@ export default function GameLandingPage() {
         terminal.current?.print('Successfully joined game. ', TerminalTextStyle.Green);
         terminal.current?.print(`Welcome, player `);
         terminal.current?.println(address, TerminalTextStyle.White);
-        terminal.current?.print('Sent player $0.05 :) ', TerminalTextStyle.Blue);
+        terminal.current?.print('Sent player $0.15 :) ', TerminalTextStyle.Blue);
         terminal.current?.printLink(
           '(View Transaction)',
           () => {

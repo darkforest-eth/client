@@ -42,7 +42,6 @@
 - [getTexIdx](frontend_renderers_gifrenderer.gifrenderer.md#gettexidx)
 - [setDim](frontend_renderers_gifrenderer.gifrenderer.md#setdim)
 - [setProjectionMatrix](frontend_renderers_gifrenderer.gifrenderer.md#setprojectionmatrix)
-- [start](frontend_renderers_gifrenderer.gifrenderer.md#start)
 
 ## Constructors
 
@@ -283,7 +282,7 @@ Inherited from: [WebGLManager](frontend_renderers_gamerenderer_webgl_webglmanage
 
 ### setDim
 
-▸ **setDim**(`dim`: _number_): _void_
+▸ `Private` **setDim**(`dim`: _number_): _void_
 
 #### Parameters
 
@@ -302,11 +301,3 @@ Inherited from: [WebGLManager](frontend_renderers_gamerenderer_webgl_webglmanage
 **Returns:** _void_
 
 Inherited from: [WebGLManager](frontend_renderers_gamerenderer_webgl_webglmanager.webglmanager.md)
-
----
-
-### start
-
-▸ `Private` **start**(): _void_
-
-**Returns:** _void_

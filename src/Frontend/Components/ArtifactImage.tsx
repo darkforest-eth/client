@@ -4,7 +4,7 @@ import { Artifact } from '@darkforest_eth/types';
 import { ArtifactFileColor, artifactFileName } from '../../Backend/GameLogic/ArtifactUtils';
 import dfstyles from '../Styles/dfstyles';
 
-const ARTIFACT_URL = 'https://d2wspbczt15cqu.cloudfront.net/v0.6.0-artifacts/';
+export const ARTIFACT_URL = 'https://d2wspbczt15cqu.cloudfront.net/v0.6.0-artifacts/';
 // const ARTIFACT_URL = '/public/img/artifacts/videos/';
 
 function getArtifactUrl(thumb: boolean, artifact: Artifact, color: ArtifactFileColor): string {

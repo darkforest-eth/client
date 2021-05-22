@@ -31,7 +31,6 @@
 - [isFullRank](backend_utils_utils.md#isfullrank)
 - [moveShipsDecay](backend_utils_utils.md#moveshipsdecay)
 - [neverResolves](backend_utils_utils.md#neverresolves)
-- [planetCanUpgrade](backend_utils_utils.md#planetcanupgrade)
 - [rejectAfter](backend_utils_utils.md#rejectafter)
 - [sleep](backend_utils_utils.md#sleep)
 - [timeoutAfter](backend_utils_utils.md#timeoutafter)
@@ -342,20 +341,6 @@
 ▸ **neverResolves**(): _Promise_<void\>
 
 **Returns:** _Promise_<void\>
-
----
-
-### planetCanUpgrade
-
-▸ `Const` **planetCanUpgrade**(`planet`: _undefined_ \| Planet): _boolean_
-
-#### Parameters
-
-| Name     | Type                  |
-| :------- | :-------------------- |
-| `planet` | _undefined_ \| Planet |
-
-**Returns:** _boolean_
 
 ---
 

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { Biome, LocatablePlanet, PlanetLevel, PlanetType, SpaceType } from '@darkforest_eth/types';
 import _ from 'lodash';
@@ -68,7 +67,7 @@ const StyledPreviewPage = styled.div`
   }
 `;
 
-function PreviewPage() {
+export function PreviewPage() {
   return (
     <StyledPreviewPage>
       <div className='row'>
@@ -79,5 +78,3 @@ function PreviewPage() {
     </StyledPreviewPage>
   );
 }
-
-ReactDOM.render(<PreviewPage />, document.getElementById('root'));

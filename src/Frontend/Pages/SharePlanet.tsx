@@ -10,6 +10,7 @@ import { Sub } from '../Components/Text';
 import { PlanetScape } from '../Renderers/PlanetscapeRenderer/PlanetScape';
 import dfstyles from '../Styles/dfstyles';
 import { Share } from '../Views/Share';
+import { Wrapper } from '../../Backend/Utils/Wrapper';
 
 const PlanetCard = styled.div`
   width: 36em;
@@ -68,7 +69,7 @@ export function SharePlanet({ match }: RouteComponentProps<{ locationId: Locatio
               {getPlanetShortHash(data.planet)} {ProcgenUtils.getPlanetName(data.planet)}
             </div>
             <div>
-              <PlanetScape planet={data.planet} />
+              <PlanetScape wrapper={new Wrapper<Planet>(data.planet)} />
             </div>
             <div>
               <p>

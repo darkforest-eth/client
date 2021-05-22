@@ -151,7 +151,6 @@
 - [locationFromCoords](backend_gamelogic_gamemanager.default.md#locationfromcoords)
 - [move](backend_gamelogic_gamemanager.default.md#move)
 - [onTxIntentFail](backend_gamelogic_gamemanager.default.md#ontxintentfail)
-- [planetCanUpgrade](backend_gamelogic_gamemanager.default.md#planetcanupgrade)
 - [prospectPlanet](backend_gamelogic_gamemanager.default.md#prospectplanet)
 - [refreshMyGPTCredits](backend_gamelogic_gamemanager.default.md#refreshmygptcredits)
 - [refreshTwitters](backend_gamelogic_gamemanager.default.md#refreshtwitters)
@@ -1713,20 +1712,6 @@ the given planet to the given planet.
 | `e`        | Error    |
 
 **Returns:** _void_
-
----
-
-### planetCanUpgrade
-
-▸ **planetCanUpgrade**(`planet`: Planet): _boolean_
-
-#### Parameters
-
-| Name     | Type   |
-| :------- | :----- |
-| `planet` | Planet |
-
-**Returns:** _boolean_
 
 ---
 

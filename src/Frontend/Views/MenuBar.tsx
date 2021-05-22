@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Hook } from '../../_types/global/GlobalTypes';
 import dfstyles from '../Styles/dfstyles';
 import { GameWindowZIndex } from '../Utils/constants';
-import { LongDash } from './Text';
+import { LongDash } from '../Components/Text';
 
 /** Left bar (with all the modal icons) */
 

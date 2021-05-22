@@ -10,7 +10,7 @@
 
 ### TextPreview
 
-▸ **TextPreview**(`__namedParameters`: { `focusedWidthPx?`: _number_ ; `text`: _string_ ; `unFocusedWidthPx?`: _number_ }): _Element_
+▸ **TextPreview**(`__namedParameters`: { `focusedWidthPx?`: _number_ ; `maxLength?`: _number_ ; `text`: _string_ ; `unFocusedWidthPx?`: _number_ }): _Element_
 
 #### Parameters
 
@@ -18,6 +18,7 @@
 | :------------------------------------ | :------- |
 | `__namedParameters`                   | _object_ |
 | `__namedParameters.focusedWidthPx?`   | _number_ |
+| `__namedParameters.maxLength?`        | _number_ |
 | `__namedParameters.text`              | _string_ |
 | `__namedParameters.unFocusedWidthPx?` | _number_ |
 

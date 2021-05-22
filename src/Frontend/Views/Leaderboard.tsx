@@ -1,28 +1,15 @@
 import { AggregateLeaderboard, Leaderboard_060 } from '@darkforest_eth/types';
 import _ from 'lodash';
-import React, { useEffect } from 'react';
-import { useCallback } from 'react';
-import { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { loadLeaderboard } from '../../Backend/Network/LeaderboardApi';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
 import { Red } from '../Components/Text';
 import { TextPreview } from '../Components/TextPreview';
+import { useLeaderboard } from '../Utils/AppHooks';
 import { Table } from './Table';
 
 export function Leaderboard() {
-  const [leaderboard, setLeaderboard] = useState<AggregateLeaderboard | undefined>();
-  const [error, setError] = useState<Error | undefined>();
-
-  const load = useCallback(async function load() {
-    try {
-      setLeaderboard(await loadLeaderboard());
-    } catch (e) {
-      setError(e);
-    }
-  }, []);
-
-  useEffect(() => void load(), [load]);
+  const { leaderboard, error } = useLeaderboard();
 
   return (
     <>

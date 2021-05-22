@@ -1,7 +1,6 @@
-import { Planet } from '@darkforest_eth/types';
-import React, { useState, useRef, useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { Hook, isLocatable } from '../../_types/global/GlobalTypes';
+import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import { Spacer, Truncate } from '../Components/CoreUI';
 import { PaneProps } from '../Components/GameWindowComponents';
@@ -11,10 +10,8 @@ import {
   MinimizeCircleIcon,
   QuestionCircleIcon,
 } from '../Components/Icons';
-import Viewport from '../Game/Viewport';
 import WindowManager from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
-import { useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 import { GameWindowZIndex } from '../Utils/constants';
 
 export const RECOMMENDED_WIDTH = '450px';
@@ -155,9 +152,7 @@ const Content = styled.div`
 
 const Title = styled(Truncate)`
   flex-grow: 1;
-  padding-left: 16px;
-  padding-right: 16px;
-  text-align: center;
+  text-align: left;
 `;
 
 /**
@@ -210,7 +205,6 @@ export function ModalPane({
   noPadding,
   helpContent,
   width,
-  fixToSelectedPlanet,
   borderColor,
   backgroundColor,
   titlebarColor,
@@ -222,7 +216,6 @@ export function ModalPane({
   noPadding?: boolean;
   helpContent?: () => React.ReactNode;
   width?: string;
-  fixToSelectedPlanet?: boolean;
   borderColor?: string;
   backgroundColor?: string;
   titlebarColor?: string;
@@ -373,39 +366,6 @@ export function ModalPane({
 
   const showingHelp = helpContent !== undefined && showingInformationSection;
   const currentWidth = minimized || showingHelp ? '' : width;
-
-  /* fix to selected planet (used in `SelectedPlanetPane.tsx`) 
-     this is a really bad way to do it, ModalPane shouldn't have to be aware of any game logic
-     TODO make this kind of logic composable */
-
-  const uiManager = useUIManager();
-  const selected = useSelectedPlanet(uiManager).value;
-
-  const [lastPlanet, setLastPlanet] = useState<Planet | undefined>(selected);
-  useEffect(() => setLastPlanet(selected), [selected]);
-
-  const planetChanged = useMemo(
-    () => selected?.locationId !== lastPlanet?.locationId,
-    [lastPlanet, selected]
-  );
-
-  useLayoutEffect(() => {
-    if (!fixToSelectedPlanet || !containerRef.current || !selected) return;
-
-    if (isLocatable(selected) && planetChanged) {
-      const viewport = Viewport.getInstance();
-      if (viewport.isInViewport(selected.location.coords)) {
-        const canvasCoords = viewport.worldToCanvasCoords(selected.location.coords);
-
-        let offX = 0;
-        let offY = 0;
-        if (canvasCoords.x > window.innerWidth / 2) offX = -containerRef.current.offsetWidth;
-        if (canvasCoords.y > window.innerHeight / 2) offY = -containerRef.current.offsetHeight;
-
-        setCoords({ x: canvasCoords.x + offX, y: canvasCoords.y + offY });
-      }
-    }
-  }, [selected, fixToSelectedPlanet, containerRef, planetChanged]);
 
   return (
     <Modal

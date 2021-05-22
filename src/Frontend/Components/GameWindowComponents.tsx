@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import dfstyles from '../../Frontend/Styles/dfstyles';
+import { TOP_BAR_HEIGHT } from '../Views/TopBar';
 
 export const WindowWrapper = styled.div`
   overflow: hidden;
@@ -83,7 +84,7 @@ export const CanvasWrapper = styled.div`
 
 export const UpperLeft = styled.div`
   position: absolute;
-  top: 0;
+  top: ${TOP_BAR_HEIGHT};
   left: 0;
 
   display: flex;

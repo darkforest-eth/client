@@ -94,7 +94,7 @@
 
 ### SendCancelled
 
-• **SendCancelled**: = "SendCanelled"
+• **SendCancelled**: = "SendCancelled"
 
 ---
 

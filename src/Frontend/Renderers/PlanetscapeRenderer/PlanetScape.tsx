@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Planet } from '@darkforest_eth/types';
+import { Planet, PlanetType } from '@darkforest_eth/types';
 import { PlanetscapeRenderer } from './PlanetScapeRenderer';
 import { useUIManager } from '../../Utils/AppHooks';
+import dfstyles from '../../Styles/dfstyles';
+import { Wrapper } from '../../../Backend/Utils/Wrapper';
 
 const PlanetScapeContainer = styled.div`
   position: relative;
@@ -21,11 +23,37 @@ const PlanetScapeContainer = styled.div`
   }
 `;
 
+const ArtifactLabel = styled.div`
+  border: 1px solid ${dfstyles.colors.subtext};
+  color: ${dfstyles.colors.subtext};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  & > p {
+    width: 12em;
+    display: inline-block;
+    margin: 0 auto;
+  }
+
+  background: none;
+`;
+
 export const SCAPE_WIDTH = 450;
 export const SCAPE_HEIGHT = 150;
 
 // NOTE this refreshes every second like everything else; if it's slow we can cache a planet and wait for select
-export function PlanetScape({ planet }: { planet: Planet | undefined }) {
+export function PlanetScape({ wrapper: p }: { wrapper: Wrapper<Planet | undefined> }) {
   const scapeRef = useRef<HTMLCanvasElement | null>(null);
   const moonRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -55,13 +83,21 @@ export function PlanetScape({ planet }: { planet: Planet | undefined }) {
 
   // sync renderer to planet
   useEffect(() => {
-    renderer?.setPlanet(planet);
-  }, [planet, renderer]);
+    renderer?.setPlanet(p.value);
+  }, [p, renderer]);
 
   const canvasH = SCAPE_HEIGHT + 'px';
 
   return (
     <PlanetScapeContainer ref={parentRef}>
+      {p &&
+        p.value &&
+        p.value.heldArtifactIds.length === 0 &&
+        p.value.planetType !== PlanetType.PLANET && (
+          <ArtifactLabel>
+            <p>Artifacts on this planet will appear here</p>
+          </ArtifactLabel>
+        )}
       <canvas
         style={{
           width: '100%',

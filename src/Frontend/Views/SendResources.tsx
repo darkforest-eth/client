@@ -12,8 +12,8 @@ import WindowManager, { CursorState } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
 import { planetBackground } from '../Styles/PlanetStyles';
 import { useUIManager, useControlDown, usePlanetInactiveArtifacts } from '../Utils/AppHooks';
-import { useEmitterValue } from '../Utils/EmitterHooks';
-import { keyUp$ } from '../Utils/KeyEmitters';
+import { useEmitterSubscribe, useEmitterValue } from '../Utils/EmitterHooks';
+import { escapeDown$, keyUp$ } from '../Utils/KeyEmitters';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 
 const DEFAULT_ENERGY_PERCENT = 50;
@@ -308,26 +308,28 @@ function SendRow({
   );
 }
 
-export function SendResources({ planetWrapper }: { planetWrapper: Wrapper<Planet | undefined> }) {
+export function SendResources({
+  planetWrapper: p,
+}: {
+  planetWrapper: Wrapper<Planet | undefined>;
+}) {
   const uiManager = useUIManager();
 
-  const planet = planetWrapper.value;
-
   const energyHook = useState<number>(
-    planet && uiManager.getForcesSending(planet.locationId)
-      ? uiManager.getForcesSending(planet.locationId)
+    p.value && uiManager.getForcesSending(p.value.locationId)
+      ? uiManager.getForcesSending(p.value.locationId)
       : DEFAULT_ENERGY_PERCENT
   );
   const [energyPercent, setEnergyPercent] = energyHook;
 
   const silverHook = useState<number>(
-    planet && uiManager.getSilverSending(planet.locationId)
-      ? uiManager.getSilverSending(planet.locationId)
+    p.value && uiManager.getSilverSending(p.value.locationId)
+      ? uiManager.getSilverSending(p.value.locationId)
       : DEFAULT_SILVER_PERCENT
   );
   const [silverPercent, setSilverPercent] = silverHook;
 
-  const [_sending, setSending] = useState<boolean>(false);
+  const [sending, setSending] = useState<boolean>(false);
 
   const windowManager = WindowManager.getInstance();
 
@@ -336,23 +338,23 @@ export function SendResources({ planetWrapper }: { planetWrapper: Wrapper<Planet
   const lastKeyUp = useRef(keyUp);
 
   useEffect(() => {
-    if (!planet || !uiManager) return;
+    if (!p.value || !uiManager) return;
 
-    uiManager.setForcesSending(planet.locationId, energyPercent);
-    uiManager.setSilverSending(planet.locationId, silverPercent);
-  }, [energyPercent, silverPercent, planet, uiManager]);
+    uiManager.setForcesSending(p.value.locationId, energyPercent);
+    uiManager.setSilverSending(p.value.locationId, silverPercent);
+  }, [energyPercent, silverPercent, p, uiManager]);
 
   useEffect(() => {
     const uiEmitter = UIEmitter.getInstance();
     setSending(false);
     windowManager.setCursorState(CursorState.Normal);
     uiEmitter.emit(UIEmitterEvent.SendCancelled);
-  }, [planet, windowManager]);
+  }, [p.value?.locationId, windowManager]);
 
   useEffect(() => {
     setEnergyPercent(DEFAULT_ENERGY_PERCENT);
     setSilverPercent(DEFAULT_SILVER_PERCENT);
-  }, [planet?.locationId, setEnergyPercent, setSilverPercent]);
+  }, [p.value?.locationId, setEnergyPercent, setSilverPercent]);
 
   const doSend = useCallback(() => {
     if (!uiManager || !windowManager) return;
@@ -366,9 +368,9 @@ export function SendResources({ planetWrapper }: { planetWrapper: Wrapper<Planet
     } else {
       setSending(true);
       windowManager.setCursorState(CursorState.TargetingForces);
-      uiEmitter.emit(UIEmitterEvent.SendInitiated, planet);
+      uiEmitter.emit(UIEmitterEvent.SendInitiated, p.value);
     }
-  }, [planet, windowManager, uiManager]);
+  }, [p, windowManager, uiManager]);
 
   /**
    * If the user presses 0-9, set the energy percent we're sending to be
@@ -424,38 +426,55 @@ export function SendResources({ planetWrapper }: { planetWrapper: Wrapper<Planet
   const artifactProps = { sendArtifact, setSendArtifact };
 
   useEffect(() => {
-    if (!planet || !sendArtifact) return;
+    if (!p.value || !sendArtifact) return;
 
     // kill the artifact once the move is made
-    if (!planet.heldArtifactIds.includes(sendArtifact.id)) {
+    if (!p.value.heldArtifactIds.includes(sendArtifact.id)) {
       setSendArtifact(undefined);
     }
 
     // kill the artifact when the move is pending
-    for (const v of planet.unconfirmedDepartures) {
+    for (const v of p.value.unconfirmedDepartures) {
       if (v.artifact === sendArtifact.id) {
         setSendArtifact(undefined);
         return;
       }
     }
-  }, [planet, sendArtifact]);
+  }, [p, sendArtifact]);
 
   useEffect(() => {
-    if (!planet) return;
-    uiManager.setArtifactSending(planet.locationId, sendArtifact);
-  }, [sendArtifact, uiManager, planet]);
+    if (!p.value) return;
+    uiManager.setArtifactSending(p.value.locationId, sendArtifact);
+  }, [sendArtifact, uiManager, p]);
 
   const remove = useCallback(() => setSendArtifact(undefined), [setSendArtifact]);
-  const artifacts = usePlanetInactiveArtifacts(planetWrapper, uiManager);
+  const artifacts = usePlanetInactiveArtifacts(p, uiManager);
+
+  // attach escape key listener
+  /* TODO rethink this. this is a trash way of doing this. this only works because
+    `SendResources` is always open when `PlanetContextPane` is, but we shouldn't trust this.  */
+  const onEscapeDown = useCallback(() => {
+    if (!sending) uiManager.selectedPlanetId$.publish(undefined);
+    else {
+      UIEmitter.getInstance().emit(UIEmitterEvent.SendCancelled);
+      setSending(false);
+    }
+  }, [uiManager, sending]);
+  useEmitterSubscribe(escapeDown$, onEscapeDown);
 
   return (
     <StyledSendResources>
-      <ResourceBar selected={planet} value={energyPercent} setValue={setEnergyPercent} />
-      {planet && planet.silver > 0 && (
-        <ResourceBar selected={planet} value={silverPercent} setValue={setSilverPercent} isSilver />
+      <ResourceBar selected={p.value} value={energyPercent} setValue={setEnergyPercent} />
+      {p.value && p.value.silver > 0 && (
+        <ResourceBar
+          selected={p.value}
+          value={silverPercent}
+          setValue={setSilverPercent}
+          isSilver
+        />
       )}
-      {planet && artifacts.length > 0 && (
-        <SelectArtifactRow planet={planet} inactiveArtifacts={artifacts} {...artifactProps} />
+      {p.value && artifacts.length > 0 && (
+        <SelectArtifactRow planet={p.value} inactiveArtifacts={artifacts} {...artifactProps} />
       )}
 
       <SendRow artifact={sendArtifact} remove={remove} doSend={doSend} />

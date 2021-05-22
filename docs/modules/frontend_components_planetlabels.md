@@ -8,20 +8,20 @@
 - [DefenseText](frontend_components_planetlabels.md#defensetext)
 - [EnergyCapText](frontend_components_planetlabels.md#energycaptext)
 - [EnergyGrowthText](frontend_components_planetlabels.md#energygrowthtext)
-- [EnergyLabel](frontend_components_planetlabels.md#energylabel)
 - [EnergyText](frontend_components_planetlabels.md#energytext)
 - [LevelRankText](frontend_components_planetlabels.md#levelranktext)
 - [LevelRankTextEm](frontend_components_planetlabels.md#levelranktextem)
 - [OptionalBiomeLabel](frontend_components_planetlabels.md#optionalbiomelabel)
 - [PlanetBiomeTypeLabel](frontend_components_planetlabels.md#planetbiometypelabel)
+- [PlanetEnergyLabel](frontend_components_planetlabels.md#planetenergylabel)
 - [PlanetLevelText](frontend_components_planetlabels.md#planetleveltext)
 - [PlanetOwnerLabel](frontend_components_planetlabels.md#planetownerlabel)
 - [PlanetRankText](frontend_components_planetlabels.md#planetranktext)
+- [PlanetSilverLabel](frontend_components_planetlabels.md#planetsilverlabel)
 - [PlanetTypeLabel](frontend_components_planetlabels.md#planettypelabel)
 - [RangeText](frontend_components_planetlabels.md#rangetext)
 - [SilverCapText](frontend_components_planetlabels.md#silvercaptext)
 - [SilverGrowthText](frontend_components_planetlabels.md#silvergrowthtext)
-- [SilverLabel](frontend_components_planetlabels.md#silverlabel)
 - [SilverText](frontend_components_planetlabels.md#silvertext)
 - [SpeedText](frontend_components_planetlabels.md#speedtext)
 - [StatText](frontend_components_planetlabels.md#stattext)
@@ -83,21 +83,6 @@
 | :------------------------- | :-------------------- |
 | `__namedParameters`        | _object_              |
 | `__namedParameters.planet` | _undefined_ \| Planet |
-
-**Returns:** _Element_
-
----
-
-### EnergyLabel
-
-▸ **EnergyLabel**(`__namedParameters`: { `planet`: Planet \| _undefined_ }): _Element_
-
-#### Parameters
-
-| Name                       | Type                  |
-| :------------------------- | :-------------------- |
-| `__namedParameters`        | _object_              |
-| `__namedParameters.planet` | Planet \| _undefined_ |
 
 **Returns:** _Element_
 
@@ -180,6 +165,21 @@
 
 ---
 
+### PlanetEnergyLabel
+
+▸ **PlanetEnergyLabel**(`__namedParameters`: { `planet`: Planet \| _undefined_ }): _Element_
+
+#### Parameters
+
+| Name                       | Type                  |
+| :------------------------- | :-------------------- |
+| `__namedParameters`        | _object_              |
+| `__namedParameters.planet` | Planet \| _undefined_ |
+
+**Returns:** _Element_
+
+---
+
 ### PlanetLevelText
 
 ▸ `Const` **PlanetLevelText**(`__namedParameters`: { `planet`: _undefined_ \| Planet }): _Element_
@@ -222,6 +222,21 @@
 | :------------------------- | :-------------------- |
 | `__namedParameters`        | _object_              |
 | `__namedParameters.planet` | _undefined_ \| Planet |
+
+**Returns:** _Element_
+
+---
+
+### PlanetSilverLabel
+
+▸ **PlanetSilverLabel**(`__namedParameters`: { `planet`: Planet \| _undefined_ }): _Element_
+
+#### Parameters
+
+| Name                       | Type                  |
+| :------------------------- | :-------------------- |
+| `__namedParameters`        | _object_              |
+| `__namedParameters.planet` | Planet \| _undefined_ |
 
 **Returns:** _Element_
 
@@ -282,21 +297,6 @@
 | :------------------------- | :-------------------- |
 | `__namedParameters`        | _object_              |
 | `__namedParameters.planet` | _undefined_ \| Planet |
-
-**Returns:** _Element_
-
----
-
-### SilverLabel
-
-▸ **SilverLabel**(`__namedParameters`: { `planet`: Planet \| _undefined_ }): _Element_
-
-#### Parameters
-
-| Name                       | Type                  |
-| :------------------------- | :-------------------- |
-| `__namedParameters`        | _object_              |
-| `__namedParameters.planet` | Planet \| _undefined_ |
 
 **Returns:** _Element_
 

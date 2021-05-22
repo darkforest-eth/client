@@ -20,6 +20,7 @@ import dfstyles from '../Styles/dfstyles';
 import { BiomeTextColors } from '../Styles/PlanetStyles';
 import { shakeAnim, burnAnim, icyAnim } from './BiomeAnims';
 import { LavaLabel } from './LavaLabel';
+import { WastelandLabel } from './WastelandLabel';
 
 /* note that we generally prefer `Planet | undefined` over `Planet` because it
    makes it easier to pass in selected / hovering planet from the emitters      */
@@ -56,7 +57,7 @@ export const EnergyCapText = ({ planet }: { planet: Planet | undefined }) => (
   <StatText planet={planet} getStat={getEnergyCap} />
 );
 
-export function EnergyLabel({ planet }: { planet: Planet | undefined }) {
+export function PlanetEnergyLabel({ planet }: { planet: Planet | undefined }) {
   return (
     <span>
       <EnergyText planet={planet} /> <Sub>/</Sub> <EnergyCapText planet={planet} />
@@ -64,7 +65,7 @@ export function EnergyLabel({ planet }: { planet: Planet | undefined }) {
   );
 }
 
-export function SilverLabel({ planet }: { planet: Planet | undefined }) {
+export function PlanetSilverLabel({ planet }: { planet: Planet | undefined }) {
   return (
     <span>
       <SilverText planet={planet} /> <Sub>/</Sub> <SilverCapText planet={planet} />
@@ -148,6 +149,8 @@ const StyledBiomeLabel = styled.span<{ biome: Biome }>`
 export const BiomeLabel = ({ planet }: { planet: LocatablePlanet }) =>
   planet.biome === Biome.LAVA ? (
     <LavaLabel />
+  ) : planet.biome === Biome.WASTELAND ? (
+    <WastelandLabel />
   ) : (
     <StyledBiomeLabel biome={planet.biome}>{BiomeNames[planet.biome]}</StyledBiomeLabel>
   );

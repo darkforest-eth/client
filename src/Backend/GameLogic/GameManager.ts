@@ -19,12 +19,7 @@ import {
 } from '../../_types/darkforest/api/ContractsAPITypes';
 import { fakeHash, mimcHash, perlin } from '@darkforest_eth/hashing';
 import { GameObjects } from './GameObjects';
-import {
-  getRandomActionId,
-  hexifyBigIntNestedArray,
-  moveShipsDecay,
-  planetCanUpgrade,
-} from '../Utils/Utils';
+import { getRandomActionId, hexifyBigIntNestedArray, moveShipsDecay } from '../Utils/Utils';
 import { Contract, ContractInterface } from 'ethers';
 import {
   isUnconfirmedInit,
@@ -2321,10 +2316,6 @@ class GameManager extends EventEmitter {
 
   public getNotificationsManager() {
     return NotificationManager.getInstance();
-  }
-
-  public planetCanUpgrade(planet: Planet) {
-    return planetCanUpgrade(planet);
   }
 
   /** Return a reference to the planet map */

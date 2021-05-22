@@ -10,6 +10,7 @@ import { RGBVec } from '../GameRenderer/EngineTypes';
 import { SpriteRenderer } from '../GameRenderer/Entities/SpriteRenderer';
 import { WebGLManager } from '../GameRenderer/WebGL/WebGLManager';
 import { PathRenderer } from './PathRenderer';
+import autoBind from 'auto-bind';
 
 const ARTIFACT_W = 128;
 
@@ -51,10 +52,12 @@ export class PlanetscapeRenderer extends WebGLManager {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     this.pathRenderer = new PathRenderer(this);
-    this.spriteRenderer = new SpriteRenderer(this);
+    this.spriteRenderer = new SpriteRenderer(this, false, true);
 
     this.isPaused = false;
     this.loop();
+
+    autoBind(this);
   }
 
   setPaused(isPaused?: boolean) {
@@ -62,6 +65,9 @@ export class PlanetscapeRenderer extends WebGLManager {
   }
 
   public destroy(): void {
+    /* we're in bad territory if this ever gets called - it means there's a memory leak.
+    you can't really clean up after WebGL contexts*/
+    console.error('canceled PlanetScape!');
     window.cancelAnimationFrame(this.frameRequestId);
   }
 
@@ -143,6 +149,7 @@ export class PlanetscapeRenderer extends WebGLManager {
   // workaround for weird bug where not drawing once crashes the renderer
   // TODO fix & remove
   private flushArtifactOnce() {
+    this.drawHill((x) => x, [255, 0, 0]);
     this.spriteRenderer.queueArtifact(mockCommon, { x: 0, y: 0 });
     this.spriteRenderer.flush();
     this.clear();

@@ -10,13 +10,12 @@
 
 ### PlanetContextPane
 
-▸ **PlanetContextPane**(`__namedParameters`: { `hook`: [_ModalHook_](frontend_views_modalpane.md#modalhook) }): _Element_
+▸ **PlanetContextPane**(`__namedParameters`: { `hook`: [_ModalHook_](frontend_views_modalpane.md#modalhook) } & [_PlanetNotifHooks_](frontend_views_planetnotifications.md#planetnotifhooks)): _Element_
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | _object_                                             |
-| `__namedParameters.hook` | [_ModalHook_](frontend_views_modalpane.md#modalhook) |
+| Name                | Type                                                                                                                                            |
+| :------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `__namedParameters` | { `hook`: [_ModalHook_](frontend_views_modalpane.md#modalhook) } & [_PlanetNotifHooks_](frontend_views_planetnotifications.md#planetnotifhooks) |
 
 **Returns:** _Element_

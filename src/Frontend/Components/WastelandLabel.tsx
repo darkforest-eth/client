@@ -1,7 +1,8 @@
 import { Biome, BiomeNames } from '@darkforest_eth/types';
 import React, { useMemo } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { BiomeTextColors } from '../Styles/PlanetStyles';
+import { burnAnim, wiggle } from './BiomeAnims';
 
 const Wrap = styled.span`
   position: relative;
@@ -12,23 +13,16 @@ const Static = styled.span`
   opacity: 0;
 `;
 
-const bounce = keyframes`
-  0% { top: 0px; filter: none; }
-  20% { top: -3px; filter: brightness(1.75); }
-  40% { top: -3px; filter: brightness(1.75); }
-  60% { top: 0px; filter: none; }
-  100% { top: 0px; filter: none;}
-`;
-
 const AnimDelay = styled.span<{ i: number }>`
   position: relative;
-  animation: ${bounce} 1s ease-in-out infinite alternate;
-  ${({ i }) => `animation-delay: ${-i * 0.1}s;`}
+  animation: ${wiggle} ${({ i }) => 9.4 + ((i * 0.7) % 1.0)}s linear infinite;
+  ${({ i }) => `animation-delay: ${-i * 5.9}s;`}
+  color: ${BiomeTextColors[Biome.WASTELAND]};
 `;
 
 const Anim = styled.span`
   position: absolute;
-  color: ${BiomeTextColors[Biome.LAVA]};
+  ${burnAnim};
   transition: color 0.2s;
   display: inline-flex;
   flex-direction: row;
@@ -37,13 +31,13 @@ const Anim = styled.span`
 `;
 
 // TODO pull this logic out from here and SpaceTimeRipLabel into a component
-export function LavaLabelRaw() {
+export function WastelandLabelRaw() {
   const component = useMemo(
     () => (
       <Wrap>
-        <Static>{BiomeNames[Biome.LAVA]}</Static>
+        <Static>{BiomeNames[Biome.WASTELAND]}</Static>
         <Anim>
-          {BiomeNames[Biome.LAVA].split('').map((c, i) => (
+          {BiomeNames[Biome.WASTELAND].split('').map((c, i) => (
             <AnimDelay i={i} key={i}>
               {c === ' ' ? <>&nbsp;</> : c}
             </AnimDelay>
@@ -57,4 +51,4 @@ export function LavaLabelRaw() {
   return component;
 }
 
-export const LavaLabel = React.memo(LavaLabelRaw);
+export const WastelandLabel = React.memo(WastelandLabelRaw);

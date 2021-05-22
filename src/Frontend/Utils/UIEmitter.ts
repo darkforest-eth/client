@@ -23,7 +23,7 @@ export enum UIEmitterEvent {
   ZoomOut = 'ZoomOut',
 
   SendInitiated = 'SendInitiated',
-  SendCancelled = 'SendCanelled',
+  SendCancelled = 'SendCancelled',
   SendCompleted = 'SendCompleted',
 
   DepositArtifact = 'DepositArtifact',

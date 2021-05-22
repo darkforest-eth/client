@@ -1,5 +1,6 @@
 import { EMPTY_LOCATION_ID } from '@darkforest_eth/constants';
 import { Planet, PlanetType } from '@darkforest_eth/types';
+import autoBind from 'auto-bind';
 import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { MineRenderer } from '../Renderers/GameRenderer/Entities/MineRenderer';
@@ -59,9 +60,14 @@ class PlanetPreviewRenderer extends WebGLManager {
     this.flushOnce();
 
     this.loop();
+
+    autoBind(this);
   }
 
   public destroy() {
+    /* we're in bad territory if this ever gets called - it means there's a memory leak.
+    you can't really clean up after WebGL contexts*/
+    console.error('canceled PlanetPreview!');
     window.cancelAnimationFrame(this.frameRequestId);
   }
 

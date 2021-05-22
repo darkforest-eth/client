@@ -2,6 +2,8 @@ import { PlanetType } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
 import { getPlanetRank, isFullRank } from '../../Backend/Utils/Utils';
+import { ScoreLabel, SilverLabel } from '../Components/KeywordLabels';
+import { SpacetimeRipLabel } from '../Components/SpacetimeRipLabel';
 import { Sub, White, Green, Red } from '../Components/Text';
 import { TooltipName } from '../Game/WindowManager';
 import { useUIManager, useSelectedPlanet, useAccount } from '../Utils/AppHooks';
@@ -34,7 +36,7 @@ export function RankTooltipPane() {
   return (
     <div>
       <Sub>
-        Your current rank, based on <White>score</White>.
+        Your current rank, based on <ScoreLabel />.
       </Sub>
     </div>
   );
@@ -44,9 +46,8 @@ export function ScoreTooltipPane() {
   return (
     <div>
       <Sub>
-        Your current score. <White>Score</White> is calculated as the sum of the total <br />
-        <White>Energy Cap</White> of your top 10 planets plus 30 percent of your <br />
-        planets' <White>total silver value</White>. (Cost of upgrades + current silver)
+        Your current score. <ScoreLabel /> is obtained by withdrawing <SilverLabel /> on a{' '}
+        <SpacetimeRipLabel />
       </Sub>
     </div>
   );
@@ -425,7 +426,7 @@ function YourArtifacts() {
 
 const ModalWithdrawSilverTooltipPane = () => <div>Withdraw silver to earn score.</div>;
 
-const Hats = () => <div>Buy hats for this planet.</div>;
+const Hats = () => <div>Buy hats for the selected planet.</div>;
 
 const FindArtifact = () => (
   <div>

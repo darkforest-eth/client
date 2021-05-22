@@ -13,7 +13,7 @@ export const BiomeTextColors: Record<Biome, string> = [
   '#b48812', // SWAMP
   '#ffe554', // DESERT
   'hsl(198, 78%, 77%)', // ICE
-  '#000', // WASTELAND
+  '#000000', // WASTELAND
   '#FF5100', // LAVA
   '#bf5bf1', // CORRUPTED
 ];
@@ -27,7 +27,7 @@ export const BiomeBackgroundColors: Record<Biome, string> = [
   '#211b0e', // SWAMP
   '#302e0e', // DESERT
   '#0d212f', // ICE
-  '#1e1e1e', // WASTELAND
+  '#321b1b', // WASTELAND
   '#321000', // LAVA
   '#1e0d26', // CORRUPTED
 ];

@@ -1,14 +1,7 @@
 import * as bigInt from 'big-integer';
 import { BigInteger } from 'big-integer';
 import { StatIdx } from '../../_types/global/GlobalTypes';
-import {
-  Planet,
-  EthAddress,
-  SpaceType,
-  PlanetType,
-  Upgrade,
-  UpgradeBranchName,
-} from '@darkforest_eth/types';
+import { Planet, EthAddress, SpaceType, Upgrade, UpgradeBranchName } from '@darkforest_eth/types';
 import _ from 'lodash';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
@@ -135,10 +128,6 @@ export const getPlanetMaxRank = (planet: Planet | undefined): number => {
   if (planet.spaceType === SpaceType.NEBULA) return 3;
   else if (planet.spaceType === SpaceType.SPACE) return 4;
   else return 5;
-};
-
-export const planetCanUpgrade = (planet: Planet | undefined): boolean => {
-  return !!(planet && !isFullRank(planet) && planet.planetType === PlanetType.PLANET);
 };
 
 export const titleCase = (title: string): string =>

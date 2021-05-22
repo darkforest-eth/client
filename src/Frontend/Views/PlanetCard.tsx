@@ -15,13 +15,13 @@ import {
 import {
   DefenseText,
   EnergyGrowthText,
-  EnergyLabel,
+  PlanetEnergyLabel,
   LevelRankTextEm,
   PlanetBiomeTypeLabel,
   PlanetOwnerLabel,
   RangeText,
   SilverGrowthText,
-  SilverLabel,
+  PlanetSilverLabel,
   SpeedText,
 } from '../Components/PlanetLabels';
 import { PlanetPreview } from '../Components/PlanetPreview';
@@ -79,13 +79,13 @@ export function PlanetCard({ planetWrapper }: { planetWrapper: Wrapper<Planet | 
             <PCStatIcon planet={planet} stat={StatIdx.EnergyCap}>
               <EnergyIcon />
             </PCStatIcon>
-            <EnergyLabel planet={planet} />
+            <PlanetEnergyLabel planet={planet} />
           </BigStatCell>
           <BigStatCell>
             <RowTip name={TooltipName.Silver}>
               <SilverIcon />
             </RowTip>
-            <SilverLabel planet={planet} />
+            <PlanetSilverLabel planet={planet} />
           </BigStatCell>
         </TopRow>
         <StatRow>

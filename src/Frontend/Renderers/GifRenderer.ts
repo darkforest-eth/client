@@ -44,12 +44,9 @@ export class GifRenderer extends WebGLManager {
 
     this.spriteRenderer = new SpriteRenderer(this, isThumb);
     this.setDim(dim);
-
-    // shitty way to make sure texture is loaded first
-    setTimeout(() => this.start(), 1000);
   }
 
-  setDim(dim: number) {
+  private setDim(dim: number) {
     const SPRITE_DIM = this.thumb ? 16 : 64;
 
     this.canvasDim = dim;
@@ -62,12 +59,6 @@ export class GifRenderer extends WebGLManager {
   }
 
   // https://gist.github.com/ahgood/bfc57a7f44d6ab7803f3ee2ec0abb980
-  private start() {
-    this.drawSprite(
-      mockArtifactWithRarity(ArtifactRarity.Mythic, ArtifactType.PhotoidCannon, Biome.ICE)
-    );
-    window.requestAnimationFrame(this.start);
-  }
 
   private drawSprite(artifact: Artifact, atFrame: number | undefined = undefined) {
     this.clear();
@@ -149,9 +140,8 @@ export class GifRenderer extends WebGLManager {
 
   private async addBiomes(videoMode: boolean, dir: JSZip) {
     setForceAncient(false);
-    // make sure you add `return false` to isAncient
     for (let type = ArtifactType.MIN; type <= ArtifactType.MAX; type++) {
-      for (let rarity = ArtifactRarity.Common; rarity <= ArtifactRarity.Mythic; rarity++) {
+      for (let rarity = ArtifactRarity.Rare; rarity <= ArtifactRarity.Rare; rarity++) {
         for (let biome = Biome.MIN; biome <= Biome.MAX; biome++) {
           if (videoMode) await this.addVideo(dir, type, biome, rarity, false);
           else this.addSprite(dir, type, biome, rarity, false);
@@ -162,9 +152,8 @@ export class GifRenderer extends WebGLManager {
 
   private async addAncient(videoMode: boolean, dir: JSZip) {
     setForceAncient(true);
-    // make sure you add `return true` to isAncient
     for (let type = ArtifactType.MIN; type <= ArtifactType.MAX; type++) {
-      for (let rarity = ArtifactRarity.Common; rarity <= ArtifactRarity.Mythic; rarity++) {
+      for (let rarity = ArtifactRarity.Rare; rarity <= ArtifactRarity.Rare; rarity++) {
         if (videoMode) await this.addVideo(dir, type, 1, rarity, true);
         else this.addSprite(dir, type, 1, rarity, true);
       }

@@ -2,14 +2,12 @@
 
 ## Table of contents
 
-### Functions
+### Variables
 
 - [SpacetimeRipLabel](frontend_components_spacetimeriplabel.md#spacetimeriplabel)
 
-## Functions
+## Variables
 
 ### SpacetimeRipLabel
 
-▸ **SpacetimeRipLabel**(): _Element_
-
-**Returns:** _Element_
+• `Const` **SpacetimeRipLabel**: _MemoExoticComponent_<() => _Element_\>

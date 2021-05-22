@@ -6,15 +6,14 @@ import { Btn } from '../Components/Btn';
 import { CenterBackgroundSubtext, Spacer, Underline } from '../Components/CoreUI';
 import { Coords, Sub } from '../Components/Text';
 import { TextPreview } from '../Components/TextPreview';
-import { PlanetScape } from '../Renderers/PlanetscapeRenderer/PlanetScape';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager, useSelectedPlanet, useAccount } from '../Utils/AppHooks';
 import { ModalHook, ModalName, ModalPane, RECOMMENDED_WIDTH } from '../Views/ModalPane';
 import { ReadMore } from '../Components/ReadMore';
 import { TOGGLE_PLANET_DETAILS_PANE } from '../Utils/ShortcutConstants';
 import { LevelRankText, PlanetBiomeTypeLabel, PlanetOwnerLabel } from '../Components/PlanetLabels';
-
-const StyledPlanetDetailsPane = styled.div``;
+import { Planet } from '@darkforest_eth/types';
+import { Wrapper } from '../../Backend/Utils/Wrapper';
 
 const DetailsRow = styled.div`
   display: flex;
@@ -57,6 +56,21 @@ const RightHalf = styled.div`
   display: inline-block;
 `;
 
+const Wrap = styled.div`
+  width: fit-content;
+  height: fit-content;
+`;
+
+const ShowWithPlanet = styled(Wrap)<{ planet: Planet | undefined }>`
+  display: ${({ planet }) => (planet ? 'block' : 'none')};
+`;
+
+const ShowWithoutPlanet = styled(Wrap)<{ planet: Planet | undefined }>`
+  display: ${({ planet }) => (planet ? 'none' : 'block')};
+`;
+
+const StyledPlanetDetailsPane = styled(ShowWithPlanet)``;
+
 /**
  * The ui that is shown when the user clicks the question mark icon in the modal's title bar.
  */
@@ -76,86 +90,96 @@ function HelpContent() {
   );
 }
 
-export function PlanetDetailsPane({ hook, hatHook }: { hook: ModalHook; hatHook: ModalHook }) {
-  const uiManager = useUIManager();
-  const selected = useSelectedPlanet(uiManager).value;
-  const account = useAccount(uiManager);
-
-  const windowName = 'Planet Details';
-
-  let content;
-
-  if (selected) {
-    content = (
-      <StyledPlanetDetailsPane>
-        <PlanetName>{ProcgenUtils.getPlanetName(selected)}</PlanetName>
-        <PlanetNameSubtitle>
-          <LevelRankText planet={selected} /> <PlanetBiomeTypeLabel planet={selected} />
-        </PlanetNameSubtitle>
-
-        <PlanetScape planet={selected} />
-        <Spacer height={8} />
-
-        <div>
-          <ReadMore height={'5em'}>
-            <Sub>
-              {ProcgenUtils.getPlanetTagline(selected)}.
-              <Spacer height={8} />
-              {ProcgenUtils.getPlanetBlurb(selected)}
-            </Sub>
-          </ReadMore>
-        </div>
-
-        <LeftHalf>
-          <DetailsRowSingle className='margin-top' style={{ marginTop: '1em' }}>
-            <Sub>Owner</Sub>
-            <span>
-              <PlanetOwnerLabel planet={selected} showYours color />
-            </span>
-          </DetailsRowSingle>
-
-          <DetailsRowSingle>
-            <Sub>Hash</Sub>
-            <TextPreview text={selected.locationId} />
-          </DetailsRowSingle>
-        </LeftHalf>
-
-        <RightHalf>
-          <DetailsRowSingle>
-            <Sub>Hat</Sub>
-            <span>
-              {selected && ProcgenUtils.getHatSizeName(selected)}{' '}
-              {selected && selected && selected.owner === account && (
-                <Btn onClick={() => hatHook[1](true)}>
-                  {selected.hatLevel > 0 ? 'Upgrade' : 'Buy'}
-                </Btn>
-              )}
-            </span>
-          </DetailsRowSingle>
-          {selected && selected.silverGrowth > 0 && (
-            <DetailsRowSingle>
-              <Sub>Silver Growth</Sub>
-              <span>{selected.silverGrowth.toFixed(2)}</span>
-            </DetailsRowSingle>
-          )}
-          {isLocatable(selected) && (
-            <DetailsRowSingle>
-              <Sub>Coords</Sub>
-              <span>
-                <Coords coords={selected.location.coords} />
-              </span>
-            </DetailsRowSingle>
-          )}
-        </RightHalf>
-      </StyledPlanetDetailsPane>
-    );
-  } else {
-    content = (
+function NoPlanet({ selectedWrapper }: { selectedWrapper: Wrapper<Planet | undefined> }) {
+  return (
+    <ShowWithoutPlanet planet={selectedWrapper.value}>
       <CenterBackgroundSubtext width='100%' height='75px'>
         Select a Planet
       </CenterBackgroundSubtext>
-    );
-  }
+    </ShowWithoutPlanet>
+  );
+}
+
+function WithPlanet({
+  selectedWrapper,
+  hatHook,
+}: {
+  selectedWrapper: Wrapper<Planet | undefined>;
+  hatHook: ModalHook;
+}) {
+  const s = selectedWrapper;
+  const uiManager = useUIManager();
+  const account = useAccount(uiManager);
+
+  return (
+    <StyledPlanetDetailsPane planet={selectedWrapper.value}>
+      <PlanetName>{ProcgenUtils.getPlanetName(s.value)}</PlanetName>
+      <PlanetNameSubtitle>
+        <LevelRankText planet={s.value} /> <PlanetBiomeTypeLabel planet={s.value} />
+      </PlanetNameSubtitle>
+
+      {/* <PlanetScape wrapper={s} /> */}
+      <Spacer height={8} />
+
+      <div>
+        <ReadMore height={'5em'}>
+          <Sub>
+            {ProcgenUtils.getPlanetTagline(s.value)}.
+            <Spacer height={8} />
+            {ProcgenUtils.getPlanetBlurb(s.value)}
+          </Sub>
+        </ReadMore>
+      </div>
+
+      <LeftHalf>
+        <DetailsRowSingle className='margin-top' style={{ marginTop: '1em' }}>
+          <Sub>Owner</Sub>
+          <span>
+            <PlanetOwnerLabel planet={s.value} showYours color />
+          </span>
+        </DetailsRowSingle>
+
+        <DetailsRowSingle>
+          <Sub>Hash</Sub>
+          {s.value && <TextPreview text={s.value.locationId} />}
+        </DetailsRowSingle>
+      </LeftHalf>
+
+      <RightHalf>
+        <DetailsRowSingle>
+          <Sub>Hat</Sub>
+          <span>
+            {s.value && ProcgenUtils.getHatSizeName(s.value)}{' '}
+            {s && s.value && s.value.owner === account && (
+              <Btn onClick={() => hatHook[1](true)}>{s.value.hatLevel > 0 ? 'Upgrade' : 'Buy'}</Btn>
+            )}
+          </span>
+        </DetailsRowSingle>
+        {s.value && s.value.silverGrowth > 0 && (
+          <DetailsRowSingle>
+            <Sub>Silver Growth</Sub>
+            <span>{s.value.silverGrowth.toFixed(2)}</span>
+          </DetailsRowSingle>
+        )}
+        {s.value && isLocatable(s.value) && (
+          <DetailsRowSingle>
+            <Sub>Coords</Sub>
+            <span>
+              <Coords coords={s.value.location.coords} />
+            </span>
+          </DetailsRowSingle>
+        )}
+      </RightHalf>
+    </StyledPlanetDetailsPane>
+  );
+}
+
+export function PlanetDetailsPane({ hook, hatHook }: { hook: ModalHook; hatHook: ModalHook }) {
+  const uiManager = useUIManager();
+  const selected = useSelectedPlanet(uiManager);
+
+  const windowName = 'Planet Details';
+
   return (
     <ModalPane
       hook={hook}
@@ -164,7 +188,8 @@ export function PlanetDetailsPane({ hook, hatHook }: { hook: ModalHook; hatHook:
       helpContent={HelpContent}
       width={RECOMMENDED_WIDTH}
     >
-      {content}
+      <WithPlanet selectedWrapper={selected} hatHook={hatHook} />
+      <NoPlanet selectedWrapper={selected} />
     </ModalPane>
   );
 }

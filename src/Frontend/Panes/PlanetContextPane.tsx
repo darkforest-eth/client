@@ -1,13 +1,19 @@
 import { PlanetType } from '@darkforest_eth/types';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import { CenterBackgroundSubtext } from '../Components/CoreUI';
 import { SelectedPlanetHelpContent } from '../Copy/HelpContent';
 import dfstyles from '../Styles/dfstyles';
 import { useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
+import { useEmitterValue } from '../Utils/EmitterHooks';
 import { ModalHook, ModalPane } from '../Views/ModalPane';
 import { PlanetCard } from '../Views/PlanetCard';
+import {
+  getNotifsForPlanet,
+  PlanetNotifications,
+  PlanetNotifHooks,
+} from '../Views/PlanetNotifications';
 import { SendResources } from '../Views/SendResources';
+import { WithdrawSilver } from '../Views/WithdrawSilver';
 
 const StyledSelectedPlanetPane = styled.div`
   width: 22em;
@@ -24,34 +30,26 @@ const Header = styled.div`
   border-bottom: 1px solid ${dfstyles.colors.subtext};
 `;
 
-export function PlanetContextPane({ hook }: { hook: ModalHook }) {
+const ContextSection = styled.div`
+  padding: 0.5em;
+`;
+
+export function PlanetContextPane({
+  hook,
+  upgradeDetHook,
+}: {
+  hook: ModalHook;
+} & PlanetNotifHooks) {
   const uiManager = useUIManager();
-  const selectedWrapper = useSelectedPlanet(uiManager);
-  const selected = selectedWrapper.value;
+  const s = useSelectedPlanet(uiManager);
 
-  let content;
+  const currentBlockNumber = useEmitterValue(uiManager.getEthConnection().blockNumber$, undefined);
+  const notifs = useMemo(
+    () => getNotifsForPlanet(s.value, currentBlockNumber),
+    [s, currentBlockNumber]
+  );
 
-  if (selected) {
-    content = (
-      <StyledSelectedPlanetPane>
-        <PlanetCard planetWrapper={selectedWrapper} />
-        <Header>Send Resources</Header>
-        <SendResources planetWrapper={selectedWrapper} />
-        {selected.planetType === PlanetType.TRADING_POST && (
-          <>
-            <Header>Spacetime Rip</Header>
-            <p>This is a Spacetime Rip, meaning you can withdraw silver for score!</p>
-          </>
-        )}
-      </StyledSelectedPlanetPane>
-    );
-  } else {
-    content = (
-      <CenterBackgroundSubtext width='20em' height='75px'>
-        Select a Planet
-      </CenterBackgroundSubtext>
-    );
-  }
+  const notifProps = { upgradeDetHook };
 
   return (
     <ModalPane
@@ -60,9 +58,28 @@ export function PlanetContextPane({ hook }: { hook: ModalHook }) {
       hideClose
       noPadding
       helpContent={SelectedPlanetHelpContent}
-      fixToSelectedPlanet
     >
-      {content}
+      <StyledSelectedPlanetPane>
+        <PlanetCard planetWrapper={s} />
+        <Header>Send Resources</Header>
+        <SendResources planetWrapper={s} />
+        {s.value?.planetType === PlanetType.TRADING_POST && (
+          <>
+            <Header>Spacetime Rip</Header>
+            <ContextSection>
+              <WithdrawSilver wrapper={s} />
+            </ContextSection>
+          </>
+        )}
+        {notifs.length > 0 && (
+          <>
+            <Header>Planet Notifications</Header>
+            <ContextSection>
+              <PlanetNotifications wrapper={s} notifs={notifs} {...notifProps} />
+            </ContextSection>
+          </>
+        )}
+      </StyledSelectedPlanetPane>
     </ModalPane>
   );
 }

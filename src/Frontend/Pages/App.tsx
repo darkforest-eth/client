@@ -12,6 +12,11 @@ import { hot } from 'react-hot-loader/root';
 import { ShareArtifact } from './ShareArtifact';
 import { ConversationTest } from './ConversationTest';
 import { ValhallaPage } from './ValhallaPage';
+import { TestArtifactImages } from './TestArtifactImages';
+import { PreviewPage } from './PreviewPage';
+import { GifMaker } from './GifMaker';
+
+const isProd = process.env.NODE_ENV === 'production';
 
 function App() {
   return (
@@ -27,6 +32,9 @@ function App() {
           <Route path='/unsubscribe' component={UnsubscribePage} />
           <Route path='/conversation' component={ConversationTest} />
           <Route path='/valhalla' component={ValhallaPage} />
+          {!isProd && <Route path='/images' component={TestArtifactImages} />}
+          {!isProd && <Route path='/preview' component={PreviewPage} />}
+          {!isProd && <Route path='/gifs' component={GifMaker} />}
         </Switch>
       </Router>
     </>

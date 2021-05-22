@@ -156,7 +156,7 @@ const ancientSpriteLocs = ancientSpriteInfo();
 const artifactSpriteMap: Map<ArtifactId, SpriteRectangle> = new Map();
 
 export function isShiny(rarity: ArtifactRarity) {
-  return rarity >= ArtifactRarity.Rare;
+  return rarity >= ArtifactRarity.Epic;
 }
 
 export function spriteFromArtifact(artifact: RenderedArtifact): SpriteRectangle {

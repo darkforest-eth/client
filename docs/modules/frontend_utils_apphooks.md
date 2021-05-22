@@ -13,12 +13,14 @@
 - [useActiveArtifact](frontend_utils_apphooks.md#useactiveartifact)
 - [useControlDown](frontend_utils_apphooks.md#usecontroldown)
 - [useHoverPlanet](frontend_utils_apphooks.md#usehoverplanet)
+- [useLeaderboard](frontend_utils_apphooks.md#useleaderboard)
 - [useMyArtifacts](frontend_utils_apphooks.md#usemyartifacts)
 - [usePlanetArtifacts](frontend_utils_apphooks.md#useplanetartifacts)
 - [usePlanetInactiveArtifacts](frontend_utils_apphooks.md#useplanetinactiveartifacts)
 - [useSelectedArtifact](frontend_utils_apphooks.md#useselectedartifact)
 - [useSelectedPlanet](frontend_utils_apphooks.md#useselectedplanet)
 - [useTopLevelDiv](frontend_utils_apphooks.md#usetopleveldiv)
+- [useTwitter](frontend_utils_apphooks.md#usetwitter)
 - [useUIManager](frontend_utils_apphooks.md#useuimanager)
 
 ## Variables
@@ -89,6 +91,27 @@ Create a subscription to the currently hovering planet.
 | `uiManager` | [_default_](../classes/backend_gamelogic_gameuimanager.default.md) | instance of GameUIManager |
 
 **Returns:** [_Wrapper_](../classes/backend_utils_wrapper.wrapper.md)<Planet \| undefined\>
+
+---
+
+### useLeaderboard
+
+▸ **useLeaderboard**(`poll?`: _number_ \| _undefined_): _object_
+
+Loads the leaderboard
+
+#### Parameters
+
+| Name   | Type                    |
+| :----- | :---------------------- |
+| `poll` | _number_ \| _undefined_ |
+
+**Returns:** _object_
+
+| Name          | Type                                |
+| :------------ | :---------------------------------- |
+| `error`       | Error \| _undefined_                |
+| `leaderboard` | AggregateLeaderboard \| _undefined_ |
 
 ---
 
@@ -173,6 +196,21 @@ Create a subscription to the currently selected planet.
 ▸ **useTopLevelDiv**(): HTMLDivElement
 
 **Returns:** HTMLDivElement
+
+---
+
+### useTwitter
+
+▸ **useTwitter**(`account`: EthAddress \| _undefined_, `uiManager`: [_default_](../classes/backend_gamelogic_gameuimanager.default.md)): _string_ \| _undefined_
+
+#### Parameters
+
+| Name        | Type                                                               |
+| :---------- | :----------------------------------------------------------------- |
+| `account`   | EthAddress \| _undefined_                                          |
+| `uiManager` | [_default_](../classes/backend_gamelogic_gameuimanager.default.md) |
+
+**Returns:** _string_ \| _undefined_
 
 ---
 

@@ -1,14 +1,14 @@
-# Module: Frontend/Components/MenuBar
+# Module: Frontend/Views/MenuBar
 
 ## Table of contents
 
 ### Variables
 
-- [MenuBar](frontend_components_menubar.md#menubar)
+- [MenuBar](frontend_views_menubar.md#menubar)
 
 ### Functions
 
-- [MenuBarSection](frontend_components_menubar.md#menubarsection)
+- [MenuBarSection](frontend_views_menubar.md#menubarsection)
 
 ## Variables
 

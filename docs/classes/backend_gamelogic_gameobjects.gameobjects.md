@@ -69,7 +69,6 @@
 - [getPlanetWithLocation](backend_gamelogic_gameobjects.gameobjects.md#getplanetwithlocation)
 - [getRevealedLocations](backend_gamelogic_gameobjects.gameobjects.md#getrevealedlocations)
 - [getSilverCurveAtPercent](backend_gamelogic_gameobjects.gameobjects.md#getsilvercurveatpercent)
-- [getSilverNeeded](backend_gamelogic_gameobjects.gameobjects.md#getsilverneeded)
 - [getUnconfirmedBuyGPTCredits](backend_gamelogic_gameobjects.gameobjects.md#getunconfirmedbuygptcredits)
 - [getUnconfirmedMoves](backend_gamelogic_gameobjects.gameobjects.md#getunconfirmedmoves)
 - [getUnconfirmedReveal](backend_gamelogic_gameobjects.gameobjects.md#getunconfirmedreveal)
@@ -79,7 +78,6 @@
 - [isPlanetInContract](backend_gamelogic_gameobjects.gameobjects.md#isplanetincontract)
 - [markLocationRevealed](backend_gamelogic_gameobjects.gameobjects.md#marklocationrevealed)
 - [onTxIntent](backend_gamelogic_gameobjects.gameobjects.md#ontxintent)
-- [planetCanUpgrade](backend_gamelogic_gameobjects.gameobjects.md#planetcanupgrade)
 - [planetLevelFromHexPerlin](backend_gamelogic_gameobjects.gameobjects.md#planetlevelfromhexperlin)
 - [planetTypeFromHexPerlin](backend_gamelogic_gameobjects.gameobjects.md#planettypefromhexperlin)
 - [processArrivalsForPlanet](backend_gamelogic_gameobjects.gameobjects.md#processarrivalsforplanet)
@@ -92,6 +90,8 @@
 - [updatePlanetIfStale](backend_gamelogic_gameobjects.gameobjects.md#updateplanetifstale)
 - [updateScore](backend_gamelogic_gameobjects.gameobjects.md#updatescore)
 - [getGridBucketKey](backend_gamelogic_gameobjects.gameobjects.md#getgridbucketkey)
+- [getSilverNeeded](backend_gamelogic_gameobjects.gameobjects.md#getsilverneeded)
+- [planetCanUpgrade](backend_gamelogic_gameobjects.gameobjects.md#planetcanupgrade)
 
 ## Constructors
 
@@ -670,20 +670,6 @@ returns undefined
 
 ---
 
-### getSilverNeeded
-
-▸ `Private` **getSilverNeeded**(`planet`: Planet): _number_
-
-#### Parameters
-
-| Name     | Type   |
-| :------- | :----- |
-| `planet` | Planet |
-
-**Returns:** _number_
-
----
-
 ### getUnconfirmedBuyGPTCredits
 
 ▸ **getUnconfirmedBuyGPTCredits**(): _undefined_ \| UnconfirmedBuyGPTCredits
@@ -771,20 +757,6 @@ returns undefined
 | `txIntent` | TxIntent |
 
 **Returns:** _void_
-
----
-
-### planetCanUpgrade
-
-▸ `Private` **planetCanUpgrade**(`planet`: Planet): _boolean_
-
-#### Parameters
-
-| Name     | Type   |
-| :------- | :----- |
-| `planet` | Planet |
-
-**Returns:** _boolean_
 
 ---
 
@@ -971,3 +943,31 @@ This function also handles managing planet update messages and indexing the map 
 | `coords` | WorldCoords |
 
 **Returns:** _string_
+
+---
+
+### getSilverNeeded
+
+▸ `Static` **getSilverNeeded**(`planet`: Planet): _number_
+
+#### Parameters
+
+| Name     | Type   |
+| :------- | :----- |
+| `planet` | Planet |
+
+**Returns:** _number_
+
+---
+
+### planetCanUpgrade
+
+▸ `Static` **planetCanUpgrade**(`planet`: Planet): _boolean_
+
+#### Parameters
+
+| Name     | Type   |
+| :------- | :----- |
+| `planet` | Planet |
+
+**Returns:** _boolean_

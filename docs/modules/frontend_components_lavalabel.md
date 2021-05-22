@@ -2,14 +2,24 @@
 
 ## Table of contents
 
-### Functions
+### Variables
 
 - [LavaLabel](frontend_components_lavalabel.md#lavalabel)
 
-## Functions
+### Functions
+
+- [LavaLabelRaw](frontend_components_lavalabel.md#lavalabelraw)
+
+## Variables
 
 ### LavaLabel
 
-▸ **LavaLabel**(): _Element_
+• `Const` **LavaLabel**: _MemoExoticComponent_<() => _Element_\>
+
+## Functions
+
+### LavaLabelRaw
+
+▸ **LavaLabelRaw**(): _Element_
 
 **Returns:** _Element_
