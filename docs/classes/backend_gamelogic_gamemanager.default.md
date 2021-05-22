@@ -102,6 +102,7 @@
 - [getMyPlanetMap](backend_gamelogic_gamemanager.default.md#getmyplanetmap)
 - [getMyPlanets](backend_gamelogic_gamemanager.default.md#getmyplanets)
 - [getMyPlanetsUpdated$](backend_gamelogic_gamemanager.default.md#getmyplanetsupdated$)
+- [getMyScore](backend_gamelogic_gamemanager.default.md#getmyscore)
 - [getNextBroadcastAvailableTimestamp](backend_gamelogic_gamemanager.default.md#getnextbroadcastavailabletimestamp)
 - [getNextRevealCountdownInfo](backend_gamelogic_gamemanager.default.md#getnextrevealcountdowninfo)
 - [getNotificationsManager](backend_gamelogic_gamemanager.default.md#getnotificationsmanager)
@@ -1051,6 +1052,16 @@ Gets a list of the planets that the player logged into this `GameManager` owns.
 ▸ **getMyPlanetsUpdated$**(): [_Monomitter_](../modules/frontend_utils_monomitter.md#monomitter)<Map<LocationId, Planet\>\>
 
 **Returns:** [_Monomitter_](../modules/frontend_utils_monomitter.md#monomitter)<Map<LocationId, Planet\>\>
+
+---
+
+### getMyScore
+
+▸ **getMyScore**(): _number_
+
+Get the score of the currently logged-in account.
+
+**Returns:** _number_
 
 ---
 

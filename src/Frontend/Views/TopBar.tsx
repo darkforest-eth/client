@@ -117,44 +117,54 @@ function BoardPlacement({ account }: { account: EthAddress | undefined }) {
   const uiManager = useUIManager();
   const twitter = useTwitter(account, uiManager);
 
-  const { leaderboard, error } = useLeaderboard(TEN_MIN);
+  // const { leaderboard, error } = useLeaderboard(TEN_MIN);
   const [score, setScore] = useState<number | undefined>();
-  const [place, setPlace] = useState<number | undefined>();
+  // const [place, setPlace] = useState<number | undefined>();
 
-  useEffect(() => {
-    if (!leaderboard || !account) return;
+  // useEffect(() => {
+  //   if (!leaderboard || !account) return;
 
-    const keys = Object.getOwnPropertyNames(leaderboard);
-    const forVersion = leaderboard[keys[0]];
+  //   const keys = Object.getOwnPropertyNames(leaderboard);
+  //   const forVersion = leaderboard[keys[0]];
 
-    const score = forVersion.scoresByPlayer[account];
-    setScore(score);
+  //   const score = forVersion.scoresByPlayer[account];
+  //   setScore(score);
 
-    const entries: [string, number][] = Object.getOwnPropertyNames(leaderboard.scoresByPlayer).map(
-      (name) => [name, forVersion.scoresByPlayer[name]]
-    );
+  //   const entries: [string, number][] = Object.getOwnPropertyNames(leaderboard.scoresByPlayer).map(
+  //     (name) => [name, forVersion.scoresByPlayer[name]]
+  //   );
 
-    const sortedEntries = _.sortBy(entries, (row) => -row[1]);
+  //   const sortedEntries = _.sortBy(entries, (row) => -row[1]);
 
-    const idx = sortedEntries.findIndex(([acc, _score]) => acc === twitter || acc === account);
-    setPlace(idx + 1);
-  }, [leaderboard, account, twitter]);
+  //   const idx = sortedEntries.findIndex(([acc, _score]) => acc === twitter || acc === account);
+  //   setPlace(idx + 1);
+  // }, [leaderboard, account, twitter]);
+  const syncScore = useCallback(() => {
+    setScore(uiManager.getMyScore());
+  }, [uiManager, setScore]);
+
+  usePoll(syncScore, 5000);
 
   let content, single;
-  if (error || !account) {
-    single = true;
-    content = <Sub>error loading leaderboard</Sub>;
-  } else if (!leaderboard) {
-    single = true;
-    content = (
-      <Sub>
-        <LoadingSpinner initialText={'loading leaderboard...'} />
-      </Sub>
-    );
+  // if (error || !account) {
+  //   single = true;
+  //   content = <Sub>error loading leaderboard</Sub>;
+  // }
+  // else if (!leaderboard) {
+  //   single = true;
+  //   content = (
+  //     <Sub>
+  //       <LoadingSpinner initialText={'loading leaderboard...'} />
+  //     </Sub>
+  //   );
+  // }
+  if (!account) {
+    content = <Sub>error loading account</Sub>;
   } else {
+    single = true;
     content = (
       <>
-        <Sub>{!score || !place ? 'unranked' : place}</Sub>
+        {/* <Sub>{!score || !place ? 'unranked' : place}</Sub> */}
         <Sub>
           <TooltipTrigger name={TooltipName.Score}>
             <White>{score || 0}</White> pts

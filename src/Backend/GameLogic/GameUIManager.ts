@@ -829,6 +829,10 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getPlanetWithId(planetId);
   }
 
+  getMyScore(): number {
+    return this.gameManager.getMyScore();
+  }
+
   getArtifactWithId(artifactId: ArtifactId): Artifact | undefined {
     return this.gameManager.getArtifactWithId(artifactId);
   }

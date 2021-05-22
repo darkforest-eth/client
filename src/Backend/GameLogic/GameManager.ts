@@ -952,6 +952,16 @@ class GameManager extends EventEmitter {
   }
 
   /**
+   * Get the score of the currently logged-in account.
+   */
+  getMyScore(): number {
+    if (!this.account) {
+      return 0;
+    }
+    return this.players.get(this.account)?.withdrawnSilver || 0;
+  }
+
+  /**
    * Gets the artifact with the given id. Null if no artifact with id exists.
    */
   getArtifactWithId(artifactId: ArtifactId): Artifact | undefined {

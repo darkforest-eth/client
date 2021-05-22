@@ -111,6 +111,7 @@
 - [getMyBalance](backend_gamelogic_gameuimanager.default.md#getmybalance)
 - [getMyBalanceEmitter](backend_gamelogic_gameuimanager.default.md#getmybalanceemitter)
 - [getMyPlanetMap](backend_gamelogic_gameuimanager.default.md#getmyplanetmap)
+- [getMyScore](backend_gamelogic_gameuimanager.default.md#getmyscore)
 - [getNextBroadcastAvailableTimestamp](backend_gamelogic_gameuimanager.default.md#getnextbroadcastavailabletimestamp)
 - [getPerlinThresholds](backend_gamelogic_gameuimanager.default.md#getperlinthresholds)
 - [getPlanetDetailLevel](backend_gamelogic_gameuimanager.default.md#getplanetdetaillevel)
@@ -1079,6 +1080,14 @@ indicates whether or not the player is currently selecting a target planet.
 ▸ **getMyPlanetMap**(): _Map_<LocationId, Planet\>
 
 **Returns:** _Map_<LocationId, Planet\>
+
+---
+
+### getMyScore
+
+▸ **getMyScore**(): _number_
+
+**Returns:** _number_
 
 ---
 
