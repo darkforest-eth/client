@@ -51,7 +51,7 @@ export default function LandingPage() {
 
             <p>
               <Sub>
-                zkSNARK space warfare <HideSmall>(v0.6.0)</HideSmall>
+                zkSNARK space warfare <HideSmall>(v0.6 Round 1)</HideSmall>
               </Sub>
             </p>
 
@@ -126,10 +126,10 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.6.0
+                    <HideSmall>v</HideSmall>0.6 Round 1
                   </td>
                   <td>
-                    05/14/<HideSmall>20</HideSmall>21
+                    05/22/<HideSmall>20</HideSmall>21
                   </td>
                   <td>t.b.d.</td>
                 </TRow>
@@ -145,29 +145,31 @@ export default function LandingPage() {
 
           <Spacer height={16} />
 
-          <TextLinks>
-            <a href={links.email}>email</a>
-            <Spacer width={4} />
-            <Sub>-</Sub>
-            <Spacer width={8} />
-            <a href={links.blog}>blog</a>
-          </TextLinks>
+          <VariousLinksContainer>
+            <TextLinks>
+              <a href={links.email}>email</a>
+              <Spacer width={4} />
+              <Sub>-</Sub>
+              <Spacer width={8} />
+              <a href={links.blog}>blog</a>
+            </TextLinks>
 
-          <Spacer height={8} />
+            <Spacer width={8} />
 
-          <IconLinks>
-            <a className={'link-twitter'} href={links.twitter}>
-              <span className={'icon-twitter'}></span>
-            </a>
-            <Spacer width={8} />
-            <a className={'link-discord'} href={links.discord}>
-              <span className={'icon-discord'}></span>
-            </a>
-            <Spacer width={8} />
-            <a className={'link-github'} href={links.github}>
-              <span className={'icon-github'}></span>
-            </a>
-          </IconLinks>
+            <IconLinks>
+              <a className={'link-twitter'} href={links.twitter}>
+                <span className={'icon-twitter'}></span>
+              </a>
+              <Spacer width={8} />
+              <a className={'link-discord'} href={links.discord}>
+                <span className={'icon-discord'}></span>
+              </a>
+              <Spacer width={8} />
+              <a className={'link-github'} href={links.github}>
+                <span className={'icon-github'}></span>
+              </a>
+            </IconLinks>
+          </VariousLinksContainer>
         </MainContentContainer>
 
         <Spacer height={128} />
@@ -179,6 +181,15 @@ export default function LandingPage() {
     </>
   );
 }
+
+const VariousLinksContainer = styled.div`
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const PrettyOverlayGradient = styled.div`
   width: 100vw;
@@ -220,7 +231,8 @@ const MainContentContainer = styled.div`
   justify-content: space-between;
 `;
 
-const TextLinks = styled.div`
+const TextLinks = styled.span`
+  vertical-align: center;
   & a {
     transition: color 0.2s;
 
@@ -230,7 +242,7 @@ const TextLinks = styled.div`
   }
 `;
 
-const IconLinks = styled.div`
+const IconLinks = styled.span`
   font-size: 18pt;
 
   & a {
