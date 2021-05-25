@@ -6,6 +6,7 @@
 
 - [Backend/GameLogic/ArrivalUtils](modules/backend_gamelogic_arrivalutils.md)
 - [Backend/GameLogic/ArtifactUtils](modules/backend_gamelogic_artifactutils.md)
+- [Backend/GameLogic/ContractCaller](modules/backend_gamelogic_contractcaller.md)
 - [Backend/GameLogic/ContractsAPI](modules/backend_gamelogic_contractsapi.md)
 - [Backend/GameLogic/ConversationManager](modules/backend_gamelogic_conversationmanager.md)
 - [Backend/GameLogic/GameManager](modules/backend_gamelogic_gamemanager.md)

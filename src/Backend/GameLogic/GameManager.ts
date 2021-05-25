@@ -436,13 +436,20 @@ class GameManager extends EventEmitter {
         await gameManager.hardRefreshPlayer(playerId);
       })
       .on(ContractsAPIEvent.PlanetUpdate, async (planetId: LocationId) => {
-        await gameManager.hardRefreshPlanet(planetId);
-        gameManager.emit(GameManagerEvent.PlanetUpdate);
+        // don't reload planets that you don't have in your map. once a planet
+        // is in your map it will be loaded from the contract.
+        const localPlanet = gameManager.entityStore.getPlanetWithId(planetId);
+        if (localPlanet && isLocatable(localPlanet)) {
+          await gameManager.hardRefreshPlanet(planetId);
+          gameManager.emit(GameManagerEvent.PlanetUpdate);
+        }
       })
       .on(
         ContractsAPIEvent.LocationRevealed,
-        async (_planetId: LocationId, _revealer: EthAddress) => {
+        async (planetId: LocationId, _revealer: EthAddress) => {
           // TODO: hook notifs or emit event to UI if you want
+          await gameManager.hardRefreshPlanet(planetId);
+          gameManager.emit(GameManagerEvent.PlanetUpdate);
         }
       )
       .on(ContractsAPIEvent.ChangedGPTCreditPrice, async (newPriceInEther: number) => {

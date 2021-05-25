@@ -19,7 +19,7 @@ in the contract.
 
 ### Properties
 
-- [callQueue](backend_gamelogic_contractsapi.default.md#callqueue)
+- [contractCaller](backend_gamelogic_contractsapi.default.md#contractcaller)
 - [coreContract](backend_gamelogic_contractsapi.default.md#corecontract)
 - [ethConnection](backend_gamelogic_contractsapi.default.md#ethconnection)
 - [gettersContract](backend_gamelogic_contractsapi.default.md#getterscontract)
@@ -97,9 +97,9 @@ Overrides: EventEmitter.constructor
 
 ## Properties
 
-### callQueue
+### contractCaller
 
-• `Private` `Readonly` **callQueue**: [_ThrottledConcurrentQueue_](backend_network_throttledconcurrentqueue.throttledconcurrentqueue.md)
+• `Private` `Readonly` **contractCaller**: [_ContractCaller_](backend_gamelogic_contractcaller.contractcaller.md)
 
 ---
 

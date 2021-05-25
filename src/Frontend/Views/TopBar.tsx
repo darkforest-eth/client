@@ -1,6 +1,6 @@
 import { EthAddress } from '@darkforest_eth/types';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { formatNumber } from '../../Backend/Utils/Utils';
 import { Hook } from '../../_types/global/GlobalTypes';
@@ -11,7 +11,7 @@ import { LongDash, Sub, White } from '../Components/Text';
 import { TooltipName } from '../Game/WindowManager';
 import { TooltipTrigger } from '../Panes/Tooltip';
 import dfstyles from '../Styles/dfstyles';
-import { useAccount, useLeaderboard, useTwitter, useUIManager } from '../Utils/AppHooks';
+import { useAccount, useUIManager } from '../Utils/AppHooks';
 import { GameWindowZIndex } from '../Utils/constants';
 import { usePoll } from '../Utils/Hooks';
 
@@ -111,11 +111,11 @@ const StyledBoardPlacement = styled.span<{ single?: boolean }>`
   justify-content: ${({ single }) => (single ? 'flex-end' : 'space-between')};
 `;
 
-const TEN_MIN = 10 * 60 * 1000;
+// const TEN_MIN = 10 * 60 * 1000;
 
 function BoardPlacement({ account }: { account: EthAddress | undefined }) {
   const uiManager = useUIManager();
-  const twitter = useTwitter(account, uiManager);
+  // const twitter = useTwitter(account, uiManager);
 
   // const { leaderboard, error } = useLeaderboard(TEN_MIN);
   const [score, setScore] = useState<number | undefined>();

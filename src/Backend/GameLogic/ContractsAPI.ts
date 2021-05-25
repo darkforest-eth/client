@@ -48,7 +48,7 @@ import {
   SubmittedWithdrawSilver,
   UnconfirmedWithdrawSilver,
 } from '@darkforest_eth/types';
-import { aggregateBulkGetter, callWithRetry } from '../Utils/Utils';
+import { aggregateBulkGetter } from '../Utils/Utils';
 import bigInt from 'big-integer';
 import { TxExecutor } from '../Network/TxExecutor';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
@@ -56,7 +56,6 @@ import { BLOCK_EXPLORER_URL } from '../../Frontend/Utils/constants';
 import { TerminalTextStyle } from '../../Frontend/Utils/TerminalTypes';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import EthConnection from '../Network/EthConnection';
-import { ThrottledConcurrentQueue } from '../Network/ThrottledConcurrentQueue';
 import {
   DarkForestCore,
   DarkForestGetters,
@@ -85,17 +84,18 @@ import type {
   BiomebaseSnarkContractCallArgs,
 } from '@darkforest_eth/snarks';
 import UIStateStorageManager from '../Storage/UIStateStorageManager';
+import { ContractCaller } from './ContractCaller';
 
 /**
  * Roughly contains methods that map 1:1 with functions that live
  * in the contract.
  */
 class ContractsAPI extends EventEmitter {
-  private readonly callQueue = new ThrottledConcurrentQueue(20, 1000);
+  private readonly contractCaller = new ContractCaller();
   private readonly txRequestExecutor: TxExecutor | undefined;
   private readonly terminal: React.MutableRefObject<TerminalHandle | undefined>;
-  private ethConnection: EthConnection;
 
+  private ethConnection: EthConnection;
   private coreContract: DarkForestCore;
   private gettersContract: DarkForestGetters;
   private gptCreditContract: DarkForestGPTCredit;
@@ -150,7 +150,7 @@ class ContractsAPI extends EventEmitter {
   }
 
   private makeCall<T>(contractViewFunction: ContractFunction<T>, args: unknown[] = []): Promise<T> {
-    return this.callQueue.add(() => callWithRetry<T>(contractViewFunction, args));
+    return this.contractCaller.makeCall(contractViewFunction, args);
   }
 
   private setupEventListeners(): void {
