@@ -305,7 +305,7 @@ const Title = styled.div`
       position: absolute;
       top: 0;
       left: -1em;
-      color: #00ff08;
+      color: #00ff00;
     }
   }
 `;

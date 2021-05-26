@@ -412,6 +412,11 @@ class GameManager extends EventEmitter {
       uiStateStorageManager
     );
 
+    // important that this happens AFTER we load the game state from the blockchain. Otherwise our
+    // 'loading game state' contract calls will be competing with events from the blockchain that
+    // are happening now, which makes no sense.
+    contractsAPI.setupEventListeners();
+
     // get twitter handles
     gameManager.refreshTwitters();
 

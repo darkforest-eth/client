@@ -23,6 +23,7 @@ import coreContractAbiPath from '@darkforest_eth/contracts/abis/DarkForestCore.j
 import gettersContractAbiPath from '@darkforest_eth/contracts/abis/DarkForestGetters.json';
 import whitelistContractAbiPath from '@darkforest_eth/contracts/abis/Whitelist.json';
 import gptCreditContractAbiPath from '@darkforest_eth/contracts/abis/DarkForestGPTCredit.json';
+import { ContractEvent } from '../../_types/darkforest/api/ContractsAPITypes';
 
 function toJSON(x: Response) {
   return x.json();
@@ -85,10 +86,56 @@ class EthConnection extends EventEmitter {
     return !!this.signer;
   }
 
+  public subscribeToEvents(
+    contract: DarkForestCore,
+    // map from contract event to function. using type 'any' here to satisfy typescript - each of
+    // the functions has a different type signature.
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    handlers: Partial<Record<ContractEvent, any>>
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+  ) {
+    const filter = {
+      address: contract.address,
+      topics: [
+        [
+          contract.filters.ArrivalQueued(null, null, null, null, null).topics,
+          contract.filters.ArtifactActivated(null, null, null).topics,
+          contract.filters.ArtifactDeactivated(null, null, null).topics,
+          contract.filters.ArtifactDeposited(null, null, null).topics,
+          contract.filters.ArtifactFound(null, null, null).topics,
+          contract.filters.ArtifactWithdrawn(null, null, null).topics,
+          contract.filters.LocationRevealed(null, null).topics,
+          contract.filters.PlanetHatBought(null, null, null).topics,
+          contract.filters.PlanetProspected(null, null).topics,
+          contract.filters.PlanetSilverWithdrawn(null, null, null).topics,
+          contract.filters.PlanetTransferred(null, null, null).topics,
+          contract.filters.PlanetUpgraded(null, null, null, null).topics,
+          contract.filters.PlayerInitialized(null, null).topics,
+        ].map((topicsOrUndefined) => (topicsOrUndefined || [])[0]),
+      ] as Array<string | Array<string>>,
+    };
+
+    this.provider.on('block', async () => {
+      const logs = await this.provider.getLogs({
+        fromBlock: 'latest',
+        toBlock: 'latest',
+        ...filter,
+      });
+
+      logs.forEach((log) => {
+        const parsedData = contract.interface.parseLog(log);
+        const handler = handlers[parsedData.name as ContractEvent];
+        if (handler !== undefined) {
+          handler(...parsedData.args);
+        }
+      });
+    });
+  }
+
   public async setRpcEndpoint(url: string): Promise<void> {
     try {
       this.rpcURL = url;
-      const newProvider = new providers.JsonRpcProvider(this.rpcURL);
+      const newProvider = new providers.StaticJsonRpcProvider(this.rpcURL);
       /**
        * this.provider needs to get set to nonnull value immediately (synchronously)
        * otherwise other classes which call loadContract() immediately on app load might

@@ -49,6 +49,7 @@ Responsible for
 - [setAccount](backend_network_ethconnection.default.md#setaccount)
 - [setRpcEndpoint](backend_network_ethconnection.default.md#setrpcendpoint)
 - [signMessage](backend_network_ethconnection.default.md#signmessage)
+- [subscribeToEvents](backend_network_ethconnection.default.md#subscribetoevents)
 - [waitForTransaction](backend_network_ethconnection.default.md#waitfortransaction)
 
 ## Constructors
@@ -289,6 +290,21 @@ Overrides: EventEmitter.constructor
 | `message` | _string_ |
 
 **Returns:** _Promise_<string\>
+
+---
+
+### subscribeToEvents
+
+▸ **subscribeToEvents**(`contract`: _DarkForestCore_, `handlers`: _Partial_<Record<[_ContractEvent_](../enums/_types_darkforest_api_contractsapitypes.contractevent.md), any\>\>): _void_
+
+#### Parameters
+
+| Name       | Type                                                                                                           |
+| :--------- | :------------------------------------------------------------------------------------------------------------- |
+| `contract` | _DarkForestCore_                                                                                               |
+| `handlers` | _Partial_<Record<[_ContractEvent_](../enums/_types_darkforest_api_contractsapitypes.contractevent.md), any\>\> |
+
+**Returns:** _void_
 
 ---
 

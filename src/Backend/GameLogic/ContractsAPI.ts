@@ -140,8 +140,6 @@ class ContractsAPI extends EventEmitter {
       nonce
     );
 
-    contractsAPI.setupEventListeners();
-
     return contractsAPI;
   }
 
@@ -153,118 +151,121 @@ class ContractsAPI extends EventEmitter {
     return this.contractCaller.makeCall(contractViewFunction, args);
   }
 
-  private setupEventListeners(): void {
-    // TODO replace these with block polling
-    this.coreContract
-      .on(
-        ContractEvent.ArtifactFound,
-        (_playerAddr: string, rawArtifactId: EthersBN, loc: EthersBN) => {
-          const artifactId = artifactIdFromEthersBN(rawArtifactId);
-          this.emit(ContractsAPIEvent.ArtifactUpdate, artifactId);
-          this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(loc));
-        }
-      )
-      .on(
-        ContractEvent.ArtifactDeposited,
-        (_playerAddr: string, rawArtifactId: EthersBN, loc: EthersBN) => {
-          const artifactId = artifactIdFromEthersBN(rawArtifactId);
-          this.emit(ContractsAPIEvent.ArtifactUpdate, artifactId);
-          this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(loc));
-        }
-      )
-      .on(
-        ContractEvent.ArtifactWithdrawn,
-        (_playerAddr: string, rawArtifactId: EthersBN, loc: EthersBN) => {
-          const artifactId = artifactIdFromEthersBN(rawArtifactId);
-          this.emit(ContractsAPIEvent.ArtifactUpdate, artifactId);
-          this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(loc));
-        }
-      )
-      .on(
-        ContractEvent.ArtifactActivated,
-        (_playerAddr: string, rawArtifactId: EthersBN, loc: EthersBN) => {
-          const artifactId = artifactIdFromEthersBN(rawArtifactId);
-          this.emit(ContractsAPIEvent.ArtifactUpdate, artifactId);
-          this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(loc));
-        }
-      )
-      .on(
-        ContractEvent.ArtifactDeactivated,
-        (_playerAddr: string, rawArtifactId: EthersBN, loc: EthersBN) => {
-          const artifactId = artifactIdFromEthersBN(rawArtifactId);
-          this.emit(ContractsAPIEvent.ArtifactUpdate, artifactId);
-          this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(loc));
-        }
-      )
-      .on(ContractEvent.PlayerInitialized, async (player: string, locRaw: EthersBN, _: Event) => {
+  public setupEventListeners(): void {
+    this.ethConnection.subscribeToEvents(this.coreContract, {
+      [ContractEvent.ArtifactFound]: (
+        _playerAddr: string,
+        rawArtifactId: EthersBN,
+        loc: EthersBN
+      ) => {
+        const artifactId = artifactIdFromEthersBN(rawArtifactId);
+        this.emit(ContractsAPIEvent.ArtifactUpdate, artifactId);
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(loc));
+      },
+      [ContractEvent.ArtifactDeposited]: (
+        _playerAddr: string,
+        rawArtifactId: EthersBN,
+        loc: EthersBN
+      ) => {
+        const artifactId = artifactIdFromEthersBN(rawArtifactId);
+        this.emit(ContractsAPIEvent.ArtifactUpdate, artifactId);
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(loc));
+      },
+      [ContractEvent.ArtifactWithdrawn]: (
+        _playerAddr: string,
+        rawArtifactId: EthersBN,
+        loc: EthersBN
+      ) => {
+        const artifactId = artifactIdFromEthersBN(rawArtifactId);
+        this.emit(ContractsAPIEvent.ArtifactUpdate, artifactId);
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(loc));
+      },
+      [ContractEvent.ArtifactActivated]: (
+        _playerAddr: string,
+        rawArtifactId: EthersBN,
+        loc: EthersBN
+      ) => {
+        const artifactId = artifactIdFromEthersBN(rawArtifactId);
+        this.emit(ContractsAPIEvent.ArtifactUpdate, artifactId);
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(loc));
+      },
+      [ContractEvent.ArtifactDeactivated]: (
+        _playerAddr: string,
+        rawArtifactId: EthersBN,
+        loc: EthersBN
+      ) => {
+        const artifactId = artifactIdFromEthersBN(rawArtifactId);
+        this.emit(ContractsAPIEvent.ArtifactUpdate, artifactId);
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(loc));
+      },
+      [ContractEvent.PlayerInitialized]: async (player: string, locRaw: EthersBN, _: Event) => {
         this.emit(ContractsAPIEvent.PlayerUpdate, address(player));
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(locRaw));
         this.emit(ContractsAPIEvent.RadiusUpdated);
-      })
-      .on(
-        ContractEvent.PlanetTransferred,
-        async (_senderAddress: string, planetId: EthersBN, receiverAddress: string, _: Event) => {
-          this.emit(
-            ContractsAPIEvent.PlanetTransferred,
-            locationIdFromEthersBN(planetId),
-            receiverAddress.toLowerCase() as EthAddress
-          );
+      },
+      [ContractEvent.PlanetTransferred]: async (
+        _senderAddress: string,
+        planetId: EthersBN,
+        receiverAddress: string,
+        _: Event
+      ) => {
+        this.emit(
+          ContractsAPIEvent.PlanetTransferred,
+          locationIdFromEthersBN(planetId),
+          receiverAddress.toLowerCase() as EthAddress
+        );
+      },
+      [ContractEvent.ArrivalQueued]: async (
+        _playerAddr: string,
+        arrivalId: EthersBN,
+        _fromLocRaw: EthersBN,
+        _toLocRaw: EthersBN,
+        _artifactIdRaw: EthersBN,
+        _: Event
+      ) => {
+        const arrival: QueuedArrival | undefined = await this.getArrival(arrivalId.toNumber());
+        if (!arrival) {
+          console.error('arrival is undefined');
+          return;
         }
-      )
-      .on(
-        ContractEvent.ArrivalQueued,
-        async (
-          _playerAddr: string,
-          arrivalId: EthersBN,
-          _fromLocRaw: EthersBN,
-          _toLocRaw: EthersBN,
-          _artifactIdRaw: EthersBN,
-          _: Event
-        ) => {
-          const arrival: QueuedArrival | undefined = await this.getArrival(arrivalId.toNumber());
-          if (!arrival) {
-            console.error('arrival is undefined');
-            return;
-          }
-          this.emit(ContractsAPIEvent.PlanetUpdate, arrival.toPlanet);
-          this.emit(ContractsAPIEvent.PlanetUpdate, arrival.fromPlanet);
-          this.emit(ContractsAPIEvent.RadiusUpdated);
-        }
-      )
-      .on(
-        ContractEvent.PlanetUpgraded,
-        async (
-          _playerAddr: string,
-          location: EthersBN,
-          _branch: EthersBN,
-          _toBranchLevel: EthersBN,
-          _: Event
-        ) => {
-          this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
-        }
-      )
-      .on(ContractEvent.PlanetHatBought, async (location: EthersBN, _: Event) => {
+        this.emit(ContractsAPIEvent.PlanetUpdate, arrival.toPlanet);
+        this.emit(ContractsAPIEvent.PlanetUpdate, arrival.fromPlanet);
+        this.emit(ContractsAPIEvent.RadiusUpdated);
+      },
+      [ContractEvent.PlanetUpgraded]: async (
+        _playerAddr: string,
+        location: EthersBN,
+        _branch: EthersBN,
+        _toBranchLevel: EthersBN,
+        _: Event
+      ) => {
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
-      })
-      .on(
-        ContractEvent.LocationRevealed,
-        async (revealerAddr: string, location: EthersBN, _: Event) => {
-          this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
-          this.emit(
-            ContractsAPIEvent.LocationRevealed,
-            locationIdFromEthersBN(location),
-            address(revealerAddr.toLowerCase())
-          );
-          this.emit(ContractsAPIEvent.PlayerUpdate, address(revealerAddr));
-        }
-      )
-      .on(
-        ContractEvent.PlanetSilverWithdrawn,
-        async (player: string, location: EthersBN, _amount: EthersBN, _: Event) => {
-          this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
-          this.emit(ContractsAPIEvent.PlayerUpdate, address(player));
-        }
-      );
+      },
+      [ContractEvent.PlanetHatBought]: async (location: EthersBN, _: Event) =>
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location)),
+      [ContractEvent.LocationRevealed]: async (
+        revealerAddr: string,
+        location: EthersBN,
+        _: Event
+      ) => {
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
+        this.emit(
+          ContractsAPIEvent.LocationRevealed,
+          locationIdFromEthersBN(location),
+          address(revealerAddr.toLowerCase())
+        );
+        this.emit(ContractsAPIEvent.PlayerUpdate, address(revealerAddr));
+      },
+      [ContractEvent.PlanetSilverWithdrawn]: async (
+        player: string,
+        location: EthersBN,
+        _amount: EthersBN,
+        _: Event
+      ) => {
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
+        this.emit(ContractsAPIEvent.PlayerUpdate, address(player));
+      },
+    });
 
     this.gptCreditContract.on(
       ContractEvent.ChangedGPTCreditPrice,

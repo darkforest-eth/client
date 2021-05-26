@@ -612,7 +612,7 @@ Overrides: EventEmitter.constructor
 
 ### setupEventListeners
 
-▸ `Private` **setupEventListeners**(): _void_
+▸ **setupEventListeners**(): _void_
 
 **Returns:** _void_
 

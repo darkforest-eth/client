@@ -15,6 +15,7 @@ import { ValhallaPage } from './ValhallaPage';
 import { TestArtifactImages } from './TestArtifactImages';
 import { PreviewPage } from './PreviewPage';
 import { GifMaker } from './GifMaker';
+import { LandingPageBackground } from '../Renderers/LandingPageCanvas';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -35,6 +36,7 @@ function App() {
           {!isProd && <Route path='/images' component={TestArtifactImages} />}
           {!isProd && <Route path='/preview' component={PreviewPage} />}
           {!isProd && <Route path='/gifs' component={GifMaker} />}
+          {!isProd && <Route path='/bg' component={LandingPageBackground} />}
         </Switch>
       </Router>
     </>

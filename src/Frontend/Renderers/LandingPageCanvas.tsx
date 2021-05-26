@@ -315,3 +315,11 @@ export default function LandingPageCanvas() {
 
   return <canvas width={width} height={height} ref={canvasRef} style={canvasStyle}></canvas>;
 }
+
+export function LandingPageBackground() {
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <LandingPageCanvas />
+    </div>
+  );
+}
