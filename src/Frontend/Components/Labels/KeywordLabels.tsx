@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { TooltipName } from '../Game/WindowManager';
-import { TooltipTrigger } from '../Panes/Tooltip';
-import dfstyles from '../Styles/dfstyles';
+import { TooltipName } from '../../Game/WindowManager';
+import { TooltipTrigger } from '../../Panes/Tooltip';
+import dfstyles from '../../Styles/dfstyles';
 
 const StyledSilverLabel = styled.span`
   color: ${dfstyles.colors.text};

@@ -1,7 +1,7 @@
 import { Biome, BiomeNames } from '@darkforest_eth/types';
-import React, { useMemo } from 'react';
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { BiomeTextColors } from '../Styles/PlanetStyles';
+import { BiomeTextColors } from '../../Styles/Colors';
 
 const Wrap = styled.span`
   position: relative;
@@ -38,23 +38,18 @@ const Anim = styled.span`
 
 // TODO pull this logic out from here and SpaceTimeRipLabel into a component
 export function LavaLabelRaw() {
-  const component = useMemo(
-    () => (
-      <Wrap>
-        <Static>{BiomeNames[Biome.LAVA]}</Static>
-        <Anim>
-          {BiomeNames[Biome.LAVA].split('').map((c, i) => (
-            <AnimDelay i={i} key={i}>
-              {c === ' ' ? <>&nbsp;</> : c}
-            </AnimDelay>
-          ))}
-        </Anim>
-      </Wrap>
-    ),
-    []
+  return (
+    <Wrap>
+      <Static>{BiomeNames[Biome.LAVA]}</Static>
+      <Anim>
+        {BiomeNames[Biome.LAVA].split('').map((c, i) => (
+          <AnimDelay i={i} key={i}>
+            {c === ' ' ? <>&nbsp;</> : c}
+          </AnimDelay>
+        ))}
+      </Anim>
+    </Wrap>
   );
-
-  return component;
 }
 
 export const LavaLabel = React.memo(LavaLabelRaw);

@@ -1,27 +1,10 @@
-# Module: Frontend/Styles/PlanetStyles
+# Module: Frontend/Styles/Mixins
 
 ## Table of contents
 
-### Variables
-
-- [BiomeBackgroundColors](frontend_styles_planetstyles.md#biomebackgroundcolors)
-- [BiomeTextColors](frontend_styles_planetstyles.md#biometextcolors)
-
 ### Functions
 
-- [planetBackground](frontend_styles_planetstyles.md#planetbackground)
-
-## Variables
-
-### BiomeBackgroundColors
-
-• `Const` **BiomeBackgroundColors**: _Record_<Biome, string\>
-
----
-
-### BiomeTextColors
-
-• `Const` **BiomeTextColors**: _Record_<Biome, string\>
+- [planetBackground](frontend_styles_mixins.md#planetbackground)
 
 ## Functions
 

@@ -3,9 +3,11 @@ import { useRef } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 import { GifRenderer } from '../Renderers/GifRenderer';
+import { ArtifactFileColor } from '../../Backend/GameLogic/ArtifactUtils';
 
 const IS_THUMB = true;
 const GIF_DIM = IS_THUMB ? 90 : 350;
+export const GIF_ARTIFACT_COLOR = ArtifactFileColor.APP_BACKGROUND;
 
 const StyledGifMaker = styled.div`
   overflow-x: scroll;

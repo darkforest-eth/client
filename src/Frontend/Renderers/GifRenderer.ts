@@ -10,6 +10,7 @@ import {
   setForceAncient,
 } from '../../Backend/GameLogic/ArtifactUtils';
 import { EMPTY_LOCATION_ID } from '@darkforest_eth/constants';
+import { GIF_ARTIFACT_COLOR } from '../Pages/GifMaker';
 
 const FileSaver = require('file-saver');
 
@@ -19,8 +20,6 @@ declare global {
     CCapture: any;
   }
 }
-
-export const GIF_ARTIFACT_COLOR = ArtifactFileColor.APP_BACKGROUND;
 
 const COLORS: Record<ArtifactFileColor, [number, number, number, number]> = [
   [0.0724, 0.051, 0.3111, 1],
@@ -141,7 +140,7 @@ export class GifRenderer extends WebGLManager {
   private async addBiomes(videoMode: boolean, dir: JSZip) {
     setForceAncient(false);
     for (let type = ArtifactType.MIN; type <= ArtifactType.MAX; type++) {
-      for (let rarity = ArtifactRarity.Rare; rarity <= ArtifactRarity.Rare; rarity++) {
+      for (let rarity = ArtifactRarity.MIN; rarity <= ArtifactRarity.MAX; rarity++) {
         for (let biome = Biome.MIN; biome <= Biome.MAX; biome++) {
           if (videoMode) await this.addVideo(dir, type, biome, rarity, false);
           else this.addSprite(dir, type, biome, rarity, false);
@@ -153,7 +152,7 @@ export class GifRenderer extends WebGLManager {
   private async addAncient(videoMode: boolean, dir: JSZip) {
     setForceAncient(true);
     for (let type = ArtifactType.MIN; type <= ArtifactType.MAX; type++) {
-      for (let rarity = ArtifactRarity.Rare; rarity <= ArtifactRarity.Rare; rarity++) {
+      for (let rarity = ArtifactRarity.MIN; rarity <= ArtifactRarity.MAX; rarity++) {
         if (videoMode) await this.addVideo(dir, type, 1, rarity, true);
         else this.addSprite(dir, type, 1, rarity, true);
       }

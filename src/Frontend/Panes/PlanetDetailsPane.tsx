@@ -11,7 +11,11 @@ import { useUIManager, useSelectedPlanet, useAccount } from '../Utils/AppHooks';
 import { ModalHook, ModalName, ModalPane, RECOMMENDED_WIDTH } from '../Views/ModalPane';
 import { ReadMore } from '../Components/ReadMore';
 import { TOGGLE_PLANET_DETAILS_PANE } from '../Utils/ShortcutConstants';
-import { LevelRankText, PlanetBiomeTypeLabel, PlanetOwnerLabel } from '../Components/PlanetLabels';
+import {
+  LevelRankText,
+  PlanetBiomeTypeLabelAnim,
+  PlanetOwnerLabel,
+} from '../Components/Labels/PlanetLabels';
 import { Planet } from '@darkforest_eth/types';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 
@@ -115,7 +119,7 @@ function WithPlanet({
     <StyledPlanetDetailsPane planet={selectedWrapper.value}>
       <PlanetName>{ProcgenUtils.getPlanetName(s.value)}</PlanetName>
       <PlanetNameSubtitle>
-        <LevelRankText planet={s.value} /> <PlanetBiomeTypeLabel planet={s.value} />
+        <LevelRankText planet={s.value} /> <PlanetBiomeTypeLabelAnim planet={s.value} />
       </PlanetNameSubtitle>
 
       {/* <PlanetScape wrapper={s} /> */}

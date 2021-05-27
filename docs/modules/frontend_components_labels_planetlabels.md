@@ -1,47 +1,30 @@
-# Module: Frontend/Components/PlanetLabels
+# Module: Frontend/Components/Labels/PlanetLabels
 
 ## Table of contents
 
 ### Functions
 
-- [BiomeLabel](frontend_components_planetlabels.md#biomelabel)
-- [DefenseText](frontend_components_planetlabels.md#defensetext)
-- [EnergyCapText](frontend_components_planetlabels.md#energycaptext)
-- [EnergyGrowthText](frontend_components_planetlabels.md#energygrowthtext)
-- [EnergyText](frontend_components_planetlabels.md#energytext)
-- [LevelRankText](frontend_components_planetlabels.md#levelranktext)
-- [LevelRankTextEm](frontend_components_planetlabels.md#levelranktextem)
-- [OptionalBiomeLabel](frontend_components_planetlabels.md#optionalbiomelabel)
-- [PlanetBiomeTypeLabel](frontend_components_planetlabels.md#planetbiometypelabel)
-- [PlanetEnergyLabel](frontend_components_planetlabels.md#planetenergylabel)
-- [PlanetLevelText](frontend_components_planetlabels.md#planetleveltext)
-- [PlanetOwnerLabel](frontend_components_planetlabels.md#planetownerlabel)
-- [PlanetRankText](frontend_components_planetlabels.md#planetranktext)
-- [PlanetSilverLabel](frontend_components_planetlabels.md#planetsilverlabel)
-- [PlanetTypeLabel](frontend_components_planetlabels.md#planettypelabel)
-- [RangeText](frontend_components_planetlabels.md#rangetext)
-- [SilverCapText](frontend_components_planetlabels.md#silvercaptext)
-- [SilverGrowthText](frontend_components_planetlabels.md#silvergrowthtext)
-- [SilverText](frontend_components_planetlabels.md#silvertext)
-- [SpeedText](frontend_components_planetlabels.md#speedtext)
-- [StatText](frontend_components_planetlabels.md#stattext)
+- [DefenseText](frontend_components_labels_planetlabels.md#defensetext)
+- [EnergyCapText](frontend_components_labels_planetlabels.md#energycaptext)
+- [EnergyGrowthText](frontend_components_labels_planetlabels.md#energygrowthtext)
+- [EnergyText](frontend_components_labels_planetlabels.md#energytext)
+- [LevelRankText](frontend_components_labels_planetlabels.md#levelranktext)
+- [LevelRankTextEm](frontend_components_labels_planetlabels.md#levelranktextem)
+- [PlanetBiomeTypeLabelAnim](frontend_components_labels_planetlabels.md#planetbiometypelabelanim)
+- [PlanetEnergyLabel](frontend_components_labels_planetlabels.md#planetenergylabel)
+- [PlanetLevelText](frontend_components_labels_planetlabels.md#planetleveltext)
+- [PlanetOwnerLabel](frontend_components_labels_planetlabels.md#planetownerlabel)
+- [PlanetRankText](frontend_components_labels_planetlabels.md#planetranktext)
+- [PlanetSilverLabel](frontend_components_labels_planetlabels.md#planetsilverlabel)
+- [PlanetTypeLabelAnim](frontend_components_labels_planetlabels.md#planettypelabelanim)
+- [RangeText](frontend_components_labels_planetlabels.md#rangetext)
+- [SilverCapText](frontend_components_labels_planetlabels.md#silvercaptext)
+- [SilverGrowthText](frontend_components_labels_planetlabels.md#silvergrowthtext)
+- [SilverText](frontend_components_labels_planetlabels.md#silvertext)
+- [SpeedText](frontend_components_labels_planetlabels.md#speedtext)
+- [StatText](frontend_components_labels_planetlabels.md#stattext)
 
 ## Functions
-
-### BiomeLabel
-
-▸ `Const` **BiomeLabel**(`__namedParameters`: { `planet`: LocatablePlanet }): _Element_
-
-#### Parameters
-
-| Name                       | Type            |
-| :------------------------- | :-------------- |
-| `__namedParameters`        | _object_        |
-| `__namedParameters.planet` | LocatablePlanet |
-
-**Returns:** _Element_
-
----
 
 ### DefenseText
 
@@ -135,24 +118,9 @@
 
 ---
 
-### OptionalBiomeLabel
+### PlanetBiomeTypeLabelAnim
 
-▸ `Const` **OptionalBiomeLabel**(`__namedParameters`: { `planet`: _undefined_ \| Planet }): _Element_
-
-#### Parameters
-
-| Name                       | Type                  |
-| :------------------------- | :-------------------- |
-| `__namedParameters`        | _object_              |
-| `__namedParameters.planet` | _undefined_ \| Planet |
-
-**Returns:** _Element_
-
----
-
-### PlanetBiomeTypeLabel
-
-▸ `Const` **PlanetBiomeTypeLabel**(`__namedParameters`: { `planet`: _undefined_ \| Planet }): _Element_
+▸ `Const` **PlanetBiomeTypeLabelAnim**(`__namedParameters`: { `planet`: _undefined_ \| Planet }): _Element_
 
 #### Parameters
 
@@ -242,9 +210,9 @@
 
 ---
 
-### PlanetTypeLabel
+### PlanetTypeLabelAnim
 
-▸ `Const` **PlanetTypeLabel**(`__namedParameters`: { `planet`: _undefined_ \| Planet }): _Element_
+▸ `Const` **PlanetTypeLabelAnim**(`__namedParameters`: { `planet`: _undefined_ \| Planet }): _Element_
 
 #### Parameters
 

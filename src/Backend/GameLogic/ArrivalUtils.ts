@@ -38,6 +38,10 @@ export const isProspectable = (planet: Planet): boolean => {
   return planet.planetType === PlanetType.RUINS && planet.prospectedBlockNumber === undefined;
 };
 
+export const enoughEnergyToProspect = (p: Planet): boolean => {
+  return p.energy / p.energyCap > 0.955;
+};
+
 const getSilverOverTime = (
   planet: Planet,
   startTimeMillis: number,

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { formatNumber } from '../../Backend/Utils/Utils';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { ArtifactIcon, EnergyIcon, SilverIcon } from '../Components/Icons';
-import { AccountLabel } from '../Components/Labels';
+import { AccountLabel } from '../Components/Labels/Labels';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
 import { LongDash, Sub, White } from '../Components/Text';
 import { TooltipName } from '../Game/WindowManager';
@@ -32,6 +32,8 @@ const StyledTopBar = styled.div`
   background: ${dfstyles.colors.background};
   border-bottom: 1px solid ${dfstyles.colors.subtext};
   border-right: 1px solid ${dfstyles.colors.subtext};
+
+  border-bottom-right-radius: ${dfstyles.borderRadius};
 `;
 
 const StyledCollapser = styled.span`

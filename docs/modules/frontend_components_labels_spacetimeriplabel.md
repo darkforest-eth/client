@@ -1,10 +1,10 @@
-# Module: Frontend/Components/SpacetimeRipLabel
+# Module: Frontend/Components/Labels/SpacetimeRipLabel
 
 ## Table of contents
 
 ### Variables
 
-- [SpacetimeRipLabel](frontend_components_spacetimeriplabel.md#spacetimeriplabel)
+- [SpacetimeRipLabel](frontend_components_labels_spacetimeriplabel.md#spacetimeriplabel)
 
 ## Variables
 

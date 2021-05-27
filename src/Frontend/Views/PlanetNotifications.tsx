@@ -1,7 +1,11 @@
 import React, { useCallback } from 'react';
 import { Planet } from '@darkforest_eth/types';
 import styled from 'styled-components';
-import { isFindable, isProspectable } from '../../Backend/GameLogic/ArrivalUtils';
+import {
+  enoughEnergyToProspect,
+  isFindable,
+  isProspectable,
+} from '../../Backend/GameLogic/ArrivalUtils';
 import { SpacedFlexRow } from '../Components/FlexRows';
 import { Btn } from '../Components/Btn';
 import { Sub } from '../Components/Text';
@@ -34,7 +38,8 @@ export function getNotifsForPlanet(
   const notifs: PlanetNotifType[] = [];
   if (!planet) return notifs;
   if (GameObjects.planetCanUpgrade(planet)) notifs.push(PlanetNotifType.PlanetCanUpgrade);
-  if (isProspectable(planet)) notifs.push(PlanetNotifType.CanProspect);
+  if (isProspectable(planet) && enoughEnergyToProspect(planet))
+    notifs.push(PlanetNotifType.CanProspect);
   if (isFindable(planet, currentBlockNumber)) notifs.push(PlanetNotifType.CanFindArtifact);
   if (planet.silver / planet.silverCap > 0.995) notifs.push(PlanetNotifType.MaxSilver);
 
@@ -61,10 +66,9 @@ const PlanetMaxSilverRow = () => (
 
 function FindArtifactRow({ wrapper }: { wrapper: Wrapper<Planet | undefined> }) {
   const uiManager = useUIManager();
-  const find = useCallback(
-    () => wrapper.value && uiManager?.findArtifact(wrapper.value.locationId),
-    [wrapper, uiManager]
-  );
+
+  const locId = wrapper.value?.locationId;
+  const find = useCallback(() => locId && uiManager?.findArtifact(locId), [locId, uiManager]);
 
   return (
     <SpacedFlexRow>

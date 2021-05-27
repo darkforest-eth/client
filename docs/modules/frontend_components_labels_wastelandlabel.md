@@ -1,14 +1,14 @@
-# Module: Frontend/Components/WastelandLabel
+# Module: Frontend/Components/Labels/WastelandLabel
 
 ## Table of contents
 
 ### Variables
 
-- [WastelandLabel](frontend_components_wastelandlabel.md#wastelandlabel)
+- [WastelandLabel](frontend_components_labels_wastelandlabel.md#wastelandlabel)
 
 ### Functions
 
-- [WastelandLabelRaw](frontend_components_wastelandlabel.md#wastelandlabelraw)
+- [WastelandLabelRaw](frontend_components_labels_wastelandlabel.md#wastelandlabelraw)
 
 ## Variables
 

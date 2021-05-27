@@ -1,26 +1,14 @@
 import React, { useMemo } from 'react';
-import {
-  Biome,
-  BiomeNames,
-  LocatablePlanet,
-  Planet,
-  PlanetType,
-  PlanetTypeNames,
-} from '@darkforest_eth/types';
-import { formatNumber, getPlanetRank } from '../../Backend/Utils/Utils';
-import { Colored, Sub, White } from './Text';
-import styled from 'styled-components';
-import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
-import { isLocatable } from '../../_types/global/GlobalTypes';
+import { Planet, PlanetType, PlanetTypeNames } from '@darkforest_eth/types';
+import { formatNumber, getPlanetRank } from '../../../Backend/Utils/Utils';
+import { Colored, Sub, White } from '../Text';
+import { ProcgenUtils } from '../../../Backend/Procedural/ProcgenUtils';
 import { SpacetimeRipLabel } from './SpacetimeRipLabel';
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
-import { useAccount, useUIManager } from '../Utils/AppHooks';
-import { TextPreview } from './TextPreview';
-import dfstyles from '../Styles/dfstyles';
-import { BiomeTextColors } from '../Styles/PlanetStyles';
-import { shakeAnim, burnAnim, icyAnim } from './BiomeAnims';
-import { LavaLabel } from './LavaLabel';
-import { WastelandLabel } from './WastelandLabel';
+import { useAccount, useUIManager } from '../../Utils/AppHooks';
+import { TextPreview } from '../TextPreview';
+import dfstyles from '../../Styles/dfstyles';
+import { OptionalPlanetBiomeLabelAnim } from './BiomeLabels';
 
 /* note that we generally prefer `Planet | undefined` over `Planet` because it
    makes it easier to pass in selected / hovering planet from the emitters      */
@@ -136,30 +124,7 @@ export const LevelRankTextEm = ({
     <></>
   );
 
-/* biome stuff */
-
-const StyledBiomeLabel = styled.span<{ biome: Biome }>`
-  ${({ biome }) => biome === Biome.CORRUPTED && shakeAnim};
-  ${({ biome }) => biome === Biome.WASTELAND && burnAnim};
-  ${({ biome }) => biome === Biome.ICE && icyAnim};
-
-  color: ${({ biome }) => BiomeTextColors[biome]};
-`;
-
-export const BiomeLabel = ({ planet }: { planet: LocatablePlanet }) =>
-  planet.biome === Biome.LAVA ? (
-    <LavaLabel />
-  ) : planet.biome === Biome.WASTELAND ? (
-    <WastelandLabel />
-  ) : (
-    <StyledBiomeLabel biome={planet.biome}>{BiomeNames[planet.biome]}</StyledBiomeLabel>
-  );
-
-export const OptionalBiomeLabel = ({ planet }: { planet: Planet | undefined }) => (
-  <>{planet && isLocatable(planet) && <BiomeLabel planet={planet} />}</>
-);
-
-export const PlanetTypeLabel = ({ planet }: { planet: Planet | undefined }) => (
+export const PlanetTypeLabelAnim = ({ planet }: { planet: Planet | undefined }) => (
   <>
     {planet &&
       (planet.planetType === PlanetType.TRADING_POST ? (
@@ -170,14 +135,14 @@ export const PlanetTypeLabel = ({ planet }: { planet: Planet | undefined }) => (
   </>
 );
 
-export const PlanetBiomeTypeLabel = ({ planet }: { planet: Planet | undefined }) => (
+export const PlanetBiomeTypeLabelAnim = ({ planet }: { planet: Planet | undefined }) => (
   <>
     {planet?.planetType !== PlanetType.TRADING_POST && (
       <>
-        <OptionalBiomeLabel planet={planet} />{' '}
+        <OptionalPlanetBiomeLabelAnim planet={planet} />{' '}
       </>
     )}
-    <PlanetTypeLabel planet={planet} />
+    <PlanetTypeLabelAnim planet={planet} />
   </>
 );
 

@@ -1,7 +1,7 @@
 import { EthAddress } from '@darkforest_eth/types';
 import React from 'react';
-import { useTwitter, useUIManager } from '../Utils/AppHooks';
-import { TextPreview } from './TextPreview';
+import { useTwitter, useUIManager } from '../../Utils/AppHooks';
+import { TextPreview } from '../TextPreview';
 
 export function AccountLabel({ account }: { account: EthAddress | undefined }) {
   const uiManager = useUIManager();

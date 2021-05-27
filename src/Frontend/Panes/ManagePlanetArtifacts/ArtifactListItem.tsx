@@ -3,7 +3,11 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { isActivated, getArtifactDebugName } from '../../../Backend/GameLogic/ArtifactUtils';
 import { ArtifactImage } from '../../Components/ArtifactImage';
-import { ArtifactRarityBiomeNameLabel } from '../../Components/ArtifactLabels';
+import {
+  ArtifactBiomeText,
+  ArtifactRarityLabelAnim,
+  ArtifactTypeText,
+} from '../../Components/Labels/ArtifactLabels';
 import { Spacer } from '../../Components/CoreUI';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Smaller, Sub } from '../../Components/Text';
@@ -42,7 +46,8 @@ export function ArtifactListItem({
         <Spacer width={8} />
         <Smaller>
           <Sub>
-            <ArtifactRarityBiomeNameLabel artifact={artifact} />
+            <ArtifactRarityLabelAnim artifact={artifact} />{' '}
+            <ArtifactBiomeText artifact={artifact} /> <ArtifactTypeText artifact={artifact} />
           </Sub>
         </Smaller>
         {actions(artifact)}

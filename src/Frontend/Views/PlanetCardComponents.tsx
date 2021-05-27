@@ -4,11 +4,14 @@ import styled from 'styled-components';
 import { StatIdx } from '../../_types/global/GlobalTypes';
 import { TooltipName } from '../Game/WindowManager';
 import { TooltipTrigger } from '../Panes/Tooltip';
-import { planetBackground } from '../Styles/PlanetStyles';
+import { planetBackground } from '../Styles/Mixins';
 import dfstyles from '../Styles/dfstyles';
 import { ArtifactImage } from '../Components/ArtifactImage';
-import { ArtifactFileColor } from '../../Backend/GameLogic/ArtifactUtils';
-import { ArtifactRarityBiomeNameLabel } from '../Components/ArtifactLabels';
+import {
+  ArtifactBiomeText,
+  ArtifactRarityLabelAnim,
+  ArtifactTypeText,
+} from '../Components/Labels/ArtifactLabels';
 import { Sub } from '../Components/Text';
 
 export const StyledPlanetCard = styled.div`
@@ -20,6 +23,20 @@ export const PreviewSection = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  position: relative;
+`;
+
+export const DestroyedMarker = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+
+  background-image: url('/public/img/destroyedbg.png');
+  background-size: 100px 100px;
+  background-position: right bottom;
+  background-repeat: no-repeat;
 `;
 
 export const PlanetTag = styled.div<{ planet: Planet | undefined }>`
@@ -158,15 +175,12 @@ export function PlanetActiveArtifact({
   return (
     <StyledPlanetActiveArtifact planet={planet}>
       <ImageWrapper>
-        <ArtifactImage
-          artifact={artifact}
-          size={20}
-          bgColor={ArtifactFileColor.APP_BACKGROUND}
-          thumb
-        />
+        <ArtifactImage artifact={artifact} size={20} thumb />
       </ImageWrapper>
       <Sub>
-        Active: <ArtifactRarityBiomeNameLabel artifact={artifact} />
+        Active:
+        <ArtifactRarityLabelAnim artifact={artifact} /> <ArtifactBiomeText artifact={artifact} />{' '}
+        <ArtifactTypeText artifact={artifact} />
       </Sub>
     </StyledPlanetActiveArtifact>
   );

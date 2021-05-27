@@ -1,8 +1,8 @@
 import { Biome, BiomeNames } from '@darkforest_eth/types';
-import React, { useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { BiomeTextColors } from '../Styles/PlanetStyles';
-import { burnAnim, wiggle } from './BiomeAnims';
+import { BiomeTextColors } from '../../Styles/Colors';
+import { burnAnim, wiggle } from '../BiomeAnims';
 
 const Wrap = styled.span`
   position: relative;
@@ -32,23 +32,18 @@ const Anim = styled.span`
 
 // TODO pull this logic out from here and SpaceTimeRipLabel into a component
 export function WastelandLabelRaw() {
-  const component = useMemo(
-    () => (
-      <Wrap>
-        <Static>{BiomeNames[Biome.WASTELAND]}</Static>
-        <Anim>
-          {BiomeNames[Biome.WASTELAND].split('').map((c, i) => (
-            <AnimDelay i={i} key={i}>
-              {c === ' ' ? <>&nbsp;</> : c}
-            </AnimDelay>
-          ))}
-        </Anim>
-      </Wrap>
-    ),
-    []
+  return (
+    <Wrap>
+      <Static>{BiomeNames[Biome.WASTELAND]}</Static>
+      <Anim>
+        {BiomeNames[Biome.WASTELAND].split('').map((c, i) => (
+          <AnimDelay i={i} key={i}>
+            {c === ' ' ? <>&nbsp;</> : c}
+          </AnimDelay>
+        ))}
+      </Anim>
+    </Wrap>
   );
-
-  return component;
 }
 
 export const WastelandLabel = React.memo(WastelandLabelRaw);

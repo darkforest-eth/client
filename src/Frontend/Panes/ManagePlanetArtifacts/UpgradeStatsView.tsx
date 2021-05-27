@@ -1,6 +1,6 @@
 import { ArtifactType, Upgrade } from '@darkforest_eth/types';
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Spacer } from '../../Components/CoreUI';
 import {
   DefenseIcon,
@@ -10,6 +10,8 @@ import {
   SpeedIcon,
 } from '../../Components/Icons';
 import dfstyles from '../../Styles/dfstyles';
+
+const { dfgreen, dfred, subtext } = dfstyles.colors;
 
 function upgradeValue(value: number) {
   const normalizedValue = Math.floor(value - 100);
@@ -21,6 +23,40 @@ function upgradeValue(value: number) {
   }
 }
 
+type IconProps = {
+  color?: string;
+};
+
+function SingleUpgrade({
+  upgrade,
+  active,
+  icon,
+  getMultiplier,
+}: {
+  upgrade: Upgrade;
+  active: boolean;
+  icon: (p: IconProps) => JSX.Element;
+  getMultiplier: (u: Upgrade) => number;
+}) {
+  const mult = getMultiplier(upgrade);
+  const activeColor = mult > 100 ? dfgreen : mult < 100 ? dfred : subtext;
+  const color = active ? activeColor : subtext;
+
+  return (
+    <StyledSingleUpgrade color={color}>
+      {icon({ color })}
+      <Spacer width={2} />
+      {upgradeValue(getMultiplier(upgrade))}
+    </StyledSingleUpgrade>
+  );
+}
+
+const getDefenseMult = (u: Upgrade) => u.defMultiplier;
+const getEnergyCapMult = (u: Upgrade) => u.energyCapMultiplier;
+const getEnergyGroMult = (u: Upgrade) => u.energyGroMultiplier;
+const getRangeMult = (u: Upgrade) => u.rangeMultiplier;
+const getSpeedMult = (u: Upgrade) => u.speedMultiplier;
+
 export function UpgradeStatsView({
   upgrade,
   isActive,
@@ -30,8 +66,6 @@ export function UpgradeStatsView({
   isActive: boolean;
   artifactType: ArtifactType;
 }) {
-  const iconColor = isActive ? dfstyles.colors.dfgreen : dfstyles.colors.subtext;
-
   let specialDescription;
 
   switch (artifactType) {
@@ -53,50 +87,30 @@ export function UpgradeStatsView({
     return <UpgradeSummaryContainer>{specialDescription}</UpgradeSummaryContainer>;
   }
 
+  const iconProps = { active: isActive, upgrade };
+
   return (
-    <UpgradeSummaryContainer isActive={isActive}>
-      <SingleUpgrade>
-        <DefenseIcon color={iconColor} />
-        <Spacer width={2} />
-        {upgradeValue(upgrade.defMultiplier)}
-      </SingleUpgrade>
-      <SingleUpgrade>
-        <EnergyIcon color={iconColor} />
-        <Spacer width={2} />
-        {upgradeValue(upgrade.energyCapMultiplier)}
-      </SingleUpgrade>
-      <SingleUpgrade>
-        <EnergyGrowthIcon color={iconColor} />
-        <Spacer width={2} />
-        {upgradeValue(upgrade.energyGroMultiplier)}
-      </SingleUpgrade>
-      <SingleUpgrade>
-        <RangeIcon color={iconColor} />
-        <Spacer width={2} />
-        {upgradeValue(upgrade.rangeMultiplier)}
-      </SingleUpgrade>
-      <SingleUpgrade>
-        <SpeedIcon color={iconColor} />
-        <Spacer width={2} />
-        {upgradeValue(upgrade.speedMultiplier)}
-      </SingleUpgrade>
+    <UpgradeSummaryContainer>
+      <SingleUpgrade {...iconProps} icon={DefenseIcon} getMultiplier={getDefenseMult} />
+      <SingleUpgrade {...iconProps} icon={EnergyIcon} getMultiplier={getEnergyCapMult} />
+      <SingleUpgrade {...iconProps} icon={EnergyGrowthIcon} getMultiplier={getEnergyGroMult} />
+      <SingleUpgrade {...iconProps} icon={RangeIcon} getMultiplier={getRangeMult} />
+      <SingleUpgrade {...iconProps} icon={SpeedIcon} getMultiplier={getSpeedMult} />
     </UpgradeSummaryContainer>
   );
 }
 
-const SingleUpgrade = styled.div`
+const StyledSingleUpgrade = styled.div<{ color?: string }>`
   display: inline-flex;
   justify-content: flex-start;
   align-items: center;
   width: 50px;
+  ${({ color }) => color && `color: ${color};`}
 `;
 
 const UpgradeSummaryContainer = styled.div`
-  ${({ isActive }: { isActive?: boolean }) => css`
-    display: inline-block;
-    font-size: 12px;
-    justify-content: space-between;
-    align-items: center;
-    color: ${isActive ? dfstyles.colors.dfgreen : dfstyles.colors.subtext};
-  `}
+  display: inline-block;
+  font-size: 12px;
+  justify-content: space-between;
+  align-items: center;
 `;

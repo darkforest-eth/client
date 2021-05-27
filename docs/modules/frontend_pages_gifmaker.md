@@ -2,9 +2,19 @@
 
 ## Table of contents
 
+### Variables
+
+- [GIF_ARTIFACT_COLOR](frontend_pages_gifmaker.md#gif_artifact_color)
+
 ### Functions
 
 - [GifMaker](frontend_pages_gifmaker.md#gifmaker)
+
+## Variables
+
+### GIF_ARTIFACT_COLOR
+
+• `Const` **GIF_ARTIFACT_COLOR**: [_APP_BACKGROUND_](../enums/backend_gamelogic_artifactutils.artifactfilecolor.md#app_background)
 
 ## Functions
 

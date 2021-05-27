@@ -13,7 +13,7 @@ const StyledPreview = styled.div`
 `;
 
 const planetType = PlanetType.PLANET;
-const biome = Biome.CORRUPTED;
+const biome = Biome.FOREST;
 
 const myPlanet = {
   location: {

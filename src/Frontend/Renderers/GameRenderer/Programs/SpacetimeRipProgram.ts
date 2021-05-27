@@ -171,7 +171,7 @@ export const SPACETIMERIP_PROGRAM_DEFINITION = {
 
       vec4 blended = vec4(${v.inColor1} * nR + ${v.inColor2} * nG + ${v.inColor3} * nB);
       vec3 holeRgb = blended.rgb;
-      vec3 holeSquash = pow(holeRgb - vec3(0.5), vec3(1.5)) - vec3(0.3);
+      vec3 holeSquash = pow(holeRgb - vec3(0.5), vec3(1.5)) - vec3(0.1);
 
       vec4 holeColor = vec4(holeSquash, 1.);
 

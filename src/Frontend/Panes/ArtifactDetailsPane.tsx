@@ -5,8 +5,6 @@ import {
   Upgrade,
   EthAddress,
   Artifact,
-  BiomeNames,
-  ArtifactNames,
 } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React from 'react';
@@ -31,6 +29,8 @@ import { TimeUntil } from '../Components/TimeUntil';
 import { TooltipTrigger } from './Tooltip';
 import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
 import { Btn } from '../Components/Btn';
+import { ArtifactRarityLabelAnim, ArtifactTypeText } from '../Components/Labels/ArtifactLabels';
+import { ArtifactBiomeLabelAnim } from '../Components/Labels/BiomeLabels';
 
 const StyledArtifactPane = styled.div`
   width: 24em;
@@ -214,8 +214,8 @@ export function ArtifactDetailsBody({
     <StyledArtifactPane>
       <ArtifactName>{artifactName(artifact)}</ArtifactName>
       <ArtifactNameSubtitle>
-        {RarityNames[artifact.rarity]} {BiomeNames[artifact.planetBiome]}{' '}
-        {ArtifactNames[artifact.artifactType]}
+        <ArtifactRarityLabelAnim artifact={artifact} />{' '}
+        <ArtifactBiomeLabelAnim artifact={artifact} /> <ArtifactTypeText artifact={artifact} />
       </ArtifactNameSubtitle>
 
       <ArtifactDetailsHeader>

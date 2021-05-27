@@ -5,7 +5,7 @@ import { Btn } from '../Components/Btn';
 import { CenterBackgroundSubtext } from '../Components/CoreUI';
 import { Input } from '../Components/Input';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
-import { SilverLabelTip, ScoreLabelTip } from '../Components/KeywordLabels';
+import { SilverLabelTip, ScoreLabelTip } from '../Components/Labels/KeywordLabels';
 import { Red, Sub, White } from '../Components/Text';
 import { useUIManager } from '../Utils/AppHooks';
 import { SpacedFlexRow } from '../Components/FlexRows';

@@ -1,5 +1,5 @@
 import { PlanetTypeNames, PlanetType } from '@darkforest_eth/types';
-import React, { useMemo } from 'react';
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const Wrap = styled.span`
@@ -39,23 +39,18 @@ const Anim = styled.span`
 `;
 
 function SpacetimeRipLabelRaw() {
-  const component = useMemo(
-    () => (
-      <Wrap>
-        <Static>{PlanetTypeNames[PlanetType.TRADING_POST]}</Static>
-        <Anim>
-          {PlanetTypeNames[PlanetType.TRADING_POST].split('').map((c, i) => (
-            <AnimDelay i={i} key={i}>
-              {c === ' ' ? <>&nbsp;</> : c}
-            </AnimDelay>
-          ))}
-        </Anim>
-      </Wrap>
-    ),
-    []
+  return (
+    <Wrap>
+      <Static>{PlanetTypeNames[PlanetType.TRADING_POST]}</Static>
+      <Anim>
+        {PlanetTypeNames[PlanetType.TRADING_POST].split('').map((c, i) => (
+          <AnimDelay i={i} key={i}>
+            {c === ' ' ? <>&nbsp;</> : c}
+          </AnimDelay>
+        ))}
+      </Anim>
+    </Wrap>
   );
-
-  return component;
 }
 
 export const SpacetimeRipLabel = React.memo(SpacetimeRipLabelRaw);

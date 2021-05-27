@@ -10,7 +10,7 @@ import { EnergyIcon, SilverIcon } from '../Components/Icons';
 import { LongDash, Sub } from '../Components/Text';
 import WindowManager, { CursorState } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
-import { planetBackground } from '../Styles/PlanetStyles';
+import { planetBackground } from '../Styles/Mixins';
 import { useUIManager, useControlDown, usePlanetInactiveArtifacts } from '../Utils/AppHooks';
 import { useEmitterSubscribe, useEmitterValue } from '../Utils/EmitterHooks';
 import { escapeDown$, keyUp$ } from '../Utils/KeyEmitters';

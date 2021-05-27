@@ -1,10 +1,10 @@
-# Module: Frontend/Components/Labels
+# Module: Frontend/Components/Labels/Labels
 
 ## Table of contents
 
 ### Functions
 
-- [AccountLabel](frontend_components_labels.md#accountlabel)
+- [AccountLabel](frontend_components_labels_labels.md#accountlabel)
 
 ## Functions
 

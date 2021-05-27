@@ -1,14 +1,14 @@
-# Module: Frontend/Components/LavaLabel
+# Module: Frontend/Components/Labels/LavaLabel
 
 ## Table of contents
 
 ### Variables
 
-- [LavaLabel](frontend_components_lavalabel.md#lavalabel)
+- [LavaLabel](frontend_components_labels_lavalabel.md#lavalabel)
 
 ### Functions
 
-- [LavaLabelRaw](frontend_components_lavalabel.md#lavalabelraw)
+- [LavaLabelRaw](frontend_components_labels_lavalabel.md#lavalabelraw)
 
 ## Variables
 

@@ -6,6 +6,7 @@
 
 - [ArtifactSection](frontend_views_planetcardcomponents.md#artifactsection)
 - [BigStatCell](frontend_views_planetcardcomponents.md#bigstatcell)
+- [DestroyedMarker](frontend_views_planetcardcomponents.md#destroyedmarker)
 - [IconsWrapper](frontend_views_planetcardcomponents.md#iconswrapper)
 - [PlanetTag](frontend_views_planetcardcomponents.md#planettag)
 - [PreviewSection](frontend_views_planetcardcomponents.md#previewsection)
@@ -35,6 +36,12 @@
 ### BigStatCell
 
 • `Const` **BigStatCell**: _StyledComponent_<`"div"`, any, {}, never\>
+
+---
+
+### DestroyedMarker
+
+• `Const` **DestroyedMarker**: _StyledComponent_<`"div"`, any, {}, never\>
 
 ---
 

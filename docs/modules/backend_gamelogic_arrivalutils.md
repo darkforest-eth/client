@@ -7,6 +7,7 @@
 - [applyUpgrade](backend_gamelogic_arrivalutils.md#applyupgrade)
 - [arrive](backend_gamelogic_arrivalutils.md#arrive)
 - [blocksLeftToProspectExpiration](backend_gamelogic_arrivalutils.md#blockslefttoprospectexpiration)
+- [enoughEnergyToProspect](backend_gamelogic_arrivalutils.md#enoughenergytoprospect)
 - [isFindable](backend_gamelogic_arrivalutils.md#isfindable)
 - [isProspectable](backend_gamelogic_arrivalutils.md#isprospectable)
 - [prospectExpired](backend_gamelogic_arrivalutils.md#prospectexpired)
@@ -59,6 +60,20 @@
 | `prospectedBlockNumber?` | _number_ |
 
 **Returns:** _number_
+
+---
+
+### enoughEnergyToProspect
+
+▸ `Const` **enoughEnergyToProspect**(`p`: Planet): _boolean_
+
+#### Parameters
+
+| Name | Type   |
+| :--- | :----- |
+| `p`  | Planet |
+
+**Returns:** _boolean_
 
 ---
 

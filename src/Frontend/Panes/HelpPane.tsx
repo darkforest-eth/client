@@ -77,8 +77,8 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
         </p>
         <p>
           If you need help, click "Reset Tutorial" above, or check out the FAQ. You can also hold
-          down <White>SHIFT</White> and hover over anything that is highlighted{' '}
-          <BlueBG>Blue</BlueBG> to learn more about it!
+          down <White>CTRL</White> and hover over anything that is highlighted <BlueBG>Blue</BlueBG>{' '}
+          to learn more about it!
         </p>
         <p className='title'>Prizes and Scoring</p>
         <p>

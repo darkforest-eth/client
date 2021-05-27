@@ -1,13 +1,13 @@
-# Module: Frontend/Components/KeywordLabels
+# Module: Frontend/Components/Labels/KeywordLabels
 
 ## Table of contents
 
 ### Functions
 
-- [ScoreLabel](frontend_components_keywordlabels.md#scorelabel)
-- [ScoreLabelTip](frontend_components_keywordlabels.md#scorelabeltip)
-- [SilverLabel](frontend_components_keywordlabels.md#silverlabel)
-- [SilverLabelTip](frontend_components_keywordlabels.md#silverlabeltip)
+- [ScoreLabel](frontend_components_labels_keywordlabels.md#scorelabel)
+- [ScoreLabelTip](frontend_components_labels_keywordlabels.md#scorelabeltip)
+- [SilverLabel](frontend_components_labels_keywordlabels.md#silverlabel)
+- [SilverLabelTip](frontend_components_labels_keywordlabels.md#silverlabeltip)
 
 ## Functions
 

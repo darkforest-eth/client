@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { SelectedPlanetHelpContent } from '../Copy/HelpContent';
 import dfstyles from '../Styles/dfstyles';
-import { useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
+import { useAccount, useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';
 import { ModalHook, ModalPane } from '../Views/ModalPane';
 import { PlanetCard } from '../Views/PlanetCard';
@@ -43,6 +43,8 @@ export function PlanetContextPane({
   const uiManager = useUIManager();
   const s = useSelectedPlanet(uiManager);
 
+  const account = useAccount(uiManager);
+
   const currentBlockNumber = useEmitterValue(uiManager.getEthConnection().blockNumber$, undefined);
   const notifs = useMemo(
     () => getNotifsForPlanet(s.value, currentBlockNumber),
@@ -50,6 +52,9 @@ export function PlanetContextPane({
   );
 
   const notifProps = { upgradeDetHook };
+
+  const owned = s.value?.owner === account;
+  const isPost = s.value?.planetType === PlanetType.TRADING_POST;
 
   return (
     <ModalPane
@@ -61,9 +66,13 @@ export function PlanetContextPane({
     >
       <StyledSelectedPlanetPane>
         <PlanetCard planetWrapper={s} />
-        <Header>Send Resources</Header>
-        <SendResources planetWrapper={s} />
-        {s.value?.planetType === PlanetType.TRADING_POST && (
+        {owned && (
+          <>
+            <Header>Send Resources</Header>
+            <SendResources planetWrapper={s} />
+          </>
+        )}
+        {owned && isPost && (
           <>
             <Header>Spacetime Rip</Header>
             <ContextSection>
@@ -71,7 +80,7 @@ export function PlanetContextPane({
             </ContextSection>
           </>
         )}
-        {notifs.length > 0 && (
+        {owned && notifs.length > 0 && (
           <>
             <Header>Planet Notifications</Header>
             <ContextSection>

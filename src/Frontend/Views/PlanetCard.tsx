@@ -1,5 +1,6 @@
 import { Planet, PlanetType } from '@darkforest_eth/types';
 import React from 'react';
+import { useMemo } from 'react';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { StatIdx } from '../../_types/global/GlobalTypes';
@@ -17,14 +18,15 @@ import {
   EnergyGrowthText,
   PlanetEnergyLabel,
   LevelRankTextEm,
-  PlanetBiomeTypeLabel,
+  PlanetBiomeTypeLabelAnim,
   PlanetOwnerLabel,
   RangeText,
   SilverGrowthText,
   PlanetSilverLabel,
   SpeedText,
-} from '../Components/PlanetLabels';
+} from '../Components/Labels/PlanetLabels';
 import { PlanetPreview } from '../Components/PlanetPreview';
+import { Red } from '../Components/Text';
 import { TooltipName } from '../Game/WindowManager';
 import { PlanetIcons } from '../Renderers/PlanetscapeRenderer/PlanetIcons';
 import { useUIManager, useActiveArtifact } from '../Utils/AppHooks';
@@ -43,27 +45,45 @@ import {
   PCStatIcon,
   ArtifactSection,
   PlanetActiveArtifact,
+  DestroyedMarker,
 } from './PlanetCardComponents';
 
+const DestroyedLabel = () => (
+  <>
+    <Red>DESTROYED</Red>{' '}
+  </>
+);
+
 /** Preview basic planet information - used in `PlanetContextPane` and `HoverPlanetPane` */
-export function PlanetCard({ planetWrapper }: { planetWrapper: Wrapper<Planet | undefined> }) {
+export function PlanetCard({ planetWrapper: p }: { planetWrapper: Wrapper<Planet | undefined> }) {
   const uiManager = useUIManager();
-  const active = useActiveArtifact(planetWrapper, uiManager);
-  const planet = planetWrapper.value;
+  const active = useActiveArtifact(p, uiManager);
+  const planet = p.value;
+
+  const isSilverMine = useMemo(
+    () => p.value?.planetType === PlanetType.SILVER_MINE,
+    [p.value?.planetType]
+  );
+
+  const destroyed = p.value?.destroyed;
 
   return (
     <StyledPlanetCard>
       <TitleBar>
-        <p>{ProcgenUtils.getPlanetName(planet)}</p>
+        <p>
+          {destroyed && <DestroyedLabel />}
+          {ProcgenUtils.getPlanetName(planet)}
+        </p>
         <p>
           <PlanetOwnerLabel planet={planet} showYours color />
         </p>
       </TitleBar>
       <PreviewSection>
+        {destroyed && <DestroyedMarker />}
         <PlanetPreview planet={planet} size={'5em'} res={100} />
         <PlanetTag planet={planet}>
           <p>
-            <PlanetBiomeTypeLabel planet={planet} />
+            <PlanetBiomeTypeLabelAnim planet={planet} />
           </p>
           <p>
             <LevelRankTextEm planet={planet} delim={' / '} />
@@ -95,7 +115,7 @@ export function PlanetCard({ planetWrapper }: { planetWrapper: Wrapper<Planet | 
             </PCStatIcon>
             <EnergyGrowthText planet={planet} />
           </Small>
-          {planet?.planetType === PlanetType.SILVER_MINE && (
+          {isSilverMine && (
             <Small planet={planet}>
               <RowTip name={TooltipName.SilverGrowth}>
                 <SilverGrowthIcon />

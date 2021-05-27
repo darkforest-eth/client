@@ -1,4 +1,4 @@
-import { Artifact, ArtifactNames, RarityNames } from '@darkforest_eth/types';
+import { Artifact, ArtifactNames } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
@@ -8,6 +8,7 @@ import { artifactName } from '../../Backend/Procedural/ArtifactProcgen';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { ArtifactImage } from '../Components/ArtifactImage';
 import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
+import { ArtifactRarityLabelAnim } from '../Components/Labels/ArtifactLabels';
 import { Sub } from '../Components/Text';
 import { useUIManager } from '../Utils/AppHooks';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
@@ -122,7 +123,7 @@ export function PlayerArtifactsPane({
       );
     },
     (artifact: Artifact) => <Sub>{ArtifactNames[artifact.artifactType]}</Sub>,
-    (artifact: Artifact) => <Sub>{RarityNames[artifact.rarity]}</Sub>,
+    (artifact: Artifact) => <ArtifactRarityLabelAnim artifact={artifact} />,
   ];
 
   const sortFunctions = [

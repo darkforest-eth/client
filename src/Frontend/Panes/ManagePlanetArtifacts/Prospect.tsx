@@ -4,6 +4,7 @@ import { Btn } from '../../Components/Btn';
 import { Spacer } from '../../Components/CoreUI';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Sub } from '../../Components/Text';
+import { enoughEnergyToProspect } from '../../../Backend/GameLogic/ArrivalUtils';
 
 export function Prospect({
   prospect,
@@ -16,8 +17,8 @@ export function Prospect({
 }) {
   let button;
 
-  const energyPercentage = (planet.energy / planet.energyCap) * 100;
-  const enoughEnergy = energyPercentage >= 95;
+  const energyPercentage = planet.energy / planet.energyCap;
+  const enoughEnergy = enoughEnergyToProspect(planet);
 
   if (isProspecting) {
     button = (
@@ -42,8 +43,8 @@ export function Prospect({
         what artifact you will find!{' '}
         {!enoughEnergy && (
           <>
-            This planet must have 95% energy to prospect for an artifact. (Currently{' '}
-            {energyPercentage.toFixed(2)}%)
+            This planet must have over 95% energy to prospect for an artifact. (Currently{' '}
+            {energyPercentage.toFixed(0)}%)
           </>
         )}
       </Sub>
