@@ -132,7 +132,7 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
 
   const branchStrName = upgradeName(branch);
   const planetAtMaxRank = isFullRank(selected);
-  const branchAtMaxRank = !selected || selected.upgradeState[branch] >= 3;
+  const branchAtMaxRank = !selected || selected.upgradeState[branch] >= 4;
 
   const getSilver = (): number => {
     if (!selected) return 0;

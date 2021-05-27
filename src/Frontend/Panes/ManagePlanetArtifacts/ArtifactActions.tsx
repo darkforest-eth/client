@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { artifactAvailableTimestamp, isActivated } from '../../../Backend/GameLogic/ArtifactUtils';
-import { Artifact, RarityNames } from '@darkforest_eth/types';
+import { Artifact, ArtifactType, RarityNames } from '@darkforest_eth/types';
 import { HoverableTooltip } from '../../Components/CoreUI';
 import { Hoverable, TOOLTIP_SLOW } from '../../Components/Hoverable';
 import { DepositIcon, DeactivateIcon, WithdrawIcon, ActivateIcon } from '../../Components/Icons';
@@ -93,7 +93,7 @@ export function ArtifactActions({
           action: canHandleArtifact ? () => deposit(artifact) : () => {},
         });
       }
-    } else if (isActivated(artifact)) {
+    } else if (isActivated(artifact) && artifact.artifactType !== ArtifactType.BlackDomain) {
       actions.unshift({
         tooltip: 'deactivate this artifact',
         icon: <DeactivateIcon />,

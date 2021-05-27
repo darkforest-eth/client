@@ -20,6 +20,37 @@ export function Leaderboard() {
   );
 }
 
+function scoreToString(score: number) {
+  if (score === 0) {
+    return 'n/a';
+  }
+
+  if (score < 10000) {
+    return score + '';
+  }
+
+  return score.toLocaleString();
+}
+
+// pass in either an address, or a twitter handle. this function will render the appropriate
+// component
+function playerToEntry(playerStr: string) {
+  // if this is an address
+  if (playerStr.startsWith('0x') && playerStr.length === 42) {
+    return <TextPreview text={playerStr} focusedWidthPx={150} unFocusedWidthPx={150} />;
+  }
+
+  return <LinkToTwitter href={`https://twitter.com/${playerStr}`}>@{playerStr}</LinkToTwitter>;
+}
+
+const LinkToTwitter = styled.a`
+  text-decoration: underline;
+
+  &:hover {
+    color: #a59bff;
+  }
+`;
+
 function LeaderboardTable({ leaderboard }: { leaderboard: Leaderboard_060 }) {
   const entries = Object.getOwnPropertyNames(leaderboard.scoresByPlayer).map((name) => [
     name,
@@ -41,14 +72,10 @@ function LeaderboardTable({ leaderboard }: { leaderboard: Leaderboard_060 }) {
         columns={[
           (row: [string, number], i) => <Cell>{row[1] === 0 ? 'unranked' : i + 1 + '.'}</Cell>,
           (row: [string, number]) => {
-            return (
-              <Cell>
-                <TextPreview text={row[0]} focusedWidthPx={150} unFocusedWidthPx={150} />
-              </Cell>
-            );
+            return <Cell>{playerToEntry(row[0])}</Cell>;
           },
           (row: [string, number]) => {
-            return <Cell>{row[1] === 0 ? 'n/a' : row[1]}</Cell>;
+            return <Cell>{scoreToString(row[1])}</Cell>;
           },
         ]}
       />

@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { Contract, providers } from 'ethers';
+import { Contract, providers, BigNumber as EthersBN } from 'ethers';
 import { EthTxType, TxTypeToEthFunctionName } from '@darkforest_eth/types';
 import EthConnection from './EthConnection';
 import { deferred, timeoutAfter } from '../Utils/Utils';
@@ -83,8 +83,12 @@ export class TxExecutor extends EventEmitter {
     const [txReceipt, rejectTxReceipt, receiptPromise] = deferred<providers.TransactionReceipt>();
 
     if (overrides.gasPrice === undefined) {
-      overrides.gasPrice =
-        (this.uiStateStorageManager.getUIDataItem(UIDataKey.gasFeeGwei) as number) * 1000000000;
+      const gwei = EthersBN.from('1000000000');
+      const userGasPriceGwei = this.uiStateStorageManager.getUIDataItem(
+        UIDataKey.gasFeeGwei
+      ) as number;
+
+      overrides.gasPrice = gwei.mul(userGasPriceGwei);
     }
 
     this.txQueue.add(() =>
@@ -134,9 +138,18 @@ export class TxExecutor extends EventEmitter {
     const time_exec_called = Date.now();
 
     try {
+      const gasFeeGwei = EthersBN.from(txRequest.overrides.gasPrice || '1000000000')
+        .div('1000000000')
+        .toNumber();
+
       await this.checkBalance();
       await this.maybeUpdateNonce();
-      await openConfirmationWindowForTransaction(this.eth, txRequest, this.eth.getAddress());
+      await openConfirmationWindowForTransaction(
+        this.eth,
+        txRequest,
+        this.eth.getAddress(),
+        gasFeeGwei
+      );
 
       time_called = Date.now();
       const methodName = TxTypeToEthFunctionName[txRequest.type];

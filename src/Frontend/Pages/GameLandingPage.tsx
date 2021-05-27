@@ -489,16 +489,16 @@ export default function GameLandingPage() {
       terminal.current?.println("We'll use this email address to notify you if you win a prize.");
       const email = (await terminal.current?.getInput()) || '';
       const response = await submitPlayerEmail(email, address);
+
       if (response === EmailResponse.Success) {
         terminal.current?.println('Email successfully recorded.');
         setStep(TerminalPromptStep.FETCHING_ETH_DATA);
       } else if (response === EmailResponse.Invalid) {
-        terminal.current?.println('Email invalid. Please try again.', TerminalTextStyle.Red);
+        terminal.current?.println('Email invalid.', TerminalTextStyle.Red);
+        advanceStateFromAskPlayerEmail(terminal);
       } else {
-        terminal.current?.println(
-          'Server error. Please try again, or contact administrator if problem persists.',
-          TerminalTextStyle.Red
-        );
+        terminal.current?.println('Error recording email.', TerminalTextStyle.Red);
+        setStep(TerminalPromptStep.FETCHING_ETH_DATA);
       }
     },
     [ethConnection]

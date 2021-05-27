@@ -22,6 +22,7 @@ Responsible for
 
 ### Properties
 
+- [blockNumber](backend_network_ethconnection.default.md#blocknumber)
 - [blockNumber$](backend_network_ethconnection.default.md#blocknumber$)
 - [knownAddresses](backend_network_ethconnection.default.md#knownaddresses)
 - [provider](backend_network_ethconnection.default.md#provider)
@@ -45,7 +46,6 @@ Responsible for
 - [loadGPTCreditContract](backend_network_ethconnection.default.md#loadgptcreditcontract)
 - [loadGettersContract](backend_network_ethconnection.default.md#loadgetterscontract)
 - [loadWhitelistContract](backend_network_ethconnection.default.md#loadwhitelistcontract)
-- [pollForBlockNumber](backend_network_ethconnection.default.md#pollforblocknumber)
 - [setAccount](backend_network_ethconnection.default.md#setaccount)
 - [setRpcEndpoint](backend_network_ethconnection.default.md#setrpcendpoint)
 - [signMessage](backend_network_ethconnection.default.md#signmessage)
@@ -63,6 +63,12 @@ Responsible for
 Overrides: EventEmitter.constructor
 
 ## Properties
+
+### blockNumber
+
+• `Private` **blockNumber**: _number_
+
+---
 
 ### blockNumber$
 
@@ -240,14 +246,6 @@ Overrides: EventEmitter.constructor
 ▸ **loadWhitelistContract**(): _Promise_<Whitelist\>
 
 **Returns:** _Promise_<Whitelist\>
-
----
-
-### pollForBlockNumber
-
-▸ `Private` **pollForBlockNumber**(): _void_
-
-**Returns:** _void_
 
 ---
 

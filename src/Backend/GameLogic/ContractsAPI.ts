@@ -241,8 +241,11 @@ class ContractsAPI extends EventEmitter {
       ) => {
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
       },
-      [ContractEvent.PlanetHatBought]: async (location: EthersBN, _: Event) =>
-        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location)),
+      [ContractEvent.PlanetHatBought]: async (
+        _playerAddress: string,
+        location: EthersBN,
+        _: Event
+      ) => this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location)),
       [ContractEvent.LocationRevealed]: async (
         revealerAddr: string,
         location: EthersBN,

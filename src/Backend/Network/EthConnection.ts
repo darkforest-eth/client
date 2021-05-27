@@ -37,7 +37,10 @@ function toJSON(x: Response) {
  */
 class EthConnection extends EventEmitter {
   private static readonly XDAI_DEFAULT_URL = process.env.DEFAULT_RPC as string;
+
   public readonly blockNumber$: Monomitter<number>;
+  private blockNumber: number;
+
   private readonly knownAddresses: EthAddress[];
   private provider: JsonRpcProvider;
   private signer: Wallet | undefined;
@@ -67,15 +70,6 @@ class EthConnection extends EventEmitter {
     }
 
     this.blockNumber$ = monomitter(true);
-    this.pollForBlockNumber();
-  }
-
-  private pollForBlockNumber() {
-    setTimeout(async () => {
-      const blockNumber = await this.provider.getBlockNumber();
-      this.blockNumber$.publish(blockNumber);
-      this.pollForBlockNumber();
-    }, 1000 * 10);
   }
 
   public getRpcEndpoint(): string {
@@ -115,10 +109,20 @@ class EthConnection extends EventEmitter {
       ] as Array<string | Array<string>>,
     };
 
-    this.provider.on('block', async () => {
+    this.provider.on('block', async (blockNumber: number) => {
+      const previousBlockNumber = this.blockNumber === undefined ? blockNumber : this.blockNumber;
+      this.blockNumber = blockNumber;
+      this.blockNumber$.publish(blockNumber);
+
+      const newBlocks = blockNumber - previousBlockNumber;
+
+      if (newBlocks <= 0) {
+        return;
+      }
+
       const logs = await this.provider.getLogs({
-        fromBlock: 'latest',
-        toBlock: 'latest',
+        fromBlock: previousBlockNumber + 1, // inclusive
+        toBlock: blockNumber, // inclusive
         ...filter,
       });
 

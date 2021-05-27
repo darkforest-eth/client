@@ -7,7 +7,7 @@ import { useStoredUIState, UIDataKey } from '../../Backend/Storage/UIStateStorag
 import { ONE_DAY } from '../../Backend/Utils/Utils';
 import { ExploredChunkData } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
-import { Spacer } from '../Components/CoreUI';
+import { SelectFrom, Spacer } from '../Components/CoreUI';
 import { Input } from '../Components/Input';
 import { White, Red, Green } from '../Components/Text';
 import Viewport, { getDefaultScroll } from '../Game/Viewport';
@@ -36,6 +36,7 @@ const Row = styled.div`
 
   justify-content: space-between;
   align-items: center;
+  margin-top: 8px;
 
   & > span:first-child {
     flex-grow: 1;
@@ -237,8 +238,12 @@ export function SettingsPane({
 
   const [gasFeeGwei, setGasFeeGwei] = useStoredUIState<number>(UIDataKey.gasFeeGwei, uiManager);
   const onGasFeeGweiChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setGasFeeGwei(parseInt(e.target.value, 10));
+    (newValueStringifiedInt: string) => {
+      const newGasFee = parseInt(newValueStringifiedInt, 10);
+
+      if (!isNaN(newGasFee)) {
+        setGasFeeGwei(newGasFee);
+      }
     },
     [setGasFeeGwei]
   );
@@ -273,10 +278,19 @@ export function SettingsPane({
           </Row>
           <Row>
             <span>gas fee (gwei)</span>
-            <Input value={gasFeeGwei} onChange={onGasFeeGweiChange} />
+            <SelectFrom
+              values={['1', '2', '3']}
+              labels={['1 gwei (default)', '2 gwei (faster)', '3 gwei (fastest)']}
+              value={gasFeeGwei + ''}
+              setValue={onGasFeeGweiChange}
+            />
           </Row>
           <Row>
-            <span>Auto-confirm txs under $0.01</span>
+            <span>
+              Auto-confirm all transactions except purchases. Currently, you can only purchase GPT
+              Credits, and Hats.
+            </span>
+            <Spacer width={64} />
             <input
               type='checkbox'
               checked={allowTx}

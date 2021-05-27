@@ -72,7 +72,7 @@ export const Select = styled.select`
   color: ${dfstyles.colors.subtext};
   border-radius: 4px;
   border: 1px solid ${dfstyles.colors.text};
-  width: 20em;
+  width: 12em;
   padding: 2px 6px;
 
   &:focus {
@@ -89,10 +89,12 @@ export function SelectFrom({
   values,
   value,
   setValue,
+  labels,
 }: {
   values: string[];
   value: string;
   setValue: (value: string) => void;
+  labels?: string[];
 }) {
   const onChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
@@ -103,10 +105,10 @@ export function SelectFrom({
 
   return (
     <Select value={value} onChange={onChange}>
-      {values.map((value) => {
+      {values.map((value, i) => {
         return (
           <option key={value} value={value}>
-            {value}
+            {(labels && labels[i]) || value}
           </option>
         );
       })}

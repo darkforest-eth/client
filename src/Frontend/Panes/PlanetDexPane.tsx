@@ -8,7 +8,7 @@ import {
 } from '../../Backend/GameLogic/ArrivalUtils';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { getPlanetRank, formatNumber } from '../../Backend/Utils/Utils';
-import { Spacer } from '../Components/CoreUI';
+import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
 import { ArtifactIcon, SilverGrowthIcon, SilverIcon, WithdrawIcon } from '../Components/Icons';
 import { Sub, Green } from '../Components/Text';
 import { engineConsts } from '../Renderers/GameRenderer/EngineConsts';
@@ -260,14 +260,16 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
     },
   ];
 
-  return (
-    <ModalPane
-      hook={hook}
-      title='Planet Dex'
-      name={ModalName.PlanetDex}
-      width='unset'
-      helpContent={HelpContent}
-    >
+  let content;
+
+  if (planets.length === 0) {
+    content = (
+      <CenterBackgroundSubtext width='300px' height='100px'>
+        Loading Your Home Planet...
+      </CenterBackgroundSubtext>
+    );
+  } else {
+    content = (
       <TableContainer>
         <SortableTable
           rows={planets}
@@ -277,6 +279,18 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
           alignments={alignments}
         />
       </TableContainer>
+    );
+  }
+
+  return (
+    <ModalPane
+      hook={hook}
+      title='Planet Dex'
+      name={ModalName.PlanetDex}
+      width='unset'
+      helpContent={HelpContent}
+    >
+      {content}
     </ModalPane>
   );
 }

@@ -93,7 +93,7 @@ way to do this.
 
 ### SelectFrom
 
-▸ **SelectFrom**(`__namedParameters`: { `setValue`: (`value`: _string_) => _void_ ; `value`: _string_ ; `values`: _string_[] }): _Element_
+▸ **SelectFrom**(`__namedParameters`: { `labels?`: _string_[] ; `setValue`: (`value`: _string_) => _void_ ; `value`: _string_ ; `values`: _string_[] }): _Element_
 
 Controllable input that allows the user to select from one of the
 given string values.
@@ -103,6 +103,7 @@ given string values.
 | Name                         | Type                          |
 | :--------------------------- | :---------------------------- |
 | `__namedParameters`          | _object_                      |
+| `__namedParameters.labels?`  | _string_[]                    |
 | `__namedParameters.setValue` | (`value`: _string_) => _void_ |
 | `__namedParameters.value`    | _string_                      |
 | `__namedParameters.values`   | _string_[]                    |

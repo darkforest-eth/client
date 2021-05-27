@@ -8,17 +8,20 @@ const POPUP_TIMEOUT = 20000;
 export async function openConfirmationWindowForTransaction(
   ethConnection: EthConnection,
   txRequest: QueuedTxRequest,
-  from: EthAddress
+  from: EthAddress,
+  gasFeeGwei: number
 ): Promise<void> {
-  // this guy should get a manager / API so we can actually understand it
+  // this value encodes the timestamp after which we should start asking for transaction
+  // confirmations again.
   const enableUntilStr = localStorage.getItem(`wallet-enabled-${from}`);
 
-  if (
-    !enableUntilStr ||
-    Number.isNaN(+enableUntilStr) ||
-    Date.now() > +enableUntilStr ||
-    txRequest.type === EthTxType.BUY_HAT
-  ) {
+  const userHasntDisabledConfirmations =
+    !enableUntilStr || Number.isNaN(+enableUntilStr) || Date.now() > +enableUntilStr;
+  const isPurchase =
+    txRequest.type === EthTxType.BUY_HAT || txRequest.type === EthTxType.BUY_GPT_CREDITS;
+
+  if (userHasntDisabledConfirmations || isPurchase) {
+    localStorage.setItem(`${from}-gasFeeGwei`, gasFeeGwei + '');
     const account = ethConnection.getAddress();
     const balance = await ethConnection.getBalance(account);
     const method = TxTypeToEthFunctionName[txRequest.type];

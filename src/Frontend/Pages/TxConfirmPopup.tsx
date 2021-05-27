@@ -4,6 +4,7 @@ import styled, { css, keyframes } from 'styled-components';
 import dfstyles from '../Styles/dfstyles';
 import { ONE_DAY } from '../../Backend/Utils/Utils';
 import Button from '../Components/Button';
+import { Spacer } from '../Components/CoreUI';
 
 const StyledTxConfirmPopup = styled.div`
   width: 100%;
@@ -94,7 +95,7 @@ const keys = keyframes`
     filter: brightness(1.3);
   }
   to {
-    filter brightness(0.6);
+    filter: brightness(0.6);
   }
 `;
 
@@ -143,14 +144,16 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
     else approve();
   };
 
+  const gasFeeGwei = parseInt(localStorage.getItem(`${addr.toLowerCase()}-gasFeeGwei`) || '1', 10);
   const fromPlanet = localStorage.getItem(`${addr.toLowerCase()}-fromPlanet`);
   const toPlanet = localStorage.getItem(`${addr.toLowerCase()}-toPlanet`);
 
   const hatPlanet = localStorage.getItem(`${addr.toLowerCase()}-hatPlanet`);
   const hatLevel = localStorage.getItem(`${addr.toLowerCase()}-hatLevel`);
   const hatCost: number = method === 'buyHat' && hatLevel ? 2 ** parseInt(hatLevel) : 0;
+  const gptCost: number = method === 'buyCredits' ? 0.5 : 0;
 
-  const txCost: number = 0.002 + hatCost;
+  const txCost: number = 0.002 * gasFeeGwei + hatCost + gptCost;
 
   const upPlanet = localStorage.getItem(`${addr.toLowerCase()}-upPlanet`);
   const branch = localStorage.getItem(`${addr.toLowerCase()}-branch`);
@@ -324,20 +327,12 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
             </div>
           </>
         )}
-        {/* <div>
-          <b>From Planet</b>
-          <span className='mono'>0xaaasdfasdfasdfasdfa</span>
-        </div>
-        <div>
-          <b>To Planet</b>
-          <span className='mono'>0xaaasdfasdfasdfasdfa</span>
-        </div> */}
       </div>
 
       <div>
         <div>
           <b>Gas Fee</b>
-          <span>1GWEI</span>
+          <span>{gasFeeGwei} gwei</span>
         </div>
         <div>
           <b>Gas Limit</b>
@@ -380,7 +375,8 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
             <ConfirmIcon /> DF connected to xDAI
           </span>
           <span>
-            Auto-confirm {'txs under $0.01'} for 24 hours{' '}
+            Auto-confirm all transactions except purchases. Currently, you can only purchase GPT
+            Credits, and Hats. <Spacer width={8} />
             <input
               type='checkbox'
               checked={checked}
@@ -389,10 +385,6 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
           </span>
         </div>
       </div>
-
-      {/* <Button onClick={doApproveFor24H}>
-        <span>{'approve all for 24h'} </span>
-      </Button> */}
     </StyledTxConfirmPopup>
   );
 }
