@@ -167,6 +167,7 @@ export function neverResolves(): Promise<void> {
 }
 
 export const aggregateBulkGetter = async <T>(
+  logTag: string,
   total: number,
   querySize: number,
   getterFn: (startIdx: number, endIdx: number) => Promise<T[]>,
@@ -197,7 +198,7 @@ export const aggregateBulkGetter = async <T>(
             terminal.print(`${percent}%... `);
           }
           soFar += querySize;
-          console.log(`retrieved ${start}-${end}.`);
+          console.log(`[bulk-fetch] retrieved ${logTag} ${start}-${end}.`);
         }
         resolve(res);
       })

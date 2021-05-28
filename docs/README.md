@@ -40,6 +40,7 @@
 - [Backend/Storage/PersistentChunkStore](modules/backend_storage_persistentchunkstore.md)
 - [Backend/Storage/ReaderDataStore](modules/backend_storage_readerdatastore.md)
 - [Backend/Storage/UIStateStorageManager](modules/backend_storage_uistatestoragemanager.md)
+- [Backend/Utils/BlockWaiter](modules/backend_utils_blockwaiter.md)
 - [Backend/Utils/Coordinates](modules/backend_utils_coordinates.md)
 - [Backend/Utils/SnarkArgsHelper](modules/backend_utils_snarkargshelper.md)
 - [Backend/Utils/TypeAssertions](modules/backend_utils_typeassertions.md)

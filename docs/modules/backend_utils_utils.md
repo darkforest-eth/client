@@ -66,7 +66,7 @@
 
 ### aggregateBulkGetter
 
-▸ `Const` **aggregateBulkGetter**<T\>(`total`: _number_, `querySize`: _number_, `getterFn`: (`startIdx`: _number_, `endIdx`: _number_) => _Promise_<T[]\>, `terminal?`: [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md), `spacedInMs?`: _number_): _Promise_<T[]\>
+▸ `Const` **aggregateBulkGetter**<T\>(`logTag`: _string_, `total`: _number_, `querySize`: _number_, `getterFn`: (`startIdx`: _number_, `endIdx`: _number_) => _Promise_<T[]\>, `terminal?`: [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md), `spacedInMs?`: _number_): _Promise_<T[]\>
 
 #### Type parameters
 
@@ -78,6 +78,7 @@
 
 | Name         | Type                                                                        | Default value |
 | :----------- | :-------------------------------------------------------------------------- | :------------ |
+| `logTag`     | _string_                                                                    | -             |
 | `total`      | _number_                                                                    | -             |
 | `querySize`  | _number_                                                                    | -             |
 | `getterFn`   | (`startIdx`: _number_, `endIdx`: _number_) => _Promise_<T[]\>               | -             |

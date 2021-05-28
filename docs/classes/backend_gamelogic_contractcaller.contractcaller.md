@@ -35,7 +35,7 @@
 
 ### MAX_RETRIES
 
-▪ `Static` `Private` `Readonly` **MAX_RETRIES**: `5`= 5
+▪ `Static` `Private` `Readonly` **MAX_RETRIES**: `12`= 12
 
 ## Methods
 

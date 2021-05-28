@@ -3,7 +3,7 @@ import { ThrottledConcurrentQueue } from '../Network/ThrottledConcurrentQueue';
 import { sleep } from '../Utils/Utils';
 
 export class ContractCaller {
-  private static readonly MAX_RETRIES = 5;
+  private static readonly MAX_RETRIES = 12;
   private readonly callQueue = new ThrottledConcurrentQueue(10, 1000, 20);
 
   public async makeCall<T>(

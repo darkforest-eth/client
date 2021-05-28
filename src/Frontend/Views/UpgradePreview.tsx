@@ -144,7 +144,8 @@ export function UpgradePreview({
   cantUpgrade: boolean;
 }) {
   const branchStrName = branchName !== undefined && upgradeName(branchName);
-  const maxBranchLevel = 3;
+  const maxRank = getPlanetMaxRank(planet);
+  const maxBranchRank = Math.min(4, maxRank);
   const branchUpgradeState = (branchName && planet && planet.upgradeState[branchName]) || 0;
 
   if (cantUpgrade) {
@@ -173,7 +174,7 @@ export function UpgradePreview({
           <RightarrowIcon />
         </span>
         <span>
-          {branchUpgradeState + increment} of {maxBranchLevel} <Sub>max</Sub>
+          {branchUpgradeState + increment} of {maxBranchRank} <Sub>max</Sub>
         </span>
         <span>{cantUpgrade ? <Sub>0</Sub> : <Green>+1</Green>}</span>
       </StatRow>
@@ -184,7 +185,7 @@ export function UpgradePreview({
           <RightarrowIcon />
         </span>
         <span>
-          {getPlanetRank(planet) + increment} of {getPlanetMaxRank(planet)} <Sub>max</Sub>
+          {getPlanetRank(planet) + increment} of {maxRank} <Sub>max</Sub>
         </span>
         <span>{cantUpgrade ? <Sub>0</Sub> : <Green>+1</Green>}</span>
       </StatRow>

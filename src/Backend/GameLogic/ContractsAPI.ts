@@ -874,8 +874,12 @@ class ContractsAPI extends EventEmitter {
       await this.makeCall<EthersBN>(this.coreContract.getNPlayers)
     ).toNumber();
 
-    const players = await aggregateBulkGetter<Player>(nPlayers, 200, async (start, end) =>
-      (await this.makeCall(this.gettersContract.bulkGetPlayers, [start, end])).map(decodePlayer)
+    const players = await aggregateBulkGetter<Player>(
+      'players',
+      nPlayers,
+      200,
+      async (start, end) =>
+        (await this.makeCall(this.gettersContract.bulkGetPlayers, [start, end])).map(decodePlayer)
     );
 
     const playerMap: Map<EthAddress, Player> = new Map();
@@ -926,6 +930,7 @@ class ContractsAPI extends EventEmitter {
 
   public async getAllArrivals(planetsToLoad: LocationId[]): Promise<QueuedArrival[]> {
     const arrivalsUnflattened = await aggregateBulkGetter<QueuedArrival[]>(
+      'arrivals',
       planetsToLoad.length,
       1000,
       async (start, end) => {
@@ -948,6 +953,7 @@ class ContractsAPI extends EventEmitter {
     ).toNumber();
 
     const planetIds = await aggregateBulkGetter<EthersBN>(
+      'planetids',
       nPlanets - startingAt,
       2000,
       async (start, end) =>
@@ -979,6 +985,7 @@ class ContractsAPI extends EventEmitter {
     ).toNumber();
 
     const rawRevealedPlanetIds = await aggregateBulkGetter<EthersBN>(
+      'revealed-planetids',
       nRevealedPlanets - startingAt,
       2000,
       async (start, end) =>
@@ -989,6 +996,7 @@ class ContractsAPI extends EventEmitter {
     );
 
     const rawRevealedCoords = await aggregateBulkGetter(
+      'revealed-coords',
       rawRevealedPlanetIds.length,
       1000,
       async (start, end) =>
@@ -1004,6 +1012,7 @@ class ContractsAPI extends EventEmitter {
 
   public async bulkGetPlanets(toLoadPlanets: LocationId[]): Promise<Map<LocationId, Planet>> {
     const rawPlanetsExtendedInfo = await aggregateBulkGetter(
+      'planets-extended-info',
       toLoadPlanets.length,
       1000,
       async (start, end) =>
@@ -1015,6 +1024,7 @@ class ContractsAPI extends EventEmitter {
     );
 
     const rawPlanets = await aggregateBulkGetter(
+      'planets',
       toLoadPlanets.length,
       1000,
       async (start, end) =>
@@ -1062,6 +1072,7 @@ class ContractsAPI extends EventEmitter {
 
   public async bulkGetArtifactsOnPlanets(locationIds: LocationId[]): Promise<Artifact[][]> {
     const rawArtifacts = await aggregateBulkGetter(
+      'planet-artifacts',
       locationIds.length,
       500,
       async (start, end) =>
@@ -1082,6 +1093,7 @@ class ContractsAPI extends EventEmitter {
     printProgress = false
   ): Promise<Artifact[]> {
     const rawArtifacts = await aggregateBulkGetter(
+      'artifacts',
       artifactIds.length,
       500,
       async (start, end) =>

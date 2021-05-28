@@ -33,6 +33,7 @@ Responsible for
 ### Methods
 
 - [addAccount](backend_network_ethconnection.default.md#addaccount)
+- [adjustPollRateBasedOnVisibility](backend_network_ethconnection.default.md#adjustpollratebasedonvisibility)
 - [getAddress](backend_network_ethconnection.default.md#getaddress)
 - [getBalance](backend_network_ethconnection.default.md#getbalance)
 - [getKnownAccounts](backend_network_ethconnection.default.md#getknownaccounts)
@@ -46,6 +47,7 @@ Responsible for
 - [loadGPTCreditContract](backend_network_ethconnection.default.md#loadgptcreditcontract)
 - [loadGettersContract](backend_network_ethconnection.default.md#loadgetterscontract)
 - [loadWhitelistContract](backend_network_ethconnection.default.md#loadwhitelistcontract)
+- [processEvents](backend_network_ethconnection.default.md#processevents)
 - [setAccount](backend_network_ethconnection.default.md#setaccount)
 - [setRpcEndpoint](backend_network_ethconnection.default.md#setrpcendpoint)
 - [signMessage](backend_network_ethconnection.default.md#signmessage)
@@ -115,6 +117,14 @@ Overrides: EventEmitter.constructor
 | Name   | Type     |
 | :----- | :------- |
 | `skey` | _string_ |
+
+**Returns:** _void_
+
+---
+
+### adjustPollRateBasedOnVisibility
+
+▸ `Private` **adjustPollRateBasedOnVisibility**(): _void_
 
 **Returns:** _void_
 
@@ -246,6 +256,24 @@ Overrides: EventEmitter.constructor
 ▸ **loadWhitelistContract**(): _Promise_<Whitelist\>
 
 **Returns:** _Promise_<Whitelist\>
+
+---
+
+### processEvents
+
+▸ `Private` **processEvents**(`startBlock`: _number_, `endBlock`: _number_, `eventFilter`: EventFilter, `contract`: _DarkForestCore_, `handlers`: _Partial_<Record<[_ContractEvent_](../enums/_types_darkforest_api_contractsapitypes.contractevent.md), any\>\>): _Promise_<void\>
+
+#### Parameters
+
+| Name          | Type                                                                                                           |
+| :------------ | :------------------------------------------------------------------------------------------------------------- |
+| `startBlock`  | _number_                                                                                                       |
+| `endBlock`    | _number_                                                                                                       |
+| `eventFilter` | EventFilter                                                                                                    |
+| `contract`    | _DarkForestCore_                                                                                               |
+| `handlers`    | _Partial_<Record<[_ContractEvent_](../enums/_types_darkforest_api_contractsapitypes.contractevent.md), any\>\> |
+
+**Returns:** _Promise_<void\>
 
 ---
 

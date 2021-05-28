@@ -5,7 +5,15 @@ import {
   GPT_CREDIT_CONTRACT_ADDRESS,
 } from '@darkforest_eth/contracts';
 import { JsonRpcProvider, TransactionReceipt } from '@ethersproject/providers';
-import { Wallet, providers, ContractInterface, Contract, utils, BigNumber } from 'ethers';
+import {
+  Wallet,
+  providers,
+  ContractInterface,
+  Contract,
+  utils,
+  BigNumber,
+  EventFilter,
+} from 'ethers';
 import EventEmitter from 'events';
 import stringify from 'json-stable-stringify';
 import { XDAI_CHAIN_ID } from '../../Frontend/Utils/constants';
@@ -24,6 +32,9 @@ import gettersContractAbiPath from '@darkforest_eth/contracts/abis/DarkForestGet
 import whitelistContractAbiPath from '@darkforest_eth/contracts/abis/Whitelist.json';
 import gptCreditContractAbiPath from '@darkforest_eth/contracts/abis/DarkForestGPTCredit.json';
 import { ContractEvent } from '../../_types/darkforest/api/ContractsAPITypes';
+import { BlockWaiter } from '../Utils/BlockWaiter';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 function toJSON(x: Response) {
   return x.json();
@@ -70,6 +81,17 @@ class EthConnection extends EventEmitter {
     }
 
     this.blockNumber$ = monomitter(true);
+    this.adjustPollRateBasedOnVisibility();
+  }
+
+  private adjustPollRateBasedOnVisibility() {
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        this.provider.pollingInterval = 1000 * 60;
+      } else {
+        this.provider.pollingInterval = 1000 * 8;
+      }
+    });
   }
 
   public getRpcEndpoint(): string {
@@ -84,9 +106,7 @@ class EthConnection extends EventEmitter {
     contract: DarkForestCore,
     // map from contract event to function. using type 'any' here to satisfy typescript - each of
     // the functions has a different type signature.
-    /* eslint-disable @typescript-eslint/no-explicit-any */
     handlers: Partial<Record<ContractEvent, any>>
-    /* eslint-enable @typescript-eslint/no-explicit-any */
   ) {
     const filter = {
       address: contract.address,
@@ -109,30 +129,50 @@ class EthConnection extends EventEmitter {
       ] as Array<string | Array<string>>,
     };
 
-    this.provider.on('block', async (blockNumber: number) => {
-      const previousBlockNumber = this.blockNumber === undefined ? blockNumber : this.blockNumber;
-      this.blockNumber = blockNumber;
-      this.blockNumber$.publish(blockNumber);
+    const blockWaiter = new BlockWaiter(1000);
 
-      const newBlocks = blockNumber - previousBlockNumber;
-
-      if (newBlocks <= 0) {
-        return;
+    this.provider.on('block', async (latestBlockNumber: number) => {
+      if (this.blockNumber === undefined) {
+        this.blockNumber = latestBlockNumber;
       }
 
-      const logs = await this.provider.getLogs({
-        fromBlock: previousBlockNumber + 1, // inclusive
-        toBlock: blockNumber, // inclusive
-        ...filter,
-      });
+      blockWaiter.schedule(() => {
+        const previousBlockNumber = this.blockNumber;
+        this.blockNumber = latestBlockNumber;
+        this.blockNumber$.publish(latestBlockNumber);
 
-      logs.forEach((log) => {
-        const parsedData = contract.interface.parseLog(log);
-        const handler = handlers[parsedData.name as ContractEvent];
-        if (handler !== undefined) {
-          handler(...parsedData.args);
-        }
+        console.log(`processing events for ${latestBlockNumber - previousBlockNumber} blocks`);
+
+        this.processEvents(
+          Math.min(previousBlockNumber + 1, latestBlockNumber),
+          latestBlockNumber,
+          filter,
+          contract,
+          handlers
+        );
       });
+    });
+  }
+
+  private async processEvents(
+    startBlock: number,
+    endBlock: number,
+    eventFilter: EventFilter,
+    contract: DarkForestCore,
+    handlers: Partial<Record<ContractEvent, any>>
+  ) {
+    const logs = await this.provider.getLogs({
+      fromBlock: startBlock, // inclusive
+      toBlock: endBlock, // inclusive
+      ...eventFilter,
+    });
+
+    logs.forEach((log) => {
+      const parsedData = contract.interface.parseLog(log);
+      const handler = handlers[parsedData.name as ContractEvent];
+      if (handler !== undefined) {
+        handler(...parsedData.args);
+      }
     });
   }
 
