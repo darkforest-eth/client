@@ -385,15 +385,16 @@ Overrides: EventEmitter.constructor
 
 ### activateArtifact
 
-▸ **activateArtifact**(`locationId`: LocationId, `artifactId`: ArtifactId, `wormholeTo`: _undefined_ \| LocationId): [_default_](backend_gamelogic_gamemanager.default.md)
+▸ **activateArtifact**(`locationId`: LocationId, `artifactId`: ArtifactId, `wormholeTo`: _undefined_ \| LocationId, `bypassChecks?`: _boolean_): [_default_](backend_gamelogic_gamemanager.default.md)
 
 #### Parameters
 
-| Name         | Type                      |
-| :----------- | :------------------------ |
-| `locationId` | LocationId                |
-| `artifactId` | ArtifactId                |
-| `wormholeTo` | _undefined_ \| LocationId |
+| Name           | Type                      | Default value |
+| :------------- | :------------------------ | :------------ |
+| `locationId`   | LocationId                | -             |
+| `artifactId`   | ArtifactId                | -             |
+| `wormholeTo`   | _undefined_ \| LocationId | -             |
+| `bypassChecks` | _boolean_                 | false         |
 
 **Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
 
@@ -498,7 +499,7 @@ to load all of the associated planet data in an efficient manner.
 
 ### buyHat
 
-▸ **buyHat**(`planetId`: LocationId): [_default_](backend_gamelogic_gamemanager.default.md)
+▸ **buyHat**(`planetId`: LocationId, `_bypassChecks?`: _boolean_): [_default_](backend_gamelogic_gamemanager.default.md)
 
 Submits a transaction to the blockchain to buy a hat for the given planet. You
 must own the planet. Warning costs real xdai. Hats are permanently locked to a
@@ -507,9 +508,10 @@ look your best. Just like in the real world, more money means more hat.
 
 #### Parameters
 
-| Name       | Type       |
-| :--------- | :--------- |
-| `planetId` | LocationId |
+| Name            | Type       | Default value |
+| :-------------- | :--------- | :------------ |
+| `planetId`      | LocationId | -             |
+| `_bypassChecks` | _boolean_  | false         |
 
 **Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
 
@@ -525,14 +527,15 @@ look your best. Just like in the real world, more money means more hat.
 
 ### deactivateArtifact
 
-▸ **deactivateArtifact**(`locationId`: LocationId, `artifactId`: ArtifactId): _undefined_ \| [_default_](backend_gamelogic_gamemanager.default.md)
+▸ **deactivateArtifact**(`locationId`: LocationId, `artifactId`: ArtifactId, `bypassChecks?`: _boolean_): _undefined_ \| [_default_](backend_gamelogic_gamemanager.default.md)
 
 #### Parameters
 
-| Name         | Type       |
-| :----------- | :--------- |
-| `locationId` | LocationId |
-| `artifactId` | ArtifactId |
+| Name           | Type       | Default value |
+| :------------- | :--------- | :------------ |
+| `locationId`   | LocationId | -             |
+| `artifactId`   | ArtifactId | -             |
+| `bypassChecks` | _boolean_  | false         |
 
 **Returns:** _undefined_ \| [_default_](backend_gamelogic_gamemanager.default.md)
 
@@ -540,17 +543,18 @@ look your best. Just like in the real world, more money means more hat.
 
 ### depositArtifact
 
-▸ **depositArtifact**(`locationId`: LocationId, `artifactId`: ArtifactId): [_default_](backend_gamelogic_gamemanager.default.md)
+▸ **depositArtifact**(`locationId`: LocationId, `artifactId`: ArtifactId, `bypassChecks?`: _boolean_): [_default_](backend_gamelogic_gamemanager.default.md)
 
 Submits a transaction to the blockchain to deposit an artifact on a given planet.
 You must own the planet and you must own the artifact directly (can't be locked in contract)
 
 #### Parameters
 
-| Name         | Type       |
-| :----------- | :--------- |
-| `locationId` | LocationId |
-| `artifactId` | ArtifactId |
+| Name           | Type       | Default value |
+| :------------- | :--------- | :------------ |
+| `locationId`   | LocationId | -             |
+| `artifactId`   | ArtifactId | -             |
+| `bypassChecks` | _boolean_  | true          |
 
 **Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
 
@@ -566,15 +570,16 @@ You must own the planet and you must own the artifact directly (can't be locked 
 
 ### findArtifact
 
-▸ **findArtifact**(`planetId`: LocationId): [_default_](backend_gamelogic_gamemanager.default.md)
+▸ **findArtifact**(`planetId`: LocationId, `bypassChecks?`: _boolean_): [_default_](backend_gamelogic_gamemanager.default.md)
 
 Calls the contract to find an artifact on the given planet.
 
 #### Parameters
 
-| Name       | Type       |
-| :--------- | :--------- |
-| `planetId` | LocationId |
+| Name           | Type       | Default value |
+| :------------- | :--------- | :------------ |
+| `planetId`     | LocationId | -             |
+| `bypassChecks` | _boolean_  | false         |
 
 **Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
 
@@ -1692,20 +1697,21 @@ very slow since it actually calculates the hash; do not use in render loop
 
 ### move
 
-▸ **move**(`from`: LocationId, `to`: LocationId, `forces`: _number_, `silver`: _number_, `artifactMoved?`: ArtifactId): [_default_](backend_gamelogic_gamemanager.default.md)
+▸ **move**(`from`: LocationId, `to`: LocationId, `forces`: _number_, `silver`: _number_, `artifactMoved?`: ArtifactId, `bypassChecks?`: _boolean_): [_default_](backend_gamelogic_gamemanager.default.md)
 
 Submits a transaction to the blockchain to move the given amount of resources from
 the given planet to the given planet.
 
 #### Parameters
 
-| Name             | Type       |
-| :--------------- | :--------- |
-| `from`           | LocationId |
-| `to`             | LocationId |
-| `forces`         | _number_   |
-| `silver`         | _number_   |
-| `artifactMoved?` | ArtifactId |
+| Name             | Type       | Default value |
+| :--------------- | :--------- | :------------ |
+| `from`           | LocationId | -             |
+| `to`             | LocationId | -             |
+| `forces`         | _number_   | -             |
+| `silver`         | _number_   | -             |
+| `artifactMoved?` | ArtifactId | -             |
+| `bypassChecks`   | _boolean_  | false         |
 
 **Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
 
@@ -1728,13 +1734,14 @@ the given planet to the given planet.
 
 ### prospectPlanet
 
-▸ **prospectPlanet**(`planetId`: LocationId): _Promise_<undefined \| [_default_](backend_gamelogic_gamemanager.default.md)\>
+▸ **prospectPlanet**(`planetId`: LocationId, `bypassChecks?`: _boolean_): _Promise_<undefined \| [_default_](backend_gamelogic_gamemanager.default.md)\>
 
 #### Parameters
 
-| Name       | Type       |
-| :--------- | :--------- |
-| `planetId` | LocationId |
+| Name           | Type       | Default value |
+| :------------- | :--------- | :------------ |
+| `planetId`     | LocationId | -             |
+| `bypassChecks` | _boolean_  | false         |
 
 **Returns:** _Promise_<undefined \| [_default_](backend_gamelogic_gamemanager.default.md)\>
 
@@ -1955,14 +1962,15 @@ Stops the miner.
 
 ### transferOwnership
 
-▸ **transferOwnership**(`planetId`: LocationId, `newOwner`: EthAddress): [_default_](backend_gamelogic_gamemanager.default.md)
+▸ **transferOwnership**(`planetId`: LocationId, `newOwner`: EthAddress, `bypassChecks?`: _boolean_): [_default_](backend_gamelogic_gamemanager.default.md)
 
 #### Parameters
 
-| Name       | Type       |
-| :--------- | :--------- |
-| `planetId` | LocationId |
-| `newOwner` | EthAddress |
+| Name           | Type       | Default value |
+| :------------- | :--------- | :------------ |
+| `planetId`     | LocationId | -             |
+| `newOwner`     | EthAddress | -             |
+| `bypassChecks` | _boolean_  | false         |
 
 **Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
 
@@ -1970,7 +1978,7 @@ Stops the miner.
 
 ### upgrade
 
-▸ **upgrade**(`planetId`: LocationId, `branch`: _number_): [_default_](backend_gamelogic_gamemanager.default.md)
+▸ **upgrade**(`planetId`: LocationId, `branch`: _number_, `_bypassChecks?`: _boolean_): [_default_](backend_gamelogic_gamemanager.default.md)
 
 Submits a transaction to the blockchain to upgrade the given planet with the given
 upgrade branch. You must own the planet, and have enough silver on it to complete
@@ -1978,10 +1986,11 @@ the upgrade.
 
 #### Parameters
 
-| Name       | Type       |
-| :--------- | :--------- |
-| `planetId` | LocationId |
-| `branch`   | _number_   |
+| Name            | Type       | Default value |
+| :-------------- | :--------- | :------------ |
+| `planetId`      | LocationId | -             |
+| `branch`        | _number_   | -             |
+| `_bypassChecks` | _boolean_  | false         |
 
 **Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
 
@@ -2006,16 +2015,17 @@ process by telling the Dark Forest webserver to look at that tweet.
 
 ### withdrawArtifact
 
-▸ **withdrawArtifact**(`locationId`: LocationId, `artifactId`: ArtifactId): [_default_](backend_gamelogic_gamemanager.default.md)
+▸ **withdrawArtifact**(`locationId`: LocationId, `artifactId`: ArtifactId, `bypassChecks?`: _boolean_): [_default_](backend_gamelogic_gamemanager.default.md)
 
 Withdraws the artifact that is locked up on the given planet.
 
 #### Parameters
 
-| Name         | Type       |
-| :----------- | :--------- |
-| `locationId` | LocationId |
-| `artifactId` | ArtifactId |
+| Name           | Type       | Default value |
+| :------------- | :--------- | :------------ |
+| `locationId`   | LocationId | -             |
+| `artifactId`   | ArtifactId | -             |
+| `bypassChecks` | _boolean_  | true          |
 
 **Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
 
@@ -2023,14 +2033,15 @@ Withdraws the artifact that is locked up on the given planet.
 
 ### withdrawSilver
 
-▸ **withdrawSilver**(`locationId`: LocationId, `amount`: _number_): _undefined_ \| [_default_](backend_gamelogic_gamemanager.default.md)
+▸ **withdrawSilver**(`locationId`: LocationId, `amount`: _number_, `bypassChecks?`: _boolean_): _undefined_ \| [_default_](backend_gamelogic_gamemanager.default.md)
 
 #### Parameters
 
-| Name         | Type       |
-| :----------- | :--------- |
-| `locationId` | LocationId |
-| `amount`     | _number_   |
+| Name           | Type       | Default value |
+| :------------- | :--------- | :------------ |
+| `locationId`   | LocationId | -             |
+| `amount`       | _number_   | -             |
+| `bypassChecks` | _boolean_  | false         |
 
 **Returns:** _undefined_ \| [_default_](backend_gamelogic_gamemanager.default.md)
 

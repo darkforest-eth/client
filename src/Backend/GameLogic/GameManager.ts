@@ -1504,37 +1504,39 @@ class GameManager extends EventEmitter {
     });
   }
 
-  public async prospectPlanet(planetId: LocationId) {
-    if (this.checkGameHasEnded()) return this;
+  public async prospectPlanet(planetId: LocationId, bypassChecks = false) {
+    if (!bypassChecks) {
+      if (this.checkGameHasEnded()) return this;
 
-    const planet = this.entityStore.getPlanetWithId(planetId);
+      const planet = this.entityStore.getPlanetWithId(planetId);
 
-    if (!planet) {
-      throw new Error("you can't prospect a planet you haven't discovered");
-    }
+      if (!planet) {
+        throw new Error("you can't prospect a planet you haven't discovered");
+      }
 
-    if (planet.owner !== this.getAccount()) {
-      throw new Error("you can't prospect a planet you don't own");
-    }
+      if (planet.owner !== this.getAccount()) {
+        throw new Error("you can't prospect a planet you don't own");
+      }
 
-    if (!isLocatable(planet)) {
-      throw new Error("you don't know this planet's location");
-    }
+      if (!isLocatable(planet)) {
+        throw new Error("you don't know this planet's location");
+      }
 
-    if (planet.prospectedBlockNumber !== undefined) {
-      throw new Error('someone already prospected this planet');
-    }
+      if (planet.prospectedBlockNumber !== undefined) {
+        throw new Error('someone already prospected this planet');
+      }
 
-    if (planet.unconfirmedFindArtifact) {
-      throw new Error("you're already looking bro...");
-    }
+      if (planet.unconfirmedFindArtifact) {
+        throw new Error("you're already looking bro...");
+      }
 
-    if (planet.planetType !== PlanetType.RUINS) {
-      throw new Error("this planet doesn't have an artifact on it.");
-    }
+      if (planet.planetType !== PlanetType.RUINS) {
+        throw new Error("this planet doesn't have an artifact on it.");
+      }
 
-    if (planet.energy < planet.energyCap * 0.95) {
-      throw new Error('you can only prospect planets that are 95% to the energy cap');
+      if (planet.energy < planet.energyCap * 0.95) {
+        throw new Error('you can only prospect planets that are 95% to the energy cap');
+      }
     }
 
     localStorage.setItem(`${this.getAccount()?.toLowerCase()}-prospectPlanet`, planetId);
@@ -1548,7 +1550,7 @@ class GameManager extends EventEmitter {
 
     this.handleTxIntent(txIntent);
 
-    await this.contractsAPI.prospectPlanet(planet.location.hash, actionId).catch((err) => {
+    await this.contractsAPI.prospectPlanet(planetId, actionId).catch((err) => {
       this.onTxIntentFail(txIntent, err);
     });
   }
@@ -1556,33 +1558,37 @@ class GameManager extends EventEmitter {
   /**
    * Calls the contract to find an artifact on the given planet.
    */
-  public findArtifact(planetId: LocationId): GameManager {
-    if (this.checkGameHasEnded()) return this;
-
+  public findArtifact(planetId: LocationId, bypassChecks = false): GameManager {
     const planet = this.entityStore.getPlanetWithId(planetId);
 
     if (!planet) {
       throw new Error("you can't find artifacts on a planet you haven't discovered");
     }
 
-    if (planet.owner !== this.getAccount()) {
-      throw new Error("you can't find artifacts on planets you don't own");
-    }
-
     if (!isLocatable(planet)) {
       throw new Error("you don't know the biome of this planet");
     }
 
-    if (planet.hasTriedFindingArtifact) {
-      throw new Error('someone already tried finding an artifact on this planet');
-    }
+    if (!bypassChecks) {
+      if (this.checkGameHasEnded()) {
+        throw new Error('game has ended');
+      }
 
-    if (planet.unconfirmedFindArtifact) {
-      throw new Error("you're already looking bro...");
-    }
+      if (planet.owner !== this.getAccount()) {
+        throw new Error("you can't find artifacts on planets you don't own");
+      }
 
-    if (planet.planetType !== PlanetType.RUINS) {
-      throw new Error("this planet doesn't have an artifact on it.");
+      if (planet.hasTriedFindingArtifact) {
+        throw new Error('someone already tried finding an artifact on this planet');
+      }
+
+      if (planet.unconfirmedFindArtifact) {
+        throw new Error("you're already looking bro...");
+      }
+
+      if (planet.planetType !== PlanetType.RUINS) {
+        throw new Error("this planet doesn't have an artifact on it.");
+      }
     }
 
     // this is shitty. used for the popup window
@@ -1627,8 +1633,14 @@ class GameManager extends EventEmitter {
    * Submits a transaction to the blockchain to deposit an artifact on a given planet.
    * You must own the planet and you must own the artifact directly (can't be locked in contract)
    */
-  depositArtifact(locationId: LocationId, artifactId: ArtifactId): GameManager {
-    if (this.checkGameHasEnded()) return this;
+  depositArtifact(
+    locationId: LocationId,
+    artifactId: ArtifactId,
+    bypassChecks = true
+  ): GameManager {
+    if (!bypassChecks) {
+      if (this.checkGameHasEnded()) return this;
+    }
     // this is shitty. used for the popup window
     localStorage.setItem(`${this.getAccount()?.toLowerCase()}-depositPlanet`, locationId);
     localStorage.setItem(`${this.getAccount()?.toLowerCase()}-depositArtifact`, artifactId);
@@ -1654,17 +1666,23 @@ class GameManager extends EventEmitter {
   /**
    * Withdraws the artifact that is locked up on the given planet.
    */
-  withdrawArtifact(locationId: LocationId, artifactId: ArtifactId): GameManager {
-    if (this.checkGameHasEnded()) return this;
+  withdrawArtifact(
+    locationId: LocationId,
+    artifactId: ArtifactId,
+    bypassChecks = true
+  ): GameManager {
+    if (!bypassChecks) {
+      if (this.checkGameHasEnded()) return this;
 
-    const planet = this.entityStore.getPlanetWithId(locationId);
-    if (!planet) {
-      console.error('tried to withdraw from unknown planet');
-      return this;
-    }
-    if (!artifactId) {
-      console.error('must supply an artifact id');
-      return this;
+      const planet = this.entityStore.getPlanetWithId(locationId);
+      if (!planet) {
+        console.error('tried to withdraw from unknown planet');
+        return this;
+      }
+      if (!artifactId) {
+        console.error('must supply an artifact id');
+        return this;
+      }
     }
 
     // this is shitty. used for the popup window
@@ -1699,17 +1717,20 @@ class GameManager extends EventEmitter {
   activateArtifact(
     locationId: LocationId,
     artifactId: ArtifactId,
-    wormholeTo: LocationId | undefined
+    wormholeTo: LocationId | undefined,
+    bypassChecks = false
   ) {
-    if (this.checkGameHasEnded()) return this;
+    if (!bypassChecks) {
+      if (this.checkGameHasEnded()) return this;
 
-    const planet = this.entityStore.getPlanetWithId(locationId);
+      const planet = this.entityStore.getPlanetWithId(locationId);
 
-    if (!planet) {
-      throw new Error('tried to activate on an unknown planet');
-    }
-    if (!artifactId) {
-      throw new Error('must supply an artifact id');
+      if (!planet) {
+        throw new Error('tried to activate on an unknown planet');
+      }
+      if (!artifactId) {
+        throw new Error('must supply an artifact id');
+      }
     }
 
     localStorage.setItem(`${this.getAccount()?.toLowerCase()}-activatePlanet`, locationId);
@@ -1729,12 +1750,14 @@ class GameManager extends EventEmitter {
     return this;
   }
 
-  deactivateArtifact(locationId: LocationId, artifactId: ArtifactId) {
-    if (this.checkGameHasEnded()) return this;
+  deactivateArtifact(locationId: LocationId, artifactId: ArtifactId, bypassChecks = false) {
+    if (!bypassChecks) {
+      if (this.checkGameHasEnded()) return this;
 
-    const planet = this.entityStore.getPlanetWithId(locationId);
-    if (!planet) {
-      throw new Error('tried to deactivate on an unknown planet');
+      const planet = this.entityStore.getPlanetWithId(locationId);
+      if (!planet) {
+        throw new Error('tried to deactivate on an unknown planet');
+      }
     }
 
     localStorage.setItem(`${this.getAccount()?.toLowerCase()}-deactivatePlanet`, locationId);
@@ -1752,31 +1775,33 @@ class GameManager extends EventEmitter {
     this.contractsAPI.deactivateArtifact(txIntent).catch((e) => this.onTxIntentFail(txIntent, e));
   }
 
-  withdrawSilver(locationId: LocationId, amount: number) {
-    if (this.checkGameHasEnded()) return this;
-    if (!this.account) return this;
+  withdrawSilver(locationId: LocationId, amount: number, bypassChecks = false) {
+    if (!bypassChecks) {
+      if (this.checkGameHasEnded()) return this;
+      if (!this.account) return this;
 
-    const planet = this.entityStore.getPlanetWithId(locationId);
-    if (!planet) {
-      throw new Error('tried to withdraw silver from an unknown planet');
-    }
-    if (planet.planetType !== PlanetType.TRADING_POST) {
-      throw new Error('can only withdraw silver from spacetime rips');
-    }
-    if (planet.owner !== this.account) {
-      throw new Error('can only withdraw silver from a planet you own');
-    }
-    if (planet.unconfirmedWithdrawSilver) {
-      throw new Error('a withdraw silver action is already in progress for this planet');
-    }
-    if (amount > planet.silver) {
-      throw new Error('not enough silver to withdraw!');
-    }
-    if (amount === 0) {
-      throw new Error('must withdraw more than 0 silver!');
-    }
-    if (planet.destroyed) {
-      throw new Error("can't withdraw silver from a destroyed planet");
+      const planet = this.entityStore.getPlanetWithId(locationId);
+      if (!planet) {
+        throw new Error('tried to withdraw silver from an unknown planet');
+      }
+      if (planet.planetType !== PlanetType.TRADING_POST) {
+        throw new Error('can only withdraw silver from spacetime rips');
+      }
+      if (planet.owner !== this.account) {
+        throw new Error('can only withdraw silver from a planet you own');
+      }
+      if (planet.unconfirmedWithdrawSilver) {
+        throw new Error('a withdraw silver action is already in progress for this planet');
+      }
+      if (amount > planet.silver) {
+        throw new Error('not enough silver to withdraw!');
+      }
+      if (amount === 0) {
+        throw new Error('must withdraw more than 0 silver!');
+      }
+      if (planet.destroyed) {
+        throw new Error("can't withdraw silver from a destroyed planet");
+      }
     }
 
     localStorage.setItem(`${this.getAccount()?.toLowerCase()}-withdrawSilverPlanet`, locationId);
@@ -1802,13 +1827,14 @@ class GameManager extends EventEmitter {
     to: LocationId,
     forces: number,
     silver: number,
-    artifactMoved?: ArtifactId
+    artifactMoved?: ArtifactId,
+    bypassChecks = false
   ): GameManager {
     if (this.checkGameHasEnded()) return this;
     localStorage.setItem(`${this.getAccount()?.toLowerCase()}-fromPlanet`, from);
     localStorage.setItem(`${this.getAccount()?.toLowerCase()}-toPlanet`, to);
 
-    if (Date.now() / 1000 > this.endTimeSeconds) {
+    if (!bypassChecks && Date.now() / 1000 > this.endTimeSeconds) {
       this.terminal.current?.println('[ERROR] Game has ended.');
       return this;
     }
@@ -1842,7 +1868,7 @@ class GameManager extends EventEmitter {
 
     const oldPlanet = this.entityStore.getPlanetWithLocation(oldLocation);
 
-    if (!this.account || !oldPlanet || oldPlanet.owner !== this.account) {
+    if ((!bypassChecks && !this.account) || !oldPlanet || oldPlanet.owner !== this.account) {
       throw new Error('attempted to move from a planet not owned by player');
     }
     const actionId = getRandomActionId();
@@ -1857,14 +1883,16 @@ class GameManager extends EventEmitter {
 
     if (artifactMoved) {
       const artifact = this.entityStore.getArtifactById(artifactMoved);
-      if (!artifact) {
-        throw new Error("couldn't find this artifact");
-      }
-      if (isActivated(artifact)) {
-        throw new Error("can't move an activated artifact");
-      }
-      if (!oldPlanet.heldArtifactIds.includes(artifactMoved)) {
-        throw new Error("that artifact isn't on this planet!");
+      if (!bypassChecks) {
+        if (!artifact) {
+          throw new Error("couldn't find this artifact");
+        }
+        if (isActivated(artifact)) {
+          throw new Error("can't move an activated artifact");
+        }
+        if (!oldPlanet.heldArtifactIds.includes(artifactMoved)) {
+          throw new Error("that artifact isn't on this planet!");
+        }
       }
       txIntent.artifact = artifactMoved;
     }
@@ -1894,7 +1922,7 @@ class GameManager extends EventEmitter {
    * upgrade branch. You must own the planet, and have enough silver on it to complete
    * the upgrade.
    */
-  upgrade(planetId: LocationId, branch: number): GameManager {
+  upgrade(planetId: LocationId, branch: number, _bypassChecks = false): GameManager {
     if (this.checkGameHasEnded()) return this;
     // this is shitty
     localStorage.setItem(`${this.getAccount()?.toLowerCase()}-upPlanet`, planetId);
@@ -1925,7 +1953,7 @@ class GameManager extends EventEmitter {
    * planet. They are purely cosmetic and a great way to BM your opponents or just
    * look your best. Just like in the real world, more money means more hat.
    */
-  buyHat(planetId: LocationId): GameManager {
+  buyHat(planetId: LocationId, _bypassChecks = false): GameManager {
     if (this.checkGameHasEnded()) return this;
 
     const planetLoc = this.entityStore.getLocationOfPlanet(planetId);
@@ -1964,19 +1992,21 @@ class GameManager extends EventEmitter {
     return this;
   }
 
-  transferOwnership(planetId: LocationId, newOwner: EthAddress): GameManager {
-    if (this.checkGameHasEnded()) return this;
-    const planetLoc = this.entityStore.getLocationOfPlanet(planetId);
-    if (!planetLoc) {
-      console.error('planet not found');
-      this.terminal.current?.println('[TX ERROR] Planet not found');
-      return this;
-    }
-    const planet = this.entityStore.getPlanetWithLocation(planetLoc);
-    if (!planet) {
-      console.error('planet not found');
-      this.terminal.current?.println('[TX ERROR] Planet not found');
-      return this;
+  transferOwnership(planetId: LocationId, newOwner: EthAddress, bypassChecks = false): GameManager {
+    if (!bypassChecks) {
+      if (this.checkGameHasEnded()) return this;
+      const planetLoc = this.entityStore.getLocationOfPlanet(planetId);
+      if (!planetLoc) {
+        console.error('planet not found');
+        this.terminal.current?.println('[TX ERROR] Planet not found');
+        return this;
+      }
+      const planet = this.entityStore.getPlanetWithLocation(planetLoc);
+      if (!planet) {
+        console.error('planet not found');
+        this.terminal.current?.println('[TX ERROR] Planet not found');
+        return this;
+      }
     }
 
     localStorage.setItem(`${this.getAccount()?.toLowerCase()}-transferPlanet`, planetId);
