@@ -6,6 +6,7 @@
 
 ### Enumeration members
 
+- [ArrivalQueued](_types_darkforest_api_contractsapitypes.contractsapievent.md#arrivalqueued)
 - [ArtifactUpdate](_types_darkforest_api_contractsapitypes.contractsapievent.md#artifactupdate)
 - [ChangedGPTCreditPrice](_types_darkforest_api_contractsapitypes.contractsapievent.md#changedgptcreditprice)
 - [LocationRevealed](_types_darkforest_api_contractsapitypes.contractsapievent.md#locationrevealed)
@@ -19,6 +20,12 @@
 - [TxSubmitted](_types_darkforest_api_contractsapitypes.contractsapievent.md#txsubmitted)
 
 ## Enumeration members
+
+### ArrivalQueued
+
+• **ArrivalQueued**: = "ArrivalQueued"
+
+---
 
 ### ArtifactUpdate
 

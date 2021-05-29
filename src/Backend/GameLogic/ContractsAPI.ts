@@ -47,6 +47,7 @@ import {
   SubmittedBuyGPTCredits,
   SubmittedWithdrawSilver,
   UnconfirmedWithdrawSilver,
+  VoyageId,
 } from '@darkforest_eth/types';
 import { aggregateBulkGetter } from '../Utils/Utils';
 import bigInt from 'big-integer';
@@ -218,18 +219,17 @@ class ContractsAPI extends EventEmitter {
       [ContractEvent.ArrivalQueued]: async (
         _playerAddr: string,
         arrivalId: EthersBN,
-        _fromLocRaw: EthersBN,
-        _toLocRaw: EthersBN,
+        fromLocRaw: EthersBN,
+        toLocRaw: EthersBN,
         _artifactIdRaw: EthersBN,
         _: Event
       ) => {
-        const arrival: QueuedArrival | undefined = await this.getArrival(arrivalId.toNumber());
-        if (!arrival) {
-          console.error('arrival is undefined');
-          return;
-        }
-        this.emit(ContractsAPIEvent.PlanetUpdate, arrival.toPlanet);
-        this.emit(ContractsAPIEvent.PlanetUpdate, arrival.fromPlanet);
+        this.emit(
+          ContractsAPIEvent.ArrivalQueued,
+          arrivalId.toString() as VoyageId,
+          locationIdFromEthersBN(fromLocRaw),
+          locationIdFromEthersBN(toLocRaw)
+        );
         this.emit(ContractsAPIEvent.RadiusUpdated);
       },
       [ContractEvent.PlanetUpgraded]: async (

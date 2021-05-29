@@ -306,10 +306,17 @@ class GameManager extends EventEmitter {
     // while we are fetching
     terminal.current?.println('(4/6) Getting pending moves...');
     // only load {arrival data, planet data} for planets that we have mined on this device, or that are contract-side revealed.
-    const planetsToLoad = allTouchedPlanetIds.filter(
+    let planetsToLoad = allTouchedPlanetIds.filter(
       (id) => minedPlanetIds.has(id) || revealedCoordsMap.has(id)
     );
     const allArrivals = await contractsAPI.getAllArrivals(planetsToLoad);
+
+    // add origin points of voyages to known planets, because we need to know
+    // origin owner to render the shrinking / incoming circle
+    for (const arrival of allArrivals) {
+      planetsToLoad.push(arrival.fromPlanet);
+    }
+    planetsToLoad = [...new Set(planetsToLoad)];
 
     terminal.current?.println('(5/6) Getting planet metadata...');
     const touchedAndLocatedPlanets = await contractsAPI.bulkGetPlanets(planetsToLoad);
@@ -449,6 +456,21 @@ class GameManager extends EventEmitter {
           gameManager.emit(GameManagerEvent.PlanetUpdate);
         }
       })
+      .on(
+        ContractsAPIEvent.ArrivalQueued,
+        async (_arrivalId: VoyageId, fromId: LocationId, toId: LocationId) => {
+          // only reload planets if the toPlanet is in the map
+          const localToPlanet = gameManager.entityStore.getPlanetWithId(toId);
+          if (localToPlanet && isLocatable(localToPlanet)) {
+            const promises = [
+              gameManager.hardRefreshPlanet(fromId),
+              gameManager.hardRefreshPlanet(toId),
+            ];
+            await Promise.all(promises);
+            gameManager.emit(GameManagerEvent.PlanetUpdate);
+          }
+        }
+      )
       .on(
         ContractsAPIEvent.LocationRevealed,
         async (planetId: LocationId, _revealer: EthAddress) => {

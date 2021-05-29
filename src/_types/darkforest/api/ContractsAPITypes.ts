@@ -61,6 +61,7 @@ export enum ContractEvent {
 export enum ContractsAPIEvent {
   PlayerUpdate = 'PlayerUpdate',
   PlanetUpdate = 'PlanetUpdate',
+  ArrivalQueued = 'ArrivalQueued',
   ArtifactUpdate = 'ArtifactUpdate',
   RadiusUpdated = 'RadiusUpdated',
   LocationRevealed = 'LocationRevealed',
