@@ -66,6 +66,13 @@ const getEnergyAtTime = (planet: Planet, atTimeMillis: number): number => {
   if (!hasOwner(planet)) {
     return planet.energy;
   }
+
+  if (planet.planetType === PlanetType.SILVER_BANK) {
+    if (planet.energy > planet.energyCap) {
+      return planet.energyCap;
+    }
+  }
+
   const timeElapsed = atTimeMillis / 1000 - planet.lastUpdated;
   const denominator =
     Math.exp((-4 * planet.energyGrowth * timeElapsed) / planet.energyCap) *
@@ -162,6 +169,12 @@ export const arrive = (
   } else {
     // moving between my own planets
     toPlanet.energy += energyArriving;
+  }
+
+  if (toPlanet.planetType === PlanetType.SILVER_BANK) {
+    if (toPlanet.energy > toPlanet.energyCap) {
+      toPlanet.energy = toPlanet.energyCap;
+    }
   }
 
   // apply silver
