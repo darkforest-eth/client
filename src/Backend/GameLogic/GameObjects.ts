@@ -390,6 +390,8 @@ export class GameObjects {
         unconfirmedWithdrawArtifact,
         unconfirmedActivateArtifact,
         unconfirmedDeactivateArtifact,
+        unconfirmedWithdrawSilver,
+        unconfirmedProspectPlanet,
       } = localPlanet;
       planet.unconfirmedReveal = unconfirmedReveal;
       planet.unconfirmedDepartures = unconfirmedDepartures;
@@ -401,6 +403,8 @@ export class GameObjects {
       planet.unconfirmedWithdrawArtifact = unconfirmedWithdrawArtifact;
       planet.unconfirmedActivateArtifact = unconfirmedActivateArtifact;
       planet.unconfirmedDeactivateArtifact = unconfirmedDeactivateArtifact;
+      planet.unconfirmedWithdrawSilver = unconfirmedWithdrawSilver;
+      planet.unconfirmedProspectPlanet = unconfirmedProspectPlanet;
     }
     planet.heldArtifactIds = updatedArtifactsOnPlanet;
     // make planet Locatable if we know its location
