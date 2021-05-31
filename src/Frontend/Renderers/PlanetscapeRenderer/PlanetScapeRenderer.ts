@@ -84,7 +84,9 @@ export class PlanetscapeRenderer extends WebGLManager {
   public setPlanet(planet: Planet | undefined): void {
     this.planet = planet;
     if (planet) {
-      this.artifacts = this.uiManager.getArtifactsWithIds(planet.heldArtifactIds);
+      this.artifacts = this.uiManager
+        .getArtifactsWithIds(planet.heldArtifactIds)
+        .filter((a) => !!a) as Artifact[];
     } else {
       this.artifacts = [];
     }

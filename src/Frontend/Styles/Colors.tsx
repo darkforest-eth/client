@@ -36,7 +36,7 @@ export const ANCIENT_BLUE = '#b2fffc';
 
 export const RarityColors: Record<ArtifactRarity, string> = [
   '#000000',
-  dfstyles.colors.text, // Common
+  dfstyles.colors.subtext, // Common
   '#6b68ff', // Rare
   '#c13cff', // Epic
   '#f8b73e', // Legendary

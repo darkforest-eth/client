@@ -21,6 +21,8 @@ export function Leaderboard() {
 }
 
 function scoreToString(score: number) {
+  score = Math.floor(score);
+
   if (score === 0) {
     return 'n/a';
   }

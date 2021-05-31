@@ -29,7 +29,6 @@
 - [hexifyBigIntNestedArray](backend_utils_utils.md#hexifybigintnestedarray)
 - [hslStr](backend_utils_utils.md#hslstr)
 - [isFullRank](backend_utils_utils.md#isfullrank)
-- [moveShipsDecay](backend_utils_utils.md#moveshipsdecay)
 - [neverResolves](backend_utils_utils.md#neverresolves)
 - [rejectAfter](backend_utils_utils.md#rejectafter)
 - [sleep](backend_utils_utils.md#sleep)
@@ -318,22 +317,6 @@
 | `planet` | _undefined_ \| Planet |
 
 **Returns:** _boolean_
-
----
-
-### moveShipsDecay
-
-▸ `Const` **moveShipsDecay**(`shipsMoved`: _number_, `fromPlanet`: Planet, `dist`: _number_): _number_
-
-#### Parameters
-
-| Name         | Type     |
-| :----------- | :------- |
-| `shipsMoved` | _number_ |
-| `fromPlanet` | Planet   |
-| `dist`       | _number_ |
-
-**Returns:** _number_
 
 ---
 

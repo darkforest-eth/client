@@ -2,11 +2,9 @@ import { Artifact, ArtifactNames } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { ArtifactFileColor } from '../../Backend/GameLogic/ArtifactUtils';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { artifactName } from '../../Backend/Procedural/ArtifactProcgen';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
-import { ArtifactImage } from '../Components/ArtifactImage';
 import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
 import { ArtifactRarityLabelAnim } from '../Components/Labels/ArtifactLabels';
 import { Sub } from '../Components/Text';
@@ -90,17 +88,9 @@ export function PlayerArtifactsPane({
     };
   }, [setVisible]);
 
-  const headers = ['', 'Name', 'Location', 'Type', 'Rarity'];
-  const alignments: Array<'r' | 'c' | 'l'> = ['r', 'l', 'r', 'r', 'r'];
+  const headers = ['Name', 'Location', 'Type', 'Rarity'];
+  const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r', 'r'];
   const columns = [
-    (artifact: Artifact) => (
-      <ArtifactImage
-        thumb
-        artifact={artifact}
-        size={20}
-        bgColor={ArtifactFileColor.APP_BACKGROUND}
-      />
-    ),
     (artifact: Artifact) => (
       <ArtifactLink artifact={artifact} setDetailsOpen={setDetailsOpen}>
         {artifactName(artifact)}
@@ -127,7 +117,6 @@ export function PlayerArtifactsPane({
   ];
 
   const sortFunctions = [
-    (left: Artifact, right: Artifact) => artifactName(left).localeCompare(artifactName(right)),
     (left: Artifact, right: Artifact) => artifactName(left).localeCompare(artifactName(right)),
     (left: Artifact, right: Artifact) =>
       planetArtifactName(left, uiManager)?.localeCompare(

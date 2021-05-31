@@ -42,9 +42,7 @@ export function ManagePlanetArtifactsPane({
   const account = useAccount(uiManager);
   const currentBlockNumber = useEmitterValue(uiManager.getEthConnection().blockNumber$, undefined);
   const myArtifacts = useMyArtifacts(uiManager);
-  const onPlanet = uiManager.getArtifactsWithIdsIncludeUndefined(
-    planet.value?.heldArtifactIds || []
-  );
+  const onPlanet = uiManager.getArtifactsWithIds(planet.value?.heldArtifactIds || []);
 
   const find = useCallback(() => {
     planet.value && uiManager.findArtifact(planet.value.locationId);

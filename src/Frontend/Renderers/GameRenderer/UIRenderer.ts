@@ -1,4 +1,4 @@
-import { moveShipsDecay, formatNumber } from '../../../Backend/Utils/Utils';
+import { formatNumber } from '../../../Backend/Utils/Utils';
 import { Planet, WorldCoords } from '@darkforest_eth/types';
 import Renderer from './Renderer';
 import { engineConsts } from './EngineConsts';
@@ -37,6 +37,7 @@ export class UIRenderer {
 
     const to: WorldCoords | undefined = uiManager.getHoveringOverCoords();
     const from: WorldCoords | undefined = loc?.coords;
+    const toPlanet = uiManager.getPlanetWithCoords(to);
 
     if (mouseDownPlanet && from && to) {
       if (uiManager.getIsChoosingTargetPlanet()) {
@@ -48,15 +49,21 @@ export class UIRenderer {
           lR.queueLineWorld(from, to, whiteA, 2, RenderZIndex.Voyages);
 
           let effectiveEnergy = myPlanet.energy;
+
           for (const unconfirmedMove of myPlanet.unconfirmedDepartures) {
             effectiveEnergy -= unconfirmedMove.forces;
           }
-          const shipsMoved =
-            (uiManager.getForcesSending(myPlanet.locationId) / 100) * effectiveEnergy;
 
-          const dist = Math.sqrt((from.x - to.x) ** 2 + (from.y - to.y) ** 2);
+          const energy = (uiManager.getForcesSending(myPlanet.locationId) / 100) * effectiveEnergy;
+          const distance = uiManager.getDistCoords(from, to);
 
-          const myAtk: number = moveShipsDecay(shipsMoved, myPlanet, dist);
+          const myAtk: number = uiManager.getEnergyArrivingForMove(
+            myPlanet.locationId,
+            toPlanet?.locationId,
+            distance,
+            energy
+          );
+
           if (!uiManager.getHoveringOverPlanet()) {
             const color = myAtk > 0 ? whiteA : redA;
             color[3] = 255;

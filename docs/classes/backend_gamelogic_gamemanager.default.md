@@ -62,6 +62,7 @@
 - [destroy](backend_gamelogic_gamemanager.default.md#destroy)
 - [findArtifact](backend_gamelogic_gamemanager.default.md#findartifact)
 - [getAccount](backend_gamelogic_gamemanager.default.md#getaccount)
+- [getActiveArtifact](backend_gamelogic_gamemanager.default.md#getactiveartifact)
 - [getAllOwnedPlanets](backend_gamelogic_gamemanager.default.md#getallownedplanets)
 - [getAllPlanets](backend_gamelogic_gamemanager.default.md#getallplanets)
 - [getAllPlayers](backend_gamelogic_gamemanager.default.md#getallplayers)
@@ -69,6 +70,7 @@
 - [getArtifactMap](backend_gamelogic_gamemanager.default.md#getartifactmap)
 - [getArtifactUpdated$](backend_gamelogic_gamemanager.default.md#getartifactupdated$)
 - [getArtifactWithId](backend_gamelogic_gamemanager.default.md#getartifactwithid)
+- [getArtifactsWithIds](backend_gamelogic_gamemanager.default.md#getartifactswithids)
 - [getChunk](backend_gamelogic_gamemanager.default.md#getchunk)
 - [getChunkStore](backend_gamelogic_gamemanager.default.md#getchunkstore)
 - [getConstructors](backend_gamelogic_gamemanager.default.md#getconstructors)
@@ -77,6 +79,7 @@
 - [getConversation](backend_gamelogic_gamemanager.default.md#getconversation)
 - [getCurrentlyExploringChunk](backend_gamelogic_gamemanager.default.md#getcurrentlyexploringchunk)
 - [getDist](backend_gamelogic_gamemanager.default.md#getdist)
+- [getDistCoords](backend_gamelogic_gamemanager.default.md#getdistcoords)
 - [getEndTimeSeconds](backend_gamelogic_gamemanager.default.md#getendtimeseconds)
 - [getEnergyArrivingForMove](backend_gamelogic_gamemanager.default.md#getenergyarrivingformove)
 - [getEnergyCurveAtPercent](backend_gamelogic_gamemanager.default.md#getenergycurveatpercent)
@@ -136,6 +139,7 @@
 - [getWithdrawnSilverOfPlayer](backend_gamelogic_gamemanager.default.md#getwithdrawnsilverofplayer)
 - [getWorldRadius](backend_gamelogic_gamemanager.default.md#getworldradius)
 - [getWorldSilver](backend_gamelogic_gamemanager.default.md#getworldsilver)
+- [getWormholeFactors](backend_gamelogic_gamemanager.default.md#getwormholefactors)
 - [getWormholes](backend_gamelogic_gamemanager.default.md#getwormholes)
 - [handleTxIntent](backend_gamelogic_gamemanager.default.md#handletxintent)
 - [hardRefreshArtifact](backend_gamelogic_gamemanager.default.md#hardrefreshartifact)
@@ -595,6 +599,22 @@ Gets the address of the player logged into this game manager.
 
 ---
 
+### getActiveArtifact
+
+▸ **getActiveArtifact**(`planet`: Planet): _undefined_ \| Artifact
+
+Gets the active artifact on this planet, if one exists.
+
+#### Parameters
+
+| Name     | Type   |
+| :------- | :----- |
+| `planet` | Planet |
+
+**Returns:** _undefined_ \| Artifact
+
+---
+
 ### getAllOwnedPlanets
 
 ▸ **getAllOwnedPlanets**(): Planet[]
@@ -669,6 +689,23 @@ Gets the artifact with the given id. Null if no artifact with id exists.
 | `artifactId` | ArtifactId |
 
 **Returns:** _undefined_ \| Artifact
+
+---
+
+### getArtifactsWithIds
+
+▸ **getArtifactsWithIds**(`artifactIds`: ArtifactId[]): (_undefined_ \| Artifact)[]
+
+Gets the artifacts with the given ids, including ones we know exist but haven't been loaded,
+represented by `undefined`.
+
+#### Parameters
+
+| Name          | Type         |
+| :------------ | :----------- |
+| `artifactIds` | ArtifactId[] |
+
+**Returns:** (_undefined_ \| Artifact)[]
 
 ---
 
@@ -774,6 +811,23 @@ know the location of either planet.
 
 ---
 
+### getDistCoords
+
+▸ **getDistCoords**(`fromCoords`: WorldCoords, `toCoords`: WorldCoords): _number_
+
+Gets the distance between two coordinates in space.
+
+#### Parameters
+
+| Name         | Type        |
+| :----------- | :---------- |
+| `fromCoords` | WorldCoords |
+| `toCoords`   | WorldCoords |
+
+**Returns:** _number_
+
+---
+
 ### getEndTimeSeconds
 
 ▸ **getEndTimeSeconds**(): _number_
@@ -787,18 +841,20 @@ in seconds from the epoch.
 
 ### getEnergyArrivingForMove
 
-▸ **getEnergyArrivingForMove**(`fromId`: LocationId, `toId`: LocationId, `sentEnergy`: _number_): _number_
+▸ **getEnergyArrivingForMove**(`fromId`: LocationId, `toId`: _undefined_ \| LocationId, `distance`: _undefined_ \| _number_, `sentEnergy`: _number_): _number_
 
 Gets the amount of energy that would arrive if a voyage with the given parameters
-was to occur.
+was to occur. The toPlanet is optional, in case you want an estimate that doesn't include
+wormhole speedups.
 
 #### Parameters
 
-| Name         | Type       |
-| :----------- | :--------- |
-| `fromId`     | LocationId |
-| `toId`       | LocationId |
-| `sentEnergy` | _number_   |
+| Name         | Type                      |
+| :----------- | :------------------------ |
+| `fromId`     | LocationId                |
+| `toId`       | _undefined_ \| LocationId |
+| `distance`   | _undefined_ \| _number_   |
+| `sentEnergy` | _number_                  |
 
 **Returns:** _number_
 
@@ -1216,7 +1272,7 @@ some time has passed since we last updated the planet), then updates that planet
 
 ### getPlanetWithId
 
-▸ **getPlanetWithId**(`planetId`: LocationId): _undefined_ \| Planet
+▸ **getPlanetWithId**(`planetId`: _undefined_ \| LocationId): _undefined_ \| Planet
 
 Gets the planet with the given hash. Returns undefined if the planet is neither in the contract
 nor has been discovered locally. If the planet needs to be updated (because some time has
@@ -1224,9 +1280,9 @@ passed since we last updated the planet), then updates that planet first.
 
 #### Parameters
 
-| Name       | Type       |
-| :--------- | :--------- |
-| `planetId` | LocationId |
+| Name       | Type                      |
+| :--------- | :------------------------ |
+| `planetId` | _undefined_ \| LocationId |
 
 **Returns:** _undefined_ \| Planet
 
@@ -1504,6 +1560,25 @@ Gets the radius of the playable area of the universe.
 Gets the total amount of silver that lives on a planet that somebody owns.
 
 **Returns:** _number_
+
+---
+
+### getWormholeFactors
+
+▸ **getWormholeFactors**(`fromPlanet`: Planet, `toPlanet`: Planet): _undefined_ \| { `distanceFactor`: _number_ ; `speedFactor`: _number_ }
+
+If there's an active artifact on either of these planets which happens to be a wormhole which
+is active and targetting the other planet, return the wormhole boost which is greater. Values
+represent a multiplier.
+
+#### Parameters
+
+| Name         | Type   |
+| :----------- | :----- |
+| `fromPlanet` | Planet |
+| `toPlanet`   | Planet |
+
+**Returns:** _undefined_ \| { `distanceFactor`: _number_ ; `speedFactor`: _number_ }
 
 ---
 

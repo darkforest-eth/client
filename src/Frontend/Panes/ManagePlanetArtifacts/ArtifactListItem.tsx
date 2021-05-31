@@ -1,7 +1,7 @@
 import { Artifact, ArtifactId } from '@darkforest_eth/types';
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { isActivated, getArtifactDebugName } from '../../../Backend/GameLogic/ArtifactUtils';
+import { isActivated } from '../../../Backend/GameLogic/ArtifactUtils';
 import { ArtifactImage } from '../../Components/ArtifactImage';
 import {
   ArtifactBiomeText,
@@ -13,6 +13,7 @@ import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Smaller, Sub } from '../../Components/Text';
 import dfstyles from '../../Styles/dfstyles';
 import { UpgradeStatsView } from './UpgradeStatsView';
+import { artifactName } from '../../../Backend/Procedural/ArtifactProcgen';
 
 export function ArtifactListItem({
   artifact,
@@ -42,7 +43,7 @@ export function ArtifactListItem({
       </ArtifactImageContainer>
       <Spacer width={16} />
       <ArtifactContent>
-        {getArtifactDebugName(artifact)}
+        {artifactName(artifact)}
         <Spacer width={8} />
         <Smaller>
           <Sub>

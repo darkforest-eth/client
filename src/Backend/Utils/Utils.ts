@@ -141,14 +141,6 @@ export const titleCase = (title: string): string =>
     })
     .join(' ');
 
-export const moveShipsDecay = (shipsMoved: number, fromPlanet: Planet, dist: number) => {
-  const scale = (1 / 2) ** (dist / fromPlanet.range);
-  let ret = scale * shipsMoved - 0.05 * fromPlanet.energyCap;
-  if (ret < 0) ret = 0;
-
-  return ret;
-};
-
 export const hasOwner = (planet: Planet) => {
   return planet.owner !== EMPTY_ADDRESS;
 };

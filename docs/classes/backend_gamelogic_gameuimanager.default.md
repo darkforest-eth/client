@@ -73,7 +73,6 @@
 - [getArtifactSending](backend_gamelogic_gameuimanager.default.md#getartifactsending)
 - [getArtifactWithId](backend_gamelogic_gameuimanager.default.md#getartifactwithid)
 - [getArtifactsWithIds](backend_gamelogic_gameuimanager.default.md#getartifactswithids)
-- [getArtifactsWithIdsIncludeUndefined](backend_gamelogic_gameuimanager.default.md#getartifactswithidsincludeundefined)
 - [getBiomeKey](backend_gamelogic_gameuimanager.default.md#getbiomekey)
 - [getBiomePerlin](backend_gamelogic_gameuimanager.default.md#getbiomeperlin)
 - [getChunk](backend_gamelogic_gameuimanager.default.md#getchunk)
@@ -82,7 +81,9 @@
 - [getConversation](backend_gamelogic_gameuimanager.default.md#getconversation)
 - [getDetailLevel](backend_gamelogic_gameuimanager.default.md#getdetaillevel)
 - [getDiscoverBiomeName](backend_gamelogic_gameuimanager.default.md#getdiscoverbiomename)
+- [getDistCoords](backend_gamelogic_gameuimanager.default.md#getdistcoords)
 - [getEndTimeSeconds](backend_gamelogic_gameuimanager.default.md#getendtimeseconds)
+- [getEnergyArrivingForMove](backend_gamelogic_gameuimanager.default.md#getenergyarrivingformove)
 - [getEnergyCurveAtPercent](backend_gamelogic_gameuimanager.default.md#getenergycurveatpercent)
 - [getEnergyOfPlayer](backend_gamelogic_gameuimanager.default.md#getenergyofplayer)
 - [getEthConnection](backend_gamelogic_gameuimanager.default.md#getethconnection)
@@ -117,6 +118,7 @@
 - [getPlanetDetailLevel](backend_gamelogic_gameuimanager.default.md#getplanetdetaillevel)
 - [getPlanetLevel](backend_gamelogic_gameuimanager.default.md#getplanetlevel)
 - [getPlanetMap](backend_gamelogic_gameuimanager.default.md#getplanetmap)
+- [getPlanetWithCoords](backend_gamelogic_gameuimanager.default.md#getplanetwithcoords)
 - [getPlanetWithId](backend_gamelogic_gameuimanager.default.md#getplanetwithid)
 - [getPlanetsInViewport](backend_gamelogic_gameuimanager.default.md#getplanetsinviewport)
 - [getPluginManager](backend_gamelogic_gameuimanager.default.md#getpluginmanager)
@@ -700,21 +702,7 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### getArtifactsWithIds
 
-▸ **getArtifactsWithIds**(`artifactIds`: ArtifactId[]): Artifact[]
-
-#### Parameters
-
-| Name          | Type         |
-| :------------ | :----------- |
-| `artifactIds` | ArtifactId[] |
-
-**Returns:** Artifact[]
-
----
-
-### getArtifactsWithIdsIncludeUndefined
-
-▸ **getArtifactsWithIdsIncludeUndefined**(`artifactIds`: ArtifactId[]): (_undefined_ \| Artifact)[]
+▸ **getArtifactsWithIds**(`artifactIds`: ArtifactId[]): (_undefined_ \| Artifact)[]
 
 #### Parameters
 
@@ -821,9 +809,41 @@ indicates whether or not the player is currently selecting a target planet.
 
 ---
 
+### getDistCoords
+
+▸ **getDistCoords**(`from`: WorldCoords, `to`: WorldCoords): _number_
+
+#### Parameters
+
+| Name   | Type        |
+| :----- | :---------- |
+| `from` | WorldCoords |
+| `to`   | WorldCoords |
+
+**Returns:** _number_
+
+---
+
 ### getEndTimeSeconds
 
 ▸ **getEndTimeSeconds**(): _number_
+
+**Returns:** _number_
+
+---
+
+### getEnergyArrivingForMove
+
+▸ **getEnergyArrivingForMove**(`from`: LocationId, `to`: _undefined_ \| LocationId, `dist`: _undefined_ \| _number_, `energy`: _number_): _number_
+
+#### Parameters
+
+| Name     | Type                      |
+| :------- | :------------------------ |
+| `from`   | LocationId                |
+| `to`     | _undefined_ \| LocationId |
+| `dist`   | _undefined_ \| _number_   |
+| `energy` | _number_                  |
 
 **Returns:** _number_
 
@@ -1140,6 +1160,20 @@ indicates whether or not the player is currently selecting a target planet.
 ▸ **getPlanetMap**(): _Map_<LocationId, Planet\>
 
 **Returns:** _Map_<LocationId, Planet\>
+
+---
+
+### getPlanetWithCoords
+
+▸ **getPlanetWithCoords**(`coords`: _undefined_ \| WorldCoords): _undefined_ \| Planet
+
+#### Parameters
+
+| Name     | Type                       |
+| :------- | :------------------------- |
+| `coords` | _undefined_ \| WorldCoords |
+
+**Returns:** _undefined_ \| Planet
 
 ---
 

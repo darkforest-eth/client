@@ -73,7 +73,7 @@ export function usePlanetArtifacts(
     [planet, uiManager]
   );
 
-  return artifacts;
+  return artifacts.filter((a) => !!a) as Artifact[];
 }
 
 export function usePlanetInactiveArtifacts(

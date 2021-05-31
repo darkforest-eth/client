@@ -40,7 +40,7 @@ import { MiningPattern } from '../Miner/MiningPatterns';
 import EthConnection from '../Network/EthConnection';
 import { UIDataKey } from '../Storage/UIStateStorageManager';
 import { coordsEqual } from '../Utils/Coordinates';
-import { deferred, moveShipsDecay } from '../Utils/Utils';
+import { deferred } from '../Utils/Utils';
 import { biomeName } from './ArtifactUtils';
 import GameManager, { GameManagerEvent } from './GameManager';
 import { PluginManager } from './PluginManager';
@@ -352,6 +352,15 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.stepConversation(artifactId, message);
   }
 
+  public getEnergyArrivingForMove(
+    from: LocationId,
+    to: LocationId | undefined,
+    dist: number | undefined,
+    energy: number
+  ) {
+    return this.gameManager.getEnergyArrivingForMove(from, to, dist, energy);
+  }
+
   getIsChoosingTargetPlanet() {
     return this.isChoosingTargetPlanet;
   }
@@ -405,6 +414,8 @@ class GameUIManager extends EventEmitter {
         // move initiated if enough forces
         const from = mouseDownPlanet;
         const to = mouseUpOverPlanet;
+
+        // TODO: the following code block needs to be in a Planet class
         let effectiveEnergy = from.energy;
         for (const unconfirmedMove of from.unconfirmedDepartures) {
           effectiveEnergy -= unconfirmedMove.forces;
@@ -418,15 +429,17 @@ class GameUIManager extends EventEmitter {
           if (forces < 1) return;
         }
 
-        const loc = this.getLocationOfPlanet(mouseDownPlanet.locationId);
-        const mouseDownCoords = loc ? loc.coords : { x: 0, y: 0 };
+        const dist = this.gameManager.getDist(from.locationId, to.locationId);
 
-        const dist = Math.sqrt(
-          (mouseDownCoords.x - mouseUpOverCoords.x) ** 2 +
-            (mouseDownCoords.y - mouseUpOverCoords.y) ** 2
+        const myAtk: number = this.gameManager.getEnergyArrivingForMove(
+          from.locationId,
+          to.locationId,
+          dist,
+          forces
         );
-        const myAtk: number = moveShipsDecay(forces, mouseDownPlanet, dist);
+
         let effPercentSilver = this.getSilverSending(from.locationId);
+
         if (
           effPercentSilver > 98 &&
           from.planetType === PlanetType.SILVER_MINE &&
@@ -547,6 +560,10 @@ class GameUIManager extends EventEmitter {
       return biomeName(biome);
     }
     return 'Undiscovered';
+  }
+
+  getDistCoords(from: WorldCoords, to: WorldCoords) {
+    return this.gameManager.getDistCoords(from, to);
   }
 
   discoverBiome(planet: LocatablePlanet): void {
@@ -841,12 +858,12 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getArtifactWithId(artifactId);
   }
 
-  getArtifactsWithIds(artifactIds: ArtifactId[]): Artifact[] {
-    return this.getArtifactsWithIdsIncludeUndefined(artifactIds).filter((a) => !!a) as Artifact[];
+  getPlanetWithCoords(coords: WorldCoords | undefined): Planet | undefined {
+    return coords && this.gameManager.getPlanetWithCoords(coords);
   }
 
-  getArtifactsWithIdsIncludeUndefined(artifactIds: ArtifactId[]): Array<Artifact | undefined> {
-    return artifactIds.map((id) => this.getArtifactWithId(id));
+  getArtifactsWithIds(artifactIds: ArtifactId[]): Array<Artifact | undefined> {
+    return this.gameManager.getArtifactsWithIds(artifactIds);
   }
 
   getArtifactPlanet(artifact: Artifact): Planet | undefined {

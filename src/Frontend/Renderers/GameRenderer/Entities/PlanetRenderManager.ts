@@ -7,7 +7,7 @@ import {
   Artifact,
 } from '@darkforest_eth/types';
 import { ProcgenUtils } from '../../../../Backend/Procedural/ProcgenUtils';
-import { hasOwner, formatNumber, moveShipsDecay } from '../../../../Backend/Utils/Utils';
+import { hasOwner, formatNumber } from '../../../../Backend/Utils/Utils';
 import { isLocatable } from '../../../../_types/global/GlobalTypes';
 import Viewport from '../../../Game/Viewport';
 import { HatType } from '../../../Utils/Hats';
@@ -66,7 +66,9 @@ export default class PlanetRenderManager {
       textAlpha *= radius / (2 * maxRadius);
     }
 
-    const artifacts = uiManager.getArtifactsWithIds(planet.heldArtifactIds);
+    const artifacts: Artifact[] = uiManager
+      .getArtifactsWithIds(planet.heldArtifactIds)
+      .filter((a) => !!a) as Artifact[];
 
     /* draw planet body */
     this.queuePlanetBody(planet, centerW, radiusW);
@@ -188,10 +190,7 @@ export default class PlanetRenderManager {
     const fromPlanet = uiManager.getMouseDownPlanet();
     const toPlanet = uiManager.getHoveringOverPlanet();
 
-    const fromCoords = uiManager.getMouseDownCoords();
-    const toCoords = uiManager.getHoveringOverCoords();
-
-    if (!fromPlanet || !fromCoords || !toPlanet || !toCoords) return undefined;
+    if (!fromPlanet || !toPlanet) return undefined;
 
     let effectiveEnergy = fromPlanet.energy;
     for (const unconfirmedMove of fromPlanet.unconfirmedDepartures) {
@@ -199,9 +198,13 @@ export default class PlanetRenderManager {
     }
     const shipsMoved = (uiManager.getForcesSending(fromPlanet.locationId) / 100) * effectiveEnergy;
 
-    const dist = Math.sqrt((fromCoords.x - toCoords.x) ** 2 + (fromCoords.y - toCoords.y) ** 2);
+    const myAtk: number = uiManager.getEnergyArrivingForMove(
+      fromPlanet.locationId,
+      toPlanet.locationId,
+      undefined,
+      shipsMoved
+    );
 
-    const myAtk: number = moveShipsDecay(shipsMoved, fromPlanet, dist);
     return myAtk;
   }
 

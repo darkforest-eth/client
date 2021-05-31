@@ -19,7 +19,7 @@ import {
 } from '../../_types/darkforest/api/ContractsAPITypes';
 import { fakeHash, mimcHash, perlin } from '@darkforest_eth/hashing';
 import { GameObjects } from './GameObjects';
-import { getRandomActionId, hexifyBigIntNestedArray, moveShipsDecay } from '../Utils/Utils';
+import { getRandomActionId, hexifyBigIntNestedArray } from '../Utils/Utils';
 import { Contract, ContractInterface } from 'ethers';
 import {
   isUnconfirmedInit,
@@ -69,6 +69,8 @@ import {
   UnconfirmedReveal,
   UnconfirmedBuyGPTCredits,
   UnconfirmedWithdrawSilver,
+  ArtifactType,
+  ArtifactRarity,
 } from '@darkforest_eth/types';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import { MIN_CHUNK_SIZE } from '../../Frontend/Utils/constants';
@@ -965,8 +967,8 @@ class GameManager extends EventEmitter {
    * nor has been discovered locally. If the planet needs to be updated (because some time has
    * passed since we last updated the planet), then updates that planet first.
    */
-  getPlanetWithId(planetId: LocationId): Planet | undefined {
-    return this.entityStore.getPlanetWithId(planetId);
+  getPlanetWithId(planetId: LocationId | undefined): Planet | undefined {
+    return planetId && this.entityStore.getPlanetWithId(planetId);
   }
 
   /**
@@ -1000,6 +1002,14 @@ class GameManager extends EventEmitter {
    */
   getArtifactWithId(artifactId: ArtifactId): Artifact | undefined {
     return this.entityStore.getArtifactById(artifactId);
+  }
+
+  /**
+   * Gets the artifacts with the given ids, including ones we know exist but haven't been loaded,
+   * represented by `undefined`.
+   */
+  getArtifactsWithIds(artifactIds: ArtifactId[]): Array<Artifact | undefined> {
+    return artifactIds.map((id) => this.getArtifactWithId(id));
   }
 
   /**
@@ -2239,10 +2249,14 @@ class GameManager extends EventEmitter {
     const toLoc = this.entityStore.getLocationOfPlanet(toId);
     if (!toLoc) throw new Error('destination location unknown');
 
-    const { x: fromX, y: fromY } = fromLoc.coords;
-    const { x: toX, y: toY } = toLoc.coords;
+    return this.getDistCoords(fromLoc.coords, toLoc.coords);
+  }
 
-    return Math.sqrt((fromX - toX) ** 2 + (fromY - toY) ** 2);
+  /**
+   * Gets the distance between two coordinates in space.
+   */
+  getDistCoords(fromCoords: WorldCoords, toCoords: WorldCoords) {
+    return Math.sqrt((fromCoords.x - toCoords.x) ** 2 + (fromCoords.y - toCoords.y) ** 2);
   }
 
   /**
@@ -2286,13 +2300,95 @@ class GameManager extends EventEmitter {
 
   /**
    * Gets the amount of energy that would arrive if a voyage with the given parameters
-   * was to occur.
+   * was to occur. The toPlanet is optional, in case you want an estimate that doesn't include
+   * wormhole speedups.
    */
-  getEnergyArrivingForMove(fromId: LocationId, toId: LocationId, sentEnergy: number) {
+  getEnergyArrivingForMove(
+    fromId: LocationId,
+    toId: LocationId | undefined,
+    distance: number | undefined,
+    sentEnergy: number
+  ) {
     const from = this.getPlanetWithId(fromId);
-    if (!from) throw new Error('origin planet unknown');
-    const dist = this.getDist(fromId, toId);
-    return moveShipsDecay(sentEnergy, from, dist);
+    const to = this.getPlanetWithId(toId);
+
+    if (!from) throw new Error(`unknown planet`);
+    if (distance === undefined && toId === undefined)
+      throw new Error(`you must provide either a target planet or a distance`);
+
+    let dist = (toId && this.getDist(fromId, toId)) || (distance as number);
+
+    if (to && toId) {
+      const wormholeFactors = this.getWormholeFactors(from, to);
+      if (wormholeFactors !== undefined) {
+        if (to.owner === from.owner) {
+          dist /= wormholeFactors.distanceFactor;
+        } else {
+          return 0;
+        }
+      }
+    }
+
+    const scale = (1 / 2) ** (dist / from.range);
+    let ret = scale * sentEnergy - 0.05 * from.energyCap;
+    if (ret < 0) ret = 0;
+
+    return ret;
+  }
+
+  /**
+   * Gets the active artifact on this planet, if one exists.
+   */
+  getActiveArtifact(planet: Planet): Artifact | undefined {
+    const artifacts = this.getArtifactsWithIds(planet.heldArtifactIds);
+    const active = artifacts.find((a) => a && isActivated(a));
+
+    return active;
+  }
+
+  /**
+   * If there's an active artifact on either of these planets which happens to be a wormhole which
+   * is active and targetting the other planet, return the wormhole boost which is greater. Values
+   * represent a multiplier.
+   */
+  getWormholeFactors(
+    fromPlanet: Planet,
+    toPlanet: Planet
+  ): { distanceFactor: number; speedFactor: number } | undefined {
+    const fromActiveArtifact = this.getActiveArtifact(fromPlanet);
+    const toActiveArtifact = this.getActiveArtifact(toPlanet);
+
+    let greaterRarity: ArtifactRarity | undefined;
+
+    if (
+      fromActiveArtifact?.artifactType === ArtifactType.Wormhole &&
+      fromActiveArtifact.wormholeTo === toPlanet.locationId
+    ) {
+      greaterRarity = fromActiveArtifact.rarity;
+    }
+
+    if (
+      toActiveArtifact?.artifactType === ArtifactType.Wormhole &&
+      toActiveArtifact.wormholeTo === fromPlanet.locationId
+    ) {
+      if (greaterRarity === undefined) {
+        greaterRarity = toActiveArtifact.rarity;
+      } else {
+        greaterRarity = Math.max(greaterRarity, toActiveArtifact.rarity);
+      }
+    }
+
+    const rangeUpgradesPerRarity = [0, 2, 4, 6, 8, 10];
+    const speedUpgradesPerRarity = [0, 10, 20, 30, 40, 50];
+
+    if (!greaterRarity || greaterRarity <= ArtifactRarity.Unknown) {
+      return undefined;
+    }
+
+    return {
+      distanceFactor: rangeUpgradesPerRarity[greaterRarity],
+      speedFactor: speedUpgradesPerRarity[greaterRarity],
+    };
   }
 
   /**
