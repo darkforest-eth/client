@@ -179,7 +179,12 @@ class EthConnection extends EventEmitter {
   public async setRpcEndpoint(url: string): Promise<void> {
     try {
       this.rpcURL = url;
-      const newProvider = new providers.StaticJsonRpcProvider(this.rpcURL);
+      let newProvider: JsonRpcProvider | undefined;
+      if (this.rpcURL.startsWith('wss://')) {
+        newProvider = new providers.WebSocketProvider(this.rpcURL);
+      } else {
+        newProvider = new providers.StaticJsonRpcProvider(this.rpcURL);
+      }
       /**
        * this.provider needs to get set to nonnull value immediately (synchronously)
        * otherwise other classes which call loadContract() immediately on app load might
