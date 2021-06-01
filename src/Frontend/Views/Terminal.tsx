@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import { Hoverable } from '../Components/Hoverable';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
 import { BasicLink, Green, Blue, Sub, White, Red, Invisible } from '../Components/Text';
+import { LoadingBarHandle, TextLoadingBar } from '../Components/TextLoadingBar';
 import dfstyles from '../Styles/dfstyles';
 import { isFirefox } from '../Utils/BrowserChecks';
 import { TerminalTextStyle } from '../Utils/TerminalTypes';
@@ -13,6 +14,8 @@ const UP_ARROW_KEY_CODE = 38;
 const ON_INPUT = 'ON_INPUT';
 
 export interface TerminalHandle {
+  printElement: (element: React.ReactElement) => void;
+  printLoadingBar: (prettyEntityName: string, ref: React.RefObject<LoadingBarHandle>) => void;
   printLoadingSpinner: () => void;
   print: (str: string, style?: TerminalTextStyle, hoverContents?: () => JSX.Element) => void;
   println: (str: string, style?: TerminalTextStyle, hoverContents?: () => JSX.Element) => void;
@@ -172,6 +175,12 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
   useImperativeHandle(
     ref,
     () => ({
+      printElement: (element: React.ReactElement) => {
+        append(element);
+      },
+      printLoadingBar: (prettyEntityName: string, ref: React.RefObject<LoadingBarHandle>) => {
+        append(<TextLoadingBar prettyEntityName={prettyEntityName} ref={ref} />);
+      },
       print: (str: string, style?: TerminalTextStyle, hoverContents?: () => JSX.Element) => {
         print(str, style, undefined, hoverContents);
       },

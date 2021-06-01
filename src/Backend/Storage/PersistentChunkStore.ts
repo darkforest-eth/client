@@ -80,6 +80,7 @@ class PersistentChunkStore implements ChunkStore {
         db.createObjectStore(ObjectStore.PLUGINS);
       },
     });
+
     const localStorageManager = new PersistentChunkStore(db, account);
 
     await localStorageManager.loadIntoMemory();

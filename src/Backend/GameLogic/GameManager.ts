@@ -91,6 +91,7 @@ import { getConversation, startConversation, stepConversation } from '../Network
 import { address, locationIdToDecStr, locationIdFromBigInt } from '@darkforest_eth/serde';
 import UIStateStorageManager, { UIDataKey } from '../Storage/UIStateStorageManager';
 import { CORE_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
+import { InitialGameStateDownloader } from './InitialGameStateDownloader';
 
 export enum GameManagerEvent {
   PlanetUpdate = 'PlanetUpdate',
@@ -248,137 +249,58 @@ class GameManager extends EventEmitter {
     ethConnection: EthConnection,
     terminal: React.MutableRefObject<TerminalHandle | undefined>
   ): Promise<GameManager> {
-    // initialize dependencies according to a DAG
+    if (!terminal.current) {
+      throw new Error('you must pass in a handle to a terminal');
+    }
 
     const account = ethConnection.getAddress();
-    const balance = await ethConnection.getBalance(account);
-
+    const gameStateDownloader = new InitialGameStateDownloader(terminal.current);
     const uiStateStorageManager = UIStateStorageManager.create(account, CORE_CONTRACT_ADDRESS);
-
-    // first we initialize the ContractsAPI and get the user's eth account,
-    // and load contract constants + state
     const contractsAPI = await ContractsAPI.create(ethConnection, uiStateStorageManager, terminal);
 
-    // then we initialize the local storage manager and SNARK helper
+    terminal.current?.println('Loading game data from disk...');
 
     const persistentChunkStore = await PersistentChunkStore.create(account);
+
+    terminal.current?.println(
+      'Downloading data from Ethereum blockchain... (the contract is very big. this may take a while)'
+    );
+    terminal.current?.newline();
+
+    const initialState = await gameStateDownloader.download(contractsAPI, persistentChunkStore);
     const possibleHomes = await persistentChunkStore.getHomeLocations();
-    const storedTouchedPlanetIds = await persistentChunkStore.getSavedTouchedPlanetIds();
-    const storedRevealedCoords = await persistentChunkStore.getSavedRevealedCoords();
 
-    // get data from the contract
-    terminal.current?.println('(1/6) Getting game constants...', TerminalTextStyle.Sub);
-    const contractConstants = await contractsAPI.getConstants();
-    const players = await contractsAPI.getPlayers();
-    const worldRadius = await contractsAPI.getWorldRadius();
-    const gptCreditPriceEther = await contractsAPI.getGPTCreditPriceEther();
-    const myGPTCredits = await contractsAPI.getGPTCreditBalance(account);
+    await persistentChunkStore.saveTouchedPlanetIds(initialState.allTouchedPlanetIds);
+    await persistentChunkStore.saveRevealedCoords(initialState.allRevealedCoords);
 
-    const arrivals: Map<VoyageId, QueuedArrival> = new Map();
-    const planetVoyageIdMap: Map<LocationId, VoyageId[]> = new Map();
-
-    const minedChunks = Array.from(await persistentChunkStore.allChunks());
-    const minedPlanetIds = new Set(
-      _.flatMap(minedChunks, (c) => c.planetLocations).map((l) => l.hash)
-    );
-    terminal.current?.println('(2/6) Getting planet IDs...');
-    const loadedTouchedPlanetIds = await contractsAPI.getTouchedPlanetIds(
-      storedTouchedPlanetIds.length
-    );
-
-    const allTouchedPlanetIds = storedTouchedPlanetIds.concat(loadedTouchedPlanetIds);
-    await persistentChunkStore.saveTouchedPlanetIds(allTouchedPlanetIds);
-
-    terminal.current?.println('(3/6) Getting broadcasted coordinates...');
-    const loadedRevealedCoords = await contractsAPI.getRevealedPlanetsCoords(
-      storedRevealedCoords.length
-    );
-    const allRevealedCoords = storedRevealedCoords.concat(loadedRevealedCoords);
-    const revealedCoordsMap = new Map<LocationId, WorldCoords>();
-    // transform from [LocationId, number, number][] to Map<LocationId, WorldCoords>
-    for (const revealedCoords of allRevealedCoords) {
-      revealedCoordsMap.set(revealedCoords.hash, {
-        x: revealedCoords.coords.x,
-        y: revealedCoords.coords.y,
-      });
-    }
-    await persistentChunkStore.saveRevealedCoords(allRevealedCoords);
-
-    // fetch arrivals before fetching planets, since an arrival to a new planet might be sent
-    // while we are fetching
-    terminal.current?.println('(4/6) Getting pending moves...');
-    // only load {arrival data, planet data} for planets that we have mined on this device, or that are contract-side revealed.
-    let planetsToLoad = allTouchedPlanetIds.filter(
-      (id) => minedPlanetIds.has(id) || revealedCoordsMap.has(id)
-    );
-    const allArrivals = await contractsAPI.getAllArrivals(planetsToLoad);
-
-    // add origin points of voyages to known planets, because we need to know
-    // origin owner to render the shrinking / incoming circle
-    for (const arrival of allArrivals) {
-      planetsToLoad.push(arrival.fromPlanet);
-    }
-    planetsToLoad = [...new Set(planetsToLoad)];
-
-    terminal.current?.println('(5/6) Getting planet metadata...');
-    const touchedAndLocatedPlanets = await contractsAPI.bulkGetPlanets(planetsToLoad);
-
-    touchedAndLocatedPlanets.forEach((_planet, locId) => {
-      if (touchedAndLocatedPlanets.has(locId)) {
-        planetVoyageIdMap.set(locId, []);
-      }
-    });
-
-    for (const arrival of allArrivals) {
-      const voyageIds = planetVoyageIdMap.get(arrival.toPlanet);
-      if (voyageIds) {
-        voyageIds.push(arrival.eventId);
-        planetVoyageIdMap.set(arrival.toPlanet, voyageIds);
-      }
-      arrivals.set(arrival.eventId, arrival);
-    }
-
-    terminal.current?.println('(6/6) Getting artifacts...');
-    const heldArtifacts = await contractsAPI.bulkGetArtifactsOnPlanets(planetsToLoad);
-
-    const artifactIdsOnVoyages: ArtifactId[] = [];
-    for (const arrival of allArrivals) {
-      if (arrival.artifactId) {
-        artifactIdsOnVoyages.push(arrival.artifactId);
-      }
-    }
-
-    const artifactsOnVoyages = await contractsAPI.bulkGetArtifacts(artifactIdsOnVoyages);
-
-    const myArtifacts = await contractsAPI.getPlayerArtifacts(account);
     const knownArtifacts: Map<ArtifactId, Artifact> = new Map();
 
-    for (let i = 0; i < planetsToLoad.length; i++) {
-      const planet = touchedAndLocatedPlanets.get(planetsToLoad[i]);
+    for (let i = 0; i < initialState.loadedPlanets.length; i++) {
+      const planet = initialState.touchedAndLocatedPlanets.get(initialState.loadedPlanets[i]);
 
       if (!planet) {
         continue;
       }
 
-      planet.heldArtifactIds = heldArtifacts[i].map((a) => a.id);
+      planet.heldArtifactIds = initialState.heldArtifacts[i].map((a) => a.id);
 
-      for (const heldArtifact of heldArtifacts[i]) {
+      for (const heldArtifact of initialState.heldArtifacts[i]) {
         knownArtifacts.set(heldArtifact.id, heldArtifact);
       }
     }
 
-    for (const myArtifact of myArtifacts) {
+    for (const myArtifact of initialState.myArtifacts) {
       knownArtifacts.set(myArtifact.id, myArtifact);
     }
 
-    for (const artifact of artifactsOnVoyages) {
+    for (const artifact of initialState.artifactsOnVoyages) {
       knownArtifacts.set(artifact.id, artifact);
     }
 
     // figure out what's my home planet
     let homeLocation: WorldLocation | undefined = undefined;
     for (const loc of possibleHomes) {
-      if (allTouchedPlanetIds.includes(loc.hash)) {
+      if (initialState.allTouchedPlanetIds.includes(loc.hash)) {
         homeLocation = loc;
         await persistentChunkStore.confirmHomeLocation(loc);
         break;
@@ -386,38 +308,38 @@ class GameManager extends EventEmitter {
     }
 
     const hashConfig: HashConfig = {
-      planetHashKey: contractConstants.PLANETHASH_KEY,
-      spaceTypeKey: contractConstants.SPACETYPE_KEY,
-      biomebaseKey: contractConstants.BIOMEBASE_KEY,
-      perlinLengthScale: contractConstants.PERLIN_LENGTH_SCALE,
-      perlinMirrorX: contractConstants.PERLIN_MIRROR_X,
-      perlinMirrorY: contractConstants.PERLIN_MIRROR_Y,
+      planetHashKey: initialState.contractConstants.PLANETHASH_KEY,
+      spaceTypeKey: initialState.contractConstants.SPACETYPE_KEY,
+      biomebaseKey: initialState.contractConstants.BIOMEBASE_KEY,
+      perlinLengthScale: initialState.contractConstants.PERLIN_LENGTH_SCALE,
+      perlinMirrorX: initialState.contractConstants.PERLIN_MIRROR_X,
+      perlinMirrorY: initialState.contractConstants.PERLIN_MIRROR_Y,
     };
 
-    const useMockHash = contractConstants.DISABLE_ZK_CHECKS;
+    const useMockHash = initialState.contractConstants.DISABLE_ZK_CHECKS;
     const snarkHelper = SnarkArgsHelper.create(hashConfig, terminal, useMockHash);
 
     const gameManager = new GameManager(
       terminal,
       account,
-      balance,
-      players,
-      touchedAndLocatedPlanets,
-      new Set<LocationId>(Array.from(allTouchedPlanetIds)),
-      revealedCoordsMap,
-      worldRadius,
-      arrivals,
-      planetVoyageIdMap,
+      initialState.balance,
+      initialState.players,
+      initialState.touchedAndLocatedPlanets,
+      new Set(Array.from(initialState.allTouchedPlanetIds)),
+      initialState.revealedCoordsMap,
+      initialState.worldRadius,
+      initialState.arrivals,
+      initialState.planetVoyageIdMap,
       contractsAPI,
-      contractConstants,
+      initialState.contractConstants,
       persistentChunkStore,
       snarkHelper,
       homeLocation,
       useMockHash,
       knownArtifacts,
       ethConnection,
-      gptCreditPriceEther,
-      myGPTCredits,
+      initialState.gptCreditPriceEther,
+      initialState.myGPTCredits,
       uiStateStorageManager
     );
 
@@ -551,7 +473,7 @@ class GameManager extends EventEmitter {
         gameManager.entityStore.clearUnconfirmedTxIntent(unconfirmedTx);
         if (gameManager.account) {
           gameManager.balance = await gameManager.ethConnection.getBalance(gameManager.account);
-          gameManager.myBalance$.publish(balance);
+          gameManager.myBalance$.publish(gameManager.balance);
         }
       })
       .on(ContractsAPIEvent.TxReverted, async (unconfirmedTx: SubmittedTx) => {
@@ -559,7 +481,7 @@ class GameManager extends EventEmitter {
         gameManager.persistentChunkStore.onEthTxComplete(unconfirmedTx.txHash);
         if (gameManager.account) {
           gameManager.balance = await gameManager.ethConnection.getBalance(gameManager.account);
-          gameManager.myBalance$.publish(balance);
+          gameManager.myBalance$.publish(gameManager.balance);
         }
       })
       .on(ContractsAPIEvent.RadiusUpdated, async () => {
@@ -580,7 +502,7 @@ class GameManager extends EventEmitter {
 
     // we only want to initialize the mining manager if the player has already joined the game
     // if they haven't, we'll do this once the player has joined the game
-    if (!!homeLocation && players.has(account as string)) {
+    if (!!homeLocation && initialState.players.has(account as string)) {
       gameManager.initMiningManager(homeLocation.coords);
     }
 

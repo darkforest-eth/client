@@ -506,10 +506,6 @@ export default function GameLandingPage() {
 
   const advanceStateFromFetchingEthData = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
-      terminal.current?.println(
-        'Downloading data from Ethereum blockchain... (the contract is very big. this may take a while)'
-      );
-
       let newGameManager: GameManager;
 
       try {
@@ -545,6 +541,7 @@ export default function GameLandingPage() {
 
       window.ui = newGameUIManager;
 
+      terminal.current?.newline();
       terminal.current?.println('Connected to DarkForestCore contract.');
       gameUIManagerRef.current = newGameUIManager;
 

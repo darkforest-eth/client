@@ -11,7 +11,9 @@
 - [getInput](frontend_views_terminal.terminalhandle.md#getinput)
 - [newline](frontend_views_terminal.terminalhandle.md#newline)
 - [print](frontend_views_terminal.terminalhandle.md#print)
+- [printElement](frontend_views_terminal.terminalhandle.md#printelement)
 - [printLink](frontend_views_terminal.terminalhandle.md#printlink)
+- [printLoadingBar](frontend_views_terminal.terminalhandle.md#printloadingbar)
 - [printLoadingSpinner](frontend_views_terminal.terminalhandle.md#printloadingspinner)
 - [printShellLn](frontend_views_terminal.terminalhandle.md#printshellln)
 - [println](frontend_views_terminal.terminalhandle.md#println)
@@ -89,6 +91,24 @@
 
 ---
 
+### printElement
+
+• **printElement**: (`element`: _ReactElement_<any, string \| (`props`: _any_) => `null` \| _ReactElement_<any, any\> \| (`props`: _any_) => _Component_<any, any, any\>\>) => _void_
+
+#### Type declaration
+
+▸ (`element`: _ReactElement_<any, string \| (`props`: _any_) => `null` \| _ReactElement_<any, any\> \| (`props`: _any_) => _Component_<any, any, any\>\>): _void_
+
+#### Parameters
+
+| Name      | Type                                                                                                                                       |
+| :-------- | :----------------------------------------------------------------------------------------------------------------------------------------- |
+| `element` | _ReactElement_<any, string \| (`props`: _any_) => `null` \| _ReactElement_<any, any\> \| (`props`: _any_) => _Component_<any, any, any\>\> |
+
+**Returns:** _void_
+
+---
+
 ### printLink
 
 • **printLink**: (`str`: _string_, `onClick`: () => _void_, `style`: [_TerminalTextStyle_](../enums/frontend_utils_terminaltypes.terminaltextstyle.md)) => _void_
@@ -104,6 +124,25 @@
 | `str`     | _string_                                                                          |
 | `onClick` | () => _void_                                                                      |
 | `style`   | [_TerminalTextStyle_](../enums/frontend_utils_terminaltypes.terminaltextstyle.md) |
+
+**Returns:** _void_
+
+---
+
+### printLoadingBar
+
+• **printLoadingBar**: (`prettyEntityName`: _string_, `ref`: _RefObject_<[_LoadingBarHandle_](frontend_components_textloadingbar.loadingbarhandle.md)\>) => _void_
+
+#### Type declaration
+
+▸ (`prettyEntityName`: _string_, `ref`: _RefObject_<[_LoadingBarHandle_](frontend_components_textloadingbar.loadingbarhandle.md)\>): _void_
+
+#### Parameters
+
+| Name               | Type                                                                                       |
+| :----------------- | :----------------------------------------------------------------------------------------- |
+| `prettyEntityName` | _string_                                                                                   |
+| `ref`              | _RefObject_<[_LoadingBarHandle_](frontend_components_textloadingbar.loadingbarhandle.md)\> |
 
 **Returns:** _void_
 

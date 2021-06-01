@@ -3,7 +3,6 @@ import { BigInteger } from 'big-integer';
 import { StatIdx } from '../../_types/global/GlobalTypes';
 import { Planet, EthAddress, SpaceType, Upgrade, UpgradeBranchName } from '@darkforest_eth/types';
 import _ from 'lodash';
-import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
 
 export const ONE_DAY = 24 * 60 * 60 * 1000;
@@ -163,43 +162,34 @@ export const aggregateBulkGetter = async <T>(
   total: number,
   querySize: number,
   getterFn: (startIdx: number, endIdx: number) => Promise<T[]>,
-  terminal?: TerminalHandle,
-  spacedInMs = 0
+  // the parameter to this function is a value between 0 and 1. We guarantee at least one call to
+  // `onProgress` if you provide it. The guaranteed call is the one at the end, where the value is 1.
+  onProgress?: (fractionCompleted: number) => void
 ) => {
   const promises: Promise<T[]>[] = [];
-  let soFar = 0;
+  let loadedSoFar = 0;
 
   for (let i = 0; i < total / querySize; i += 1) {
     const start = i * querySize;
     const end = Math.min((i + 1) * querySize, total);
-
-    await sleep(spacedInMs);
+    const loadedThisBatch = end - start;
 
     promises.push(
       new Promise<T[]>(async (resolve) => {
         let res: T[] = [];
         while (res.length === 0) {
           res = await getterFn(start, end);
-          if (
-            terminal &&
-            Math.floor((soFar * 20) / total) !== Math.floor(((soFar + querySize) * 20) / total)
-          ) {
-            // print every 5%
-            let percent = Math.floor(((soFar + querySize) * 20) / total) * 5;
-            percent = Math.min(percent, 100);
-            terminal.print(`${percent}%... `);
-          }
-          soFar += querySize;
+          loadedSoFar += loadedThisBatch;
           console.log(`[bulk-fetch] retrieved ${logTag} ${start}-${end}.`);
+          onProgress && onProgress(loadedSoFar / total);
         }
+
         resolve(res);
       })
     );
   }
   const unflattenedResults = await Promise.all(promises);
-  if (terminal && total > 0) {
-    terminal.newline();
-  }
+  onProgress && onProgress(1);
   return _.flatten(unflattenedResults);
 };
 

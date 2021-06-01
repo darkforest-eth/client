@@ -65,7 +65,7 @@
 
 ### aggregateBulkGetter
 
-▸ `Const` **aggregateBulkGetter**<T\>(`logTag`: _string_, `total`: _number_, `querySize`: _number_, `getterFn`: (`startIdx`: _number_, `endIdx`: _number_) => _Promise_<T[]\>, `terminal?`: [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md), `spacedInMs?`: _number_): _Promise_<T[]\>
+▸ `Const` **aggregateBulkGetter**<T\>(`logTag`: _string_, `total`: _number_, `querySize`: _number_, `getterFn`: (`startIdx`: _number_, `endIdx`: _number_) => _Promise_<T[]\>, `onProgress?`: (`fractionCompleted`: _number_) => _void_): _Promise_<T[]\>
 
 #### Type parameters
 
@@ -75,14 +75,13 @@
 
 #### Parameters
 
-| Name         | Type                                                                        | Default value |
-| :----------- | :-------------------------------------------------------------------------- | :------------ |
-| `logTag`     | _string_                                                                    | -             |
-| `total`      | _number_                                                                    | -             |
-| `querySize`  | _number_                                                                    | -             |
-| `getterFn`   | (`startIdx`: _number_, `endIdx`: _number_) => _Promise_<T[]\>               | -             |
-| `terminal?`  | [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md) | -             |
-| `spacedInMs` | _number_                                                                    | 0             |
+| Name          | Type                                                          |
+| :------------ | :------------------------------------------------------------ |
+| `logTag`      | _string_                                                      |
+| `total`       | _number_                                                      |
+| `querySize`   | _number_                                                      |
+| `getterFn`    | (`startIdx`: _number_, `endIdx`: _number_) => _Promise_<T[]\> |
+| `onProgress?` | (`fractionCompleted`: _number_) => _void_                     |
 
 **Returns:** _Promise_<T[]\>
 

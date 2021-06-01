@@ -83,7 +83,7 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
         <p className='title'>Prizes and Scoring</p>
         <p>
           A snapshot of scores will be taken on <White>June 6, 2021</White>. At that time, the top
-          15 highest-scoring players will be awarded prizes from a pool 63 prize planets. Your score
+          63 highest-scoring players will be awarded prizes from a pool 63 prize planets. Your score
           is determined by the total amount of <White>Silver</White> you have withdrawn from the
           universe. You can see the current rankings by scrolling down on the landing page of the
           game.

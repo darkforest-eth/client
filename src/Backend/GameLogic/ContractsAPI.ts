@@ -869,7 +869,9 @@ class ContractsAPI extends EventEmitter {
     };
   }
 
-  public async getPlayers(): Promise<Map<string, Player>> {
+  public async getPlayers(
+    onProgress?: (fractionCompleted: number) => void
+  ): Promise<Map<string, Player>> {
     const nPlayers: number = (
       await this.makeCall<EthersBN>(this.coreContract.getNPlayers)
     ).toNumber();
@@ -879,7 +881,8 @@ class ContractsAPI extends EventEmitter {
       nPlayers,
       200,
       async (start, end) =>
-        (await this.makeCall(this.gettersContract.bulkGetPlayers, [start, end])).map(decodePlayer)
+        (await this.makeCall(this.gettersContract.bulkGetPlayers, [start, end])).map(decodePlayer),
+      onProgress
     );
 
     const playerMap: Map<EthAddress, Player> = new Map();
@@ -928,11 +931,14 @@ class ContractsAPI extends EventEmitter {
     return events;
   }
 
-  public async getAllArrivals(planetsToLoad: LocationId[]): Promise<QueuedArrival[]> {
+  public async getAllArrivals(
+    planetsToLoad: LocationId[],
+    onProgress?: (fractionCompleted: number) => void
+  ): Promise<QueuedArrival[]> {
     const arrivalsUnflattened = await aggregateBulkGetter<QueuedArrival[]>(
       'arrivals',
       planetsToLoad.length,
-      1000,
+      200,
       async (start, end) => {
         return (
           await this.makeCall(this.gettersContract.bulkGetPlanetArrivalsByIds, [
@@ -940,14 +946,16 @@ class ContractsAPI extends EventEmitter {
           ])
         ).map((arrivals) => arrivals.map(decodeArrival));
       },
-      this.terminal.current,
-      100
+      onProgress
     );
 
     return _.flatten(arrivalsUnflattened);
   }
 
-  public async getTouchedPlanetIds(startingAt: number): Promise<LocationId[]> {
+  public async getTouchedPlanetIds(
+    startingAt: number,
+    onProgress?: (fractionCompleted: number) => void
+  ): Promise<LocationId[]> {
     const nPlanets: number = (
       await this.makeCall<EthersBN>(this.coreContract.getNPlanets)
     ).toNumber();
@@ -955,14 +963,13 @@ class ContractsAPI extends EventEmitter {
     const planetIds = await aggregateBulkGetter<EthersBN>(
       'planetids',
       nPlanets - startingAt,
-      2000,
+      1000,
       async (start, end) =>
         await this.makeCall(this.gettersContract.bulkGetPlanetIds, [
           start + startingAt,
           end + startingAt,
         ]),
-      this.terminal.current,
-      100
+      onProgress
     );
     return planetIds.map(locationIdFromEthersBN);
   }
@@ -979,7 +986,11 @@ class ContractsAPI extends EventEmitter {
     return ret;
   }
 
-  public async getRevealedPlanetsCoords(startingAt: number): Promise<RevealedCoords[]> {
+  public async getRevealedPlanetsCoords(
+    startingAt: number,
+    onProgressIds?: (fractionCompleted: number) => void,
+    onProgressCoords?: (fractionCompleted: number) => void
+  ): Promise<RevealedCoords[]> {
     const nRevealedPlanets: number = (
       await this.makeCall<EthersBN>(this.coreContract.getNRevealedPlanets)
     ).toNumber();
@@ -987,52 +998,54 @@ class ContractsAPI extends EventEmitter {
     const rawRevealedPlanetIds = await aggregateBulkGetter<EthersBN>(
       'revealed-planetids',
       nRevealedPlanets - startingAt,
-      2000,
+      500,
       async (start, end) =>
         await this.makeCall(this.gettersContract.bulkGetRevealedPlanetIds, [
           start + startingAt,
           end + startingAt,
-        ])
+        ]),
+      onProgressIds
     );
 
     const rawRevealedCoords = await aggregateBulkGetter(
       'revealed-coords',
       rawRevealedPlanetIds.length,
-      1000,
+      500,
       async (start, end) =>
         await this.makeCall(this.gettersContract.bulkGetRevealedCoordsByIds, [
           rawRevealedPlanetIds.slice(start, end),
         ]),
-      this.terminal.current,
-      100
+      onProgressCoords
     );
 
     return rawRevealedCoords.map(decodeRevealedCoords);
   }
 
-  public async bulkGetPlanets(toLoadPlanets: LocationId[]): Promise<Map<LocationId, Planet>> {
-    const rawPlanetsExtendedInfo = await aggregateBulkGetter(
-      'planets-extended-info',
-      toLoadPlanets.length,
-      1000,
-      async (start, end) =>
-        await this.makeCall(this.gettersContract.bulkGetPlanetsExtendedInfoByIds, [
-          toLoadPlanets.slice(start, end).map(locationIdToDecStr),
-        ]),
-      this.terminal.current,
-      100
-    );
-
+  public async bulkGetPlanets(
+    toLoadPlanets: LocationId[],
+    onProgressPlanet?: (fractionCompleted: number) => void,
+    onProgressMetadata?: (fractionCompleted: number) => void
+  ): Promise<Map<LocationId, Planet>> {
     const rawPlanets = await aggregateBulkGetter(
       'planets',
       toLoadPlanets.length,
-      1000,
+      200,
       async (start, end) =>
         await this.makeCall(this.gettersContract.bulkGetPlanetsByIds, [
           toLoadPlanets.slice(start, end).map(locationIdToDecStr),
         ]),
-      this.terminal.current,
-      100
+      onProgressPlanet
+    );
+
+    const rawPlanetsExtendedInfo = await aggregateBulkGetter(
+      'planets-extended-info',
+      toLoadPlanets.length,
+      200,
+      async (start, end) =>
+        await this.makeCall(this.gettersContract.bulkGetPlanetsExtendedInfoByIds, [
+          toLoadPlanets.slice(start, end).map(locationIdToDecStr),
+        ]),
+      onProgressMetadata
     );
 
     const planets: Map<LocationId, Planet> = new Map();
@@ -1070,17 +1083,19 @@ class ContractsAPI extends EventEmitter {
     return decodeArtifact(rawArtifact);
   }
 
-  public async bulkGetArtifactsOnPlanets(locationIds: LocationId[]): Promise<Artifact[][]> {
+  public async bulkGetArtifactsOnPlanets(
+    locationIds: LocationId[],
+    onProgress?: (fractionCompleted: number) => void
+  ): Promise<Artifact[][]> {
     const rawArtifacts = await aggregateBulkGetter(
       'planet-artifacts',
       locationIds.length,
-      500,
+      200,
       async (start, end) =>
         await this.makeCall(this.gettersContract.bulkGetPlanetArtifacts, [
           locationIds.slice(start, end).map(locationIdToDecStr),
         ]),
-      undefined,
-      100
+      onProgress
     );
 
     return rawArtifacts.map((rawArtifactArray) => {
@@ -1090,18 +1105,17 @@ class ContractsAPI extends EventEmitter {
 
   public async bulkGetArtifacts(
     artifactIds: ArtifactId[],
-    printProgress = false
+    onProgress?: (fractionCompleted: number) => void
   ): Promise<Artifact[]> {
     const rawArtifacts = await aggregateBulkGetter(
       'artifacts',
       artifactIds.length,
-      500,
+      200,
       async (start, end) =>
         await this.makeCall(this.gettersContract.bulkGetArtifactsByIds, [
           artifactIds.slice(start, end).map(artifactIdToDecStr),
         ]),
-      (printProgress && this.terminal.current) || undefined,
-      100
+      onProgress
     );
 
     const ret: Artifact[] = rawArtifacts.map(decodeArtifact);
@@ -1109,11 +1123,22 @@ class ContractsAPI extends EventEmitter {
     return ret;
   }
 
-  public async getPlayerArtifacts(playerId: EthAddress): Promise<Artifact[]> {
+  public async getPlayerArtifacts(
+    playerId: EthAddress,
+    onProgress?: (percent: number) => void
+  ): Promise<Artifact[]> {
     const myArtifactIds = (
       await this.makeCall(this.gettersContract.getPlayerArtifactIds, [playerId])
     ).map(artifactIdFromEthersBN);
-    return this.bulkGetArtifacts(myArtifactIds);
+    return this.bulkGetArtifacts(myArtifactIds, onProgress);
+  }
+
+  public getAccount() {
+    return this.ethConnection.getAddress();
+  }
+
+  public getBalance() {
+    return this.ethConnection.getBalance(this.getAccount());
   }
 }
 

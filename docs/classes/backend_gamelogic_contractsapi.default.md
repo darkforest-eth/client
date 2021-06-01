@@ -39,10 +39,12 @@ in the contract.
 - [depositArtifact](backend_gamelogic_contractsapi.default.md#depositartifact)
 - [destroy](backend_gamelogic_contractsapi.default.md#destroy)
 - [findArtifact](backend_gamelogic_contractsapi.default.md#findartifact)
+- [getAccount](backend_gamelogic_contractsapi.default.md#getaccount)
 - [getAllArrivals](backend_gamelogic_contractsapi.default.md#getallarrivals)
 - [getArrival](backend_gamelogic_contractsapi.default.md#getarrival)
 - [getArrivalsForPlanet](backend_gamelogic_contractsapi.default.md#getarrivalsforplanet)
 - [getArtifactById](backend_gamelogic_contractsapi.default.md#getartifactbyid)
+- [getBalance](backend_gamelogic_contractsapi.default.md#getbalance)
 - [getConstants](backend_gamelogic_contractsapi.default.md#getconstants)
 - [getContractAddress](backend_gamelogic_contractsapi.default.md#getcontractaddress)
 - [getContractBalance](backend_gamelogic_contractsapi.default.md#getcontractbalance)
@@ -155,14 +157,14 @@ Overrides: EventEmitter.constructor
 
 ### bulkGetArtifacts
 
-▸ **bulkGetArtifacts**(`artifactIds`: ArtifactId[], `printProgress?`: _boolean_): _Promise_<Artifact[]\>
+▸ **bulkGetArtifacts**(`artifactIds`: ArtifactId[], `onProgress?`: (`fractionCompleted`: _number_) => _void_): _Promise_<Artifact[]\>
 
 #### Parameters
 
-| Name            | Type         | Default value |
-| :-------------- | :----------- | :------------ |
-| `artifactIds`   | ArtifactId[] | -             |
-| `printProgress` | _boolean_    | false         |
+| Name          | Type                                      |
+| :------------ | :---------------------------------------- |
+| `artifactIds` | ArtifactId[]                              |
+| `onProgress?` | (`fractionCompleted`: _number_) => _void_ |
 
 **Returns:** _Promise_<Artifact[]\>
 
@@ -170,13 +172,14 @@ Overrides: EventEmitter.constructor
 
 ### bulkGetArtifactsOnPlanets
 
-▸ **bulkGetArtifactsOnPlanets**(`locationIds`: LocationId[]): _Promise_<Artifact[][]\>
+▸ **bulkGetArtifactsOnPlanets**(`locationIds`: LocationId[], `onProgress?`: (`fractionCompleted`: _number_) => _void_): _Promise_<Artifact[][]\>
 
 #### Parameters
 
-| Name          | Type         |
-| :------------ | :----------- |
-| `locationIds` | LocationId[] |
+| Name          | Type                                      |
+| :------------ | :---------------------------------------- |
+| `locationIds` | LocationId[]                              |
+| `onProgress?` | (`fractionCompleted`: _number_) => _void_ |
 
 **Returns:** _Promise_<Artifact[][]\>
 
@@ -184,13 +187,15 @@ Overrides: EventEmitter.constructor
 
 ### bulkGetPlanets
 
-▸ **bulkGetPlanets**(`toLoadPlanets`: LocationId[]): _Promise_<Map<LocationId, Planet\>\>
+▸ **bulkGetPlanets**(`toLoadPlanets`: LocationId[], `onProgressPlanet?`: (`fractionCompleted`: _number_) => _void_, `onProgressMetadata?`: (`fractionCompleted`: _number_) => _void_): _Promise_<Map<LocationId, Planet\>\>
 
 #### Parameters
 
-| Name            | Type         |
-| :-------------- | :----------- |
-| `toLoadPlanets` | LocationId[] |
+| Name                  | Type                                      |
+| :-------------------- | :---------------------------------------- |
+| `toLoadPlanets`       | LocationId[]                              |
+| `onProgressPlanet?`   | (`fractionCompleted`: _number_) => _void_ |
+| `onProgressMetadata?` | (`fractionCompleted`: _number_) => _void_ |
 
 **Returns:** _Promise_<Map<LocationId, Planet\>\>
 
@@ -279,15 +284,24 @@ Overrides: EventEmitter.constructor
 
 ---
 
+### getAccount
+
+▸ **getAccount**(): EthAddress
+
+**Returns:** EthAddress
+
+---
+
 ### getAllArrivals
 
-▸ **getAllArrivals**(`planetsToLoad`: LocationId[]): _Promise_<QueuedArrival[]\>
+▸ **getAllArrivals**(`planetsToLoad`: LocationId[], `onProgress?`: (`fractionCompleted`: _number_) => _void_): _Promise_<QueuedArrival[]\>
 
 #### Parameters
 
-| Name            | Type         |
-| :-------------- | :----------- |
-| `planetsToLoad` | LocationId[] |
+| Name            | Type                                      |
+| :-------------- | :---------------------------------------- |
+| `planetsToLoad` | LocationId[]                              |
+| `onProgress?`   | (`fractionCompleted`: _number_) => _void_ |
 
 **Returns:** _Promise_<QueuedArrival[]\>
 
@@ -332,6 +346,14 @@ Overrides: EventEmitter.constructor
 | `artifactId` | ArtifactId |
 
 **Returns:** _Promise_<undefined \| Artifact\>
+
+---
+
+### getBalance
+
+▸ **getBalance**(): _Promise_<number\>
+
+**Returns:** _Promise_<number\>
 
 ---
 
@@ -397,13 +419,14 @@ Overrides: EventEmitter.constructor
 
 ### getPlayerArtifacts
 
-▸ **getPlayerArtifacts**(`playerId`: EthAddress): _Promise_<Artifact[]\>
+▸ **getPlayerArtifacts**(`playerId`: EthAddress, `onProgress?`: (`percent`: _number_) => _void_): _Promise_<Artifact[]\>
 
 #### Parameters
 
-| Name       | Type       |
-| :--------- | :--------- |
-| `playerId` | EthAddress |
+| Name          | Type                            |
+| :------------ | :------------------------------ |
+| `playerId`    | EthAddress                      |
+| `onProgress?` | (`percent`: _number_) => _void_ |
 
 **Returns:** _Promise_<Artifact[]\>
 
@@ -425,7 +448,13 @@ Overrides: EventEmitter.constructor
 
 ### getPlayers
 
-▸ **getPlayers**(): _Promise_<Map<string, Player\>\>
+▸ **getPlayers**(`onProgress?`: (`fractionCompleted`: _number_) => _void_): _Promise_<Map<string, Player\>\>
+
+#### Parameters
+
+| Name          | Type                                      |
+| :------------ | :---------------------------------------- |
+| `onProgress?` | (`fractionCompleted`: _number_) => _void_ |
 
 **Returns:** _Promise_<Map<string, Player\>\>
 
@@ -447,13 +476,15 @@ Overrides: EventEmitter.constructor
 
 ### getRevealedPlanetsCoords
 
-▸ **getRevealedPlanetsCoords**(`startingAt`: _number_): _Promise_<RevealedCoords[]\>
+▸ **getRevealedPlanetsCoords**(`startingAt`: _number_, `onProgressIds?`: (`fractionCompleted`: _number_) => _void_, `onProgressCoords?`: (`fractionCompleted`: _number_) => _void_): _Promise_<RevealedCoords[]\>
 
 #### Parameters
 
-| Name         | Type     |
-| :----------- | :------- |
-| `startingAt` | _number_ |
+| Name                | Type                                      |
+| :------------------ | :---------------------------------------- |
+| `startingAt`        | _number_                                  |
+| `onProgressIds?`    | (`fractionCompleted`: _number_) => _void_ |
+| `onProgressCoords?` | (`fractionCompleted`: _number_) => _void_ |
 
 **Returns:** _Promise_<RevealedCoords[]\>
 
@@ -469,13 +500,14 @@ Overrides: EventEmitter.constructor
 
 ### getTouchedPlanetIds
 
-▸ **getTouchedPlanetIds**(`startingAt`: _number_): _Promise_<LocationId[]\>
+▸ **getTouchedPlanetIds**(`startingAt`: _number_, `onProgress?`: (`fractionCompleted`: _number_) => _void_): _Promise_<LocationId[]\>
 
 #### Parameters
 
-| Name         | Type     |
-| :----------- | :------- |
-| `startingAt` | _number_ |
+| Name          | Type                                      |
+| :------------ | :---------------------------------------- |
+| `startingAt`  | _number_                                  |
+| `onProgress?` | (`fractionCompleted`: _number_) => _void_ |
 
 **Returns:** _Promise_<LocationId[]\>
 
