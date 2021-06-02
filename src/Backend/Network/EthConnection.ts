@@ -86,6 +86,10 @@ class EthConnection extends EventEmitter {
 
   private adjustPollRateBasedOnVisibility() {
     document.addEventListener('visibilitychange', () => {
+      // If it is 0, then we are websocket
+      if (this.provider.pollingInterval === 0) {
+        return;
+      }
       if (document.hidden) {
         this.provider.pollingInterval = 1000 * 60;
       } else {
@@ -184,6 +188,7 @@ class EthConnection extends EventEmitter {
         newProvider = new providers.WebSocketProvider(this.rpcURL);
       } else {
         newProvider = new providers.StaticJsonRpcProvider(this.rpcURL);
+        newProvider.pollingInterval = 8000;
       }
       /**
        * this.provider needs to get set to nonnull value immediately (synchronously)
@@ -200,8 +205,6 @@ class EthConnection extends EventEmitter {
           throw new Error('not a valid xDAI RPC URL');
         }
       }
-      this.provider = newProvider;
-      this.provider.pollingInterval = 8000;
       if (this.signer) {
         this.signer = new Wallet(this.signer.privateKey, this.provider);
       } else {
