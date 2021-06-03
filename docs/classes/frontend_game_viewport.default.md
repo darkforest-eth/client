@@ -50,6 +50,9 @@
 - [getDetailLevel](frontend_game_viewport.default.md#getdetaillevel)
 - [getStorage](frontend_game_viewport.default.md#getstorage)
 - [getStorageKey](frontend_game_viewport.default.md#getstoragekey)
+- [getViewportPosition](frontend_game_viewport.default.md#getviewportposition)
+- [getViewportWorldHeight](frontend_game_viewport.default.md#getviewportworldheight)
+- [getViewportWorldWidth](frontend_game_viewport.default.md#getviewportworldwidth)
 - [intersectsViewport](frontend_game_viewport.default.md#intersectsviewport)
 - [isInOrAroundViewport](frontend_game_viewport.default.md#isinoraroundviewport)
 - [isInViewport](frontend_game_viewport.default.md#isinviewport)
@@ -70,7 +73,6 @@
 - [setStorage](frontend_game_viewport.default.md#setstorage)
 - [setWorldHeight](frontend_game_viewport.default.md#setworldheight)
 - [setWorldWidth](frontend_game_viewport.default.md#setworldwidth)
-- [updateScale](frontend_game_viewport.default.md#updatescale)
 - [worldToCanvasCoords](frontend_game_viewport.default.md#worldtocanvascoords)
 - [worldToCanvasDist](frontend_game_viewport.default.md#worldtocanvasdist)
 - [worldToCanvasX](frontend_game_viewport.default.md#worldtocanvasx)
@@ -275,7 +277,7 @@
 
 ### canvasToWorldX
 
-▸ **canvasToWorldX**(`x`: _number_): _number_
+▸ `Private` **canvasToWorldX**(`x`: _number_): _number_
 
 #### Parameters
 
@@ -289,7 +291,7 @@
 
 ### canvasToWorldY
 
-▸ **canvasToWorldY**(`y`: _number_): _number_
+▸ `Private` **canvasToWorldY**(`y`: _number_): _number_
 
 #### Parameters
 
@@ -378,6 +380,35 @@
 ▸ `Private` **getStorageKey**(): _string_
 
 **Returns:** _string_
+
+---
+
+### getViewportPosition
+
+▸ **getViewportPosition**(): _object_
+
+**Returns:** _object_
+
+| Name | Type     |
+| :--- | :------- |
+| `x`  | _number_ |
+| `y`  | _number_ |
+
+---
+
+### getViewportWorldHeight
+
+▸ **getViewportWorldHeight**(): _number_
+
+**Returns:** _number_
+
+---
+
+### getViewportWorldWidth
+
+▸ **getViewportWorldWidth**(): _number_
+
+**Returns:** _number_
 
 ---
 
@@ -620,14 +651,6 @@
 
 ---
 
-### updateScale
-
-▸ `Private` **updateScale**(): _void_
-
-**Returns:** _void_
-
----
-
 ### worldToCanvasCoords
 
 ▸ **worldToCanvasCoords**(`worldCoords`: WorldCoords): [_CanvasCoords_](../interfaces/backend_utils_coordinates.canvascoords.md)
@@ -658,7 +681,7 @@
 
 ### worldToCanvasX
 
-▸ **worldToCanvasX**(`x`: _number_): _number_
+▸ `Private` **worldToCanvasX**(`x`: _number_): _number_
 
 #### Parameters
 
@@ -672,7 +695,7 @@
 
 ### worldToCanvasY
 
-▸ **worldToCanvasY**(`y`: _number_): _number_
+▸ `Private` **worldToCanvasY**(`y`: _number_): _number_
 
 #### Parameters
 

@@ -194,8 +194,13 @@ class PersistentChunkStore implements ChunkStore {
     const revealedPlanetIds = await this.getKey('revealedPlanetIds');
 
     if (revealedPlanetIds) {
-      const parsed = JSON.parse(revealedPlanetIds) as RevealedCoords[];
-      return parsed;
+      const parsed = JSON.parse(revealedPlanetIds);
+      // changed the type on 6/1/21 to include revealer field
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (parsed.length === 0 || !(parsed[0] as any).revealer) {
+        return [];
+      }
+      return parsed as RevealedCoords[];
     }
 
     return [];

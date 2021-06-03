@@ -153,13 +153,15 @@ class Renderer {
 
     // clear all
     this.overlay2dRenderer.clear();
+    this.glManager.isHighPerf = this.gameUIManager.getIsHighPerfMode();
     this.glManager.clear();
 
     // get some data
-    const { locations, chunks } = this.gameUIManager.getLocationsAndChunks();
+    const { cachedPlanets, chunks } = this.gameUIManager.getLocationsAndChunks();
+    const isHighPerfMode = this.gameUIManager.getIsHighPerfMode();
 
     // draw the bg
-    this.bgRenderer.drawChunks(chunks);
+    this.bgRenderer.drawChunks(chunks, isHighPerfMode);
 
     this.uiRenderManager.queueBorders();
     this.uiRenderManager.queueSelectedRangeRing();
@@ -175,7 +177,7 @@ class Renderer {
     this.wormholeRenderManager.queueWormholes();
 
     // queue planets
-    this.planetRenderManager.queuePlanets(locations, this.now);
+    this.planetRenderManager.queuePlanets(cachedPlanets, this.now, isHighPerfMode);
 
     // flush all - ordering matters! (they get drawn bottom-up)
     this.lineRenderer.flush();

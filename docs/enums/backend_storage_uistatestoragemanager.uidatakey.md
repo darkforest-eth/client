@@ -109,7 +109,7 @@ plugin capability - drawing on top of the game
 
 ### highPerf
 
-• **highPerf**: = "highPerf"
+• **highPerf**: = "highPerf2"
 
 ---
 

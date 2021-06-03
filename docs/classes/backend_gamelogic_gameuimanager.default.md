@@ -17,7 +17,6 @@
 ### Properties
 
 - [artifactSending](backend_gamelogic_gameuimanager.default.md#artifactsending)
-- [detailLevel](backend_gamelogic_gameuimanager.default.md#detaillevel)
 - [extraMinerLocations](backend_gamelogic_gameuimanager.default.md#extraminerlocations)
 - [forcesSending](backend_gamelogic_gameuimanager.default.md#forcessending)
 - [gameManager](backend_gamelogic_gameuimanager.default.md#gamemanager)
@@ -45,6 +44,7 @@
 - [sendingPlanet](backend_gamelogic_gameuimanager.default.md#sendingplanet)
 - [silverSending](backend_gamelogic_gameuimanager.default.md#silversending)
 - [terminal](backend_gamelogic_gameuimanager.default.md#terminal)
+- [viewportEntities](backend_gamelogic_gameuimanager.default.md#viewportentities)
 
 ### Methods
 
@@ -79,7 +79,6 @@
 - [getContractAddress](backend_gamelogic_gameuimanager.default.md#getcontractaddress)
 - [getContractConstants](backend_gamelogic_gameuimanager.default.md#getcontractconstants)
 - [getConversation](backend_gamelogic_gameuimanager.default.md#getconversation)
-- [getDetailLevel](backend_gamelogic_gameuimanager.default.md#getdetaillevel)
 - [getDiscoverBiomeName](backend_gamelogic_gameuimanager.default.md#getdiscoverbiomename)
 - [getDistCoords](backend_gamelogic_gameuimanager.default.md#getdistcoords)
 - [getEndTimeSeconds](backend_gamelogic_gameuimanager.default.md#getendtimeseconds)
@@ -100,6 +99,7 @@
 - [getHoveringOverPlanet](backend_gamelogic_gameuimanager.default.md#gethoveringoverplanet)
 - [getIsBuyingCreditsEmitter](backend_gamelogic_gameuimanager.default.md#getisbuyingcreditsemitter)
 - [getIsChoosingTargetPlanet](backend_gamelogic_gameuimanager.default.md#getischoosingtargetplanet)
+- [getIsHighPerfMode](backend_gamelogic_gameuimanager.default.md#getishighperfmode)
 - [getLocationOfPlanet](backend_gamelogic_gameuimanager.default.md#getlocationofplanet)
 - [getLocationsAndChunks](backend_gamelogic_gameuimanager.default.md#getlocationsandchunks)
 - [getMinerLocation](backend_gamelogic_gameuimanager.default.md#getminerlocation)
@@ -115,7 +115,6 @@
 - [getMyScore](backend_gamelogic_gameuimanager.default.md#getmyscore)
 - [getNextBroadcastAvailableTimestamp](backend_gamelogic_gameuimanager.default.md#getnextbroadcastavailabletimestamp)
 - [getPerlinThresholds](backend_gamelogic_gameuimanager.default.md#getperlinthresholds)
-- [getPlanetDetailLevel](backend_gamelogic_gameuimanager.default.md#getplanetdetaillevel)
 - [getPlanetLevel](backend_gamelogic_gameuimanager.default.md#getplanetlevel)
 - [getPlanetMap](backend_gamelogic_gameuimanager.default.md#getplanetmap)
 - [getPlanetWithCoords](backend_gamelogic_gameuimanager.default.md#getplanetwithcoords)
@@ -160,12 +159,10 @@
 - [onMouseUp](backend_gamelogic_gameuimanager.default.md#onmouseup)
 - [onSendCancel](backend_gamelogic_gameuimanager.default.md#onsendcancel)
 - [onSendInit](backend_gamelogic_gameuimanager.default.md#onsendinit)
-- [planetHitboxForCoords](backend_gamelogic_gameuimanager.default.md#planethitboxforcoords)
 - [prospectPlanet](backend_gamelogic_gameuimanager.default.md#prospectplanet)
 - [removeExtraMinerLocation](backend_gamelogic_gameuimanager.default.md#removeextraminerlocation)
 - [revealLocation](backend_gamelogic_gameuimanager.default.md#reveallocation)
 - [setArtifactSending](backend_gamelogic_gameuimanager.default.md#setartifactsending)
-- [setDetailLevel](backend_gamelogic_gameuimanager.default.md#setdetaillevel)
 - [setExtraMinerLocation](backend_gamelogic_gameuimanager.default.md#setextraminerlocation)
 - [setForcesSending](backend_gamelogic_gameuimanager.default.md#setforcessending)
 - [setHoveringOverPlanet](backend_gamelogic_gameuimanager.default.md#sethoveringoverplanet)
@@ -215,12 +212,6 @@ Overrides: EventEmitter.constructor
 
 ---
 
-### detailLevel
-
-• `Private` **detailLevel**: _number_
-
----
-
 ### extraMinerLocations
 
 • `Private` **extraMinerLocations**: WorldCoords[]= []
@@ -237,7 +228,7 @@ Overrides: EventEmitter.constructor
 
 ### gameManager
 
-• `Private` **gameManager**: [_default_](backend_gamelogic_gamemanager.default.md)
+• `Private` `Readonly` **gameManager**: [_default_](backend_gamelogic_gamemanager.default.md)
 
 ---
 
@@ -399,6 +390,12 @@ indicates whether or not the player is currently selecting a target planet.
 ### terminal
 
 • `Private` **terminal**: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>
+
+---
+
+### viewportEntities
+
+• `Private` **viewportEntities**: [_ViewportEntities_](backend_gamelogic_viewportentities.viewportentities.md)
 
 ## Methods
 
@@ -787,14 +784,6 @@ indicates whether or not the player is currently selecting a target planet.
 
 ---
 
-### getDetailLevel
-
-▸ **getDetailLevel**(): _number_
-
-**Returns:** _number_
-
----
-
 ### getDiscoverBiomeName
 
 ▸ **getDiscoverBiomeName**(`biome`: Biome): _string_
@@ -996,6 +985,14 @@ indicates whether or not the player is currently selecting a target planet.
 
 ---
 
+### getIsHighPerfMode
+
+▸ **getIsHighPerfMode**(): _boolean_
+
+**Returns:** _boolean_
+
+---
+
 ### getLocationOfPlanet
 
 ▸ **getLocationOfPlanet**(`planetId`: LocationId): _undefined_ \| WorldLocation
@@ -1016,10 +1013,10 @@ indicates whether or not the player is currently selecting a target planet.
 
 **Returns:** _object_
 
-| Name        | Type                                                                               |
-| :---------- | :--------------------------------------------------------------------------------- |
-| `chunks`    | _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\> |
-| `locations` | _Iterable_<WorldLocation\>                                                         |
+| Name            | Type                                                                                                           |
+| :-------------- | :------------------------------------------------------------------------------------------------------------- |
+| `cachedPlanets` | _Map_<LocationId, [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md)\> |
+| `chunks`        | _Set_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>                                  |
 
 ---
 
@@ -1124,20 +1121,6 @@ indicates whether or not the player is currently selecting a target planet.
 ▸ **getPerlinThresholds**(): [*number*, *number*, *number*]
 
 **Returns:** [*number*, *number*, *number*]
-
----
-
-### getPlanetDetailLevel
-
-▸ **getPlanetDetailLevel**(`planetId`: LocationId): _undefined_ \| _number_
-
-#### Parameters
-
-| Name       | Type       |
-| :--------- | :--------- |
-| `planetId` | LocationId |
-
-**Returns:** _undefined_ \| _number_
 
 ---
 
@@ -1634,20 +1617,6 @@ indicates whether or not the player is currently selecting a target planet.
 
 ---
 
-### planetHitboxForCoords
-
-▸ `Private` **planetHitboxForCoords**(`coords`: WorldCoords): _undefined_ \| LocatablePlanet
-
-#### Parameters
-
-| Name     | Type        |
-| :------- | :---------- |
-| `coords` | WorldCoords |
-
-**Returns:** _undefined_ \| LocatablePlanet
-
----
-
 ### prospectPlanet
 
 ▸ **prospectPlanet**(`planetId`: LocationId): _void_
@@ -1700,20 +1669,6 @@ indicates whether or not the player is currently selecting a target planet.
 | :---------- | :--------- |
 | `planetId`  | LocationId |
 | `artifact?` | Artifact   |
-
-**Returns:** _void_
-
----
-
-### setDetailLevel
-
-▸ **setDetailLevel**(`level`: _number_): _void_
-
-#### Parameters
-
-| Name    | Type     |
-| :------ | :------- |
-| `level` | _number_ |
 
 **Returns:** _void_
 

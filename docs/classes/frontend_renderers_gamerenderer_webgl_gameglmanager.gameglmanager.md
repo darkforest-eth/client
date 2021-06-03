@@ -18,6 +18,7 @@
 
 - [canvas](frontend_renderers_gamerenderer_webgl_gameglmanager.gameglmanager.md#canvas)
 - [gl](frontend_renderers_gamerenderer_webgl_gameglmanager.gameglmanager.md#gl)
+- [isHighPerf](frontend_renderers_gamerenderer_webgl_gameglmanager.gameglmanager.md#ishighperf)
 - [projectionMatrix](frontend_renderers_gamerenderer_webgl_gameglmanager.gameglmanager.md#projectionmatrix)
 - [renderer](frontend_renderers_gamerenderer_webgl_gameglmanager.gameglmanager.md#renderer)
 - [stencil](frontend_renderers_gamerenderer_webgl_gameglmanager.gameglmanager.md#stencil)
@@ -60,6 +61,12 @@ Inherited from: [WebGLManager](frontend_renderers_gamerenderer_webgl_webglmanage
 • **gl**: WebGL2RenderingContext
 
 Overrides: [WebGLManager](frontend_renderers_gamerenderer_webgl_webglmanager.webglmanager.md).[gl](frontend_renderers_gamerenderer_webgl_webglmanager.webglmanager.md#gl)
+
+---
+
+### isHighPerf
+
+• **isHighPerf**: _boolean_
 
 ---
 

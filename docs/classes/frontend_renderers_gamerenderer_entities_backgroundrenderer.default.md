@@ -169,13 +169,14 @@ Inherited from: [GenericRenderer](frontend_renderers_gamerenderer_webgl_genericr
 
 ### drawChunks
 
-▸ **drawChunks**(`exploredChunks`: _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>): _void_
+▸ **drawChunks**(`exploredChunks`: _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>, `highPerfMode`: _boolean_): _void_
 
 #### Parameters
 
 | Name             | Type                                                                               |
 | :--------------- | :--------------------------------------------------------------------------------- |
 | `exploredChunks` | _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\> |
+| `highPerfMode`   | _boolean_                                                                          |
 
 **Returns:** _void_
 

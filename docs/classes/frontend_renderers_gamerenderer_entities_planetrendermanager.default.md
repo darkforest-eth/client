@@ -169,14 +169,15 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 
 ### queueLocation
 
-▸ **queueLocation**(`location`: WorldLocation, `now`: _number_): _void_
+▸ **queueLocation**(`planetInfo`: [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md), `now`: _number_, `highPerfMode`: _boolean_): _void_
 
 #### Parameters
 
-| Name       | Type          |
-| :--------- | :------------ |
-| `location` | WorldLocation |
-| `now`      | _number_      |
+| Name           | Type                                                                                       |
+| :------------- | :----------------------------------------------------------------------------------------- |
+| `planetInfo`   | [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md) |
+| `now`          | _number_                                                                                   |
+| `highPerfMode` | _boolean_                                                                                  |
 
 **Returns:** _void_
 
@@ -234,14 +235,15 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 
 ### queuePlanets
 
-▸ **queuePlanets**(`planetLocations`: _Iterable_<WorldLocation\>, `now`: _number_): _void_
+▸ **queuePlanets**(`cachedPlanets`: _Map_<LocationId, [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md)\>, `now`: _number_, `highPerfMode`: _boolean_): _void_
 
 #### Parameters
 
-| Name              | Type                       |
-| :---------------- | :------------------------- |
-| `planetLocations` | _Iterable_<WorldLocation\> |
-| `now`             | _number_                   |
+| Name            | Type                                                                                                           |
+| :-------------- | :------------------------------------------------------------------------------------------------------------- |
+| `cachedPlanets` | _Map_<LocationId, [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md)\> |
+| `now`           | _number_                                                                                                       |
+| `highPerfMode`  | _boolean_                                                                                                      |
 
 **Returns:** _void_
 

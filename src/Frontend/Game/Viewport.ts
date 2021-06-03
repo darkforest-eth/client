@@ -30,11 +30,14 @@ class Viewport {
 
   static instance: Viewport | undefined;
 
+  // the following two fields represent the position of the vieport in the world
   centerWorldCoords: WorldCoords;
   widthInWorldUnits: number;
   heightInWorldUnits: number;
-  viewportWidth: number;
-  viewportHeight: number;
+
+  viewportWidth: number; // pixels
+  viewportHeight: number; // pixels
+
   isPanning = false;
   mouseLastCoords: CanvasCoords | undefined;
   canvas: HTMLCanvasElement;
@@ -67,8 +70,6 @@ class Viewport {
     canvas: HTMLCanvasElement
   ) {
     this.gameUIManager = gameUIManager;
-    this.gameUIManager.setDetailLevel(this.getDetailLevel());
-
     this.shouldFling = gameUIManager.getUIDataItem(UIDataKey.shouldFling) as boolean;
 
     // each of these is measured relative to the world coordinate system
@@ -113,6 +114,18 @@ class Viewport {
 
   get maxWorldWidth(): number {
     return this.gameUIManager.getWorldRadius() * 4;
+  }
+
+  public getViewportPosition() {
+    return { ...this.centerWorldCoords };
+  }
+
+  public getViewportWorldWidth() {
+    return this.widthInWorldUnits;
+  }
+
+  public getViewportWorldHeight() {
+    return this.heightInWorldUnits;
   }
 
   public setMouseSensitivty(mouseSensitivity: number) {
@@ -429,14 +442,13 @@ class Viewport {
       this.centerWorldCoords.y = newCenter.y;
 
       this.setWorldWidth(newWidth);
-      this.gameUIManager.setDetailLevel(this.getDetailLevel());
     }
   }
 
   onWindowResize() {
     this.viewportHeight = this.canvas.height;
     this.viewportWidth = this.canvas.width;
-    this.updateScale();
+    this.scale = this.widthInWorldUnits / this.viewportWidth;
   }
 
   // Camera utility functions
@@ -460,23 +472,23 @@ class Viewport {
     return d * this.scale;
   }
 
-  worldToCanvasX(x: number): number {
+  private worldToCanvasX(x: number): number {
     return (x - this.centerWorldCoords.x) / this.scale + this.viewportWidth / 2;
   }
 
-  canvasToWorldX(x: number): number {
+  private canvasToWorldX(x: number): number {
     return (x - this.viewportWidth / 2) * this.scale + this.centerWorldCoords.x;
   }
 
-  worldToCanvasY(y: number): number {
+  private worldToCanvasY(y: number): number {
     return (-1 * (y - this.centerWorldCoords.y)) / this.scale + this.viewportHeight / 2;
   }
 
-  canvasToWorldY(y: number): number {
+  private canvasToWorldY(y: number): number {
     return -1 * (y - this.viewportHeight / 2) * this.scale + this.centerWorldCoords.y;
   }
 
-  isInOrAroundViewport(coords: WorldCoords): boolean {
+  public isInOrAroundViewport(coords: WorldCoords): boolean {
     if (Math.abs(coords.x - this.centerWorldCoords.x) > 0.6 * this.widthInWorldUnits) {
       return false;
     }
@@ -486,7 +498,7 @@ class Viewport {
     return true;
   }
 
-  isInViewport(coords: WorldCoords) {
+  public isInViewport(coords: WorldCoords) {
     return (
       coords.x >= this.centerWorldCoords.x - this.widthInWorldUnits / 2 &&
       coords.x <= this.centerWorldCoords.x + this.widthInWorldUnits / 2 &&
@@ -495,7 +507,7 @@ class Viewport {
     );
   }
 
-  intersectsViewport(chunk: ExploredChunkData): boolean {
+  public intersectsViewport(chunk: ExploredChunkData): boolean {
     const chunkLeft = chunk.chunkFootprint.bottomLeft.x;
     const chunkRight = chunkLeft + chunk.chunkFootprint.sideLength;
     const chunkBottom = chunk.chunkFootprint.bottomLeft.y;
@@ -522,16 +534,10 @@ class Viewport {
 
   private setWorldWidth(width: number): void {
     if (this.isValidWorldWidth(width)) {
-      // world scale width
       this.widthInWorldUnits = width;
       this.heightInWorldUnits = (width * this.viewportHeight) / this.viewportWidth;
-
-      this.updateScale();
+      this.scale = this.widthInWorldUnits / this.viewportWidth;
     }
-  }
-
-  private updateScale() {
-    this.scale = this.widthInWorldUnits / this.viewportWidth;
   }
 
   public setWorldHeight(height: number): void {

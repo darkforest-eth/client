@@ -47,6 +47,7 @@ import { PluginManager } from './PluginManager';
 import TutorialManager, { TutorialState } from './TutorialManager';
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
 import { planetHasBonus } from '@darkforest_eth/hexgen';
+import { ViewportEntities } from './ViewportEntities';
 
 export enum GameUIManagerEvent {
   InitializedPlayer = 'InitializedPlayer',
@@ -54,11 +55,10 @@ export enum GameUIManagerEvent {
 }
 
 class GameUIManager extends EventEmitter {
-  private gameManager: GameManager;
-  private terminal: React.MutableRefObject<TerminalHandle | undefined>;
-
   private readonly radiusMap: Record<PlanetLevel, number>;
-  private detailLevel: number; // 0 is show everything; higher means show less
+  private readonly gameManager: GameManager;
+
+  private terminal: React.MutableRefObject<TerminalHandle | undefined>;
   private previousSelectedPlanet: Planet | undefined;
   private selectedPlanet: Planet | undefined;
   private selectedCoords: WorldCoords | undefined;
@@ -69,6 +69,7 @@ class GameUIManager extends EventEmitter {
   private sendingPlanet: Planet | undefined;
   private sendingCoords: WorldCoords | undefined;
   private isSending = false;
+  private viewportEntities: ViewportEntities;
 
   /**
    * The Wormhole artifact requires you to choose a target planet. This value
@@ -148,6 +149,7 @@ class GameUIManager extends EventEmitter {
       this.gameManager.getArtifactUpdated$()
     );
     this.myArtifacts$ = this.gameManager.getMyArtifactsUpdated$();
+    this.viewportEntities = new ViewportEntities(this.gameManager, this);
 
     autoBind(this);
   }
@@ -507,10 +509,6 @@ class GameUIManager extends EventEmitter {
     return planet.owner === this.gameManager.getAccount();
   }
 
-  setDetailLevel(level: number) {
-    this.detailLevel = level;
-  }
-
   addNewChunk(chunk: ExploredChunkData) {
     this.gameManager.addNewChunk(chunk);
   }
@@ -578,10 +576,6 @@ class GameUIManager extends EventEmitter {
 
   getAllPlayers(): Player[] {
     return this.gameManager.getAllPlayers();
-  }
-
-  getDetailLevel(): number {
-    return this.detailLevel;
   }
 
   getSelectedPlanet(): Planet | undefined {
@@ -830,7 +824,7 @@ class GameUIManager extends EventEmitter {
   }
 
   isOverOwnPlanet(coords: WorldCoords): Planet | undefined {
-    const res = this.planetHitboxForCoords(coords);
+    const res = this.viewportEntities.getNearestVisiblePlanet(coords);
     const planet: LocatablePlanet | undefined = res;
     if (!planet) {
       return undefined;
@@ -875,10 +869,6 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getPlanetLevel(planetId);
   }
 
-  getPlanetDetailLevel(planetId: LocationId): number | undefined {
-    return this.gameManager.getPlanetDetailLevel(planetId);
-  }
-
   getAllOwnedPlanets(): Planet[] {
     return this.gameManager.getAllOwnedPlanets();
   }
@@ -915,36 +905,18 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getExploredChunks();
   }
 
-  getLocationsAndChunks(): {
-    locations: Iterable<WorldLocation>;
-    chunks: Iterable<ExploredChunkData>;
-  } {
-    const locations: Set<WorldLocation> = new Set();
-    const chunks: Set<ExploredChunkData> = new Set();
+  getLocationsAndChunks() {
+    return this.viewportEntities.getPlanetsAndChunks();
+  }
 
-    const viewport = Viewport.getInstance();
-    const exploredChunks = this.getExploredChunks();
-
-    for (const exploredChunk of exploredChunks) {
-      if (viewport.intersectsViewport(exploredChunk)) {
-        chunks.add(exploredChunk);
-        for (const planetLocation of exploredChunk.planetLocations) {
-          locations.add(planetLocation);
-        }
-      }
-    }
-    // revealed locations are not necessarily included in a chunk
-    const revealedLocationsMap = this.gameManager.getRevealedLocations();
-    for (const location of revealedLocationsMap.values()) {
-      if (viewport.isInOrAroundViewport(location.coords)) locations.add(location);
-    }
-    return { locations, chunks };
+  getIsHighPerfMode(): boolean {
+    return this.getUIDataItem(UIDataKey.highPerf) as boolean;
   }
 
   getPlanetsInViewport(): Planet[] {
-    return Array.from(this.getLocationsAndChunks().locations).map((loc) =>
-      this.gameManager.getPlanetWithCoords(loc.coords)
-    ) as Planet[];
+    return Array.from(this.viewportEntities.getPlanetsAndChunks().cachedPlanets.values()).map(
+      (p) => p.planet
+    );
   }
 
   getWorldRadius(): number {
@@ -1099,7 +1071,7 @@ class GameUIManager extends EventEmitter {
     this.mouseHoveringOverCoords = coords;
     let hoveringPlanet = undefined;
 
-    const res = this.planetHitboxForCoords(coords);
+    const res = this.viewportEntities.getNearestVisiblePlanet(coords);
     if (res) {
       hoveringPlanet = res;
       this.mouseHoveringOverCoords = res.location.coords;
@@ -1112,10 +1084,6 @@ class GameUIManager extends EventEmitter {
       y: Math.round(this.mouseHoveringOverCoords.y),
     };
     return this.mouseHoveringOverCoords;
-  }
-
-  private planetHitboxForCoords(coords: WorldCoords): LocatablePlanet | undefined {
-    return this.gameManager.getPlanetHitboxForCoords(coords, this.radiusMap);
   }
 
   private onEmitInitializedPlayer() {

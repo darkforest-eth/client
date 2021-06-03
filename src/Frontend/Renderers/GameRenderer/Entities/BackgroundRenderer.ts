@@ -19,7 +19,7 @@ export default class BackgroundRenderer extends GenericRenderer<typeof MASK_PROG
     this.perlinThresholds = this.manager.renderer.gameUIManager.getPerlinThresholds();
   }
 
-  drawChunks(exploredChunks: Iterable<ExploredChunkData>): void {
+  drawChunks(exploredChunks: Iterable<ExploredChunkData>, highPerfMode: boolean): void {
     // upload current camera transform to shader
 
     /* draw using mask program */
@@ -29,6 +29,9 @@ export default class BackgroundRenderer extends GenericRenderer<typeof MASK_PROG
 
     let vertCount = 0;
 
+    if (highPerfMode) {
+      return;
+    }
     for (const exploredChunk of exploredChunks) {
       if (viewport.intersectsViewport(exploredChunk)) {
         // add this chunk to the verts array
@@ -55,7 +58,6 @@ export default class BackgroundRenderer extends GenericRenderer<typeof MASK_PROG
     }
 
     this.verts = vertCount;
-
     this.flush();
   }
 

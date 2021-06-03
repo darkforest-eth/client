@@ -45,7 +45,7 @@
 | `hasAcceptedPluginRisk` | _boolean_ |
 | `hasAddedCanvasPlugin`  | _boolean_ |
 | `hasAddedReadme`        | _boolean_ |
-| `highPerf`              | _boolean_ |
+| `highPerf2`             | _boolean_ |
 | `newPlayer`             | _boolean_ |
 | `notifMove`             | _boolean_ |
 | `shouldFling`           | _boolean_ |

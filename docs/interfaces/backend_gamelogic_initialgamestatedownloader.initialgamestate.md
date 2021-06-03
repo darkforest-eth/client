@@ -112,7 +112,7 @@
 
 ### revealedCoordsMap
 
-• **revealedCoordsMap**: _Map_<LocationId, WorldCoords\>
+• **revealedCoordsMap**: _Map_<LocationId, RevealedCoords\>
 
 ---
 

@@ -110,8 +110,6 @@
 - [getNextRevealCountdownInfo](backend_gamelogic_gamemanager.default.md#getnextrevealcountdowninfo)
 - [getNotificationsManager](backend_gamelogic_gamemanager.default.md#getnotificationsmanager)
 - [getPerlinThresholds](backend_gamelogic_gamemanager.default.md#getperlinthresholds)
-- [getPlanetDetailLevel](backend_gamelogic_gamemanager.default.md#getplanetdetaillevel)
-- [getPlanetHitboxForCoords](backend_gamelogic_gamemanager.default.md#getplanethitboxforcoords)
 - [getPlanetLevel](backend_gamelogic_gamemanager.default.md#getplanetlevel)
 - [getPlanetMap](backend_gamelogic_gamemanager.default.md#getplanetmap)
 - [getPlanetRarity](backend_gamelogic_gamemanager.default.md#getplanetrarity)
@@ -119,6 +117,7 @@
 - [getPlanetWithCoords](backend_gamelogic_gamemanager.default.md#getplanetwithcoords)
 - [getPlanetWithId](backend_gamelogic_gamemanager.default.md#getplanetwithid)
 - [getPlanetsInRange](backend_gamelogic_gamemanager.default.md#getplanetsinrange)
+- [getPlanetsInWorldRectangle](backend_gamelogic_gamemanager.default.md#getplanetsinworldrectangle)
 - [getPrivateKey](backend_gamelogic_gamemanager.default.md#getprivatekey)
 - [getProcgenUtils](backend_gamelogic_gamemanager.default.md#getprocgenutils)
 - [getRandomHomePlanetCoords](backend_gamelogic_gamemanager.default.md#getrandomhomeplanetcoords)
@@ -126,6 +125,7 @@
 - [getSignedTwitter](backend_gamelogic_gamemanager.default.md#getsignedtwitter)
 - [getSilverCurveAtPercent](backend_gamelogic_gamemanager.default.md#getsilvercurveatpercent)
 - [getSilverOfPlayer](backend_gamelogic_gamemanager.default.md#getsilverofplayer)
+- [getStalePlanetWithId](backend_gamelogic_gamemanager.default.md#getstaleplanetwithid)
 - [getTemperature](backend_gamelogic_gamemanager.default.md#gettemperature)
 - [getTimeForMove](backend_gamelogic_gamemanager.default.md#gettimeformove)
 - [getTwitter](backend_gamelogic_gamemanager.default.md#gettwitter)
@@ -183,7 +183,7 @@
 
 ### constructor
 
-\+ `Private` **new default**(`terminal`: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>, `account`: _undefined_ \| EthAddress, `balance`: _number_, `players`: _Map_<string, Player\>, `touchedPlanets`: _Map_<LocationId, Planet\>, `allTouchedPlanetIds`: _Set_<LocationId\>, `revealedCoords`: _Map_<LocationId, WorldCoords\>, `worldRadius`: _number_, `unprocessedArrivals`: _Map_<VoyageId, QueuedArrival\>, `unprocessedPlanetArrivalIds`: _Map_<LocationId, VoyageId[]\>, `contractsAPI`: [_default_](backend_gamelogic_contractsapi.default.md), `contractConstants`: [_ContractConstants_](../interfaces/_types_darkforest_api_contractsapitypes.contractconstants.md), `persistentChunkStore`: [_default_](backend_storage_persistentchunkstore.default.md), `snarkHelper`: [_default_](backend_utils_snarkargshelper.default.md), `homeLocation`: _undefined_ \| WorldLocation, `useMockHash`: _boolean_, `artifacts`: _Map_<ArtifactId, Artifact\>, `ethConnection`: [_default_](backend_network_ethconnection.default.md), `gptCreditPriceEther`: _number_, `myGPTCredits`: _number_, `uiStateStorageManager`: [_default_](backend_storage_uistatestoragemanager.default.md)): [_default_](backend_gamelogic_gamemanager.default.md)
+\+ `Private` **new default**(`terminal`: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>, `account`: _undefined_ \| EthAddress, `balance`: _number_, `players`: _Map_<string, Player\>, `touchedPlanets`: _Map_<LocationId, Planet\>, `allTouchedPlanetIds`: _Set_<LocationId\>, `revealedCoords`: _Map_<LocationId, RevealedCoords\>, `worldRadius`: _number_, `unprocessedArrivals`: _Map_<VoyageId, QueuedArrival\>, `unprocessedPlanetArrivalIds`: _Map_<LocationId, VoyageId[]\>, `contractsAPI`: [_default_](backend_gamelogic_contractsapi.default.md), `contractConstants`: [_ContractConstants_](../interfaces/_types_darkforest_api_contractsapitypes.contractconstants.md), `persistentChunkStore`: [_default_](backend_storage_persistentchunkstore.default.md), `snarkHelper`: [_default_](backend_utils_snarkargshelper.default.md), `homeLocation`: _undefined_ \| WorldLocation, `useMockHash`: _boolean_, `artifacts`: _Map_<ArtifactId, Artifact\>, `ethConnection`: [_default_](backend_network_ethconnection.default.md), `gptCreditPriceEther`: _number_, `myGPTCredits`: _number_, `uiStateStorageManager`: [_default_](backend_storage_uistatestoragemanager.default.md)): [_default_](backend_gamelogic_gamemanager.default.md)
 
 #### Parameters
 
@@ -195,7 +195,7 @@
 | `players`                     | _Map_<string, Player\>                                                                                        |
 | `touchedPlanets`              | _Map_<LocationId, Planet\>                                                                                    |
 | `allTouchedPlanetIds`         | _Set_<LocationId\>                                                                                            |
-| `revealedCoords`              | _Map_<LocationId, WorldCoords\>                                                                               |
+| `revealedCoords`              | _Map_<LocationId, RevealedCoords\>                                                                            |
 | `worldRadius`                 | _number_                                                                                                      |
 | `unprocessedArrivals`         | _Map_<VoyageId, QueuedArrival\>                                                                               |
 | `unprocessedPlanetArrivalIds` | _Map_<LocationId, VoyageId[]\>                                                                                |
@@ -1167,46 +1167,6 @@ four ranges: `PERLIN_THRESHOLD_1`, `PERLIN_THRESHOLD_2`, `PERLIN_THRESHOLD_3`.
 
 ---
 
-### getPlanetDetailLevel
-
-▸ **getPlanetDetailLevel**(`planetId`: LocationId): _undefined_ \| _number_
-
-Gets the detail level of the given planet. Returns undefined if the planet does not exist. Does
-NOT update the planet if the planet is stale, which means this function is fast.
-
-#### Parameters
-
-| Name       | Type       |
-| :--------- | :--------- |
-| `planetId` | LocationId |
-
-**Returns:** _undefined_ \| _number_
-
----
-
-### getPlanetHitboxForCoords
-
-▸ **getPlanetHitboxForCoords**(`coords`: WorldCoords, `radiusMap`: _Record_<PlanetLevel, number\>): _undefined_ \| LocatablePlanet
-
-Gets the planet that is closest to the given coordinates. Filters out irrelevant planets
-using the `radiusMap` parameter, which specifies how close a planet must be in order to
-be returned from this function, given that planet's level. Smaller planets have a smaller
-radius, and larger planets have a larger radius.
-
-If a smaller and a larger planet are both within respective radii of coords, the smaller
-planet is returned.
-
-#### Parameters
-
-| Name        | Type                           |
-| :---------- | :----------------------------- |
-| `coords`    | WorldCoords                    |
-| `radiusMap` | _Record_<PlanetLevel, number\> |
-
-**Returns:** _undefined_ \| LocatablePlanet
-
----
-
 ### getPlanetLevel
 
 ▸ **getPlanetLevel**(`planetId`: LocationId): _undefined_ \| ZERO \| ONE \| TWO \| THREE \| FOUR \| FIVE \| SIX \| SEVEN \| EIGHT \| NINE
@@ -1306,6 +1266,30 @@ the given planet.
 
 ---
 
+### getPlanetsInWorldRectangle
+
+▸ **getPlanetsInWorldRectangle**(`worldX`: _number_, `worldY`: _number_, `worldWidth`: _number_, `worldHeight`: _number_, `levels`: _number_[], `planetLevelToRadii`: _Map_<number, [_Radii_](../interfaces/backend_gamelogic_viewportentities.radii.md)\>, `updateIfStale?`: _boolean_): LocatablePlanet[]
+
+Gets the ids of all the planets that are both within the given bounding box (defined by its bottom
+left coordinate, width, and height) in the world and of a level that was passed in via the
+`planetLevels` parameter.
+
+#### Parameters
+
+| Name                 | Type                                                                                 | Default value |
+| :------------------- | :----------------------------------------------------------------------------------- | :------------ |
+| `worldX`             | _number_                                                                             | -             |
+| `worldY`             | _number_                                                                             | -             |
+| `worldWidth`         | _number_                                                                             | -             |
+| `worldHeight`        | _number_                                                                             | -             |
+| `levels`             | _number_[]                                                                           | -             |
+| `planetLevelToRadii` | _Map_<number, [_Radii_](../interfaces/backend_gamelogic_viewportentities.radii.md)\> | -             |
+| `updateIfStale`      | _boolean_                                                                            | true          |
+
+**Returns:** LocatablePlanet[]
+
+---
+
 ### getPrivateKey
 
 ▸ **getPrivateKey**(): _string_
@@ -1336,11 +1320,11 @@ Helpful functions for getting the names, descriptions, and colors of in-game ent
 
 ### getRevealedLocations
 
-▸ **getRevealedLocations**(): _Map_<LocationId, WorldLocation\>
+▸ **getRevealedLocations**(): _Map_<LocationId, RevealedLocation\>
 
 Gets a map of all location IDs whose coords have been publicly revealed
 
-**Returns:** _Map_<LocationId, WorldLocation\>
+**Returns:** _Map_<LocationId, RevealedLocation\>
 
 ---
 
@@ -1393,6 +1377,20 @@ Gets the total amount of silver that lives on planets that the given player owns
 | `player` | EthAddress |
 
 **Returns:** _number_
+
+---
+
+### getStalePlanetWithId
+
+▸ **getStalePlanetWithId**(`planetId`: LocationId): _undefined_ \| Planet
+
+#### Parameters
+
+| Name       | Type       |
+| :--------- | :--------- |
+| `planetId` | LocationId |
+
+**Returns:** _undefined_ \| Planet
 
 ---
 

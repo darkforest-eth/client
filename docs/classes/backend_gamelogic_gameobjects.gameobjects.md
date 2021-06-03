@@ -17,12 +17,12 @@
 - [contractConstants](backend_gamelogic_gameobjects.gameobjects.md#contractconstants)
 - [coordsToLocation](backend_gamelogic_gameobjects.gameobjects.md#coordstolocation)
 - [isBuyingCredits$](backend_gamelogic_gameobjects.gameobjects.md#isbuyingcredits$)
+- [layeredMap](backend_gamelogic_gameobjects.gameobjects.md#layeredmap)
 - [myArtifacts](backend_gamelogic_gameobjects.gameobjects.md#myartifacts)
 - [myArtifactsUpdated$](backend_gamelogic_gameobjects.gameobjects.md#myartifactsupdated$)
 - [myPlanets](backend_gamelogic_gameobjects.gameobjects.md#myplanets)
 - [myPlanetsUpdated$](backend_gamelogic_gameobjects.gameobjects.md#myplanetsupdated$)
 - [planetArrivalIds](backend_gamelogic_gameobjects.gameobjects.md#planetarrivalids)
-- [planetGridBuckets](backend_gamelogic_gameobjects.gameobjects.md#planetgridbuckets)
 - [planetLocationMap](backend_gamelogic_gameobjects.gameobjects.md#planetlocationmap)
 - [planetUpdated$](backend_gamelogic_gameobjects.gameobjects.md#planetupdated$)
 - [planets](backend_gamelogic_gameobjects.gameobjects.md#planets)
@@ -36,7 +36,6 @@
 - [unconfirmedUpgrades](backend_gamelogic_gameobjects.gameobjects.md#unconfirmedupgrades)
 - [unconfirmedWormholeActivations](backend_gamelogic_gameobjects.gameobjects.md#unconfirmedwormholeactivations)
 - [wormholes](backend_gamelogic_gameobjects.gameobjects.md#wormholes)
-- [GRID_BUCKET_SIZE](backend_gamelogic_gameobjects.gameobjects.md#grid_bucket_size)
 
 ### Methods
 
@@ -61,12 +60,12 @@
 - [getMyPlanetMap](backend_gamelogic_gameobjects.gameobjects.md#getmyplanetmap)
 - [getPlanetArtifacts](backend_gamelogic_gameobjects.gameobjects.md#getplanetartifacts)
 - [getPlanetDetailLevel](backend_gamelogic_gameobjects.gameobjects.md#getplanetdetaillevel)
-- [getPlanetHitboxForCoords](backend_gamelogic_gameobjects.gameobjects.md#getplanethitboxforcoords)
 - [getPlanetLevel](backend_gamelogic_gameobjects.gameobjects.md#getplanetlevel)
 - [getPlanetMap](backend_gamelogic_gameobjects.gameobjects.md#getplanetmap)
 - [getPlanetWithCoords](backend_gamelogic_gameobjects.gameobjects.md#getplanetwithcoords)
 - [getPlanetWithId](backend_gamelogic_gameobjects.gameobjects.md#getplanetwithid)
 - [getPlanetWithLocation](backend_gamelogic_gameobjects.gameobjects.md#getplanetwithlocation)
+- [getPlanetsInWorldRectangle](backend_gamelogic_gameobjects.gameobjects.md#getplanetsinworldrectangle)
 - [getRevealedLocations](backend_gamelogic_gameobjects.gameobjects.md#getrevealedlocations)
 - [getSilverCurveAtPercent](backend_gamelogic_gameobjects.gameobjects.md#getsilvercurveatpercent)
 - [getUnconfirmedBuyGPTCredits](backend_gamelogic_gameobjects.gameobjects.md#getunconfirmedbuygptcredits)
@@ -89,7 +88,6 @@
 - [spaceTypeFromPerlin](backend_gamelogic_gameobjects.gameobjects.md#spacetypefromperlin)
 - [updatePlanetIfStale](backend_gamelogic_gameobjects.gameobjects.md#updateplanetifstale)
 - [updateScore](backend_gamelogic_gameobjects.gameobjects.md#updatescore)
-- [getGridBucketKey](backend_gamelogic_gameobjects.gameobjects.md#getgridbucketkey)
 - [getSilverNeeded](backend_gamelogic_gameobjects.gameobjects.md#getsilverneeded)
 - [planetCanUpgrade](backend_gamelogic_gameobjects.gameobjects.md#planetcanupgrade)
 
@@ -97,7 +95,7 @@
 
 ### constructor
 
-\+ **new GameObjects**(`address`: _undefined_ \| EthAddress, `touchedPlanets`: _Map_<LocationId, Planet\>, `allTouchedPlanetIds`: _Set_<LocationId\>, `revealedLocations`: _Map_<LocationId, WorldLocation\>, `artifacts`: _Map_<ArtifactId, Artifact\>, `allChunks`: _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>, `unprocessedArrivals`: _Map_<VoyageId, QueuedArrival\>, `unprocessedPlanetArrivalIds`: _Map_<LocationId, VoyageId[]\>, `contractConstants`: [_ContractConstants_](../interfaces/_types_darkforest_api_contractsapitypes.contractconstants.md)): [_GameObjects_](backend_gamelogic_gameobjects.gameobjects.md)
+\+ **new GameObjects**(`address`: _undefined_ \| EthAddress, `touchedPlanets`: _Map_<LocationId, Planet\>, `allTouchedPlanetIds`: _Set_<LocationId\>, `revealedLocations`: _Map_<LocationId, RevealedLocation\>, `artifacts`: _Map_<ArtifactId, Artifact\>, `allChunks`: _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>, `unprocessedArrivals`: _Map_<VoyageId, QueuedArrival\>, `unprocessedPlanetArrivalIds`: _Map_<LocationId, VoyageId[]\>, `contractConstants`: [_ContractConstants_](../interfaces/_types_darkforest_api_contractsapitypes.contractconstants.md), `worldRadius`: _number_): [_GameObjects_](backend_gamelogic_gameobjects.gameobjects.md)
 
 #### Parameters
 
@@ -106,12 +104,13 @@
 | `address`                     | _undefined_ \| EthAddress                                                                         |
 | `touchedPlanets`              | _Map_<LocationId, Planet\>                                                                        |
 | `allTouchedPlanetIds`         | _Set_<LocationId\>                                                                                |
-| `revealedLocations`           | _Map_<LocationId, WorldLocation\>                                                                 |
+| `revealedLocations`           | _Map_<LocationId, RevealedLocation\>                                                              |
 | `artifacts`                   | _Map_<ArtifactId, Artifact\>                                                                      |
 | `allChunks`                   | _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>                |
 | `unprocessedArrivals`         | _Map_<VoyageId, QueuedArrival\>                                                                   |
 | `unprocessedPlanetArrivalIds` | _Map_<LocationId, VoyageId[]\>                                                                    |
 | `contractConstants`           | [_ContractConstants_](../interfaces/_types_darkforest_api_contractsapitypes.contractconstants.md) |
+| `worldRadius`                 | _number_                                                                                          |
 
 **Returns:** [_GameObjects_](backend_gamelogic_gameobjects.gameobjects.md)
 
@@ -162,6 +161,12 @@ All set calls should occur via `GameObjects.setArtifact()`
 
 ---
 
+### layeredMap
+
+• `Private` `Readonly` **layeredMap**: [_LayeredMap_](backend_gamelogic_layeredmap.layeredmap.md)
+
+---
+
 ### myArtifacts
 
 • `Private` `Readonly` **myArtifacts**: _Map_<ArtifactId, Artifact\>
@@ -198,12 +203,6 @@ All set calls should occur via `GameObjects.setPlanet()`
 
 ---
 
-### planetGridBuckets
-
-• `Private` `Readonly` **planetGridBuckets**: _Record_<string, WorldLocation[]\>
-
----
-
 ### planetLocationMap
 
 • `Private` `Readonly` **planetLocationMap**: _Map_<LocationId, WorldLocation\>
@@ -227,7 +226,7 @@ All set calls should occur via `GameObjects.setPlanet()`
 
 ### revealedLocations
 
-• `Private` `Readonly` **revealedLocations**: _Map_<LocationId, WorldLocation\>
+• `Private` `Readonly` **revealedLocations**: _Map_<LocationId, RevealedLocation\>
 
 ---
 
@@ -282,12 +281,6 @@ All set calls should occur via `GameObjects.setPlanet()`
 ### wormholes
 
 • `Private` `Readonly` **wormholes**: _Map_<ArtifactId, [_Wormhole_](../modules/_types_global_globaltypes.md#wormhole)\>
-
----
-
-### GRID_BUCKET_SIZE
-
-▪ `Static` `Private` **GRID_BUCKET_SIZE**: _number_= 128
 
 ## Methods
 
@@ -563,21 +556,6 @@ time may be in the past
 
 ---
 
-### getPlanetHitboxForCoords
-
-▸ **getPlanetHitboxForCoords**(`from`: WorldCoords, `radiusMap`: _Record_<PlanetLevel, number\>): _undefined_ \| LocatablePlanet
-
-#### Parameters
-
-| Name        | Type                           |
-| :---------- | :----------------------------- |
-| `from`      | WorldCoords                    |
-| `radiusMap` | _Record_<PlanetLevel, number\> |
-
-**Returns:** _undefined_ \| LocatablePlanet
-
----
-
 ### getPlanetLevel
 
 ▸ **getPlanetLevel**(`planetId`: LocationId): _undefined_ \| ZERO \| ONE \| TWO \| THREE \| FOUR \| FIVE \| SIX \| SEVEN \| EIGHT \| NINE
@@ -643,11 +621,35 @@ time may be in the past
 
 ---
 
+### getPlanetsInWorldRectangle
+
+▸ **getPlanetsInWorldRectangle**(`worldX`: _number_, `worldY`: _number_, `worldWidth`: _number_, `worldHeight`: _number_, `levels`: _number_[], `planetLevelToRadii`: _Map_<number, [_Radii_](../interfaces/backend_gamelogic_viewportentities.radii.md)\>, `updateIfStale?`: _boolean_): LocatablePlanet[]
+
+Gets the ids of all the planets that are both within the given bounding box (defined by its bottom
+left coordinate, width, and height) in the world and of a level that was passed in via the
+`planetLevels` parameter.
+
+#### Parameters
+
+| Name                 | Type                                                                                 | Default value |
+| :------------------- | :----------------------------------------------------------------------------------- | :------------ |
+| `worldX`             | _number_                                                                             | -             |
+| `worldY`             | _number_                                                                             | -             |
+| `worldWidth`         | _number_                                                                             | -             |
+| `worldHeight`        | _number_                                                                             | -             |
+| `levels`             | _number_[]                                                                           | -             |
+| `planetLevelToRadii` | _Map_<number, [_Radii_](../interfaces/backend_gamelogic_viewportentities.radii.md)\> | -             |
+| `updateIfStale`      | _boolean_                                                                            | true          |
+
+**Returns:** LocatablePlanet[]
+
+---
+
 ### getRevealedLocations
 
-▸ **getRevealedLocations**(): _Map_<LocationId, WorldLocation\>
+▸ **getRevealedLocations**(): _Map_<LocationId, RevealedLocation\>
 
-**Returns:** _Map_<LocationId, WorldLocation\>
+**Returns:** _Map_<LocationId, RevealedLocation\>
 
 ---
 
@@ -734,13 +736,13 @@ returns undefined
 
 ### markLocationRevealed
 
-▸ **markLocationRevealed**(`planetLocation`: WorldLocation): _void_
+▸ **markLocationRevealed**(`revealedLocation`: RevealedLocation): _void_
 
 #### Parameters
 
-| Name             | Type          |
-| :--------------- | :------------ |
-| `planetLocation` | WorldLocation |
+| Name               | Type             |
+| :----------------- | :--------------- |
+| `revealedLocation` | RevealedLocation |
 
 **Returns:** _void_
 
@@ -837,18 +839,18 @@ received some artifact data from the contract. update our stores
 
 ### replacePlanetFromContractData
 
-▸ **replacePlanetFromContractData**(`planet`: Planet, `updatedArrivals`: QueuedArrival[], `updatedArtifactsOnPlanet`: ArtifactId[], `revealedLocation?`: WorldLocation): _void_
+▸ **replacePlanetFromContractData**(`planet`: Planet, `updatedArrivals`: QueuedArrival[], `updatedArtifactsOnPlanet`: ArtifactId[], `revealedLocation?`: RevealedLocation): _void_
 
 received some planet data from the contract. update our stores
 
 #### Parameters
 
-| Name                       | Type            |
-| :------------------------- | :-------------- |
-| `planet`                   | Planet          |
-| `updatedArrivals`          | QueuedArrival[] |
-| `updatedArtifactsOnPlanet` | ArtifactId[]    |
-| `revealedLocation?`        | WorldLocation   |
+| Name                       | Type             |
+| :------------------------- | :--------------- |
+| `planet`                   | Planet           |
+| `updatedArrivals`          | QueuedArrival[]  |
+| `updatedArtifactsOnPlanet` | ArtifactId[]     |
+| `revealedLocation?`        | RevealedLocation |
 
 **Returns:** _void_
 
@@ -929,20 +931,6 @@ This function also handles managing planet update messages and indexing the map 
 | `planetId` | LocationId |
 
 **Returns:** _void_
-
----
-
-### getGridBucketKey
-
-▸ `Static` `Private` **getGridBucketKey**(`coords`: WorldCoords): _string_
-
-#### Parameters
-
-| Name     | Type        |
-| :------- | :---------- |
-| `coords` | WorldCoords |
-
-**Returns:** _string_
 
 ---
 

@@ -1,11 +1,4 @@
-import {
-  PlanetLevel,
-  PlanetType,
-  WorldCoords,
-  Planet,
-  WorldLocation,
-  Artifact,
-} from '@darkforest_eth/types';
+import { PlanetType, WorldCoords, Planet, Artifact, LocationId } from '@darkforest_eth/types';
 import { ProcgenUtils } from '../../../../Backend/Procedural/ProcgenUtils';
 import { hasOwner, formatNumber } from '../../../../Backend/Utils/Utils';
 import { isLocatable } from '../../../../_types/global/GlobalTypes';
@@ -14,6 +7,7 @@ import { HatType } from '../../../Utils/Hats';
 import Renderer from '../Renderer';
 import { engineConsts } from '../EngineConsts';
 import { TextAlign, TextAnchor } from '../EngineTypes';
+import { PlanetRenderInfo } from '../../../../Backend/GameLogic/ViewportEntities';
 
 const { whiteA, barbsA, gold } = engineConsts.colors;
 const { maxRadius } = engineConsts.planet;
@@ -28,83 +22,84 @@ export default class PlanetRenderManager {
   constructor(renderer: Renderer) {
     this.renderer = renderer;
   }
-  queueLocation(location: WorldLocation, now: number): void {
-    const viewport = Viewport.getInstance();
+
+  queueLocation(planetInfo: PlanetRenderInfo, now: number, highPerfMode: boolean): void {
+    const planet = planetInfo.planet;
+    const renderAtReducedQuality = planetInfo.radii.radiusPixels <= 5 && highPerfMode;
 
     const { gameUIManager: uiManager, circleRenderer: cR } = this.renderer;
 
-    /* check if we should skip it or not */
-    // so we don't call getPlanetWithId, which triggers updates every second
-
-    const isSelected = location.hash === uiManager.getSelectedPlanet()?.locationId;
-    const level = uiManager.getPlanetLevel(location.hash);
-    const isVeryBig = level && level >= PlanetLevel.MAX - 1;
-    const forceShow = isSelected || isVeryBig;
-
-    const planetDet = uiManager.getPlanetDetailLevel(location.hash);
-    const viewDet = uiManager.getDetailLevel();
-    if (planetDet === undefined) return;
-    if (!forceShow && planetDet < viewDet) return;
-
-    /* ok, now get the planet (and update it on the way) */
-    const planet = uiManager.getPlanetWithId(location.hash);
-    if (!planet) return;
-
-    /* calculate a bunch of useful things */
-
-    // world coords
-    const radiusW = uiManager.getRadiusOfPlanetLevel(planet.planetLevel);
-
-    const radius = viewport.worldToCanvasDist(radiusW);
-    if (!forceShow && radius < 1) return;
-
-    const centerW = location.coords;
-
     let textAlpha = 255;
-    if (radius < 2 * maxRadius) {
+    if (planetInfo.radii.radiusPixels < 2 * maxRadius) {
       // text alpha scales a bit faster
-      textAlpha *= radius / (2 * maxRadius);
+      textAlpha *= planetInfo.radii.radiusPixels / (2 * maxRadius);
     }
 
-    const artifacts: Artifact[] = uiManager
+    const artifacts = uiManager
       .getArtifactsWithIds(planet.heldArtifactIds)
       .filter((a) => !!a) as Artifact[];
+    const color = uiManager.isOwnedByMe(planet) ? whiteA : ProcgenUtils.getOwnerColorVec(planet);
 
-    /* draw planet body */
-    this.queuePlanetBody(planet, centerW, radiusW);
-    this.queueAsteroids(planet, centerW, radiusW);
-    this.queueArtifactsAroundPlanet(planet, artifacts, centerW, radiusW, now, textAlpha);
-    this.queueRings(planet, centerW, radiusW);
+    // draw planet body
+    this.queuePlanetBody(planet, planet.location.coords, planetInfo.radii.radiusWorld);
+    this.queueAsteroids(planet, planet.location.coords, planetInfo.radii.radiusWorld);
+    this.queueArtifactsAroundPlanet(
+      planet,
+      artifacts,
+      planet.location.coords,
+      planetInfo.radii.radiusWorld,
+      now,
+      textAlpha
+    );
 
+    this.queueRings(planet, planet.location.coords, planetInfo.radii.radiusWorld);
+
+    // render black domain
     if (planet.destroyed) {
-      // render black domain
-      this.queueBlackDomain(planet, centerW, radiusW);
+      this.queueBlackDomain(planet, planet.location.coords, planetInfo.radii.radiusWorld);
       return;
     }
 
-    /* draw hp bar */
+    // draw hp bar
     let cA = 1.0; // circle alpha
-    if (radius < 2 * maxRadius) {
-      cA *= radius / (2 * maxRadius);
+    if (planetInfo.radii.radiusPixels < 2 * maxRadius) {
+      cA *= planetInfo.radii.radiusPixels / (2 * maxRadius);
     }
 
     if (hasOwner(planet)) {
-      const color = uiManager.isOwnedByMe(planet) ? whiteA : ProcgenUtils.getOwnerColorVec(planet);
-
       color[3] = cA * 120;
-      cR.queueCircleWorld(centerW, radiusW * 1.1, color, 0.5);
+      cR.queueCircleWorld(planet.location.coords, planetInfo.radii.radiusWorld * 1.1, color, 0.5);
       const pct = planet.energy / planet.energyCap;
       color[3] = cA * 255;
-      cR.queueCircleWorld(centerW, radiusW * 1.1, color, 2, pct);
+      cR.queueCircleWorld(
+        planet.location.coords,
+        planetInfo.radii.radiusWorld * 1.1,
+        color,
+        2,
+        pct
+      );
     }
 
-    this.queueHat(planet, centerW, radiusW);
+    this.queueHat(planet, planet.location.coords, planetInfo.radii.radiusWorld);
 
     /* draw text */
+    if (!renderAtReducedQuality) {
+      this.queuePlanetEnergyText(
+        planet,
+        planet.location.coords,
+        planetInfo.radii.radiusWorld,
+        textAlpha
+      );
 
-    this.queuePlanetEnergyText(planet, centerW, radiusW, textAlpha);
-    this.queuePlanetSilverText(planet, centerW, radiusW, textAlpha);
-    this.queueArtifactIcon(planet, centerW, radiusW);
+      this.queuePlanetSilverText(
+        planet,
+        planet.location.coords,
+        planetInfo.radii.radiusWorld,
+        textAlpha
+      );
+
+      this.queueArtifactIcon(planet, planet.location.coords, planetInfo.radii.radiusWorld);
+    }
   }
 
   private queueArtifactsAroundPlanet(
@@ -361,9 +356,13 @@ export default class PlanetRenderManager {
     }
   }
 
-  queuePlanets(planetLocations: Iterable<WorldLocation>, now: number): void {
-    for (const location of planetLocations) {
-      this.queueLocation(location, now);
+  queuePlanets(
+    cachedPlanets: Map<LocationId, PlanetRenderInfo>,
+    now: number,
+    highPerfMode: boolean
+  ): void {
+    for (const entry of cachedPlanets.entries()) {
+      this.queueLocation(entry[1], now, highPerfMode);
     }
   }
 

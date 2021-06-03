@@ -10,6 +10,8 @@ export class GameGLManager extends WebGLManager {
 
   projectionMatrix: mat4;
 
+  isHighPerf: boolean;
+
   constructor(engine: Renderer, glCanvas: HTMLCanvasElement) {
     super(glCanvas, { stencil: true });
     const { gl } = this;
@@ -21,10 +23,11 @@ export class GameGLManager extends WebGLManager {
   }
 
   public clear() {
+    const color: [number, number, number, number] = this.isHighPerf
+      ? [12 / 255, 11 / 255, 30 / 255, 1.0]
+      : [0.3, 0.3, 0.35, 1.0];
+
     const { gl } = this;
-    super.clear(
-      gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT,
-      [0.3, 0.3, 0.35, 1.0]
-    );
+    super.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT, color);
   }
 }

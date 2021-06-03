@@ -20,7 +20,7 @@ export enum UIDataKey {
 
   notifMove = 'notifMove',
   newPlayer = 'newPlayer',
-  highPerf = 'highPerf',
+  highPerf = 'highPerf2',
 
   shouldFling = 'shouldFling',
 
@@ -57,8 +57,8 @@ export type UIData = {
 
   notifMove: boolean;
   newPlayer: boolean;
-  highPerf: boolean;
 
+  highPerf2: boolean;
   hasAddedReadme: boolean;
   hasAddedCanvasPlugin: boolean;
   hasAcceptedPluginRisk: boolean;
@@ -85,7 +85,7 @@ export const defaultUserData: UIData = {
   notifMove: true,
   newPlayer: true,
 
-  highPerf: false,
+  highPerf2: false,
   hasAddedReadme: false,
   hasAddedCanvasPlugin: false,
   hasAcceptedPluginRisk: false,

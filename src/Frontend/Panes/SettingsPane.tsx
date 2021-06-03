@@ -234,8 +234,8 @@ export function SettingsPane({
     Viewport.instance.setMouseSensitivty(scrollSpeed / 10000);
   }, [scrollSpeed]);
 
+  const [highPerf, setHighPerf] = useStoredUIState<boolean>(UIDataKey.highPerf, uiManager);
   const [notifMove, setNotifMove] = useStoredUIState<boolean>(UIDataKey.notifMove, uiManager);
-
   const [gasFeeGwei, setGasFeeGwei] = useStoredUIState<number>(UIDataKey.gasFeeGwei, uiManager);
   const onGasFeeGweiChange = useCallback(
     (newValueStringifiedInt: string) => {
@@ -349,7 +349,7 @@ export function SettingsPane({
         </Section>
 
         <Section>
-          <SectionHeader>Metrics Opt Out.</SectionHeader>
+          <SectionHeader>Metrics Opt Out</SectionHeader>
           We collect a minimal set of data and statistics such as SNARK proving times, average
           transaction times across browsers, and xDAI transaction errors, to help us optimize
           performance and fix bugs. This does not include personal data like email or IP address.
@@ -360,6 +360,21 @@ export function SettingsPane({
               type='checkbox'
               checked={optOutMetrics}
               onChange={(e) => updateOptOutMetrics(e.target.checked)}
+            />
+          </Row>
+        </Section>
+
+        <Section>
+          <SectionHeader>Performance</SectionHeader>
+          Some performance settings. These will definitely be changed as we zero in on the
+          performance bottlenecks in this game.
+          <Spacer height={8} />
+          <Row>
+            <span>high performance mode</span>
+            <input
+              type='checkbox'
+              checked={highPerf}
+              onChange={(e) => setHighPerf(e.target.checked)}
             />
           </Row>
         </Section>

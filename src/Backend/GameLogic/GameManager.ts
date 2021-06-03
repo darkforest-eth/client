@@ -52,7 +52,6 @@ import {
   Upgrade,
   Planet,
   Artifact,
-  LocatablePlanet,
   UnconfirmedUpgrade,
   EthTxType,
   TxIntent,
@@ -71,6 +70,9 @@ import {
   UnconfirmedWithdrawSilver,
   ArtifactType,
   ArtifactRarity,
+  RevealedCoords,
+  LocatablePlanet,
+  RevealedLocation,
 } from '@darkforest_eth/types';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import { MIN_CHUNK_SIZE } from '../../Frontend/Utils/constants';
@@ -92,6 +94,7 @@ import { address, locationIdToDecStr, locationIdFromBigInt } from '@darkforest_e
 import UIStateStorageManager, { UIDataKey } from '../Storage/UIStateStorageManager';
 import { CORE_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { InitialGameStateDownloader } from './InitialGameStateDownloader';
+import { Radii } from './ViewportEntities';
 
 export enum GameManagerEvent {
   PlanetUpdate = 'PlanetUpdate',
@@ -140,7 +143,7 @@ class GameManager extends EventEmitter {
     players: Map<string, Player>,
     touchedPlanets: Map<LocationId, Planet>,
     allTouchedPlanetIds: Set<LocationId>,
-    revealedCoords: Map<LocationId, WorldCoords>,
+    revealedCoords: Map<LocationId, RevealedCoords>,
     worldRadius: number,
     unprocessedArrivals: Map<VoyageId, QueuedArrival>,
     unprocessedPlanetArrivalIds: Map<LocationId, VoyageId[]>,
@@ -186,7 +189,7 @@ class GameManager extends EventEmitter {
     this.contractConstants = contractConstants;
     this.homeLocation = homeLocation;
 
-    const revealedLocations = new Map<LocationId, WorldLocation>();
+    const revealedLocations = new Map<LocationId, RevealedLocation>();
     for (const [locationId, coords] of revealedCoords) {
       const planet = touchedPlanets.get(locationId);
       if (planet) {
@@ -196,7 +199,7 @@ class GameManager extends EventEmitter {
           perlin: planet.perlin,
           biomebase: this.biomebasePerlin(coords, true),
         };
-        revealedLocations.set(locationId, location);
+        revealedLocations.set(locationId, { ...location, revealer: coords.revealer });
       }
     }
 
@@ -209,8 +212,10 @@ class GameManager extends EventEmitter {
       persistentChunkStore.allChunks(),
       unprocessedArrivals,
       unprocessedPlanetArrivalIds,
-      contractConstants
+      contractConstants,
+      worldRadius
     );
+
     this.contractsAPI = contractsAPI;
     this.persistentChunkStore = persistentChunkStore;
     this.snarkHelper = snarkHelper;
@@ -529,9 +534,12 @@ class GameManager extends EventEmitter {
     const artifactsOnPlanet = artifactsOnPlanets[0];
 
     const revealedCoords = await this.contractsAPI.getRevealedCoordsByIdIfExists(planetId);
-    let revealedLocation: WorldLocation | undefined;
+    let revealedLocation: RevealedLocation | undefined;
     if (revealedCoords) {
-      revealedLocation = this.locationFromCoords(revealedCoords.coords);
+      revealedLocation = {
+        ...this.locationFromCoords(revealedCoords),
+        revealer: revealedCoords.revealer,
+      };
     }
 
     this.entityStore.replacePlanetFromContractData(
@@ -716,6 +724,31 @@ class GameManager extends EventEmitter {
   }
 
   /**
+   * Gets the ids of all the planets that are both within the given bounding box (defined by its bottom
+   * left coordinate, width, and height) in the world and of a level that was passed in via the
+   * `planetLevels` parameter.
+   */
+  public getPlanetsInWorldRectangle(
+    worldX: number,
+    worldY: number,
+    worldWidth: number,
+    worldHeight: number,
+    levels: number[],
+    planetLevelToRadii: Map<number, Radii>,
+    updateIfStale = true
+  ): LocatablePlanet[] {
+    return this.entityStore.getPlanetsInWorldRectangle(
+      worldX,
+      worldY,
+      worldWidth,
+      worldHeight,
+      levels,
+      planetLevelToRadii,
+      updateIfStale
+    );
+  }
+
+  /**
    * Gets the radius of the playable area of the universe.
    */
   public getWorldRadius(): number {
@@ -893,20 +926,8 @@ class GameManager extends EventEmitter {
     return planetId && this.entityStore.getPlanetWithId(planetId);
   }
 
-  /**
-   * Gets the planet that is closest to the given coordinates. Filters out irrelevant planets
-   * using the `radiusMap` parameter, which specifies how close a planet must be in order to
-   * be returned from this function, given that planet's level. Smaller planets have a smaller
-   * radius, and larger planets have a larger radius.
-   *
-   * If a smaller and a larger planet are both within respective radii of coords, the smaller
-   * planet is returned.
-   */
-  getPlanetHitboxForCoords(
-    coords: WorldCoords,
-    radiusMap: Record<PlanetLevel, number>
-  ): LocatablePlanet | undefined {
-    return this.entityStore.getPlanetHitboxForCoords(coords, radiusMap);
+  getStalePlanetWithId(planetId: LocationId): Planet | undefined {
+    return this.entityStore.getPlanetWithId(planetId, false);
   }
 
   /**
@@ -940,17 +961,6 @@ class GameManager extends EventEmitter {
    */
   getPlanetLevel(planetId: LocationId): PlanetLevel | undefined {
     return this.entityStore.getPlanetLevel(planetId);
-  }
-
-  /**
-   * Gets the detail level of the given planet. Returns undefined if the planet does not exist. Does
-   * NOT update the planet if the planet is stale, which means this function is fast.
-   */
-  getPlanetDetailLevel(planetId: LocationId): number | undefined {
-    if (planetId === this.homeLocation?.hash) {
-      return Infinity;
-    }
-    return this.entityStore.getPlanetDetailLevel(planetId);
   }
 
   /**
@@ -995,7 +1005,7 @@ class GameManager extends EventEmitter {
   /**
    * Gets a map of all location IDs whose coords have been publicly revealed
    */
-  getRevealedLocations(): Map<LocationId, WorldLocation> {
+  getRevealedLocations(): Map<LocationId, RevealedLocation> {
     return this.entityStore.getRevealedLocations();
   }
 

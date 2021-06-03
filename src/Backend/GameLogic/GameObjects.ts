@@ -23,6 +23,7 @@ import {
   TxIntent,
   UnconfirmedReveal,
   UnconfirmedBuyGPTCredits,
+  RevealedLocation,
 } from '@darkforest_eth/types';
 import autoBind from 'auto-bind';
 import bigInt from 'big-integer';
@@ -57,14 +58,14 @@ import { updatePlanetToTime, arrive } from './ArrivalUtils';
 import { isActivated } from './ArtifactUtils';
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
 import { bonusFromHex, getBytesFromHex } from '@darkforest_eth/hexgen';
+import { LayeredMap } from './LayeredMap';
+import { Radii } from './ViewportEntities';
 
 const getCoordsString = (coords: WorldCoords): string => {
   return `${coords.x},${coords.y}`;
 };
 
 export class GameObjects {
-  private static GRID_BUCKET_SIZE = 128;
-
   private readonly address: EthAddress | undefined;
   /**
    * Cached index of all known planet data. This should NEVER be set to directly!
@@ -86,12 +87,11 @@ export class GameObjects {
    * All set calls should occur via `GameObjects.setArtifact()`
    */
   private readonly myArtifacts: Map<ArtifactId, Artifact>;
-  private readonly planetGridBuckets: Record<string, WorldLocation[]>;
   private readonly touchedPlanetIds: Set<LocationId>;
   private readonly arrivals: Map<VoyageId, ArrivalWithTimer>;
   private readonly planetArrivalIds: Map<LocationId, VoyageId[]>;
   private readonly planetLocationMap: Map<LocationId, WorldLocation>;
-  private readonly revealedLocations: Map<LocationId, WorldLocation>;
+  private readonly revealedLocations: Map<LocationId, RevealedLocation>;
   private readonly contractConstants: ContractConstants;
   private readonly coordsToLocation: Map<string, WorldLocation>;
   private unconfirmedReveal?: UnconfirmedReveal; // at most one at a time
@@ -102,6 +102,7 @@ export class GameObjects {
   private readonly unconfirmedPlanetTransfers: Record<string, UnconfirmedPlanetTransfer>;
   private readonly unconfirmedWormholeActivations: UnconfirmedActivateArtifact[];
   private readonly wormholes: Map<ArtifactId, Wormhole>;
+  private readonly layeredMap: LayeredMap;
 
   public readonly planetUpdated$: Monomitter<LocationId>;
   public readonly artifactUpdated$: Monomitter<ArtifactId>;
@@ -113,19 +114,19 @@ export class GameObjects {
     address: EthAddress | undefined,
     touchedPlanets: Map<LocationId, Planet>,
     allTouchedPlanetIds: Set<LocationId>,
-    revealedLocations: Map<LocationId, WorldLocation>,
+    revealedLocations: Map<LocationId, RevealedLocation>,
     artifacts: Map<ArtifactId, Artifact>,
     allChunks: Iterable<ExploredChunkData>,
     unprocessedArrivals: Map<VoyageId, QueuedArrival>,
     unprocessedPlanetArrivalIds: Map<LocationId, VoyageId[]>,
-    contractConstants: ContractConstants
+    contractConstants: ContractConstants,
+    worldRadius: number
   ) {
     autoBind(this);
 
     this.address = address;
     this.planets = touchedPlanets;
     this.myPlanets = new Map();
-    this.planetGridBuckets = {};
     this.touchedPlanetIds = allTouchedPlanetIds;
     this.revealedLocations = new Map();
     this.artifacts = artifacts;
@@ -137,6 +138,7 @@ export class GameObjects {
     const arrivals = new Map();
     this.unconfirmedWormholeActivations = [];
     this.wormholes = new Map();
+    this.layeredMap = new LayeredMap(worldRadius);
 
     this.planetUpdated$ = monomitter();
     this.artifactUpdated$ = monomitter();
@@ -167,7 +169,11 @@ export class GameObjects {
           (x) => !!x
         ) as QueuedArrival[];
 
-        if (revealedLocations.get(planetId)) planet.coordsRevealed = true;
+        const revealedLocation = revealedLocations.get(planetId);
+        if (revealedLocation) {
+          planet.coordsRevealed = true;
+          planet.revealer = revealedLocation.revealer;
+        }
 
         this.setPlanet(planet);
         const arrivalsWithTimers = this.processArrivalsForPlanet(
@@ -202,6 +208,7 @@ export class GameObjects {
     this.unconfirmedBuyHats = {};
     this.unconfirmedPlanetTransfers = {};
 
+    // TODO: do this better...
     // set interval to update all planets every 120s
     setInterval(() => {
       this.planets.forEach((planet) => {
@@ -214,7 +221,7 @@ export class GameObjects {
           );
         }
       });
-    }, 120000);
+    }, 120 * 1000);
   }
 
   public getIsBuyingCreditsEmitter() {
@@ -266,48 +273,6 @@ export class GameObjects {
     const loc = this.getLocationOfPlanet(planetId);
     if (!loc) return undefined;
     return this.getPlanetWithLocation(loc);
-  }
-
-  // this is shitty and should really be handled by comparing against UI objects
-  public getPlanetHitboxForCoords(
-    from: WorldCoords,
-    radiusMap: Record<PlanetLevel, number>
-  ): LocatablePlanet | undefined {
-    const GRID_BUCKET_SIZE = GameObjects.GRID_BUCKET_SIZE;
-    const candidates: LocatablePlanet[] = [];
-    const gridRange = Math.ceil(radiusMap[PlanetLevel.MAX] / GRID_BUCKET_SIZE);
-
-    const gridBucketX = Math.floor(from.x / GRID_BUCKET_SIZE);
-    const gridBucketY = Math.floor(from.y / GRID_BUCKET_SIZE);
-
-    for (let dx = -1 * gridRange; dx <= gridRange; dx++) {
-      for (let dy = -1 * gridRange; dy <= gridRange; dy++) {
-        const key = `(${gridBucketX + dx},${gridBucketY + dy},${GRID_BUCKET_SIZE})`;
-        if (this.planetGridBuckets[key]) {
-          for (const planetLoc of this.planetGridBuckets[key]) {
-            const planet = this.getPlanetWithId(planetLoc.hash, false);
-            if (planet && isLocatable(planet)) {
-              candidates.push(planet);
-            }
-          }
-        }
-      }
-    }
-
-    let bestPlanet: LocatablePlanet | undefined = undefined;
-    for (const planet of candidates) {
-      const distThreshold = radiusMap[planet.planetLevel];
-      if (
-        Math.abs(from.x - planet.location.coords.x) <= distThreshold &&
-        Math.abs(from.y - planet.location.coords.y) <= distThreshold
-      ) {
-        if (!bestPlanet || bestPlanet.planetLevel > planet.planetLevel) {
-          bestPlanet = planet;
-        }
-      }
-    }
-
-    return bestPlanet;
   }
 
   // returns undefined if this planet is neither in contract nor in known chunks
@@ -372,7 +337,7 @@ export class GameObjects {
     planet: Planet,
     updatedArrivals: QueuedArrival[],
     updatedArtifactsOnPlanet: ArtifactId[],
-    revealedLocation?: WorldLocation
+    revealedLocation?: RevealedLocation
   ): void {
     this.touchedPlanetIds.add(planet.locationId);
     // does not modify unconfirmed txs
@@ -417,6 +382,7 @@ export class GameObjects {
       this.markLocationRevealed(revealedLocation);
       this.addPlanetLocation(revealedLocation);
       planet.coordsRevealed = true;
+      planet.revealer = revealedLocation.revealer;
     }
 
     this.setPlanet(planet);
@@ -478,21 +444,10 @@ export class GameObjects {
    * IMPORTANT: Idempotent
    */
   public addPlanetLocation(planetLocation: WorldLocation): void {
-    const key = GameObjects.getGridBucketKey(planetLocation.coords);
-    if (this.planetGridBuckets[key]) {
-      let contains = false;
-      for (const loc of this.planetGridBuckets[key]) {
-        if (loc.hash === planetLocation.hash) {
-          contains = true;
-          break;
-        }
-      }
-      if (!contains) {
-        this.planetGridBuckets[key].push(planetLocation);
-      }
-    } else {
-      this.planetGridBuckets[key] = [planetLocation];
-    }
+    this.layeredMap.insertPlanet(
+      planetLocation,
+      this.planetLevelFromHexPerlin(planetLocation.hash, planetLocation.perlin)
+    );
 
     this.planetLocationMap.set(planetLocation.hash, planetLocation);
     const str = getCoordsString(planetLocation.coords);
@@ -514,8 +469,8 @@ export class GameObjects {
   }
 
   // marks that a location is revealed on-chain
-  public markLocationRevealed(planetLocation: WorldLocation): void {
-    this.revealedLocations.set(planetLocation.hash, planetLocation);
+  public markLocationRevealed(revealedLocation: RevealedLocation): void {
+    this.revealedLocations.set(revealedLocation.hash, revealedLocation);
   }
 
   public getLocationOfPlanet(planetId: LocationId): WorldLocation | undefined {
@@ -867,8 +822,35 @@ export class GameObjects {
     return this.myArtifacts;
   }
 
-  public getRevealedLocations(): Map<LocationId, WorldLocation> {
+  public getRevealedLocations(): Map<LocationId, RevealedLocation> {
     return this.revealedLocations;
+  }
+
+  /**
+   * Gets the ids of all the planets that are both within the given bounding box (defined by its bottom
+   * left coordinate, width, and height) in the world and of a level that was passed in via the
+   * `planetLevels` parameter.
+   */
+  public getPlanetsInWorldRectangle(
+    worldX: number,
+    worldY: number,
+    worldWidth: number,
+    worldHeight: number,
+    levels: number[],
+    planetLevelToRadii: Map<number, Radii>,
+    updateIfStale = true
+  ): LocatablePlanet[] {
+    const locationIds = this.layeredMap.getPlanets(
+      worldX,
+      worldY,
+      worldWidth,
+      worldHeight,
+      levels,
+      planetLevelToRadii
+    );
+    return locationIds
+      .map((id) => this.getPlanetWithId(id, updateIfStale))
+      .filter((p) => p !== undefined) as LocatablePlanet[];
   }
 
   /**
@@ -878,6 +860,10 @@ export class GameObjects {
    * @param planet the planet to set
    */
   private setPlanet(planet: Planet) {
+    if (isLocatable(planet)) {
+      this.layeredMap.insertPlanet(planet.location, planet.planetLevel);
+    }
+
     setObjectSyncState<Planet, LocationId>(
       this.planets,
       this.myPlanets,
@@ -1318,12 +1304,5 @@ export class GameObjects {
       return;
     }
     planet.silverSpent = this.calculateSilverSpent(planet);
-  }
-
-  private static getGridBucketKey(coords: WorldCoords): string {
-    const GRID_BUCKET_SIZE = GameObjects.GRID_BUCKET_SIZE;
-    const gridBucketX = Math.floor(coords.x / GRID_BUCKET_SIZE);
-    const gridBucketY = Math.floor(coords.y / GRID_BUCKET_SIZE);
-    return `(${gridBucketX},${gridBucketY},${GRID_BUCKET_SIZE})`;
   }
 }

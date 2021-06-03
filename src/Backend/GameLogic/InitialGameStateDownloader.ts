@@ -2,7 +2,6 @@ import {
   VoyageId,
   QueuedArrival,
   LocationId,
-  WorldCoords,
   ArtifactId,
   Artifact,
   Player,
@@ -33,7 +32,7 @@ export interface InitialGameState {
   heldArtifacts: Artifact[][];
   loadedPlanets: LocationId[];
   balance: number;
-  revealedCoordsMap: Map<LocationId, WorldCoords>;
+  revealedCoordsMap: Map<LocationId, RevealedCoords>;
   planetVoyageIdMap: Map<LocationId, VoyageId[]>;
   arrivals: Map<VoyageId, QueuedArrival>;
 }
@@ -107,12 +106,9 @@ export class InitialGameStateDownloader {
 
     const allTouchedPlanetIds = storedTouchedPlanetIds.concat(await loadedTouchedPlanetIds);
     const allRevealedCoords = storedRevealedCoords.concat(await loadedRevealedCoords);
-    const revealedCoordsMap = new Map<LocationId, WorldCoords>();
+    const revealedCoordsMap = new Map<LocationId, RevealedCoords>();
     for (const revealedCoords of allRevealedCoords) {
-      revealedCoordsMap.set(revealedCoords.hash, {
-        x: revealedCoords.coords.x,
-        y: revealedCoords.coords.y,
-      });
+      revealedCoordsMap.set(revealedCoords.hash, revealedCoords);
     }
 
     let planetsToLoad = allTouchedPlanetIds.filter(
