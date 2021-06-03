@@ -28,7 +28,7 @@ export class LayeredMap {
     this.perLevelPlanetQuadtrees = new Map();
     this.insertedLocations = new Set();
 
-    for (let i = PlanetLevel.MIN; i < PlanetLevel.MAX; i++) {
+    for (let i = PlanetLevel.MIN; i <= PlanetLevel.MAX; i++) {
       const config: QuadTreeConfig = {
         maximumDepth: i <= 3 ? 15 : 10,
         removeEmptyNodes: true,
