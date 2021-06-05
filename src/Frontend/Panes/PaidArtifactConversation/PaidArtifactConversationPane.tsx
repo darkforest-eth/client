@@ -75,6 +75,7 @@ export function PaidArtifactConversationPane({
       backgroundColor={dfstyles.colors.dfyellow}
       titlebarColor={dfstyles.colors.dfyellow}
       borderColor={'#918d0c'}
+      titlebarTextColor='#383604'
     >
       <ContentContainer>
         {remainingQuestionsSection}

@@ -50,6 +50,11 @@ export class PaidConversationManager {
     this.conversation = existingConversation;
     this.setConversation(existingConversation);
 
+    if (this.artifact.currentOwner !== this.gameUIManager.getAccount()) {
+      this.terminal.current?.println("You cannot talk to an artifact that you don't own.");
+      return;
+    }
+
     if (this.conversation) {
       this.printAllMessages();
     } else {

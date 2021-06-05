@@ -221,6 +221,7 @@
 - [Frontend/Utils/Monomitter](modules/frontend_utils_monomitter.md)
 - [Frontend/Utils/ShortcutConstants](modules/frontend_utils_shortcutconstants.md)
 - [Frontend/Utils/TerminalTypes](modules/frontend_utils_terminaltypes.md)
+- [Frontend/Utils/TimeUtils](modules/frontend_utils_timeutils.md)
 - [Frontend/Utils/UIEmitter](modules/frontend_utils_uiemitter.md)
 - [Frontend/Utils/constants](modules/frontend_utils_constants.md)
 - [Frontend/Utils/createDefinedContext](modules/frontend_utils_createdefinedcontext.md)

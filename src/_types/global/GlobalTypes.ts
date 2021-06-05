@@ -18,7 +18,7 @@ export type Wormhole = {
 
 declare global {
   interface Window {
-    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     snarkjs: any;
 
     // TODO: these three should eventually live in some sort of `DFTerminal` namespace

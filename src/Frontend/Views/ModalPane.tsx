@@ -208,6 +208,7 @@ export function ModalPane({
   borderColor,
   backgroundColor,
   titlebarColor,
+  titlebarTextColor,
 }: PaneProps & {
   hook: Hook<boolean>;
   name?: ModalName;
@@ -219,6 +220,7 @@ export function ModalPane({
   borderColor?: string;
   backgroundColor?: string;
   titlebarColor?: string;
+  titlebarTextColor?: string;
 }) {
   const windowManager = WindowManager.getInstance();
   const [minimized, setMinimized] = useState(false);
@@ -402,7 +404,7 @@ export function ModalPane({
           setStyleClicking(true);
         }}
       >
-        <Title>{title}</Title>
+        <Title style={{ color: titlebarTextColor }}>{title}</Title>
 
         {/* render the 'close' and 'help me' buttons, depending on whether or not they're relevant */}
         <ModalButtonsContainer minimized={minimized}>
