@@ -3,11 +3,12 @@ import { Planet } from '@darkforest_eth/types';
 import { Btn } from '../../Components/Btn';
 import { Spacer } from '../../Components/CoreUI';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
-import { Sub, White } from '../../Components/Text';
+import { Red, Sub, White } from '../../Components/Text';
 import {
   blocksLeftToProspectExpiration,
   prospectExpired,
 } from '../../../Backend/GameLogic/ArrivalUtils';
+import { TOKEN_MINT_END } from '../../../Backend/GameLogic/ArtifactUtils';
 
 export function Find({
   find,
@@ -20,6 +21,8 @@ export function Find({
   currentBlockNumber: number | undefined;
   planet: Planet;
 }) {
+  const roundOver = Date.now() > TOKEN_MINT_END;
+
   let button;
 
   if (isFinding) {
@@ -30,7 +33,7 @@ export function Find({
     );
   } else {
     button = (
-      <Btn wide onClick={find}>
+      <Btn wide onClick={find} disabled={roundOver}>
         Find
       </Btn>
     );
@@ -48,6 +51,7 @@ export function Find({
     <>
       {button}
       <Spacer height={8} />
+      {roundOver && <Red>Round 1 is over, and you can no longer mint artifacts!</Red>}
       <Sub>
         Once the artifact is found, it will be placed directly onto this planet. You have{' '}
         <White>

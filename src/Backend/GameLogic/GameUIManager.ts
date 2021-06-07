@@ -41,7 +41,7 @@ import EthConnection from '../Network/EthConnection';
 import { UIDataKey } from '../Storage/UIStateStorageManager';
 import { coordsEqual } from '../Utils/Coordinates';
 import { deferred } from '../Utils/Utils';
-import { biomeName } from './ArtifactUtils';
+import { biomeName, TOKEN_MINT_END } from './ArtifactUtils';
 import GameManager, { GameManagerEvent } from './GameManager';
 import { PluginManager } from './PluginManager';
 import TutorialManager, { TutorialState } from './TutorialManager';
@@ -270,10 +270,18 @@ class GameUIManager extends EventEmitter {
   }
 
   findArtifact(planetId: LocationId) {
+    if (Date.now() > TOKEN_MINT_END) {
+      alert('Round 1 has ended, and you can no longer find artifacts!');
+      return;
+    }
     this.gameManager.findArtifact(planetId);
   }
 
   prospectPlanet(planetId: LocationId) {
+    if (Date.now() > TOKEN_MINT_END) {
+      alert('Round 1 has ended, and you can no longer find artifacts!');
+      return;
+    }
     this.gameManager.prospectPlanet(planetId);
   }
 

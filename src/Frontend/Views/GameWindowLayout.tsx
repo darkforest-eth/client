@@ -60,10 +60,13 @@ import { MenuBar, MenuBarSection } from './MenuBar';
 import { PlanetContextPane } from '../Panes/PlanetContextPane';
 import { HoverPlanetPane } from '../Panes/HoverPlanetPane';
 import { TopBar } from './TopBar';
+import { TOKEN_MINT_END } from '../../Backend/GameLogic/ArtifactUtils';
 
 export function GameWindowLayout() {
   const planetDetHook = useState<boolean>(false);
-  const helpHook = useState<boolean>(false);
+
+  const isOver = Date.now() > TOKEN_MINT_END;
+  const helpHook = useState<boolean>(isOver);
   const planetdexHook = useState<boolean>(false);
   const yourArtifactsHook = useState<boolean>(false);
   const upgradeDetHook = useState<boolean>(false);

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import TutorialManager from '../../Backend/GameLogic/TutorialManager';
 import { White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
+import { TOKEN_MINT_END } from '../../Backend/GameLogic/ArtifactUtils';
 
 const HelpWrapper = styled.div`
   width: 36em;
@@ -42,9 +43,23 @@ const BlueBG = styled.span`
 `;
 
 export function HelpPane({ hook }: { hook: ModalHook }) {
+  const isOver = Date.now() > TOKEN_MINT_END;
   return (
     <ModalPane hook={hook} title='Help' name={ModalName.Help}>
       <HelpWrapper>
+        <p>
+          This window gives additional information about the game. When you are done reading, click
+          the <White>X</White> in the upper-right corner to close this window.
+        </p>
+        {isOver && (
+          <>
+            <p className='title'>Round 1 Complete</p>
+            <p>
+              Dark Forest v0.6.0 Round 1 is now complete! Scores are being compiled and winners will
+              be announced shortly. Also, Artifacts will no longer be mintable. Thanks for playing!
+            </p>
+          </>
+        )}
         <p className='title'>Welcome to Dark Forest v0.6.0!</p>
         <p>
           This window gives additional information about the game. When you are done reading, click

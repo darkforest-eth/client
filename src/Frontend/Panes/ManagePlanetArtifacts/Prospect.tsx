@@ -3,8 +3,9 @@ import { Planet } from '@darkforest_eth/types';
 import { Btn } from '../../Components/Btn';
 import { Spacer } from '../../Components/CoreUI';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
-import { Sub } from '../../Components/Text';
+import { Red, Sub } from '../../Components/Text';
 import { enoughEnergyToProspect } from '../../../Backend/GameLogic/ArrivalUtils';
+import { TOKEN_MINT_END } from '../../../Backend/GameLogic/ArtifactUtils';
 
 export function Prospect({
   prospect,
@@ -20,6 +21,8 @@ export function Prospect({
   const energyPercentage = planet.energy / planet.energyCap;
   const enoughEnergy = enoughEnergyToProspect(planet);
 
+  const roundOver = Date.now() > TOKEN_MINT_END;
+
   if (isProspecting) {
     button = (
       <Btn wide disabled>
@@ -28,7 +31,7 @@ export function Prospect({
     );
   } else {
     button = (
-      <Btn wide onClick={prospect} disabled={!enoughEnergy}>
+      <Btn wide onClick={prospect} disabled={!enoughEnergy || roundOver}>
         Prospect
       </Btn>
     );
@@ -38,6 +41,7 @@ export function Prospect({
     <>
       {button}
       <Spacer height={8} />
+      {roundOver && <Red>Round 1 is over, and you can no longer mint artifacts!</Red>}
       <Sub>
         Before you can find an artifact on a planet, you must prospect it. Prospecting determines
         what artifact you will find!{' '}
