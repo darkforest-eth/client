@@ -40,6 +40,8 @@
 | `colors.blueBackground`        | _string_                   |
 | `colors.dfblue`                | _string_                   |
 | `colors.dfgreen`               | _string_                   |
+| `colors.dfgreendark`           | _string_                   |
+| `colors.dfgreenlight`          | _string_                   |
 | `colors.dfred`                 | _string_                   |
 | `colors.dfyellow`              | _string_                   |
 | `colors.icons`                 | _object_                   |

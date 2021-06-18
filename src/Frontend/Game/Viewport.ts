@@ -1,8 +1,7 @@
 import autoBind from 'auto-bind';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
-import { UIDataKey } from '../../Backend/Storage/UIStateStorageManager';
-import { CanvasCoords, distL2, vectorLength, scaleVector } from '../../Backend/Utils/Coordinates';
-import { isLocatable, ExploredChunkData } from '../../_types/global/GlobalTypes';
+import { CanvasCoords, distL2, vectorLength } from '../../Backend/Utils/Coordinates';
+import { isLocatable, Chunk } from '../../_types/global/GlobalTypes';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 import { WorldCoords, Planet } from '@darkforest_eth/types';
 import { AnimationManager, ViewportAnimation } from './ViewportAnimation';
@@ -51,7 +50,6 @@ class Viewport {
   // for momentum stuff
   velocity: WorldCoords | undefined = undefined;
   momentum = false;
-  shouldFling: boolean;
 
   mouseSensitivity: number;
   intervalId: ReturnType<typeof setTimeout>;
@@ -70,7 +68,6 @@ class Viewport {
     canvas: HTMLCanvasElement
   ) {
     this.gameUIManager = gameUIManager;
-    this.shouldFling = gameUIManager.getUIDataItem(UIDataKey.shouldFling) as boolean;
 
     // each of these is measured relative to the world coordinate system
     this.centerWorldCoords = centerWorldCoords;
@@ -208,8 +205,6 @@ class Viewport {
       .on(UIEmitterEvent.WindowResize, viewport.onResize);
 
     viewport.intervalId = setInterval(viewport.setStorage, 5000);
-    viewport.loop();
-
     Viewport.instance = viewport;
 
     return viewport;
@@ -298,7 +293,7 @@ class Viewport {
     this.centerWorldCoords = coords;
   }
 
-  centerChunk(chunk: ExploredChunkData): void {
+  centerChunk(chunk: Chunk): void {
     const { bottomLeft, sideLength } = chunk.chunkFootprint;
     this.centerWorldCoords = {
       x: bottomLeft.x + sideLength / 2,
@@ -374,36 +369,6 @@ class Viewport {
       this.velocity = undefined;
       this.momentum = false;
     }
-  }
-
-  setFling(fling: boolean) {
-    this.shouldFling = fling;
-  }
-
-  private loop() {
-    if (this.shouldFling) {
-      // do velocity
-      if (this.momentum && this.velocity) {
-        const velX = this.velocity.x;
-        const velY = this.velocity.y;
-
-        if (!isNaN(velX) && !isNaN(velY)) {
-          this.centerWorldCoords = {
-            x: this.centerWorldCoords.x + velX,
-            y: this.centerWorldCoords.y + velY,
-          };
-        }
-
-        this.velocity = scaleVector(this.velocity, 0.98);
-
-        if (vectorLength(this.velocity) < VEL_THRESHOLD) {
-          this.velocity = undefined;
-          this.momentum = false;
-        }
-      }
-    }
-
-    this.frameRequestId = window.requestAnimationFrame(this.loop);
   }
 
   onMouseOut() {
@@ -507,7 +472,7 @@ class Viewport {
     );
   }
 
-  public intersectsViewport(chunk: ExploredChunkData): boolean {
+  public intersectsViewport(chunk: Chunk): boolean {
     const chunkLeft = chunk.chunkFootprint.bottomLeft.x;
     const chunkRight = chunkLeft + chunk.chunkFootprint.sideLength;
     const chunkBottom = chunk.chunkFootprint.bottomLeft.y;

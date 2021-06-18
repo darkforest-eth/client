@@ -52,10 +52,6 @@ import {
 import { aggregateBulkGetter } from '../Utils/Utils';
 import bigInt from 'big-integer';
 import { TxExecutor } from '../Network/TxExecutor';
-import NotificationManager from '../../Frontend/Game/NotificationManager';
-import { BLOCK_EXPLORER_URL } from '../../Frontend/Utils/constants';
-import { TerminalTextStyle } from '../../Frontend/Utils/TerminalTypes';
-import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import EthConnection from '../Network/EthConnection';
 import {
   DarkForestCore,
@@ -84,18 +80,18 @@ import type {
   MoveSnarkContractCallArgs,
   BiomebaseSnarkContractCallArgs,
 } from '@darkforest_eth/snarks';
-import UIStateStorageManager from '../Storage/UIStateStorageManager';
 import { ContractCaller } from './ContractCaller';
+import { DiagnosticUpdater } from '../Interfaces/DiagnosticUpdater';
 
 /**
  * Roughly contains methods that map 1:1 with functions that live
  * in the contract.
  */
 class ContractsAPI extends EventEmitter {
-  private readonly contractCaller = new ContractCaller();
+  private readonly contractCaller: ContractCaller;
   private readonly txRequestExecutor: TxExecutor | undefined;
-  private readonly terminal: React.MutableRefObject<TerminalHandle | undefined>;
 
+  private diagnosticsUpdater?: DiagnosticUpdater;
   private ethConnection: EthConnection;
   private coreContract: DarkForestCore;
   private gettersContract: DarkForestGetters;
@@ -103,27 +99,21 @@ class ContractsAPI extends EventEmitter {
 
   private constructor(
     ethConnection: EthConnection,
-    terminal: React.MutableRefObject<TerminalHandle | undefined>,
     coreContract: DarkForestCore,
     gettersContract: DarkForestGetters,
     gptCreditContract: DarkForestGPTCredit,
-    uiStateStorageManager: UIStateStorageManager,
     nonce: number
   ) {
     super();
+    this.contractCaller = new ContractCaller();
     this.coreContract = coreContract;
     this.gettersContract = gettersContract;
     this.gptCreditContract = gptCreditContract;
-    this.txRequestExecutor = new TxExecutor(ethConnection, uiStateStorageManager, nonce);
-    this.terminal = terminal;
+    this.txRequestExecutor = new TxExecutor(ethConnection, nonce);
     this.ethConnection = ethConnection;
   }
 
-  static async create(
-    ethConnection: EthConnection,
-    uiStateStorageManager: UIStateStorageManager,
-    terminal: React.MutableRefObject<TerminalHandle | undefined>
-  ): Promise<ContractsAPI> {
+  static async create(ethConnection: EthConnection): Promise<ContractsAPI> {
     let nonce = 0;
     try {
       nonce = await ethConnection.getNonce();
@@ -133,11 +123,9 @@ class ContractsAPI extends EventEmitter {
 
     const contractsAPI: ContractsAPI = new ContractsAPI(
       ethConnection,
-      terminal,
       await ethConnection.loadCoreContract(),
       await ethConnection.loadGettersContract(),
       await ethConnection.loadGPTCreditContract(),
-      uiStateStorageManager,
       nonce
     );
 
@@ -305,80 +293,22 @@ class ContractsAPI extends EventEmitter {
     return address(this.coreContract.address);
   }
 
-  private onTxSubmit(unminedTx: SubmittedTx): void {
-    this.terminal.current?.print(
-      `[TX SUBMIT] ${unminedTx.type} transaction (`,
-      TerminalTextStyle.Blue
-    );
-    this.terminal.current?.printLink(
-      `${unminedTx.txHash.slice(0, 6)}`,
-      () => {
-        window.open(`${BLOCK_EXPLORER_URL}/tx/${unminedTx.txHash}`);
-      },
-      TerminalTextStyle.White
-    );
-    this.terminal.current?.println(`) submitted to blockchain.`, TerminalTextStyle.Blue);
-
-    const notifManager = NotificationManager.getInstance();
-    notifManager.txSubmit(unminedTx);
-
-    this.emit(ContractsAPIEvent.TxSubmitted, unminedTx);
-  }
-
   /**
    * Given an unconfirmed (but submitted) transaction, emits the appropriate
    * [[ContractsAPIEvent]].
    */
   public waitFor(submitted: SubmittedTx, receiptPromise: Promise<providers.TransactionReceipt>) {
-    this.onTxSubmit(submitted);
+    this.emit(ContractsAPIEvent.TxSubmitted, submitted);
 
     return receiptPromise
       .then((receipt) => {
-        this.onTxConfirmed(submitted, receipt.status === 1);
+        this.emit(ContractsAPIEvent.TxConfirmed, submitted);
         return receipt;
       })
       .catch((e) => {
-        this.onTxConfirmed(submitted, false);
+        this.emit(ContractsAPIEvent.TxReverted, submitted);
         throw e;
       });
-  }
-
-  private onTxConfirmed(unminedTx: SubmittedTx, success: boolean) {
-    if (success) {
-      this.terminal.current?.print(
-        `[TX CONFIRM] ${unminedTx.type} transaction (`,
-        TerminalTextStyle.Green
-      );
-      this.terminal.current?.printLink(
-        `${unminedTx.txHash.slice(0, 6)}`,
-        () => {
-          window.open(`${BLOCK_EXPLORER_URL}/tx/${unminedTx.txHash}`);
-        },
-        TerminalTextStyle.White
-      );
-      this.terminal.current?.println(`) confirmed.`, TerminalTextStyle.Green);
-
-      const notifManager = NotificationManager.getInstance();
-      notifManager.txConfirm(unminedTx);
-      this.emit(ContractsAPIEvent.TxConfirmed, unminedTx);
-    } else {
-      this.terminal.current?.print(
-        `[TX ERROR] ${unminedTx.type} transaction (`,
-        TerminalTextStyle.Red
-      );
-      this.terminal.current?.printLink(
-        `${unminedTx.txHash.slice(0, 6)}`,
-        () => {
-          window.open(`${BLOCK_EXPLORER_URL}/tx/${unminedTx.txHash}`);
-        },
-        TerminalTextStyle.White
-      );
-      this.terminal.current?.println(`) reverted. Please try again.`, TerminalTextStyle.Red);
-
-      const notifManager = NotificationManager.getInstance();
-      notifManager.txRevert(unminedTx);
-      this.emit(ContractsAPIEvent.TxReverted, unminedTx);
-    }
   }
 
   async reveal(
@@ -1139,6 +1069,12 @@ class ContractsAPI extends EventEmitter {
 
   public getBalance() {
     return this.ethConnection.getBalance(this.getAccount());
+  }
+
+  public setDiagnosticUpdater(diagnosticUpdater?: DiagnosticUpdater) {
+    this.diagnosticsUpdater = diagnosticUpdater;
+    this.contractCaller.setDiagnosticUpdater(diagnosticUpdater);
+    this.txRequestExecutor?.setDiagnosticUpdater(diagnosticUpdater);
   }
 }
 

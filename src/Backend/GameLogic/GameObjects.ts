@@ -37,7 +37,7 @@ import {
 } from '../../Frontend/Utils/EmitterUtils';
 import { Monomitter, monomitter } from '../../Frontend/Utils/Monomitter';
 import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
-import { Wormhole, isLocatable, ExploredChunkData } from '../../_types/global/GlobalTypes';
+import { Wormhole, isLocatable, Chunk } from '../../_types/global/GlobalTypes';
 import {
   isUnconfirmedMove,
   isUnconfirmedUpgrade,
@@ -61,39 +61,136 @@ import { bonusFromHex, getBytesFromHex } from '@darkforest_eth/hexgen';
 import { LayeredMap } from './LayeredMap';
 import { Radii } from './ViewportEntities';
 
-const getCoordsString = (coords: WorldCoords): string => {
-  return `${coords.x},${coords.y}`;
+type CoordsString = string & {
+  __value__: never;
 };
 
+const getCoordsString = (coords: WorldCoords): CoordsString => {
+  return `${coords.x},${coords.y}` as CoordsString;
+};
+
+/**
+ * Representation of the objects which exist in the world.
+ */
 export class GameObjects {
-  private readonly address: EthAddress | undefined;
   /**
-   * Cached index of all known planet data. This should NEVER be set to directly!
-   * All set calls should occur via `GameObjects.setPlanet()`
+   * This is a data structure that allows us to efficiently calculate which planets are visible on
+   * the player's screen given the viewport's position and size.
+   */
+  private readonly layeredMap: LayeredMap;
+
+  /**
+   * This address of the player that is currently logged in.
+   *
+   * @todo move this, along with all other objects relating to the currently logged-on player into a
+   * new field: {@code player: PlayerInfo}
+   */
+  private readonly address: EthAddress | undefined;
+
+  /**
+   * Cached index of all known planet data.
+   *
+   * Warning!
+   *
+   * This should NEVER be set to directly! Any time you want to update a planet, you must call the
+   * {@link GameObjects#setPlanet()} function. Following this rule enables us to reliably notify
+   * other parts of the client when a particular object has been updated. TODO: what is the best way
+   * to do this?
+   *
+   * @todo extract the pattern we're using for the field tuples
+   *   - {planets, myPlanets, myPlanetsUpdated, planetUpdated$}
+   *   - {artifacts, myArtifacts, myArtifactsUpdated, artifactUpdated$}
+   *
+   *   into some sort of class.
    */
   private readonly planets: Map<LocationId, Planet>;
+
   /**
-   * Cached index of planets owned by the player. This should NEVER be set to directly!
-   * All set calls should occur via `GameObjects.setPlanet()`
+   * Cached index of planets owned by the player.
+   *
+   * @see The same warning applys as the one on {@link GameObjects.planets}
    */
   private readonly myPlanets: Map<LocationId, Planet>;
+
   /**
-   * Cached index of all known artifact data. This should NEVER be set to directly!
-   * All set calls should occur via `GameObjects.setArtifact()`
+   * Cached index of all known artifact data.
+   *
+   * @see The same warning applys as the one on {@link GameObjects.planets}
    */
   private readonly artifacts: Map<ArtifactId, Artifact>;
+
   /**
-   * Cached index of artifacts owned by the player. This should NEVER be set to directly!
-   * All set calls should occur via `GameObjects.setArtifact()`
+   * Cached index of artifacts owned by the player.
+   *
+   * @see The same warning applys as the one on {@link GameObjects.planets}
    */
   private readonly myArtifacts: Map<ArtifactId, Artifact>;
+
+  /**
+   * Map from artifact ids to wormholes.
+   */
+  private readonly wormholes: Map<ArtifactId, Wormhole>;
+
+  /**
+   * Set of all planet ids that we know have been interacted-with on-chain.
+   */
   private readonly touchedPlanetIds: Set<LocationId>;
+
+  /**
+   * Map of arrivals to timers that fire when an arrival arrives, in case that handler needs to be
+   * cancelled for whatever reason.
+   */
   private readonly arrivals: Map<VoyageId, ArrivalWithTimer>;
+
+  /**
+   * Map from a location id (think of it as the unique id of each planet) to all the ids of the
+   * voyages that are arriving on that planet. These include both the player's own voyages, and also
+   * any potential invader's voyages.
+   */
   private readonly planetArrivalIds: Map<LocationId, VoyageId[]>;
+
+  /**
+   * Map from location id (unique id of each planet) to some information about the location at which
+   * this planet is located, if this client happens to know the coordinates of this planet.
+   */
   private readonly planetLocationMap: Map<LocationId, WorldLocation>;
+
+  /**
+   * Map from location ids to, if that location id has been revealed on-chain, the world coordinates
+   * of that location id, as well as some extra information regarding the circumstances of the
+   * revealing of this planet.
+   */
   private readonly revealedLocations: Map<LocationId, RevealedLocation>;
+
+  /**
+   * Some of the game's parameters are downloaded from the blockchain. This allows the client to be
+   * flexible, and connect to any compatible set of Dark Forest contracts, download the parameters,
+   * and join the game, taking into account the unique configuration of those specific Dark Forest
+   * contracts.
+   */
   private readonly contractConstants: ContractConstants;
-  private readonly coordsToLocation: Map<string, WorldLocation>;
+
+  /**
+   * Map from a stringified representation of an x-y coordinate to an object that contains some more
+   * information about the world at that location.
+   */
+  private readonly coordsToLocation: Map<CoordsString, WorldLocation>;
+
+  /**
+   * The following set of fields represent actions which the user has initiated on the blockchain,
+   * and have not yet completed. The nature of the blockchain is that transactions could take up to
+   * several minutes to confirm (depending on network congestion). This means that we need to make
+   * it clear to players that the action that they have initiated is indeed in progress, and that
+   * something is actually happening. See `Prospect.tsx` for example.
+   *
+   * The storage and retrieval of unconfirmed transactions could, and
+   * probablu should be abstracted into some sort of class which keeps in sync both *these* fields
+   * and each of these fields counterparts in their corresponding entity objects (Planet, Artifact,
+   * etc.)
+   *
+   * @todo these are good candidates for being in the `PlayerInfo` class.
+   */
+
   private unconfirmedReveal?: UnconfirmedReveal; // at most one at a time
   private unconfirmedBuyGPTCredits?: UnconfirmedBuyGPTCredits; // at most one at a time
   private readonly unconfirmedMoves: Record<string, UnconfirmedMove>;
@@ -101,13 +198,38 @@ export class GameObjects {
   private readonly unconfirmedBuyHats: Record<string, UnconfirmedBuyHat>;
   private readonly unconfirmedPlanetTransfers: Record<string, UnconfirmedPlanetTransfer>;
   private readonly unconfirmedWormholeActivations: UnconfirmedActivateArtifact[];
-  private readonly wormholes: Map<ArtifactId, Wormhole>;
-  private readonly layeredMap: LayeredMap;
 
+  /**
+   * Event emitter which publishes whenever a planet is updated.
+   */
   public readonly planetUpdated$: Monomitter<LocationId>;
+
+  /**
+   * Event emitter which publishes whenever an artifact has been updated.
+   */
   public readonly artifactUpdated$: Monomitter<ArtifactId>;
-  public readonly myArtifactsUpdated$: Monomitter<Map<ArtifactId, Artifact>>;
+
+  /**
+   * Whenever a planet is updated, we publish to this event with a reference to a map from location
+   * id to planet. We need to rethink this event emitter because it currently publishes every time
+   * that any planet is updated, and if a lot of them are updated at once (which i think is the case
+   * once every two minutes) then this event emitter will publish a shitton of events.
+   * TODO: rethink this
+   */
   public readonly myPlanetsUpdated$: Monomitter<Map<LocationId, Planet>>;
+
+  /**
+   * Whenever one of the player's artifacts are updated, this event emitter publishes. See
+   * {@link GameObjects.myPlanetsUpdated$} for more info.
+   */
+  public readonly myArtifactsUpdated$: Monomitter<Map<ArtifactId, Artifact>>;
+
+  /**
+   * Event emitter which publishes whenever the player begins and finishes (whether with a success
+   * or an error) buying gpt credits.
+   *
+   * @todo move into `PlayerInfo`
+   */
   public readonly isBuyingCredits$: Monomitter<boolean>;
 
   constructor(
@@ -116,7 +238,7 @@ export class GameObjects {
     allTouchedPlanetIds: Set<LocationId>,
     revealedLocations: Map<LocationId, RevealedLocation>,
     artifacts: Map<ArtifactId, Artifact>,
-    allChunks: Iterable<ExploredChunkData>,
+    allChunks: Iterable<Chunk>,
     unprocessedArrivals: Map<VoyageId, QueuedArrival>,
     unprocessedPlanetArrivalIds: Map<LocationId, VoyageId[]>,
     contractConstants: ContractConstants,
@@ -335,8 +457,8 @@ export class GameObjects {
    */
   public replacePlanetFromContractData(
     planet: Planet,
-    updatedArrivals: QueuedArrival[],
-    updatedArtifactsOnPlanet: ArtifactId[],
+    updatedArrivals?: QueuedArrival[],
+    updatedArtifactsOnPlanet?: ArtifactId[],
     revealedLocation?: RevealedLocation
   ): void {
     this.touchedPlanetIds.add(planet.locationId);
@@ -370,8 +492,12 @@ export class GameObjects {
       planet.unconfirmedDeactivateArtifact = unconfirmedDeactivateArtifact;
       planet.unconfirmedWithdrawSilver = unconfirmedWithdrawSilver;
       planet.unconfirmedProspectPlanet = unconfirmedProspectPlanet;
+      // Possibly non updated props
+      planet.heldArtifactIds = localPlanet.heldArtifactIds;
     }
-    planet.heldArtifactIds = updatedArtifactsOnPlanet;
+    if (updatedArtifactsOnPlanet) {
+      planet.heldArtifactIds = updatedArtifactsOnPlanet;
+    }
     // make planet Locatable if we know its location
     const loc = this.planetLocationMap.get(planet.locationId) || revealedLocation;
     if (loc) {
@@ -387,16 +513,18 @@ export class GameObjects {
 
     this.setPlanet(planet);
 
-    // apply arrivals
-    this.clearOldArrivals(planet);
-    const updatedAwts = this.processArrivalsForPlanet(planet.locationId, updatedArrivals);
-    for (const awt of updatedAwts) {
-      const arrivalId = awt.arrivalData.eventId;
-      this.arrivals.set(arrivalId, awt);
-      const arrivalIds = this.planetArrivalIds.get(planet.locationId);
-      if (arrivalIds) {
-        arrivalIds.push(arrivalId);
-        this.planetArrivalIds.set(planet.locationId, arrivalIds);
+    if (updatedArrivals) {
+      // apply arrivals
+      this.clearOldArrivals(planet);
+      const updatedAwts = this.processArrivalsForPlanet(planet.locationId, updatedArrivals);
+      for (const awt of updatedAwts) {
+        const arrivalId = awt.arrivalData.eventId;
+        this.arrivals.set(arrivalId, awt);
+        const arrivalIds = this.planetArrivalIds.get(planet.locationId);
+        if (arrivalIds) {
+          arrivalIds.push(arrivalId);
+          this.planetArrivalIds.set(planet.locationId, arrivalIds);
+        }
       }
     }
     this.updateScore(planet.locationId);
@@ -477,19 +605,66 @@ export class GameObjects {
     return this.planetLocationMap.get(planetId) || undefined;
   }
 
-  // NOT PERFORMANT - for scripting only
+  /**
+   * Returns all planets in the game.
+   *
+   * Warning! Simply iterating over this is not performant, and is meant for scripting.
+   *
+   * @tutorial For plugin developers!
+   */
   public getAllPlanets(): Iterable<Planet> {
     return this.planets.values();
   }
 
+  /**
+   * Returns all planets in the game, as a map from their location id to the planet.
+   *
+   * @tutorial For plugin developers!
+   * @see Warning in {@link GameObjects.getAllPlanets()}
+   */
+  public getAllPlanetsMap(): Map<LocationId, Planet> {
+    return this.planets;
+  }
+
+  /**
+   * Returns all the planets in the game which this client is aware of that have an owner, as a map
+   * from their id to the planet
+   *
+   * @tutorial For plugin developers!
+   * @see Warning in {@link GameObjects.getAllPlanets()}
+   */
   public getAllOwnedPlanets(): Planet[] {
     return Array.from(this.planets.values()).filter(hasOwner);
   }
 
+  /**
+   * Returns all voyages that are scheduled to arrive at some point in the future.
+   *
+   * @tutorial For plugin developers!
+   * @see Warning in {@link GameObjects.getAllPlanets()}
+   */
   public getAllVoyages(): QueuedArrival[] {
     return Array.from(this.arrivals.values()).map((awt) => awt.arrivalData);
   }
 
+  /**
+   * We call this function whenever the user requests that we send a transaction to the blockchain
+   * with their localstorage wallet. You can think of it as one of the hubs which connects
+   * `GameObjects` to the rest of the world.
+   *
+   * Inside this function, we update the relevant internal game objects to reflect that the user has
+   * requested a particular action. Additionally, we publish the appropriate events to the relevant
+   * {@link Monomitter} instances that are stored in this class.
+   *
+   * In the case of something like prospecting for an artifact, this allows us to display a spinner
+   * text which says "Prospecting..."
+   *
+   * In the case of the user sending energy from one planet to another planet, this allows us to
+   * display a dashed line between the two planets in their new voyage.
+   *
+   * Whenever we update an entity, we must do it via that entity's type's corresponding
+   * `set<EntityType>` function, in order for us to publish these events.
+   */
   public onTxIntent(txIntent: TxIntent) {
     const notifManager = NotificationManager.getInstance();
     notifManager.txInit(txIntent);
@@ -607,6 +782,16 @@ export class GameObjects {
     }
   }
 
+  /**
+   * Whenever a transaction that the user initiated either succeeds or fails, we need to clear the
+   * fact that it was in progress from the event's corresponding entities. For example, whenever a
+   * transaction that sends a voyage from one planet to another either succeeds or fails, we need to
+   * remove the dashed line that connected them.
+   *
+   * Making sure that we never miss something here is very tedious.
+   *
+   * @todo Make this less tedious.
+   */
   public clearUnconfirmedTxIntent(txIntent: TxIntent) {
     if (isUnconfirmedReveal(txIntent)) {
       const planet = this.getPlanetWithId(txIntent.locationId);
@@ -1008,7 +1193,7 @@ export class GameObjects {
     return ret;
   }
 
-  spaceTypeFromPerlin(perlin: number): SpaceType {
+  public spaceTypeFromPerlin(perlin: number): SpaceType {
     if (perlin < this.contractConstants.PERLIN_THRESHOLD_1) {
       return SpaceType.NEBULA;
     } else if (perlin < this.contractConstants.PERLIN_THRESHOLD_2) {

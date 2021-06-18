@@ -1,6 +1,7 @@
 import { EthAddress, EthTxType, TxTypeToEthFunctionName } from '@darkforest_eth/types';
 import { QueuedTxRequest } from '../../Backend/Network/TxExecutor';
 import EthConnection from '../../Backend/Network/EthConnection';
+import { getBooleanSetting, Setting } from '../Utils/SettingsHooks';
 
 // tx is killed if user doesn't click popup within 20s
 const POPUP_TIMEOUT = 20000;
@@ -11,16 +12,15 @@ export async function openConfirmationWindowForTransaction(
   from: EthAddress,
   gasFeeGwei: number
 ): Promise<void> {
-  // this value encodes the timestamp after which we should start asking for transaction
-  // confirmations again.
-  const enableUntilStr = localStorage.getItem(`wallet-enabled-${from}`);
+  const autoApprove = getBooleanSetting(
+    ethConnection.getAddress(),
+    Setting.AutoApproveNonPurchaseTransactions
+  );
 
-  const userHasntDisabledConfirmations =
-    !enableUntilStr || Number.isNaN(+enableUntilStr) || Date.now() > +enableUntilStr;
   const isPurchase =
     txRequest.type === EthTxType.BUY_HAT || txRequest.type === EthTxType.BUY_GPT_CREDITS;
 
-  if (userHasntDisabledConfirmations || isPurchase) {
+  if (!autoApprove || isPurchase) {
     localStorage.setItem(`${from}-gasFeeGwei`, gasFeeGwei + '');
     const account = ethConnection.getAddress();
     const balance = await ethConnection.getBalance(account);

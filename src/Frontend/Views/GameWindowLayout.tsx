@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { useStoredUIState, UIDataKey } from '../../Backend/Storage/UIStateStorageManager';
 import {
   WindowWrapper,
   MainWindow,
@@ -50,6 +49,7 @@ import { PaidArtifactConversationPane } from '../Panes/PaidArtifactConversation/
 import {
   TOGGLE_ARTIFACTS_DEX_PANE,
   TOGGLE_BROADCAST_PANE,
+  TOGGLE_DIAGNOSTICS_PANE,
   TOGGLE_HAT_PANE,
   TOGGLE_PLANET_ARTIFACTS_PANE,
   TOGGLE_PLANET_DETAILS_PANE,
@@ -60,13 +60,13 @@ import { MenuBar, MenuBarSection } from './MenuBar';
 import { PlanetContextPane } from '../Panes/PlanetContextPane';
 import { HoverPlanetPane } from '../Panes/HoverPlanetPane';
 import { TopBar } from './TopBar';
-import { TOKEN_MINT_END } from '../../Backend/GameLogic/ArtifactUtils';
+import { DiagnosticsPane } from '../Panes/DiagnosticsPane';
+import { Setting, useBooleanSetting } from '../Utils/SettingsHooks';
 
 export function GameWindowLayout() {
   const planetDetHook = useState<boolean>(false);
 
-  const isOver = Date.now() > TOKEN_MINT_END;
-  const helpHook = useState<boolean>(isOver);
+  const helpHook = useState<boolean>(false);
   const planetdexHook = useState<boolean>(false);
   const yourArtifactsHook = useState<boolean>(false);
   const upgradeDetHook = useState<boolean>(false);
@@ -79,10 +79,11 @@ export function GameWindowLayout() {
   const pluginsHook = useState<boolean>(false);
   const modalsContainerRef = useRef<HTMLDivElement | null>(null);
   const uiManager = useUIManager();
-  const newPlayerHook = useStoredUIState<boolean>(UIDataKey.newPlayer, uiManager);
+  const newPlayerHook = useBooleanSetting(uiManager, Setting.NewPlayer);
 
   const selected = useSelectedPlanet(uiManager).value;
   const selectedPlanetHook = useState<boolean>(!!selected);
+  const diagnosticsHook = useState<boolean>(false);
   const [, setSelectedPlanetVisible] = selectedPlanetHook;
 
   useEffect(() => setSelectedPlanetVisible(!!selected), [selected, setSelectedPlanetVisible]);
@@ -116,6 +117,8 @@ export function GameWindowLayout() {
       paneHook = planetdexHook;
     } else if (keyUp.value === TOGGLE_ARTIFACTS_DEX_PANE) {
       paneHook = yourArtifactsHook;
+    } else if (keyUp.value === TOGGLE_DIAGNOSTICS_PANE) {
+      paneHook = diagnosticsHook;
     }
 
     if (paneHook) {
@@ -130,6 +133,7 @@ export function GameWindowLayout() {
     upgradeDetHook,
     planetdexHook,
     yourArtifactsHook,
+    diagnosticsHook,
   ]);
 
   const openConversationForArtifact = (id: ArtifactId) => {
@@ -173,7 +177,7 @@ export function GameWindowLayout() {
         />
         <PaidArtifactConversationPane hook={artifactConversationHook} artifact={convoArtifact} />
         <PlanetContextPane hook={selectedPlanetHook} upgradeDetHook={upgradeDetHook} />
-
+        <DiagnosticsPane hook={diagnosticsHook} />
         {modalsContainerRef.current && (
           <PluginLibraryPane
             modalsContainer={modalsContainerRef.current}

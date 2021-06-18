@@ -21,17 +21,7 @@ const HomeLink = styled.a`
 const Title = styled.div``;
 
 export function ValhallaPage() {
-  return (
-    <Container>
-      <Title>valhalla</Title>
-      <Spacer height={32} />
-      NFTs awarded to the top players of each round
-      <br />
-      of Dark Forest v0.6.x will be enshrined here.
-      <Spacer height={16} />
-      <LoadingSpinner initialText='Coming June 2021...' />
-      <Spacer height={16} />
-      <HomeLink href='/'>home</HomeLink>
-    </Container>
-  );
+  window.location.href = 'https://valhalla.zkga.me';
+
+  return <Container></Container>;
 }

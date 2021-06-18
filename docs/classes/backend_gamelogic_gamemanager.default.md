@@ -21,6 +21,7 @@
 - [balanceInterval](backend_gamelogic_gamemanager.default.md#balanceinterval)
 - [contractConstants](backend_gamelogic_gamemanager.default.md#contractconstants)
 - [contractsAPI](backend_gamelogic_gamemanager.default.md#contractsapi)
+- [diagnostics](backend_gamelogic_gamemanager.default.md#diagnostics)
 - [endTimeSeconds](backend_gamelogic_gamemanager.default.md#endtimeseconds)
 - [entityStore](backend_gamelogic_gamemanager.default.md#entitystore)
 - [ethConnection](backend_gamelogic_gamemanager.default.md#ethconnection)
@@ -35,10 +36,10 @@
 - [myGPTCredits$](backend_gamelogic_gamemanager.default.md#mygptcredits$)
 - [persistentChunkStore](backend_gamelogic_gamemanager.default.md#persistentchunkstore)
 - [planetHashMimc](backend_gamelogic_gamemanager.default.md#planethashmimc)
+- [playerInterval](backend_gamelogic_gamemanager.default.md#playerinterval)
 - [players](backend_gamelogic_gamemanager.default.md#players)
 - [snarkHelper](backend_gamelogic_gamemanager.default.md#snarkhelper)
 - [terminal](backend_gamelogic_gamemanager.default.md#terminal)
-- [uiStateStorageManager](backend_gamelogic_gamemanager.default.md#uistatestoragemanager)
 - [useMockHash](backend_gamelogic_gamemanager.default.md#usemockhash)
 - [worldRadius](backend_gamelogic_gamemanager.default.md#worldradius)
 
@@ -78,6 +79,7 @@
 - [getContractConstants](backend_gamelogic_gamemanager.default.md#getcontractconstants)
 - [getConversation](backend_gamelogic_gamemanager.default.md#getconversation)
 - [getCurrentlyExploringChunk](backend_gamelogic_gamemanager.default.md#getcurrentlyexploringchunk)
+- [getDiagnostics](backend_gamelogic_gamemanager.default.md#getdiagnostics)
 - [getDist](backend_gamelogic_gamemanager.default.md#getdist)
 - [getDistCoords](backend_gamelogic_gamemanager.default.md#getdistcoords)
 - [getEndTimeSeconds](backend_gamelogic_gamemanager.default.md#getendtimeseconds)
@@ -87,6 +89,7 @@
 - [getEnergyOfPlayer](backend_gamelogic_gamemanager.default.md#getenergyofplayer)
 - [getEthConnection](backend_gamelogic_gamemanager.default.md#getethconnection)
 - [getExploredChunks](backend_gamelogic_gamemanager.default.md#getexploredchunks)
+- [getGameObjects](backend_gamelogic_gamemanager.default.md#getgameobjects)
 - [getGptCreditBalanceEmitter](backend_gamelogic_gamemanager.default.md#getgptcreditbalanceemitter)
 - [getGptCreditPriceEmitter](backend_gamelogic_gamemanager.default.md#getgptcreditpriceemitter)
 - [getHashConfig](backend_gamelogic_gamemanager.default.md#gethashconfig)
@@ -129,7 +132,6 @@
 - [getTemperature](backend_gamelogic_gamemanager.default.md#gettemperature)
 - [getTimeForMove](backend_gamelogic_gamemanager.default.md#gettimeformove)
 - [getTwitter](backend_gamelogic_gamemanager.default.md#gettwitter)
-- [getUIDataItem](backend_gamelogic_gamemanager.default.md#getuidataitem)
 - [getUIEventEmitter](backend_gamelogic_gamemanager.default.md#getuieventemitter)
 - [getUnconfirmedMoves](backend_gamelogic_gamemanager.default.md#getunconfirmedmoves)
 - [getUnconfirmedUpgrades](backend_gamelogic_gamemanager.default.md#getunconfirmedupgrades)
@@ -155,7 +157,10 @@
 - [loadPlugins](backend_gamelogic_gamemanager.default.md#loadplugins)
 - [locationFromCoords](backend_gamelogic_gamemanager.default.md#locationfromcoords)
 - [move](backend_gamelogic_gamemanager.default.md#move)
+- [onTxConfirmed](backend_gamelogic_gamemanager.default.md#ontxconfirmed)
 - [onTxIntentFail](backend_gamelogic_gamemanager.default.md#ontxintentfail)
+- [onTxReverted](backend_gamelogic_gamemanager.default.md#ontxreverted)
+- [onTxSubmit](backend_gamelogic_gamemanager.default.md#ontxsubmit)
 - [prospectPlanet](backend_gamelogic_gamemanager.default.md#prospectplanet)
 - [refreshMyGPTCredits](backend_gamelogic_gamemanager.default.md#refreshmygptcredits)
 - [refreshTwitters](backend_gamelogic_gamemanager.default.md#refreshtwitters)
@@ -165,7 +170,7 @@
 - [setMiningPattern](backend_gamelogic_gamemanager.default.md#setminingpattern)
 - [setRadius](backend_gamelogic_gamemanager.default.md#setradius)
 - [setSnarkCacheSize](backend_gamelogic_gamemanager.default.md#setsnarkcachesize)
-- [setUIDataItem](backend_gamelogic_gamemanager.default.md#setuidataitem)
+- [softRefreshPlanet](backend_gamelogic_gamemanager.default.md#softrefreshplanet)
 - [spaceTypeFromPerlin](backend_gamelogic_gamemanager.default.md#spacetypefromperlin)
 - [spaceTypePerlin](backend_gamelogic_gamemanager.default.md#spacetypeperlin)
 - [startConversation](backend_gamelogic_gamemanager.default.md#startconversation)
@@ -173,6 +178,7 @@
 - [stepConversation](backend_gamelogic_gamemanager.default.md#stepconversation)
 - [stopExplore](backend_gamelogic_gamemanager.default.md#stopexplore)
 - [transferOwnership](backend_gamelogic_gamemanager.default.md#transferownership)
+- [updateDiagnostics](backend_gamelogic_gamemanager.default.md#updatediagnostics)
 - [upgrade](backend_gamelogic_gamemanager.default.md#upgrade)
 - [verifyTwitter](backend_gamelogic_gamemanager.default.md#verifytwitter)
 - [withdrawArtifact](backend_gamelogic_gamemanager.default.md#withdrawartifact)
@@ -183,7 +189,7 @@
 
 ### constructor
 
-\+ `Private` **new default**(`terminal`: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>, `account`: _undefined_ \| EthAddress, `balance`: _number_, `players`: _Map_<string, Player\>, `touchedPlanets`: _Map_<LocationId, Planet\>, `allTouchedPlanetIds`: _Set_<LocationId\>, `revealedCoords`: _Map_<LocationId, RevealedCoords\>, `worldRadius`: _number_, `unprocessedArrivals`: _Map_<VoyageId, QueuedArrival\>, `unprocessedPlanetArrivalIds`: _Map_<LocationId, VoyageId[]\>, `contractsAPI`: [_default_](backend_gamelogic_contractsapi.default.md), `contractConstants`: [_ContractConstants_](../interfaces/_types_darkforest_api_contractsapitypes.contractconstants.md), `persistentChunkStore`: [_default_](backend_storage_persistentchunkstore.default.md), `snarkHelper`: [_default_](backend_utils_snarkargshelper.default.md), `homeLocation`: _undefined_ \| WorldLocation, `useMockHash`: _boolean_, `artifacts`: _Map_<ArtifactId, Artifact\>, `ethConnection`: [_default_](backend_network_ethconnection.default.md), `gptCreditPriceEther`: _number_, `myGPTCredits`: _number_, `uiStateStorageManager`: [_default_](backend_storage_uistatestoragemanager.default.md)): [_default_](backend_gamelogic_gamemanager.default.md)
+\+ `Private` **new default**(`terminal`: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>, `account`: _undefined_ \| EthAddress, `balance`: _number_, `players`: _Map_<string, Player\>, `touchedPlanets`: _Map_<LocationId, Planet\>, `allTouchedPlanetIds`: _Set_<LocationId\>, `revealedCoords`: _Map_<LocationId, RevealedCoords\>, `worldRadius`: _number_, `unprocessedArrivals`: _Map_<VoyageId, QueuedArrival\>, `unprocessedPlanetArrivalIds`: _Map_<LocationId, VoyageId[]\>, `contractsAPI`: [_default_](backend_gamelogic_contractsapi.default.md), `contractConstants`: [_ContractConstants_](../interfaces/_types_darkforest_api_contractsapitypes.contractconstants.md), `persistentChunkStore`: [_default_](backend_storage_persistentchunkstore.default.md), `snarkHelper`: [_default_](backend_utils_snarkargshelper.default.md), `homeLocation`: _undefined_ \| WorldLocation, `useMockHash`: _boolean_, `artifacts`: _Map_<ArtifactId, Artifact\>, `ethConnection`: [_default_](backend_network_ethconnection.default.md), `gptCreditPriceEther`: _number_, `myGPTCredits`: _number_): [_default_](backend_gamelogic_gamemanager.default.md)
 
 #### Parameters
 
@@ -209,7 +215,6 @@
 | `ethConnection`               | [_default_](backend_network_ethconnection.default.md)                                                         |
 | `gptCreditPriceEther`         | _number_                                                                                                      |
 | `myGPTCredits`                | _number_                                                                                                      |
-| `uiStateStorageManager`       | [_default_](backend_storage_uistatestoragemanager.default.md)                                                 |
 
 **Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
 
@@ -221,11 +226,20 @@ Overrides: EventEmitter.constructor
 
 • `Private` `Readonly` **account**: _undefined_ \| EthAddress
 
+The ethereum address of the player who is currently logged in. We support 'no account',
+represented by `undefined` in the case when you want to simply load the game state from the
+contract and view it without be able to make any moves.
+
 ---
 
 ### balance
 
 • `Private` **balance**: _number_
+
+This is kept relatively up-to-date with the balance of the player's wallet on the latest block
+of whatever blockchain we're connected to.
+
+**`todo`** move this into a new `PlayerState` class.
 
 ---
 
@@ -233,11 +247,20 @@ Overrides: EventEmitter.constructor
 
 • `Private` **balanceInterval**: _Timeout_
 
+Handle to an interval that periodically refreshes the player's balance.
+
+**`todo`** move this into a new `PlayerState` class.
+
 ---
 
 ### contractConstants
 
 • `Private` `Readonly` **contractConstants**: [_ContractConstants_](../interfaces/_types_darkforest_api_contractsapitypes.contractconstants.md)
+
+Game parameters set by the contract. Stuff like perlin keys, which are important for mining the
+correct universe, or the time multiplier, which allows us to tune how quickly voyages go.
+
+**`todo`** move this into a separate `GameConfiguration` class.
 
 ---
 
@@ -245,11 +268,34 @@ Overrides: EventEmitter.constructor
 
 • `Private` `Readonly` **contractsAPI**: [_default_](backend_gamelogic_contractsapi.default.md)
 
+Allows us to make contract calls, and execute transactions. Be careful about how you use this
+guy. You don't want to cause your client to send an excessive amount of traffic to whatever
+node you're connected to.
+
+Interacting with the blockchain isn't free, and we need to be mindful about about the way our
+application interacts with the blockchain. The current rate limiting strategy consists of three
+points:
+
+- data that needs to be fetched often should be fetched in bulk.
+- rate limit smart contract calls (reads from the blockchain), implemented by
+  [ContractCaller](backend_gamelogic_contractcaller.contractcaller.md) and transactions (writes to the blockchain on behalf of the player),
+  implemented by [TxExecutor](backend_network_txexecutor.txexecutor.md) via two separately tuned [ThrottledConcurrentQueue](backend_network_throttledconcurrentqueue.throttledconcurrentqueue.md)s.
+
+---
+
+### diagnostics
+
+• `Private` **diagnostics**: [_Diagnostics_](../interfaces/frontend_panes_diagnosticspane.diagnostics.md)
+
+Diagnostic information about the game.
+
 ---
 
 ### endTimeSeconds
 
 • `Private` `Readonly` **endTimeSeconds**: _number_= 1643587533
+
+**`todo`** change this to the correct timestamp each round.
 
 ---
 
@@ -257,11 +303,17 @@ Overrides: EventEmitter.constructor
 
 • `Private` `Readonly` **entityStore**: [_GameObjects_](backend_gamelogic_gameobjects.gameobjects.md)
 
+This variable contains the internal state of objects that live in the game world.
+
 ---
 
 ### ethConnection
 
 • `Private` `Readonly` **ethConnection**: [_default_](backend_network_ethconnection.default.md)
+
+An interface to the blockchain that is a little bit lower-level than {@link ContractsAPI}. It
+allows us to do basic operations such as wait for a transaction to complete, check the player's
+address and balance, etc.
 
 ---
 
@@ -269,11 +321,18 @@ Overrides: EventEmitter.constructor
 
 • `Private` **gptCreditPriceEther**: _number_
 
+Price of a single gpt credit, which buys you a single interaction with the GPT-powered AI
+Artifact Chat Bots.
+
+**`todo`** move this into a new `GameConfiguration` class.
+
 ---
 
 ### gptCreditPriceEtherEmitter$
 
 • `Private` **gptCreditPriceEtherEmitter$**: [_Monomitter_](../modules/frontend_utils_monomitter.md#monomitter)<number\>
+
+Whenever the price of single GPT credit changes, we emit that event here.
 
 ---
 
@@ -281,11 +340,22 @@ Overrides: EventEmitter.constructor
 
 • `Private` `Readonly` **hashConfig**: [_HashConfig_](../modules/_types_global_globaltypes.md#hashconfig)
 
+Each round we change the hash configuration of the game. The hash configuration is download
+from the blockchain, and essentially acts as a salt, permuting the universe into a unique
+configuration for each new round.
+
+**`todo`** deduplicate this and `useMockHash` somehow.
+
 ---
 
 ### hashRate
 
 • `Private` **hashRate**: _number_
+
+Continuously updated value representing the total hashes per second that the game is currently
+mining the universe at.
+
+**`todo`** keep this in {@link MinerManager}
 
 ---
 
@@ -293,11 +363,23 @@ Overrides: EventEmitter.constructor
 
 • `Private` **homeLocation**: _undefined_ \| WorldLocation
 
+The spawn location of the current player.
+
+**`todo,`** make this smarter somehow. It's really annoying to have to import world coordinates, and
+get them wrong or something. Maybe we need to mark a planet, once it's been initialized
+contract-side, as the homeworld of the user who initialized on it. That way, when you import a
+new account into the game, and you import map data that contains your home planet, the client
+would be able to automatically detect which planet is the player's home planet.
+
+**`todo`** move this into a new `PlayerState` class.
+
 ---
 
 ### minerManager
 
 • `Private` `Optional` **minerManager**: [_default_](backend_miner_minermanager.default.md)
+
+Manages the process of mining new space territory.
 
 ---
 
@@ -305,11 +387,19 @@ Overrides: EventEmitter.constructor
 
 • `Private` **myBalance$**: [_Monomitter_](../modules/frontend_utils_monomitter.md#monomitter)<number\>
 
+Any time the balance of the player's address changes, we publish an event here.
+
+**`todo`** move this into a new `PlayerState` class.
+
 ---
 
 ### myGPTCredits
 
 • `Private` **myGPTCredits**: _number_
+
+The total amount of GPT credits that belong to the current player.
+
+**`todo`** move this into a new `PlayerState` class.
 
 ---
 
@@ -317,17 +407,29 @@ Overrides: EventEmitter.constructor
 
 • `Private` **myGPTCredits$**: [_Monomitter_](../modules/frontend_utils_monomitter.md#monomitter)<number\>
 
+Whenever the amount of the GPT credits that this player owns changes, we publish an event here.
+
+**`todo`** move this into a new `PlayerState` class.
+
 ---
 
 ### persistentChunkStore
 
 • `Private` `Readonly` **persistentChunkStore**: [_default_](backend_storage_persistentchunkstore.default.md)
 
+An object that syncs any newly added or deleted chunks to the player's IndexedDB.
+
+**`todo`** it also persists other game data to IndexedDB. This class needs to be renamed `GameSaver`
+or something like that.
+
 ---
 
 ### planetHashMimc
 
 • `Private` `Readonly` **planetHashMimc**: (...`inputs`: _number_[]) => BigInteger
+
+The aforementioned hash function. In debug mode where `DISABLE_ZK_CHECKS` is on, we use a
+faster hash function. Othewise, in production mode, use MiMC hash (https://byt3bit.github.io/primesym/).
 
 #### Type declaration
 
@@ -343,9 +445,26 @@ Overrides: EventEmitter.constructor
 
 ---
 
+### playerInterval
+
+• `Private` **playerInterval**: _Timeout_
+
+Handle to an interval that periodically refreshes some information about the player from the
+blockchain.
+
+**`todo`** move this into a new `PlayerState` class.
+
+---
+
 ### players
 
 • `Private` `Readonly` **players**: _Map_<string, Player\>
+
+Map from ethereum addresses to player objects. This isn't stored in [GameObjects](backend_gamelogic_gameobjects.gameobjects.md),
+because it's not techincally an entity that exists in the world. A player just controls planets
+and artifacts that do exist in the world.
+
+**`todo`** move this into a new `Players` class.
 
 ---
 
@@ -353,17 +472,17 @@ Overrides: EventEmitter.constructor
 
 • `Private` `Readonly` **snarkHelper**: [_default_](backend_utils_snarkargshelper.default.md)
 
+Responsible for generating snark proofs.
+
 ---
 
 ### terminal
 
 • `Private` `Readonly` **terminal**: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>
 
----
-
-### uiStateStorageManager
-
-• `Private` `Readonly` **uiStateStorageManager**: [_default_](backend_storage_uistatestoragemanager.default.md)
+Kind of hacky, but we store a reference to the terminal that the player sees when the initially
+load into the game. This is the same exact terminal that appears inside the collapsable right
+bar of the game.
 
 ---
 
@@ -371,11 +490,21 @@ Overrides: EventEmitter.constructor
 
 • `Private` `Readonly` **useMockHash**: _boolean_
 
+In debug builds of the game, we can connect to a set of contracts deployed to a local
+blockchain, which are tweaked to not verify planet hashes, meaning we can use a faster hash
+function with similar properties to mimc. This allows us to mine the map faster in debug mode.
+
+**`todo`** move this into a separate `GameConfiguration` class.
+
 ---
 
 ### worldRadius
 
 • `Private` **worldRadius**: _number_
+
+Sometimes the universe gets bigger... Sometimes it doesn't.
+
+**`todo`** move this into a new `GameConfiguration` class.
 
 ## Accessors
 
@@ -423,7 +552,7 @@ initialized the player on the contract.
 
 ### addNewChunk
 
-▸ **addNewChunk**(`chunk`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)): [_default_](backend_gamelogic_gamemanager.default.md)
+▸ **addNewChunk**(`chunk`: [_Chunk_](_types_global_globaltypes.chunk.md)): [_default_](backend_gamelogic_gamemanager.default.md)
 
 Makes this game manager aware of a new chunk - which includes its location, size,
 as well as all of the planets contained in that chunk. Causes the client to load
@@ -431,9 +560,9 @@ all of the information about those planets from the blockchain.
 
 #### Parameters
 
-| Name    | Type                                                                  |
-| :------ | :-------------------------------------------------------------------- |
-| `chunk` | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md) |
+| Name    | Type                                          |
+| :------ | :-------------------------------------------- |
+| `chunk` | [_Chunk_](_types_global_globaltypes.chunk.md) |
 
 **Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
 
@@ -458,16 +587,16 @@ Gets the biome perlin valie at the given location in the world.
 
 ### bulkAddNewChunks
 
-▸ **bulkAddNewChunks**(`chunks`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)[]): _Promise_<void\>
+▸ **bulkAddNewChunks**(`chunks`: [_Chunk_](_types_global_globaltypes.chunk.md)[]): _Promise_<void\>
 
 To add multiple chunks at once, use this function rather than `addNewChunk`, in order
 to load all of the associated planet data in an efficient manner.
 
 #### Parameters
 
-| Name     | Type                                                                    |
-| :------- | :---------------------------------------------------------------------- |
-| `chunks` | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)[] |
+| Name     | Type                                            |
+| :------- | :---------------------------------------------- |
+| `chunks` | [_Chunk_](_types_global_globaltypes.chunk.md)[] |
 
 **Returns:** _Promise_<void\>
 
@@ -711,7 +840,7 @@ represented by `undefined`.
 
 ### getChunk
 
-▸ **getChunk**(`chunkFootprint`: [_Rectangle_](../interfaces/_types_global_globaltypes.rectangle.md)): _undefined_ \| [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)
+▸ **getChunk**(`chunkFootprint`: [_Rectangle_](../interfaces/_types_global_globaltypes.rectangle.md)): _undefined_ \| [_Chunk_](_types_global_globaltypes.chunk.md)
 
 #### Parameters
 
@@ -719,7 +848,7 @@ represented by `undefined`.
 | :--------------- | :------------------------------------------------------------------ |
 | `chunkFootprint` | [_Rectangle_](../interfaces/_types_global_globaltypes.rectangle.md) |
 
-**Returns:** _undefined_ \| [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)
+**Returns:** _undefined_ \| [_Chunk_](_types_global_globaltypes.chunk.md)
 
 ---
 
@@ -790,6 +919,16 @@ Gets the rectangle bounding the chunk that the miner is currently in the process
 of hashing.
 
 **Returns:** _undefined_ \| [_Rectangle_](../interfaces/_types_global_globaltypes.rectangle.md)
+
+---
+
+### getDiagnostics
+
+▸ **getDiagnostics**(): [_Diagnostics_](../interfaces/frontend_panes_diagnosticspane.diagnostics.md)
+
+Gets some diagnostic information about the game. Returns a copy, you can't modify it.
+
+**Returns:** [_Diagnostics_](../interfaces/frontend_panes_diagnosticspane.diagnostics.md)
 
 ---
 
@@ -923,12 +1062,23 @@ Gets the total amount of energy that lives on planets that the given player owns
 
 ### getExploredChunks
 
-▸ **getExploredChunks**(): _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>
+▸ **getExploredChunks**(): _Iterable_<[_Chunk_](_types_global_globaltypes.chunk.md)\>
 
 Gets all the map chunks that this client is aware of. Chunks may have come from
 mining, or from importing map data.
 
-**Returns:** _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>
+**Returns:** _Iterable_<[_Chunk_](_types_global_globaltypes.chunk.md)\>
+
+---
+
+### getGameObjects
+
+▸ **getGameObjects**(): [_GameObjects_](backend_gamelogic_gameobjects.gameobjects.md)
+
+Gets a reference to the game's internal representation of the world state. This includes
+voyages, planets, artifacts, and active wormholes,
+
+**Returns:** [_GameObjects_](backend_gamelogic_gameobjects.gameobjects.md)
 
 ---
 
@@ -1445,20 +1595,6 @@ with Dark Forest.
 
 ---
 
-### getUIDataItem
-
-▸ **getUIDataItem**(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md)): _number_ \| _boolean_
-
-#### Parameters
-
-| Name  | Type                                                                       |
-| :---- | :------------------------------------------------------------------------- |
-| `key` | [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md) |
-
-**Returns:** _number_ \| _boolean_
-
----
-
 ### getUIEventEmitter
 
 ▸ **getUIEventEmitter**(): [_default_](frontend_utils_uiemitter.default.md)
@@ -1730,6 +1866,10 @@ Attempts to join the game. Should not be called once you've already joined.
 
 ▸ **loadContract**(`contractAddress`: _string_, `contractABI`: ContractInterface): _Promise_<Contract\>
 
+Returns an instance of a `Contract` from the ethersjs library. This is the library we use to
+connect to the blockchain. For documentation about how `Contract` works, see:
+https://docs.ethers.io/v5/api/contract/contract/
+
 #### Parameters
 
 | Name              | Type              |
@@ -1790,6 +1930,20 @@ the given planet to the given planet.
 
 ---
 
+### onTxConfirmed
+
+▸ `Private` **onTxConfirmed**(`unminedTx`: SubmittedTx): _void_
+
+#### Parameters
+
+| Name        | Type        |
+| :---------- | :---------- |
+| `unminedTx` | SubmittedTx |
+
+**Returns:** _void_
+
+---
+
 ### onTxIntentFail
 
 ▸ `Private` **onTxIntentFail**(`txIntent`: TxIntent, `e`: Error): _void_
@@ -1800,6 +1954,34 @@ the given planet to the given planet.
 | :--------- | :------- |
 | `txIntent` | TxIntent |
 | `e`        | Error    |
+
+**Returns:** _void_
+
+---
+
+### onTxReverted
+
+▸ `Private` **onTxReverted**(`unminedTx`: SubmittedTx): _void_
+
+#### Parameters
+
+| Name        | Type        |
+| :---------- | :---------- |
+| `unminedTx` | SubmittedTx |
+
+**Returns:** _void_
+
+---
+
+### onTxSubmit
+
+▸ `Private` **onTxSubmit**(`unminedTx`: SubmittedTx): _void_
+
+#### Parameters
+
+| Name        | Type        |
+| :---------- | :---------- |
+| `unminedTx` | SubmittedTx |
 
 **Returns:** _void_
 
@@ -1930,18 +2112,17 @@ Changes the amount of move snark proofs that are cached.
 
 ---
 
-### setUIDataItem
+### softRefreshPlanet
 
-▸ **setUIDataItem**(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md), `value`: _number_ \| _boolean_): _void_
+▸ `Private` **softRefreshPlanet**(`planetId`: LocationId): _Promise_<void\>
 
 #### Parameters
 
-| Name    | Type                                                                       |
-| :------ | :------------------------------------------------------------------------- |
-| `key`   | [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md) |
-| `value` | _number_ \| _boolean_                                                      |
+| Name       | Type       |
+| :--------- | :--------- |
+| `planetId` | LocationId |
 
-**Returns:** _void_
+**Returns:** _Promise_<void\>
 
 ---
 
@@ -2046,6 +2227,24 @@ Stops the miner.
 | `bypassChecks` | _boolean_  | false         |
 
 **Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
+
+---
+
+### updateDiagnostics
+
+▸ **updateDiagnostics**(`updateFn`: (`d`: [_Diagnostics_](../interfaces/frontend_panes_diagnosticspane.diagnostics.md)) => _void_): _void_
+
+Updates the diagnostic info of the game using the supplied function. Ideally, each spot in the
+codebase that would like to record a metric is able to update its specific metric in a
+convenient manner.
+
+#### Parameters
+
+| Name       | Type                                                                                          |
+| :--------- | :-------------------------------------------------------------------------------------------- |
+| `updateFn` | (`d`: [_Diagnostics_](../interfaces/frontend_panes_diagnosticspane.diagnostics.md)) => _void_ |
+
+**Returns:** _void_
 
 ---
 

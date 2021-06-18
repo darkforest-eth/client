@@ -1,9 +1,4 @@
-import {
-  ExploredChunkData,
-  Rectangle,
-  MinerWorkerMessage,
-  HashConfig,
-} from '../../_types/global/GlobalTypes';
+import { Chunk, Rectangle, MinerWorkerMessage, HashConfig } from '../../_types/global/GlobalTypes';
 import Worker from 'worker-loader!./miner.worker';
 import { EventEmitter } from 'events';
 import _ from 'lodash';
@@ -35,7 +30,7 @@ export class HomePlanetMinerChunkStore implements ChunkStore {
     };
   }
 
-  addChunk(exploredChunk: ExploredChunkData) {
+  addChunk(exploredChunk: Chunk) {
     this.minedChunkKeys.add(getChunkKey(exploredChunk.chunkFootprint));
   }
 
@@ -62,7 +57,7 @@ class MinerManager extends EventEmitter {
   private worldRadius: number;
   private cores = 1;
   // chunks we're exploring
-  private exploringChunk: { [chunkKey: string]: ExploredChunkData } = {};
+  private exploringChunk: { [chunkKey: string]: Chunk } = {};
   // when we started exploring this chunk
   private exploringChunkStart: { [chunkKey: string]: number } = {};
   private minersComplete: { [chunkKey: string]: number } = {};
@@ -146,7 +141,7 @@ class MinerManager extends EventEmitter {
     this.workers[index] = new this.WorkerCtor();
     this.workers[index].onmessage = (e: MessageEvent) => {
       // worker explored a slice of a chunk
-      const [exploredChunk, jobId] = JSON.parse(e.data) as [ExploredChunkData, number];
+      const [exploredChunk, jobId] = JSON.parse(e.data) as [Chunk, number];
       const chunkKey = this.chunkLocationToKey(exploredChunk.chunkFootprint, jobId);
       this.exploringChunk[chunkKey].planetLocations.push(...exploredChunk.planetLocations);
 
@@ -157,7 +152,7 @@ class MinerManager extends EventEmitter {
     };
   }
 
-  private async onDiscovered(exploredChunk: ExploredChunkData, jobId: number): Promise<void> {
+  private async onDiscovered(exploredChunk: Chunk, jobId: number): Promise<void> {
     const discoveredLoc = exploredChunk.chunkFootprint;
     const chunkKey = this.chunkLocationToKey(discoveredLoc, jobId);
     const miningTimeMillis = Date.now() - this.exploringChunkStart[chunkKey];

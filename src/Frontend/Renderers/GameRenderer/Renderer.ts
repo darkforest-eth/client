@@ -21,6 +21,7 @@ import { RuinsRenderer } from './Entities/RuinsRenderer';
 import RingRenderer from './Entities/RingRenderer';
 import BlackDomainRenderer from './Entities/BlackDomainRenderer';
 import { MineRenderer } from './Entities/MineRenderer';
+import { Setting } from '../../Utils/SettingsHooks';
 
 class Renderer {
   static instance: Renderer | null;
@@ -65,6 +66,8 @@ class Renderer {
   voyageRenderManager: VoyageRenderer;
   wormholeRenderManager: WormholeRenderer;
 
+  private previousRenderTimestamp: number;
+
   private constructor(
     canvas: HTMLCanvasElement,
     glCanvas: HTMLCanvasElement,
@@ -77,6 +80,7 @@ class Renderer {
 
     this.glManager = new GameGLManager(this, this.glCanvas);
     this.overlay2dRenderer = new Overlay2DRenderer(this, this.canvas);
+    this.previousRenderTimestamp = Date.now();
 
     this.gameUIManager = gameUIManager;
 
@@ -134,10 +138,19 @@ class Renderer {
     return canvasRenderer;
   }
 
+  private recordRender(now: number) {
+    this.gameUIManager.updateDiagnostics((d) => {
+      d.fps = 1000 / (now - this.previousRenderTimestamp);
+    });
+
+    this.previousRenderTimestamp = now;
+  }
+
   private loop() {
     this.frameCount++;
     this.now = Date.now();
     this.draw();
+    this.recordRender(Date.now());
 
     this.frameRequestId = window.requestAnimationFrame(() => this.loop());
   }
@@ -158,10 +171,11 @@ class Renderer {
 
     // get some data
     const { cachedPlanets, chunks } = this.gameUIManager.getLocationsAndChunks();
-    const isHighPerfMode = this.gameUIManager.getIsHighPerfMode();
+    const isHighPerfMode = this.gameUIManager.getBooleanSetting(Setting.HighPerformanceRendering);
+    const drawChunkBorders = this.gameUIManager.getBooleanSetting(Setting.DrawChunkBorders);
 
     // draw the bg
-    this.bgRenderer.drawChunks(chunks, isHighPerfMode);
+    this.bgRenderer.drawChunks(chunks, isHighPerfMode, drawChunkBorders);
 
     this.uiRenderManager.queueBorders();
     this.uiRenderManager.queueSelectedRangeRing();

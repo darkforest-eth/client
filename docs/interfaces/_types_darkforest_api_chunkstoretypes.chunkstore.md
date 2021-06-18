@@ -2,6 +2,9 @@
 
 [\_types/darkforest/api/ChunkStoreTypes](../modules/_types_darkforest_api_chunkstoretypes.md).ChunkStore
 
+Abstract interface shared between different types of chunk stores. Currently we have one that
+writes to IndexedDB, and one that simply throws away the data.
+
 ## Implemented by
 
 - [_HomePlanetMinerChunkStore_](../classes/backend_miner_minermanager.homeplanetminerchunkstore.md)

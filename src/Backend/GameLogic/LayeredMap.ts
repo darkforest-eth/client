@@ -67,13 +67,14 @@ export class LayeredMap {
     const result: LocationId[] = [];
 
     for (const level of planetLevels) {
-      const increaseBounds = planetLevelToRadii.get(level)?.radiusWorld as number;
+      const radiusPx = planetLevelToRadii.get(level)?.radiusWorld as number;
+      const boundsIncrease = radiusPx * 5;
 
       const bounds = new Box(
-        worldX - increaseBounds,
-        worldY - increaseBounds,
-        worldWidth + increaseBounds * 2,
-        worldHeight + increaseBounds * 2
+        worldX - boundsIncrease,
+        worldY - boundsIncrease,
+        worldWidth + boundsIncrease * 2,
+        worldHeight + boundsIncrease * 2
       );
 
       const planets =

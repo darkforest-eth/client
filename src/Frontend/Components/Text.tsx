@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { SubmittedTx, Planet, ArtifactId, Artifact, WorldCoords } from '@darkforest_eth/types';
 import { artifactName } from '../../Backend/Procedural/ArtifactProcgen';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
-import { ExploredChunkData } from '../../_types/global/GlobalTypes';
+import { Chunk } from '../../_types/global/GlobalTypes';
 import Viewport from '../Game/Viewport';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
@@ -238,13 +238,7 @@ export function PlanetNameLink({ planet }: { planet: Planet }) {
   return <CenterPlanetLink planet={planet}>{ProcgenUtils.getPlanetName(planet)}</CenterPlanetLink>;
 }
 
-export function CenterChunkLink({
-  chunk,
-  children,
-}: {
-  chunk: ExploredChunkData;
-  children: React.ReactNode;
-}) {
+export function CenterChunkLink({ chunk, children }: { chunk: Chunk; children: React.ReactNode }) {
   return (
     <a>
       <u onClick={() => Viewport.getInstance().centerChunk(chunk)}>{children}</u>

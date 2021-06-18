@@ -142,13 +142,15 @@ export const arrive = (
   // update toPlanet energy and silver right before arrival
   updatePlanetToTime(toPlanet, artifactsOnPlanet, arrival.arrivalTime * 1000, contractConstants);
 
-  // apply energy
+  if (toPlanet.destroyed) {
+    return;
+  }
 
+  // apply energy
   const { energyArriving } = arrival;
 
   if (arrival.player !== toPlanet.owner) {
     // attacking enemy - includes emptyAddress
-
     if (
       toPlanet.energy >
       Math.floor((energyArriving * CONTRACT_PRECISION * 100) / toPlanet.defense) /

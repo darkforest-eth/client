@@ -1,18 +1,16 @@
 import React, { useState, useEffect, FormEvent } from 'react';
-import { useCallback } from 'react';
 import { ChangeEvent } from 'react';
 import styled from 'styled-components';
 import EthConnection from '../../Backend/Network/EthConnection';
-import { useStoredUIState, UIDataKey } from '../../Backend/Storage/UIStateStorageManager';
-import { ONE_DAY } from '../../Backend/Utils/Utils';
-import { ExploredChunkData } from '../../_types/global/GlobalTypes';
+import { Chunk } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
-import { SelectFrom, Spacer } from '../Components/CoreUI';
+import { Spacer } from '../Components/CoreUI';
 import { Input } from '../Components/Input';
 import { White, Red, Green } from '../Components/Text';
 import Viewport, { getDefaultScroll } from '../Game/Viewport';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager, useAccount } from '../Utils/AppHooks';
+import { BooleanSetting, Setting, MultiSelectSetting } from '../Utils/SettingsHooks';
 import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 
 const SCROLL_MIN = 0.0001 * 10000;
@@ -76,42 +74,6 @@ export function SettingsPane({
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
 
-  const [optOutMetrics, setOptOutMetrics] = useState<boolean | undefined>();
-  const updateOptOutMetrics = (newVal: boolean): void => {
-    if (!account) return;
-    localStorage.setItem(`optout-metrics-${account}`, JSON.stringify(newVal));
-    setOptOutMetrics(newVal);
-  };
-
-  const [allowTx, setAllowTx] = useState<boolean>(false);
-  const updateAllowTx = (newVal: boolean): void => {
-    if (!account) return;
-    if (newVal) {
-      localStorage.setItem(`wallet-enabled-${account}`, (Date.now() + ONE_DAY).toString());
-      setAllowTx(true);
-    } else {
-      localStorage.setItem(`wallet-enabled-${account}`, '0');
-      setAllowTx(false);
-    }
-  };
-
-  useEffect(() => {
-    const checkEnabled = () => {
-      if (!account) return;
-
-      const enableUntilStr = localStorage.getItem(`wallet-enabled-${account}`);
-      if (!enableUntilStr || Number.isNaN(+enableUntilStr) || Date.now() > +enableUntilStr) {
-        setAllowTx(false);
-      } else {
-        setAllowTx(true);
-      }
-    };
-
-    checkEnabled();
-    const intervalId = setInterval(checkEnabled, 1000);
-    return () => clearInterval(intervalId);
-  }, [account]);
-
   const [rpcURLText, setRpcURLText] = useState<string>(ethConnection.getRpcEndpoint());
   const [rpcURL, setRpcURL] = useState<string>(ethConnection.getRpcEndpoint());
   const onChangeRpc = () => {
@@ -123,12 +85,7 @@ export function SettingsPane({
   };
 
   const [balance, setBalance] = useState<number>(0);
-  useEffect(() => {
-    if (typeof optOutMetrics === 'undefined' && account) {
-      const fromDisk = localStorage.getItem(`optout-metrics-${account}`);
-      setOptOutMetrics(fromDisk === 'true');
-    }
-  }, [optOutMetrics, account]);
+
   useEffect(() => {
     if (!uiManager) return;
     const updateBalance = () => {
@@ -175,7 +132,7 @@ export function SettingsPane({
   const onImportMapFromTextBox = async () => {
     try {
       const chunks = JSON.parse(importMapByTextBoxValue);
-      await uiManager.bulkAddNewChunks(chunks as ExploredChunkData[]);
+      await uiManager.bulkAddNewChunks(chunks as Chunk[]);
       setImportMapByTextBoxValue('');
     } catch (e) {
       setFailure('Invalid map data. Check the data in your clipboard.');
@@ -200,7 +157,7 @@ export function SettingsPane({
         setFailure('Invalid map data. Check the data in your clipboard.');
         return;
       }
-      await uiManager.bulkAddNewChunks(chunks as ExploredChunkData[]);
+      await uiManager.bulkAddNewChunks(chunks as Chunk[]);
       setSuccess('Successfully imported a map!');
     } else {
       setFailure('Unable to import map right now.');
@@ -223,30 +180,18 @@ export function SettingsPane({
     const value = parseFloat((e.target as HTMLInputElement).value);
     if (!isNaN(value)) setScrollSpeed(value);
   };
+
   useEffect(() => {
     const scroll = localStorage.getItem('scrollSpeed');
     if (scroll) {
       setScrollSpeed(10000 * (parseFloat(scroll) - 1));
     }
   }, [setScrollSpeed]);
+
   useEffect(() => {
     if (!Viewport.instance) return;
     Viewport.instance.setMouseSensitivty(scrollSpeed / 10000);
   }, [scrollSpeed]);
-
-  const [highPerf, setHighPerf] = useStoredUIState<boolean>(UIDataKey.highPerf, uiManager);
-  const [notifMove, setNotifMove] = useStoredUIState<boolean>(UIDataKey.notifMove, uiManager);
-  const [gasFeeGwei, setGasFeeGwei] = useStoredUIState<number>(UIDataKey.gasFeeGwei, uiManager);
-  const onGasFeeGweiChange = useCallback(
-    (newValueStringifiedInt: string) => {
-      const newGasFee = parseInt(newValueStringifiedInt, 10);
-
-      if (!isNaN(newGasFee)) {
-        setGasFeeGwei(newGasFee);
-      }
-    },
-    [setGasFeeGwei]
-  );
 
   return (
     <ModalPane hook={hook} title={'Settings'} name={ModalName.Hats}>
@@ -278,11 +223,11 @@ export function SettingsPane({
           </Row>
           <Row>
             <span>gas fee (gwei)</span>
-            <SelectFrom
+            <MultiSelectSetting
+              uiManager={uiManager}
+              setting={Setting.GasFeeGwei}
               values={['1', '2', '3']}
               labels={['1 gwei (default)', '2 gwei (faster)', '3 gwei (fastest)']}
-              value={gasFeeGwei + ''}
-              setValue={onGasFeeGweiChange}
             />
           </Row>
           <Row>
@@ -291,10 +236,9 @@ export function SettingsPane({
               Credits, and Hats.
             </span>
             <Spacer width={64} />
-            <input
-              type='checkbox'
-              checked={allowTx}
-              onChange={(e) => updateAllowTx(e.target.checked)}
+            <BooleanSetting
+              uiManager={uiManager}
+              setting={Setting.AutoApproveNonPurchaseTransactions}
             />
           </Row>
         </Section>
@@ -354,14 +298,11 @@ export function SettingsPane({
           transaction times across browsers, and xDAI transaction errors, to help us optimize
           performance and fix bugs. This does not include personal data like email or IP address.
           <Spacer height={8} />
-          <Row>
-            <span>Opt out of metrics</span>
-            <input
-              type='checkbox'
-              checked={optOutMetrics}
-              onChange={(e) => updateOptOutMetrics(e.target.checked)}
-            />
-          </Row>
+          <BooleanSetting
+            uiManager={uiManager}
+            setting={Setting.OptOutMetrics}
+            settingDescription='toggle metrics opt out'
+          />
         </Section>
 
         <Section>
@@ -369,26 +310,22 @@ export function SettingsPane({
           Some performance settings. These will definitely be changed as we zero in on the
           performance bottlenecks in this game.
           <Spacer height={8} />
-          <Row>
-            <span>high performance mode</span>
-            <input
-              type='checkbox'
-              checked={highPerf}
-              onChange={(e) => setHighPerf(e.target.checked)}
-            />
-          </Row>
+          <BooleanSetting
+            uiManager={uiManager}
+            setting={Setting.HighPerformanceRendering}
+            settingDescription='toggle performance mode'
+          />
         </Section>
 
         <Section>
           <SectionHeader>Manage other settings.</SectionHeader>
-          <Row>
-            <span>Show notifications for MOVE</span>
-            <input
-              type='checkbox'
-              checked={notifMove}
-              onChange={(e) => setNotifMove(e.target.checked)}
-            />
-          </Row>
+          <div>Show notifications for MOVE</div>
+          <Spacer height={8} />
+          <BooleanSetting
+            uiManager={uiManager}
+            setting={Setting.MoveNotifications}
+            settingDescription='toggle move notifications'
+          />
           <Row>
             Scroll speed
             <Range

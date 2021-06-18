@@ -22,7 +22,11 @@ const dfstyles = {
     backgroundlight: '#282834',
     backgroundlighter: '#4a4a5a',
     dfblue: '#00ADE1',
+
     dfgreen: '#00DC82',
+    dfgreendark: '#025230',
+    dfgreenlight: '#89facc',
+
     dfred: '#FF6492',
     dfyellow: '#e8e228',
 

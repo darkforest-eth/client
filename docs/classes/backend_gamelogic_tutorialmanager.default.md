@@ -76,7 +76,13 @@ Overrides: EventEmitter.constructor
 
 ### complete
 
-▸ **complete**(): _void_
+▸ **complete**(`gameUiManager`: [_default_](backend_gamelogic_gameuimanager.default.md)): _void_
+
+#### Parameters
+
+| Name            | Type                                                    |
+| :-------------- | :------------------------------------------------------ |
+| `gameUiManager` | [_default_](backend_gamelogic_gameuimanager.default.md) |
 
 **Returns:** _void_
 

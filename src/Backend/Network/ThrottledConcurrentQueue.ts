@@ -93,6 +93,13 @@ export class ThrottledConcurrentQueue {
   }
 
   /**
+   * Returns the amount of queued items, not including the ones that are being executed at this moment.
+   */
+  public size() {
+    return this.taskQueue.length;
+  }
+
+  /**
    * Runs tasks until it's at either the throttle or concurrency limit. If there are more
    * tasks to be executed after that, schedules itself to execute again at the soonest
    * possible moment.

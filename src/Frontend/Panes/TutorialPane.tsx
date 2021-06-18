@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import TutorialManager, {
   TutorialState,
   TutorialManagerEvent,
 } from '../../Backend/GameLogic/TutorialManager';
-import { useStoredUIState, UIDataKey } from '../../Backend/Storage/UIStateStorageManager';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import { Underline } from '../Components/CoreUI';
@@ -12,8 +11,10 @@ import { TargetIcon, PauseIcon } from '../Components/Icons';
 import { White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
+import { Setting, useBooleanSetting } from '../Utils/SettingsHooks';
 
 function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }) {
+  const uiManager = useUIManager();
   const tutorialManager = TutorialManager.getInstance();
 
   if (tutorialState === TutorialState.None) {
@@ -24,7 +25,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
           <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.None)}>
             Yes
           </Btn>
-          <Btn className='btn' onClick={() => tutorialManager.complete()}>
+          <Btn className='btn' onClick={() => tutorialManager.complete(uiManager)}>
             No
           </Btn>
         </div>
@@ -150,7 +151,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         <br />
         We hope you enjoy the game!
         <div>
-          <Btn onClick={() => tutorialManager.complete()}>Finish</Btn>
+          <Btn onClick={() => tutorialManager.complete(uiManager)}>Finish</Btn>
         </div>
       </div>
     );
@@ -197,19 +198,12 @@ const StyledTutorialPane = styled.div<{ visible: boolean }>`
 `;
 
 export function TutorialPane({ newPlayerHook }: { newPlayerHook: Hook<boolean> }) {
-  const [visible, setVisible] = useState<boolean>(true);
+  const uiManager = useUIManager();
   const tutorialManager = TutorialManager.getInstance();
 
-  const uiManager = useUIManager();
-
   const [tutorialState, setTutorialState] = useState<TutorialState>(TutorialState.None);
-
   const [newPlayer] = newPlayerHook;
-
-  const [completed, setCompleted] = useStoredUIState<boolean>(
-    UIDataKey.tutorialCompleted,
-    uiManager
-  );
+  const [completed, setCompleted] = useBooleanSetting(uiManager, Setting.TutorialCompleted);
 
   // sync tutorial state
   useEffect(() => {
@@ -217,7 +211,6 @@ export function TutorialPane({ newPlayerHook }: { newPlayerHook: Hook<boolean> }
       setTutorialState(newState);
       setCompleted(newState === TutorialState.Completed);
     };
-
     tutorialManager.on(TutorialManagerEvent.StateChanged, update);
 
     return () => {
@@ -225,26 +218,8 @@ export function TutorialPane({ newPlayerHook }: { newPlayerHook: Hook<boolean> }
     };
   }, [tutorialManager, setCompleted]);
 
-  // sync style to tutorial state
-  useLayoutEffect(() => {
-    if (newPlayer) {
-      setVisible(false);
-      return;
-    }
-
-    if (completed) {
-      setVisible(false);
-    } else {
-      setVisible(true);
-    }
-  }, [tutorialState, completed, newPlayer]);
-
-  useEffect(() => {
-    // console.log(tutorialState, visible, newPlayer);
-  }, [tutorialState, visible, newPlayer]);
-
   return (
-    <StyledTutorialPane visible={visible}>
+    <StyledTutorialPane visible={completed || newPlayer}>
       <TutorialPaneContent tutorialState={tutorialState} />
     </StyledTutorialPane>
   );

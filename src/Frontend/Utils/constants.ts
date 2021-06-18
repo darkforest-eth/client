@@ -1,7 +1,16 @@
 import * as bigInt from 'big-integer';
 
 const MIN_CHUNK_SIZE = 16;
-const MAX_CHUNK_SIZE = 256;
+
+/**
+ * @tutorial to speed up the game's background rendering code, it is possible to set this value to
+ * be a higher power of two. This means that smaller chunks will be merged into larger chunks via
+ * the algorithms implemented in {@link ChunkUtils}.
+ *
+ * {@code Math.floor(Math.pow(2, 16))} should be large enough for most.
+ */
+const MAX_CHUNK_SIZE = 1024;
+
 const LOCATION_ID_UB = bigInt(
   '21888242871839275222246405745257275088548364400416034343698204186575808495617'
 );

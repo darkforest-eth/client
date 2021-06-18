@@ -1,6 +1,6 @@
 import { LocatablePlanet, LocationId, PlanetLevel, WorldCoords } from '@darkforest_eth/types';
 import Viewport from '../../Frontend/Game/Viewport';
-import { ExploredChunkData, isLocatable } from '../../_types/global/GlobalTypes';
+import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import GameManager from './GameManager';
 import GameUIManager from './GameUIManager';
 
@@ -22,7 +22,7 @@ export class ViewportEntities {
   private readonly gameManager: GameManager;
   private readonly uiManager: GameUIManager;
 
-  private cachedExploredChunks: Set<ExploredChunkData> = new Set();
+  private cachedExploredChunks: Set<Chunk> = new Set();
   private cachedPlanets: Map<LocationId, PlanetRenderInfo> = new Map();
   private cachedPlanetsAsList: PlanetRenderInfo[] = [];
 
@@ -44,6 +44,12 @@ export class ViewportEntities {
     const viewport = Viewport.getInstance();
     this.recalculateViewportPlanets(viewport);
     this.recalculateViewportChunks(viewport);
+
+    this.uiManager.updateDiagnostics((d) => {
+      d.visibleChunks = this.cachedExploredChunks.size;
+      d.visiblePlanets = this.cachedPlanets.size;
+      d.totalPlanets = this.gameManager.getGameObjects().getAllPlanetsMap().size;
+    });
   }
 
   private recalculateViewportChunks(viewport: Viewport) {
@@ -51,10 +57,13 @@ export class ViewportEntities {
       return;
     }
 
-    const chunks = new Set<ExploredChunkData>();
+    const chunks = new Set<Chunk>();
 
     for (const exploredChunk of this.uiManager.getExploredChunks()) {
-      if (viewport.intersectsViewport(exploredChunk)) {
+      if (
+        viewport.intersectsViewport(exploredChunk) &&
+        viewport.worldToCanvasDist(exploredChunk.chunkFootprint.sideLength) >= 3
+      ) {
         chunks.add(exploredChunk);
       }
     }

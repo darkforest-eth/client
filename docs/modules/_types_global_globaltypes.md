@@ -8,7 +8,7 @@
 
 ### Classes
 
-- [ExploredChunkData](../classes/_types_global_globaltypes.exploredchunkdata.md)
+- [Chunk](../classes/_types_global_globaltypes.chunk.md)
 
 ### Interfaces
 

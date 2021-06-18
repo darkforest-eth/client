@@ -15,15 +15,17 @@
 ### Properties
 
 - [account](backend_storage_persistentchunkstore.default.md#account)
-- [cached](backend_storage_persistentchunkstore.default.md#cached)
 - [chunkMap](backend_storage_persistentchunkstore.default.md#chunkmap)
 - [confirmedTxHashes](backend_storage_persistentchunkstore.default.md#confirmedtxhashes)
 - [db](backend_storage_persistentchunkstore.default.md#db)
+- [diagnosticUpdater](backend_storage_persistentchunkstore.default.md#diagnosticupdater)
 - [nUpdatesLastTwoMins](backend_storage_persistentchunkstore.default.md#nupdateslasttwomins)
+- [queuedChunkWrites](backend_storage_persistentchunkstore.default.md#queuedchunkwrites)
 - [throttledSaveChunkCacheToDisk](backend_storage_persistentchunkstore.default.md#throttledsavechunkcachetodisk)
 
 ### Methods
 
+- [addChunk](backend_storage_persistentchunkstore.default.md#addchunk)
 - [addHomeLocation](backend_storage_persistentchunkstore.default.md#addhomelocation)
 - [allChunks](backend_storage_persistentchunkstore.default.md#allchunks)
 - [bulkSetKeyInCollection](backend_storage_persistentchunkstore.default.md#bulksetkeyincollection)
@@ -38,18 +40,18 @@
 - [getSavedTouchedPlanetIds](backend_storage_persistentchunkstore.default.md#getsavedtouchedplanetids)
 - [getUnconfirmedSubmittedEthTxs](backend_storage_persistentchunkstore.default.md#getunconfirmedsubmittedethtxs)
 - [hasMinedChunk](backend_storage_persistentchunkstore.default.md#hasminedchunk)
-- [loadIntoMemory](backend_storage_persistentchunkstore.default.md#loadintomemory)
+- [loadChunks](backend_storage_persistentchunkstore.default.md#loadchunks)
 - [loadPlugins](backend_storage_persistentchunkstore.default.md#loadplugins)
 - [onEthTxComplete](backend_storage_persistentchunkstore.default.md#onethtxcomplete)
 - [onEthTxSubmit](backend_storage_persistentchunkstore.default.md#onethtxsubmit)
+- [persistQueuedChunks](backend_storage_persistentchunkstore.default.md#persistqueuedchunks)
 - [recomputeSaveThrottleAfterUpdate](backend_storage_persistentchunkstore.default.md#recomputesavethrottleafterupdate)
 - [removeKey](backend_storage_persistentchunkstore.default.md#removekey)
-- [saveChunkCacheToDisk](backend_storage_persistentchunkstore.default.md#savechunkcachetodisk)
 - [savePlugins](backend_storage_persistentchunkstore.default.md#saveplugins)
 - [saveRevealedCoords](backend_storage_persistentchunkstore.default.md#saverevealedcoords)
 - [saveTouchedPlanetIds](backend_storage_persistentchunkstore.default.md#savetouchedplanetids)
+- [setDiagnosticUpdater](backend_storage_persistentchunkstore.default.md#setdiagnosticupdater)
 - [setKey](backend_storage_persistentchunkstore.default.md#setkey)
-- [updateChunk](backend_storage_persistentchunkstore.default.md#updatechunk)
 - [create](backend_storage_persistentchunkstore.default.md#create)
 
 ## Constructors
@@ -75,15 +77,9 @@
 
 ---
 
-### cached
-
-• `Private` **cached**: DBTx[]
-
----
-
 ### chunkMap
 
-• `Private` **chunkMap**: _Map_<string, [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>
+• `Private` **chunkMap**: _Map_<[_ChunkId_](../modules/_types_darkforest_api_chunkstoretypes.md#chunkid), [_Chunk_](_types_global_globaltypes.chunk.md)\>
 
 ---
 
@@ -99,9 +95,21 @@
 
 ---
 
+### diagnosticUpdater
+
+• `Private` `Optional` **diagnosticUpdater**: [_DiagnosticUpdater_](../interfaces/backend_interfaces_diagnosticupdater.diagnosticupdater.md)
+
+---
+
 ### nUpdatesLastTwoMins
 
 • `Private` **nUpdatesLastTwoMins**: _number_= 0
+
+---
+
+### queuedChunkWrites
+
+• `Private` **queuedChunkWrites**: DBTx[]
 
 ---
 
@@ -110,6 +118,27 @@
 • `Private` **throttledSaveChunkCacheToDisk**: _DebouncedFunc_<() => _Promise_<void\>\>
 
 ## Methods
+
+### addChunk
+
+▸ **addChunk**(`chunk`: [_Chunk_](_types_global_globaltypes.chunk.md), `persistChunk?`: _boolean_): _void_
+
+When a chunk is mined, or a chunk is imported via map import, or a chunk is loaded from
+persistent storage for the first time, we need to add this chunk to the game. This function
+allows you to add a new chunk to the game, and optionally persist that chunk. The reason you
+might not want to persist the chunk is if you are sure that you got it from persistent storage.
+i.e. it already exists in persistent storage.
+
+#### Parameters
+
+| Name           | Type                                          | Default value |
+| :------------- | :-------------------------------------------- | :------------ |
+| `chunk`        | [_Chunk_](_types_global_globaltypes.chunk.md) | -             |
+| `persistChunk` | _boolean_                                     | true          |
+
+**Returns:** _void_
+
+---
 
 ### addHomeLocation
 
@@ -127,9 +156,9 @@
 
 ### allChunks
 
-▸ **allChunks**(): _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>
+▸ **allChunks**(): _Iterable_<[_Chunk_](_types_global_globaltypes.chunk.md)\>
 
-**Returns:** _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>
+**Returns:** _Iterable_<[_Chunk_](_types_global_globaltypes.chunk.md)\>
 
 ---
 
@@ -172,7 +201,12 @@
 
 ### getChunkByFootprint
 
-▸ **getChunkByFootprint**(`chunkLoc`: [_Rectangle_](../interfaces/_types_global_globaltypes.rectangle.md)): _undefined_ \| [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)
+▸ **getChunkByFootprint**(`chunkLoc`: [_Rectangle_](../interfaces/_types_global_globaltypes.rectangle.md)): _undefined_ \| [_Chunk_](_types_global_globaltypes.chunk.md)
+
+Returns the explored chunk data for the given rectangle if that chunk has been mined. If this
+chunk is entirely contained within another bigger chunk that has been mined, return that chunk.
+`chunkLoc` is an aligned square, as defined in ChunkUtils.ts in the `getSiblingLocations`
+function.
 
 #### Parameters
 
@@ -180,21 +214,21 @@
 | :--------- | :------------------------------------------------------------------ |
 | `chunkLoc` | [_Rectangle_](../interfaces/_types_global_globaltypes.rectangle.md) |
 
-**Returns:** _undefined_ \| [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)
+**Returns:** _undefined_ \| [_Chunk_](_types_global_globaltypes.chunk.md)
 
 ---
 
 ### getChunkById
 
-▸ `Private` **getChunkById**(`chunkId`: _string_): _undefined_ \| [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)
+▸ `Private` **getChunkById**(`chunkId`: [_ChunkId_](../modules/_types_darkforest_api_chunkstoretypes.md#chunkid)): _undefined_ \| [_Chunk_](_types_global_globaltypes.chunk.md)
 
 #### Parameters
 
-| Name      | Type     |
-| :-------- | :------- |
-| `chunkId` | _string_ |
+| Name      | Type                                                                     |
+| :-------- | :----------------------------------------------------------------------- |
+| `chunkId` | [_ChunkId_](../modules/_types_darkforest_api_chunkstoretypes.md#chunkid) |
 
-**Returns:** _undefined_ \| [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)
+**Returns:** _undefined_ \| [_Chunk_](_types_global_globaltypes.chunk.md)
 
 ---
 
@@ -215,6 +249,11 @@ which bricks the user's account.
 
 ▸ `Private` **getKey**(`key`: _string_, `objStore?`: ObjectStore): _Promise_<undefined \| string\>
 
+Important! This sets the key in indexed db per account and per contract. This means the same
+client can connect to multiple different dark forest contracts, with multiple different
+accounts, and the persistent storage will not overwrite data that is not relevant for the
+current configuration of the client.
+
 #### Parameters
 
 | Name       | Type        |
@@ -228,15 +267,20 @@ which bricks the user's account.
 
 ### getMinedSubChunks
 
-▸ `Private` **getMinedSubChunks**(`e`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)): [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)[]
+▸ `Private` **getMinedSubChunks**(`chunk`: [_Chunk_](_types_global_globaltypes.chunk.md)): [_Chunk_](_types_global_globaltypes.chunk.md)[]
+
+Returns all the mined chunks with smaller sidelength strictly contained in the chunk.
+
+TODO: move this into ChunkUtils, and also make use of it, the way that it is currently used, in
+the function named `addToChunkMap`.
 
 #### Parameters
 
-| Name | Type                                                                  |
-| :--- | :-------------------------------------------------------------------- |
-| `e`  | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md) |
+| Name    | Type                                          |
+| :------ | :-------------------------------------------- |
+| `chunk` | [_Chunk_](_types_global_globaltypes.chunk.md) |
 
-**Returns:** [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)[]
+**Returns:** [_Chunk_](_types_global_globaltypes.chunk.md)[]
 
 ---
 
@@ -280,9 +324,11 @@ Implementation of: ChunkStore.hasMinedChunk
 
 ---
 
-### loadIntoMemory
+### loadChunks
 
-▸ `Private` **loadIntoMemory**(): _Promise_<void\>
+▸ `Private` **loadChunks**(): _Promise_<void\>
+
+This function loads all chunks persisted in the user's storage into the game.
 
 **Returns:** _Promise_<void\>
 
@@ -324,6 +370,18 @@ Implementation of: ChunkStore.hasMinedChunk
 
 ---
 
+### persistQueuedChunks
+
+▸ `Private` **persistQueuedChunks**(): _Promise_<void\>
+
+Rather than saving a chunk immediately after it's mined, we queue up new chunks, and
+periodically save them. This function gets all of the queued new chunks, and persists them to
+indexed db.
+
+**Returns:** _Promise_<void\>
+
+---
+
 ### recomputeSaveThrottleAfterUpdate
 
 ▸ `Private` **recomputeSaveThrottleAfterUpdate**(): _void_
@@ -342,14 +400,6 @@ Implementation of: ChunkStore.hasMinedChunk
 | :--------- | :---------- |
 | `key`      | _string_    |
 | `objStore` | ObjectStore |
-
-**Returns:** _Promise_<void\>
-
----
-
-### saveChunkCacheToDisk
-
-▸ `Private` **saveChunkCacheToDisk**(): _Promise_<void\>
 
 **Returns:** _Promise_<void\>
 
@@ -397,9 +447,28 @@ Implementation of: ChunkStore.hasMinedChunk
 
 ---
 
+### setDiagnosticUpdater
+
+▸ **setDiagnosticUpdater**(`diagnosticUpdater?`: [_DiagnosticUpdater_](../interfaces/backend_interfaces_diagnosticupdater.diagnosticupdater.md)): _void_
+
+#### Parameters
+
+| Name                 | Type                                                                                           |
+| :------------------- | :--------------------------------------------------------------------------------------------- |
+| `diagnosticUpdater?` | [_DiagnosticUpdater_](../interfaces/backend_interfaces_diagnosticupdater.diagnosticupdater.md) |
+
+**Returns:** _void_
+
+---
+
 ### setKey
 
 ▸ `Private` **setKey**(`key`: _string_, `value`: _string_, `objStore?`: ObjectStore): _Promise_<void\>
+
+Important! This sets the key in indexed db per account and per contract. This means the same
+client can connect to multiple different dark forest contracts, with multiple different
+accounts, and the persistent storage will not overwrite data that is not relevant for the
+current configuration of the client.
 
 #### Parameters
 
@@ -410,21 +479,6 @@ Implementation of: ChunkStore.hasMinedChunk
 | `objStore` | ObjectStore |
 
 **Returns:** _Promise_<void\>
-
----
-
-### updateChunk
-
-▸ **updateChunk**(`e`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md), `loadedFromStorage?`: _boolean_): _void_
-
-#### Parameters
-
-| Name                | Type                                                                  | Default value |
-| :------------------ | :-------------------------------------------------------------------- | :------------ |
-| `e`                 | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md) | -             |
-| `loadedFromStorage` | _boolean_                                                             | false         |
-
-**Returns:** _void_
 
 ---
 

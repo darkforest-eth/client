@@ -7,7 +7,8 @@ import { ThrottledConcurrentQueue } from './ThrottledConcurrentQueue';
 import { EventLogger } from './EventLogger';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import { openConfirmationWindowForTransaction } from '../../Frontend/Game/Popups';
-import UIStateStorageManager, { UIDataKey } from '../Storage/UIStateStorageManager';
+import { DiagnosticUpdater } from '../Interfaces/DiagnosticUpdater';
+import { getSetting, Setting } from '../../Frontend/Utils/SettingsHooks';
 
 export interface QueuedTxRequest {
   onSubmissionError: (e: Error) => void;
@@ -48,20 +49,15 @@ export class TxExecutor extends EventEmitter {
   private lastTransaction: number;
   private nonce: number;
   private eth: EthConnection;
-  private uiStateStorageManager: UIStateStorageManager;
+  private diagnosticsUpdater?: DiagnosticUpdater;
 
-  constructor(
-    ethConnection: EthConnection,
-    uiStateStorageManager: UIStateStorageManager,
-    nonce: number
-  ) {
+  constructor(ethConnection: EthConnection, nonce: number) {
     super();
 
     this.txQueue = new ThrottledConcurrentQueue(3, 1000, 1);
     this.nonce = nonce;
     this.lastTransaction = Date.now();
     this.eth = ethConnection;
-    this.uiStateStorageManager = uiStateStorageManager;
   }
 
   /**
@@ -78,21 +74,27 @@ export class TxExecutor extends EventEmitter {
       gasLimit: 2000000,
     }
   ): PendingTransaction {
+    this.diagnosticsUpdater?.updateDiagnostics((d) => {
+      d.transactionsInQueue++;
+    });
+
     const [txResponse, rejectTxResponse, submittedPromise] =
       deferred<providers.TransactionResponse>();
     const [txReceipt, rejectTxReceipt, receiptPromise] = deferred<providers.TransactionReceipt>();
 
     if (overrides.gasPrice === undefined) {
       const gwei = EthersBN.from('1000000000');
-      const userGasPriceGwei = this.uiStateStorageManager.getUIDataItem(
-        UIDataKey.gasFeeGwei
-      ) as number;
+      const userGasPriceGwei = getSetting(this.eth.getAddress(), Setting.GasFeeGwei);
 
       overrides.gasPrice = gwei.mul(userGasPriceGwei);
     }
 
-    this.txQueue.add(() =>
-      this.execute({
+    this.txQueue.add(() => {
+      this.diagnosticsUpdater?.updateDiagnostics((d) => {
+        d.transactionsInQueue--;
+      });
+
+      return this.execute({
         type,
         actionId,
         contract,
@@ -102,8 +104,8 @@ export class TxExecutor extends EventEmitter {
         onReceiptError: rejectTxReceipt,
         onTransactionResponse: txResponse,
         onTransactionReceipt: txReceipt,
-      })
-    );
+      });
+    });
 
     return {
       submitted: submittedPromise,
@@ -184,6 +186,10 @@ export class TxExecutor extends EventEmitter {
       } else {
         txRequest.onReceiptError(e);
       }
+    } finally {
+      this.diagnosticsUpdater?.updateDiagnostics((d) => {
+        d.totalTransactions++;
+      });
     }
 
     /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -218,4 +224,8 @@ export class TxExecutor extends EventEmitter {
       EventLogger.getInstance().logEvent(logEvent);
     }
   };
+
+  public setDiagnosticUpdater(diagnosticUpdater?: DiagnosticUpdater) {
+    this.diagnosticsUpdater = diagnosticUpdater;
+  }
 }

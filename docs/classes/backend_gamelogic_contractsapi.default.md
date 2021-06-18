@@ -21,10 +21,10 @@ in the contract.
 
 - [contractCaller](backend_gamelogic_contractsapi.default.md#contractcaller)
 - [coreContract](backend_gamelogic_contractsapi.default.md#corecontract)
+- [diagnosticsUpdater](backend_gamelogic_contractsapi.default.md#diagnosticsupdater)
 - [ethConnection](backend_gamelogic_contractsapi.default.md#ethconnection)
 - [gettersContract](backend_gamelogic_contractsapi.default.md#getterscontract)
 - [gptCreditContract](backend_gamelogic_contractsapi.default.md#gptcreditcontract)
-- [terminal](backend_gamelogic_contractsapi.default.md#terminal)
 - [txRequestExecutor](backend_gamelogic_contractsapi.default.md#txrequestexecutor)
 
 ### Methods
@@ -62,11 +62,10 @@ in the contract.
 - [initializePlayer](backend_gamelogic_contractsapi.default.md#initializeplayer)
 - [makeCall](backend_gamelogic_contractsapi.default.md#makecall)
 - [move](backend_gamelogic_contractsapi.default.md#move)
-- [onTxConfirmed](backend_gamelogic_contractsapi.default.md#ontxconfirmed)
-- [onTxSubmit](backend_gamelogic_contractsapi.default.md#ontxsubmit)
 - [prospectPlanet](backend_gamelogic_contractsapi.default.md#prospectplanet)
 - [removeEventListeners](backend_gamelogic_contractsapi.default.md#removeeventlisteners)
 - [reveal](backend_gamelogic_contractsapi.default.md#reveal)
+- [setDiagnosticUpdater](backend_gamelogic_contractsapi.default.md#setdiagnosticupdater)
 - [setupEventListeners](backend_gamelogic_contractsapi.default.md#setupeventlisteners)
 - [transferOwnership](backend_gamelogic_contractsapi.default.md#transferownership)
 - [upgradePlanet](backend_gamelogic_contractsapi.default.md#upgradeplanet)
@@ -79,19 +78,17 @@ in the contract.
 
 ### constructor
 
-\+ `Private` **new default**(`ethConnection`: [_default_](backend_network_ethconnection.default.md), `terminal`: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>, `coreContract`: _DarkForestCore_, `gettersContract`: _DarkForestGetters_, `gptCreditContract`: _DarkForestGPTCredit_, `uiStateStorageManager`: [_default_](backend_storage_uistatestoragemanager.default.md), `nonce`: _number_): [_default_](backend_gamelogic_contractsapi.default.md)
+\+ `Private` **new default**(`ethConnection`: [_default_](backend_network_ethconnection.default.md), `coreContract`: _DarkForestCore_, `gettersContract`: _DarkForestGetters_, `gptCreditContract`: _DarkForestGPTCredit_, `nonce`: _number_): [_default_](backend_gamelogic_contractsapi.default.md)
 
 #### Parameters
 
-| Name                    | Type                                                                                                          |
-| :---------------------- | :------------------------------------------------------------------------------------------------------------ |
-| `ethConnection`         | [_default_](backend_network_ethconnection.default.md)                                                         |
-| `terminal`              | _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\> |
-| `coreContract`          | _DarkForestCore_                                                                                              |
-| `gettersContract`       | _DarkForestGetters_                                                                                           |
-| `gptCreditContract`     | _DarkForestGPTCredit_                                                                                         |
-| `uiStateStorageManager` | [_default_](backend_storage_uistatestoragemanager.default.md)                                                 |
-| `nonce`                 | _number_                                                                                                      |
+| Name                | Type                                                  |
+| :------------------ | :---------------------------------------------------- |
+| `ethConnection`     | [_default_](backend_network_ethconnection.default.md) |
+| `coreContract`      | _DarkForestCore_                                      |
+| `gettersContract`   | _DarkForestGetters_                                   |
+| `gptCreditContract` | _DarkForestGPTCredit_                                 |
+| `nonce`             | _number_                                              |
 
 **Returns:** [_default_](backend_gamelogic_contractsapi.default.md)
 
@@ -111,6 +108,12 @@ Overrides: EventEmitter.constructor
 
 ---
 
+### diagnosticsUpdater
+
+• `Private` `Optional` **diagnosticsUpdater**: [_DiagnosticUpdater_](../interfaces/backend_interfaces_diagnosticupdater.diagnosticupdater.md)
+
+---
+
 ### ethConnection
 
 • `Private` **ethConnection**: [_default_](backend_network_ethconnection.default.md)
@@ -126,12 +129,6 @@ Overrides: EventEmitter.constructor
 ### gptCreditContract
 
 • `Private` **gptCreditContract**: _DarkForestGPTCredit_
-
----
-
-### terminal
-
-• `Private` `Readonly` **terminal**: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>
 
 ---
 
@@ -575,35 +572,6 @@ Overrides: EventEmitter.constructor
 
 ---
 
-### onTxConfirmed
-
-▸ `Private` **onTxConfirmed**(`unminedTx`: SubmittedTx, `success`: _boolean_): _void_
-
-#### Parameters
-
-| Name        | Type        |
-| :---------- | :---------- |
-| `unminedTx` | SubmittedTx |
-| `success`   | _boolean_   |
-
-**Returns:** _void_
-
----
-
-### onTxSubmit
-
-▸ `Private` **onTxSubmit**(`unminedTx`: SubmittedTx): _void_
-
-#### Parameters
-
-| Name        | Type        |
-| :---------- | :---------- |
-| `unminedTx` | SubmittedTx |
-
-**Returns:** _void_
-
----
-
 ### prospectPlanet
 
 ▸ **prospectPlanet**(`planetId`: LocationId, `actionId`: _string_): _Promise_<TransactionReceipt\>
@@ -639,6 +607,20 @@ Overrides: EventEmitter.constructor
 | `action` | UnconfirmedReveal           |
 
 **Returns:** _Promise_<TransactionReceipt\>
+
+---
+
+### setDiagnosticUpdater
+
+▸ **setDiagnosticUpdater**(`diagnosticUpdater?`: [_DiagnosticUpdater_](../interfaces/backend_interfaces_diagnosticupdater.diagnosticupdater.md)): _void_
+
+#### Parameters
+
+| Name                 | Type                                                                                           |
+| :------------------- | :--------------------------------------------------------------------------------------------- |
+| `diagnosticUpdater?` | [_DiagnosticUpdater_](../interfaces/backend_interfaces_diagnosticupdater.diagnosticupdater.md) |
+
+**Returns:** _void_
 
 ---
 
@@ -729,14 +711,12 @@ Given an unconfirmed (but submitted) transaction, emits the appropriate
 
 ### create
 
-▸ `Static` **create**(`ethConnection`: [_default_](backend_network_ethconnection.default.md), `uiStateStorageManager`: [_default_](backend_storage_uistatestoragemanager.default.md), `terminal`: _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\>): _Promise_<[_default_](backend_gamelogic_contractsapi.default.md)\>
+▸ `Static` **create**(`ethConnection`: [_default_](backend_network_ethconnection.default.md)): _Promise_<[_default_](backend_gamelogic_contractsapi.default.md)\>
 
 #### Parameters
 
-| Name                    | Type                                                                                                          |
-| :---------------------- | :------------------------------------------------------------------------------------------------------------ |
-| `ethConnection`         | [_default_](backend_network_ethconnection.default.md)                                                         |
-| `uiStateStorageManager` | [_default_](backend_storage_uistatestoragemanager.default.md)                                                 |
-| `terminal`              | _MutableRefObject_<undefined \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)\> |
+| Name            | Type                                                  |
+| :-------------- | :---------------------------------------------------- |
+| `ethConnection` | [_default_](backend_network_ethconnection.default.md) |
 
 **Returns:** _Promise_<[_default_](backend_gamelogic_contractsapi.default.md)\>

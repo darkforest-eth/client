@@ -13,7 +13,6 @@ import {
   EmailResponse,
   submitPlayerEmail,
 } from '../../Backend/Network/UtilityServerAPI';
-import { useStoredUIState, UIDataKey } from '../../Backend/Storage/UIStateStorageManager';
 import { neverResolves } from '../../Backend/Utils/Utils';
 import {
   Wrapper,
@@ -65,10 +64,7 @@ export default function GameLandingPage() {
   const topLevelContainer = useRef<HTMLDivElement | null>(null);
   const [ethConnection] = useState(() => new EthConnection());
   const [gameManager, setGameManager] = useState<GameManager | undefined>();
-  const [terminalEnabled, setTerminalEnabled] = useStoredUIState<boolean>(
-    UIDataKey.terminalEnabled,
-    gameUIManagerRef.current
-  );
+  const [terminalEnabled, setTerminalEnabled] = useState(true);
   const [initRenderState, setInitRenderState] = useState(InitRenderState.NONE);
   const [step, setStep] = useState(TerminalPromptStep.NONE);
 

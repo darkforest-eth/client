@@ -294,14 +294,14 @@ Overrides: EventEmitter.constructor
 
 ### onDiscovered
 
-▸ `Private` **onDiscovered**(`exploredChunk`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md), `jobId`: _number_): _Promise_<void\>
+▸ `Private` **onDiscovered**(`exploredChunk`: [_Chunk_](_types_global_globaltypes.chunk.md), `jobId`: _number_): _Promise_<void\>
 
 #### Parameters
 
-| Name            | Type                                                                  |
-| :-------------- | :-------------------------------------------------------------------- |
-| `exploredChunk` | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md) |
-| `jobId`         | _number_                                                              |
+| Name            | Type                                          |
+| :-------------- | :-------------------------------------------- |
+| `exploredChunk` | [_Chunk_](_types_global_globaltypes.chunk.md) |
+| `jobId`         | _number_                                      |
 
 **Returns:** _Promise_<void\>
 

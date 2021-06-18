@@ -25,7 +25,6 @@
 - [mouseSensitivity](frontend_game_viewport.default.md#mousesensitivity)
 - [mousedownCoords](frontend_game_viewport.default.md#mousedowncoords)
 - [scale](frontend_game_viewport.default.md#scale)
-- [shouldFling](frontend_game_viewport.default.md#shouldfling)
 - [velocity](frontend_game_viewport.default.md#velocity)
 - [viewportHeight](frontend_game_viewport.default.md#viewportheight)
 - [viewportWidth](frontend_game_viewport.default.md#viewportwidth)
@@ -57,7 +56,6 @@
 - [isInOrAroundViewport](frontend_game_viewport.default.md#isinoraroundviewport)
 - [isInViewport](frontend_game_viewport.default.md#isinviewport)
 - [isValidWorldWidth](frontend_game_viewport.default.md#isvalidworldwidth)
-- [loop](frontend_game_viewport.default.md#loop)
 - [onMouseDown](frontend_game_viewport.default.md#onmousedown)
 - [onMouseMove](frontend_game_viewport.default.md#onmousemove)
 - [onMouseOut](frontend_game_viewport.default.md#onmouseout)
@@ -68,7 +66,6 @@
 - [onSendInit](frontend_game_viewport.default.md#onsendinit)
 - [onWindowResize](frontend_game_viewport.default.md#onwindowresize)
 - [setData](frontend_game_viewport.default.md#setdata)
-- [setFling](frontend_game_viewport.default.md#setfling)
 - [setMouseSensitivty](frontend_game_viewport.default.md#setmousesensitivty)
 - [setStorage](frontend_game_viewport.default.md#setstorage)
 - [setWorldHeight](frontend_game_viewport.default.md#setworldheight)
@@ -195,12 +192,6 @@
 
 ---
 
-### shouldFling
-
-• **shouldFling**: _boolean_
-
----
-
 ### velocity
 
 • **velocity**: _undefined_ \| WorldCoords
@@ -305,13 +296,13 @@
 
 ### centerChunk
 
-▸ **centerChunk**(`chunk`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)): _void_
+▸ **centerChunk**(`chunk`: [_Chunk_](_types_global_globaltypes.chunk.md)): _void_
 
 #### Parameters
 
-| Name    | Type                                                                  |
-| :------ | :-------------------------------------------------------------------- |
-| `chunk` | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md) |
+| Name    | Type                                          |
+| :------ | :-------------------------------------------- |
+| `chunk` | [_Chunk_](_types_global_globaltypes.chunk.md) |
 
 **Returns:** _void_
 
@@ -414,13 +405,13 @@
 
 ### intersectsViewport
 
-▸ **intersectsViewport**(`chunk`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)): _boolean_
+▸ **intersectsViewport**(`chunk`: [_Chunk_](_types_global_globaltypes.chunk.md)): _boolean_
 
 #### Parameters
 
-| Name    | Type                                                                  |
-| :------ | :-------------------------------------------------------------------- |
-| `chunk` | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md) |
+| Name    | Type                                          |
+| :------ | :-------------------------------------------- |
+| `chunk` | [_Chunk_](_types_global_globaltypes.chunk.md) |
 
 **Returns:** _boolean_
 
@@ -465,14 +456,6 @@
 | `width` | _number_ |
 
 **Returns:** _boolean_
-
----
-
-### loop
-
-▸ `Private` **loop**(): _void_
-
-**Returns:** _void_
 
 ---
 
@@ -582,20 +565,6 @@
 | Name   | Type         |
 | :----- | :----------- |
 | `data` | ViewportData |
-
-**Returns:** _void_
-
----
-
-### setFling
-
-▸ **setFling**(`fling`: _boolean_): _void_
-
-#### Parameters
-
-| Name    | Type      |
-| :------ | :-------- |
-| `fling` | _boolean_ |
 
 **Returns:** _void_
 

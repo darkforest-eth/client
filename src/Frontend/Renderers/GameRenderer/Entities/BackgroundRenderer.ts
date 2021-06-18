@@ -1,4 +1,4 @@
-import { ExploredChunkData } from '../../../../_types/global/GlobalTypes';
+import { Chunk } from '../../../../_types/global/GlobalTypes';
 import Viewport from '../../../Game/Viewport';
 import EngineUtils from '../EngineUtils';
 import { MASK_PROGRAM_DEFINITION } from '../Programs/MaskProgram';
@@ -8,7 +8,6 @@ import { GenericRenderer } from '../WebGL/GenericRenderer';
 export default class BackgroundRenderer extends GenericRenderer<typeof MASK_PROGRAM_DEFINITION> {
   manager: GameGLManager;
   bgCanvas: HTMLCanvasElement;
-  maskProgram: WebGLProgram;
   matrixULoc: WebGLUniformLocation | null;
   quadBuffer: number[];
   perlinThresholds: number[];
@@ -19,7 +18,11 @@ export default class BackgroundRenderer extends GenericRenderer<typeof MASK_PROG
     this.perlinThresholds = this.manager.renderer.gameUIManager.getPerlinThresholds();
   }
 
-  drawChunks(exploredChunks: Iterable<ExploredChunkData>, highPerfMode: boolean): void {
+  drawChunks(
+    exploredChunks: Iterable<Chunk>,
+    highPerfMode: boolean,
+    drawChunkBorders: boolean
+  ): void {
     // upload current camera transform to shader
 
     /* draw using mask program */
@@ -50,9 +53,28 @@ export default class BackgroundRenderer extends GenericRenderer<typeof MASK_PROG
         if (perlin > t2) color = 2;
         if (perlin > t3) color = 3;
 
-        EngineUtils.makeQuadBuffered(this.quadBuffer, x1, y1, x2, y2, color);
-        this.attribManagers.position.setVertex(this.quadBuffer, vertCount);
+        // a border is just a bigger rectangle with a different color drawn directly
+        // behind the rectangle you actually want to draw.
+        if (drawChunkBorders) {
+          EngineUtils.makeQuadBuffered(this.quadBuffer, x1, y1, x2, y2, 4);
+          this.attribManagers.position.setVertex(this.quadBuffer, vertCount);
+          vertCount += 6;
+        }
 
+        // if we're drawing a border, render the box a little bit smaller than the border box, so
+        // that the border box looks like a ... border
+        const shrinkByPx = drawChunkBorders ? 1 : 0;
+
+        EngineUtils.makeQuadBuffered(
+          this.quadBuffer,
+          x1 + shrinkByPx,
+          y1 + shrinkByPx,
+          x2 - shrinkByPx,
+          y2 - shrinkByPx,
+          color
+        );
+
+        this.attribManagers.position.setVertex(this.quadBuffer, vertCount);
         vertCount += 6;
       }
     }

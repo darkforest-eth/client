@@ -75,10 +75,12 @@
 - [getArtifactsWithIds](backend_gamelogic_gameuimanager.default.md#getartifactswithids)
 - [getBiomeKey](backend_gamelogic_gameuimanager.default.md#getbiomekey)
 - [getBiomePerlin](backend_gamelogic_gameuimanager.default.md#getbiomeperlin)
+- [getBooleanSetting](backend_gamelogic_gameuimanager.default.md#getbooleansetting)
 - [getChunk](backend_gamelogic_gameuimanager.default.md#getchunk)
 - [getContractAddress](backend_gamelogic_gameuimanager.default.md#getcontractaddress)
 - [getContractConstants](backend_gamelogic_gameuimanager.default.md#getcontractconstants)
 - [getConversation](backend_gamelogic_gameuimanager.default.md#getconversation)
+- [getDiagnostics](backend_gamelogic_gameuimanager.default.md#getdiagnostics)
 - [getDiscoverBiomeName](backend_gamelogic_gameuimanager.default.md#getdiscoverbiomename)
 - [getDistCoords](backend_gamelogic_gameuimanager.default.md#getdistcoords)
 - [getEndTimeSeconds](backend_gamelogic_gameuimanager.default.md#getendtimeseconds)
@@ -88,6 +90,7 @@
 - [getEthConnection](backend_gamelogic_gameuimanager.default.md#getethconnection)
 - [getExploredChunks](backend_gamelogic_gameuimanager.default.md#getexploredchunks)
 - [getForcesSending](backend_gamelogic_gameuimanager.default.md#getforcessending)
+- [getGameObjects](backend_gamelogic_gameuimanager.default.md#getgameobjects)
 - [getGptCreditBalanceEmitter](backend_gamelogic_gameuimanager.default.md#getgptcreditbalanceemitter)
 - [getGptCreditPriceEmitter](backend_gamelogic_gameuimanager.default.md#getgptcreditpriceemitter)
 - [getHashConfig](backend_gamelogic_gameuimanager.default.md#gethashconfig)
@@ -130,9 +133,9 @@
 - [getSilverOfPlayer](backend_gamelogic_gameuimanager.default.md#getsilverofplayer)
 - [getSilverSending](backend_gamelogic_gameuimanager.default.md#getsilversending)
 - [getSpaceTypePerlin](backend_gamelogic_gameuimanager.default.md#getspacetypeperlin)
+- [getStringSetting](backend_gamelogic_gameuimanager.default.md#getstringsetting)
 - [getTerminal](backend_gamelogic_gameuimanager.default.md#getterminal)
 - [getTwitter](backend_gamelogic_gameuimanager.default.md#gettwitter)
-- [getUIDataItem](backend_gamelogic_gameuimanager.default.md#getuidataitem)
 - [getUnconfirmedMoves](backend_gamelogic_gameuimanager.default.md#getunconfirmedmoves)
 - [getUnconfirmedUpgrades](backend_gamelogic_gameuimanager.default.md#getunconfirmedupgrades)
 - [getUnconfirmedWormholeActivations](backend_gamelogic_gameuimanager.default.md#getunconfirmedwormholeactivations)
@@ -170,13 +173,13 @@
 - [setSelectedId](backend_gamelogic_gameuimanager.default.md#setselectedid)
 - [setSelectedPlanet](backend_gamelogic_gameuimanager.default.md#setselectedplanet)
 - [setSilverSending](backend_gamelogic_gameuimanager.default.md#setsilversending)
-- [setUIDataItem](backend_gamelogic_gameuimanager.default.md#setuidataitem)
 - [spaceTypeFromPerlin](backend_gamelogic_gameuimanager.default.md#spacetypefromperlin)
 - [startConversation](backend_gamelogic_gameuimanager.default.md#startconversation)
 - [startExplore](backend_gamelogic_gameuimanager.default.md#startexplore)
 - [startWormholeFrom](backend_gamelogic_gameuimanager.default.md#startwormholefrom)
 - [stepConversation](backend_gamelogic_gameuimanager.default.md#stepconversation)
 - [stopExplore](backend_gamelogic_gameuimanager.default.md#stopexplore)
+- [updateDiagnostics](backend_gamelogic_gameuimanager.default.md#updatediagnostics)
 - [updateMouseHoveringOverCoords](backend_gamelogic_gameuimanager.default.md#updatemousehoveringovercoords)
 - [updatePlanets](backend_gamelogic_gameuimanager.default.md#updateplanets)
 - [upgrade](backend_gamelogic_gameuimanager.default.md#upgrade)
@@ -431,13 +434,13 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### addNewChunk
 
-▸ **addNewChunk**(`chunk`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)): _void_
+▸ **addNewChunk**(`chunk`: [_Chunk_](_types_global_globaltypes.chunk.md)): _void_
 
 #### Parameters
 
-| Name    | Type                                                                  |
-| :------ | :-------------------------------------------------------------------- |
-| `chunk` | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md) |
+| Name    | Type                                          |
+| :------ | :-------------------------------------------- |
+| `chunk` | [_Chunk_](_types_global_globaltypes.chunk.md) |
 
 **Returns:** _void_
 
@@ -445,13 +448,13 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### bulkAddNewChunks
 
-▸ **bulkAddNewChunks**(`chunks`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)[]): _Promise_<void\>
+▸ **bulkAddNewChunks**(`chunks`: [_Chunk_](_types_global_globaltypes.chunk.md)[]): _Promise_<void\>
 
 #### Parameters
 
-| Name     | Type                                                                    |
-| :------- | :---------------------------------------------------------------------- |
-| `chunks` | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)[] |
+| Name     | Type                                            |
+| :------- | :---------------------------------------------- |
+| `chunks` | [_Chunk_](_types_global_globaltypes.chunk.md)[] |
 
 **Returns:** _Promise_<void\>
 
@@ -740,9 +743,23 @@ indicates whether or not the player is currently selecting a target planet.
 
 ---
 
+### getBooleanSetting
+
+▸ **getBooleanSetting**(`setting`: [_Setting_](../enums/frontend_utils_settingshooks.setting.md)): _boolean_
+
+#### Parameters
+
+| Name      | Type                                                          |
+| :-------- | :------------------------------------------------------------ |
+| `setting` | [_Setting_](../enums/frontend_utils_settingshooks.setting.md) |
+
+**Returns:** _boolean_
+
+---
+
 ### getChunk
 
-▸ **getChunk**(`chunkFootprint`: [_Rectangle_](../interfaces/_types_global_globaltypes.rectangle.md)): _undefined_ \| [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)
+▸ **getChunk**(`chunkFootprint`: [_Rectangle_](../interfaces/_types_global_globaltypes.rectangle.md)): _undefined_ \| [_Chunk_](_types_global_globaltypes.chunk.md)
 
 #### Parameters
 
@@ -750,7 +767,7 @@ indicates whether or not the player is currently selecting a target planet.
 | :--------------- | :------------------------------------------------------------------ |
 | `chunkFootprint` | [_Rectangle_](../interfaces/_types_global_globaltypes.rectangle.md) |
 
-**Returns:** _undefined_ \| [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)
+**Returns:** _undefined_ \| [_Chunk_](_types_global_globaltypes.chunk.md)
 
 ---
 
@@ -781,6 +798,14 @@ indicates whether or not the player is currently selecting a target planet.
 | `artifactId` | ArtifactId |
 
 **Returns:** _Promise_<undefined \| Conversation\>
+
+---
+
+### getDiagnostics
+
+▸ **getDiagnostics**(): [_Diagnostics_](../interfaces/frontend_panes_diagnosticspane.diagnostics.md)
+
+**Returns:** [_Diagnostics_](../interfaces/frontend_panes_diagnosticspane.diagnostics.md)
 
 ---
 
@@ -877,9 +902,9 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### getExploredChunks
 
-▸ **getExploredChunks**(): _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>
+▸ **getExploredChunks**(): _Iterable_<[_Chunk_](_types_global_globaltypes.chunk.md)\>
 
-**Returns:** _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>
+**Returns:** _Iterable_<[_Chunk_](_types_global_globaltypes.chunk.md)\>
 
 ---
 
@@ -894,6 +919,18 @@ indicates whether or not the player is currently selecting a target planet.
 | `planetId` | LocationId |
 
 **Returns:** _number_
+
+---
+
+### getGameObjects
+
+▸ **getGameObjects**(): [_GameObjects_](backend_gamelogic_gameobjects.gameobjects.md)
+
+Gets a reference to the game's internal representation of the world state. Beware! Use this for
+reading only, otherwise you might mess up the state of the game. You can try modifying the game
+state in some way
+
+**Returns:** [_GameObjects_](backend_gamelogic_gameobjects.gameobjects.md)
 
 ---
 
@@ -1016,7 +1053,7 @@ indicates whether or not the player is currently selecting a target planet.
 | Name            | Type                                                                                                           |
 | :-------------- | :------------------------------------------------------------------------------------------------------------- |
 | `cachedPlanets` | _Map_<LocationId, [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md)\> |
-| `chunks`        | _Set_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>                                  |
+| `chunks`        | _Set_<[_Chunk_](_types_global_globaltypes.chunk.md)\>                                                          |
 
 ---
 
@@ -1294,6 +1331,20 @@ indicates whether or not the player is currently selecting a target planet.
 
 ---
 
+### getStringSetting
+
+▸ **getStringSetting**(`setting`: [_Setting_](../enums/frontend_utils_settingshooks.setting.md)): _undefined_ \| _string_
+
+#### Parameters
+
+| Name      | Type                                                          |
+| :-------- | :------------------------------------------------------------ |
+| `setting` | [_Setting_](../enums/frontend_utils_settingshooks.setting.md) |
+
+**Returns:** _undefined_ \| _string_
+
+---
+
 ### getTerminal
 
 ▸ **getTerminal**(): _undefined_ \| [_TerminalHandle_](../interfaces/frontend_views_terminal.terminalhandle.md)
@@ -1316,23 +1367,16 @@ indicates whether or not the player is currently selecting a target planet.
 
 ---
 
-### getUIDataItem
-
-▸ **getUIDataItem**(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md)): _number_ \| _boolean_
-
-#### Parameters
-
-| Name  | Type                                                                       |
-| :---- | :------------------------------------------------------------------------- |
-| `key` | [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md) |
-
-**Returns:** _number_ \| _boolean_
-
----
-
 ### getUnconfirmedMoves
 
 ▸ **getUnconfirmedMoves**(): UnconfirmedMove[]
+
+**`todo`** delete this. now that [GameObjects](backend_gamelogic_gameobjects.gameobjects.md) is publically accessible, we shouldn't need to
+drill fields like this anymore.
+
+**`tutorial`** Plugin developers, please access fields like this with something like {@code df.getGameObjects().}
+
+**`deprecated`**
 
 **Returns:** UnconfirmedMove[]
 
@@ -1497,13 +1541,13 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### onDiscoveredChunk
 
-▸ **onDiscoveredChunk**(`chunk`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)): _void_
+▸ **onDiscoveredChunk**(`chunk`: [_Chunk_](_types_global_globaltypes.chunk.md)): _void_
 
 #### Parameters
 
-| Name    | Type                                                                  |
-| :------ | :-------------------------------------------------------------------- |
-| `chunk` | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md) |
+| Name    | Type                                          |
+| :------ | :-------------------------------------------- |
+| `chunk` | [_Chunk_](_types_global_globaltypes.chunk.md) |
 
 **Returns:** _void_
 
@@ -1775,21 +1819,6 @@ indicates whether or not the player is currently selecting a target planet.
 
 ---
 
-### setUIDataItem
-
-▸ **setUIDataItem**(`key`: [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md), `value`: _number_ \| _boolean_): _void_
-
-#### Parameters
-
-| Name    | Type                                                                       |
-| :------ | :------------------------------------------------------------------------- |
-| `key`   | [_UIDataKey_](../enums/backend_storage_uistatestoragemanager.uidatakey.md) |
-| `value` | _number_ \| _boolean_                                                      |
-
-**Returns:** _void_
-
----
-
 ### spaceTypeFromPerlin
 
 ▸ **spaceTypeFromPerlin**(`perlin`: _number_): SpaceType
@@ -1858,6 +1887,20 @@ indicates whether or not the player is currently selecting a target planet.
 ### stopExplore
 
 ▸ **stopExplore**(): _void_
+
+**Returns:** _void_
+
+---
+
+### updateDiagnostics
+
+▸ **updateDiagnostics**(`updateFn`: (`d`: [_Diagnostics_](../interfaces/frontend_panes_diagnosticspane.diagnostics.md)) => _void_): _void_
+
+#### Parameters
+
+| Name       | Type                                                                                          |
+| :--------- | :-------------------------------------------------------------------------------------------- |
+| `updateFn` | (`d`: [_Diagnostics_](../interfaces/frontend_panes_diagnosticspane.diagnostics.md)) => _void_ |
 
 **Returns:** _void_
 

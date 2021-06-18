@@ -3,7 +3,7 @@ import React from 'react';
 import { TxIntent, EthTxStatus, SubmittedTx, Planet, LocatablePlanet } from '@darkforest_eth/types';
 import { biomeName } from '../../Backend/GameLogic/ArtifactUtils';
 import { getRandomActionId } from '../../Backend/Utils/Utils';
-import { ExploredChunkData, isLocatable } from '../../_types/global/GlobalTypes';
+import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import { EthIcon } from '../Components/Icons';
 import { CenterChunkLink, FAQ04Link, PlanetNameLink, TxLink } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
@@ -160,7 +160,7 @@ class NotificationManager extends EventEmitter {
     );
   }
 
-  foundSpace(chunk: ExploredChunkData): void {
+  foundSpace(chunk: Chunk): void {
     this.notify(
       NotificationType.FoundSpace,
       <span>
@@ -171,7 +171,7 @@ class NotificationManager extends EventEmitter {
     );
   }
 
-  foundDeepSpace(chunk: ExploredChunkData): void {
+  foundDeepSpace(chunk: Chunk): void {
     this.notify(
       NotificationType.FoundDeepSpace,
       <span>
@@ -182,7 +182,7 @@ class NotificationManager extends EventEmitter {
     );
   }
 
-  foundDeadSpace(chunk: ExploredChunkData): void {
+  foundDeadSpace(chunk: Chunk): void {
     this.notify(
       NotificationType.FoundDeadSpace,
       <span>

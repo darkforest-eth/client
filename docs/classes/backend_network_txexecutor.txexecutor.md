@@ -16,11 +16,11 @@
 
 ### Properties
 
+- [diagnosticsUpdater](backend_network_txexecutor.txexecutor.md#diagnosticsupdater)
 - [eth](backend_network_txexecutor.txexecutor.md#eth)
 - [lastTransaction](backend_network_txexecutor.txexecutor.md#lasttransaction)
 - [nonce](backend_network_txexecutor.txexecutor.md#nonce)
 - [txQueue](backend_network_txexecutor.txexecutor.md#txqueue)
-- [uiStateStorageManager](backend_network_txexecutor.txexecutor.md#uistatestoragemanager)
 - [MIN_BALANCE_ETH](backend_network_txexecutor.txexecutor.md#min_balance_eth)
 - [NONCE_STALE_AFTER_MS](backend_network_txexecutor.txexecutor.md#nonce_stale_after_ms)
 - [TX_SUBMIT_TIMEOUT](backend_network_txexecutor.txexecutor.md#tx_submit_timeout)
@@ -31,26 +31,32 @@
 - [execute](backend_network_txexecutor.txexecutor.md#execute)
 - [makeRequest](backend_network_txexecutor.txexecutor.md#makerequest)
 - [maybeUpdateNonce](backend_network_txexecutor.txexecutor.md#maybeupdatenonce)
+- [setDiagnosticUpdater](backend_network_txexecutor.txexecutor.md#setdiagnosticupdater)
 
 ## Constructors
 
 ### constructor
 
-\+ **new TxExecutor**(`ethConnection`: [_default_](backend_network_ethconnection.default.md), `uiStateStorageManager`: [_default_](backend_storage_uistatestoragemanager.default.md), `nonce`: _number_): [_TxExecutor_](backend_network_txexecutor.txexecutor.md)
+\+ **new TxExecutor**(`ethConnection`: [_default_](backend_network_ethconnection.default.md), `nonce`: _number_): [_TxExecutor_](backend_network_txexecutor.txexecutor.md)
 
 #### Parameters
 
-| Name                    | Type                                                          |
-| :---------------------- | :------------------------------------------------------------ |
-| `ethConnection`         | [_default_](backend_network_ethconnection.default.md)         |
-| `uiStateStorageManager` | [_default_](backend_storage_uistatestoragemanager.default.md) |
-| `nonce`                 | _number_                                                      |
+| Name            | Type                                                  |
+| :-------------- | :---------------------------------------------------- |
+| `ethConnection` | [_default_](backend_network_ethconnection.default.md) |
+| `nonce`         | _number_                                              |
 
 **Returns:** [_TxExecutor_](backend_network_txexecutor.txexecutor.md)
 
 Overrides: EventEmitter.constructor
 
 ## Properties
+
+### diagnosticsUpdater
+
+• `Private` `Optional` **diagnosticsUpdater**: [_DiagnosticUpdater_](../interfaces/backend_interfaces_diagnosticupdater.diagnosticupdater.md)
+
+---
 
 ### eth
 
@@ -73,12 +79,6 @@ Overrides: EventEmitter.constructor
 ### txQueue
 
 • `Private` **txQueue**: [_ThrottledConcurrentQueue_](backend_network_throttledconcurrentqueue.throttledconcurrentqueue.md)
-
----
-
-### uiStateStorageManager
-
-• `Private` **uiStateStorageManager**: [_default_](backend_storage_uistatestoragemanager.default.md)
 
 ---
 
@@ -162,3 +162,17 @@ ahead of it have completed.
 ▸ `Private` **maybeUpdateNonce**(): _Promise_<void\>
 
 **Returns:** _Promise_<void\>
+
+---
+
+### setDiagnosticUpdater
+
+▸ **setDiagnosticUpdater**(`diagnosticUpdater?`: [_DiagnosticUpdater_](../interfaces/backend_interfaces_diagnosticupdater.diagnosticupdater.md)): _void_
+
+#### Parameters
+
+| Name                 | Type                                                                                           |
+| :------------------- | :--------------------------------------------------------------------------------------------- |
+| `diagnosticUpdater?` | [_DiagnosticUpdater_](../interfaces/backend_interfaces_diagnosticupdater.diagnosticupdater.md) |
+
+**Returns:** _void_

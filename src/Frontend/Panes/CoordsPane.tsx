@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { useUIManager } from '../Utils/AppHooks';
-import { MIN_CHUNK_SIZE } from '../Utils/constants';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 
 class CoordsText extends React.Component<
@@ -41,30 +40,16 @@ class CoordsText extends React.Component<
     let spacetypeText = '???';
 
     if (this.props.uiManager) {
-      const chunkLoc = {
-        bottomLeft: {
-          x: Math.floor(coords.x / MIN_CHUNK_SIZE) * MIN_CHUNK_SIZE,
-          y: Math.floor(coords.y / MIN_CHUNK_SIZE) * MIN_CHUNK_SIZE,
-        },
-        sideLength: MIN_CHUNK_SIZE,
-      };
+      const per = this.props.uiManager.getSpaceTypePerlin(coords, false);
+      const spaceType = this.props.uiManager.spaceTypeFromPerlin(per);
 
-      const minedChunk = this.props.uiManager.getChunk(chunkLoc);
+      let suff = '';
+      if (spaceType === SpaceType.NEBULA) suff = '\u00b0 (NEBULA)';
+      else if (spaceType === SpaceType.SPACE) suff = '\u00b0 (SPACE)';
+      else if (spaceType === SpaceType.DEEP_SPACE) suff = '\u00b0 (DEEP SPACE)';
+      else if (spaceType === SpaceType.DEAD_SPACE) suff = '\u00b0 (DEAD SPACE)';
 
-      if (minedChunk) {
-        const per = minedChunk
-          ? minedChunk.perlin
-          : this.props.uiManager.getSpaceTypePerlin(coords, false);
-        const spaceType = this.props.uiManager.spaceTypeFromPerlin(per);
-
-        let suff = '';
-        if (spaceType === SpaceType.NEBULA) suff = '\u00b0 (NEBULA)';
-        else if (spaceType === SpaceType.SPACE) suff = '\u00b0 (SPACE)';
-        else if (spaceType === SpaceType.DEEP_SPACE) suff = '\u00b0 (DEEP SPACE)';
-        else if (spaceType === SpaceType.DEAD_SPACE) suff = '\u00b0 (DEAD SPACE)';
-
-        spacetypeText = `${Math.floor((16 - per) * 16)}${suff}`;
-      }
+      spacetypeText = `${Math.floor((16 - per) * 16)}${suff}`;
     }
 
     if (this.spacetypeRef.current) {

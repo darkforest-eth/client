@@ -40,10 +40,11 @@ export const MASK_PROGRAM_DEFINITION = {
       vec4 c1 = vec4(0.000, 0.021, 0.170, 1.0);
       vec4 c2 = vec4(0.008, 0.000, 0.024, 1.0);
       vec4 c3 = vec4(0.147, 0.000, 0.141, 1.0);
+      vec4 c4 = vec4(1.000, 0.000, 0.000, 1.0);
 
       float color = ${a.position}.z;
 
-      vec4 myColor = color == 0.0 ? c0 : color == 1.0 ? c1 : color == 2.0 ? c2 : c3;
+      vec4 myColor = color == 0.0 ? c0 : color == 1.0 ? c1 : color == 2.0 ? c2 : color == 3.0 ? c3 : c4;
 
       ${v.color} = myColor;
     }

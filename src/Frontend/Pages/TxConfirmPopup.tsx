@@ -5,6 +5,9 @@ import dfstyles from '../Styles/dfstyles';
 import { ONE_DAY } from '../../Backend/Utils/Utils';
 import Button from '../Components/Button';
 import { Spacer } from '../Components/CoreUI';
+import { setBooleanSetting } from '../Utils/SettingsHooks';
+import { EthAddress } from '../../../../packages/types/dist';
+import { Setting } from '../Utils/SettingsHooks';
 
 const StyledTxConfirmPopup = styled.div`
   width: 100%;
@@ -127,20 +130,22 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
     window.close();
   };
 
-  const [checked, setChecked] = useState<boolean>(false);
+  const [autoApproveChecked, setAutoApprovedChecked] = useState<boolean>(false);
 
   const approve = () => {
     localStorage.setItem(`tx-approved-${addr}-${actionId}`, 'true');
     window.close();
   };
-  const doApproveFor24H = () => {
+
+  const setAutoApproveSetting = () => {
     localStorage.setItem(`tx-approved-${addr}-${actionId}`, 'true');
     localStorage.setItem(`wallet-enabled-${addr}`, (Date.now() + ONE_DAY).toString());
+    setBooleanSetting(addr as EthAddress, Setting.AutoApproveNonPurchaseTransactions, true);
     window.close();
   };
 
   const doApprove = () => {
-    if (checked) doApproveFor24H();
+    if (autoApproveChecked) setAutoApproveSetting();
     else approve();
   };
 
@@ -379,8 +384,8 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
             Credits, and Hats. <Spacer width={8} />
             <input
               type='checkbox'
-              checked={checked}
-              onChange={(e) => setChecked(e.target.checked)}
+              checked={autoApproveChecked}
+              onChange={(e) => setAutoApprovedChecked(e.target.checked)}
             />
           </span>
         </div>

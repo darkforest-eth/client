@@ -13,6 +13,7 @@ import {
 import WindowManager from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
 import { GameWindowZIndex } from '../Utils/constants';
+import { DFErrorBoundary } from './DFErrorBoundary';
 
 export const RECOMMENDED_WIDTH = '450px';
 
@@ -438,7 +439,7 @@ export function ModalPane({
         style={{ display: minimized || showingHelp ? 'none' : undefined }}
         noPadding={noPadding}
       >
-        {children}
+        <DFErrorBoundary>{children}</DFErrorBoundary>
       </Content>
     </Modal>
   );

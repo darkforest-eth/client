@@ -49,12 +49,20 @@ export function isLocatable(planet: Planet): planet is LocatablePlanet {
   return (planet as LocatablePlanet).location !== undefined;
 }
 
+/**
+ * Ok, this is gonna sound weird, but all rectangles are squares. Also, we only permit side lengths
+ * that are powers of two, and ALSO!! The side lengths must be between {@link MIN_CHUNK_SIZE} and
+ * {@link MAX_CHUNK_SIZE}.
+ */
 export interface Rectangle {
   bottomLeft: WorldCoords;
   sideLength: number;
 }
 
-export class ExploredChunkData {
+/**
+ * Represents a fully mined aligned square.
+ */
+export class Chunk {
   chunkFootprint: Rectangle;
   planetLocations: WorldLocation[];
   perlin: number; // approximate avg perlin value. used for rendering

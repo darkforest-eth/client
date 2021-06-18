@@ -163,15 +163,15 @@
 
 ### CenterChunkLink
 
-▸ **CenterChunkLink**(`__namedParameters`: { `children`: React.ReactNode ; `chunk`: [_ExploredChunkData_](../classes/_types_global_globaltypes.exploredchunkdata.md) }): _Element_
+▸ **CenterChunkLink**(`__namedParameters`: { `children`: React.ReactNode ; `chunk`: [_Chunk_](../classes/_types_global_globaltypes.chunk.md) }): _Element_
 
 #### Parameters
 
-| Name                         | Type                                                                             |
-| :--------------------------- | :------------------------------------------------------------------------------- |
-| `__namedParameters`          | _object_                                                                         |
-| `__namedParameters.children` | React.ReactNode                                                                  |
-| `__namedParameters.chunk`    | [_ExploredChunkData_](../classes/_types_global_globaltypes.exploredchunkdata.md) |
+| Name                         | Type                                                     |
+| :--------------------------- | :------------------------------------------------------- |
+| `__namedParameters`          | _object_                                                 |
+| `__namedParameters.children` | React.ReactNode                                          |
+| `__namedParameters.chunk`    | [_Chunk_](../classes/_types_global_globaltypes.chunk.md) |
 
 **Returns:** _Element_
 

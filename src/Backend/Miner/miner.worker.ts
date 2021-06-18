@@ -1,6 +1,6 @@
 import { mimcHash, PerlinConfig, perlin } from '@darkforest_eth/hashing';
 import { LOCATION_ID_UB } from '../../Frontend/Utils/constants';
-import { Rectangle, ExploredChunkData, MinerWorkerMessage } from '../../_types/global/GlobalTypes';
+import { Rectangle, Chunk, MinerWorkerMessage } from '../../_types/global/GlobalTypes';
 import * as bigInt from 'big-integer';
 import { BigInteger } from 'big-integer';
 import { getPlanetLocations } from './permutation';
@@ -79,7 +79,7 @@ const exploreChunk = (
     x: chunkFootprint.bottomLeft.x + chunkFootprint.sideLength / 2,
     y: chunkFootprint.bottomLeft.y + chunkFootprint.sideLength / 2,
   };
-  const chunkData: ExploredChunkData = {
+  const chunkData: Chunk = {
     chunkFootprint,
     planetLocations,
     perlin: perlin(chunkCenter, { ...spaceTypePerlinOpts, floor: false }),

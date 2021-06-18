@@ -3,12 +3,12 @@ import { IDBPDatabase, openDB } from 'idb';
 import stringify from 'json-stable-stringify';
 import _ from 'lodash';
 import { MAX_CHUNK_SIZE } from '../../Frontend/Utils/constants';
-import { ChunkStore, LSMChunkData } from '../../_types/darkforest/api/ChunkStoreTypes';
-import { ExploredChunkData, Rectangle } from '../../_types/global/GlobalTypes';
+import { ChunkId, ChunkStore, PersistedChunk } from '../../_types/darkforest/api/ChunkStoreTypes';
+import { Chunk, Rectangle } from '../../_types/global/GlobalTypes';
 import {
-  toLSMChunk,
+  toPersistedChunk,
   toExploredChunk,
-  getChunkOfSideLength,
+  getChunkOfSideLengthContainingPoint,
   getChunkKey,
   addToChunkMap,
 } from '../Miner/ChunkUtils';
@@ -20,6 +20,7 @@ import {
   WorldLocation,
   RevealedCoords,
 } from '@darkforest_eth/types';
+import { DiagnosticUpdater } from '../Interfaces/DiagnosticUpdater';
 
 enum ObjectStore {
   DEFAULT = 'default',
@@ -33,13 +34,13 @@ enum DBActionType {
   DELETE,
 }
 
-interface DBAction {
+interface DBAction<T extends string> {
   type: DBActionType;
-  dbKey: string;
-  dbValue?: ExploredChunkData;
+  dbKey: T;
+  dbValue?: Chunk;
 }
 
-type DBTx = DBAction[];
+type DBTx = DBAction<ChunkId | string>[];
 
 interface DebouncedFunc<T extends () => void> {
   (...args: Parameters<T>): ReturnType<T> | undefined;
@@ -47,23 +48,24 @@ interface DebouncedFunc<T extends () => void> {
 }
 
 class PersistentChunkStore implements ChunkStore {
+  private diagnosticUpdater?: DiagnosticUpdater;
   private db: IDBPDatabase;
-  private cached: DBTx[];
+  private queuedChunkWrites: DBTx[];
   private throttledSaveChunkCacheToDisk: DebouncedFunc<() => Promise<void>>;
   private nUpdatesLastTwoMins = 0; // we save every 5s, unless this goes above 50
-  private chunkMap: Map<string, ExploredChunkData>;
+  private chunkMap: Map<ChunkId, Chunk>;
   private confirmedTxHashes: Set<string>;
   private account: EthAddress;
 
   constructor(db: IDBPDatabase, account: EthAddress) {
     this.db = db;
-    this.cached = [];
+    this.queuedChunkWrites = [];
     this.confirmedTxHashes = new Set<string>();
     this.throttledSaveChunkCacheToDisk = _.throttle(
-      this.saveChunkCacheToDisk,
+      this.persistQueuedChunks,
       2000 // TODO
     );
-    this.chunkMap = new Map<string, ExploredChunkData>();
+    this.chunkMap = new Map();
     this.account = account;
   }
 
@@ -83,11 +85,21 @@ class PersistentChunkStore implements ChunkStore {
 
     const localStorageManager = new PersistentChunkStore(db, account);
 
-    await localStorageManager.loadIntoMemory();
+    await localStorageManager.loadChunks();
 
     return localStorageManager;
   }
 
+  public setDiagnosticUpdater(diagnosticUpdater?: DiagnosticUpdater) {
+    this.diagnosticUpdater = diagnosticUpdater;
+  }
+
+  /**
+   * Important! This sets the key in indexed db per account and per contract. This means the same
+   * client can connect to multiple different dark forest contracts, with multiple different
+   * accounts, and the persistent storage will not overwrite data that is not relevant for the
+   * current configuration of the client.
+   */
   private async getKey(
     key: string,
     objStore: ObjectStore = ObjectStore.DEFAULT
@@ -95,6 +107,12 @@ class PersistentChunkStore implements ChunkStore {
     return await this.db.get(objStore, `${CORE_CONTRACT_ADDRESS}-${this.account}-${key}`);
   }
 
+  /**
+   * Important! This sets the key in indexed db per account and per contract. This means the same
+   * client can connect to multiple different dark forest contracts, with multiple different
+   * accounts, and the persistent storage will not overwrite data that is not relevant for the
+   * current configuration of the client.
+   */
   private async setKey(
     key: string,
     value: string,
@@ -115,7 +133,7 @@ class PersistentChunkStore implements ChunkStore {
     updateChunkTxs.forEach((updateChunkTx) => {
       updateChunkTx.forEach(({ type, dbKey: key, dbValue: value }) => {
         if (type === DBActionType.UPDATE) {
-          tx.store.put(toLSMChunk(value as ExploredChunkData), key);
+          tx.store.put(toPersistedChunk(value as Chunk), key);
         } else if (type === DBActionType.DELETE) {
           tx.store.delete(key);
         }
@@ -124,27 +142,46 @@ class PersistentChunkStore implements ChunkStore {
     await tx.done;
   }
 
-  private async loadIntoMemory(): Promise<void> {
+  /**
+   * This function loads all chunks persisted in the user's storage into the game.
+   */
+  private async loadChunks(): Promise<void> {
     // we can't bulk get all chunks, since idb will crash/hang
     // we also can't assign random non-primary keys and query on ranges
     // so we append a random alphanumeric character to the front of keys
     // and then bulk query for keys starting with 0, then 1, then 2, etc.
+    // see the `getBucket` function in `ChunkUtils.ts` for more information.
     const borders = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ~';
+    let chunkCount = 0;
+
     for (let idx = 0; idx < borders.length - 1; idx += 1) {
-      (
-        await this.db.getAll(
-          ObjectStore.BOARD,
-          IDBKeyRange.bound(borders[idx], borders[idx + 1], false, true)
-        )
-      ).forEach((chunk: LSMChunkData) => {
-        this.updateChunk(toExploredChunk(chunk), true);
+      const bucketOfChunks = await this.db.getAll(
+        ObjectStore.BOARD,
+        IDBKeyRange.bound(borders[idx], borders[idx + 1], false, true)
+      );
+
+      bucketOfChunks.forEach((chunk: PersistedChunk) => {
+        this.addChunk(toExploredChunk(chunk), false);
       });
+
+      chunkCount += bucketOfChunks.length;
     }
+
+    console.log(`loaded ${chunkCount} chunks from local storage`);
   }
 
-  private async saveChunkCacheToDisk() {
-    const toSave = [...this.cached]; // make a copy
-    this.cached = [];
+  /**
+   * Rather than saving a chunk immediately after it's mined, we queue up new chunks, and
+   * periodically save them. This function gets all of the queued new chunks, and persists them to
+   * indexed db.
+   */
+  private async persistQueuedChunks() {
+    const toSave = [...this.queuedChunkWrites]; // make a copy
+    this.queuedChunkWrites = [];
+    this.diagnosticUpdater &&
+      this.diagnosticUpdater.updateDiagnostics((d) => {
+        d.chunkUpdates = 0;
+      });
     await this.bulkSetKeyInCollection(toSave, ObjectStore.BOARD);
   }
 
@@ -214,11 +251,17 @@ class PersistentChunkStore implements ChunkStore {
     await this.setKey('revealedPlanetIds', stringify(revealedCoordTups));
   }
 
-  public getChunkByFootprint(chunkLoc: Rectangle): ExploredChunkData | undefined {
+  /**
+   * Returns the explored chunk data for the given rectangle if that chunk has been mined. If this
+   * chunk is entirely contained within another bigger chunk that has been mined, return that chunk.
+   * `chunkLoc` is an aligned square, as defined in ChunkUtils.ts in the `getSiblingLocations`
+   * function.
+   */
+  public getChunkByFootprint(chunkLoc: Rectangle): Chunk | undefined {
     let sideLength = chunkLoc.sideLength;
 
     while (sideLength <= MAX_CHUNK_SIZE) {
-      const testChunkLoc = getChunkOfSideLength(chunkLoc.bottomLeft, sideLength);
+      const testChunkLoc = getChunkOfSideLengthContainingPoint(chunkLoc.bottomLeft, sideLength);
       const chunk = this.getChunkById(getChunkKey(testChunkLoc));
       if (chunk) {
         return chunk;
@@ -233,32 +276,37 @@ class PersistentChunkStore implements ChunkStore {
     return !!this.getChunkByFootprint(chunkLoc);
   }
 
-  private getChunkById(chunkId: string): ExploredChunkData | undefined {
+  private getChunkById(chunkId: ChunkId): Chunk | undefined {
     return this.chunkMap.get(chunkId);
   }
 
-  // if the chunk was loaded from storage, then we don't need to recommit it
-  // unless it can be promoted (which shouldn't ever happen, but we handle
-  // just in case)
-  public updateChunk(e: ExploredChunkData, loadedFromStorage = false): void {
-    if (this.hasMinedChunk(e.chunkFootprint)) {
+  /**
+   * When a chunk is mined, or a chunk is imported via map import, or a chunk is loaded from
+   * persistent storage for the first time, we need to add this chunk to the game. This function
+   * allows you to add a new chunk to the game, and optionally persist that chunk. The reason you
+   * might not want to persist the chunk is if you are sure that you got it from persistent storage.
+   * i.e. it already exists in persistent storage.
+   */
+  public addChunk(chunk: Chunk, persistChunk = true): void {
+    if (this.hasMinedChunk(chunk.chunkFootprint)) {
       return;
     }
-    const tx: DBTx = [];
 
-    // if this is a mega-chunk, delete all smaller chunks inside of it
-    const minedSubChunks = this.getMinedSubChunks(e);
-    for (const subChunk of minedSubChunks) {
-      tx.push({
-        type: DBActionType.DELETE,
-        dbKey: getChunkKey(subChunk.chunkFootprint),
-      });
+    const tx: DBAction<ChunkId>[] = [];
+
+    if (persistChunk) {
+      const minedSubChunks = this.getMinedSubChunks(chunk);
+      for (const subChunk of minedSubChunks) {
+        tx.push({
+          type: DBActionType.DELETE,
+          dbKey: getChunkKey(subChunk.chunkFootprint),
+        });
+      }
     }
 
     addToChunkMap(
       this.chunkMap,
-      e,
-      true,
+      chunk,
       (chunk) => {
         tx.push({
           type: DBActionType.UPDATE,
@@ -284,33 +332,46 @@ class PersistentChunkStore implements ChunkStore {
       }
     }
 
+    this.diagnosticUpdater?.updateDiagnostics((d) => {
+      d.totalChunks = this.chunkMap.size;
+    });
+
     // can stop here, if we're just loading into in-memory store from storage
-    if (loadedFromStorage) {
+    if (!persistChunk) {
       return;
     }
 
-    this.cached.push(tx);
+    this.queuedChunkWrites.push(tx);
+
+    this.diagnosticUpdater &&
+      this.diagnosticUpdater.updateDiagnostics((d) => {
+        d.chunkUpdates = this.queuedChunkWrites.length;
+      });
 
     // save chunks every 5s if we're just starting up, or 30s once we're moving
     this.recomputeSaveThrottleAfterUpdate();
-
     this.throttledSaveChunkCacheToDisk();
   }
 
-  private getMinedSubChunks(e: ExploredChunkData): ExploredChunkData[] {
-    // returns all the mined chunks with smaller sidelength strictly contained in e
-    const ret: ExploredChunkData[] = [];
+  /**
+   * Returns all the mined chunks with smaller sidelength strictly contained in the chunk.
+   *
+   * TODO: move this into ChunkUtils, and also make use of it, the way that it is currently used, in
+   * the function named `addToChunkMap`.
+   */
+  private getMinedSubChunks(chunk: Chunk): Chunk[] {
+    const ret: Chunk[] = [];
     for (
       let clearingSideLen = 16;
-      clearingSideLen < e.chunkFootprint.sideLength;
+      clearingSideLen < chunk.chunkFootprint.sideLength;
       clearingSideLen *= 2
     ) {
-      for (let x = 0; x < e.chunkFootprint.sideLength; x += clearingSideLen) {
-        for (let y = 0; y < e.chunkFootprint.sideLength; y += clearingSideLen) {
+      for (let x = 0; x < chunk.chunkFootprint.sideLength; x += clearingSideLen) {
+        for (let y = 0; y < chunk.chunkFootprint.sideLength; y += clearingSideLen) {
           const queryChunk: Rectangle = {
             bottomLeft: {
-              x: e.chunkFootprint.bottomLeft.x + x,
-              y: e.chunkFootprint.bottomLeft.y + y,
+              x: chunk.chunkFootprint.bottomLeft.x + x,
+              y: chunk.chunkFootprint.bottomLeft.y + y,
             },
             sideLength: clearingSideLen,
           };
@@ -329,18 +390,18 @@ class PersistentChunkStore implements ChunkStore {
     this.nUpdatesLastTwoMins += 1;
     if (this.nUpdatesLastTwoMins === 50) {
       this.throttledSaveChunkCacheToDisk.cancel();
-      this.throttledSaveChunkCacheToDisk = _.throttle(this.saveChunkCacheToDisk, 30000);
+      this.throttledSaveChunkCacheToDisk = _.throttle(this.persistQueuedChunks, 30000);
     }
     setTimeout(() => {
       this.nUpdatesLastTwoMins -= 1;
       if (this.nUpdatesLastTwoMins === 49) {
         this.throttledSaveChunkCacheToDisk.cancel();
-        this.throttledSaveChunkCacheToDisk = _.throttle(this.saveChunkCacheToDisk, 5000);
+        this.throttledSaveChunkCacheToDisk = _.throttle(this.persistQueuedChunks, 5000);
       }
     }, 120000);
   }
 
-  public allChunks(): Iterable<ExploredChunkData> {
+  public allChunks(): Iterable<Chunk> {
     return this.chunkMap.values();
   }
 

@@ -68,13 +68,13 @@
 
 ### addChunk
 
-▸ **addChunk**(`exploredChunk`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)): _void_
+▸ **addChunk**(`exploredChunk`: [_Chunk_](_types_global_globaltypes.chunk.md)): _void_
 
 #### Parameters
 
-| Name            | Type                                                                  |
-| :-------------- | :-------------------------------------------------------------------- |
-| `exploredChunk` | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md) |
+| Name            | Type                                          |
+| :-------------- | :-------------------------------------------- |
+| `exploredChunk` | [_Chunk_](_types_global_globaltypes.chunk.md) |
 
 **Returns:** _void_
 

@@ -20,7 +20,6 @@
 - [attribManagers](frontend_renderers_gamerenderer_entities_backgroundrenderer.default.md#attribmanagers)
 - [bgCanvas](frontend_renderers_gamerenderer_entities_backgroundrenderer.default.md#bgcanvas)
 - [manager](frontend_renderers_gamerenderer_entities_backgroundrenderer.default.md#manager)
-- [maskProgram](frontend_renderers_gamerenderer_entities_backgroundrenderer.default.md#maskprogram)
 - [matrixULoc](frontend_renderers_gamerenderer_entities_backgroundrenderer.default.md#matrixuloc)
 - [perlinThresholds](frontend_renderers_gamerenderer_entities_backgroundrenderer.default.md#perlinthresholds)
 - [program](frontend_renderers_gamerenderer_entities_backgroundrenderer.default.md#program)
@@ -88,12 +87,6 @@ Inherited from: [GenericRenderer](frontend_renderers_gamerenderer_webgl_genericr
 WebGLManager corresponding to this program.
 
 Overrides: [GenericRenderer](frontend_renderers_gamerenderer_webgl_genericrenderer.genericrenderer.md).[manager](frontend_renderers_gamerenderer_webgl_genericrenderer.genericrenderer.md#manager)
-
----
-
-### maskProgram
-
-• **maskProgram**: WebGLProgram
 
 ---
 
@@ -169,14 +162,15 @@ Inherited from: [GenericRenderer](frontend_renderers_gamerenderer_webgl_genericr
 
 ### drawChunks
 
-▸ **drawChunks**(`exploredChunks`: _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>, `highPerfMode`: _boolean_): _void_
+▸ **drawChunks**(`exploredChunks`: _Iterable_<[_Chunk_](_types_global_globaltypes.chunk.md)\>, `highPerfMode`: _boolean_, `drawChunkBorders`: _boolean_): _void_
 
 #### Parameters
 
-| Name             | Type                                                                               |
-| :--------------- | :--------------------------------------------------------------------------------- |
-| `exploredChunks` | _Iterable_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\> |
-| `highPerfMode`   | _boolean_                                                                          |
+| Name               | Type                                                       |
+| :----------------- | :--------------------------------------------------------- |
+| `exploredChunks`   | _Iterable_<[_Chunk_](_types_global_globaltypes.chunk.md)\> |
+| `highPerfMode`     | _boolean_                                                  |
+| `drawChunkBorders` | _boolean_                                                  |
 
 **Returns:** _void_
 

@@ -1,4 +1,3 @@
-import { CORE_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import {
   EthAddress,
   SpaceType,
@@ -18,7 +17,6 @@ import ContractsAPI from '../GameLogic/ContractsAPI';
 import EthConnection from '../Network/EthConnection';
 import { getAllTwitters } from '../Network/UtilityServerAPI';
 import PersistentChunkStore from './PersistentChunkStore';
-import UIStateStorageManager from './UIStateStorageManager';
 
 export enum SinglePlanetDataStoreEvent {
   REFRESHED_PLANET = 'REFRESHED_PLANET',
@@ -61,11 +59,7 @@ class ReaderDataStore {
     ethConnection: EthConnection,
     viewer: EthAddress | undefined
   ): Promise<ReaderDataStore> {
-    const contractsAPI = await ContractsAPI.create(
-      ethConnection,
-      UIStateStorageManager.create(viewer, CORE_CONTRACT_ADDRESS),
-      terminal
-    );
+    const contractsAPI = await ContractsAPI.create(ethConnection);
     const addressTwitterMap = await getAllTwitters();
     const contractConstants = await contractsAPI.getConstants();
     const persistentChunkStore = viewer && (await PersistentChunkStore.create(viewer));

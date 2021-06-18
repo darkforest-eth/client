@@ -114,13 +114,13 @@ Overrides: EventEmitter.constructor
 
 ### foundDeadSpace
 
-▸ **foundDeadSpace**(`chunk`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)): _void_
+▸ **foundDeadSpace**(`chunk`: [_Chunk_](_types_global_globaltypes.chunk.md)): _void_
 
 #### Parameters
 
-| Name    | Type                                                                  |
-| :------ | :-------------------------------------------------------------------- |
-| `chunk` | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md) |
+| Name    | Type                                          |
+| :------ | :-------------------------------------------- |
+| `chunk` | [_Chunk_](_types_global_globaltypes.chunk.md) |
 
 **Returns:** _void_
 
@@ -128,13 +128,13 @@ Overrides: EventEmitter.constructor
 
 ### foundDeepSpace
 
-▸ **foundDeepSpace**(`chunk`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)): _void_
+▸ **foundDeepSpace**(`chunk`: [_Chunk_](_types_global_globaltypes.chunk.md)): _void_
 
 #### Parameters
 
-| Name    | Type                                                                  |
-| :------ | :-------------------------------------------------------------------- |
-| `chunk` | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md) |
+| Name    | Type                                          |
+| :------ | :-------------------------------------------- |
+| `chunk` | [_Chunk_](_types_global_globaltypes.chunk.md) |
 
 **Returns:** _void_
 
@@ -184,13 +184,13 @@ Overrides: EventEmitter.constructor
 
 ### foundSpace
 
-▸ **foundSpace**(`chunk`: [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)): _void_
+▸ **foundSpace**(`chunk`: [_Chunk_](_types_global_globaltypes.chunk.md)): _void_
 
 #### Parameters
 
-| Name    | Type                                                                  |
-| :------ | :-------------------------------------------------------------------- |
-| `chunk` | [_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md) |
+| Name    | Type                                          |
+| :------ | :-------------------------------------------- |
+| `chunk` | [_Chunk_](_types_global_globaltypes.chunk.md) |
 
 **Returns:** _void_
 

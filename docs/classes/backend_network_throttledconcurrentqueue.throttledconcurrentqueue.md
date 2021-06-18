@@ -28,6 +28,7 @@ concurrency.
 - [executeNextTasks](backend_network_throttledconcurrentqueue.throttledconcurrentqueue.md#executenexttasks)
 - [next](backend_network_throttledconcurrentqueue.throttledconcurrentqueue.md#next)
 - [nextPossibleExecution](backend_network_throttledconcurrentqueue.throttledconcurrentqueue.md#nextpossibleexecution)
+- [size](backend_network_throttledconcurrentqueue.throttledconcurrentqueue.md#size)
 - [throttleQuotaRemaining](backend_network_throttledconcurrentqueue.throttledconcurrentqueue.md#throttlequotaremaining)
 
 ## Constructors
@@ -179,6 +180,16 @@ Returns the soonest possible time from now we could execute another task without
 over the throttle limit.
 
 **Returns:** _undefined_ \| _number_
+
+---
+
+### size
+
+▸ **size**(): _number_
+
+Returns the amount of queued items, not including the ones that are being executed at this moment.
+
+**Returns:** _number_
 
 ---
 

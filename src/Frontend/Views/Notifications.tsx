@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes, css } from 'styled-components';
-import { UIDataKey } from '../../Backend/Storage/UIStateStorageManager';
 import { EthTxType } from '@darkforest_eth/types';
 import NotificationManager, {
   NotificationInfo,
@@ -10,6 +9,7 @@ import NotificationManager, {
 } from '../Game/NotificationManager';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
+import { Setting } from '../Utils/SettingsHooks';
 
 const NOTIF_SIZE = '4em';
 const MARGIN = '8px';
@@ -112,7 +112,8 @@ export function NotificationsPane() {
     const notifManager = NotificationManager.getInstance();
 
     const addNotif = (notif: NotificationInfo) => {
-      const notifMove = uiManager?.getUIDataItem(UIDataKey.notifMove);
+      const notifMove = uiManager.getBooleanSetting(Setting.MoveNotifications);
+
       if (!notifMove && notif.type === NotificationType.Tx && notif.txData?.type === EthTxType.MOVE)
         return;
 

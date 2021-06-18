@@ -48,7 +48,7 @@ visible planet to the mouse.
 
 ### cachedExploredChunks
 
-• `Private` **cachedExploredChunks**: _Set_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>
+• `Private` **cachedExploredChunks**: _Set_<[_Chunk_](_types_global_globaltypes.chunk.md)\>
 
 ---
 
@@ -124,7 +124,7 @@ viewport configuration, as well as the world radius.
 | Name            | Type                                                                                                           |
 | :-------------- | :------------------------------------------------------------------------------------------------------------- |
 | `cachedPlanets` | _Map_<LocationId, [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md)\> |
-| `chunks`        | _Set_<[_ExploredChunkData_](_types_global_globaltypes.exploredchunkdata.md)\>                                  |
+| `chunks`        | _Set_<[_Chunk_](_types_global_globaltypes.chunk.md)\>                                                          |
 
 ---
 
