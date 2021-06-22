@@ -73,6 +73,8 @@ import {
   RevealedCoords,
   LocatablePlanet,
   RevealedLocation,
+  PlanetMessageType,
+  SignedMessage,
 } from '@darkforest_eth/types';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import { MIN_CHUNK_SIZE } from '../../Frontend/Utils/constants';
@@ -96,6 +98,9 @@ import { Radii } from './ViewportEntities';
 import { BLOCK_EXPLORER_URL } from '../../Frontend/Utils/constants';
 import { Diagnostics } from '../../Frontend/Panes/DiagnosticsPane';
 import { pollSetting, Setting } from '../../Frontend/Utils/SettingsHooks';
+import { addMessage, deleteMessages, getMessagesOnPlanets } from '../Network/MessageAPI';
+import { getEmojiMessage } from './ArrivalUtils';
+import { easeInAnimation, emojiEaseOutAnimation } from '../Utils/Animation';
 
 export enum GameManagerEvent {
   PlanetUpdate = 'PlanetUpdate',
@@ -1155,6 +1160,14 @@ class GameManager extends EventEmitter {
     return planetId && this.entityStore.getPlanetWithId(planetId);
   }
 
+  /**
+   * Gets a list of planets in the client's memory with the given ids. If a planet with the given id
+   * doesn't exist, no entry for that planet will be returned in the result.
+   */
+  getPlanetsWithIds(planetId: LocationId[]): Planet[] {
+    return planetId.map((id) => this.getPlanetWithId(id)).filter((p) => !!p) as Planet[];
+  }
+
   getStalePlanetWithId(planetId: LocationId): Planet | undefined {
     return this.entityStore.getPlanetWithId(planetId, false);
   }
@@ -2009,6 +2022,174 @@ class GameManager extends EventEmitter {
 
     this.handleTxIntent(txIntent);
     this.contractsAPI.withdrawSilver(txIntent).catch((e) => this.onTxIntentFail(txIntent, e));
+  }
+
+  /**
+   * We have two locations which planet state can live: on the server, and on the blockchain. We use
+   * the blockchain for the 'physics' of the universe, and the webserver for optional 'add-on'
+   * features, which are cryptographically secure, but live off-chain.
+   *
+   * This function loads the planet states which live on the server. Plays nicely with our
+   * notifications system and sets the appropriate loading state values on the planet.
+   */
+  public async refreshServerPlanetStates(planetIds: LocationId[]) {
+    const planets = this.getPlanetsWithIds(planetIds);
+
+    planetIds.forEach((id) =>
+      this.getGameObjects().updatePlanet(id, (p) => {
+        p.loadingServerState = true;
+      })
+    );
+
+    const messages = await getMessagesOnPlanets({ planets: planetIds });
+
+    planets.forEach((planet) => {
+      const previousPlanetEmoji = getEmojiMessage(planet);
+      planet.messages = messages[planet.locationId];
+      const nowPlanetEmoji = getEmojiMessage(planet);
+
+      // an emoji was added
+      if (previousPlanetEmoji === undefined && nowPlanetEmoji !== undefined) {
+        planet.emojiZoopAnimation = easeInAnimation(2000);
+        // an emoji was removed
+      } else if (nowPlanetEmoji === undefined && previousPlanetEmoji !== undefined) {
+        planet.emojiZoopAnimation = undefined;
+        planet.emojiZoopOutAnimation = emojiEaseOutAnimation(3000, previousPlanetEmoji.body.emoji);
+      }
+    });
+
+    planetIds.forEach((id) =>
+      this.getGameObjects().updatePlanet(id, (p) => {
+        p.loadingServerState = false;
+        p.needsServerRefresh = false;
+      })
+    );
+  }
+
+  /**
+   * If you are the owner of this planet, you can set an 'emoji' to hover above the planet.
+   * `emojiStr` must be a string that contains a single emoji, otherwise this function will throw an
+   * error.
+   *
+   * The emoji is stored off-chain in a postgres database. We verify planet ownership via a contract
+   * call from the webserver, and by verifying that the request to add (or remove) an emoji from a
+   * planet was signed by the owner.
+   */
+  public setPlanetEmoji(locationId: LocationId, emojiStr: string) {
+    return this.submitPlanetMessage(locationId, PlanetMessageType.EmojiFlag, {
+      emoji: emojiStr,
+    });
+  }
+
+  /**
+   * If you are the owner of this planet, you can delete the emoji that is hovering above the
+   * planet.
+   */
+  public async clearEmoji(locationId: LocationId) {
+    if (this.account === undefined) {
+      throw new Error("can't clear emoji: not logged in");
+    }
+
+    if (this.getPlanetWithId(locationId)?.unconfirmedClearEmoji) {
+      throw new Error(`can't clear emoji: alreading clearing emoji from ${locationId}`);
+    }
+
+    this.getGameObjects().updatePlanet(locationId, (p) => {
+      p.unconfirmedClearEmoji = true;
+    });
+
+    const request = await this.signMessage({
+      locationId,
+      ids: this.getPlanetWithId(locationId)?.messages?.map((m) => m.id) || [],
+    });
+
+    try {
+      await deleteMessages(request);
+    } catch (e) {
+      throw e;
+    } finally {
+      this.getGameObjects().updatePlanet(locationId, (p) => {
+        p.needsServerRefresh = true;
+        p.unconfirmedClearEmoji = false;
+      });
+    }
+
+    await this.refreshServerPlanetStates([locationId]);
+  }
+
+  /**
+   * The planet emoji feature is built on top of a more general 'Planet Message' system, which
+   * allows players to upload pieces of data called 'Message's to planets that they own. Emojis are
+   * just one type of message. Their implementation leaves the door open to more off-chain data.
+   */
+  private async submitPlanetMessage(
+    locationId: LocationId,
+    type: PlanetMessageType,
+    body: unknown
+  ) {
+    if (this.account === undefined) {
+      throw new Error("can't submit planet message not logged in");
+    }
+
+    if (this.getPlanetWithId(locationId)?.unconfirmedAddEmoji) {
+      throw new Error(`can't submit planet message: already submitting for planet ${locationId}`);
+    }
+
+    this.getGameObjects().updatePlanet(locationId, (p) => {
+      p.unconfirmedAddEmoji = true;
+    });
+
+    const request = await this.signMessage({
+      locationId,
+      sender: this.account,
+      type,
+      body,
+    });
+
+    try {
+      await addMessage(request);
+    } catch (e) {
+      throw e;
+    } finally {
+      this.getGameObjects().updatePlanet(locationId, (p) => {
+        p.unconfirmedAddEmoji = false;
+        p.needsServerRefresh = true;
+      });
+    }
+
+    await this.refreshServerPlanetStates([locationId]);
+  }
+
+  /**
+   * Returns a signed version of this message.
+   */
+  private async signMessage<T>(obj: T): Promise<SignedMessage<T>> {
+    if (!this.account) {
+      throw new Error('not logged in');
+    }
+
+    const stringified = JSON.stringify(obj);
+    const signature = await this.ethConnection.signMessage(stringified);
+
+    return {
+      signature,
+      sender: this.account,
+      message: obj,
+    };
+  }
+
+  /**
+   * Checks that a message signed by {@link GameManager#signMessage} was signed by the address that
+   * it claims it was signed by.
+   */
+  private async verifyMessage(message: SignedMessage<unknown>): Promise<boolean> {
+    const preSigned = JSON.stringify(message.message);
+
+    return this.ethConnection.verifySignature(
+      preSigned,
+      message.signature as string,
+      message.sender as EthAddress
+    );
   }
 
   /**

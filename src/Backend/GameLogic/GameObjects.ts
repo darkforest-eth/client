@@ -453,6 +453,19 @@ export class GameObjects {
   }
 
   /**
+   * Given a planet id, update the state of the given planet by calling the given update function.
+   * If the planet was updated, then also publish the appropriate event.
+   */
+  public updatePlanet(id: LocationId, updateFn: (p: Planet) => void) {
+    const planet = this.getPlanetWithId(id);
+
+    if (planet !== undefined) {
+      updateFn(planet);
+      this.setPlanet(planet);
+    }
+  }
+
+  /**
    * received some planet data from the contract. update our stores
    */
   public replacePlanetFromContractData(
@@ -479,6 +492,13 @@ export class GameObjects {
         unconfirmedDeactivateArtifact,
         unconfirmedWithdrawSilver,
         unconfirmedProspectPlanet,
+        loadingServerState,
+        needsServerRefresh,
+        lastLoadedServerState,
+        emojiBobAnimation,
+        emojiZoopAnimation,
+        emojiZoopOutAnimation,
+        messages,
       } = localPlanet;
       planet.unconfirmedReveal = unconfirmedReveal;
       planet.unconfirmedDepartures = unconfirmedDepartures;
@@ -492,6 +512,14 @@ export class GameObjects {
       planet.unconfirmedDeactivateArtifact = unconfirmedDeactivateArtifact;
       planet.unconfirmedWithdrawSilver = unconfirmedWithdrawSilver;
       planet.unconfirmedProspectPlanet = unconfirmedProspectPlanet;
+      planet.loadingServerState = loadingServerState;
+      planet.needsServerRefresh = needsServerRefresh;
+      planet.lastLoadedServerState = lastLoadedServerState;
+      planet.emojiBobAnimation = emojiBobAnimation;
+      planet.emojiZoopAnimation = emojiZoopAnimation;
+      planet.emojiZoopOutAnimation = emojiZoopOutAnimation;
+      planet.messages = messages;
+
       // Possibly non updated props
       planet.heldArtifactIds = localPlanet.heldArtifactIds;
     }
@@ -1382,6 +1410,9 @@ export class GameObjects {
       unconfirmedUpgrades: [],
       unconfirmedBuyHats: [],
       unconfirmedPlanetTransfers: [],
+      unconfirmedClearEmoji: false,
+      unconfirmedAddEmoji: false,
+      loadingServerState: false,
       silverSpent: 0,
 
       prospectedBlockNumber: undefined,
@@ -1389,10 +1420,12 @@ export class GameObjects {
       destroyed: false,
       isInContract: this.touchedPlanetIds.has(hex),
       syncedWithContract: false,
+      needsServerRefresh: false,
       coordsRevealed: false,
       location,
       biome,
       hasTriedFindingArtifact: false,
+      messages: undefined,
     };
   }
 

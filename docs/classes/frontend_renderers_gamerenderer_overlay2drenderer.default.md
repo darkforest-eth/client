@@ -20,10 +20,12 @@
 - [drawArcWorld](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawarcworld)
 - [drawArtifactAroundPlanet](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawartifactaroundplanet)
 - [drawArtifactIcon](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawartifacticon)
+- [drawEmojiMessage](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawemojimessage)
 - [drawHat](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawhat)
 - [drawLine](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawline)
 - [drawLoopWorld](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawloopworld)
 - [drawMiner](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawminer)
+- [drawPlanetMessages](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawplanetmessages)
 - [drawRectStrokeAtCenterWorld](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawrectstrokeatcenterworld)
 - [drawText](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawtext)
 
@@ -121,6 +123,23 @@
 
 ---
 
+### drawEmojiMessage
+
+▸ **drawEmojiMessage**(`centerWorld`: WorldCoords, `radiusWorld`: _number_, `renderInfo`: [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md), `message`: _PlanetMessage_<EmojiFlagBody\>): _void_
+
+#### Parameters
+
+| Name          | Type                                                                                       |
+| :------------ | :----------------------------------------------------------------------------------------- |
+| `centerWorld` | WorldCoords                                                                                |
+| `radiusWorld` | _number_                                                                                   |
+| `renderInfo`  | [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md) |
+| `message`     | _PlanetMessage_<EmojiFlagBody\>                                                            |
+
+**Returns:** _void_
+
+---
+
 ### drawHat
 
 ▸ **drawHat**(`hatType`: [_HatType_](../enums/frontend_utils_hats.hattype.md), `pathHeight`: _number_, `pathWidth`: _number_, `center`: WorldCoords, `width`: _number_, `height`: _number_, `radius`: _number_, `rotation`: _number_, `fill1?`: _string_ \| CanvasPattern, `fill2?`: _string_ \| CanvasPattern, `hoverCoords?`: `null` \| WorldCoords): _void_
@@ -184,6 +203,22 @@
 ### drawMiner
 
 ▸ **drawMiner**(): _void_
+
+**Returns:** _void_
+
+---
+
+### drawPlanetMessages
+
+▸ **drawPlanetMessages**(`centerWorld`: WorldCoords, `radiusWorld`: _number_, `renderInfo`: [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md)): _void_
+
+#### Parameters
+
+| Name          | Type                                                                                       |
+| :------------ | :----------------------------------------------------------------------------------------- |
+| `centerWorld` | WorldCoords                                                                                |
+| `radiusWorld` | _number_                                                                                   |
+| `renderInfo`  | [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md) |
 
 **Returns:** _void_
 

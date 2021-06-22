@@ -90,6 +90,7 @@
 - [getEthConnection](backend_gamelogic_gameuimanager.default.md#getethconnection)
 - [getExploredChunks](backend_gamelogic_gameuimanager.default.md#getexploredchunks)
 - [getForcesSending](backend_gamelogic_gameuimanager.default.md#getforcessending)
+- [getGameManager](backend_gamelogic_gameuimanager.default.md#getgamemanager)
 - [getGameObjects](backend_gamelogic_gameuimanager.default.md#getgameobjects)
 - [getGptCreditBalanceEmitter](backend_gamelogic_gameuimanager.default.md#getgptcreditbalanceemitter)
 - [getGptCreditPriceEmitter](backend_gamelogic_gameuimanager.default.md#getgptcreditpriceemitter)
@@ -919,6 +920,14 @@ indicates whether or not the player is currently selecting a target planet.
 | `planetId` | LocationId |
 
 **Returns:** _number_
+
+---
+
+### getGameManager
+
+▸ **getGameManager**(): [_default_](backend_gamelogic_gamemanager.default.md)
+
+**Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
 
 ---
 

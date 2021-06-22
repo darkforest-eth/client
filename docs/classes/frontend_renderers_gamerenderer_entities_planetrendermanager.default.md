@@ -17,6 +17,7 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 
 ### Methods
 
+- [drawPlanetMessages](frontend_renderers_gamerenderer_entities_planetrendermanager.default.md#drawplanetmessages)
 - [flush](frontend_renderers_gamerenderer_entities_planetrendermanager.default.md#flush)
 - [getLockedEnergy](frontend_renderers_gamerenderer_entities_planetrendermanager.default.md#getlockedenergy)
 - [getMouseAtk](frontend_renderers_gamerenderer_entities_planetrendermanager.default.md#getmouseatk)
@@ -53,6 +54,22 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 • **renderer**: [_default_](frontend_renderers_gamerenderer_renderer.default.md)
 
 ## Methods
+
+### drawPlanetMessages
+
+▸ `Private` **drawPlanetMessages**(`renderInfo`: [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md), `coords`: WorldCoords, `radiusW`: _number_): _void_
+
+#### Parameters
+
+| Name         | Type                                                                                       |
+| :----------- | :----------------------------------------------------------------------------------------- |
+| `renderInfo` | [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md) |
+| `coords`     | WorldCoords                                                                                |
+| `radiusW`    | _number_                                                                                   |
+
+**Returns:** _void_
+
+---
 
 ### flush
 
@@ -169,13 +186,13 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 
 ### queueLocation
 
-▸ **queueLocation**(`planetInfo`: [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md), `now`: _number_, `highPerfMode`: _boolean_): _void_
+▸ **queueLocation**(`renderInfo`: [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md), `now`: _number_, `highPerfMode`: _boolean_): _void_
 
 #### Parameters
 
 | Name           | Type                                                                                       |
 | :------------- | :----------------------------------------------------------------------------------------- |
-| `planetInfo`   | [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md) |
+| `renderInfo`   | [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md) |
 | `now`          | _number_                                                                                   |
 | `highPerfMode` | _boolean_                                                                                  |
 

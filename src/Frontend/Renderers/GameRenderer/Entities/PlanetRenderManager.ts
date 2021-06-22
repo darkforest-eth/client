@@ -23,16 +23,16 @@ export default class PlanetRenderManager {
     this.renderer = renderer;
   }
 
-  queueLocation(planetInfo: PlanetRenderInfo, now: number, highPerfMode: boolean): void {
-    const planet = planetInfo.planet;
-    const renderAtReducedQuality = planetInfo.radii.radiusPixels <= 5 && highPerfMode;
+  queueLocation(renderInfo: PlanetRenderInfo, now: number, highPerfMode: boolean): void {
+    const planet = renderInfo.planet;
+    const renderAtReducedQuality = renderInfo.radii.radiusPixels <= 5 && highPerfMode;
 
     const { gameUIManager: uiManager, circleRenderer: cR } = this.renderer;
 
     let textAlpha = 255;
-    if (planetInfo.radii.radiusPixels < 2 * maxRadius) {
+    if (renderInfo.radii.radiusPixels < 2 * maxRadius) {
       // text alpha scales a bit faster
-      textAlpha *= planetInfo.radii.radiusPixels / (2 * maxRadius);
+      textAlpha *= renderInfo.radii.radiusPixels / (2 * maxRadius);
     }
 
     const artifacts = uiManager
@@ -41,64 +41,65 @@ export default class PlanetRenderManager {
     const color = uiManager.isOwnedByMe(planet) ? whiteA : ProcgenUtils.getOwnerColorVec(planet);
 
     // draw planet body
-    this.queuePlanetBody(planet, planet.location.coords, planetInfo.radii.radiusWorld);
-    this.queueAsteroids(planet, planet.location.coords, planetInfo.radii.radiusWorld);
+    this.queuePlanetBody(planet, planet.location.coords, renderInfo.radii.radiusWorld);
+    this.queueAsteroids(planet, planet.location.coords, renderInfo.radii.radiusWorld);
     this.queueArtifactsAroundPlanet(
       planet,
       artifacts,
       planet.location.coords,
-      planetInfo.radii.radiusWorld,
+      renderInfo.radii.radiusWorld,
       now,
       textAlpha
     );
 
-    this.queueRings(planet, planet.location.coords, planetInfo.radii.radiusWorld);
+    this.queueRings(planet, planet.location.coords, renderInfo.radii.radiusWorld);
 
     // render black domain
     if (planet.destroyed) {
-      this.queueBlackDomain(planet, planet.location.coords, planetInfo.radii.radiusWorld);
+      this.queueBlackDomain(planet, planet.location.coords, renderInfo.radii.radiusWorld);
       return;
     }
 
     // draw hp bar
     let cA = 1.0; // circle alpha
-    if (planetInfo.radii.radiusPixels < 2 * maxRadius) {
-      cA *= planetInfo.radii.radiusPixels / (2 * maxRadius);
+    if (renderInfo.radii.radiusPixels < 2 * maxRadius) {
+      cA *= renderInfo.radii.radiusPixels / (2 * maxRadius);
     }
 
     if (hasOwner(planet)) {
       color[3] = cA * 120;
-      cR.queueCircleWorld(planet.location.coords, planetInfo.radii.radiusWorld * 1.1, color, 0.5);
+      cR.queueCircleWorld(planet.location.coords, renderInfo.radii.radiusWorld * 1.1, color, 0.5);
       const pct = planet.energy / planet.energyCap;
       color[3] = cA * 255;
       cR.queueCircleWorld(
         planet.location.coords,
-        planetInfo.radii.radiusWorld * 1.1,
+        renderInfo.radii.radiusWorld * 1.1,
         color,
         2,
         pct
       );
     }
 
-    this.queueHat(planet, planet.location.coords, planetInfo.radii.radiusWorld);
+    this.queueHat(planet, planet.location.coords, renderInfo.radii.radiusWorld);
 
     /* draw text */
     if (!renderAtReducedQuality) {
       this.queuePlanetEnergyText(
         planet,
         planet.location.coords,
-        planetInfo.radii.radiusWorld,
+        renderInfo.radii.radiusWorld,
         textAlpha
       );
 
       this.queuePlanetSilverText(
         planet,
         planet.location.coords,
-        planetInfo.radii.radiusWorld,
+        renderInfo.radii.radiusWorld,
         textAlpha
       );
 
-      this.queueArtifactIcon(planet, planet.location.coords, planetInfo.radii.radiusWorld);
+      this.queueArtifactIcon(planet, planet.location.coords, renderInfo.radii.radiusWorld);
+      this.drawPlanetMessages(renderInfo, planet.location.coords, renderInfo.radii.radiusWorld);
     }
   }
 
@@ -130,6 +131,12 @@ export default class PlanetRenderManager {
 
       this.renderer.spriteRenderer.queueArtifactWorld(artifacts[i], { x, y }, artifactSize, alpha);
     }
+  }
+
+  private drawPlanetMessages(renderInfo: PlanetRenderInfo, coords: WorldCoords, radiusW: number) {
+    if (!renderInfo.planet.messages) return;
+    const { overlay2dRenderer: cM } = this.renderer;
+    cM.drawPlanetMessages(coords, radiusW, renderInfo);
   }
 
   private queueArtifactIcon(planet: Planet, { x, y }: WorldCoords, radius: number) {

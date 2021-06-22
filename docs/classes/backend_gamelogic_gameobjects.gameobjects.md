@@ -89,6 +89,7 @@ Representation of the objects which exist in the world.
 - [setArtifact](backend_gamelogic_gameobjects.gameobjects.md#setartifact)
 - [setPlanet](backend_gamelogic_gameobjects.gameobjects.md#setplanet)
 - [spaceTypeFromPerlin](backend_gamelogic_gameobjects.gameobjects.md#spacetypefromperlin)
+- [updatePlanet](backend_gamelogic_gameobjects.gameobjects.md#updateplanet)
 - [updatePlanetIfStale](backend_gamelogic_gameobjects.gameobjects.md#updateplanetifstale)
 - [updateScore](backend_gamelogic_gameobjects.gameobjects.md#updatescore)
 - [getSilverNeeded](backend_gamelogic_gameobjects.gameobjects.md#getsilverneeded)
@@ -1046,6 +1047,24 @@ This function also handles managing planet update messages and indexing the map 
 | `perlin` | _number_ |
 
 **Returns:** SpaceType
+
+---
+
+### updatePlanet
+
+▸ **updatePlanet**(`id`: LocationId, `updateFn`: (`p`: Planet) => _void_): _void_
+
+Given a planet id, update the state of the given planet by calling the given update function.
+If the planet was updated, then also publish the appropriate event.
+
+#### Parameters
+
+| Name       | Type                    |
+| :--------- | :---------------------- |
+| `id`       | LocationId              |
+| `updateFn` | (`p`: Planet) => _void_ |
+
+**Returns:** _void_
 
 ---
 

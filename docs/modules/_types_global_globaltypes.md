@@ -24,6 +24,7 @@
 
 ### Functions
 
+- [isEmojiFlagMessage](_types_global_globaltypes.md#isemojiflagmessage)
 - [isLocatable](_types_global_globaltypes.md#islocatable)
 
 ## Type aliases
@@ -69,6 +70,20 @@
 | `to`   | LocationId |
 
 ## Functions
+
+### isEmojiFlagMessage
+
+▸ **isEmojiFlagMessage**(`planetMessage`: _PlanetMessage_<unknown\>): planetMessage is PlanetMessage<EmojiFlagBody\>
+
+#### Parameters
+
+| Name            | Type                      |
+| :-------------- | :------------------------ |
+| `planetMessage` | _PlanetMessage_<unknown\> |
+
+**Returns:** planetMessage is PlanetMessage<EmojiFlagBody\>
+
+---
 
 ### isLocatable
 

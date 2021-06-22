@@ -8,4 +8,5 @@ const FlexRow = styled.div`
 export const SpacedFlexRow = styled(FlexRow)`
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 `;

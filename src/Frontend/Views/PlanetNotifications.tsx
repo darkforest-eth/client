@@ -15,12 +15,14 @@ import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
 import { useUIManager } from '../Utils/AppHooks';
 import { GameObjects } from '../../Backend/GameLogic/GameObjects';
+import { EmojiPlanetNotification } from './EmojiPlanetNotification';
 
 export enum PlanetNotifType {
   PlanetCanUpgrade,
   CanProspect,
   CanFindArtifact,
   MaxSilver,
+  CanAddEmoji,
 }
 
 const StyledPlanetNotifications = styled.div`
@@ -43,6 +45,8 @@ export function getNotifsForPlanet(
   if (isFindable(planet, currentBlockNumber)) notifs.push(PlanetNotifType.CanFindArtifact);
   if (planet.silver / planet.silverCap > 0.995) notifs.push(PlanetNotifType.MaxSilver);
 
+  notifs.push(PlanetNotifType.CanAddEmoji);
+
   return notifs;
 }
 
@@ -50,6 +54,10 @@ const Wrap = styled.div`
   width: 100%;
   height: fit-content;
 `;
+
+function EmojiRow({ wrapper }: { wrapper: Wrapper<Planet | undefined> }) {
+  return <EmojiPlanetNotification wrapper={wrapper} />;
+}
 
 const PlanetCanUpgradeRow = ({ upgradeDetHook }: PlanetNotifHooks) => (
   <SpacedFlexRow>
@@ -120,6 +128,7 @@ export function PlanetNotifications({
           {notif === PlanetNotifType.MaxSilver && <PlanetMaxSilverRow />}
           {notif === PlanetNotifType.CanFindArtifact && <FindArtifactRow wrapper={wrapper} />}
           {notif === PlanetNotifType.CanProspect && <CanProspectRow wrapper={wrapper} />}
+          {notif === PlanetNotifType.CanAddEmoji && <EmojiRow wrapper={wrapper} />}
         </Wrap>
       ))}
     </StyledPlanetNotifications>

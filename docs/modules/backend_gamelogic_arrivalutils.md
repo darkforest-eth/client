@@ -8,6 +8,7 @@
 - [arrive](backend_gamelogic_arrivalutils.md#arrive)
 - [blocksLeftToProspectExpiration](backend_gamelogic_arrivalutils.md#blockslefttoprospectexpiration)
 - [enoughEnergyToProspect](backend_gamelogic_arrivalutils.md#enoughenergytoprospect)
+- [getEmojiMessage](backend_gamelogic_arrivalutils.md#getemojimessage)
 - [isFindable](backend_gamelogic_arrivalutils.md#isfindable)
 - [isProspectable](backend_gamelogic_arrivalutils.md#isprospectable)
 - [prospectExpired](backend_gamelogic_arrivalutils.md#prospectexpired)
@@ -74,6 +75,23 @@
 | `p`  | Planet |
 
 **Returns:** _boolean_
+
+---
+
+### getEmojiMessage
+
+▸ **getEmojiMessage**(`planet`: Planet \| _undefined_): _PlanetMessage_<EmojiFlagBody\> \| _undefined_
+
+**`todo`** ArrivalUtils has become a dumping ground for functions that should just live inside of a
+`Planet` class.
+
+#### Parameters
+
+| Name     | Type                  |
+| :------- | :-------------------- |
+| `planet` | Planet \| _undefined_ |
+
+**Returns:** _PlanetMessage_<EmojiFlagBody\> \| _undefined_
 
 ---
 

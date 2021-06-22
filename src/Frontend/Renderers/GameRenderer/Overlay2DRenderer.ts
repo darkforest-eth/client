@@ -4,7 +4,9 @@ import { HatType, hatFromType } from '../../Utils/Hats';
 import Renderer from './Renderer';
 import { engineConsts } from './EngineConsts';
 import { TextAlign } from './EngineTypes';
-import { Artifact, WorldCoords } from '@darkforest_eth/types';
+import { Artifact, EmojiFlagBody, PlanetMessage, WorldCoords } from '@darkforest_eth/types';
+import { isEmojiFlagMessage } from '../../../_types/global/GlobalTypes';
+import { PlanetRenderInfo } from '../../../Backend/GameLogic/ViewportEntities';
 
 /*
    this is mostly migration code from the old renderer; it holds all of the old renderer primitives,
@@ -202,6 +204,58 @@ export default class Overlay2DRenderer {
     this.ctx.stroke();
 
     this.ctx.setLineDash([]);
+  }
+
+  drawPlanetMessages(centerWorld: WorldCoords, radiusWorld: number, renderInfo: PlanetRenderInfo) {
+    // planets have at most one emoji
+    let renderedEmoji = false;
+
+    renderInfo.planet.messages?.forEach((m) => {
+      if (isEmojiFlagMessage(m) && !renderedEmoji) {
+        this.drawEmojiMessage(centerWorld, radiusWorld, renderInfo, m);
+        renderedEmoji = true;
+      }
+    });
+  }
+
+  drawEmojiMessage(
+    centerWorld: WorldCoords,
+    radiusWorld: number,
+    renderInfo: PlanetRenderInfo,
+    message: PlanetMessage<EmojiFlagBody>
+  ) {
+    const viewport = Viewport.getInstance();
+    const pixelCoords = viewport.worldToCanvasCoords(centerWorld);
+    const radiusPixels = viewport.worldToCanvasDist(radiusWorld);
+    const text = message.body.emoji;
+
+    let size = radiusPixels;
+    let offsetY = -2;
+
+    if (renderInfo.planet.emojiZoopAnimation !== undefined) {
+      size *= renderInfo.planet.emojiZoopAnimation.value();
+    }
+
+    if (size < 2) {
+      return;
+    }
+
+    if (renderInfo.planet.emojiBobAnimation !== undefined) {
+      offsetY += renderInfo.planet.emojiBobAnimation.value() * (radiusPixels * 0.1);
+    }
+
+    // don't want to obscure the silver text
+    if (renderInfo.planet.silver !== 0) {
+      offsetY -= 15;
+    }
+
+    this.ctx.font = `${size}px Arial`;
+    const textSize = this.ctx.measureText(text);
+    this.ctx.fillText(
+      text,
+      pixelCoords.x - textSize.width / 2,
+      pixelCoords.y - radiusPixels * 1.3 + offsetY
+    );
   }
 
   drawText(

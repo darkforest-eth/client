@@ -58,6 +58,7 @@
 - [buyGPTCredits](backend_gamelogic_gamemanager.default.md#buygptcredits)
 - [buyHat](backend_gamelogic_gamemanager.default.md#buyhat)
 - [checkGameHasEnded](backend_gamelogic_gamemanager.default.md#checkgamehasended)
+- [clearEmoji](backend_gamelogic_gamemanager.default.md#clearemoji)
 - [deactivateArtifact](backend_gamelogic_gamemanager.default.md#deactivateartifact)
 - [depositArtifact](backend_gamelogic_gamemanager.default.md#depositartifact)
 - [destroy](backend_gamelogic_gamemanager.default.md#destroy)
@@ -121,6 +122,7 @@
 - [getPlanetWithId](backend_gamelogic_gamemanager.default.md#getplanetwithid)
 - [getPlanetsInRange](backend_gamelogic_gamemanager.default.md#getplanetsinrange)
 - [getPlanetsInWorldRectangle](backend_gamelogic_gamemanager.default.md#getplanetsinworldrectangle)
+- [getPlanetsWithIds](backend_gamelogic_gamemanager.default.md#getplanetswithids)
 - [getPrivateKey](backend_gamelogic_gamemanager.default.md#getprivatekey)
 - [getProcgenUtils](backend_gamelogic_gamemanager.default.md#getprocgenutils)
 - [getRandomHomePlanetCoords](backend_gamelogic_gamemanager.default.md#getrandomhomeplanetcoords)
@@ -163,13 +165,16 @@
 - [onTxSubmit](backend_gamelogic_gamemanager.default.md#ontxsubmit)
 - [prospectPlanet](backend_gamelogic_gamemanager.default.md#prospectplanet)
 - [refreshMyGPTCredits](backend_gamelogic_gamemanager.default.md#refreshmygptcredits)
+- [refreshServerPlanetStates](backend_gamelogic_gamemanager.default.md#refreshserverplanetstates)
 - [refreshTwitters](backend_gamelogic_gamemanager.default.md#refreshtwitters)
 - [revealLocation](backend_gamelogic_gamemanager.default.md#reveallocation)
 - [savePlugins](backend_gamelogic_gamemanager.default.md#saveplugins)
 - [setMinerCores](backend_gamelogic_gamemanager.default.md#setminercores)
 - [setMiningPattern](backend_gamelogic_gamemanager.default.md#setminingpattern)
+- [setPlanetEmoji](backend_gamelogic_gamemanager.default.md#setplanetemoji)
 - [setRadius](backend_gamelogic_gamemanager.default.md#setradius)
 - [setSnarkCacheSize](backend_gamelogic_gamemanager.default.md#setsnarkcachesize)
+- [signMessage](backend_gamelogic_gamemanager.default.md#signmessage)
 - [softRefreshPlanet](backend_gamelogic_gamemanager.default.md#softrefreshplanet)
 - [spaceTypeFromPerlin](backend_gamelogic_gamemanager.default.md#spacetypefromperlin)
 - [spaceTypePerlin](backend_gamelogic_gamemanager.default.md#spacetypeperlin)
@@ -177,9 +182,11 @@
 - [startExplore](backend_gamelogic_gamemanager.default.md#startexplore)
 - [stepConversation](backend_gamelogic_gamemanager.default.md#stepconversation)
 - [stopExplore](backend_gamelogic_gamemanager.default.md#stopexplore)
+- [submitPlanetMessage](backend_gamelogic_gamemanager.default.md#submitplanetmessage)
 - [transferOwnership](backend_gamelogic_gamemanager.default.md#transferownership)
 - [updateDiagnostics](backend_gamelogic_gamemanager.default.md#updatediagnostics)
 - [upgrade](backend_gamelogic_gamemanager.default.md#upgrade)
+- [verifyMessage](backend_gamelogic_gamemanager.default.md#verifymessage)
 - [verifyTwitter](backend_gamelogic_gamemanager.default.md#verifytwitter)
 - [withdrawArtifact](backend_gamelogic_gamemanager.default.md#withdrawartifact)
 - [withdrawSilver](backend_gamelogic_gamemanager.default.md#withdrawsilver)
@@ -655,6 +662,23 @@ look your best. Just like in the real world, more money means more hat.
 ▸ `Private` **checkGameHasEnded**(): _boolean_
 
 **Returns:** _boolean_
+
+---
+
+### clearEmoji
+
+▸ **clearEmoji**(`locationId`: LocationId): _Promise_<void\>
+
+If you are the owner of this planet, you can delete the emoji that is hovering above the
+planet.
+
+#### Parameters
+
+| Name         | Type       |
+| :----------- | :--------- |
+| `locationId` | LocationId |
+
+**Returns:** _Promise_<void\>
 
 ---
 
@@ -1440,6 +1464,23 @@ left coordinate, width, and height) in the world and of a level that was passed 
 
 ---
 
+### getPlanetsWithIds
+
+▸ **getPlanetsWithIds**(`planetId`: LocationId[]): Planet[]
+
+Gets a list of planets in the client's memory with the given ids. If a planet with the given id
+doesn't exist, no entry for that planet will be returned in the result.
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `planetId` | LocationId[] |
+
+**Returns:** Planet[]
+
+---
+
 ### getPrivateKey
 
 ▸ **getPrivateKey**(): _string_
@@ -2010,6 +2051,27 @@ the given planet to the given planet.
 
 ---
 
+### refreshServerPlanetStates
+
+▸ **refreshServerPlanetStates**(`planetIds`: LocationId[]): _Promise_<void\>
+
+We have two locations which planet state can live: on the server, and on the blockchain. We use
+the blockchain for the 'physics' of the universe, and the webserver for optional 'add-on'
+features, which are cryptographically secure, but live off-chain.
+
+This function loads the planet states which live on the server. Plays nicely with our
+notifications system and sets the appropriate loading state values on the planet.
+
+#### Parameters
+
+| Name        | Type         |
+| :---------- | :----------- |
+| `planetIds` | LocationId[] |
+
+**Returns:** _Promise_<void\>
+
+---
+
 ### refreshTwitters
 
 ▸ `Private` **refreshTwitters**(): _Promise_<void\>
@@ -2082,6 +2144,29 @@ Sets the mining pattern of the miner. This kills the old miner and starts this o
 
 ---
 
+### setPlanetEmoji
+
+▸ **setPlanetEmoji**(`locationId`: LocationId, `emojiStr`: _string_): _Promise_<void\>
+
+If you are the owner of this planet, you can set an 'emoji' to hover above the planet.
+`emojiStr` must be a string that contains a single emoji, otherwise this function will throw an
+error.
+
+The emoji is stored off-chain in a postgres database. We verify planet ownership via a contract
+call from the webserver, and by verifying that the request to add (or remove) an emoji from a
+planet was signed by the owner.
+
+#### Parameters
+
+| Name         | Type       |
+| :----------- | :--------- |
+| `locationId` | LocationId |
+| `emojiStr`   | _string_   |
+
+**Returns:** _Promise_<void\>
+
+---
+
 ### setRadius
 
 ▸ `Private` **setRadius**(`worldRadius`: _number_): _void_
@@ -2109,6 +2194,28 @@ Changes the amount of move snark proofs that are cached.
 | `size` | _number_ |
 
 **Returns:** _void_
+
+---
+
+### signMessage
+
+▸ `Private` **signMessage**<T\>(`obj`: T): _Promise_<SignedMessage<T\>\>
+
+Returns a signed version of this message.
+
+#### Type parameters
+
+| Name |
+| :--- |
+| `T`  |
+
+#### Parameters
+
+| Name  | Type |
+| :---- | :--- |
+| `obj` | T    |
+
+**Returns:** _Promise_<SignedMessage<T\>\>
 
 ---
 
@@ -2214,6 +2321,26 @@ Stops the miner.
 
 ---
 
+### submitPlanetMessage
+
+▸ `Private` **submitPlanetMessage**(`locationId`: LocationId, `type`: EmojiFlag, `body`: _unknown_): _Promise_<void\>
+
+The planet emoji feature is built on top of a more general 'Planet Message' system, which
+allows players to upload pieces of data called 'Message's to planets that they own. Emojis are
+just one type of message. Their implementation leaves the door open to more off-chain data.
+
+#### Parameters
+
+| Name         | Type       |
+| :----------- | :--------- |
+| `locationId` | LocationId |
+| `type`       | EmojiFlag  |
+| `body`       | _unknown_  |
+
+**Returns:** _Promise_<void\>
+
+---
+
 ### transferOwnership
 
 ▸ **transferOwnership**(`planetId`: LocationId, `newOwner`: EthAddress, `bypassChecks?`: _boolean_): [_default_](backend_gamelogic_gamemanager.default.md)
@@ -2265,6 +2392,23 @@ the upgrade.
 | `_bypassChecks` | _boolean_  | false         |
 
 **Returns:** [_default_](backend_gamelogic_gamemanager.default.md)
+
+---
+
+### verifyMessage
+
+▸ `Private` **verifyMessage**(`message`: _SignedMessage_<unknown\>): _Promise_<boolean\>
+
+Checks that a message signed by {@link GameManager#signMessage} was signed by the address that
+it claims it was signed by.
+
+#### Parameters
+
+| Name      | Type                      |
+| :-------- | :------------------------ |
+| `message` | _SignedMessage_<unknown\> |
+
+**Returns:** _Promise_<boolean\>
 
 ---
 

@@ -1151,6 +1151,10 @@ class GameUIManager extends EventEmitter {
   private onEmitInitializedPlayerError(err: React.ReactNode) {
     this.emit(GameUIManagerEvent.InitializedPlayerError, err);
   }
+
+  public getGameManager(): GameManager {
+    return this.gameManager;
+  }
 }
 
 export default GameUIManager;

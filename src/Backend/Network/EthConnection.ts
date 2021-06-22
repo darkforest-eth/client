@@ -13,6 +13,7 @@ import {
   utils,
   BigNumber,
   EventFilter,
+  ethers,
 } from 'ethers';
 import EventEmitter from 'events';
 import stringify from 'json-stable-stringify';
@@ -309,6 +310,10 @@ class EthConnection extends EventEmitter {
     }
 
     return this.signer.signMessage(message);
+  }
+
+  public verifySignature(message: string, signature: string, address: EthAddress): boolean {
+    return ethers.utils.verifyMessage(message, signature).toLowerCase() === address;
   }
 
   public async getBalance(address: EthAddress): Promise<number> {

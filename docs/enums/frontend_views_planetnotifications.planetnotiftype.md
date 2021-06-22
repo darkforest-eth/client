@@ -6,12 +6,19 @@
 
 ### Enumeration members
 
+- [CanAddEmoji](frontend_views_planetnotifications.planetnotiftype.md#canaddemoji)
 - [CanFindArtifact](frontend_views_planetnotifications.planetnotiftype.md#canfindartifact)
 - [CanProspect](frontend_views_planetnotifications.planetnotiftype.md#canprospect)
 - [MaxSilver](frontend_views_planetnotifications.planetnotiftype.md#maxsilver)
 - [PlanetCanUpgrade](frontend_views_planetnotifications.planetnotiftype.md#planetcanupgrade)
 
 ## Enumeration members
+
+### CanAddEmoji
+
+• **CanAddEmoji**: = 4
+
+---
 
 ### CanFindArtifact
 

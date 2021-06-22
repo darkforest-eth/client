@@ -1,7 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Spacer } from '../Components/CoreUI';
-import { LoadingSpinner } from '../Components/LoadingSpinner';
 
 const Container = styled.div`
   width: 100vw;
@@ -12,13 +10,6 @@ const Container = styled.div`
   flex-direction: column;
   text-align: center;
 `;
-
-const HomeLink = styled.a`
-  text-decoration: underline;
-  cursor: pointer;
-`;
-
-const Title = styled.div``;
 
 export function ValhallaPage() {
   window.location.href = 'https://valhalla.zkga.me';

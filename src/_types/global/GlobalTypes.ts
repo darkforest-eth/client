@@ -5,6 +5,9 @@ import {
   LocatablePlanet,
   WorldCoords,
   WorldLocation,
+  EmojiFlagBody,
+  PlanetMessageType,
+  PlanetMessage,
 } from '@darkforest_eth/types';
 import GameManager from '../../Backend/GameLogic/GameManager';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
@@ -47,6 +50,12 @@ export enum StatIdx {
 
 export function isLocatable(planet: Planet): planet is LocatablePlanet {
   return (planet as LocatablePlanet).location !== undefined;
+}
+
+export function isEmojiFlagMessage(
+  planetMessage: PlanetMessage<unknown>
+): planetMessage is PlanetMessage<EmojiFlagBody> {
+  return planetMessage.body !== undefined && planetMessage.type === PlanetMessageType.EmojiFlag;
 }
 
 /**
