@@ -6,6 +6,7 @@
 
 ### Properties
 
+- [ARTIFACT_POINT_VALUES](_types_darkforest_api_contractsapitypes.contractconstants.md#artifact_point_values)
 - [BIOMEBASE_KEY](_types_darkforest_api_contractsapitypes.contractconstants.md#biomebase_key)
 - [BIOME_THRESHOLD_1](_types_darkforest_api_contractsapitypes.contractconstants.md#biome_threshold_1)
 - [BIOME_THRESHOLD_2](_types_darkforest_api_contractsapitypes.contractconstants.md#biome_threshold_2)
@@ -26,6 +27,7 @@
 - [PLANET_TYPE_WEIGHTS](_types_darkforest_api_contractsapitypes.contractconstants.md#planet_type_weights)
 - [SPACETYPE_KEY](_types_darkforest_api_contractsapitypes.contractconstants.md#spacetype_key)
 - [TIME_FACTOR_HUNDREDTHS](_types_darkforest_api_contractsapitypes.contractconstants.md#time_factor_hundredths)
+- [TOKEN_MINT_END_SECONDS](_types_darkforest_api_contractsapitypes.contractconstants.md#token_mint_end_seconds)
 - [defaultBarbarianPercentage](_types_darkforest_api_contractsapitypes.contractconstants.md#defaultbarbarianpercentage)
 - [defaultDefense](_types_darkforest_api_contractsapitypes.contractconstants.md#defaultdefense)
 - [defaultPopulationCap](_types_darkforest_api_contractsapitypes.contractconstants.md#defaultpopulationcap)
@@ -39,6 +41,12 @@
 - [upgrades](_types_darkforest_api_contractsapitypes.contractconstants.md#upgrades)
 
 ## Properties
+
+### ARTIFACT_POINT_VALUES
+
+• **ARTIFACT_POINT_VALUES**: ArtifactPointValues
+
+---
 
 ### BIOMEBASE_KEY
 
@@ -162,6 +170,12 @@ four ranges: `PERLIN_THRESHOLD_1`, `PERLIN_THRESHOLD_2`, `PERLIN_THRESHOLD_3`.
 ### TIME_FACTOR_HUNDREDTHS
 
 • **TIME_FACTOR_HUNDREDTHS**: _number_
+
+---
+
+### TOKEN_MINT_END_SECONDS
+
+• **TOKEN_MINT_END_SECONDS**: _number_
 
 ---
 

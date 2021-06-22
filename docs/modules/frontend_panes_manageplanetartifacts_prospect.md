@@ -10,7 +10,7 @@
 
 ### Prospect
 
-▸ **Prospect**(`__namedParameters`: { `isProspecting`: _boolean_ ; `planet`: Planet ; `prospect`: () => _void_ }): _Element_
+▸ **Prospect**(`__namedParameters`: { `isProspecting`: _boolean_ ; `planet`: Planet ; `prospect`: () => _void_ ; `roundOver`: _boolean_ }): _Element_
 
 #### Parameters
 
@@ -20,5 +20,6 @@
 | `__namedParameters.isProspecting` | _boolean_    |
 | `__namedParameters.planet`        | Planet       |
 | `__namedParameters.prospect`      | () => _void_ |
+| `__namedParameters.roundOver`     | _boolean_    |
 
 **Returns:** _Element_

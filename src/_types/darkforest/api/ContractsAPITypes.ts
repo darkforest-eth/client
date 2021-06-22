@@ -1,4 +1,4 @@
-import { UpgradeBranches } from '@darkforest_eth/types';
+import { ArtifactPointValues, UpgradeBranches } from '@darkforest_eth/types';
 import { BigNumber as EthersBN } from 'ethers';
 
 export enum ZKArgIdx {
@@ -134,6 +134,8 @@ export interface ContractConstants {
   PERLIN_MIRROR_X: boolean;
   PERLIN_MIRROR_Y: boolean;
 
+  TOKEN_MINT_END_SECONDS: number;
+
   MAX_NATURAL_PLANET_LEVEL: number;
   TIME_FACTOR_HUNDREDTHS: number;
   /**
@@ -151,6 +153,7 @@ export interface ContractConstants {
   BIOME_THRESHOLD_2: number;
   PLANET_RARITY: number;
   PLANET_TYPE_WEIGHTS: PlanetTypeWeightsBySpaceType;
+  ARTIFACT_POINT_VALUES: ArtifactPointValues;
 
   PHOTOID_ACTIVATION_DELAY: number;
   LOCATION_REVEAL_COOLDOWN: number;

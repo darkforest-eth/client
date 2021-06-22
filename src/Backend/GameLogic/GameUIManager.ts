@@ -40,7 +40,7 @@ import { MiningPattern } from '../Miner/MiningPatterns';
 import EthConnection from '../Network/EthConnection';
 import { coordsEqual } from '../Utils/Coordinates';
 import { deferred } from '../Utils/Utils';
-import { biomeName, TOKEN_MINT_END } from './ArtifactUtils';
+import { biomeName } from './ArtifactUtils';
 import GameManager, { GameManagerEvent } from './GameManager';
 import { PluginManager } from './PluginManager';
 import TutorialManager, { TutorialState } from './TutorialManager';
@@ -301,16 +301,16 @@ class GameUIManager extends EventEmitter {
   }
 
   public findArtifact(planetId: LocationId) {
-    if (Date.now() > TOKEN_MINT_END) {
-      alert('Round 1 has ended, and you can no longer find artifacts!');
+    if (this.gameManager.isRoundOver()) {
+      alert('This round has ended, and you can no longer find artifacts!');
       return;
     }
     this.gameManager.findArtifact(planetId);
   }
 
   public prospectPlanet(planetId: LocationId) {
-    if (Date.now() > TOKEN_MINT_END) {
-      alert('Round 1 has ended, and you can no longer find artifacts!');
+    if (this.gameManager.isRoundOver()) {
+      alert('This round has ended, and you can no longer find artifacts!');
       return;
     }
     this.gameManager.prospectPlanet(planetId);
@@ -581,6 +581,10 @@ class GameUIManager extends EventEmitter {
 
   public getEndTimeSeconds(): number {
     return this.gameManager.getEndTimeSeconds();
+  }
+
+  public isRoundOver(): boolean {
+    return this.gameManager.isRoundOver();
   }
 
   public getUpgrade(branch: UpgradeBranchName, level: number): Upgrade {

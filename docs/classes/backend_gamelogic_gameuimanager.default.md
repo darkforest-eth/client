@@ -152,6 +152,7 @@
 - [isMining](backend_gamelogic_gameuimanager.default.md#ismining)
 - [isOverOwnPlanet](backend_gamelogic_gameuimanager.default.md#isoverownplanet)
 - [isOwnedByMe](backend_gamelogic_gameuimanager.default.md#isownedbyme)
+- [isRoundOver](backend_gamelogic_gameuimanager.default.md#isroundover)
 - [joinGame](backend_gamelogic_gameuimanager.default.md#joingame)
 - [onDiscoveredChunk](backend_gamelogic_gameuimanager.default.md#ondiscoveredchunk)
 - [onEmitInitializedPlayer](backend_gamelogic_gameuimanager.default.md#onemitinitializedplayer)
@@ -1529,6 +1530,14 @@ drill fields like this anymore.
 | Name     | Type   |
 | :------- | :----- |
 | `planet` | Planet |
+
+**Returns:** _boolean_
+
+---
+
+### isRoundOver
+
+▸ **isRoundOver**(): _boolean_
 
 **Returns:** _boolean_
 

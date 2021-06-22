@@ -23,6 +23,7 @@ export function ManageArtifactsPane({
   artifactsOnPlanet,
   currentBlockNumber,
   playerAddress,
+  roundOver,
   openArtifactDetails,
   prospect,
   find,
@@ -36,6 +37,7 @@ export function ManageArtifactsPane({
   artifactsOnPlanet: Array<Artifact | undefined>;
   currentBlockNumber: number | undefined;
   playerAddress: string;
+  roundOver: boolean;
   openArtifactDetails: (artifactId: ArtifactId) => void;
   prospect: () => void;
   find: () => void;
@@ -56,6 +58,7 @@ export function ManageArtifactsPane({
     if (planet.prospectedBlockNumber === undefined) {
       action = (
         <Prospect
+          roundOver={roundOver}
           isProspecting={!!planet.unconfirmedProspectPlanet}
           prospect={prospect}
           planet={planet}
@@ -64,6 +67,7 @@ export function ManageArtifactsPane({
     } else if (!planet.hasTriedFindingArtifact) {
       action = (
         <Find
+          roundOver={roundOver}
           isFinding={!!planet.unconfirmedFindArtifact}
           find={find}
           currentBlockNumber={currentBlockNumber}

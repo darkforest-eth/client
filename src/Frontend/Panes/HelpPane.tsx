@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import TutorialManager from '../../Backend/GameLogic/TutorialManager';
 import { White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { TOKEN_MINT_END } from '../../Backend/GameLogic/ArtifactUtils';
 
 const HelpWrapper = styled.div`
   width: 36em;
@@ -42,8 +41,8 @@ const BlueBG = styled.span`
   color: ${dfstyles.colors.text};
 `;
 
+// TODO: make this pane aware of end time
 export function HelpPane({ hook }: { hook: ModalHook }) {
-  const isOver = Date.now() > TOKEN_MINT_END;
   return (
     <ModalPane hook={hook} title='Help' name={ModalName.Help}>
       <HelpWrapper>
@@ -51,15 +50,15 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
           This window gives additional information about the game. When you are done reading, click
           the <White>X</White> in the upper-right corner to close this window.
         </p>
-        {isOver && (
+        {/*isOver && (
           <>
             <p className='title'>Round 1 Complete</p>
             <p>
-              Dark Forest v0.6.0 Round 1 is now complete! Scores are being compiled and winners will
+              Dark Forest v0.6 Round 2 is now complete! Scores are being compiled and winners will
               be announced shortly. Also, Artifacts will no longer be mintable. Thanks for playing!
             </p>
           </>
-        )}
+        )*/}
         <p className='title'>Welcome to Dark Forest v0.6.0!</p>
         <p>
           This window gives additional information about the game. When you are done reading, click
@@ -83,12 +82,12 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
         <p>
           Also scattered through the universe are <White>Asteroid Fields</White>, which produce{' '}
           <White>Silver</White>. Silver can be sent to planets and can be spent on{' '}
-          <White>Upgrades</White>. Producing and spending silver increases your score.
+          <White>Upgrades</White>. Withdrawing silver from spacetime rips increases your score.
         </p>
         <p>
           Some planets contain <White>Artifacts</White>. Artifacts can be harvested and deposited
-          onto planets, buffing their stats. Artifacts are ERC721 tokens that can be traded with
-          other players.
+          onto planets, buffing their stats. Harvesting artifacts increases your score! Artifacts
+          are ERC721 tokens that can also be traded with other players.
         </p>
         <p>
           If you need help, click "Reset Tutorial" above, or check out the FAQ. You can also hold

@@ -911,6 +911,13 @@ class GameManager extends EventEmitter {
   }
 
   /**
+   * Dark Forest tokens can only be minted up to a certain time - get this time measured in seconds from epoch.
+   */
+  public getTokenMintEndTimeSeconds(): number {
+    return this.contractConstants.TOKEN_MINT_END_SECONDS;
+  }
+
+  /**
    * Gets the rarity of planets in the universe
    */
   public getPlanetRarity(): number {
@@ -980,6 +987,13 @@ class GameManager extends EventEmitter {
       planetLevelToRadii,
       updateIfStale
     );
+  }
+
+  /**
+   * Returns whether or not the current round has ended.
+   */
+  public isRoundOver(): boolean {
+    return Date.now() / 1000 > this.getTokenMintEndTimeSeconds();
   }
 
   /**
@@ -1179,7 +1193,11 @@ class GameManager extends EventEmitter {
     if (!this.account) {
       return 0;
     }
-    return this.players.get(this.account)?.withdrawnSilver || 0;
+    const player = this.players.get(this.account);
+    if (!player) {
+      return 0;
+    }
+    return player.withdrawnSilver + player.totalArtifactPoints;
   }
 
   /**

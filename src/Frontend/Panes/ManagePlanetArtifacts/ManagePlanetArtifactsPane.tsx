@@ -43,6 +43,7 @@ export function ManagePlanetArtifactsPane({
   const currentBlockNumber = useEmitterValue(uiManager.getEthConnection().blockNumber$, undefined);
   const myArtifacts = useMyArtifacts(uiManager);
   const onPlanet = uiManager.getArtifactsWithIds(planet.value?.heldArtifactIds || []);
+  const roundOver = uiManager.isRoundOver();
 
   const find = useCallback(() => {
     planet.value && uiManager.findArtifact(planet.value.locationId);
@@ -116,6 +117,7 @@ export function ManagePlanetArtifactsPane({
         planet={planet.value}
         currentBlockNumber={currentBlockNumber}
         playerAddress={account}
+        roundOver={roundOver}
         openArtifactDetails={openArtifactDetails}
         activate={activate}
         deactivate={deactivate}

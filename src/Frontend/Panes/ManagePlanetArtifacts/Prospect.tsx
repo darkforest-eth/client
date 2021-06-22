@@ -5,23 +5,22 @@ import { Spacer } from '../../Components/CoreUI';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Red, Sub } from '../../Components/Text';
 import { enoughEnergyToProspect } from '../../../Backend/GameLogic/ArrivalUtils';
-import { TOKEN_MINT_END } from '../../../Backend/GameLogic/ArtifactUtils';
 
 export function Prospect({
   prospect,
   isProspecting,
   planet,
+  roundOver,
 }: {
   prospect: () => void;
   isProspecting: boolean;
   planet: Planet;
+  roundOver: boolean;
 }) {
   let button;
 
   const energyPercentage = planet.energy / planet.energyCap;
   const enoughEnergy = enoughEnergyToProspect(planet);
-
-  const roundOver = Date.now() > TOKEN_MINT_END;
 
   if (isProspecting) {
     button = (
@@ -41,7 +40,7 @@ export function Prospect({
     <>
       {button}
       <Spacer height={8} />
-      {roundOver && <Red>Round 1 is over, and you can no longer mint artifacts!</Red>}
+      {roundOver && <Red>Round 2 is over, and you can no longer mint artifacts!</Red>}
       <Sub>
         Before you can find an artifact on a planet, you must prospect it. Prospecting determines
         what artifact you will find!{' '}

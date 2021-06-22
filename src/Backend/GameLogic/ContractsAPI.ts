@@ -72,6 +72,7 @@ import {
   decodePlanetDefaults,
   decodeRevealedCoords,
   decodePlayer,
+  decodeArtifactPointValues,
 } from '@darkforest_eth/serde';
 import { EMPTY_LOCATION_ID, CONTRACT_PRECISION } from '@darkforest_eth/constants';
 import type {
@@ -743,10 +744,17 @@ class ContractsAPI extends EventEmitter {
       LOCATION_REVEAL_COOLDOWN,
     } = await this.makeCall(this.coreContract.gameConstants);
 
+    const TOKEN_MINT_END_SECONDS = (
+      await this.makeCall(this.coreContract.TOKEN_MINT_END_TIMESTAMP)
+    ).toNumber();
+
     const upgrades = decodeUpgradeBranches(await this.makeCall(this.coreContract.getUpgrades));
 
     const PLANET_TYPE_WEIGHTS: PlanetTypeWeightsBySpaceType =
       await this.makeCall<PlanetTypeWeightsBySpaceType>(this.coreContract.getTypeWeights);
+
+    const rawPointValues = await this.makeCall(this.coreContract.getArtifactPointValues);
+    const ARTIFACT_POINT_VALUES = decodeArtifactPointValues(rawPointValues);
 
     const planetDefaults = decodePlanetDefaults(
       await this.makeCall(this.coreContract.getDefaultStats)
@@ -770,6 +778,8 @@ class ContractsAPI extends EventEmitter {
       PERLIN_MIRROR_X,
       PERLIN_MIRROR_Y,
 
+      TOKEN_MINT_END_SECONDS,
+
       MAX_NATURAL_PLANET_LEVEL: MAX_NATURAL_PLANET_LEVEL.toNumber(),
       TIME_FACTOR_HUNDREDTHS: TIME_FACTOR_HUNDREDTHS.toNumber(),
       PERLIN_THRESHOLD_1: PERLIN_THRESHOLD_1.toNumber(),
@@ -781,6 +791,7 @@ class ContractsAPI extends EventEmitter {
       BIOME_THRESHOLD_2: BIOME_THRESHOLD_2.toNumber(),
       PLANET_RARITY: PLANET_RARITY.toNumber(),
       PLANET_TYPE_WEIGHTS,
+      ARTIFACT_POINT_VALUES,
 
       PHOTOID_ACTIVATION_DELAY: PHOTOID_ACTIVATION_DELAY.toNumber(),
       LOCATION_REVEAL_COOLDOWN: LOCATION_REVEAL_COOLDOWN.toNumber(),

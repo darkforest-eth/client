@@ -13,7 +13,6 @@
 ### Variables
 
 - [RelicsList](backend_gamelogic_artifactutils.md#relicslist)
-- [TOKEN_MINT_END](backend_gamelogic_artifactutils.md#token_mint_end)
 
 ### Functions
 
@@ -40,12 +39,6 @@
 ### RelicsList
 
 • `Const` **RelicsList**: ArtifactType[]
-
----
-
-### TOKEN_MINT_END
-
-• `Const` **TOKEN_MINT_END**: `1623038400000`= 1623038400000
 
 ## Functions
 

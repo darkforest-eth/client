@@ -10,7 +10,7 @@
 
 ### Find
 
-▸ **Find**(`__namedParameters`: { `currentBlockNumber`: _number_ \| _undefined_ ; `find`: () => _void_ ; `isFinding`: _boolean_ ; `planet`: Planet }): _Element_
+▸ **Find**(`__namedParameters`: { `currentBlockNumber`: _number_ \| _undefined_ ; `find`: () => _void_ ; `isFinding`: _boolean_ ; `planet`: Planet ; `roundOver`: _boolean_ }): _Element_
 
 #### Parameters
 
@@ -21,5 +21,6 @@
 | `__namedParameters.find`               | () => _void_            |
 | `__namedParameters.isFinding`          | _boolean_               |
 | `__namedParameters.planet`             | Planet                  |
+| `__namedParameters.roundOver`          | _boolean_               |
 
 **Returns:** _Element_

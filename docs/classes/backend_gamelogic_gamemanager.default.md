@@ -133,6 +133,7 @@
 - [getStalePlanetWithId](backend_gamelogic_gamemanager.default.md#getstaleplanetwithid)
 - [getTemperature](backend_gamelogic_gamemanager.default.md#gettemperature)
 - [getTimeForMove](backend_gamelogic_gamemanager.default.md#gettimeformove)
+- [getTokenMintEndTimeSeconds](backend_gamelogic_gamemanager.default.md#gettokenmintendtimeseconds)
 - [getTwitter](backend_gamelogic_gamemanager.default.md#gettwitter)
 - [getUIEventEmitter](backend_gamelogic_gamemanager.default.md#getuieventemitter)
 - [getUnconfirmedMoves](backend_gamelogic_gamemanager.default.md#getunconfirmedmoves)
@@ -154,6 +155,7 @@
 - [initMiningManager](backend_gamelogic_gamemanager.default.md#initminingmanager)
 - [isMining](backend_gamelogic_gamemanager.default.md#ismining)
 - [isPlanetMineable](backend_gamelogic_gamemanager.default.md#isplanetmineable)
+- [isRoundOver](backend_gamelogic_gamemanager.default.md#isroundover)
 - [joinGame](backend_gamelogic_gamemanager.default.md#joingame)
 - [loadContract](backend_gamelogic_gamemanager.default.md#loadcontract)
 - [loadPlugins](backend_gamelogic_gamemanager.default.md#loadplugins)
@@ -1619,6 +1621,16 @@ second planet would take.
 
 ---
 
+### getTokenMintEndTimeSeconds
+
+▸ **getTokenMintEndTimeSeconds**(): _number_
+
+Dark Forest tokens can only be minted up to a certain time - get this time measured in seconds from epoch.
+
+**Returns:** _number_
+
+---
+
 ### getTwitter
 
 ▸ **getTwitter**(`address`: _undefined_ \| EthAddress): _undefined_ \| _string_
@@ -1882,6 +1894,16 @@ Whether or not the given planet is capable of minting an artifact.
 | Name | Type   |
 | :--- | :----- |
 | `p`  | Planet |
+
+**Returns:** _boolean_
+
+---
+
+### isRoundOver
+
+▸ **isRoundOver**(): _boolean_
+
+Returns whether or not the current round has ended.
 
 **Returns:** _boolean_
 

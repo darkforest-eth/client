@@ -12,8 +12,6 @@ import {
 } from '@darkforest_eth/types';
 import { ProcgenUtils } from '../Procedural/ProcgenUtils';
 
-export const TOKEN_MINT_END = 1623038400000;
-
 export const RelicsList: ArtifactType[] = [
   ArtifactType.Wormhole,
   ArtifactType.PlanetaryShield,

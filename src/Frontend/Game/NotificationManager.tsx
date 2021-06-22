@@ -260,7 +260,8 @@ class NotificationManager extends EventEmitter {
     this.notify(
       NotificationType.FoundArtifact,
       <span>
-        You have found a planet that can produce an artifact! <br />
+        You have found a planet that can produce an artifact! Finding artifacts increases your
+        score. Also, artifacts can be used to power up your planets and moves! <br />
         Click to view <PlanetNameLink planet={planet} />
       </span>
     );
