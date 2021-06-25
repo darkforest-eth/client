@@ -206,13 +206,18 @@ export default class Overlay2DRenderer {
     this.ctx.setLineDash([]);
   }
 
-  drawPlanetMessages(centerWorld: WorldCoords, radiusWorld: number, renderInfo: PlanetRenderInfo) {
+  drawPlanetMessages(
+    centerWorld: WorldCoords,
+    radiusWorld: number,
+    renderInfo: PlanetRenderInfo,
+    textAlpha: number
+  ) {
     // planets have at most one emoji
     let renderedEmoji = false;
 
     renderInfo.planet.messages?.forEach((m) => {
       if (isEmojiFlagMessage(m) && !renderedEmoji) {
-        this.drawEmojiMessage(centerWorld, radiusWorld, renderInfo, m);
+        this.drawEmojiMessage(centerWorld, radiusWorld, renderInfo, m, textAlpha);
         renderedEmoji = true;
       }
     });
@@ -222,7 +227,8 @@ export default class Overlay2DRenderer {
     centerWorld: WorldCoords,
     radiusWorld: number,
     renderInfo: PlanetRenderInfo,
-    message: PlanetMessage<EmojiFlagBody>
+    message: PlanetMessage<EmojiFlagBody>,
+    textAlpha: number
   ) {
     const viewport = Viewport.getInstance();
     const pixelCoords = viewport.worldToCanvasCoords(centerWorld);
@@ -250,6 +256,7 @@ export default class Overlay2DRenderer {
     }
 
     this.ctx.font = `${size}px Arial`;
+    this.ctx.fillStyle = `rgba(0, 0, 0, ${textAlpha})`;
     const textSize = this.ctx.measureText(text);
     this.ctx.fillText(
       text,

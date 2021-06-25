@@ -1,7 +1,7 @@
 import { EthAddress } from '@darkforest_eth/types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { CORE_CONTRACT_ADDRESS } from '../../../../packages/contracts';
+import { CORE_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { SelectFrom } from '../Components/CoreUI';
 import { useEmitterSubscribe } from './EmitterHooks';
@@ -36,6 +36,7 @@ export enum Setting {
   FoundDeepSpace = 'FoundDeepSpace',
   FoundSpace = 'FoundSpace',
   NewPlayer = 'NewPlayer',
+  MiningCores = 'MiningCores',
 }
 
 const defaultSettings: Record<Setting, string> = {
@@ -58,6 +59,7 @@ const defaultSettings: Record<Setting, string> = {
   FoundDeepSpace: 'false',
   FoundSpace: 'false',
   NewPlayer: 'false',
+  MiningCores: '1',
 };
 
 /**
@@ -227,17 +229,25 @@ export function MultiSelectSetting({
   setting,
   values,
   labels,
+  style,
 }: {
   uiManager: GameUIManager;
   setting: Setting;
   values: string[];
   labels: string[];
+  style?: React.CSSProperties;
 }) {
   const [settingValue, setSettingValue] = useSetting(uiManager, setting);
 
   return (
     <>
-      <SelectFrom values={values} labels={labels} value={settingValue} setValue={setSettingValue} />
+      <SelectFrom
+        style={style}
+        values={values}
+        labels={labels}
+        value={settingValue}
+        setValue={setSettingValue}
+      />
     </>
   );
 }

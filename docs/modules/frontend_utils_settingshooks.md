@@ -59,7 +59,7 @@ setting was changed, and also saves it to local storage.
 
 ### MultiSelectSetting
 
-▸ **MultiSelectSetting**(`__namedParameters`: { `labels`: _string_[] ; `setting`: [_Setting_](../enums/frontend_utils_settingshooks.setting.md) ; `uiManager`: [_default_](../classes/backend_gamelogic_gameuimanager.default.md) ; `values`: _string_[] }): _Element_
+▸ **MultiSelectSetting**(`__namedParameters`: { `labels`: _string_[] ; `setting`: [_Setting_](../enums/frontend_utils_settingshooks.setting.md) ; `style?`: React.CSSProperties ; `uiManager`: [_default_](../classes/backend_gamelogic_gameuimanager.default.md) ; `values`: _string_[] }): _Element_
 
 UI that is kept in-sync with a particular setting which allows you to set that setting to one of
 several options.
@@ -71,6 +71,7 @@ several options.
 | `__namedParameters`           | _object_                                                           |
 | `__namedParameters.labels`    | _string_[]                                                         |
 | `__namedParameters.setting`   | [_Setting_](../enums/frontend_utils_settingshooks.setting.md)      |
+| `__namedParameters.style?`    | React.CSSProperties                                                |
 | `__namedParameters.uiManager` | [_default_](../classes/backend_gamelogic_gameuimanager.default.md) |
 | `__namedParameters.values`    | _string_[]                                                         |
 

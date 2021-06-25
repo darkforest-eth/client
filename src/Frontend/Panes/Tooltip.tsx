@@ -36,8 +36,8 @@ const StyledTooltipTrigger = styled.span<{
   display?: DisplayType;
 }>`
   border-radius: 2px;
-  transition: background 0.2s;
-  background: ${(props) => (props.anim ? dfstyles.colors.dfblue : 'none')};
+  transition: background-color 0.2s;
+  background-color: ${(props) => (props.anim ? dfstyles.colors.dfblue : 'none')};
 
   display: ${(props) => props.display || 'inline'};
 `;

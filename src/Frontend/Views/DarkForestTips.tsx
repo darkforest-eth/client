@@ -104,7 +104,7 @@ const tips = [
   'Defense upgrades make your planets less vulnerable to attack, Range upgrades make your voyages go further and decay less, and Speed upgrades make your voyages go much faster.',
   'Wormhole artifacts reduce the effective distance between 2 planets. Try using them to link 2 planets very far apart!',
   'Upon deactivation, most artifacts must cooldown for 24-hours before they can be activated again. However, wormholes go on a 48-hour cooldown!',
-  'Photoid Cannon artifacts will debuff your planet on activation, but get a massive stat boost for the first voyage from the planet after that 12 hours. Photoid Cannon artifacts are destroyed upon use.',
+  'Photoid Cannon artifacts will debuff your planet on activation, but get a massive stat boost for the first voyage from the planet after that 4 hours. Photoid Cannon artifacts are destroyed upon use.',
   "Planetary Shield artifacts will massively boost a planet's defense, but at the cost of energy and energy growth stats. Planetary Shield artifacts are destroyed upon deactivation.",
   "Bloom Filter artifacts instantly set a planet's energy and silver to full, but are destroyed upon activation. Try using them on a Quasar!",
   'Dark Forest exists on the blockchain, so you can play with an entirely different client if you want.',

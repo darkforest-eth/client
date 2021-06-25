@@ -80,7 +80,7 @@ function FindArtifactRow({ wrapper }: { wrapper: Wrapper<Planet | undefined> }) 
 
   return (
     <SpacedFlexRow>
-      <Sub>You can find an artifact on this Foundry!</Sub>
+      <Sub>Find an artifact on this Foundry for points!</Sub>
       {wrapper.value?.unconfirmedFindArtifact ? (
         <Sub>
           <LoadingSpinner initialText={'find...'} />

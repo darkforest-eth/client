@@ -125,7 +125,7 @@
 
 ### drawEmojiMessage
 
-▸ **drawEmojiMessage**(`centerWorld`: WorldCoords, `radiusWorld`: _number_, `renderInfo`: [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md), `message`: _PlanetMessage_<EmojiFlagBody\>): _void_
+▸ **drawEmojiMessage**(`centerWorld`: WorldCoords, `radiusWorld`: _number_, `renderInfo`: [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md), `message`: _PlanetMessage_<EmojiFlagBody\>, `textAlpha`: _number_): _void_
 
 #### Parameters
 
@@ -135,6 +135,7 @@
 | `radiusWorld` | _number_                                                                                   |
 | `renderInfo`  | [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md) |
 | `message`     | _PlanetMessage_<EmojiFlagBody\>                                                            |
+| `textAlpha`   | _number_                                                                                   |
 
 **Returns:** _void_
 
@@ -210,7 +211,7 @@
 
 ### drawPlanetMessages
 
-▸ **drawPlanetMessages**(`centerWorld`: WorldCoords, `radiusWorld`: _number_, `renderInfo`: [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md)): _void_
+▸ **drawPlanetMessages**(`centerWorld`: WorldCoords, `radiusWorld`: _number_, `renderInfo`: [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md), `textAlpha`: _number_): _void_
 
 #### Parameters
 
@@ -219,6 +220,7 @@
 | `centerWorld` | WorldCoords                                                                                |
 | `radiusWorld` | _number_                                                                                   |
 | `renderInfo`  | [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md) |
+| `textAlpha`   | _number_                                                                                   |
 
 **Returns:** _void_
 

@@ -57,7 +57,7 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 
 ### drawPlanetMessages
 
-▸ `Private` **drawPlanetMessages**(`renderInfo`: [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md), `coords`: WorldCoords, `radiusW`: _number_): _void_
+▸ `Private` **drawPlanetMessages**(`renderInfo`: [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md), `coords`: WorldCoords, `radiusW`: _number_, `textAlpha`: _number_): _void_
 
 #### Parameters
 
@@ -66,6 +66,7 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 | `renderInfo` | [_PlanetRenderInfo_](../interfaces/backend_gamelogic_viewportentities.planetrenderinfo.md) |
 | `coords`     | WorldCoords                                                                                |
 | `radiusW`    | _number_                                                                                   |
+| `textAlpha`  | _number_                                                                                   |
 
 **Returns:** _void_
 

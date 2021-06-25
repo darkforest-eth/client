@@ -6,7 +6,7 @@ import { ONE_DAY } from '../../Backend/Utils/Utils';
 import Button from '../Components/Button';
 import { Spacer } from '../Components/CoreUI';
 import { setBooleanSetting } from '../Utils/SettingsHooks';
-import { EthAddress } from '../../../../packages/types/dist';
+import { EthAddress } from '@darkforest_eth/types';
 import { Setting } from '../Utils/SettingsHooks';
 
 const StyledTxConfirmPopup = styled.div`

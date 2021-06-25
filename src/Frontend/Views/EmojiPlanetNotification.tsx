@@ -35,7 +35,7 @@ export function EmojiPlanetNotification({ wrapper }: { wrapper: Wrapper<Planet |
     content = (
       <>
         <SpacedFlexRow>
-          <Sub>clear emoji</Sub>
+          <Sub>current emoji: {emojiMessage?.body?.emoji}</Sub>
           <Btn
             disabled={wrapper.value?.unconfirmedClearEmoji || wrapper.value?.needsServerRefresh}
             onClick={() => {
@@ -44,7 +44,7 @@ export function EmojiPlanetNotification({ wrapper }: { wrapper: Wrapper<Planet |
               }
             }}
           >
-            Clear
+            Clear Emoji
           </Btn>
         </SpacedFlexRow>
       </>
@@ -70,7 +70,7 @@ export function EmojiPlanetNotification({ wrapper }: { wrapper: Wrapper<Planet |
                 }
               }}
             >
-              Post
+              Set
             </PostButton>
           </PostEmojiActionsContainer>
         </SpacedFlexRow>

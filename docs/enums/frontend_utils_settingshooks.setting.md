@@ -22,6 +22,7 @@ per instance of the dark forest contract that it's connected to.
 - [GasFeeGwei](frontend_utils_settingshooks.setting.md#gasfeegwei)
 - [HasAcceptedPluginRisk](frontend_utils_settingshooks.setting.md#hasacceptedpluginrisk)
 - [HighPerformanceRendering](frontend_utils_settingshooks.setting.md#highperformancerendering)
+- [MiningCores](frontend_utils_settingshooks.setting.md#miningcores)
 - [MoveNotifications](frontend_utils_settingshooks.setting.md#movenotifications)
 - [NewPlayer](frontend_utils_settingshooks.setting.md#newplayer)
 - [OptOutMetrics](frontend_utils_settingshooks.setting.md#optoutmetrics)
@@ -105,6 +106,12 @@ per instance of the dark forest contract that it's connected to.
 ### HighPerformanceRendering
 
 • **HighPerformanceRendering**: = "HighPerformanceRendering"
+
+---
+
+### MiningCores
+
+• **MiningCores**: = "MiningCores"
 
 ---
 

@@ -97,7 +97,7 @@ import { InitialGameStateDownloader } from './InitialGameStateDownloader';
 import { Radii } from './ViewportEntities';
 import { BLOCK_EXPLORER_URL } from '../../Frontend/Utils/constants';
 import { Diagnostics } from '../../Frontend/Panes/DiagnosticsPane';
-import { pollSetting, Setting } from '../../Frontend/Utils/SettingsHooks';
+import { pollSetting, setSetting, Setting } from '../../Frontend/Utils/SettingsHooks';
 import { addMessage, deleteMessages, getMessagesOnPlanets } from '../Network/MessageAPI';
 import { getEmojiMessage } from './ArrivalUtils';
 import { easeInAnimation, emojiEaseOutAnimation } from '../Utils/Animation';
@@ -1053,6 +1053,7 @@ class GameManager extends EventEmitter {
     const myPattern: MiningPattern = new SpiralPattern(homeCoords, MIN_CHUNK_SIZE);
 
     this.minerManager = MinerManager.create(
+      this.account,
       this.persistentChunkStore,
       myPattern,
       this.worldRadius,
@@ -1094,9 +1095,7 @@ class GameManager extends EventEmitter {
    * Set the amount of cores to mine the universe with. More cores equals faster!
    */
   setMinerCores(nCores: number): void {
-    this.minerManager?.setCores(nCores);
-
-    this.terminal.current?.println(`Now mining on ${nCores} core(s).`);
+    setSetting(this.account, Setting.MiningCores, nCores + '');
   }
 
   /**
@@ -1680,6 +1679,7 @@ class GameManager extends EventEmitter {
         this.hashConfig
       );
       const homePlanetFinder = MinerManager.create(
+        undefined,
         chunkStore,
         pattern,
         this.worldRadius,

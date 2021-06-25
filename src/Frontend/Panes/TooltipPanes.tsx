@@ -47,7 +47,7 @@ export function ScoreTooltipPane() {
     <div>
       <Sub>
         Your current score. <ScoreLabel /> is obtained by withdrawing <SilverLabel /> on a{' '}
-        <SpacetimeRipLabel />
+        <SpacetimeRipLabel />, and by finding Artifacts!
       </Sub>
     </div>
   );
@@ -307,7 +307,7 @@ export function UpgradesTooltipPane() {
 }
 
 export function ModalHelpTooltipPane() {
-  return <div>View patch notes and instruction</div>;
+  return <div>View patch notes and instructions</div>;
 }
 
 export function ModalPlanetDetailsTooltipPane() {

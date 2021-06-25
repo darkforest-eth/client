@@ -90,11 +90,13 @@ export function SelectFrom({
   value,
   setValue,
   labels,
+  style,
 }: {
   values: string[];
   value: string;
   setValue: (value: string) => void;
-  labels?: string[];
+  labels: string[];
+  style?: React.CSSProperties;
 }) {
   const onChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
@@ -103,12 +105,20 @@ export function SelectFrom({
     [setValue]
   );
 
+  const copyOfValues = [...values];
+  const copyOfLabels = [...labels];
+
+  if (!copyOfValues.includes(value)) {
+    copyOfLabels.push(value);
+    copyOfValues.push(value);
+  }
+
   return (
-    <Select value={value} onChange={onChange}>
-      {values.map((value, i) => {
+    <Select style={style} value={value} onChange={onChange}>
+      {copyOfValues.map((value, i) => {
         return (
           <option key={value} value={value}>
-            {(labels && labels[i]) || value}
+            {copyOfLabels[i]}
           </option>
         );
       })}

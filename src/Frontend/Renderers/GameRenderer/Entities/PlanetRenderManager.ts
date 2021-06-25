@@ -24,10 +24,10 @@ export default class PlanetRenderManager {
   }
 
   queueLocation(renderInfo: PlanetRenderInfo, now: number, highPerfMode: boolean): void {
+    const { gameUIManager: uiManager, circleRenderer: cR } = this.renderer;
     const planet = renderInfo.planet;
     const renderAtReducedQuality = renderInfo.radii.radiusPixels <= 5 && highPerfMode;
-
-    const { gameUIManager: uiManager, circleRenderer: cR } = this.renderer;
+    const isHovering = uiManager.getHoveringOverPlanet()?.locationId === planet.locationId;
 
     let textAlpha = 255;
     if (renderInfo.radii.radiusPixels < 2 * maxRadius) {
@@ -99,7 +99,12 @@ export default class PlanetRenderManager {
       );
 
       this.queueArtifactIcon(planet, planet.location.coords, renderInfo.radii.radiusWorld);
-      this.drawPlanetMessages(renderInfo, planet.location.coords, renderInfo.radii.radiusWorld);
+      this.drawPlanetMessages(
+        renderInfo,
+        planet.location.coords,
+        renderInfo.radii.radiusWorld,
+        isHovering ? 0.2 : textAlpha
+      );
     }
   }
 
@@ -133,10 +138,15 @@ export default class PlanetRenderManager {
     }
   }
 
-  private drawPlanetMessages(renderInfo: PlanetRenderInfo, coords: WorldCoords, radiusW: number) {
+  private drawPlanetMessages(
+    renderInfo: PlanetRenderInfo,
+    coords: WorldCoords,
+    radiusW: number,
+    textAlpha: number
+  ) {
     if (!renderInfo.planet.messages) return;
     const { overlay2dRenderer: cM } = this.renderer;
-    cM.drawPlanetMessages(coords, radiusW, renderInfo);
+    cM.drawPlanetMessages(coords, radiusW, renderInfo, textAlpha);
   }
 
   private queueArtifactIcon(planet: Planet, { x, y }: WorldCoords, radius: number) {

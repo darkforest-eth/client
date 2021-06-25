@@ -12,6 +12,7 @@ import { MIN_CHUNK_SIZE } from '../Utils/constants';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 import { TooltipTrigger } from './Tooltip';
 import dfstyles from '../Styles/dfstyles';
+import { MultiSelectSetting, Setting } from '../Utils/SettingsHooks';
 
 const StyledExplorePane = styled.div`
   position: absolute;
@@ -58,9 +59,14 @@ const ExploreIcons = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-right: 0.25em;
 
-  & > span:first-child {
+  & > span {
     margin-right: 0.25em;
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 
   // TODO there's def a better way to do this
@@ -72,6 +78,23 @@ const ExploreIcons = styled.div`
     color: ${dfstyles.colors.background};
   }
 `;
+
+function Cores() {
+  const uiManager = useUIManager();
+
+  const values = ['1', '2', '4', '8', '16', '32'];
+  const labels = values.map((value) => value + ' core' + (value === '1' ? '' : 's'));
+
+  return (
+    <MultiSelectSetting
+      style={{ width: '7em' }}
+      uiManager={uiManager}
+      setting={Setting.MiningCores}
+      values={values}
+      labels={labels}
+    />
+  );
+}
 
 function HashesPerSec() {
   const uiManager = useUIManager();
@@ -201,6 +224,11 @@ export function ExplorePane() {
             </IconButton>
           </span>
         </TooltipTrigger>
+        {mining && (
+          <span>
+            <Cores />
+          </span>
+        )}
         <TooltipTrigger needsCtrl name={TooltipName.MiningPause} style={{ height: '1.5em' }}>
           <span onClick={() => setMining((b) => !b)}>
             <IconButton>{mining ? <PauseIcon /> : <PlayIcon />}</IconButton>

@@ -11,6 +11,10 @@ const MESSAGE_API_HOST = process.env.CONVERSATION_API_HOST as string;
 export async function getMessagesOnPlanets(
   request: PlanetMessageRequest
 ): Promise<PlanetMessageResponse> {
+  if (request.planets.length === 0) {
+    return {};
+  }
+
   try {
     const response = await fetch(`${MESSAGE_API_HOST}/messages`, {
       headers: {

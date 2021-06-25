@@ -357,7 +357,7 @@ function ArtifactDescription({ artifact }: { artifact: Artifact }) {
     case ArtifactType.PhotoidCannon:
       content = (
         <Sub>
-          Ahh, the Photoid Canon. Activate it, wait twelve hours. Because this one is{' '}
+          Ahh, the Photoid Canon. Activate it, wait four hours. Because this one is{' '}
           <White>{rarityName}</White>, the next move you send will be able to go{' '}
           <White>{photoidRanges[artifact.rarity]}</White>x further and{' '}
           <White>{photoidSpeeds[artifact.rarity]}</White>x faster. During the 24 hour waiting
