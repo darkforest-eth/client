@@ -6,6 +6,7 @@ import { RECT_PROGRAM_DEFINITION } from '../Programs/RectProgram';
 import { GameGLManager } from '../WebGL/GameGLManager';
 import { GenericRenderer } from '../WebGL/GenericRenderer';
 import { WorldCoords } from '@darkforest_eth/types';
+import { Chunk } from '../../../../_types/global/GlobalTypes';
 
 export default class RectRenderer extends GenericRenderer<typeof RECT_PROGRAM_DEFINITION> {
   quad3Buffer: number[];
@@ -79,6 +80,20 @@ export default class RectRenderer extends GenericRenderer<typeof RECT_PROGRAM_DE
     };
 
     this.queueRectWorld(topLeft, width, height, color, stroke, zIdx);
+  }
+
+  public queueChunkBorder(chunk: Chunk): void {
+    const {
+      chunkFootprint: { bottomLeft, sideLength },
+    } = chunk;
+
+    this.queueRectWorld(
+      { x: bottomLeft.x, y: bottomLeft.y + sideLength },
+      sideLength,
+      sideLength,
+      [255, 0, 0],
+      1
+    );
   }
 
   public setUniforms() {

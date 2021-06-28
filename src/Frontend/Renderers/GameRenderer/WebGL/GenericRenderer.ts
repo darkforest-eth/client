@@ -2,7 +2,14 @@ import AttribManager from './AttribManager';
 import ProgramUtils from './ProgramUtils';
 import { WebGLManager } from './WebGLManager';
 import { mat3, mat4 } from 'gl-matrix';
-import { UniformProps, AttribProps, UniformJSType, UniformType, DrawMode } from '../EngineTypes';
+import {
+  UniformProps,
+  AttribProps,
+  UniformJSType,
+  UniformType,
+  DrawMode,
+  Vec3,
+} from '../EngineTypes';
 
 type UniformData = {
   [key: string]: UniformProps;
@@ -70,6 +77,10 @@ function getUniformSetter(
   } else if (type === UniformType.Texture) {
     return (el: number) => {
       gl.uniform1i(loc, el);
+    };
+  } else if (type === UniformType.Vec3) {
+    return (el: Vec3) => {
+      gl.uniform3fv(loc, el);
     };
   } else {
     throw `uniform type for ${name} not recognized`;

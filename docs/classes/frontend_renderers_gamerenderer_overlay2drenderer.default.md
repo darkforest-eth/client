@@ -20,6 +20,7 @@
 - [drawArcWorld](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawarcworld)
 - [drawArtifactAroundPlanet](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawartifactaroundplanet)
 - [drawArtifactIcon](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawartifacticon)
+- [drawChunk](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawchunk)
 - [drawEmojiMessage](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawemojimessage)
 - [drawHat](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawhat)
 - [drawLine](frontend_renderers_gamerenderer_overlay2drenderer.default.md#drawline)
@@ -118,6 +119,20 @@
 | `glassLoc` | WorldCoords | -             |
 | `scale`    | _number_    | -             |
 | `color`    | _string_    | 'white'       |
+
+**Returns:** _void_
+
+---
+
+### drawChunk
+
+▸ **drawChunk**(`chunk`: [_Chunk_](_types_global_globaltypes.chunk.md)): _void_
+
+#### Parameters
+
+| Name    | Type                                          |
+| :------ | :-------------------------------------------- |
+| `chunk` | [_Chunk_](_types_global_globaltypes.chunk.md) |
 
 **Returns:** _void_
 

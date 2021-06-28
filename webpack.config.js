@@ -40,8 +40,13 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.[jt]sx?$/,
+        include: /local_plugins/,
+        use: ['raw-loader', 'ts-loader'],
+      },
+      {
         test: /\.ts(x?)$/,
-        exclude: /node_modules/,
+        exclude: /(node_modules|local_plugins)/,
         loader: 'ts-loader',
         options: {
           getCustomTransformers: () => ({

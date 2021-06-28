@@ -1,21 +1,27 @@
 import { Chunk } from '../../../../_types/global/GlobalTypes';
 import Viewport from '../../../Game/Viewport';
-import EngineUtils from '../EngineUtils';
-import { MASK_PROGRAM_DEFINITION } from '../Programs/MaskProgram';
+import Renderer from '../Renderer';
 import { GameGLManager } from '../WebGL/GameGLManager';
-import { GenericRenderer } from '../WebGL/GenericRenderer';
+import { PerlinRenderer } from './PerlinRenderer';
+import RectRenderer from './RectRenderer';
+import { PerlinConfig } from '@darkforest_eth/hashing';
+import { SpaceType } from '../../../../../../packages/types/dist';
+import { RGBVec } from '../EngineTypes';
 
-export default class BackgroundRenderer extends GenericRenderer<typeof MASK_PROGRAM_DEFINITION> {
+export default class BackgroundRenderer {
   manager: GameGLManager;
-  bgCanvas: HTMLCanvasElement;
-  matrixULoc: WebGLUniformLocation | null;
-  quadBuffer: number[];
-  perlinThresholds: number[];
+  renderer: Renderer;
 
-  constructor(manager: GameGLManager) {
-    super(manager, MASK_PROGRAM_DEFINITION);
-    this.quadBuffer = EngineUtils.makeEmptyQuad();
-    this.perlinThresholds = this.manager.renderer.gameUIManager.getPerlinThresholds();
+  perlinRenderer: PerlinRenderer;
+  borderRenderer: RectRenderer;
+
+  constructor(manager: GameGLManager, config: PerlinConfig, thresholds: [number, number, number]) {
+    this.manager = manager;
+    this.renderer = manager.renderer;
+
+    const rectRenderer = new RectRenderer(manager);
+    this.borderRenderer = rectRenderer;
+    this.perlinRenderer = new PerlinRenderer(manager, config, thresholds, rectRenderer);
   }
 
   drawChunks(
@@ -24,101 +30,66 @@ export default class BackgroundRenderer extends GenericRenderer<typeof MASK_PROG
     drawChunkBorders: boolean
   ): void {
     // upload current camera transform to shader
+    if (highPerfMode) return;
 
     /* draw using mask program */
     const viewport = Viewport.getInstance();
 
-    const [t1, t2, t3] = this.perlinThresholds;
-
-    let vertCount = 0;
-
-    if (highPerfMode) {
-      return;
-    }
     for (const exploredChunk of exploredChunks) {
       if (viewport.intersectsViewport(exploredChunk)) {
         // add this chunk to the verts array
-        const {
-          chunkFootprint: { bottomLeft, sideLength },
-          perlin,
-        } = exploredChunk;
-        const { x: x1, y: y2 } = viewport.worldToCanvasCoords(bottomLeft);
-        const chunkW = viewport.worldToCanvasDist(sideLength);
-        const x2 = x1 + chunkW;
-        const y1 = y2 - chunkW;
+        this.perlinRenderer.queueChunk(exploredChunk);
 
-        let color = 0; // 0 is space, 3 is dead space
-
-        if (perlin > t1) color = 1;
-        if (perlin > t2) color = 2;
-        if (perlin > t3) color = 3;
-
-        // a border is just a bigger rectangle with a different color drawn directly
-        // behind the rectangle you actually want to draw.
         if (drawChunkBorders) {
-          EngineUtils.makeQuadBuffered(this.quadBuffer, x1, y1, x2, y2, 4);
-          this.attribManagers.position.setVertex(this.quadBuffer, vertCount);
-          vertCount += 6;
+          this.borderRenderer.queueChunkBorder(exploredChunk);
+          // this.renderer.overlay2dRenderer.drawChunk(exploredChunk);
         }
-
-        // if we're drawing a border, render the box a little bit smaller than the border box, so
-        // that the border box looks like a ... border
-        const shrinkByPx = drawChunkBorders ? 1 : 0;
-
-        EngineUtils.makeQuadBuffered(
-          this.quadBuffer,
-          x1 + shrinkByPx,
-          y1 + shrinkByPx,
-          x2 - shrinkByPx,
-          y2 - shrinkByPx,
-          color
-        );
-
-        this.attribManagers.position.setVertex(this.quadBuffer, vertCount);
-        vertCount += 6;
       }
     }
 
-    this.verts = vertCount;
     this.flush();
   }
 
-  public setUniforms() {
-    this.uniformSetters.matrix(this.manager.projectionMatrix);
-  }
-}
+  fillPerlin() {
+    const {
+      canvas: { width, height },
+      ctx,
+    } = this.renderer.overlay2dRenderer;
 
-// we'll need this code later for improved perlin
-/*
-  setStencil(stencil: boolean) {
-    this.stencil = stencil;
-    if (stencil) this.gl.enable(this.gl.STENCIL_TEST);
-    else this.gl.disable(this.gl.STENCIL_TEST);
-  }
+    const { gameUIManager } = this.renderer;
+    const viewport = Viewport.getInstance();
 
-  private checkStencil(): boolean {
-    if (!this.stencil) {
-      console.error('stencil not enabled!');
+    ctx.globalAlpha = 0.5;
+    for (let x = 0; x < width; x += 100) {
+      for (let y = 0; y < height; y += 100) {
+        const worldCoords = viewport.canvasToWorldCoords({ x, y });
+
+        const space = gameUIManager.spaceTypeFromPerlin(
+          gameUIManager.getSpaceTypePerlin(worldCoords, false)
+        );
+
+        let color: RGBVec = [255, 0, 0];
+        // if (space === SpaceType.NEBULA) ctx.fillStyle = '#ff0000';
+        if (space === SpaceType.SPACE) color = [0, 255, 0];
+        if (space === SpaceType.DEEP_SPACE) color = [0, 0, 255];
+        if (space === SpaceType.DEAD_SPACE) color = [255, 0, 255];
+
+        // ctx.beginPath();
+        // ctx.fillRect(x, y, 20, 20);
+
+        this.borderRenderer.queueRect({ x, y }, 20, 20, color);
+      }
     }
 
-    return this.stencil;
+    ctx.globalAlpha = 1.0;
   }
 
-  startMasking() {
-    if (!this.checkStencil()) return;
+  flush(): void {
+    this.perlinRenderer.flush();
 
-    const gl = this.gl;
-    gl.stencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE); // always update stencil
-    gl.stencilFunc(gl.ALWAYS, 1, 0xff); // everything passes stencil test
-    gl.stencilMask(0xff); // enable stencil writes
+    // this.fillPerlin();
+
+    this.borderRenderer.queueRectCenterWorld({ x: 0, y: 0 }, 30, 30, [255, 0, 0], 2);
+    this.borderRenderer.flush();
   }
-
-  stopMasking() {
-    if (!this.checkStencil()) return;
-
-    const gl = this.gl;
-    gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP); // never update stencil
-    gl.stencilFunc(gl.EQUAL, 1, 0xff); // only pass if eq
-    gl.stencilMask(0x00); // disable stencil writes
-  }
-  */
+}

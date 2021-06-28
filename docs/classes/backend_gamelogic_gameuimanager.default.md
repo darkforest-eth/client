@@ -118,6 +118,7 @@
 - [getMyPlanetMap](backend_gamelogic_gameuimanager.default.md#getmyplanetmap)
 - [getMyScore](backend_gamelogic_gameuimanager.default.md#getmyscore)
 - [getNextBroadcastAvailableTimestamp](backend_gamelogic_gameuimanager.default.md#getnextbroadcastavailabletimestamp)
+- [getPerlinConfig](backend_gamelogic_gameuimanager.default.md#getperlinconfig)
 - [getPerlinThresholds](backend_gamelogic_gameuimanager.default.md#getperlinthresholds)
 - [getPlanetLevel](backend_gamelogic_gameuimanager.default.md#getplanetlevel)
 - [getPlanetMap](backend_gamelogic_gameuimanager.default.md#getplanetmap)
@@ -1160,6 +1161,20 @@ state in some way
 ▸ **getNextBroadcastAvailableTimestamp**(): _number_
 
 **Returns:** _number_
+
+---
+
+### getPerlinConfig
+
+▸ **getPerlinConfig**(`isBiome?`: _boolean_): PerlinConfig
+
+#### Parameters
+
+| Name      | Type      | Default value |
+| :-------- | :-------- | :------------ |
+| `isBiome` | _boolean_ | false         |
+
+**Returns:** PerlinConfig
 
 ---
 

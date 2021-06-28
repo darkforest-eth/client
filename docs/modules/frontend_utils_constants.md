@@ -37,7 +37,7 @@
 
 ### MAX_CHUNK_SIZE
 
-• `Const` **MAX_CHUNK_SIZE**: `1024`= 1024
+• `Const` **MAX_CHUNK_SIZE**: _number_
 
 **`tutorial`** to speed up the game's background rendering code, it is possible to set this value to
 be a higher power of two. This means that smaller chunks will be merged into larger chunks via

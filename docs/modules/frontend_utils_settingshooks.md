@@ -8,7 +8,7 @@
 
 ### Variables
 
-- [settingChanged](frontend_utils_settingshooks.md#settingchanged)
+- [settingChanged$](frontend_utils_settingshooks.md#settingchanged$)
 
 ### Functions
 
@@ -27,9 +27,9 @@
 
 ## Variables
 
-### settingChanged
+### settingChanged$
 
-• `Const` **settingChanged**: [_Monomitter_](frontend_utils_monomitter.md#monomitter)<[_Setting_](../enums/frontend_utils_settingshooks.setting.md)\>
+• `Const` **settingChanged$**: [_Monomitter_](frontend_utils_monomitter.md#monomitter)<[_Setting_](../enums/frontend_utils_settingshooks.setting.md)\>
 
 Whenever a setting changes, we publish the setting's name to this event emitter.
 
@@ -171,7 +171,7 @@ notify the rest of the game that it changed if it changed.
 
 ▸ **setBooleanSetting**(`account`: EthAddress \| _undefined_, `setting`: [_Setting_](../enums/frontend_utils_settingshooks.setting.md), `value`: _boolean_): _void_
 
-Save the given setting to local storage. Publish an event to [settingChanged](frontend_utils_settingshooks.md#settingchanged).
+Save the given setting to local storage. Publish an event to [settingChanged$](frontend_utils_settingshooks.md#settingchanged$).
 
 #### Parameters
 
@@ -189,7 +189,7 @@ Save the given setting to local storage. Publish an event to [settingChanged](fr
 
 ▸ **setNumberSetting**(`account`: EthAddress \| _undefined_, `setting`: [_Setting_](../enums/frontend_utils_settingshooks.setting.md), `value`: _number_): _void_
 
-Save the given setting to local storage. Publish an event to [settingChanged](frontend_utils_settingshooks.md#settingchanged).
+Save the given setting to local storage. Publish an event to [settingChanged$](frontend_utils_settingshooks.md#settingchanged$).
 
 #### Parameters
 
@@ -207,7 +207,7 @@ Save the given setting to local storage. Publish an event to [settingChanged](fr
 
 ▸ **setSetting**(`account`: EthAddress \| _undefined_, `setting`: [_Setting_](../enums/frontend_utils_settingshooks.setting.md), `value`: _string_): _void_
 
-Save the given setting to local storage. Publish an event to [settingChanged](frontend_utils_settingshooks.md#settingchanged).
+Save the given setting to local storage. Publish an event to [settingChanged$](frontend_utils_settingshooks.md#settingchanged$).
 
 #### Parameters
 

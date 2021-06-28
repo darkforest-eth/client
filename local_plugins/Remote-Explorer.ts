@@ -3,9 +3,16 @@ import type WebpackWorker from 'worker-loader!*';
 import type MinerManager from '../src/Backend/Miner/MinerManager';
 import type { WorldCoords } from '@darkforest_eth/types';
 
-import { html, render } from 'htm/preact';
-import { useState, useEffect, useLayoutEffect } from 'preact/hooks';
-import { locationIdFromDecStr } from '@darkforest_eth/serde';
+import {
+  html,
+  render,
+  useState,
+  useEffect,
+  useLayoutEffect,
+  //@ts-ignore
+} from 'https://unpkg.com/htm/preact/standalone.module.js';
+//@ts-ignore
+import { locationIdFromDecStr } from 'https://cdn.skypack.dev/@darkforest_eth/serde';
 
 type ExtendedMinerManager = MinerManager & {
   url: string;

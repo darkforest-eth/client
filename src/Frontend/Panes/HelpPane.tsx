@@ -55,7 +55,7 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
         </p>
         {/*isOver && (
           <>
-            <p className='title'>Round 1 Complete</p>
+            <p className='title'>Round 2 Complete</p>
             <p>
               Dark Forest v0.6 Round 2 is now complete! Scores are being compiled and winners will
               be announced shortly. Also, Artifacts will no longer be mintable. Thanks for playing!
@@ -63,6 +63,14 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
           </>
         )*/}
         <p className='title'>Welcome to Dark Forest v0.6 Round 2 - Inspired Hallowed!</p>
+
+        <p className='title'>Some Links</p>
+        <p>
+          <a onClick={() => TutorialManager.getInstance().reset()}>Reset Tutorial</a>
+        </p>
+        <p>
+          <a onClick={() => window.open('https://blog.zkga.me')}>Official Info and Announcements</a>
+        </p>
         <p>
           This window gives additional information about the game. When you are done reading, click
           the <White>X</White> in the upper-right corner to close this window.
@@ -110,14 +118,6 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
           from the universe, plus additional bonuses for finding artifacts. Artifacts of different
           rarities are worth different amounts of points: Common are 5k, Rare are 20k, Epic are
           200k, <LegendaryLabel /> are 3M, and <MythicLabel /> are 20M.
-        </p>
-
-        <p className='title'>Some Links</p>
-        <p>
-          <a onClick={() => TutorialManager.getInstance().reset()}>Reset Tutorial</a>
-        </p>
-        <p>
-          <a onClick={() => window.open('https://blog.zkga.me')}>Official Info and Announcements</a>
         </p>
       </HelpWrapper>
     </ModalPane>

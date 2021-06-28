@@ -9,7 +9,7 @@ const MIN_CHUNK_SIZE = 16;
  *
  * {@code Math.floor(Math.pow(2, 16))} should be large enough for most.
  */
-const MAX_CHUNK_SIZE = 1024;
+const MAX_CHUNK_SIZE = 2 ** 14;
 
 const LOCATION_ID_UB = bigInt(
   '21888242871839275222246405745257275088548364400416034343698204186575808495617'

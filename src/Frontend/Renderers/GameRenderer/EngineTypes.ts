@@ -24,9 +24,12 @@ export enum UniformType {
   UByte,
   Float,
   Texture,
+  Vec3,
 }
 
-export type UniformJSType = mat4 | mat3 | number;
+export type Vec3 = [number, number, number];
+
+export type UniformJSType = mat4 | mat3 | number | Vec3;
 
 export type UniformProps = {
   name: string;

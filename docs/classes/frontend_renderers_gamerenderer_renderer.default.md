@@ -43,7 +43,6 @@
 
 ### Methods
 
-- [debug](frontend_renderers_gamerenderer_renderer.default.md#debug)
 - [draw](frontend_renderers_gamerenderer_renderer.default.md#draw)
 - [loop](frontend_renderers_gamerenderer_renderer.default.md#loop)
 - [recordRender](frontend_renderers_gamerenderer_renderer.default.md#recordrender)
@@ -249,20 +248,6 @@
 ▪ `Static` **instance**: `null` \| [_default_](frontend_renderers_gamerenderer_renderer.default.md)
 
 ## Methods
-
-### debug
-
-▸ **debug**(`interval?`: _number_): _boolean_
-
-#### Parameters
-
-| Name       | Type     | Default value |
-| :--------- | :------- | :------------ |
-| `interval` | _number_ | 120           |
-
-**Returns:** _boolean_
-
----
 
 ### draw
 

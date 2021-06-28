@@ -55,6 +55,7 @@ import {
   setBooleanSetting,
 } from '../../Frontend/Utils/SettingsHooks';
 import { GameObjects } from './GameObjects';
+import { PerlinConfig } from '@darkforest_eth/hashing';
 
 export enum GameUIManagerEvent {
   InitializedPlayer = 'InitializedPlayer',
@@ -1099,6 +1100,19 @@ class GameUIManager extends EventEmitter {
 
   public getContractConstants(): ContractConstants {
     return this.gameManager.getContractConstants();
+  }
+
+  public getPerlinConfig(isBiome = false): PerlinConfig {
+    const hashConfig = this.gameManager.getHashConfig();
+    const key = isBiome ? hashConfig.biomebaseKey : hashConfig.spaceTypeKey;
+
+    return {
+      key,
+      scale: hashConfig.perlinLengthScale,
+      mirrorX: hashConfig.perlinMirrorX,
+      mirrorY: hashConfig.perlinMirrorY,
+      floor: false,
+    };
   }
 
   /**

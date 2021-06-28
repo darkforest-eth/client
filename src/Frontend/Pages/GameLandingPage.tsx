@@ -234,6 +234,16 @@ export default function GameLandingPage() {
         TerminalTextStyle.White
       );
       terminal.current?.newline();
+      terminal.current?.print('    v0.6 r1    ');
+      terminal.current?.print('05/22/2021        ', TerminalTextStyle.White);
+      terminal.current?.printLink(
+        'Ansgar Dietrichs',
+        () => {
+          window.open('https://twitter.com/adietrichs');
+        },
+        TerminalTextStyle.White
+      );
+      terminal.current?.newline();
 
       const knownAddrs = ethConnection.getKnownAccounts();
       terminal.current?.println(`Found ${knownAddrs.length} accounts on this device.`);

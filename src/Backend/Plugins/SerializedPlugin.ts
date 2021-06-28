@@ -16,7 +16,7 @@ export interface SerializedPlugin {
    * This code is a javascript object that complies with the
    * {@link PluginProcess} interface.
    */
-  code?: string;
+  code: string;
 
   /**
    * Shown in the list of plugins.
@@ -27,14 +27,4 @@ export interface SerializedPlugin {
    * {@code new Date.getTime()} at the point that this plugin was saved
    */
   lastEdited: number;
-
-  /**
-   * In development mode, Dark Forest allows you to load plugins into the
-   * game via webpack's HMR. This means you can develop a plugin in VS Code,
-   * hit save, and the plugin will be automatically loaded into the player's
-   * plugin library. We need to keep track of which plugins
-   * are local and which were loaded in by the player manually.
-   */
-  isLocal: boolean;
-  localFilename?: string;
 }

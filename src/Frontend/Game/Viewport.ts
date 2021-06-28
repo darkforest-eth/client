@@ -117,6 +117,22 @@ class Viewport {
     return { ...this.centerWorldCoords };
   }
 
+  public getBottomBound() {
+    return this.centerWorldCoords.y - this.heightInWorldUnits / 2;
+  }
+
+  public getLeftBound() {
+    return this.centerWorldCoords.x - this.widthInWorldUnits / 2;
+  }
+
+  public getTopBound() {
+    return this.centerWorldCoords.y + this.heightInWorldUnits / 2;
+  }
+
+  public getRightBound() {
+    return this.centerWorldCoords.x + this.widthInWorldUnits / 2;
+  }
+
   public getViewportWorldWidth() {
     return this.widthInWorldUnits;
   }

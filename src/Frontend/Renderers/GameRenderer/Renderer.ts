@@ -94,7 +94,11 @@ class Renderer {
   }
 
   private setup() {
-    this.bgRenderer = new BackgroundRenderer(this.glManager);
+    this.bgRenderer = new BackgroundRenderer(
+      this.glManager,
+      this.gameUIManager.getPerlinConfig(),
+      this.gameUIManager.getPerlinThresholds()
+    );
     this.planetRenderer = new PlanetRenderer(this.glManager);
     this.asteroidRenderer = new AsteroidRenderer(this.glManager);
     this.beltRenderer = new BeltRenderer(this.glManager);
@@ -203,11 +207,6 @@ class Renderer {
 
     // render all of the plugins
     this.gameUIManager.getPluginManager()?.drawAllRunningPlugins(this.overlay2dRenderer.ctx);
-  }
-
-  // for throttled debugging: renderer.debug() && console.log(...);
-  debug(interval = 120): boolean {
-    return this.frameCount % interval === 0;
   }
 }
 

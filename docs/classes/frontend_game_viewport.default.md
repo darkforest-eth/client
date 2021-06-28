@@ -46,9 +46,13 @@
 - [centerCoords](frontend_game_viewport.default.md#centercoords)
 - [centerPlanet](frontend_game_viewport.default.md#centerplanet)
 - [centerPlanetAnimated](frontend_game_viewport.default.md#centerplanetanimated)
+- [getBottomBound](frontend_game_viewport.default.md#getbottombound)
 - [getDetailLevel](frontend_game_viewport.default.md#getdetaillevel)
+- [getLeftBound](frontend_game_viewport.default.md#getleftbound)
+- [getRightBound](frontend_game_viewport.default.md#getrightbound)
 - [getStorage](frontend_game_viewport.default.md#getstorage)
 - [getStorageKey](frontend_game_viewport.default.md#getstoragekey)
+- [getTopBound](frontend_game_viewport.default.md#gettopbound)
 - [getViewportPosition](frontend_game_viewport.default.md#getviewportposition)
 - [getViewportWorldHeight](frontend_game_viewport.default.md#getviewportworldheight)
 - [getViewportWorldWidth](frontend_game_viewport.default.md#getviewportworldwidth)
@@ -350,9 +354,33 @@
 
 ---
 
+### getBottomBound
+
+▸ **getBottomBound**(): _number_
+
+**Returns:** _number_
+
+---
+
 ### getDetailLevel
 
 ▸ `Private` **getDetailLevel**(): _number_
+
+**Returns:** _number_
+
+---
+
+### getLeftBound
+
+▸ **getLeftBound**(): _number_
+
+**Returns:** _number_
+
+---
+
+### getRightBound
+
+▸ **getRightBound**(): _number_
 
 **Returns:** _number_
 
@@ -371,6 +399,14 @@
 ▸ `Private` **getStorageKey**(): _string_
 
 **Returns:** _string_
+
+---
+
+### getTopBound
+
+▸ **getTopBound**(): _number_
+
+**Returns:** _number_
 
 ---
 

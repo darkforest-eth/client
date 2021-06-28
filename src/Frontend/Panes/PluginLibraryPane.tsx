@@ -13,6 +13,7 @@ import { OwnedPluginView } from '../Views/OwnedPluginView';
 import { ModalHook, ModalPane, ModalName } from '../Views/ModalPane';
 import { PluginEditorPane } from './PluginEditorPane';
 import { Setting, getBooleanSetting, setSetting } from '../Utils/SettingsHooks';
+import { v4 as uuidv4 } from 'uuid';
 
 function HelpContent() {
   return (
@@ -103,7 +104,9 @@ export function PluginLibraryPane({
     if (pluginId && newCode) {
       pluginManager?.overwritePlugin(newName || 'no name', newCode, pluginId);
     } else {
-      pluginManager?.addPluginToLibrary(newName || 'no name', newCode || '');
+      // Auto generate a PluginId
+      const pluginId = uuidv4() as PluginId;
+      pluginManager?.addPluginToLibrary(pluginId, newName || 'no name', newCode || '');
     }
   };
 

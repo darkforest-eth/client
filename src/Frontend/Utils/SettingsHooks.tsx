@@ -10,7 +10,7 @@ import { monomitter, Monomitter } from './Monomitter';
 /**
  * Whenever a setting changes, we publish the setting's name to this event emitter.
  */
-export const settingChanged: Monomitter<Setting> = monomitter();
+export const settingChanged$: Monomitter<Setting> = monomitter();
 
 /**
  * Each setting has a unique identifier. Each account gets to store its own local storage setting,
@@ -92,7 +92,7 @@ export function getSetting(account: EthAddress | undefined, setting: Setting): s
 }
 
 /**
- * Save the given setting to local storage. Publish an event to {@link settingChanged}.
+ * Save the given setting to local storage. Publish an event to {@link settingChanged$}.
  */
 export function setSetting(account: EthAddress | undefined, setting: Setting, value: string): void {
   const keyInLocalStorage = account && getLocalStorageSettingKey(account, setting);
@@ -101,7 +101,7 @@ export function setSetting(account: EthAddress | undefined, setting: Setting, va
   }
 
   localStorage.setItem(keyInLocalStorage, value);
-  settingChanged.publish(setting);
+  settingChanged$.publish(setting);
 }
 
 /**
@@ -113,7 +113,7 @@ export function getBooleanSetting(account: EthAddress | undefined, setting: Sett
 }
 
 /**
- * Save the given setting to local storage. Publish an event to {@link settingChanged}.
+ * Save the given setting to local storage. Publish an event to {@link settingChanged$}.
  */
 export function setBooleanSetting(
   account: EthAddress | undefined,
@@ -138,7 +138,7 @@ export function getNumberSetting(account: EthAddress | undefined, setting: Setti
 }
 
 /**
- * Save the given setting to local storage. Publish an event to {@link settingChanged}.
+ * Save the given setting to local storage. Publish an event to {@link settingChanged$}.
  */
 export function setNumberSetting(account: EthAddress | undefined, setting: Setting, value: number) {
   setSetting(account, setting, value + '');
@@ -154,7 +154,7 @@ export function useSetting(
   const account = uiManager?.getAccount();
   const [settingValue, setSettingValue] = useState(() => getSetting(account, setting));
 
-  useEmitterSubscribe(settingChanged, (changedSetting: Setting) => {
+  useEmitterSubscribe(settingChanged$, (changedSetting: Setting) => {
     if (changedSetting === setting) {
       setSettingValue(getSetting(account, changedSetting));
     }
@@ -278,7 +278,7 @@ export function pollSetting(
     const newValue = getSetting(account, setting);
 
     if (value !== newValue) {
-      settingChanged.publish(setting);
+      settingChanged$.publish(setting);
     }
   }, SETTING_POLL_INTERVAL);
 }

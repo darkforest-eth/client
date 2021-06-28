@@ -18,7 +18,7 @@ console.log(df, ui);
  * Plugins are just TypeScript (or modern JavaScript, if you prefer), so you can use imports, too!
  */
 // @ts-ignore
-import confetti from 'canvas-confetti';
+import confetti from 'https://cdn.skypack.dev/canvas-confetti';
 
 /**
  * A plugin is a Class with render and destory methods.

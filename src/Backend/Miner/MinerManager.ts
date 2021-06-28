@@ -6,9 +6,6 @@ import { MiningPattern } from './MiningPatterns';
 import { perlin, PerlinConfig } from '@darkforest_eth/hashing';
 import { ChunkStore } from '../../_types/darkforest/api/ChunkStoreTypes';
 import { getChunkKey } from './ChunkUtils';
-import { getSetting, Setting, settingChanged } from '../../Frontend/Utils/SettingsHooks';
-import { EthAddress } from '@darkforest_eth/types';
-import { Subscription } from '../../Frontend/Utils/Monomitter';
 
 export enum MinerManagerEvent {
   DiscoveredNewChunk = 'DiscoveredNewChunk',
@@ -54,7 +51,6 @@ class MinerManager extends EventEmitter {
   private readonly minedChunksStore: ChunkStore;
   private readonly planetRarity: number;
 
-  private account: EthAddress | undefined;
   private isExploring = false;
   private miningPattern: MiningPattern;
   private workers: Worker[];
@@ -70,10 +66,8 @@ class MinerManager extends EventEmitter {
   private perlinOptions: PerlinConfig;
   private hashConfig: HashConfig;
   private WorkerCtor: typeof Worker;
-  private settingsSubscription: Subscription | undefined;
 
   private constructor(
-    account: EthAddress | undefined,
     minedChunksStore: ChunkStore,
     miningPattern: MiningPattern,
     worldRadius: number,
@@ -83,7 +77,6 @@ class MinerManager extends EventEmitter {
     WorkerCtor: typeof Worker
   ) {
     super();
-    this.account = account;
     this.minedChunksStore = minedChunksStore;
     this.miningPattern = miningPattern;
     this.worldRadius = worldRadius;
@@ -99,20 +92,6 @@ class MinerManager extends EventEmitter {
     };
     this.WorkerCtor = WorkerCtor;
     this.useMockHash = useMockHash;
-    if (useMockHash) {
-      this.cores = 1;
-    } else {
-      this.cores = parseInt(getSetting(account, Setting.MiningCores), 10);
-    }
-
-    this.settingsSubscription = settingChanged.subscribe(this.onSettingChanged.bind(this));
-  }
-
-  onSettingChanged(setting: Setting) {
-    if (setting === Setting.MiningCores) {
-      const cores = parseInt(getSetting(this.account, Setting.MiningCores), 10);
-      this.setCores(cores);
-    }
   }
 
   setMiningPattern(pattern: MiningPattern): void {
@@ -130,11 +109,9 @@ class MinerManager extends EventEmitter {
 
   destroy(): void {
     this.workers.map((x) => x.terminate());
-    this.settingsSubscription?.unsubscribe();
   }
 
   static create(
-    account: EthAddress | undefined,
     chunkStore: ChunkStore,
     miningPattern: MiningPattern,
     worldRadius: number,
@@ -144,7 +121,6 @@ class MinerManager extends EventEmitter {
     WorkerCtor: typeof Worker = Worker
   ): MinerManager {
     const minerManager = new MinerManager(
-      account,
       chunkStore,
       miningPattern,
       worldRadius,
@@ -208,12 +184,16 @@ class MinerManager extends EventEmitter {
     });
   }
 
-  private setCores(nCores: number): void {
+  public setCores(nCores: number): void {
     this.stopExplore();
     this.workers.map((x) => x.terminate());
     this.workers = [];
 
-    this.cores = nCores;
+    if (this.useMockHash) {
+      this.cores = 1;
+    } else {
+      this.cores = nCores;
+    }
     _.range(this.cores).forEach((i) => this.initWorker(i));
     this.startExplore();
   }

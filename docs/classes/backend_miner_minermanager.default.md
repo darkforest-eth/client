@@ -17,7 +17,6 @@
 ### Properties
 
 - [WorkerCtor](backend_miner_minermanager.default.md#workerctor)
-- [account](backend_miner_minermanager.default.md#account)
 - [cores](backend_miner_minermanager.default.md#cores)
 - [currentJobId](backend_miner_minermanager.default.md#currentjobid)
 - [exploringChunk](backend_miner_minermanager.default.md#exploringchunk)
@@ -29,7 +28,6 @@
 - [miningPattern](backend_miner_minermanager.default.md#miningpattern)
 - [perlinOptions](backend_miner_minermanager.default.md#perlinoptions)
 - [planetRarity](backend_miner_minermanager.default.md#planetrarity)
-- [settingsSubscription](backend_miner_minermanager.default.md#settingssubscription)
 - [useMockHash](backend_miner_minermanager.default.md#usemockhash)
 - [workers](backend_miner_minermanager.default.md#workers)
 - [worldRadius](backend_miner_minermanager.default.md#worldradius)
@@ -47,7 +45,6 @@
 - [isValidExploreTarget](backend_miner_minermanager.default.md#isvalidexploretarget)
 - [nextValidExploreTarget](backend_miner_minermanager.default.md#nextvalidexploretarget)
 - [onDiscovered](backend_miner_minermanager.default.md#ondiscovered)
-- [onSettingChanged](backend_miner_minermanager.default.md#onsettingchanged)
 - [sendMessageToWorkers](backend_miner_minermanager.default.md#sendmessagetoworkers)
 - [setCores](backend_miner_minermanager.default.md#setcores)
 - [setMiningPattern](backend_miner_minermanager.default.md#setminingpattern)
@@ -60,13 +57,12 @@
 
 ### constructor
 
-\+ `Private` **new default**(`account`: _undefined_ \| EthAddress, `minedChunksStore`: [_ChunkStore_](../interfaces/_types_darkforest_api_chunkstoretypes.chunkstore.md), `miningPattern`: [_MiningPattern_](../interfaces/backend_miner_miningpatterns.miningpattern.md), `worldRadius`: _number_, `planetRarity`: _number_, `hashConfig`: [_HashConfig_](../modules/_types_global_globaltypes.md#hashconfig), `useMockHash`: _boolean_, `WorkerCtor`: _typeof_ [_default_](_types_worker_loader_workertypes.default.md)): [_default_](backend_miner_minermanager.default.md)
+\+ `Private` **new default**(`minedChunksStore`: [_ChunkStore_](../interfaces/_types_darkforest_api_chunkstoretypes.chunkstore.md), `miningPattern`: [_MiningPattern_](../interfaces/backend_miner_miningpatterns.miningpattern.md), `worldRadius`: _number_, `planetRarity`: _number_, `hashConfig`: [_HashConfig_](../modules/_types_global_globaltypes.md#hashconfig), `useMockHash`: _boolean_, `WorkerCtor`: _typeof_ [_default_](_types_worker_loader_workertypes.default.md)): [_default_](backend_miner_minermanager.default.md)
 
 #### Parameters
 
 | Name               | Type                                                                              |
 | :----------------- | :-------------------------------------------------------------------------------- |
-| `account`          | _undefined_ \| EthAddress                                                         |
 | `minedChunksStore` | [_ChunkStore_](../interfaces/_types_darkforest_api_chunkstoretypes.chunkstore.md) |
 | `miningPattern`    | [_MiningPattern_](../interfaces/backend_miner_miningpatterns.miningpattern.md)    |
 | `worldRadius`      | _number_                                                                          |
@@ -84,12 +80,6 @@ Overrides: EventEmitter.constructor
 ### WorkerCtor
 
 • `Private` **WorkerCtor**: _typeof_ [_default_](_types_worker_loader_workertypes.default.md)
-
----
-
-### account
-
-• `Private` **account**: _undefined_ \| EthAddress
 
 ---
 
@@ -162,12 +152,6 @@ Overrides: EventEmitter.constructor
 ### planetRarity
 
 • `Private` `Readonly` **planetRarity**: _number_
-
----
-
-### settingsSubscription
-
-• `Private` **settingsSubscription**: _undefined_ \| [_Subscription_](../modules/frontend_utils_monomitter.md#subscription)
 
 ---
 
@@ -323,20 +307,6 @@ Overrides: EventEmitter.constructor
 
 ---
 
-### onSettingChanged
-
-▸ **onSettingChanged**(`setting`: [_Setting_](../enums/frontend_utils_settingshooks.setting.md)): _void_
-
-#### Parameters
-
-| Name      | Type                                                          |
-| :-------- | :------------------------------------------------------------ |
-| `setting` | [_Setting_](../enums/frontend_utils_settingshooks.setting.md) |
-
-**Returns:** _void_
-
----
-
 ### sendMessageToWorkers
 
 ▸ `Private` **sendMessageToWorkers**(`chunkToExplore`: [_Rectangle_](../interfaces/_types_global_globaltypes.rectangle.md), `jobId`: _number_): _void_
@@ -354,7 +324,7 @@ Overrides: EventEmitter.constructor
 
 ### setCores
 
-▸ `Private` **setCores**(`nCores`: _number_): _void_
+▸ **setCores**(`nCores`: _number_): _void_
 
 #### Parameters
 
@@ -412,13 +382,12 @@ Overrides: EventEmitter.constructor
 
 ### create
 
-▸ `Static` **create**(`account`: _undefined_ \| EthAddress, `chunkStore`: [_ChunkStore_](../interfaces/_types_darkforest_api_chunkstoretypes.chunkstore.md), `miningPattern`: [_MiningPattern_](../interfaces/backend_miner_miningpatterns.miningpattern.md), `worldRadius`: _number_, `planetRarity`: _number_, `hashConfig`: [_HashConfig_](../modules/_types_global_globaltypes.md#hashconfig), `useMockHash?`: _boolean_, `WorkerCtor?`: _typeof_ [_default_](_types_worker_loader_workertypes.default.md)): [_default_](backend_miner_minermanager.default.md)
+▸ `Static` **create**(`chunkStore`: [_ChunkStore_](../interfaces/_types_darkforest_api_chunkstoretypes.chunkstore.md), `miningPattern`: [_MiningPattern_](../interfaces/backend_miner_miningpatterns.miningpattern.md), `worldRadius`: _number_, `planetRarity`: _number_, `hashConfig`: [_HashConfig_](../modules/_types_global_globaltypes.md#hashconfig), `useMockHash?`: _boolean_, `WorkerCtor?`: _typeof_ [_default_](_types_worker_loader_workertypes.default.md)): [_default_](backend_miner_minermanager.default.md)
 
 #### Parameters
 
 | Name            | Type                                                                              | Default value |
 | :-------------- | :-------------------------------------------------------------------------------- | :------------ |
-| `account`       | _undefined_ \| EthAddress                                                         | -             |
 | `chunkStore`    | [_ChunkStore_](../interfaces/_types_darkforest_api_chunkstoretypes.chunkstore.md) | -             |
 | `miningPattern` | [_MiningPattern_](../interfaces/backend_miner_miningpatterns.miningpattern.md)    | -             |
 | `worldRadius`   | _number_                                                                          | -             |

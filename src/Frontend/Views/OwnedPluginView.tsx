@@ -68,10 +68,6 @@ export class OwnedPluginView extends React.Component<Props, State> {
   };
 
   private deletePluginClicked = () => {
-    if (this.props.plugin.isLocal) {
-      return;
-    }
-
     this.props.deletePlugin(this.props.plugin.id);
     this.closeEditor && this.closeEditor();
   };
@@ -122,7 +118,6 @@ export class OwnedPluginView extends React.Component<Props, State> {
               textColor={'#aaa'}
               color={dfstyles.colors.dfred}
               noBorder={true}
-              disabled={this.props.plugin.isLocal}
               onClick={this.deletePluginClicked}
             >
               del

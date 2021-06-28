@@ -21,6 +21,7 @@
 - [Translation](frontend_renderers_gamerenderer_enginetypes.md#translation)
 - [UniformJSType](frontend_renderers_gamerenderer_enginetypes.md#uniformjstype)
 - [UniformProps](frontend_renderers_gamerenderer_enginetypes.md#uniformprops)
+- [Vec3](frontend_renderers_gamerenderer_enginetypes.md#vec3)
 
 ## Type aliases
 
@@ -85,7 +86,7 @@
 
 ### UniformJSType
 
-Ƭ **UniformJSType**: mat4 \| mat3 \| _number_
+Ƭ **UniformJSType**: mat4 \| mat3 \| _number_ \| [_Vec3_](frontend_renderers_gamerenderer_enginetypes.md#vec3)
 
 ---
 
@@ -99,3 +100,9 @@
 | :----- | :----------------------------------------------------------------------------------- |
 | `name` | _string_                                                                             |
 | `type` | [_UniformType_](../enums/frontend_renderers_gamerenderer_enginetypes.uniformtype.md) |
+
+---
+
+### Vec3
+
+Ƭ **Vec3**: [*number*, *number*, *number*]

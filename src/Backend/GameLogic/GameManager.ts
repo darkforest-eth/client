@@ -78,7 +78,7 @@ import {
 } from '@darkforest_eth/types';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import { MIN_CHUNK_SIZE } from '../../Frontend/Utils/constants';
-import { monomitter, Monomitter } from '../../Frontend/Utils/Monomitter';
+import { monomitter, Monomitter, Subscription } from '../../Frontend/Utils/Monomitter';
 import { TerminalTextStyle } from '../../Frontend/Utils/TerminalTypes';
 import UIEmitter from '../../Frontend/Utils/UIEmitter';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';
@@ -97,7 +97,13 @@ import { InitialGameStateDownloader } from './InitialGameStateDownloader';
 import { Radii } from './ViewportEntities';
 import { BLOCK_EXPLORER_URL } from '../../Frontend/Utils/constants';
 import { Diagnostics } from '../../Frontend/Panes/DiagnosticsPane';
-import { pollSetting, setSetting, Setting } from '../../Frontend/Utils/SettingsHooks';
+import {
+  pollSetting,
+  setSetting,
+  getSetting,
+  Setting,
+  settingChanged$,
+} from '../../Frontend/Utils/SettingsHooks';
 import { addMessage, deleteMessages, getMessagesOnPlanets } from '../Network/MessageAPI';
 import { getEmojiMessage } from './ArrivalUtils';
 import { easeInAnimation, emojiEaseOutAnimation } from '../Utils/Animation';
@@ -308,6 +314,11 @@ class GameManager extends EventEmitter {
    */
   private diagnostics: Diagnostics;
 
+  /**
+   * Subscription to act on setting changes
+   */
+  private settingsSubscription: Subscription | undefined;
+
   public get planetRarity(): number {
     return this.contractConstants.PLANET_RARITY;
   }
@@ -426,6 +437,15 @@ class GameManager extends EventEmitter {
     }, 5000);
 
     this.hashRate = 0;
+
+    this.settingsSubscription = settingChanged$.subscribe((setting: Setting) => {
+      if (setting === Setting.MiningCores) {
+        if (this.minerManager) {
+          const cores = parseInt(getSetting(this.account, Setting.MiningCores), 10);
+          this.minerManager.setCores(cores);
+        }
+      }
+    });
   }
 
   public getEthConnection() {
@@ -442,6 +462,7 @@ class GameManager extends EventEmitter {
     this.persistentChunkStore.destroy();
     clearInterval(this.balanceInterval);
     clearInterval(this.playerInterval);
+    this.settingsSubscription?.unsubscribe();
   }
 
   static async create(
@@ -1053,7 +1074,6 @@ class GameManager extends EventEmitter {
     const myPattern: MiningPattern = new SpiralPattern(homeCoords, MIN_CHUNK_SIZE);
 
     this.minerManager = MinerManager.create(
-      this.account,
       this.persistentChunkStore,
       myPattern,
       this.worldRadius,
@@ -1679,7 +1699,6 @@ class GameManager extends EventEmitter {
         this.hashConfig
       );
       const homePlanetFinder = MinerManager.create(
-        undefined,
         chunkStore,
         pattern,
         this.worldRadius,

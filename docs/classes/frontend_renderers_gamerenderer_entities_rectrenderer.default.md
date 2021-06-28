@@ -30,6 +30,7 @@
 ### Methods
 
 - [flush](frontend_renderers_gamerenderer_entities_rectrenderer.default.md#flush)
+- [queueChunkBorder](frontend_renderers_gamerenderer_entities_rectrenderer.default.md#queuechunkborder)
 - [queueRect](frontend_renderers_gamerenderer_entities_rectrenderer.default.md#queuerect)
 - [queueRectCenterWorld](frontend_renderers_gamerenderer_entities_rectrenderer.default.md#queuerectcenterworld)
 - [queueRectWorld](frontend_renderers_gamerenderer_entities_rectrenderer.default.md#queuerectworld)
@@ -163,6 +164,20 @@ Draw all buffered vertices to the screen.
 **Returns:** _void_
 
 Inherited from: [GenericRenderer](frontend_renderers_gamerenderer_webgl_genericrenderer.genericrenderer.md)
+
+---
+
+### queueChunkBorder
+
+▸ **queueChunkBorder**(`chunk`: [_Chunk_](_types_global_globaltypes.chunk.md)): _void_
+
+#### Parameters
+
+| Name    | Type                                          |
+| :------ | :-------------------------------------------- |
+| `chunk` | [_Chunk_](_types_global_globaltypes.chunk.md) |
+
+**Returns:** _void_
 
 ---
 

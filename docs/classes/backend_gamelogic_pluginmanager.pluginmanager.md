@@ -35,6 +35,7 @@ it would suck if that bricked their game.
 - [getLibrary](backend_gamelogic_pluginmanager.pluginmanager.md#getlibrary)
 - [getPluginFromLibrary](backend_gamelogic_pluginmanager.pluginmanager.md#getpluginfromlibrary)
 - [getProcessInfo](backend_gamelogic_pluginmanager.pluginmanager.md#getprocessinfo)
+- [hasPlugin](backend_gamelogic_pluginmanager.pluginmanager.md#hasplugin)
 - [load](backend_gamelogic_pluginmanager.pluginmanager.md#load)
 - [notifyPluginLibraryUpdated](backend_gamelogic_pluginmanager.pluginmanager.md#notifypluginlibraryupdated)
 - [onNewLocalPlugins](backend_gamelogic_pluginmanager.pluginmanager.md#onnewlocalplugins)
@@ -107,17 +108,17 @@ Event emitter that publishes whenever the set of plugins changes.
 
 ### addPluginToLibrary
 
-▸ **addPluginToLibrary**(`name`: _string_, `code?`: _string_, `localFilename?`: _string_): [_SerializedPlugin_](../interfaces/backend_plugins_serializedplugin.serializedplugin.md)
+▸ **addPluginToLibrary**(`id`: [_PluginId_](../modules/backend_plugins_serializedplugin.md#pluginid), `name`: _string_, `code`: _string_): [_SerializedPlugin_](../interfaces/backend_plugins_serializedplugin.serializedplugin.md)
 
 adds a new plugin into the plugin library.
 
 #### Parameters
 
-| Name             | Type     |
-| :--------------- | :------- |
-| `name`           | _string_ |
-| `code?`          | _string_ |
-| `localFilename?` | _string_ |
+| Name   | Type                                                                  |
+| :----- | :-------------------------------------------------------------------- |
+| `id`   | [_PluginId_](../modules/backend_plugins_serializedplugin.md#pluginid) |
+| `name` | _string_                                                              |
+| `code` | _string_                                                              |
 
 **Returns:** [_SerializedPlugin_](../interfaces/backend_plugins_serializedplugin.serializedplugin.md)
 
@@ -227,6 +228,20 @@ If this process has been started, gets its info
 
 ---
 
+### hasPlugin
+
+▸ `Private` **hasPlugin**(`plugin`: [_LocalPlugin_](../interfaces/backend_plugins_localpluginreloader.localplugin.md)): _boolean_
+
+#### Parameters
+
+| Name     | Type                                                                              |
+| :------- | :-------------------------------------------------------------------------------- |
+| `plugin` | [_LocalPlugin_](../interfaces/backend_plugins_localpluginreloader.localplugin.md) |
+
+**Returns:** _boolean_
+
+---
+
 ### load
 
 ▸ **load**(): _Promise_<void\>
@@ -249,13 +264,13 @@ added before. Effectively idempotent after the first time you call it.
 
 ### onNewLocalPlugins
 
-▸ `Private` **onNewLocalPlugins**(`newPlugins`: [_HMRPlugin_](../interfaces/backend_plugins_localpluginreloader.hmrplugin.md)[]): _void_
+▸ `Private` **onNewLocalPlugins**(`newPlugins`: [_LocalPlugin_](../interfaces/backend_plugins_localpluginreloader.localplugin.md)[]): _void_
 
 #### Parameters
 
-| Name         | Type                                                                            |
-| :----------- | :------------------------------------------------------------------------------ |
-| `newPlugins` | [_HMRPlugin_](../interfaces/backend_plugins_localpluginreloader.hmrplugin.md)[] |
+| Name         | Type                                                                                |
+| :----------- | :---------------------------------------------------------------------------------- |
+| `newPlugins` | [_LocalPlugin_](../interfaces/backend_plugins_localpluginreloader.localplugin.md)[] |
 
 **Returns:** _void_
 

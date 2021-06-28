@@ -21,8 +21,6 @@ and data about attribs / uniforms and provides:
 
   ↳ [_default_](frontend_renderers_gamerenderer_entities_asteroidrenderer.default.md)
 
-  ↳ [_default_](frontend_renderers_gamerenderer_entities_backgroundrenderer.default.md)
-
   ↳ [_default_](frontend_renderers_gamerenderer_entities_beltrenderer.default.md)
 
   ↳ [_default_](frontend_renderers_gamerenderer_entities_blackdomainrenderer.default.md)
@@ -31,7 +29,11 @@ and data about attribs / uniforms and provides:
 
   ↳ [_default_](frontend_renderers_gamerenderer_entities_linerenderer.default.md)
 
+  ↳ [_default_](frontend_renderers_gamerenderer_entities_maskrenderer.default.md)
+
   ↳ [_MineBodyRenderer_](frontend_renderers_gamerenderer_entities_minebodyrenderer.minebodyrenderer.md)
+
+  ↳ [_PerlinRenderer_](frontend_renderers_gamerenderer_entities_perlinrenderer.perlinrenderer.md)
 
   ↳ [_default_](frontend_renderers_gamerenderer_entities_planetrenderer.default.md)
 

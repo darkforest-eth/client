@@ -5,7 +5,7 @@ import Renderer from './Renderer';
 import { engineConsts } from './EngineConsts';
 import { TextAlign } from './EngineTypes';
 import { Artifact, EmojiFlagBody, PlanetMessage, WorldCoords } from '@darkforest_eth/types';
-import { isEmojiFlagMessage } from '../../../_types/global/GlobalTypes';
+import { Chunk, isEmojiFlagMessage } from '../../../_types/global/GlobalTypes';
 import { PlanetRenderInfo } from '../../../Backend/GameLogic/ViewportEntities';
 
 /*
@@ -33,6 +33,19 @@ export default class Overlay2DRenderer {
 
   clear() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  drawChunk(chunk: Chunk) {
+    const { bottomLeft, sideLength } = chunk.chunkFootprint;
+    const { x, y } = bottomLeft;
+
+    this.drawRectStrokeAtCenterWorld(
+      { x: x + sideLength / 2, y: y + sideLength / 2 },
+      sideLength,
+      sideLength,
+      2,
+      'red'
+    );
   }
 
   drawRectStrokeAtCenterWorld(

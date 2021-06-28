@@ -38,6 +38,7 @@
 - [planetHashMimc](backend_gamelogic_gamemanager.default.md#planethashmimc)
 - [playerInterval](backend_gamelogic_gamemanager.default.md#playerinterval)
 - [players](backend_gamelogic_gamemanager.default.md#players)
+- [settingsSubscription](backend_gamelogic_gamemanager.default.md#settingssubscription)
 - [snarkHelper](backend_gamelogic_gamemanager.default.md#snarkhelper)
 - [terminal](backend_gamelogic_gamemanager.default.md#terminal)
 - [useMockHash](backend_gamelogic_gamemanager.default.md#usemockhash)
@@ -474,6 +475,14 @@ because it's not techincally an entity that exists in the world. A player just c
 and artifacts that do exist in the world.
 
 **`todo`** move this into a new `Players` class.
+
+---
+
+### settingsSubscription
+
+• `Private` **settingsSubscription**: _undefined_ \| [_Subscription_](../modules/frontend_utils_monomitter.md#subscription)
+
+Subscription to act on setting changes
 
 ---
 

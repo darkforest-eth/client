@@ -11,6 +11,7 @@
 - [Mat4](frontend_renderers_gamerenderer_enginetypes.uniformtype.md#mat4)
 - [Texture](frontend_renderers_gamerenderer_enginetypes.uniformtype.md#texture)
 - [UByte](frontend_renderers_gamerenderer_enginetypes.uniformtype.md#ubyte)
+- [Vec3](frontend_renderers_gamerenderer_enginetypes.uniformtype.md#vec3)
 
 ## Enumeration members
 
@@ -41,3 +42,9 @@
 ### UByte
 
 • **UByte**: = 2
+
+---
+
+### Vec3
+
+• **Vec3**: = 5

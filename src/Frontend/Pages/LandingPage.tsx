@@ -51,7 +51,7 @@ export default function LandingPage() {
 
             <p>
               <Sub>
-                zkSNARK space warfare <HideSmall>(v0.6 Round 1)</HideSmall>
+                zkSNARK space warfare <HideSmall>(v0.6 Round 2)</HideSmall>
               </Sub>
             </p>
 
@@ -132,8 +132,17 @@ export default function LandingPage() {
                     05/22/<HideSmall>20</HideSmall>21
                   </td>
                   <td>
-                    <a href='https://twitter.com/adietrichs'>@adietrichs</a>
+                    <a href='https://twitter.com/adietrichs'>Ansgar Dietrichs</a>
                   </td>
+                </TRow>
+                <TRow>
+                  <td>
+                    <HideSmall>v</HideSmall>0.6 Round 2
+                  </td>
+                  <td>
+                    06/28/<HideSmall>20</HideSmall>21
+                  </td>
+                  <td>t.b.d.</td>
                 </TRow>
               </tbody>
             </table>

@@ -4,41 +4,16 @@
 
 ### Interfaces
 
-- [HMRPlugin](../interfaces/backend_plugins_localpluginreloader.hmrplugin.md)
-
-### Variables
-
-- [hmrPlugins$](backend_plugins_localpluginreloader.md#hmrplugins$)
+- [LocalPlugin](../interfaces/backend_plugins_localpluginreloader.localplugin.md)
 
 ### Functions
 
-- [getHmrPlugins](backend_plugins_localpluginreloader.md#gethmrplugins)
-- [loadLocalPlugin](backend_plugins_localpluginreloader.md#loadlocalplugin)
-
-## Variables
-
-### hmrPlugins$
-
-• `Const` **hmrPlugins$**: [_Monomitter_](frontend_utils_monomitter.md#monomitter)<[_HMRPlugin_](../interfaces/backend_plugins_localpluginreloader.hmrplugin.md)[]\>
+- [getLocalPlugins](backend_plugins_localpluginreloader.md#getlocalplugins)
 
 ## Functions
 
-### getHmrPlugins
+### getLocalPlugins
 
-▸ **getHmrPlugins**(): [_HMRPlugin_](../interfaces/backend_plugins_localpluginreloader.hmrplugin.md)[]
+▸ **getLocalPlugins**(): { `code`: _string_ ; `id`: [_PluginId_](backend_plugins_serializedplugin.md#pluginid) ; `name`: _string_ }[]
 
-**Returns:** [_HMRPlugin_](../interfaces/backend_plugins_localpluginreloader.hmrplugin.md)[]
-
----
-
-### loadLocalPlugin
-
-▸ **loadLocalPlugin**(`filename`: _string_): _Promise_<{ `default`: [_PluginProcess_](../interfaces/backend_plugins_pluginprocess.pluginprocess.md) }\>
-
-#### Parameters
-
-| Name       | Type     |
-| :--------- | :------- |
-| `filename` | _string_ |
-
-**Returns:** _Promise_<{ `default`: [_PluginProcess_](../interfaces/backend_plugins_pluginprocess.pluginprocess.md) }\>
+**Returns:** { `code`: _string_ ; `id`: [_PluginId_](backend_plugins_serializedplugin.md#pluginid) ; `name`: _string_ }[]

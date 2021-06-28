@@ -49,10 +49,6 @@ export function PluginEditorPane({
   const [code, setCode] = useState(plugin?.code || PLUGIN_TEMPLATE);
 
   function onSaveClick() {
-    if (plugin?.isLocal) {
-      return;
-    }
-
     overwrite(name || 'no name', code || '', pluginId);
     setIsOpen(false);
   }
@@ -63,18 +59,13 @@ export function PluginEditorPane({
 
   return (
     <>
-      <Input
-        placeholder='no name'
-        value={name}
-        onChange={onNameInputChange}
-        disabled={plugin?.isLocal}
-      />
+      <Input placeholder='no name' value={name} onChange={onNameInputChange} />
       <Spacer height={4} />
       <EditorContainer>
         <Editor
           className={'df-editor'}
           value={code || ''}
-          onValueChange={plugin?.isLocal ? () => {} : setCode}
+          onValueChange={setCode}
           highlight={(code) => Prism.highlight(code, Prism.languages.javascript, 'javascript')}
           padding={10}
           onKeyUp={(e: React.KeyboardEvent<HTMLElement>) => {
@@ -90,9 +81,7 @@ export function PluginEditorPane({
         />
       </EditorContainer>
       <Spacer height={4} />
-      <Btn onClick={onSaveClick} disabled={plugin?.isLocal}>
-        save
-      </Btn>
+      <Btn onClick={onSaveClick}>save</Btn>
     </>
   );
 }
