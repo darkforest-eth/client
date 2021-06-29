@@ -32,7 +32,7 @@
 - [Backend/Network/ThrottledConcurrentQueue](modules/backend_network_throttledconcurrentqueue.md)
 - [Backend/Network/TxExecutor](modules/backend_network_txexecutor.md)
 - [Backend/Network/UtilityServerAPI](modules/backend_network_utilityserverapi.md)
-- [Backend/Plugins/LocalPluginReloader](modules/backend_plugins_localpluginreloader.md)
+- [Backend/Plugins/EmbeddedPluginLoader](modules/backend_plugins_embeddedpluginloader.md)
 - [Backend/Plugins/PluginProcess](modules/backend_plugins_pluginprocess.md)
 - [Backend/Plugins/PluginTemplate](modules/backend_plugins_plugintemplate.md)
 - [Backend/Plugins/SerializedPlugin](modules/backend_plugins_serializedplugin.md)

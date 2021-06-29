@@ -1,19 +1,19 @@
 import { PluginId } from './SerializedPlugin';
 
 /**
- * This interface represents a local plugin, which is stored in local_plugins/src.
+ * This interface represents an embedded plugin, which is stored in `embedded_plugins/`.
  */
-export interface LocalPlugin {
+export interface EmbeddedPlugin {
   id: PluginId;
   name: string;
   code: string;
 }
 
 /**
- * Load all of the local plugins in the dist directory of the `local_plugins/` project
- * as Plain Text files. This means that `local_plugins/` can't use `import` for relative paths.
+ * Load all of the embedded plugins in the dist directory of the `embedded_plugins/` project
+ * as Plain Text files. This means that `embedded_plugins/` can't use `import` for relative paths.
  */
-const pluginsContext = require.context('../../../local_plugins/', false, /\.[jt]sx?$/);
+const pluginsContext = require.context('../../../embedded_plugins/', false, /\.[jt]sx?$/);
 
 function cleanFilename(filename: string) {
   return filename
@@ -22,7 +22,7 @@ function cleanFilename(filename: string) {
     .replace(/\.[jt]sx?$/, '');
 }
 
-export function getLocalPlugins() {
+export function getEmbeddedPlugins() {
   return pluginsContext.keys().map((filename) => {
     return {
       id: filename as PluginId,

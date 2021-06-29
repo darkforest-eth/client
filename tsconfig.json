@@ -13,7 +13,7 @@
     "lib": ["es2019", "dom"],
     "skipLibCheck": true
   },
-  "include": ["src/**/*", "local_plugins/*"],
+  "include": ["src/**/*", "embedded_plugins/*", "plugins/*"],
   "exclude": ["./node_modules", "./dist", "./declarations"],
   "typedocOptions": {
     "entryPoints": ["src"],

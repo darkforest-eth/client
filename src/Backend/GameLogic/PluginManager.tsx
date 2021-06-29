@@ -1,5 +1,5 @@
 import { Monomitter, monomitter } from '../../Frontend/Utils/Monomitter';
-import { getLocalPlugins, LocalPlugin } from '../Plugins/LocalPluginReloader';
+import { getEmbeddedPlugins, EmbeddedPlugin } from '../Plugins/EmbeddedPluginLoader';
 import { PluginProcess } from '../Plugins/PluginProcess';
 import { SerializedPlugin, PluginId } from '../Plugins/SerializedPlugin';
 import GameManager from './GameManager';
@@ -92,7 +92,7 @@ export class PluginManager {
   public async load(): Promise<void> {
     this.pluginLibrary = await this.gameManager.loadPlugins();
 
-    this.onNewLocalPlugins(getLocalPlugins());
+    this.onNewEmbeddedPlugins(getEmbeddedPlugins());
 
     this.notifyPluginLibraryUpdated();
   }
@@ -283,11 +283,11 @@ export class PluginManager {
     }
   }
 
-  private hasPlugin(plugin: LocalPlugin): boolean {
+  private hasPlugin(plugin: EmbeddedPlugin): boolean {
     return this.pluginLibrary.some((p) => p.id === plugin.id);
   }
 
-  private onNewLocalPlugins(newPlugins: LocalPlugin[]) {
+  private onNewEmbeddedPlugins(newPlugins: EmbeddedPlugin[]) {
     for (const plugin of newPlugins) {
       if (!this.hasPlugin(plugin)) {
         this.addPluginToLibrary(plugin.id, plugin.name, plugin.code);

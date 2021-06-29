@@ -38,7 +38,7 @@ it would suck if that bricked their game.
 - [hasPlugin](backend_gamelogic_pluginmanager.pluginmanager.md#hasplugin)
 - [load](backend_gamelogic_pluginmanager.pluginmanager.md#load)
 - [notifyPluginLibraryUpdated](backend_gamelogic_pluginmanager.pluginmanager.md#notifypluginlibraryupdated)
-- [onNewLocalPlugins](backend_gamelogic_pluginmanager.pluginmanager.md#onnewlocalplugins)
+- [onNewEmbeddedPlugins](backend_gamelogic_pluginmanager.pluginmanager.md#onnewembeddedplugins)
 - [overwritePlugin](backend_gamelogic_pluginmanager.pluginmanager.md#overwriteplugin)
 - [render](backend_gamelogic_pluginmanager.pluginmanager.md#render)
 - [reorderPlugins](backend_gamelogic_pluginmanager.pluginmanager.md#reorderplugins)
@@ -230,13 +230,13 @@ If this process has been started, gets its info
 
 ### hasPlugin
 
-▸ `Private` **hasPlugin**(`plugin`: [_LocalPlugin_](../interfaces/backend_plugins_localpluginreloader.localplugin.md)): _boolean_
+▸ `Private` **hasPlugin**(`plugin`: [_EmbeddedPlugin_](../interfaces/backend_plugins_embeddedpluginloader.embeddedplugin.md)): _boolean_
 
 #### Parameters
 
-| Name     | Type                                                                              |
-| :------- | :-------------------------------------------------------------------------------- |
-| `plugin` | [_LocalPlugin_](../interfaces/backend_plugins_localpluginreloader.localplugin.md) |
+| Name     | Type                                                                                     |
+| :------- | :--------------------------------------------------------------------------------------- |
+| `plugin` | [_EmbeddedPlugin_](../interfaces/backend_plugins_embeddedpluginloader.embeddedplugin.md) |
 
 **Returns:** _boolean_
 
@@ -262,15 +262,15 @@ added before. Effectively idempotent after the first time you call it.
 
 ---
 
-### onNewLocalPlugins
+### onNewEmbeddedPlugins
 
-▸ `Private` **onNewLocalPlugins**(`newPlugins`: [_LocalPlugin_](../interfaces/backend_plugins_localpluginreloader.localplugin.md)[]): _void_
+▸ `Private` **onNewEmbeddedPlugins**(`newPlugins`: [_EmbeddedPlugin_](../interfaces/backend_plugins_embeddedpluginloader.embeddedplugin.md)[]): _void_
 
 #### Parameters
 
-| Name         | Type                                                                                |
-| :----------- | :---------------------------------------------------------------------------------- |
-| `newPlugins` | [_LocalPlugin_](../interfaces/backend_plugins_localpluginreloader.localplugin.md)[] |
+| Name         | Type                                                                                       |
+| :----------- | :----------------------------------------------------------------------------------------- |
+| `newPlugins` | [_EmbeddedPlugin_](../interfaces/backend_plugins_embeddedpluginloader.embeddedplugin.md)[] |
 
 **Returns:** _void_
 

@@ -2,8 +2,8 @@
  * This file declares globals that are available to all plugins.
  */
 
-import GameManager from '../../api/GameManager';
-import GameUIManager from '../../app/board/GameUIManager';
+import GameManager from '../../Backend/GameLogic/GameManager';
+import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 
 declare global {
   const df: GameManager;

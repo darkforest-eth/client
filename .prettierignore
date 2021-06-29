@@ -1,6 +1,7 @@
 dist/
 declarations/
-local_plugins/dist/
+plugins/dist/
+embedded_plugins/dist/
 public/
 src/styles/font/
 src/styles/icomoon/
