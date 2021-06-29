@@ -62,15 +62,15 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
             </p>
           </>
         )*/}
-        <p className='title'>Welcome to Dark Forest v0.6 Round 2 - Inspired Hallowed!</p>
-
-        <p className='title'>Some Links</p>
-        <p>
-          <a onClick={() => TutorialManager.getInstance().reset()}>Reset Tutorial</a>
-        </p>
+        <p className='title'>Dark Forest v0.6 Round 2 - Inspired Hallowed</p>
         <p>
           <a onClick={() => window.open('https://blog.zkga.me')}>Official Info and Announcements</a>
         </p>
+        <p>
+          <a onClick={() => TutorialManager.getInstance().reset()}>Reset Tutorial</a>
+        </p>
+
+        <p className='title'>Welcome!</p>
         <p>
           This window gives additional information about the game. When you are done reading, click
           the <White>X</White> in the upper-right corner to close this window.

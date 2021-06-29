@@ -58,7 +58,7 @@ const defaultSettings: Record<Setting, string> = {
   FoundArtifact: 'false',
   FoundDeepSpace: 'false',
   FoundSpace: 'false',
-  NewPlayer: 'false',
+  NewPlayer: 'true',
   MiningCores: '1',
 };
 
