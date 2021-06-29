@@ -1,4 +1,4 @@
-import { PerlinConfig } from '../../../../../../packages/hashing/dist';
+import { PerlinConfig } from '@darkforest_eth/hashing';
 import Viewport from '../../../Game/Viewport';
 import EngineUtils from '../EngineUtils';
 import { PERLIN_PROGRAM_DEFINITION } from '../Programs/PerlinProgram';

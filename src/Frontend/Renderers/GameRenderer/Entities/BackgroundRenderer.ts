@@ -5,7 +5,7 @@ import { GameGLManager } from '../WebGL/GameGLManager';
 import { PerlinRenderer } from './PerlinRenderer';
 import RectRenderer from './RectRenderer';
 import { PerlinConfig } from '@darkforest_eth/hashing';
-import { SpaceType } from '../../../../../../packages/types/dist';
+import { SpaceType } from '@darkforest_eth/types';
 import { RGBVec } from '../EngineTypes';
 
 export default class BackgroundRenderer {
