@@ -59,8 +59,15 @@ export const getOwnerColor: (planet: Planet) => string = (planet) => {
   return planet.owner ? getPlayerColor(planet.owner) : 'hsl(0,1%,50%)';
 };
 
-export const formatNumber = (num: number): string => {
-  if (num < 1000) return `${num.toFixed(0)}`;
+// smallDec represents the decimals to show for small numbers
+export const formatNumber = (num: number, smallDec = 0): string => {
+  if (num < 1000) {
+    if (`${num}` === num.toFixed(0)) {
+      return `${num.toFixed(0)}`;
+    } else {
+      return `${num.toFixed(smallDec)}`;
+    }
+  }
 
   const suffixes = ['', 'K', 'M', 'B', 'T', 'q', 'Q'];
   let log000 = 0;

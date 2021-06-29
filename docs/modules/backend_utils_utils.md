@@ -127,13 +127,14 @@
 
 ### formatNumber
 
-▸ `Const` **formatNumber**(`num`: _number_): _string_
+▸ `Const` **formatNumber**(`num`: _number_, `smallDec?`: _number_): _string_
 
 #### Parameters
 
-| Name  | Type     |
-| :---- | :------- |
-| `num` | _number_ |
+| Name       | Type     | Default value |
+| :--------- | :------- | :------------ |
+| `num`      | _number_ | -             |
+| `smallDec` | _number_ | 0             |
 
 **Returns:** _string_
 

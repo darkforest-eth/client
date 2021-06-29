@@ -22,7 +22,7 @@ export function StatText({
   planet: Planet | undefined;
   getStat: (p: Planet) => number;
 }) {
-  return <>{planet ? formatNumber(getStat(planet)) : 'n/a'}</>;
+  return <>{planet ? formatNumber(getStat(planet), 2) : 'n/a'}</>;
 }
 
 const getSilver = (p: Planet) => p.silver;
