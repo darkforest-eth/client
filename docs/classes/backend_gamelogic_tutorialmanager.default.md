@@ -90,7 +90,13 @@ Overrides: EventEmitter.constructor
 
 ### reset
 
-▸ **reset**(): _void_
+▸ **reset**(`account`: _undefined_ \| EthAddress): _void_
+
+#### Parameters
+
+| Name      | Type                      |
+| :-------- | :------------------------ |
+| `account` | _undefined_ \| EthAddress |
 
 **Returns:** _void_
 

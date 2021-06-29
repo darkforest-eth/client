@@ -197,12 +197,12 @@ const StyledTutorialPane = styled.div<{ visible: boolean }>`
   }
 `;
 
-export function TutorialPane({ newPlayerHook }: { newPlayerHook: Hook<boolean> }) {
+export function TutorialPane({ tutorialHook }: { tutorialHook: Hook<boolean> }) {
   const uiManager = useUIManager();
   const tutorialManager = TutorialManager.getInstance();
 
   const [tutorialState, setTutorialState] = useState<TutorialState>(TutorialState.None);
-  const [newPlayer] = newPlayerHook;
+  const [tutorialOpen] = tutorialHook;
   const [completed, setCompleted] = useBooleanSetting(uiManager, Setting.TutorialCompleted);
 
   // sync tutorial state
@@ -219,7 +219,7 @@ export function TutorialPane({ newPlayerHook }: { newPlayerHook: Hook<boolean> }
   }, [tutorialManager, setCompleted]);
 
   return (
-    <StyledTutorialPane visible={completed || newPlayer}>
+    <StyledTutorialPane visible={!completed && tutorialOpen}>
       <TutorialPaneContent tutorialState={tutorialState} />
     </StyledTutorialPane>
   );

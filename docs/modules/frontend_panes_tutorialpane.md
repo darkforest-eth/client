@@ -10,13 +10,13 @@
 
 ### TutorialPane
 
-▸ **TutorialPane**(`__namedParameters`: { `newPlayerHook`: [_Hook_](_types_global_globaltypes.md#hook)<boolean\> }): _Element_
+▸ **TutorialPane**(`__namedParameters`: { `tutorialHook`: [_Hook_](_types_global_globaltypes.md#hook)<boolean\> }): _Element_
 
 #### Parameters
 
-| Name                              | Type                                                  |
-| :-------------------------------- | :---------------------------------------------------- |
-| `__namedParameters`               | _object_                                              |
-| `__namedParameters.newPlayerHook` | [_Hook_](_types_global_globaltypes.md#hook)<boolean\> |
+| Name                             | Type                                                  |
+| :------------------------------- | :---------------------------------------------------- |
+| `__namedParameters`              | _object_                                              |
+| `__namedParameters.tutorialHook` | [_Hook_](_types_global_globaltypes.md#hook)<boolean\> |
 
 **Returns:** _Element_

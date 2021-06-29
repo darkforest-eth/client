@@ -1,3 +1,4 @@
+import { EthAddress } from '@darkforest_eth/types';
 import { EventEmitter } from 'events';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import { Setting, setBooleanSetting } from '../../Frontend/Utils/SettingsHooks';
@@ -54,7 +55,8 @@ class TutorialManager extends EventEmitter {
     this.setTutorialState(Math.min(this.tutorialState + 1, TutorialState.Completed));
   }
 
-  reset() {
+  reset(account: EthAddress | undefined) {
+    setBooleanSetting(account, Setting.TutorialOpen, true);
     this.setTutorialState(TutorialState.None);
   }
 

@@ -20,9 +20,9 @@ export class LayeredMap {
   private insertedLocations: Set<LocationId>;
 
   public constructor(worldRadius: number) {
-    // multiply by 3 in case the world expands while you're playing the game. three should be
-    // enough.
-    worldRadius *= 3;
+    // add 500k so that players have the ability to mine far outside the current world radius.
+    worldRadius += 500_000;
+
     const worldSize = new Box(-worldRadius, -worldRadius, worldRadius * 2, worldRadius * 2);
 
     this.perLevelPlanetQuadtrees = new Map();

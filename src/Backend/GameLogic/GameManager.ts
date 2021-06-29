@@ -100,9 +100,9 @@ import { Diagnostics } from '../../Frontend/Panes/DiagnosticsPane';
 import {
   pollSetting,
   setSetting,
-  getSetting,
   Setting,
   settingChanged$,
+  getNumberSetting,
 } from '../../Frontend/Utils/SettingsHooks';
 import { addMessage, deleteMessages, getMessagesOnPlanets } from '../Network/MessageAPI';
 import { getEmojiMessage } from './ArrivalUtils';
@@ -441,7 +441,7 @@ class GameManager extends EventEmitter {
     this.settingsSubscription = settingChanged$.subscribe((setting: Setting) => {
       if (setting === Setting.MiningCores) {
         if (this.minerManager) {
-          const cores = parseInt(getSetting(this.account, Setting.MiningCores), 10);
+          const cores = getNumberSetting(this.account, Setting.MiningCores);
           this.minerManager.setCores(cores);
         }
       }
@@ -1081,6 +1081,8 @@ class GameManager extends EventEmitter {
       this.hashConfig,
       this.useMockHash
     );
+
+    this.minerManager.setCores(getNumberSetting(this.account, Setting.MiningCores));
 
     this.minerManager.on(
       MinerManagerEvent.DiscoveredNewChunk,

@@ -68,12 +68,6 @@ export function PluginEditorPane({
           onValueChange={setCode}
           highlight={(code) => Prism.highlight(code, Prism.languages.javascript, 'javascript')}
           padding={10}
-          onKeyUp={(e: React.KeyboardEvent<HTMLElement>) => {
-            // we stop propogation of key up events because key up is used
-            // by dark forest at the document level for keyboard shortcuts
-            // that bring up various panes.
-            e.stopPropagation();
-          }}
           style={{
             fontFamily: '"Fira code", "Fira Mono", monospace',
             fontSize: 12,

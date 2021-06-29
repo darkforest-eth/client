@@ -37,6 +37,7 @@ export enum Setting {
   FoundSpace = 'FoundSpace',
   NewPlayer = 'NewPlayer',
   MiningCores = 'MiningCores',
+  TutorialOpen = 'TutorialOpen',
 }
 
 const defaultSettings: Record<Setting, string> = {
@@ -48,6 +49,7 @@ const defaultSettings: Record<Setting, string> = {
   HasAcceptedPluginRisk: 'false',
   GasFeeGwei: '1',
   TerminalVisible: 'true',
+  TutorialOpen: 'true',
 
   FoundPirates: 'false',
   TutorialCompleted: 'false',

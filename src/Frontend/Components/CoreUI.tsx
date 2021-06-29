@@ -18,10 +18,13 @@ export const Spacer = styled.div`
 `;
 
 export const Truncate = styled.div`
-  display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  ${({ maxWidth }: { maxWidth?: string }) => css`
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    ${maxWidth !== undefined && `max-width: ${maxWidth};`};
+  `}
 `;
 
 /**

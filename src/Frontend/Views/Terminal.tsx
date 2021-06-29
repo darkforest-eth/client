@@ -128,11 +128,6 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
   );
 
   const onKeyUp = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    // we stop propogation of key up events because key up is used
-    // by dark forest at the document level for keyboard shortcuts
-    // that bring up various panes.
-    e.stopPropagation();
-
     if (e.keyCode === ENTER_KEY_CODE && !e.shiftKey) {
       e.preventDefault();
       print(promptCharacter + ' ', TerminalTextStyle.Green);

@@ -20,10 +20,6 @@ function InputImpl(
       disabled={false}
       onChange={props.disabled ? () => {} : props.onChange}
       onKeyUp={(e) => {
-        // we stop propogation of key up events because key up is used
-        // by dark forest at the document level for keyboard shortcuts
-        // that bring up various panes.
-        e.stopPropagation();
         if (props.onKeyUp) {
           props.onKeyUp(e);
         }

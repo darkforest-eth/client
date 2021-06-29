@@ -80,6 +80,7 @@ export function GameWindowLayout() {
   const modalsContainerRef = useRef<HTMLDivElement | null>(null);
   const uiManager = useUIManager();
   const newPlayerHook = useBooleanSetting(uiManager, Setting.NewPlayer);
+  const tutorialHook = useBooleanSetting(uiManager, Setting.TutorialOpen);
 
   const selected = useSelectedPlanet(uiManager).value;
   const selectedPlanetHook = useState<boolean>(!!selected);
@@ -223,7 +224,7 @@ export function GameWindowLayout() {
 
           <HoverPlanetPane />
 
-          <TutorialPane newPlayerHook={newPlayerHook} />
+          <TutorialPane tutorialHook={tutorialHook} />
         </CanvasContainer>
       </MainWindow>
     </WindowWrapper>

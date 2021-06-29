@@ -7,6 +7,7 @@ import dfstyles from '../Styles/dfstyles';
 import { MythicLabel } from '../Components/Labels/MythicLabel';
 import { ScoreLabel } from '../Components/Labels/KeywordLabels';
 import { LegendaryLabel } from '../Components/Labels/LegendaryLabel';
+import { useUIManager } from '../Utils/AppHooks';
 
 const HelpWrapper = styled.div`
   width: 36em;
@@ -46,6 +47,8 @@ const BlueBG = styled.span`
 
 // TODO: make this pane aware of end time
 export function HelpPane({ hook }: { hook: ModalHook }) {
+  const uiManager = useUIManager();
+
   return (
     <ModalPane hook={hook} title='Help' name={ModalName.Help}>
       <HelpWrapper>
@@ -67,7 +70,9 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
           <a onClick={() => window.open('https://blog.zkga.me')}>Official Info and Announcements</a>
         </p>
         <p>
-          <a onClick={() => TutorialManager.getInstance().reset()}>Reset Tutorial</a>
+          <a onClick={() => TutorialManager.getInstance().reset(uiManager.getAccount())}>
+            Reset Tutorial
+          </a>
         </p>
 
         <p className='title'>Welcome!</p>

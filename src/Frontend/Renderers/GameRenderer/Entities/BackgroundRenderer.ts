@@ -86,10 +86,6 @@ export default class BackgroundRenderer {
 
   flush(): void {
     this.perlinRenderer.flush();
-
-    // this.fillPerlin();
-
-    this.borderRenderer.queueRectCenterWorld({ x: 0, y: 0 }, 30, 30, [255, 0, 0], 2);
     this.borderRenderer.flush();
   }
 }

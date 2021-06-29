@@ -98,7 +98,7 @@ export class OwnedPluginView extends React.Component<Props, State> {
           </RemoteModal>
         ) : null}
         <div>
-          <Truncate>
+          <Truncate maxWidth={'150px'}>
             {this.props.plugin.name}
             {this.state.error && <Error>{' ' + this.state.error}</Error>}
           </Truncate>

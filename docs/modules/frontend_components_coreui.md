@@ -81,7 +81,7 @@ way to do this.
 
 ### Truncate
 
-• `Const` **Truncate**: _StyledComponent_<`"div"`, any, {}, never\>
+• `Const` **Truncate**: _StyledComponent_<`"div"`, any, { `maxWidth?`: _string_ }, never\>
 
 ---
 

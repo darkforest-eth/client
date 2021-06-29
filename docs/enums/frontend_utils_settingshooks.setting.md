@@ -28,6 +28,7 @@ per instance of the dark forest contract that it's connected to.
 - [OptOutMetrics](frontend_utils_settingshooks.setting.md#optoutmetrics)
 - [TerminalVisible](frontend_utils_settingshooks.setting.md#terminalvisible)
 - [TutorialCompleted](frontend_utils_settingshooks.setting.md#tutorialcompleted)
+- [TutorialOpen](frontend_utils_settingshooks.setting.md#tutorialopen)
 
 ## Enumeration members
 
@@ -142,3 +143,9 @@ per instance of the dark forest contract that it's connected to.
 ### TutorialCompleted
 
 • **TutorialCompleted**: = "TutorialCompleted"
+
+---
+
+### TutorialOpen
+
+• **TutorialOpen**: = "TutorialOpen"
