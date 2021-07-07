@@ -1,4 +1,4 @@
-import { AggregateLeaderboard, ArtifactRarity } from '@darkforest_eth/types';
+import { Leaderboard, ArtifactRarity } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
@@ -11,17 +11,20 @@ import { RarityColors } from '../Styles/Colors';
 import dfstyles from '../Styles/dfstyles';
 import { useLeaderboard } from '../Utils/AppHooks';
 import { formatDuration } from '../Utils/TimeUtils';
+import { GenericErrorBoundary } from './GenericErrorBoundary';
 import { Table } from './Table';
 
-export function Leaderboard() {
+export function LeadboardDisplay() {
   const { leaderboard, error } = useLeaderboard();
 
+  const errorMessage = 'Error Loading Leaderboard';
+
   return (
-    <>
+    <GenericErrorBoundary errorMessage={errorMessage}>
       {!leaderboard && !error && <LoadingSpinner initialText={'Loading Leaderboard...'} />}
       {leaderboard && <LeaderboardBody leaderboard={leaderboard} />}
-      {error && <Red>error loading leaderboard</Red>}
-    </>
+      {error && <Red>{errorMessage}</Red>}
+    </GenericErrorBoundary>
   );
 }
 
@@ -144,18 +147,20 @@ function CountDown() {
   return <>{str}</>;
 }
 
-function LeaderboardBody({ leaderboard }: { leaderboard: AggregateLeaderboard }) {
-  const leaderboardRoundNames = Object.getOwnPropertyNames(leaderboard);
-  const firstRoundLeaderboard = leaderboard[leaderboardRoundNames[0]];
-  const firstRoundScores = Object.getOwnPropertyNames(firstRoundLeaderboard.scoresByPlayer).map(
-    (name) => [name, firstRoundLeaderboard.scoresByPlayer[name]]
-  );
+function LeaderboardBody({ leaderboard }: { leaderboard: Leaderboard }) {
+  const rankedPlayers = leaderboard.entries.filter((entry) => entry.score > 0);
 
-  const sortedFirstRoundScores = _.sortBy(firstRoundScores, (row) => -row[1]) as Array<
-    [string, number]
-  >;
+  leaderboard.entries.sort((a, b) => {
+    return b.score - a.score;
+  });
 
-  const rankedPlayers = sortedFirstRoundScores.filter((entry) => entry[1] > 0);
+  const rows: [string, number][] = leaderboard.entries.map((entry) => {
+    if (typeof entry.twitter === 'string') {
+      return [entry.twitter, entry.score];
+    }
+
+    return [entry.ethAddress, entry.score];
+  });
 
   return (
     <div>
@@ -170,7 +175,7 @@ function LeaderboardBody({ leaderboard }: { leaderboard: AggregateLeaderboard })
             </tr>
             <tr>
               <td>players</td>
-              <td>{sortedFirstRoundScores.length}</td>
+              <td>{leaderboard.entries.length}</td>
             </tr>
             <tr>
               <td>ranked players</td>
@@ -180,7 +185,7 @@ function LeaderboardBody({ leaderboard }: { leaderboard: AggregateLeaderboard })
         </StatsTable>
       </StatsTableContainer>
       <Spacer height={8} />
-      <LeaderboardTable rows={sortedFirstRoundScores} />
+      <LeaderboardTable rows={rows} />
     </div>
   );
 }

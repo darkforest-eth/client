@@ -4,12 +4,12 @@
 
 ### Functions
 
-- [Leaderboard](frontend_views_leaderboard.md#leaderboard)
+- [LeadboardDisplay](frontend_views_leaderboard.md#leadboarddisplay)
 
 ## Functions
 
-### Leaderboard
+### LeadboardDisplay
 
-▸ **Leaderboard**(): _Element_
+▸ **LeadboardDisplay**(): _Element_
 
 **Returns:** _Element_

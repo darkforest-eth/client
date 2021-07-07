@@ -6,7 +6,7 @@ import { EmailCTA, EmailCTAMode } from '../Components/Email';
 import { Sub, BlinkCursor, Invisible, HideSmall } from '../Components/Text';
 import LandingPageCanvas from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
-import { Leaderboard } from '../Views/Leaderboard';
+import { LeadboardDisplay } from '../Views/Leaderboard';
 
 export const enum LandingPageZIndex {
   Background = 0,
@@ -185,7 +185,7 @@ export default function LandingPage() {
 
         <Spacer height={128} />
 
-        <Leaderboard />
+        <LeadboardDisplay />
 
         <Spacer height={256} />
       </Page>

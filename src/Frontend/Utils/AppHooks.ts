@@ -1,13 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
-import {
-  EthAddress,
-  Planet,
-  ArtifactId,
-  Artifact,
-  AggregateLeaderboard,
-} from '@darkforest_eth/types';
+import { EthAddress, Planet, ArtifactId, Artifact, Leaderboard } from '@darkforest_eth/types';
 import { createDefinedContext } from './createDefinedContext';
 import { useKeyPressed, useWrappedEmitter } from './EmitterHooks';
 import { ctrlDown$, ctrlUp$ } from './KeyEmitters';
@@ -111,16 +105,17 @@ export function useControlDown(): boolean {
 
 /** Loads the leaderboard */
 export function useLeaderboard(poll: number | undefined = undefined): {
-  leaderboard: AggregateLeaderboard | undefined;
+  leaderboard: Leaderboard | undefined;
   error: Error | undefined;
 } {
-  const [leaderboard, setLeaderboard] = useState<AggregateLeaderboard | undefined>();
+  const [leaderboard, setLeaderboard] = useState<Leaderboard | undefined>();
   const [error, setError] = useState<Error | undefined>();
 
   const load = useCallback(async function load() {
     try {
       setLeaderboard(await loadLeaderboard());
     } catch (e) {
+      console.log('error loading leaderboard', e);
       setError(e);
     }
   }, []);

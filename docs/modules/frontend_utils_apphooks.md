@@ -108,10 +108,10 @@ Loads the leaderboard
 
 **Returns:** _object_
 
-| Name          | Type                                |
-| :------------ | :---------------------------------- |
-| `error`       | Error \| _undefined_                |
-| `leaderboard` | AggregateLeaderboard \| _undefined_ |
+| Name          | Type                       |
+| :------------ | :------------------------- |
+| `error`       | Error \| _undefined_       |
+| `leaderboard` | Leaderboard \| _undefined_ |
 
 ---
 

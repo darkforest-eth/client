@@ -239,6 +239,7 @@
 - [Frontend/Views/EmojiPicker](modules/frontend_views_emojipicker.md)
 - [Frontend/Views/EmojiPlanetNotification](modules/frontend_views_emojiplanetnotification.md)
 - [Frontend/Views/GameWindowLayout](modules/frontend_views_gamewindowlayout.md)
+- [Frontend/Views/GenericErrorBoundary](modules/frontend_views_genericerrorboundary.md)
 - [Frontend/Views/Leaderboard](modules/frontend_views_leaderboard.md)
 - [Frontend/Views/MenuBar](modules/frontend_views_menubar.md)
 - [Frontend/Views/ModalIcon](modules/frontend_views_modalicon.md)

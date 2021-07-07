@@ -10,6 +10,6 @@
 
 ### loadLeaderboard
 
-▸ **loadLeaderboard**(): _Promise_<AggregateLeaderboard\>
+▸ **loadLeaderboard**(): _Promise_<Leaderboard\>
 
-**Returns:** _Promise_<AggregateLeaderboard\>
+**Returns:** _Promise_<Leaderboard\>
