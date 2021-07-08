@@ -1,25 +1,70 @@
+import React, { CSSProperties } from 'react';
 import { h, Component } from 'preact'
-import { Table as DFTable } from '../../src/Frontend/Views/Table';
+import styled from 'styled-components';
 
-// export function Table<T>({
-//   rows,
-//   headers,
-//   columns,
-//   alignments,
-//   headerStyle,
-// }: {
-//   rows: T[];
-//   headers: React.ReactNode[];
-//   columns: Array<(t: T, i: number) => React.ReactNode>;
-//   alignments?: Array<'r' | 'c' | 'l'>;
-//   headerStyle?: React.CSSProperties;
-// }) {
-//   return <DFTable rows={rows} headers={headers} columns={columns} alignments={alignments} headerStyle={headerStyle} />
-// }
+const TableElement = styled.table`
+  overflow-y: scroll;
+  scrollbar-width: initial;
+  width: 100%;
+`;
 
-export class Table extends Component
+const ScrollableBody = styled.tbody`
+  width: 100%;
+  max-height: 400px;
+`;
+
+const AlignmentOptions: { [key: string]: CSSProperties['textAlign'] } = {
+  r: 'right',
+  l: 'left',
+  c: 'center',
+};
+
+export class Table<T> extends Component
 {
-  render(props, state) {
-    return <div>Hello world</div>
+  render({
+    rows,
+    headers,
+    columns,
+    alignments,
+    headerStyle,
+  }: {
+    rows: T[];
+    headers: string[];
+    columns: Array<(t: T, i: number) => React.ReactNode>;
+    alignments?: Array<'r' | 'c' | 'l'>;
+    headerStyle?: React.CSSProperties;
+  }, state: any) {
+    console.log(headers)
+    return (
+      <TableElement>
+        <thead style={headerStyle}>
+          <tr>
+            {headers.map((txt: string, colIdx: number) => (
+              <th
+                key={colIdx}
+                style={(alignments && { textAlign: AlignmentOptions[alignments[colIdx]] }) || {}}
+              >
+                {txt}
+              </th>
+            ))}
+          </tr>
+        </thead>
+
+        <ScrollableBody>
+          {rows.map((row: T, rowIdx: number) => (
+            <tr key={rowIdx}>
+              {columns.map((column, colIdx) => (
+                <td
+                  key={colIdx}
+                  style={(alignments && { textAlign: AlignmentOptions[alignments[colIdx]] }) || {}}
+                >
+                  {column(row, rowIdx)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </ScrollableBody>
+      </TableElement>
+    )
   }
 }

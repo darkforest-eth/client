@@ -1,4 +1,25 @@
-import { Artifact, Planet } from "@darkforest_eth/types"
+import { Artifact, Planet, PlanetType } from "@darkforest_eth/types"
+import { PlanetTypeWeightsBySpaceType } from "../src/_types/darkforest/api/ContractsAPITypes"
+
+export const PlanetTypes: { [ key:string]: PlanetType } = {
+  PLANET: 0,
+  ASTEROID: 1,
+  FOUNDRY: 2,
+  RIP: 3,
+  QUASAR: 4
+}
+
+export function isAsteroid(p: Planet) {
+  return p.planetType === PlanetTypes.ASTEROID
+}
+
+export function hasPendingMove(p: Planet) {
+  return p.unconfirmedDepartures.length > 0
+}
+
+export function energy(p: Planet) {
+  return Math.floor(p.energy / p.energyCap * 100);
+}
 
 /**
  * df.getMyArtifacts() misses some.. This function loops through

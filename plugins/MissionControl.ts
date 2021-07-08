@@ -25,7 +25,7 @@ import {
   canStatUpgrade,
   canPlanetUpgrade,
 } from 'https://plugins.zkga.me/utils/utils.js';
-import { getAllArtifacts } from './utils'
+import { energy, getAllArtifacts, hasPendingMove, isAsteroid } from './utils'
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -159,43 +159,79 @@ function UpgradeAllPlanets() {
   `;
 }
 
-// import styled from 'styled-components';
-import dfstyles from '../src/Frontend/Styles/dfstyles';
 import { Table } from './Components/Table';
-// import { formatNumber } from '../src/Backend/Utils/Utils'
-// import { Sub } from '../src/Frontend/Components/Text'
+import { Header, Sub, Title } from './components/Text'
+import { PlanetLink } from './components/PlanetLink'
+import { capturePlanets } from './strategies/Crawl'
 
 const TableContainer = {
   maxHeight: '300px',
-  height: '300px',
   overflowYy: 'scroll',
 };
 
+function crawl() {
+  capturePlanets(
+    null, // all planets
+    0,
+    9,
+    37.5,
+    1
+  )
+}
+
 function PlanetsWithEnergy({ planets }: { planets: Planet[] })
 {
-  const headers = ['', 'Planet Name', 'Level', 'Energy', 'Silver', 'Artifacts', 'Prospect', 'Find'];
-  const alignments: Array<'r' | 'c' | 'l'> = ['r', 'l', 'r', 'r', 'r', 'r', 'r', 'r'];
+  const headers = ['Planet Name', 'Level', 'Energy'];
+  const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
-  // const Sub = styled.span`
-  //   color: ${dfstyles.colors.subtext};
-  // `;
+  const rows = planets
+    .filter(p => p.planetLevel >= 0)
+    .filter(p => ! isAsteroid(p))
+    .filter(p => ! hasPendingMove(p))
+    .filter(p => energy(p) > 75)
+    .sort((a, b) => energy(b) - energy(a))
 
   const columns = [
-    (planet: Planet) => 'TODO',
-    (planet: Planet) => {df.getProcgenUtils().getPlanetName(planet)},
-    (planet: Planet) => planet.planetLevel,
-    (planet: Planet) => 'TODO',
-    (planet: Planet) => 'TODO',
-    (planet: Planet) => 'TODO',
-    (planet: Planet) => 'TODO',
-    (planet: Planet) => 'TODO',
+    (planet: Planet) => html`<${PlanetLink} planet=${planet}>${df.getProcgenUtils().getPlanetName(planet)}</${PlanetLink}>`,
+    (planet: Planet) => html`<${Sub}>${planet.planetLevel}</${Sub}>`,
+    (planet: Planet) => html`<${Sub}>${energy(planet)}%</${Sub}>`,
   ];
 
-  console.log(planets)
+  return html`<div style=${TableContainer}>
+  <${Header}>Planets with > 75% Energy</${Header}>
+  <button onClick=${crawl}>Crawl</button>
+  <${Table}
+    rows=${rows}
+    headers=${headers}
+    columns=${columns}
+    alignments=${alignments}
+  />
+</div>`
+}
+
+function FullSilver({ planets }: { planets: Planet[] })
+{
+  const headers = ['Planet Name', 'Level', 'Energy'];
+  const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
+
+  const rows = planets
+    .filter(p => p.planetLevel >= 0)
+    .filter(p => isAsteroid(p))
+    .filter(p => ! hasPendingMove(p))
+    .filter(p => p.silver == p.silverCap)
+    .sort((a, b) => b.silverCap - a.silverCap)
+
+  const columns = [
+    (planet: Planet) => html`<${PlanetLink} planet=${planet}>${df.getProcgenUtils().getPlanetName(planet)}</${PlanetLink}>`,
+    (planet: Planet) => html`<${Sub}>${planet.planetLevel}</${Sub}>`,
+    (planet: Planet) => html`<${Sub}>${planet.silverCap / 1000}</${Sub}>`,
+  ];
 
   return html`<div style=${TableContainer}>
+  <${Header}>Full Silver</${Header}>
+  <button>Rip & Withdraw</button>
   <${Table}
-    rows=${planets}
+    rows=${rows}
     headers=${headers}
     columns=${columns}
     alignments=${alignments}
@@ -231,6 +267,13 @@ function App() {
   return html`
     <div>
       <${PlanetsWithEnergy} planets=${myPlanets} />
+      <br />
+      <hr />
+      <br />
+      <${FullSilver} planets=${myPlanets} />
+      <br />
+      <hr />
+      <br />
       <${UpgradeSelectedPlanet} planet=${selectedPlanet} />
       <br />
       <hr />
