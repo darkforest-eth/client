@@ -285,7 +285,7 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
   return (
     <ModalPane
       hook={hook}
-      title='Planet Dex'
+      title='Planet Dex 3'
       name={ModalName.PlanetDex}
       width='unset'
       helpContent={HelpContent}

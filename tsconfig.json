@@ -11,7 +11,12 @@
     "allowJs": true, // allow a partial TypeScript and JavaScript codebase
     "moduleResolution": "Node",
     "lib": ["es2019", "dom"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@df_client/*": ["declarations/*"],
+      "@df/*": ["declarations/src/Backend/GameLogic/*"]
+    }
   },
   "include": ["src/**/*", "embedded_plugins/*", "plugins/*"],
   "exclude": ["./node_modules", "./dist", "./declarations"],
