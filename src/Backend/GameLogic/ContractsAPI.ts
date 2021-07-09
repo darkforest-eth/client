@@ -1086,6 +1086,7 @@ class ContractsAPI extends EventEmitter {
     this.diagnosticsUpdater = diagnosticUpdater;
     this.contractCaller.setDiagnosticUpdater(diagnosticUpdater);
     this.txRequestExecutor?.setDiagnosticUpdater(diagnosticUpdater);
+    this.ethConnection.setDiagnosticUpdater(diagnosticUpdater);
   }
 }
 

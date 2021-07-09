@@ -4,10 +4,12 @@
 
 ### Enumerations
 
+- [AutoGasSetting](../enums/frontend_utils_settingshooks.autogassetting.md)
 - [Setting](../enums/frontend_utils_settingshooks.setting.md)
 
 ### Variables
 
+- [ALL_AUTO_GAS_SETTINGS](frontend_utils_settingshooks.md#all_auto_gas_settings)
 - [settingChanged$](frontend_utils_settingshooks.md#settingchanged$)
 
 ### Functions
@@ -26,6 +28,12 @@
 - [useSetting](frontend_utils_settingshooks.md#usesetting)
 
 ## Variables
+
+### ALL_AUTO_GAS_SETTINGS
+
+• `Const` **ALL_AUTO_GAS_SETTINGS**: [_AutoGasSetting_](../enums/frontend_utils_settingshooks.autogassetting.md)[]
+
+---
 
 ### settingChanged$
 

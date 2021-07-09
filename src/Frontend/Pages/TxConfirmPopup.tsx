@@ -149,7 +149,8 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
     else approve();
   };
 
-  const gasFeeGwei = parseInt(localStorage.getItem(`${addr.toLowerCase()}-gasFeeGwei`) || '1', 10);
+  const gasFeeGwei = parseInt(localStorage.getItem(`${addr}-gasFeeGwei`) || '1', 10);
+
   const fromPlanet = localStorage.getItem(`${addr.toLowerCase()}-fromPlanet`);
   const toPlanet = localStorage.getItem(`${addr.toLowerCase()}-toPlanet`);
 
@@ -158,7 +159,7 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
   const hatCost: number = method === 'buyHat' && hatLevel ? 2 ** parseInt(hatLevel) : 0;
   const gptCost: number = method === 'buyCredits' ? 0.5 : 0;
 
-  const txCost: number = 0.002 * gasFeeGwei + hatCost + gptCost;
+  const txCost: number = hatCost + gptCost + 0.002 * gasFeeGwei;
 
   const upPlanet = localStorage.getItem(`${addr.toLowerCase()}-upPlanet`);
   const branch = localStorage.getItem(`${addr.toLowerCase()}-branch`);

@@ -25,11 +25,11 @@ export function PrivatePane({ hook }: { hook: ModalHook }) {
     setHome(coords ? `(${coords.x}, ${coords.y})` : '');
   }, [uiManager]);
   return (
-    <ModalPane hook={hook} title={'View SKEY and Home Coords'} name={ModalName.Private}>
+    <ModalPane hook={hook} title={'View Secret Key and Home Coords'} name={ModalName.Private}>
       <StyledPrivatePane>
         <p>
           <Sub>
-            <u>SKEY</u>
+            <u>secret key</u>
           </Sub>
         </p>
         <p>{sKey}</p>

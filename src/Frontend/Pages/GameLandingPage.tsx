@@ -233,7 +233,6 @@ export default function GameLandingPage() {
         '0xb05d95422bf8d5024f9c340e8f7bd696d67ee3a9',
         TerminalTextStyle.White
       );
-      terminal.current?.newline();
       terminal.current?.print('    v0.6 r1    ');
       terminal.current?.print('05/22/2021        ', TerminalTextStyle.White);
       terminal.current?.printLink(
@@ -243,6 +242,7 @@ export default function GameLandingPage() {
         },
         TerminalTextStyle.White
       );
+      terminal.current?.newline();
       terminal.current?.newline();
 
       const knownAddrs = ethConnection.getKnownAccounts();
