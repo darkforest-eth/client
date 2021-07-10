@@ -40,6 +40,18 @@ export enum Setting {
   TutorialOpen = 'TutorialOpen',
 }
 
+export enum AutoGasSetting {
+  Slow = 'Slow',
+  Average = 'Average',
+  Fast = 'Fast',
+}
+
+export const ALL_AUTO_GAS_SETTINGS = [
+  AutoGasSetting.Slow,
+  AutoGasSetting.Average,
+  AutoGasSetting.Fast,
+];
+
 const defaultSettings: Record<Setting, string> = {
   OptOutMetrics: 'false',
   AutoApproveNonPurchaseTransactions: 'false',
@@ -47,7 +59,7 @@ const defaultSettings: Record<Setting, string> = {
   HighPerformanceRendering: 'false',
   MoveNotifications: 'true',
   HasAcceptedPluginRisk: 'false',
-  GasFeeGwei: '1',
+  GasFeeGwei: AutoGasSetting.Average,
   TerminalVisible: 'true',
   TutorialOpen: 'true',
 

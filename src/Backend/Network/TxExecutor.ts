@@ -8,7 +8,6 @@ import { EventLogger } from './EventLogger';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import { openConfirmationWindowForTransaction } from '../../Frontend/Game/Popups';
 import { DiagnosticUpdater } from '../Interfaces/DiagnosticUpdater';
-import { getSetting, Setting } from '../../Frontend/Utils/SettingsHooks';
 
 export interface QueuedTxRequest {
   onSubmissionError: (e: Error) => void;
@@ -83,15 +82,9 @@ export class TxExecutor extends EventEmitter {
     const [txReceipt, rejectTxReceipt, receiptPromise] = deferred<providers.TransactionReceipt>();
 
     if (overrides.gasPrice === undefined) {
-      const gwei = EthersBN.from('1000000000');
-      let userGasPriceGwei = getSetting(this.eth.getAddress(), Setting.GasFeeGwei);
-
-      // TODO: this value should be pulled from blockscout API or something
-      if (type === EthTxType.INIT) {
-        userGasPriceGwei = '10';
-      }
-
-      overrides.gasPrice = gwei.mul(userGasPriceGwei);
+      overrides.gasPrice = EthersBN.from('1000000000').mul(
+        this.eth.getGasPriceGwei(type, this.eth.getGasPrices())
+      );
     }
 
     this.txQueue.add(() => {

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import styled from 'styled-components';
+import { GasPrices } from '@darkforest_eth/types';
 import { Spacer, Underline } from '../Components/CoreUI';
+import { DisplayGasPrices } from '../Components/DisplayGasPrices';
 import { White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
@@ -24,6 +26,7 @@ export interface Diagnostics {
   totalTransactions: number;
   transactionsInQueue: number;
   totalChunks: number;
+  gasPrices?: GasPrices;
 }
 
 export function DiagnosticsPane({ hook }: { hook: ModalHook }) {
@@ -132,6 +135,13 @@ function NetworkingTab({ diagnostics }: { diagnostics: Diagnostics }) {
         <tr>
           <td>queued transactions</td>
           <td>{diagnostics.transactionsInQueue.toLocaleString()}</td>
+        </tr>
+
+        <tr>
+          <td>oracle gas prices (gwei)</td>
+          <td>
+            <DisplayGasPrices gasPrices={diagnostics.gasPrices} />
+          </td>
         </tr>
       </tbody>
     </DiagnosticsTableStyle>

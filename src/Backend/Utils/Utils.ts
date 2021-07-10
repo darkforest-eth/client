@@ -1,9 +1,17 @@
 import * as bigInt from 'big-integer';
 import { BigInteger } from 'big-integer';
 import { StatIdx } from '../../_types/global/GlobalTypes';
-import { Planet, EthAddress, SpaceType, Upgrade, UpgradeBranchName } from '@darkforest_eth/types';
+import {
+  Planet,
+  EthAddress,
+  SpaceType,
+  Upgrade,
+  UpgradeBranchName,
+  GasPrices,
+} from '@darkforest_eth/types';
 import _ from 'lodash';
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
+import { AutoGasSetting } from '../../Frontend/Utils/SettingsHooks';
 
 export const ONE_DAY = 24 * 60 * 60 * 1000;
 
@@ -251,4 +259,20 @@ export function deferred<T>(): [(t: T) => void, (t: Error) => void, Promise<T>] 
   });
   /* eslint-disable @typescript-eslint/no-explicit-any */
   return [resolve as any, reject as any, promise];
+}
+
+export function getGasSettingGwei(
+  setting: AutoGasSetting,
+  gasPrices: GasPrices
+): number | undefined {
+  switch (setting) {
+    case AutoGasSetting.Slow:
+      return gasPrices.slow;
+    case AutoGasSetting.Average:
+      return gasPrices.average;
+    case AutoGasSetting.Fast:
+      return gasPrices.fast;
+    default:
+      return undefined;
+  }
 }

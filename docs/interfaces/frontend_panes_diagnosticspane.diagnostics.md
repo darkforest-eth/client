@@ -9,6 +9,7 @@
 - [callsInQueue](frontend_panes_diagnosticspane.diagnostics.md#callsinqueue)
 - [chunkUpdates](frontend_panes_diagnosticspane.diagnostics.md#chunkupdates)
 - [fps](frontend_panes_diagnosticspane.diagnostics.md#fps)
+- [gasPrices](frontend_panes_diagnosticspane.diagnostics.md#gasprices)
 - [totalCalls](frontend_panes_diagnosticspane.diagnostics.md#totalcalls)
 - [totalChunks](frontend_panes_diagnosticspane.diagnostics.md#totalchunks)
 - [totalPlanets](frontend_panes_diagnosticspane.diagnostics.md#totalplanets)
@@ -34,6 +35,12 @@
 ### fps
 
 • **fps**: _number_
+
+---
+
+### gasPrices
+
+• `Optional` **gasPrices**: GasPrices
 
 ---
 

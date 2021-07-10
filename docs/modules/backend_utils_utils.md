@@ -17,6 +17,7 @@
 - [deferred](backend_utils_utils.md#deferred)
 - [formatNumber](backend_utils_utils.md#formatnumber)
 - [getFormatProp](backend_utils_utils.md#getformatprop)
+- [getGasSettingGwei](backend_utils_utils.md#getgassettinggwei)
 - [getOwnerColor](backend_utils_utils.md#getownercolor)
 - [getPlanetMaxRank](backend_utils_utils.md#getplanetmaxrank)
 - [getPlanetRank](backend_utils_utils.md#getplanetrank)
@@ -152,6 +153,21 @@
 | `prop`   | _string_              |
 
 **Returns:** _string_
+
+---
+
+### getGasSettingGwei
+
+▸ **getGasSettingGwei**(`setting`: [_AutoGasSetting_](../enums/frontend_utils_settingshooks.autogassetting.md), `gasPrices`: GasPrices): _number_ \| _undefined_
+
+#### Parameters
+
+| Name        | Type                                                                        |
+| :---------- | :-------------------------------------------------------------------------- |
+| `setting`   | [_AutoGasSetting_](../enums/frontend_utils_settingshooks.autogassetting.md) |
+| `gasPrices` | GasPrices                                                                   |
+
+**Returns:** _number_ \| _undefined_
 
 ---
 

@@ -24,6 +24,9 @@ Responsible for
 
 - [blockNumber](backend_network_ethconnection.default.md#blocknumber)
 - [blockNumber$](backend_network_ethconnection.default.md#blocknumber$)
+- [diagnosticsUpdater](backend_network_ethconnection.default.md#diagnosticsupdater)
+- [gasPrices](backend_network_ethconnection.default.md#gasprices)
+- [gasPrices$](backend_network_ethconnection.default.md#gasprices$)
 - [knownAddresses](backend_network_ethconnection.default.md#knownaddresses)
 - [provider](backend_network_ethconnection.default.md#provider)
 - [rpcURL](backend_network_ethconnection.default.md#rpcurl)
@@ -36,6 +39,8 @@ Responsible for
 - [adjustPollRateBasedOnVisibility](backend_network_ethconnection.default.md#adjustpollratebasedonvisibility)
 - [getAddress](backend_network_ethconnection.default.md#getaddress)
 - [getBalance](backend_network_ethconnection.default.md#getbalance)
+- [getGasPriceGwei](backend_network_ethconnection.default.md#getgaspricegwei)
+- [getGasPrices](backend_network_ethconnection.default.md#getgasprices)
 - [getKnownAccounts](backend_network_ethconnection.default.md#getknownaccounts)
 - [getNonce](backend_network_ethconnection.default.md#getnonce)
 - [getPrivateKey](backend_network_ethconnection.default.md#getprivatekey)
@@ -48,9 +53,12 @@ Responsible for
 - [loadGettersContract](backend_network_ethconnection.default.md#loadgetterscontract)
 - [loadWhitelistContract](backend_network_ethconnection.default.md#loadwhitelistcontract)
 - [processEvents](backend_network_ethconnection.default.md#processevents)
+- [refreshGasPrices](backend_network_ethconnection.default.md#refreshgasprices)
 - [setAccount](backend_network_ethconnection.default.md#setaccount)
+- [setDiagnosticUpdater](backend_network_ethconnection.default.md#setdiagnosticupdater)
 - [setRpcEndpoint](backend_network_ethconnection.default.md#setrpcendpoint)
 - [signMessage](backend_network_ethconnection.default.md#signmessage)
+- [startPollingGasPrices](backend_network_ethconnection.default.md#startpollinggasprices)
 - [subscribeToEvents](backend_network_ethconnection.default.md#subscribetoevents)
 - [verifySignature](backend_network_ethconnection.default.md#verifysignature)
 - [waitForTransaction](backend_network_ethconnection.default.md#waitfortransaction)
@@ -79,9 +87,27 @@ Overrides: EventEmitter.constructor
 
 ---
 
+### diagnosticsUpdater
+
+• `Private` **diagnosticsUpdater**: _undefined_ \| [_DiagnosticUpdater_](../interfaces/backend_interfaces_diagnosticupdater.diagnosticupdater.md)
+
+---
+
+### gasPrices
+
+• `Private` **gasPrices**: GasPrices
+
+---
+
+### gasPrices$
+
+• `Readonly` **gasPrices$**: [_Monomitter_](../modules/frontend_utils_monomitter.md#monomitter)<GasPrices\>
+
+---
+
 ### knownAddresses
 
-• `Private` `Readonly` **knownAddresses**: EthAddress[]
+• `Private` **knownAddresses**: EthAddress[]
 
 ---
 
@@ -150,6 +176,32 @@ Overrides: EventEmitter.constructor
 | `address` | EthAddress |
 
 **Returns:** _Promise_<number\>
+
+---
+
+### getGasPriceGwei
+
+▸ **getGasPriceGwei**(`txType`: EthTxType, `gasPrices`: GasPrices): _number_
+
+Get the gas price, measured in gwei, that we should send for a given transaction type, given
+the current prices for transaction speeds, and given the user's gas price setting.
+
+#### Parameters
+
+| Name        | Type      |
+| :---------- | :-------- |
+| `txType`    | EthTxType |
+| `gasPrices` | GasPrices |
+
+**Returns:** _number_
+
+---
+
+### getGasPrices
+
+▸ **getGasPrices**(): GasPrices
+
+**Returns:** GasPrices
 
 ---
 
@@ -278,6 +330,14 @@ Overrides: EventEmitter.constructor
 
 ---
 
+### refreshGasPrices
+
+▸ `Private` **refreshGasPrices**(): _Promise_<void\>
+
+**Returns:** _Promise_<void\>
+
+---
+
 ### setAccount
 
 ▸ **setAccount**(`address`: EthAddress): _void_
@@ -287,6 +347,20 @@ Overrides: EventEmitter.constructor
 | Name      | Type       |
 | :-------- | :--------- |
 | `address` | EthAddress |
+
+**Returns:** _void_
+
+---
+
+### setDiagnosticUpdater
+
+▸ **setDiagnosticUpdater**(`diagnosticUpdater?`: [_DiagnosticUpdater_](../interfaces/backend_interfaces_diagnosticupdater.diagnosticupdater.md)): _void_
+
+#### Parameters
+
+| Name                 | Type                                                                                           |
+| :------------------- | :--------------------------------------------------------------------------------------------- |
+| `diagnosticUpdater?` | [_DiagnosticUpdater_](../interfaces/backend_interfaces_diagnosticupdater.diagnosticupdater.md) |
 
 **Returns:** _void_
 
@@ -317,6 +391,14 @@ Overrides: EventEmitter.constructor
 | `message` | _string_ |
 
 **Returns:** _Promise_<string\>
+
+---
+
+### startPollingGasPrices
+
+▸ `Private` **startPollingGasPrices**(): _void_
+
+**Returns:** _void_
 
 ---
 

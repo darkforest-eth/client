@@ -19,8 +19,8 @@ import EventEmitter from 'events';
 import stringify from 'json-stable-stringify';
 import { XDAI_CHAIN_ID } from '../../Frontend/Utils/constants';
 import { Monomitter, monomitter } from '../../Frontend/Utils/Monomitter';
-import { EthAddress } from '@darkforest_eth/types';
-import { callWithRetry, sleep } from '../Utils/Utils';
+import { EthAddress, EthTxType, GasPrices } from '@darkforest_eth/types';
+import { callWithRetry, getGasSettingGwei, sleep } from '../Utils/Utils';
 import type {
   DarkForestCore,
   DarkForestGetters,
@@ -34,6 +34,9 @@ import whitelistContractAbiPath from '@darkforest_eth/contracts/abis/Whitelist.j
 import gptCreditContractAbiPath from '@darkforest_eth/contracts/abis/DarkForestGPTCredit.json';
 import { ContractEvent } from '../../_types/darkforest/api/ContractsAPITypes';
 import { BlockWaiter } from '../Utils/BlockWaiter';
+import { DEFAULT_GAS_PRICES, getAutoGasPrices } from './ChainAPI';
+import { DiagnosticUpdater } from '../Interfaces/DiagnosticUpdater';
+import { getSetting, Setting, AutoGasSetting } from '../../Frontend/Utils/SettingsHooks';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -51,12 +54,15 @@ class EthConnection extends EventEmitter {
   private static readonly XDAI_DEFAULT_URL = process.env.DEFAULT_RPC as string;
 
   public readonly blockNumber$: Monomitter<number>;
-  private blockNumber: number;
+  public readonly gasPrices$: Monomitter<GasPrices>;
 
-  private readonly knownAddresses: EthAddress[];
+  private diagnosticsUpdater: DiagnosticUpdater | undefined;
+  private knownAddresses: EthAddress[];
+  private blockNumber: number;
   private provider: JsonRpcProvider;
   private signer: Wallet | undefined;
   private rpcURL: string;
+  private gasPrices: GasPrices = DEFAULT_GAS_PRICES;
 
   public constructor() {
     super();
@@ -83,6 +89,56 @@ class EthConnection extends EventEmitter {
 
     this.blockNumber$ = monomitter(true);
     this.adjustPollRateBasedOnVisibility();
+    this.startPollingGasPrices();
+    this.gasPrices$ = monomitter();
+  }
+
+  private async refreshGasPrices() {
+    this.gasPrices = await getAutoGasPrices();
+    this.gasPrices$.publish(this.gasPrices);
+    this.diagnosticsUpdater?.updateDiagnostics((d) => (d.gasPrices = this.gasPrices));
+  }
+
+  private startPollingGasPrices() {
+    this.refreshGasPrices();
+    setInterval(() => {
+      this.refreshGasPrices();
+    }, 1000 * 10);
+  }
+
+  public getGasPrices(): GasPrices {
+    return { ...this.gasPrices };
+  }
+
+  /**
+   * Get the gas price, measured in gwei, that we should send for a given transaction type, given
+   * the current prices for transaction speeds, and given the user's gas price setting.
+   */
+  public getGasPriceGwei(txType: EthTxType, gasPrices: GasPrices): number {
+    // all init transactions should be fast, regardless of user setting. it's important that this
+    // transaction actually happens.
+    if (txType === EthTxType.INIT) {
+      return gasPrices.fast;
+    }
+
+    // either a `AutoGasSetting` or a stringified number
+    const gasPriceSetting = getSetting(this.getAddress(), Setting.GasFeeGwei);
+
+    // if `userSetting` represents an 'auto' choice, return that choice's current price
+    const autoPrice = getGasSettingGwei(gasPriceSetting as AutoGasSetting, gasPrices);
+    if (autoPrice !== undefined) {
+      return autoPrice;
+    }
+
+    // if `userSetting` is not an auto choice, it is a string representing the user's
+    // preferred gas price, measured in gwei.
+    const parsedSetting = parseFloat(gasPriceSetting);
+    if (!isNaN(parsedSetting)) {
+      return parsedSetting;
+    }
+
+    // if the setting has become corrupted, just return an average gas price
+    return gasPrices.average;
   }
 
   private adjustPollRateBasedOnVisibility() {
@@ -368,6 +424,10 @@ class EthConnection extends EventEmitter {
         tries += 1;
       }
     });
+  }
+
+  public setDiagnosticUpdater(diagnosticUpdater?: DiagnosticUpdater) {
+    this.diagnosticsUpdater = diagnosticUpdater;
   }
 }
 

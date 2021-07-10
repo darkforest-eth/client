@@ -4,13 +4,19 @@ import styled from 'styled-components';
 import EthConnection from '../../Backend/Network/EthConnection';
 import { Chunk } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
-import { Spacer } from '../Components/CoreUI';
+import { Spacer, Underline } from '../Components/CoreUI';
 import { Input } from '../Components/Input';
-import { White, Red, Green } from '../Components/Text';
+import { Red, Green, Link } from '../Components/Text';
 import Viewport, { getDefaultScroll } from '../Game/Viewport';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager, useAccount } from '../Utils/AppHooks';
-import { BooleanSetting, Setting, MultiSelectSetting } from '../Utils/SettingsHooks';
+import { useEmitterValue } from '../Utils/EmitterHooks';
+import {
+  BooleanSetting,
+  Setting,
+  MultiSelectSetting,
+  AutoGasSetting,
+} from '../Utils/SettingsHooks';
 import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 
 const SCROLL_MIN = 0.0001 * 10000;
@@ -45,15 +51,19 @@ const Section = styled.div`
   padding: 1em 0;
   border-bottom: 1px solid ${dfstyles.colors.subtext};
 
+  &:first-child {
+    margin-top: -8px;
+  }
+
   &:last-child {
     border-bottom: none;
   }
 `;
 
 const SectionHeader = styled.div`
-  text-decoration: underline;
   color: white;
   margin-bottom: 8px;
+  font-weight: bold;
 `;
 
 const ScrollSpeedInput = styled(Input)`
@@ -73,6 +83,7 @@ export function SettingsPane({
 }) {
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
+  const gasPrices = useEmitterValue(ethConnection.gasPrices$, ethConnection.getGasPrices());
 
   const [rpcURLText, setRpcURLText] = useState<string>(ethConnection.getRpcEndpoint());
   const [rpcURL, setRpcURL] = useState<string>(ethConnection.getRpcEndpoint());
@@ -197,10 +208,22 @@ export function SettingsPane({
     <ModalPane hook={hook} title={'Settings'} name={ModalName.Hats}>
       <StyledSettingsPane>
         <Section>
-          <SectionHeader>Manage account</SectionHeader>
-          Your <White>SKEY</White>, or secret key, together with your <White>home planet's</White>{' '}
-          coordinates, grant you access to your Dark Forest account on different browsers (kind of
-          like a password).
+          <SectionHeader>Burner Wallet Info</SectionHeader>
+          <Row>
+            <span>Public Key</span>
+            <span>{account}</span>
+          </Row>
+          <Row>
+            <span>Balance</span>
+            <span>{balance}</span>
+          </Row>
+        </Section>
+
+        <Section>
+          <SectionHeader>Burner Wallet Info (Private)</SectionHeader>
+          Your <Underline>secret key</Underline>, together with your{' '}
+          <Underline>home planet's coordinates</Underline>, grant you access to your Dark Forest
+          account on different browsers. You should save this info somewhere on your computer.
           <Spacer height={8} />
           <em>
             <Red>WARNING:</Red> Never ever send this to anyone!
@@ -212,61 +235,69 @@ export function SettingsPane({
         </Section>
 
         <Section>
-          <SectionHeader>Manage wallet</SectionHeader>
-          <Row>
-            <span>Public Key</span>
-            <span>{account}</span>
-          </Row>
-          <Row>
-            <span>Balance</span>
-            <span>{balance}</span>
-          </Row>
-          <Row>
-            <span>gas fee (gwei)</span>
-            <MultiSelectSetting
-              uiManager={uiManager}
-              setting={Setting.GasFeeGwei}
-              values={['1', '2', '5', '10', '20']}
-              labels={[
-                '1 gwei (default)',
-                '2 gwei (faster)',
-                '5 gwei (turbo)',
-                '10 gwei (mega turbo)',
-                '20 gwei (need4speed)',
-              ]}
-            />
-          </Row>
-          <Row>
-            <span>
-              Auto-confirm all transactions except purchases. Currently, you can only purchase GPT
-              Credits, and Hats.
-            </span>
-            <Spacer width={64} />
-            <BooleanSetting
-              uiManager={uiManager}
-              setting={Setting.AutoApproveNonPurchaseTransactions}
-            />
-          </Row>
+          <SectionHeader>Auto Confirm Transactions</SectionHeader>
+          <Spacer height={8} />
+          Whether or not to auto-confirm all transactions, except purchases. This will allow you to
+          make moves, spend silver on upgrades, etc. without requiring you to confirm each
+          transaction. However, the client WILL ask for confirmation before purchasing GPT credits
+          or buying hats.
+          <Spacer height={8} />
+          <BooleanSetting
+            uiManager={uiManager}
+            setting={Setting.AutoApproveNonPurchaseTransactions}
+            settingDescription={'toggle auto confirm non-purchase transactions'}
+          />
+          <Spacer width={8} />
         </Section>
 
         <Section>
-          <SectionHeader>Export and import explored maps</SectionHeader>
+          <SectionHeader>Gas Price</SectionHeader>
+          Your gas price setting determines the price you pay for each transaction. A higher gas
+          price means your transactions will be prioritized by the blockchain, making them confirm
+          faster. We recommend using the <Underline>auto average</Underline> setting. All auto
+          settings prices are pulled from{' '}
+          <Link href='https://blockscout.com/xdai/mainnet/api/v1/gas-price-oracle'>an oracle</Link>{' '}
+          and are capped at 15 gwei.
+          <Spacer height={8} />
+          <MultiSelectSetting
+            uiManager={uiManager}
+            setting={Setting.GasFeeGwei}
+            values={[
+              '1',
+              '2',
+              '5',
+              '10',
+              '20',
+              '40',
+              AutoGasSetting.Slow,
+              AutoGasSetting.Average,
+              AutoGasSetting.Fast,
+            ]}
+            labels={[
+              '1 gwei (default)',
+              '2 gwei (faster)',
+              '5 gwei (turbo)',
+              '10 gwei (mega turbo)',
+              '20 gwei (need4speed)',
+              '40 gwei (gigafast)',
+              `slow auto (~${gasPrices.slow} gwei)`,
+              `average auto (~${gasPrices.average} gwei)`,
+              `fast auto (~${gasPrices.fast} gwei)`,
+            ]}
+            style={{
+              width: '250px',
+            }}
+          />
+        </Section>
+
+        <Section>
+          <SectionHeader>Import and Export Map Data</SectionHeader>
           <em>
             <Red>WARNING:</Red> Maps from others could be altered and are not guaranteed to be
             correct!
           </em>
           <Spacer height={8} />
-          <Btn wide onClick={onExportMap}>
-            Copy Map to Clipboard
-          </Btn>
-          <Spacer height={8} />
-          <Btn wide onClick={onImportMap}>
-            Import Map from Clipboard
-          </Btn>
-          <Spacer height={16} />
-          You can also import a map by pasting from your clipboard into the text input below, and
-          clicking the import button below it.
-          <Spacer height={8} />
+
           <Input
             wide
             value={importMapByTextBoxValue}
@@ -276,14 +307,26 @@ export function SettingsPane({
             }
           />
           <Spacer height={8} />
+
           <Btn
             wide
             onClick={onImportMapFromTextBox}
             disabled={importMapByTextBoxValue.length === 0}
           >
-            Import
+            Import Map From Above
           </Btn>
           <Spacer height={8} />
+
+          <Btn wide onClick={onExportMap}>
+            Copy Map to Clipboard
+          </Btn>
+          <Spacer height={8} />
+
+          <Btn wide onClick={onImportMap}>
+            Import Map from Clipboard
+          </Btn>
+          <Spacer height={8} />
+
           <Green>{success}</Green>
           <Red>{failure}</Red>
         </Section>
@@ -324,14 +367,17 @@ export function SettingsPane({
         </Section>
 
         <Section>
-          <SectionHeader>Manage other settings.</SectionHeader>
-          <div>Show notifications for MOVE</div>
+          <SectionHeader>Show notifications for MOVE</SectionHeader>
           <Spacer height={8} />
           <BooleanSetting
             uiManager={uiManager}
             setting={Setting.MoveNotifications}
             settingDescription='toggle move notifications'
           />
+        </Section>
+        <Section>
+          <SectionHeader>Scroll speed</SectionHeader>
+          <Spacer height={8} />
           <Row>
             Scroll speed
             <Range
