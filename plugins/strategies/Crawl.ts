@@ -1,7 +1,7 @@
 import GameManager from '@df/GameManager'
 import GameUIManager from '@df/GameUIManager'
 import { LocationId, Planet, PlanetLevel, PlanetType } from "@darkforest_eth/types";
-import { getBestMove, getEnergyNeeded, getPossibleMoves, hasIncomingMove, isUnowned, onlyIfMinEnergy, planetName } from 'plugins/utils';
+import { getBestMove, getEnergyNeeded, hasIncomingMove, isUnowned, planetName, planetWillHaveMinEnergyAfterMove } from 'plugins/utils';
 import { moveSyntheticComments } from 'typescript';
 // import { isUnowned } from 'utils/utils';
 // import { planetName, PlanetTypes } from './CM-utils'
@@ -27,19 +27,23 @@ export function capturePlanets(config: config)
 
   const from = df.getMyPlanets()
     .filter(p => p.planetLevel <= config.maxSourceLevel)
+    // @todo only planets?
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
   // Calculate moves required to take and use the first one
-  const bestMoves = to.map(to => getBestMove(to, from, config.targetEnergy))
+  // @todo This will get the best possible move but might be skipped if the
+  // planet doesn't have enough energy to make it - should we try the
+  // next best move - or wait until the best move is possible?
+  const movesToMake = to.map(to => getBestMove(to, from, config.targetEnergy))
 
-  // @todo sort by smallest energy
+  movesToMake.sort((a, b) => a.energy - b.energy)
 
-  for (const move of movesToMake) {
-    // Filter out moves which will drain the source too much
-    const movesToMake = bestMoves.filter(m => onlyIfMinEnergy(m, config.minEnergyLeft))
-    console.log(`CAPTURING ${planetName(move.to)} (${move.to.locationId}) FROM ${planetName(move.from)} WITH ${move.energy}`)
-    // df.move(move.from.locationId, move.to.locationId, move.energy, 0);
-  }
+  const moves = movesToMake.map(move => {
+    if (planetWillHaveMinEnergyAfterMove(move, config.minEnergyLeft)) {
+      console.log(`CAPTURING ${planetName(move.to)} (${move.to.locationId}) FROM ${planetName(move.from)} WITH ${move.energy}`)
+      return df.move(move.from.locationId, move.to.locationId, move.energy, 0);
+    }
+  })
 
-  return movesToMake
+  return moves
 }

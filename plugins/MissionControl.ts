@@ -164,22 +164,27 @@ import { Header, Sub, Title } from './components/Text'
 import { PlanetLink } from './components/PlanetLink'
 import { capturePlanets } from './strategies/Crawl'
 
-function crawl() {
+function crawl(selectedPlanet: Planet) {
   capturePlanets({
+    fromId: selectedPlanet?.locationId,
     minCaptureLevel: 3,
     maxSourceLevel: 9,
     minEnergyLeft: 37.5,
-    planetType: PlanetTypes.PLANET,
+    planetType: PlanetTypes.ASTEROID,
     targetEnergy: 15
   })
 }
 
-function PlanetsWithEnergy({ planets }: { planets: Planet[] })
+interface PlanetsWithEnergyProps {
+  planets: Planet[],
+  selectedPlanet: Planet,
+}
+function PlanetsWithEnergy(props: PlanetsWithEnergyProps)
 {
   const headers = ['Planet Name', 'Level', 'Energy'];
   const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
-  const rows = planets
+  const rows = props.planets
     .filter(p => p.planetLevel >= 4)
     .filter(p => ! isAsteroid(p))
     .filter(p => ! hasPendingMove(p))
@@ -194,7 +199,7 @@ function PlanetsWithEnergy({ planets }: { planets: Planet[] })
 
   return html`<div>
   <${Header}>Planets with > 75% Energy</${Header}>
-  <button onClick=${crawl}>Crawl</button>
+  <button onClick=${() => crawl(props.selectedPlanet)}>Crawl</button>
   <${Table}
     rows=${rows}
     headers=${headers}
@@ -261,7 +266,7 @@ function App() {
 
   return html`
     <div>
-      <${PlanetsWithEnergy} planets=${myPlanets} />
+      <${PlanetsWithEnergy} planets=${myPlanets} selectedPlanet=${selectedPlanet} />
       <br />
       <hr />
       <br />

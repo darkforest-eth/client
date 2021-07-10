@@ -84,15 +84,10 @@ export function getBestMove(to: Planet, from: Planet[], targetEnergy: number): M
 
   const movesByEnergy = moves.sort((a, b) => a.energy - b.energy)
 
-  console.log({
-    to: planetName(to),
-    moves
-  })
-
   return movesByEnergy[0]
 }
 
-export function onlyIfMinEnergy(move: Move, minEnergy: number) {
+export function planetWillHaveMinEnergyAfterMove(move: Move, minEnergy: number) {
   const energyPending = move.from.unconfirmedDepartures.reduce((total, m) => total + m.forces, 0)
   const remainingAfterMove = move.from.energy - energyPending - move.energy
   const percentAfterMove = remainingAfterMove / move.from.energyCap * 100
