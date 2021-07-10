@@ -25,7 +25,7 @@ import {
   canStatUpgrade,
   canPlanetUpgrade,
 } from 'https://plugins.zkga.me/utils/utils.js';
-import { energy, getAllArtifacts, hasPendingMove, isAsteroid } from './utils'
+import { energy, getAllArtifacts, hasPendingMove, isAsteroid, PlanetTypes } from './utils'
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -164,19 +164,14 @@ import { Header, Sub, Title } from './components/Text'
 import { PlanetLink } from './components/PlanetLink'
 import { capturePlanets } from './strategies/Crawl'
 
-const TableContainer = {
-  maxHeight: '300px',
-  overflowYy: 'scroll',
-};
-
 function crawl() {
-  capturePlanets(
-    null, // all planets
-    0,
-    9,
-    37.5,
-    1
-  )
+  capturePlanets({
+    minCaptureLevel: 3,
+    maxSourceLevel: 9,
+    minEnergyLeft: 37.5,
+    planetType: PlanetTypes.PLANET,
+    targetEnergy: 15
+  })
 }
 
 function PlanetsWithEnergy({ planets }: { planets: Planet[] })
@@ -185,7 +180,7 @@ function PlanetsWithEnergy({ planets }: { planets: Planet[] })
   const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
   const rows = planets
-    .filter(p => p.planetLevel >= 0)
+    .filter(p => p.planetLevel >= 4)
     .filter(p => ! isAsteroid(p))
     .filter(p => ! hasPendingMove(p))
     .filter(p => energy(p) > 75)
@@ -197,7 +192,7 @@ function PlanetsWithEnergy({ planets }: { planets: Planet[] })
     (planet: Planet) => html`<${Sub}>${energy(planet)}%</${Sub}>`,
   ];
 
-  return html`<div style=${TableContainer}>
+  return html`<div>
   <${Header}>Planets with > 75% Energy</${Header}>
   <button onClick=${crawl}>Crawl</button>
   <${Table}
@@ -215,7 +210,7 @@ function FullSilver({ planets }: { planets: Planet[] })
   const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
   const rows = planets
-    .filter(p => p.planetLevel >= 0)
+    .filter(p => p.planetLevel >= 4)
     .filter(p => isAsteroid(p))
     .filter(p => ! hasPendingMove(p))
     .filter(p => p.silver == p.silverCap)
@@ -227,7 +222,7 @@ function FullSilver({ planets }: { planets: Planet[] })
     (planet: Planet) => html`<${Sub}>${planet.silverCap / 1000}</${Sub}>`,
   ];
 
-  return html`<div style=${TableContainer}>
+  return html`<div>
   <${Header}>Full Silver</${Header}>
   <button>Rip & Withdraw</button>
   <${Table}

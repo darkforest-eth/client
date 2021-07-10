@@ -2,16 +2,9 @@ import React, { CSSProperties } from 'react';
 import { h, Component } from 'preact'
 import styled from 'styled-components';
 
-const TableElement = styled.table`
-  overflow-y: scroll;
-  scrollbar-width: initial;
-  width: 100%;
-`;
-
-const ScrollableBody = styled.tbody`
-  width: 100%;
-  max-height: 400px;
-`;
+const TableStyle = {
+  width: '100%'
+}
 
 const AlignmentOptions: { [key: string]: CSSProperties['textAlign'] } = {
   r: 'right',
@@ -36,7 +29,7 @@ export class Table<T> extends Component
   }, state: any) {
     console.log(headers)
     return (
-      <TableElement>
+      <table style={TableStyle}>
         <thead style={headerStyle}>
           <tr>
             {headers.map((txt: string, colIdx: number) => (
@@ -50,7 +43,7 @@ export class Table<T> extends Component
           </tr>
         </thead>
 
-        <ScrollableBody>
+        <tbody>
           {rows.map((row: T, rowIdx: number) => (
             <tr key={rowIdx}>
               {columns.map((column, colIdx) => (
@@ -63,8 +56,8 @@ export class Table<T> extends Component
               ))}
             </tr>
           ))}
-        </ScrollableBody>
-      </TableElement>
+        </tbody>
+      </table>
     )
   }
 }
