@@ -1,7 +1,7 @@
 import GameManager from '@df/GameManager'
 import GameUIManager from '@df/GameUIManager'
 import { LocationId, Planet, PlanetLevel, PlanetType } from "@darkforest_eth/types";
-import { getBestMove, getEnergyNeeded, hasIncomingMove, isUnowned, planetName, planetWillHaveMinEnergyAfterMove } from 'plugins/utils';
+import { getEnergyNeeded, hasIncomingMove, isUnowned, Move, planetName, planetWillHaveMinEnergyAfterMove } from 'plugins/utils';
 import { moveSyntheticComments } from 'typescript';
 // import { isUnowned } from 'utils/utils';
 // import { planetName, PlanetTypes } from './CM-utils'

@@ -19,6 +19,7 @@
     "bad-words": "^3.0.4",
     "big-integer": "^1.6.48",
     "canvas-confetti": "^1.4.0",
+    "date-fns": "^2.22.1",
     "email-validator": "^2.0.4",
     "emoji-picker-react": "^3.4.8",
     "ethers": "^5.0.7",

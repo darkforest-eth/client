@@ -1,4 +1,5 @@
 import { Artifact, ArtifactId, Planet, PlanetType, QueuedArrival, UnconfirmedMove, UpgradeBranchName } from "@darkforest_eth/types"
+import { addHours, fromUnixTime, isAfter } from "date-fns"
 import { PlanetTypeWeightsBySpaceType } from "../src/_types/darkforest/api/ContractsAPITypes"
 
 export const PlanetTypes: { [ key:string]: PlanetType } = {
@@ -7,6 +8,36 @@ export const PlanetTypes: { [ key:string]: PlanetType } = {
   FOUNDRY: 2,
   RIP: 3,
   QUASAR: 4
+}
+
+export const ArtifactTypes = {
+  Unknown: 0,
+  Monolith: 1,
+  Colossus: 2,
+  Spaceship: 3,
+  Pyramid: 4,
+  Wormhole: 5,
+  PlanetaryShield: 6,
+  PhotoidCannon: 7,
+  BloomFilter: 8,
+  BlackDomain: 9,
+  MIN: 1,
+  MAX: 9
+}
+
+export const ArtifactRarities = {
+  Unknown: 0,
+  Common: 1,
+  Rare: 2,
+  Epic: 3,
+  Legendary: 4,
+  Mythic: 5,
+  MIN: 1,
+  MAX: 5
+}
+
+export function isArtifact(pet: Planet | Artifact): pet is Artifact {
+  return (pet as Artifact).artifactType !== undefined;
 }
 
 export function isAsteroid(p: Planet) {
@@ -26,9 +57,9 @@ export function energy(p: Planet) {
  * all planets and gathers artifacts then combines them with
  * the ones from the inventory to be we don't miss any.
  */
-export function getAllArtifacts(myPlanets: Planet[])
+export function getAllArtifacts()
 {
-  const artifactsFromPlanets = myPlanets.flatMap(p => {
+  const artifactsFromPlanets = df.getMyPlanets().flatMap(p => {
     const artifacts = df.getArtifactsWithIds(p.heldArtifactIds)
 
     // fix bug where onPlanetId isn't set?
@@ -42,7 +73,7 @@ export function getAllArtifacts(myPlanets: Planet[])
   const artifactsFromInventory = df.getMyArtifacts().filter(a => ! a.onPlanetId)
   const artifacts = artifactsFromPlanets.concat(artifactsFromInventory)
 
-  return artifacts
+  return artifactsFromPlanets
 }
 
 const emptyAddress = "0x0000000000000000000000000000000000000000";
@@ -104,6 +135,8 @@ export function getEnergyNeeded(from: Planet, to: Planet, targetEnergy: number) 
 
   const energyNeeded = Math.ceil(df.getEnergyNeededForMove(from.locationId, to.locationId, energyArriving));
 
+  console.log(`${planetName(from)} to ${planetName(to)} will take ${energyNeeded}.`)
+
   return energyNeeded
 }
 
@@ -162,4 +195,28 @@ export function getPlanetRankForBranch(planet: Planet, branch: UpgradeBranchName
 
 export function canPlanetUpgrade(planet: Planet) {
   return df.entityStore.constructor.planetCanUpgrade(planet)
+}
+
+export function isReachable(p: Planet) {
+  return df.getMyPlanets().some(myPlanet => {
+    const dist = df.getDist(p.locationId, myPlanet.locationId)
+    const reachable = dist < df.getMaxMoveDist(myPlanet.locationId, 100)
+
+    reachable && console.log(`${planetName(p)} reachable by ${planetName(myPlanet,)} with 100% energy`)
+
+    return reachable
+  })
+}
+
+export function isActivated(a: Artifact) {
+  return a.lastActivated > a.lastDeactivated
+}
+
+/**
+ * @todo Add 48 hours for wormholes
+ */
+export function canBeActivated(a: Artifact) {
+  const lastDeactivated = fromUnixTime(a.lastDeactivated)
+  const canBeActivatedAt = addHours(lastDeactivated, 24)
+  return isAfter(new Date, canBeActivatedAt)
 }
