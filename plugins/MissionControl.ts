@@ -13,178 +13,37 @@ import { useState, useLayoutEffect } from 'preact/hooks'
 import GameManager from '@df/GameManager'
 import GameUIManager from '@df/GameUIManager'
 
-import {
-  Defense,
-  Range,
-  Speed,
-} from 'https://plugins.zkga.me/game/Icons.js';
+import { availableEnergy, availableSilver, canPlanetUpgrade, blocksLeft, blocksLeftToProspectExpiration, energy, enoughEnergyToProspect, getAllArtifacts, hasPendingMove, isAsteroid, isFindable, isProspectable, planetName, PlanetTypes, getPlanetRank } from './utils'
 
-import {
-  UpgradeBranchName,
-  SpaceType,
-  canStatUpgrade,
-  canPlanetUpgrade,
-} from 'https://plugins.zkga.me/utils/utils.js';
-import { energy, getAllArtifacts, hasPendingMove, isAsteroid, PlanetTypes } from './utils'
+import { Table } from './Components/Table';
+import { Header, Sub, Title } from './components/Text'
+import { PlanetLink } from './components/PlanetLink'
+import { capturePlanets } from './strategies/Crawl'
+import { distributeSilver } from './strategies/Distribute'
+import { withdrawSilver } from './strategies/Withdraw'
+import { upgrade } from './strategies/Upgrade'
 
 declare const df: GameManager
 declare const ui: GameUIManager
 
 const html = htm.bind(h)
 
-function upgrade(planet, branch) {
-  if (planet && canPlanetUpgrade(planet) && canStatUpgrade(planet, branch)) {
-    df.upgrade(planet.locationId, branch)
-  }
+const buttonGridStyle = {
+  display: 'grid',
+  gridAutoFlow: 'column',
+  gridColumnGap: '10px'
 }
 
-function UpgradeButton({ Icon, planet, branch }) {
-  let isEnabled = canPlanetUpgrade(planet) && canStatUpgrade(planet, branch);
-
-  let button = {
-    opacity: isEnabled ? '1' : '0.5',
-  };
-
-  let label = {
-    marginLeft: '5px',
-  };
-
-  let [iconColor, setIconColor] = useState('white');
-
-  function colorBlack() {
-    setIconColor('black');
-  }
-
-  function colorWhite() {
-    setIconColor('white');
-  }
-
-  function onClick() {
-    upgrade(planet, branch);
-  }
-
-  return html`
-    <button style=${button} disabled=${!isEnabled} onClick=${onClick} onMouseOver=${colorBlack} onMouseOut=${colorWhite}>
-      <${Icon} pathStyle=${{ fill: iconColor }} />
-      <span style=${label}>Lvl ${planet.upgradeState[branch]}</span>
-    </button>
-  `;
-}
-
-function UpgradeAllButton({ Icon, branch, onFeedback }) {
-  let button = {
-    paddingLeft: '10px',
-    paddingRight: '10px',
-  };
-
-  let [iconColor, setIconColor] = useState('white');
-
-  function colorBlack() {
-    setIconColor('black');
-  }
-
-  function colorWhite() {
-    setIconColor('white');
-  }
-
-  function onClick() {
-    let myPlanets = df.getMyPlanets()
-      .filter(planet => canPlanetUpgrade(planet) && canStatUpgrade(planet, branch));
-    onFeedback(`Queueing ${myPlanets.length} planet upgrades.`);
-
-    if (myPlanets.length === 0) {
-      onFeedback('No planet upgrades to queue.');
-      return;
-    }
-
-    eachLimit(myPlanets, 1, (planet, cb) => {
-      setTimeout(() => {
-        upgrade(planet, branch);
-        cb();
-      }, 250);
-    }, () => {
-      onFeedback('Planet upgrades queued!');
-    });
-  }
-
-  return html`
-    <button style=${button} onClick=${onClick} onMouseOver=${colorBlack} onMouseOut=${colorWhite}>
-      <${Icon} pathStyle=${{ fill: iconColor }} />
-    </button>
-  `;
-}
-
-function UpgradeSelectedPlanet({ planet }) {
-  let wrapper = {
-    display: 'flex',
-    justifyContent: 'space-between',
-  };
-
-  if (!planet) {
-    return html`
-      <div style=${wrapper}>
-        No planet selected.
-      </div>
-    `;
-  }
-  return html`
-    <div style=${wrapper}>
-      <span>Selected:</span>
-      <${UpgradeButton} Icon=${Defense} planet=${planet} branch=${UpgradeBranchName.Defense} />
-      <${UpgradeButton} Icon=${Range} planet=${planet} branch=${UpgradeBranchName.Range} />
-      <${UpgradeButton} Icon=${Speed} planet=${planet} branch=${UpgradeBranchName.Speed} />
-    </div>
-  `;
-}
-
-function UpgradeAllPlanets() {
-  let wrapper = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '20px',
-  };
-
-  let [feedback, setFeedback] = useState(null);
-
-  return html`
-    <div style=${wrapper}>
-      <span>All planets:</span>
-      <${UpgradeAllButton} Icon=${Defense} branch=${UpgradeBranchName.Defense} onFeedback=${setFeedback} />
-      <${UpgradeAllButton} Icon=${Range} branch=${UpgradeBranchName.Range} onFeedback=${setFeedback} />
-      <${UpgradeAllButton} Icon=${Speed} branch=${UpgradeBranchName.Speed} onFeedback=${setFeedback} />
-    </div>
-    <div>
-      ${feedback}
-    </div>
-  `;
-}
-
-import { Table } from './Components/Table';
-import { Header, Sub, Title } from './components/Text'
-import { PlanetLink } from './components/PlanetLink'
-import { capturePlanets } from './strategies/Crawl'
-
-function crawl(selectedPlanet: Planet) {
-  capturePlanets({
-    fromId: selectedPlanet?.locationId,
-    minCaptureLevel: 3,
-    maxSourceLevel: 9,
-    minEnergyLeft: 37.5,
-    planetType: PlanetTypes.ASTEROID,
-    targetEnergy: 15
-  })
-}
-
-interface PlanetsWithEnergyProps {
-  planets: Planet[],
+interface SelectedPlanetProp {
   selectedPlanet: Planet,
 }
-function PlanetsWithEnergy(props: PlanetsWithEnergyProps)
+
+function PlanetsWithEnergy(props: SelectedPlanetProp)
 {
   const headers = ['Planet Name', 'Level', 'Energy'];
   const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
-  const rows = props.planets
+  const rows = df.getMyPlanets()
     .filter(p => p.planetLevel >= 4)
     .filter(p => ! isAsteroid(p))
     .filter(p => ! hasPendingMove(p))
@@ -197,9 +56,29 @@ function PlanetsWithEnergy(props: PlanetsWithEnergyProps)
     (planet: Planet) => html`<${Sub}>${energy(planet)}%</${Sub}>`,
   ];
 
+  function onCrawlClick() {
+    capturePlanets({
+      fromId: props.selectedPlanet?.locationId,
+      toMinLevel: 3,
+      fromMaxLevel: 9,
+      fromMinEnergyLeftPercent: 37.5,
+      toPlanetType: PlanetTypes.FOUNDRY,
+      toTargetEnergy: 95.5
+    })
+
+    capturePlanets({
+      fromId: props.selectedPlanet?.locationId,
+      toMinLevel: 3,
+      fromMaxLevel: 9,
+      fromMinEnergyLeftPercent: 37.5,
+      toPlanetType: PlanetTypes.ASTEROID,
+      toTargetEnergy: 15
+    })
+  }
+
   return html`<div>
   <${Header}>Planets with > 75% Energy</${Header}>
-  <button onClick=${() => crawl(props.selectedPlanet)}>Crawl</button>
+  <button onClick=${onCrawlClick}>Crawl</button>
   <${Table}
     rows=${rows}
     headers=${headers}
@@ -209,27 +88,136 @@ function PlanetsWithEnergy(props: PlanetsWithEnergyProps)
 </div>`
 }
 
-function FullSilver({ planets }: { planets: Planet[] })
+function FullSilver(props: SelectedPlanetProp)
 {
-  const headers = ['Planet Name', 'Level', 'Energy'];
+  const headers = ['Planet Name', 'Level', 'Silver'];
   const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
-  const rows = planets
+  const rows = df.getMyPlanets()
     .filter(p => p.planetLevel >= 4)
-    .filter(p => isAsteroid(p))
-    .filter(p => ! hasPendingMove(p))
-    .filter(p => p.silver == p.silverCap)
+    .filter(p => availableSilver(p) == p.silverCap)
     .sort((a, b) => b.silverCap - a.silverCap)
 
   const columns = [
     (planet: Planet) => html`<${PlanetLink} planet=${planet}>${df.getProcgenUtils().getPlanetName(planet)}</${PlanetLink}>`,
     (planet: Planet) => html`<${Sub}>${planet.planetLevel}</${Sub}>`,
-    (planet: Planet) => html`<${Sub}>${planet.silverCap / 1000}</${Sub}>`,
+    (planet: Planet) => html`<${Sub}>${planet.silverCap / 1000}K</${Sub}>`,
   ];
+
+  function onDistributeClick() {
+    distributeSilver({
+      fromId: props.selectedPlanet?.locationId,
+      fromMaxLevel: 4,
+      toMinLevel: 4,
+      toPlanetType: PlanetTypes.PLANET,
+    })
+
+    distributeSilver({
+      fromId: props.selectedPlanet?.locationId,
+      fromMaxLevel: 4,
+      toMinLevel: 2,
+      toPlanetType: PlanetTypes.RIP,
+    })
+  }
+
+  function onWithdrawClick() {
+    withdrawSilver({
+      fromId: props.selectedPlanet?.locationId
+    })
+  }
 
   return html`<div>
   <${Header}>Full Silver</${Header}>
-  <button>Rip & Withdraw</button>
+  <div style=${buttonGridStyle}>
+    <button onClick=${onDistributeClick}>Rip</button>
+    <button onClick=${onWithdrawClick}>Withdraw</button>
+  </div>
+  <${Table}
+    rows=${rows}
+    headers=${headers}
+    columns=${columns}
+    alignments=${alignments}
+  />
+</div>`
+}
+
+/**
+ * @todo Can't test this since round was over.
+ */
+function ProspectOrFind()
+{
+  const headers = ['Planet Name', 'Level', 'Blocks Left'];
+  const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
+
+  const currentBlockNumber = df.contractsAPI.ethConnection.blockNumber;
+
+  const rows = df.getMyPlanets()
+    .filter(enoughEnergyToProspect)
+    .filter(p => isProspectable(p) || isFindable(p, currentBlockNumber))
+    .sort((a, b) => b.planetLevel - a.planetLevel)
+
+  const columns = [
+    (planet: Planet) => html`<${PlanetLink} planet=${planet}>${df.getProcgenUtils().getPlanetName(planet)}</${PlanetLink}>`,
+    (planet: Planet) => html`<${Sub}>${planet.planetLevel}</${Sub}>`,
+    (planet: Planet) => html`<${Sub}>${planet.prospectedBlockNumber ? blocksLeft(planet) : '-'}</${Sub}>`,
+  ];
+
+  function onProspectAndFindClick() {
+    distributeSilver({
+      fromId: props.selectedPlanet?.locationId,
+      fromMaxLevel: 4,
+      toMinLevel: 4,
+      toPlanetType: PlanetTypes.PLANET,
+    })
+
+    distributeSilver({
+      fromId: props.selectedPlanet?.locationId,
+      fromMaxLevel: 4,
+      toMinLevel: 2,
+      toPlanetType: PlanetTypes.RIP,
+    })
+  }
+
+  return html`<div>
+  <${Header}>Prospect or Find</${Header}>
+  <div style=${buttonGridStyle}>
+    <button onClick=${onProspectAndFindClick}>Prospect & Find</button>
+  </div>
+  <${Table}
+    rows=${rows}
+    headers=${headers}
+    columns=${columns}
+    alignments=${alignments}
+  />
+</div>`
+}
+
+function Upgradable(props: SelectedPlanetProp)
+{
+  const headers = ['Planet Name', 'Level', 'Rank'];
+  const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
+
+  const rows = df.getMyPlanets()
+    .filter(canPlanetUpgrade)
+    .sort((a, b) => b.planetLevel - a.planetLevel)
+
+  const columns = [
+    (planet: Planet) => html`<${PlanetLink} planet=${planet}>${df.getProcgenUtils().getPlanetName(planet)}</${PlanetLink}>`,
+    (planet: Planet) => html`<${Sub}>${planet.planetLevel}</${Sub}>`,
+    (planet: Planet) => html`<${Sub}>${getPlanetRank(planet)}</${Sub}>`,
+  ];
+
+  function onUpgradeClick() {
+    upgrade({
+      fromId: props.selectedPlanet?.locationId,
+    })
+  }
+
+  return html`<div>
+  <${Header}>Upgradable</${Header}>
+  <div style=${buttonGridStyle}>
+    <button onClick=${onUpgradeClick}>Upgrade</button>
+  </div>
   <${Table}
     rows=${rows}
     headers=${headers}
@@ -266,18 +254,22 @@ function App() {
 
   return html`
     <div>
-      <${PlanetsWithEnergy} planets=${myPlanets} selectedPlanet=${selectedPlanet} />
+      Selected: ${selectedPlanet ? planetName(selectedPlanet) : '- none -'}
+      <!--
+      <${PlanetsWithEnergy} selectedPlanet=${selectedPlanet} />
       <br />
       <hr />
       <br />
-      <${FullSilver} planets=${myPlanets} />
+      <${FullSilver} selectedPlanet=${selectedPlanet} />
       <br />
       <hr />
       <br />
-      <${UpgradeSelectedPlanet} planet=${selectedPlanet} />
+      <${ProspectOrFind} selectedPlanet=${selectedPlanet} />
       <br />
       <hr />
-      <${UpgradeAllPlanets} />
+      <br />
+      -->
+      <${Upgradable} selectedPlanet=${selectedPlanet} />
     </div>
   `;
 }

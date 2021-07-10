@@ -1,4 +1,4 @@
-import { Artifact, Planet, PlanetType, QueuedArrival, UnconfirmedMove } from "@darkforest_eth/types"
+import { Artifact, ArtifactId, Planet, PlanetType, QueuedArrival, UnconfirmedMove, UpgradeBranchName } from "@darkforest_eth/types"
 import { PlanetTypeWeightsBySpaceType } from "../src/_types/darkforest/api/ContractsAPITypes"
 
 export const PlanetTypes: { [ key:string]: PlanetType } = {
@@ -49,6 +49,10 @@ const emptyAddress = "0x0000000000000000000000000000000000000000";
 
 export const isUnowned = (planet: Planet) => planet.owner === emptyAddress;
 
+export function isMine(planet: Planet) {
+  return planet.owner === df.getAccount()
+}
+
 export function planetName(p: Planet) {
   return df.getProcgenUtils().getPlanetName(p)
 }
@@ -71,36 +75,91 @@ export interface Move {
   from: Planet,
   to: Planet,
   energy: number,
+  silver?: number,
+  artifact?: ArtifactId
 }
 
-export function getBestMove(to: Planet, from: Planet[], targetEnergy: number): Move {
-  const moves = from.map(from => {
-    return {
-      from,
-      to,
-      energy: getEnergyNeeded(from, to, targetEnergy)
-    }
-  })
+export function getPendingEnergy(p: Planet) {
+  return p.unconfirmedDepartures.reduce((total, m) => total + m.forces, 0)
+}
 
-  const movesByEnergy = moves.sort((a, b) => a.energy - b.energy)
-
-  return movesByEnergy[0]
+export function getPendingSilver(p: Planet) {
+  return p.unconfirmedDepartures.reduce((total, m) => total + m.silver, 0)
 }
 
 export function planetWillHaveMinEnergyAfterMove(move: Move, minEnergy: number) {
-  const energyPending = move.from.unconfirmedDepartures.reduce((total, m) => total + m.forces, 0)
-  const remainingAfterMove = move.from.energy - energyPending - move.energy
+  const remainingAfterMove = availableEnergy(move.from) - move.energy
   const percentAfterMove = remainingAfterMove / move.from.energyCap * 100
-
-  console.log(`Checking capture of ${planetName(move.to)} from ${planetName(move.from)} with ${move.energy} - ${percentAfterMove}% after move: ${percentAfterMove > minEnergy}`)
 
   return percentAfterMove > minEnergy
 }
 
+export function planetCanAcceptMove(move: Move) {
+  return getIncomingMoves(move.to).length < 5
+}
+
 export function getEnergyNeeded(from: Planet, to: Planet, targetEnergy: number) {
-  const energyArriving = (to.energyCap * targetEnergy / 100) + (to.energy * (to.defense / 100));
+  const energyToTake = isMine(to) ? 0 : to.energy * (to.defense / 100)
+  const energyArriving = (to.energyCap * targetEnergy / 100) + energyToTake;
 
   const energyNeeded = Math.ceil(df.getEnergyNeededForMove(from.locationId, to.locationId, energyArriving));
 
   return energyNeeded
+}
+
+export function getPlanetRank(planet: Planet) {
+  return planet.upgradeState.reduce((a, b) => a + b);
+}
+
+export function availableEnergy(planet: Planet) {
+  return planet.energy - getPendingEnergy(planet)
+}
+
+export function availableSilver(planet: Planet) {
+  return planet.silver - getPendingSilver(planet)
+}
+
+export function isFindable(planet: Planet, currentBlockNumber: number) {
+  return (
+    currentBlockNumber !== undefined &&
+    df.isPlanetMineable(planet) &&
+    planet.prospectedBlockNumber !== undefined &&
+    !planet.hasTriedFindingArtifact &&
+    !planet.unconfirmedFindArtifact &&
+    !prospectExpired(planet.prospectedBlockNumber)
+  );
+}
+
+export function isProspectable(planet: Planet) {
+  return df.isPlanetMineable(planet) && planet.prospectedBlockNumber === undefined && !planet.unconfirmedProspectPlanet;
+}
+
+export function enoughEnergyToProspect(p: Planet) {
+  return energy(p) >= 95.5;
+}
+
+export function blocksLeftToProspectExpiration(prospectedBlockNumber: number | undefined) {
+  const currentBlockNumber = df.contractsAPI.ethConnection.blockNumber
+
+  return (prospectedBlockNumber || 0) + 255 - currentBlockNumber;
+}
+
+export function prospectExpired(prospectedBlockNumber: number) {
+  return blocksLeftToProspectExpiration(prospectedBlockNumber) <= 0;
+}
+
+export function canHaveArtifact(planet: Planet) {
+  return df.isPlanetMineable(planet) && !planet.hasTriedFindingArtifact
+}
+
+export function blocksLeft(p: Planet) {
+  return blocksLeftToProspectExpiration(p.prospectedBlockNumber)
+}
+
+export function getPlanetRankForBranch(planet: Planet, branch: UpgradeBranchName) {
+  return planet.upgradeState.reduce((a, b) => a + b);
+}
+
+export function canPlanetUpgrade(planet: Planet) {
+  return df.entityStore.constructor.planetCanUpgrade(planet)
 }

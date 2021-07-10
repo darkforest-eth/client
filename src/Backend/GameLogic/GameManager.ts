@@ -1093,7 +1093,7 @@ class GameManager extends EventEmitter {
       }
     );
 
-    this.minerManager.startExplore();
+    // this.minerManager.startExplore();
   }
 
   /**

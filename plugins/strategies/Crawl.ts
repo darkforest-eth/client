@@ -9,24 +9,38 @@ import { moveSyntheticComments } from 'typescript';
 declare const df: GameManager
 declare const ui: GameUIManager
 
+export function getBestMove(to: Planet, from: Planet[], targetEnergy: number): Move {
+  const moves = from.map(from => {
+    return {
+      from,
+      to,
+      energy: getEnergyNeeded(from, to, targetEnergy)
+    }
+  })
+
+  const movesByEnergy = moves.sort((a, b) => a.energy - b.energy)
+
+  return movesByEnergy[0]
+}
+
 interface config {
   fromId?: LocationId,
-  minCaptureLevel: PlanetLevel,
-  maxSourceLevel: PlanetLevel,
-  minEnergyLeft: number,
-  planetType: PlanetType,
-  targetEnergy: number,
+  fromMaxLevel: PlanetLevel,
+  fromMinEnergyLeftPercent: number,
+  toMinLevel: PlanetLevel,
+  toPlanetType: PlanetType,
+  toTargetEnergy: number,
 }
 export function capturePlanets(config: config)
 {
   const to = Array.from(df.getAllPlanets()).filter(p => p.location)
     .filter(isUnowned)
     .filter(p => ! hasIncomingMove(p))
-    .filter(p => p.planetLevel >= config.minCaptureLevel)
-    .filter(p => p.planetType === config.planetType)
+    .filter(p => p.planetLevel >= config.toMinLevel)
+    .filter(p => p.planetType === config.toPlanetType)
 
   const from = df.getMyPlanets()
-    .filter(p => p.planetLevel <= config.maxSourceLevel)
+    .filter(p => p.planetLevel <= config.fromMaxLevel)
     // @todo only planets?
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
@@ -34,12 +48,13 @@ export function capturePlanets(config: config)
   // @todo This will get the best possible move but might be skipped if the
   // planet doesn't have enough energy to make it - should we try the
   // next best move - or wait until the best move is possible?
-  const movesToMake = to.map(to => getBestMove(to, from, config.targetEnergy))
+  const movesToMake = to.map(to => getBestMove(to, from, config.toTargetEnergy))
 
+  // Make moves with the smallest amount of energy first - this will make the most moves before running out
   movesToMake.sort((a, b) => a.energy - b.energy)
 
   const moves = movesToMake.map(move => {
-    if (planetWillHaveMinEnergyAfterMove(move, config.minEnergyLeft)) {
+    if (planetWillHaveMinEnergyAfterMove(move, config.fromMinEnergyLeftPercent)) {
       console.log(`CAPTURING ${planetName(move.to)} (${move.to.locationId}) FROM ${planetName(move.from)} WITH ${move.energy}`)
       return df.move(move.from.locationId, move.to.locationId, move.energy, 0);
     }
