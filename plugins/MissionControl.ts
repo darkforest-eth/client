@@ -323,6 +323,70 @@ function Cannons(props: SelectedPlanetProp)
 </div>`
 }
 
+function UsefulArtifacts(props: SelectedPlanetProp)
+{
+  const headers = ['Rarity', 'Type', 'Planet Name', 'Planet Level', 'Status'];
+  const alignments: Array<'r' | 'c' | 'l'> = ['l', 'l', 'l', 'r', 'r'];
+
+  const rows = getAllArtifacts()
+    .filter(a => a && ! isActivated(a))
+    .filter(a => a && a.rarity > ArtifactRarities.Common)
+    .filter(a => [ArtifactTypes.Wormhole, ArtifactTypes.BloomFilter].includes(a.artifactType))
+    .filter(canBeActivated)
+    .sort((a, b) => b!.rarity - a!.rarity)
+
+  const columns = [
+    (a: Artifact) => html`<${Sub}>${Object.keys(ArtifactRarities)[a.rarity]}</${Sub}>`,
+    (a: Artifact) => html`<${Sub}>${Object.keys(ArtifactTypes)[a.artifactType]}</${Sub}>`,
+    (a: Artifact) => {
+      const planet = df.getPlanetWithId(a.onPlanetId)
+
+      return html`<${PlanetLink} planet=${planet}>${df.getProcgenUtils().getPlanetName(planet)}</${PlanetLink}>`
+    },
+    (a: Artifact) => {
+      const planet = df.getPlanetWithId(a.onPlanetId)
+
+      return html`<${Sub}>${planet!.planetLevel}</${Sub}>`
+    },
+    (a: Artifact) => {
+      const status = isActivated(a)
+        ? 'ACTIVE'
+        : (canBeActivated(a) ? 'IDLE' : `WAIT`)
+
+      return html`<${Sub}>${status}</${Sub}>`
+    },
+  ];
+
+  function onDistributeClick() {
+    // send all common to p4 or wormwhole
+    // send all rare+ to wormhole
+  }
+
+  function onWithdrawClick() {
+    // withdraw any on wormhole
+  }
+
+  function onActivateClick() {
+    // activate on any planet l4+
+  }
+
+  return html`<div>
+  <${Header}>Useful Artifacts</${Header}>
+  <div style=${buttonGridStyle}>
+    <button onClick=${onDistributeClick}>Distribute</button>
+    <button onClick=${onWithdrawClick}>Withdraw</button>
+    <button onClick=${onActivateClick}>Activate</button>
+  </div>
+  <${Table}
+    rows=${rows}
+    headers=${headers}
+    columns=${columns}
+    alignments=${alignments}
+  />
+</div>`
+}
+
+
 function App() {
   console.log('Running Status Report')
 
@@ -364,8 +428,12 @@ function App() {
       <br />
       <hr />
       <br />
-      -->
       <${Cannons} selectedPlanet=${selectedPlanet} />
+      <br />
+      <hr />
+      <br />
+      -->
+      <${UsefulArtifacts} selectedPlanet=${selectedPlanet} />
     </div>
   `;
 }

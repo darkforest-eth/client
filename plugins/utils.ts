@@ -61,10 +61,11 @@ export function getAllArtifacts()
 {
   const artifactsFromPlanets = df.getMyPlanets().flatMap(p => {
     const artifacts = df.getArtifactsWithIds(p.heldArtifactIds)
+      .filter((a): a is Artifact => !!a)
 
     // fix bug where onPlanetId isn't set?
     artifacts.forEach(a => {
-      if (a && !a.onPlanetId) a.onPlanetId = p.locationId
+      if (!a.onPlanetId) a.onPlanetId = p.locationId
     })
 
     return artifacts
