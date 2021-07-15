@@ -1,9 +1,12 @@
 import {
   Artifact,
   ArtifactId,
+  artifactNameFromArtifact,
+  ArtifactRarity,
   LocatablePlanet,
   LocationId,
   Planet,
+  PlanetLevel,
 } from '@darkforest_eth/types'
 
 import { h, render } from 'preact'
@@ -18,9 +21,12 @@ import { availableEnergy, availableSilver, canPlanetUpgrade, blocksLeft, blocksL
 import { Table } from './Components/Table';
 import { Header, Sub, Title } from './components/Text'
 import { PlanetLink } from './components/PlanetLink'
+import { activateArtifacts } from './strategies/ActivateArtifacts'
 import { capturePlanets } from './strategies/Crawl'
 import { distributeSilver } from './strategies/DistributeSilver'
-import { withdrawSilver } from './strategies/Withdraw'
+import { distributeArtifacts } from './strategies/DistributeArtifacts'
+import { withdrawSilver } from './strategies/WithdrawSilver'
+import { withdrawArtifacts } from './strategies/WithdrawArtifacts'
 import { upgrade } from './strategies/Upgrade'
 import { prospectAndFind } from './strategies/ProspectAndFind'
 import { addHours, formatDistanceToNow, fromUnixTime, isAfter, isBefore, subHours } from 'date-fns'
@@ -325,8 +331,8 @@ function Cannons(props: SelectedPlanetProp)
 
 function UsefulArtifacts(props: SelectedPlanetProp)
 {
-  const headers = ['Rarity', 'Type', 'Planet Name', 'Planet Level', 'Status'];
-  const alignments: Array<'r' | 'c' | 'l'> = ['l', 'l', 'l', 'r', 'r'];
+  const headers = ['Name', 'Type', 'Planet', 'Rarity', 'Status', 'Lvl'];
+  const alignments: Array<'r' | 'c' | 'l'> = ['l', 'l', 'l', 'c', 'c', 'r'];
 
   const rows = getAllArtifacts()
     .filter(a => a && ! isActivated(a))
@@ -336,18 +342,16 @@ function UsefulArtifacts(props: SelectedPlanetProp)
     .sort((a, b) => b!.rarity - a!.rarity)
 
   const columns = [
-    (a: Artifact) => html`<${Sub}>${Object.keys(ArtifactRarities)[a.rarity]}</${Sub}>`,
+    (a: Artifact) => html`<${Sub}>${artifactNameFromArtifact(a)}</${Sub}>`,
     (a: Artifact) => html`<${Sub}>${Object.keys(ArtifactTypes)[a.artifactType]}</${Sub}>`,
     (a: Artifact) => {
       const planet = df.getPlanetWithId(a.onPlanetId)
 
+      if (! planet) return html`<${Sub}>inventory</${Sub}>`
+
       return html`<${PlanetLink} planet=${planet}>${df.getProcgenUtils().getPlanetName(planet)}</${PlanetLink}>`
     },
-    (a: Artifact) => {
-      const planet = df.getPlanetWithId(a.onPlanetId)
-
-      return html`<${Sub}>${planet!.planetLevel}</${Sub}>`
-    },
+    (a: Artifact) => html`<${Sub}>${Object.keys(ArtifactRarities)[a.rarity]}</${Sub}>`,
     (a: Artifact) => {
       const status = isActivated(a)
         ? 'ACTIVE'
@@ -355,19 +359,53 @@ function UsefulArtifacts(props: SelectedPlanetProp)
 
       return html`<${Sub}>${status}</${Sub}>`
     },
+    (a: Artifact) => {
+      const planet = df.getPlanetWithId(a.onPlanetId)
+
+      if (! planet) return html`<${Sub}>-</${Sub}>`
+
+      return html`<${Sub}>${planet.planetLevel}</${Sub}>`
+    },
   ];
 
   function onDistributeClick() {
-    // send all common to p4 or wormwhole
-    // send all rare+ to wormhole
+    distributeArtifacts({
+      fromId: props.selectedPlanet?.locationId,
+      rarity: ArtifactRarities.Common,
+      toPlanetType: PlanetTypes.PLANET,
+      toMinLevel: 4,
+    })
+
+    const rarities = [
+      // ArtifactRarities.Common,
+      ArtifactRarities.Rare,
+      ArtifactRarities.Epic,
+      ArtifactRarities.Legendary,
+      ArtifactRarities.Mythic,
+    ]
+
+    for (const level of rarities) {
+      distributeArtifacts({
+        fromId: props.selectedPlanet?.locationId,
+        rarity: level,
+        toPlanetType: PlanetTypes.RIP,
+        toMinLevel: level + 1,
+      })
+    }
   }
 
   function onWithdrawClick() {
-    // withdraw any on wormhole
+    withdrawArtifacts({
+      fromId: props.selectedPlanet?.locationId
+    })
   }
 
   function onActivateClick() {
-    // activate on any planet l4+
+    activateArtifacts({
+      fromId: props.selectedPlanet?.locationId,
+      level: 4,
+      planetType: PlanetTypes.PLANET,
+    })
   }
 
   return html`<div>

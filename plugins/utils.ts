@@ -1,4 +1,4 @@
-import { Artifact, ArtifactId, Planet, PlanetType, QueuedArrival, UnconfirmedMove, UpgradeBranchName } from "@darkforest_eth/types"
+import { Artifact, ArtifactId, ArtifactRarity, ArtifactType, Planet, PlanetType, QueuedArrival, UnconfirmedMove, UpgradeBranchName } from "@darkforest_eth/types"
 import { addHours, fromUnixTime, isAfter } from "date-fns"
 import { PlanetTypeWeightsBySpaceType } from "../src/_types/darkforest/api/ContractsAPITypes"
 
@@ -10,7 +10,7 @@ export const PlanetTypes: { [ key:string]: PlanetType } = {
   QUASAR: 4
 }
 
-export const ArtifactTypes = {
+export const ArtifactTypes: { [ key:string]: ArtifactType } = {
   Unknown: 0,
   Monolith: 1,
   Colossus: 2,
@@ -25,7 +25,7 @@ export const ArtifactTypes = {
   MAX: 9
 }
 
-export const ArtifactRarities = {
+export const ArtifactRarities: { [ key:string]: ArtifactRarity } = {
   Unknown: 0,
   Common: 1,
   Rare: 2,
@@ -65,7 +65,10 @@ export function getAllArtifacts()
 
     // fix bug where onPlanetId isn't set?
     artifacts.forEach(a => {
-      if (!a.onPlanetId) a.onPlanetId = p.locationId
+      if (!a.onPlanetId) {
+        console.log(`Fixing onPlanetId for ${p.locationId} with ${a.id})`)
+        a.onPlanetId = p.locationId
+      }
     })
 
     return artifacts
@@ -74,7 +77,7 @@ export function getAllArtifacts()
   const artifactsFromInventory = df.getMyArtifacts().filter(a => ! a.onPlanetId)
   const artifacts = artifactsFromPlanets.concat(artifactsFromInventory)
 
-  return artifactsFromPlanets
+  return artifacts
 }
 
 const emptyAddress = "0x0000000000000000000000000000000000000000";
@@ -108,7 +111,7 @@ export interface Move {
   to: Planet,
   energy: number,
   silver?: number,
-  artifact?: ArtifactId
+  artifact?: Artifact
 }
 
 export function getPendingEnergy(p: Planet) {
