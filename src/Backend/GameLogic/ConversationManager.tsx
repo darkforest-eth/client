@@ -6,8 +6,8 @@ import {
   ConversationArtifact,
   ArtifactType,
   ArtifactRarity,
-  RarityNames,
-  ArtifactNames,
+  ArtifactRarityNames,
+  ArtifactTypeNames,
 } from '@darkforest_eth/types';
 import { WikiPane } from '../../Frontend/Panes/WikiPane';
 import { TerminalTextStyle } from '../../Frontend/Utils/TerminalTypes';
@@ -46,7 +46,7 @@ export class ConversationManager {
       rarity: artifactRarity,
       name: 'Qora',
     };
-    this.artifactId = `prototype-ui-${RarityNames[artifactRarity]}-${ArtifactNames[artifactType]}`;
+    this.artifactId = `prototype-ui-${ArtifactRarityNames[artifactRarity]}-${ArtifactTypeNames[artifactType]}`;
   }
 
   public async start() {

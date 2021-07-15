@@ -2,12 +2,12 @@ import {
   Biome,
   BiomeNames,
   ArtifactRarity,
-  RarityNames,
+  ArtifactRarityNames,
   Planet,
   PlanetLevel,
   Artifact,
   ArtifactType,
-  ArtifactNames,
+  ArtifactTypeNames,
   ArtifactId,
 } from '@darkforest_eth/types';
 import { ProcgenUtils } from '../Procedural/ProcgenUtils';
@@ -125,7 +125,7 @@ export const hasUnconfirmedArtifactTx = (p: Planet | undefined): boolean =>
 
 export const biomeName = (biome: Biome): string => BiomeNames[biome];
 
-export const rarityName = (rarity: ArtifactRarity): string => RarityNames[rarity];
+export const rarityName = (rarity: ArtifactRarity): string => ArtifactRarityNames[rarity];
 
 export const rarityNameFromArtifact = (a: Artifact): string => rarityName(a.rarity);
 
@@ -167,8 +167,8 @@ export function artifactFileName(
   if (!debugProps?.skipCaching && artifactFileNamesById.has(id)) {
     fileName = artifactFileNamesById.get(id) || '';
   } else {
-    const typeStr = ArtifactNames[type];
-    const rarityStr = RarityNames[rarity];
+    const typeStr = ArtifactTypeNames[type];
+    const rarityStr = ArtifactRarityNames[rarity];
     let nameStr = '';
     if (debugProps) {
       if (debugProps.forceAncient) {

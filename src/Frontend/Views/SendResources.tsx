@@ -1,4 +1,9 @@
-import { Artifact, artifactNameFromArtifact, ArtifactNames, Planet } from '@darkforest_eth/types';
+import {
+  Artifact,
+  artifactNameFromArtifact,
+  ArtifactTypeNames,
+  Planet,
+} from '@darkforest_eth/types';
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { formatNumber } from '../../Backend/Utils/Utils';
@@ -297,7 +302,7 @@ function SendRow({
           <>
             <span>
               {artifactNameFromArtifact(artifact)}{' '}
-              {artifact && <Sub>({ArtifactNames[artifact.artifactType]})</Sub>}
+              {artifact && <Sub>({ArtifactTypeNames[artifact.artifactType]})</Sub>}
             </span>
             <Remove onClick={remove}>remove</Remove>
           </>

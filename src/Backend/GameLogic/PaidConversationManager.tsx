@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Artifact, Conversation, Message, ArtifactNames } from '@darkforest_eth/types';
+import { Artifact, Conversation, Message, ArtifactTypeNames } from '@darkforest_eth/types';
 import { WikiPane } from '../../Frontend/Panes/WikiPane';
 import { TerminalTextStyle } from '../../Frontend/Utils/TerminalTypes';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';
@@ -58,7 +58,7 @@ export class PaidConversationManager {
         await this.terminal.current?.getInput();
         this.terminal.current?.println(
           `Initializing conversation with ${artifactName(this.artifact)} (${
-            ArtifactNames[this.artifact.artifactType]
+            ArtifactTypeNames[this.artifact.artifactType]
           })`
         );
 
