@@ -6,7 +6,7 @@ import { sleep } from '../Utils/Utils';
 export class ContractCaller {
   private diagnosticsUpdater?: DiagnosticUpdater;
   private static readonly MAX_RETRIES = 12;
-  private readonly callQueue = new ThrottledConcurrentQueue(10, 1000, 20);
+  private readonly callQueue = new ThrottledConcurrentQueue(10, 100, 20);
 
   public async makeCall<T>(
     contractViewFunction: ContractFunction<T>,
