@@ -1141,7 +1141,7 @@ export class GameObjects {
     if (previous.owner === this.address && current.owner !== this.address) {
       notifManager.planetLost(current as LocatablePlanet);
     }
-    if (arrival.player !== this.address) {
+    if (arrival.player !== this.address && current.owner === this.address) {
       notifManager.planetAttacked(current as LocatablePlanet);
     }
   }
