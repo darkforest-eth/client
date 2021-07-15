@@ -19,7 +19,7 @@ import { Table } from './Components/Table';
 import { Header, Sub, Title } from './components/Text'
 import { PlanetLink } from './components/PlanetLink'
 import { capturePlanets } from './strategies/Crawl'
-import { distributeSilver } from './strategies/Distribute'
+import { distributeSilver } from './strategies/DistributeSilver'
 import { withdrawSilver } from './strategies/Withdraw'
 import { upgrade } from './strategies/Upgrade'
 import { prospectAndFind } from './strategies/ProspectAndFind'
