@@ -299,10 +299,14 @@ function Cannons(props: SelectedPlanetProp)
     (a: Artifact) => {
       const planet = df.getPlanetWithId(a.onPlanetId)
 
+      if (! planet) return html`<${Sub}>inventory</${Sub}>`
+
       return html`<${PlanetLink} planet=${planet}>${df.getProcgenUtils().getPlanetName(planet)}</${PlanetLink}>`
     },
     (a: Artifact) => {
       const planet = df.getPlanetWithId(a.onPlanetId)
+
+      if (! planet) return html`<${Sub}>-</${Sub}>`
 
       return html`<${Sub}>${planet!.planetLevel}</${Sub}>`
     },
@@ -445,7 +449,6 @@ function App() {
   return html`
     <div>
       Selected: ${selectedPlanet ? planetName(selectedPlanet) : '- none -'}
-      <!--
       <${PlanetsWithEnergy} selectedPlanet=${selectedPlanet} />
       <br />
       <hr />
@@ -470,7 +473,6 @@ function App() {
       <br />
       <hr />
       <br />
-      -->
       <${UsefulArtifacts} selectedPlanet=${selectedPlanet} />
     </div>
   `;
