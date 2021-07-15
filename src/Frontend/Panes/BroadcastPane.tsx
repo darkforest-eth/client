@@ -138,7 +138,7 @@ export function BroadcastPane({ hook }: { hook: ModalHook }) {
       {isRevealed && (
         <p>
           <Blue>INFO:</Blue>{' '}
-          <Sub>This planet's location is already, and can't be revealed again!</Sub>
+          <Sub>This planet's location is already revealed, and can't be revealed again!</Sub>
         </p>
       )}
       {!broadcastCooldownPassed && (
