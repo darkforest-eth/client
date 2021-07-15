@@ -25,7 +25,7 @@ const StyledRowIcon = styled.div`
   margin-right: 0.75em;
 `;
 
-enum RowType {
+const enum RowType {
   Energy,
   Silver,
   Artifact,

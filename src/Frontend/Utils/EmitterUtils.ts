@@ -1,5 +1,6 @@
 import { Artifact, EthAddress, Planet } from '@darkforest_eth/types';
 import { monomitter, Monomitter } from './Monomitter';
+import _ from 'lodash';
 
 /**
  * Create a monomitter to emit objects with a given id from a cached map of ids to objects.
@@ -16,17 +17,45 @@ export function getObjectWithIdFromMap<Obj, Id>(
 
   const selectedObj$ = monomitter<Obj | undefined>();
 
-  const pushId = (id: Id | undefined) => {
+  const publishIdEvent = (id: Id | undefined) => {
+    // emit object associated with id
     selectedObj$.publish(id ? objMap.get(id) : undefined);
   };
 
   objId$.subscribe((id: Id | undefined) => {
-    pushId(id);
+    // Publish event for new object
+    publishIdEvent(id);
+    //Update tracked object
     lastId = id;
   });
 
   objUpdated$.subscribe((id: Id) => {
-    if (lastId && lastId === id) pushId(id);
+    if (lastId && lastId === id) publishIdEvent(id);
+  });
+
+  return selectedObj$;
+}
+
+/**
+ * Create a monomitter to emit objects with a given id from a cached map of ids to objects. Not intended for re-use
+ * @param objMap the cached map of `<Id, Obj>`
+ * @param objId the object id to select
+ * @param objUpdated$ emitter which indicates when an object has been updated
+ */
+export function getDisposableEmitter<Obj, Id>(
+  objMap: Map<Id, Obj>,
+  objId: Id,
+  objUpdated$: Monomitter<Id>
+): Monomitter<Obj | undefined> {
+  const selectedObj$ = monomitter<Obj | undefined>();
+
+  const publishIdEvent = (id: Id | undefined) => {
+    // emit value of new id
+    selectedObj$.publish(id ? objMap.get(id) : undefined);
+  };
+
+  objUpdated$.subscribe((id: Id) => {
+    if (objId === id) publishIdEvent(id);
   });
 
   return selectedObj$;
@@ -71,6 +100,34 @@ export function setObjectSyncState<Obj, Id>(
   }
 }
 
+/**
+ * @param previous The previously emitted state of an object
+ * @param current The current emitted state of an object
+ */
+export interface Diff<Type> {
+  previous: Type;
+  current: Type;
+}
+
+/**
+ * Wraps an existing emitter and emits an event with the current and previous values
+ * @param emitter an emitter announcing game objects
+ */
+export function generateDiffEmitter<Obj>(
+  emitter: Monomitter<Obj | undefined>
+): Monomitter<Diff<Obj> | undefined> {
+  let prevInstance: Obj | undefined;
+  const currPrevEmitter$ = monomitter<Diff<Obj> | undefined>();
+  emitter.subscribe((instance) => {
+    currPrevEmitter$.publish({
+      current: _.cloneDeep(instance) as Obj,
+      previous: prevInstance ? _.cloneDeep(prevInstance) : (_.cloneDeep(instance) as Obj),
+    });
+    prevInstance = _.cloneDeep(instance);
+  });
+
+  return currPrevEmitter$;
+}
 /* i'm slightly worried that function literals would have to get allocated and de-allocated
    all the time - the below functions exist in order to prevent that */
 

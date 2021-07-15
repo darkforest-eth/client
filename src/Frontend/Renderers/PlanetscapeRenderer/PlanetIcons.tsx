@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { isLocatable, StatIdx } from '../../../_types/global/GlobalTypes';
 import dfstyles from '../../Styles/dfstyles';
-import { PlanetLevel, PlanetType, Planet } from '@darkforest_eth/types';
+import { PlanetType, Planet } from '@darkforest_eth/types';
 import { ProcgenUtils } from '../../../Backend/Procedural/ProcgenUtils';
 import { getPlanetRank } from '../../../Backend/Utils/Utils';
 import {
@@ -19,7 +19,7 @@ import {
 } from '../../Components/Icons';
 import { TooltipName } from '../../Game/WindowManager';
 import { TooltipTrigger } from '../../Panes/Tooltip';
-import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
+import { EMPTY_ADDRESS, MAX_PLANET_LEVEL } from '@darkforest_eth/constants';
 import { bonusFromHex } from '@darkforest_eth/hexgen';
 
 const StyledPlanetIcons = styled.div`
@@ -70,7 +70,7 @@ export function PlanetIcons({ planet }: { planet: Planet | undefined }) {
           <PiratesIcon />
         </TooltipTrigger>
       )}
-      {planet.planetLevel === PlanetLevel.MAX && (
+      {planet.planetLevel === MAX_PLANET_LEVEL && (
         <TooltipTrigger name={TooltipName.MaxLevel}>
           <MaxLevelIcon />
         </TooltipTrigger>

@@ -1,10 +1,12 @@
 import { mat4, mat3 } from 'gl-matrix';
 
+//eslint-disable-next-line @projectsophon/typescript-enum/no-enum
 export enum AttribType {
   Float = window.WebGL2RenderingContext && WebGL2RenderingContext['FLOAT'],
   UByte = window.WebGL2RenderingContext && WebGL2RenderingContext['UNSIGNED_BYTE'],
 }
 
+//eslint-disable-next-line @projectsophon/typescript-enum/no-enum
 export enum DrawMode {
   Triangles = window.WebGL2RenderingContext && WebGL2RenderingContext['TRIANGLES'],
   Lines = window.WebGL2RenderingContext && WebGL2RenderingContext['LINES'],
@@ -18,7 +20,7 @@ export type AttribProps = {
   name: string;
 };
 
-export enum UniformType {
+export const enum UniformType {
   Mat4,
   Mat3,
   UByte,
@@ -49,21 +51,21 @@ export type Scaling = {
   x: number;
   y: number;
 };
-export type HSLVec = [number, number, number];
+export type HSLVec = readonly [number, number, number];
 
-export enum TextAlign {
+export const enum TextAlign {
   Left = 0,
   Center = 0.5,
   Right = 1,
 }
 
-export enum TextAnchor {
+export const enum TextAnchor {
   Top = 0,
   Middle = 0.5,
   Bottom = 1,
 }
 
-export enum RenderZIndex {
+export const enum RenderZIndex {
   Background = 0,
   Voyages = -1,
   Planets = -10,

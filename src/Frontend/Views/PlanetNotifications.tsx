@@ -17,7 +17,7 @@ import { useUIManager } from '../Utils/AppHooks';
 import { GameObjects } from '../../Backend/GameLogic/GameObjects';
 import { EmojiPlanetNotification } from './EmojiPlanetNotification';
 
-export enum PlanetNotifType {
+export const enum PlanetNotifType {
   PlanetCanUpgrade,
   CanProspect,
   CanFindArtifact,

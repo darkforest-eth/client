@@ -1,4 +1,5 @@
 import { LocatablePlanet, LocationId, PlanetLevel, WorldCoords } from '@darkforest_eth/types';
+import { MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
 import Viewport from '../../Frontend/Game/Viewport';
 import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import { planetLevelToAnimationSpeed, sinusoidalAnimation } from '../Utils/Animation';
@@ -185,7 +186,7 @@ export class ViewportEntities {
   private getPlanetRadii(viewport: Viewport): Map<PlanetLevel, Radii> {
     const result = new Map();
 
-    for (let i = PlanetLevel.MIN; i <= PlanetLevel.MAX; i++) {
+    for (let i = MIN_PLANET_LEVEL; i <= MAX_PLANET_LEVEL; i++) {
       const radiusWorld = this.uiManager.getRadiusOfPlanetLevel(i as PlanetLevel);
       const radiusPixels = viewport.worldToCanvasDist(radiusWorld);
 
@@ -202,7 +203,7 @@ export class ViewportEntities {
   private getVisiblePlanetLevels(viewport: Viewport) {
     const result = [];
 
-    for (let i = 0; i <= PlanetLevel.MAX; i++) {
+    for (let i = 0; i <= MAX_PLANET_LEVEL; i++) {
       const radiusW = this.uiManager.getRadiusOfPlanetLevel(i as PlanetLevel);
       const radiusPx = viewport.worldToCanvasDist(radiusW);
 

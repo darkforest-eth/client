@@ -8,7 +8,7 @@ import {
 } from '../../Backend/Network/UtilityServerAPI';
 import { Green, Red, Sub } from './Text';
 
-export enum EmailCTAMode {
+export const enum EmailCTAMode {
   SUBSCRIBE,
   UNSUBSCRIBE,
 }

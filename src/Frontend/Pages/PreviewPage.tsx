@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Biome, LocatablePlanet, PlanetLevel, PlanetType, SpaceType } from '@darkforest_eth/types';
-import _ from 'lodash';
 import { PlanetPreviewImage } from '../Components/PlanetPreview';
 
 const StyledPreview = styled.div`
@@ -71,7 +70,7 @@ export function PreviewPage() {
   return (
     <StyledPreviewPage>
       <div className='row'>
-        {_.range(PlanetLevel.MIN, PlanetLevel.MAX + 1).map((level) => (
+        {Object.values(PlanetLevel).map((level) => (
           <Preview type={planetType} biome={biome} level={level} key={level} />
         ))}
       </div>

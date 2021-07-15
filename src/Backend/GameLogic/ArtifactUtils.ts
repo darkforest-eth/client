@@ -70,9 +70,18 @@ export function setForceAncient(force: boolean): void {
   forceAncient = force;
 }
 
-const artifactCooldownHoursMap: Record<ArtifactType, number> = [
-  24, 24, 24, 24, 24, 48, 24, 24, 24, 24,
-];
+const artifactCooldownHoursMap = {
+  [ArtifactType.Unknown]: 24,
+  [ArtifactType.Monolith]: 24,
+  [ArtifactType.Colossus]: 24,
+  [ArtifactType.Spaceship]: 24,
+  [ArtifactType.Pyramid]: 24,
+  [ArtifactType.Wormhole]: 48,
+  [ArtifactType.PlanetaryShield]: 24,
+  [ArtifactType.PhotoidCannon]: 24,
+  [ArtifactType.BloomFilter]: 24,
+  [ArtifactType.BlackDomain]: 24,
+} as const;
 
 export function artifactAvailableTimestamp(artifact: Artifact) {
   if (artifact.lastDeactivated === 0) {
@@ -126,16 +135,16 @@ export function artifactBiomeName(artifact: Artifact): string {
 }
 
 export const levelFromRarity = (rarity: ArtifactRarity): PlanetLevel => {
-  if (rarity === ArtifactRarity.Mythic) return 9;
-  else if (rarity === ArtifactRarity.Legendary) return 7;
-  else if (rarity === ArtifactRarity.Epic) return 5;
-  else if (rarity === ArtifactRarity.Rare) return 3;
-  else return 1;
+  if (rarity === ArtifactRarity.Mythic) return PlanetLevel.NINE;
+  else if (rarity === ArtifactRarity.Legendary) return PlanetLevel.SEVEN;
+  else if (rarity === ArtifactRarity.Epic) return PlanetLevel.FIVE;
+  else if (rarity === ArtifactRarity.Rare) return PlanetLevel.THREE;
+  else return PlanetLevel.ONE;
 };
 
 const artifactFileNamesById: Map<ArtifactId, string> = new Map();
 
-export enum ArtifactFileColor {
+export const enum ArtifactFileColor {
   BLUE,
   APP_BACKGROUND,
 }

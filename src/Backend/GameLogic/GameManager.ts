@@ -107,6 +107,8 @@ import {
 import { addMessage, deleteMessages, getMessagesOnPlanets } from '../Network/MessageAPI';
 import { getEmojiMessage } from './ArrivalUtils';
 import { easeInAnimation, emojiEaseOutAnimation } from '../Utils/Animation';
+import { getDisposableEmitter, generateDiffEmitter, Diff } from '../../Frontend/Utils/EmitterUtils';
+import { MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
 
 export enum GameManagerEvent {
   PlanetUpdate = 'PlanetUpdate',
@@ -1733,7 +1735,7 @@ class GameManager extends EventEmitter {
             planetPerlin < initPerlinMax &&
             planetPerlin >= initPerlinMin &&
             planetX ** 2 + planetY ** 2 < this.worldRadius ** 2 &&
-            planetLevel === PlanetLevel.MIN &&
+            planetLevel === MIN_PLANET_LEVEL &&
             planetType === PlanetType.PLANET &&
             (!planet || !planet.isInContract) // init will fail if planet has been initialized in contract already
           ) {
@@ -1750,10 +1752,13 @@ class GameManager extends EventEmitter {
   }
 
   public async prospectPlanet(planetId: LocationId, bypassChecks = false) {
+    const planet = this.entityStore.getPlanetWithId(planetId);
+    if (!planet || !isLocatable(planet)) {
+      throw new Error("you can't prospect a planet you haven't discovered");
+    }
+
     if (!bypassChecks) {
       if (this.checkGameHasEnded()) return this;
-
-      const planet = this.entityStore.getPlanetWithId(planetId);
 
       if (!planet) {
         throw new Error("you can't prospect a planet you haven't discovered");
@@ -1795,9 +1800,15 @@ class GameManager extends EventEmitter {
 
     this.handleTxIntent(txIntent);
 
-    await this.contractsAPI.prospectPlanet(planetId, actionId).catch((err) => {
-      this.onTxIntentFail(txIntent, err);
-    });
+    await this.contractsAPI
+      .prospectPlanet(planetId, actionId)
+      .then(() => {
+        const notifManager = NotificationManager.getInstance();
+        notifManager.artifactProspected(planet as LocatablePlanet);
+      })
+      .catch((err) => {
+        this.onTxIntentFail(txIntent, err);
+      });
   }
 
   /**
@@ -1862,6 +1873,18 @@ class GameManager extends EventEmitter {
         this.terminal.current?.newline();
 
         return this.contractsAPI.findArtifact(planet.location, snarkArgs, actionId);
+      })
+      .then(() => {
+        return this.waitForPlanet<Artifact>(planet.locationId, ({ current }: Diff<Planet>) => {
+          return current.heldArtifactIds
+            .map(this.getArtifactWithId.bind(this))
+            .find((a: Artifact) => a?.planetDiscoveredOn === planet.locationId) as Artifact;
+        }).then((foundArtifact) => {
+          if (!foundArtifact) throw new Error('Artifact not found?');
+          const notifManager = NotificationManager.getInstance();
+
+          notifManager.artifactFound(planet as LocatablePlanet, foundArtifact);
+        });
       })
       .catch((err) => {
         this.onTxIntentFail(txIntent, err);
@@ -2755,7 +2778,7 @@ class GameManager extends EventEmitter {
       if (greaterRarity === undefined) {
         greaterRarity = toActiveArtifact.rarity;
       } else {
-        greaterRarity = Math.max(greaterRarity, toActiveArtifact.rarity);
+        greaterRarity = Math.max(greaterRarity, toActiveArtifact.rarity) as ArtifactRarity;
       }
     }
 
@@ -2936,6 +2959,46 @@ class GameManager extends EventEmitter {
    */
   public updateDiagnostics(updateFn: (d: Diagnostics) => void): void {
     updateFn(this.diagnostics);
+  }
+
+  /**
+   * Listen for changes to a planet take action,
+   * eg.
+   * waitForPlanet("yourAsteroidId", ({current}) => current.silverCap / current.silver > 90)
+   * .then(() => {
+   *  // Send Silver to nearby planet
+   * })
+   *
+   * @param locationId A locationId to watch for updates
+   * @param predicate a function that accepts a Diff and should return a truth-y value, value will be passed to promise.resolve()
+   * @returns a promise that will resolve with results returned from the predicate function
+   */
+  public waitForPlanet<T>(
+    locationId: LocationId,
+    predicate: ({ current, previous }: Diff<Planet>) => T | undefined
+  ): Promise<T> {
+    const disposableEmitter = getDisposableEmitter<Planet, LocationId>(
+      this.getPlanetMap(),
+      locationId,
+      this.getPlanetUpdated$()
+    );
+    const diffEmitter = generateDiffEmitter(disposableEmitter);
+    return new Promise((resolve, reject) => {
+      diffEmitter.subscribe(({ current, previous }: Diff<Planet>) => {
+        try {
+          const predicateResults = predicate({ current, previous });
+          if (!!predicateResults) {
+            disposableEmitter.clear();
+            diffEmitter.clear();
+            resolve(predicateResults);
+          }
+        } catch (err) {
+          disposableEmitter.clear();
+          diffEmitter.clear();
+          reject(err);
+        }
+      });
+    });
   }
 }
 

@@ -1,10 +1,11 @@
 import { Artifact, Biome, ArtifactRarity, ArtifactType } from '@darkforest_eth/types';
 import autoBind from 'auto-bind';
+import { MAX_BIOME, MIN_BIOME } from '@darkforest_eth/constants';
 import { ARTIFACT_ROW_H } from '../../Styles/dfstyles';
 import { SpriteRenderer } from '../GameRenderer/Entities/SpriteRenderer';
 import { WebGLManager } from '../GameRenderer/WebGL/WebGLManager';
 
-const NUM_BIOMES = Biome.MAX;
+const NUM_BIOMES = MAX_BIOME;
 
 const thumbDim = 32;
 const cellDim = ARTIFACT_ROW_H;
@@ -59,8 +60,8 @@ export class ArtifactRenderer extends WebGLManager {
 
   private queueRarityColumn(rarity: ArtifactRarity, startX: number) {
     let col = 0;
-    for (let type: ArtifactType = 1; type <= 4; type++) {
-      this.queueArtifactColumn(type, rarity, startX + col * cellDim);
+    for (let type = 1; type <= 4; type++) {
+      this.queueArtifactColumn(type as ArtifactType, rarity, startX + col * cellDim);
       col++;
     }
   }
@@ -81,7 +82,7 @@ export class ArtifactRenderer extends WebGLManager {
 
   private queueArtifactColumn(type: ArtifactType, rarity: ArtifactRarity, startX: number) {
     let row = 0;
-    for (let biome: Biome = Biome.MIN; biome <= Biome.MAX; biome++) {
+    for (let biome = MIN_BIOME; biome <= MAX_BIOME; biome++) {
       const pos = { x: startX, y: mTop + row * ARTIFACT_ROW_H };
       const artifact = {
         planetBiome: biome,

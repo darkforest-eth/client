@@ -1,0 +1,1246 @@
+# Class: GameObjects
+
+[Backend/GameLogic/GameObjects](../modules/Backend_GameLogic_GameObjects.md).GameObjects
+
+Representation of the objects which exist in the world.
+
+## Table of contents
+
+### Constructors
+
+- [constructor](Backend_GameLogic_GameObjects.GameObjects.md#constructor)
+
+### Properties
+
+- [address](Backend_GameLogic_GameObjects.GameObjects.md#address)
+- [arrivals](Backend_GameLogic_GameObjects.GameObjects.md#arrivals)
+- [artifactUpdated$](Backend_GameLogic_GameObjects.GameObjects.md#artifactupdated$)
+- [artifacts](Backend_GameLogic_GameObjects.GameObjects.md#artifacts)
+- [contractConstants](Backend_GameLogic_GameObjects.GameObjects.md#contractconstants)
+- [coordsToLocation](Backend_GameLogic_GameObjects.GameObjects.md#coordstolocation)
+- [isBuyingCredits$](Backend_GameLogic_GameObjects.GameObjects.md#isbuyingcredits$)
+- [layeredMap](Backend_GameLogic_GameObjects.GameObjects.md#layeredmap)
+- [myArtifacts](Backend_GameLogic_GameObjects.GameObjects.md#myartifacts)
+- [myArtifactsUpdated$](Backend_GameLogic_GameObjects.GameObjects.md#myartifactsupdated$)
+- [myPlanets](Backend_GameLogic_GameObjects.GameObjects.md#myplanets)
+- [myPlanetsUpdated$](Backend_GameLogic_GameObjects.GameObjects.md#myplanetsupdated$)
+- [planetArrivalIds](Backend_GameLogic_GameObjects.GameObjects.md#planetarrivalids)
+- [planetLocationMap](Backend_GameLogic_GameObjects.GameObjects.md#planetlocationmap)
+- [planetUpdated$](Backend_GameLogic_GameObjects.GameObjects.md#planetupdated$)
+- [planets](Backend_GameLogic_GameObjects.GameObjects.md#planets)
+- [revealedLocations](Backend_GameLogic_GameObjects.GameObjects.md#revealedlocations)
+- [touchedPlanetIds](Backend_GameLogic_GameObjects.GameObjects.md#touchedplanetids)
+- [unconfirmedBuyGPTCredits](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedbuygptcredits)
+- [unconfirmedBuyHats](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedbuyhats)
+- [unconfirmedMoves](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedmoves)
+- [unconfirmedPlanetTransfers](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedplanettransfers)
+- [unconfirmedReveal](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedreveal)
+- [unconfirmedUpgrades](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedupgrades)
+- [unconfirmedWormholeActivations](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedwormholeactivations)
+- [wormholes](Backend_GameLogic_GameObjects.GameObjects.md#wormholes)
+
+### Methods
+
+- [addPlanetLocation](Backend_GameLogic_GameObjects.GameObjects.md#addplanetlocation)
+- [calculateSilverSpent](Backend_GameLogic_GameObjects.GameObjects.md#calculatesilverspent)
+- [clearOldArrivals](Backend_GameLogic_GameObjects.GameObjects.md#clearoldarrivals)
+- [clearUnconfirmedTxIntent](Backend_GameLogic_GameObjects.GameObjects.md#clearunconfirmedtxintent)
+- [defaultPlanetFromLocation](Backend_GameLogic_GameObjects.GameObjects.md#defaultplanetfromlocation)
+- [emitArrivalNotifications](Backend_GameLogic_GameObjects.GameObjects.md#emitarrivalnotifications)
+- [getAllOwnedPlanets](Backend_GameLogic_GameObjects.GameObjects.md#getallownedplanets)
+- [getAllPlanets](Backend_GameLogic_GameObjects.GameObjects.md#getallplanets)
+- [getAllPlanetsMap](Backend_GameLogic_GameObjects.GameObjects.md#getallplanetsmap)
+- [getAllVoyages](Backend_GameLogic_GameObjects.GameObjects.md#getallvoyages)
+- [getArtifactById](Backend_GameLogic_GameObjects.GameObjects.md#getartifactbyid)
+- [getArtifactController](Backend_GameLogic_GameObjects.GameObjects.md#getartifactcontroller)
+- [getArtifactMap](Backend_GameLogic_GameObjects.GameObjects.md#getartifactmap)
+- [getArtifactsOnPlanetsOwnedBy](Backend_GameLogic_GameObjects.GameObjects.md#getartifactsonplanetsownedby)
+- [getArtifactsOwnedBy](Backend_GameLogic_GameObjects.GameObjects.md#getartifactsownedby)
+- [getBiome](Backend_GameLogic_GameObjects.GameObjects.md#getbiome)
+- [getEnergyCurveAtPercent](Backend_GameLogic_GameObjects.GameObjects.md#getenergycurveatpercent)
+- [getIsBuyingCreditsEmitter](Backend_GameLogic_GameObjects.GameObjects.md#getisbuyingcreditsemitter)
+- [getLocationOfPlanet](Backend_GameLogic_GameObjects.GameObjects.md#getlocationofplanet)
+- [getMyArtifactMap](Backend_GameLogic_GameObjects.GameObjects.md#getmyartifactmap)
+- [getMyPlanetMap](Backend_GameLogic_GameObjects.GameObjects.md#getmyplanetmap)
+- [getPlanetArtifacts](Backend_GameLogic_GameObjects.GameObjects.md#getplanetartifacts)
+- [getPlanetDetailLevel](Backend_GameLogic_GameObjects.GameObjects.md#getplanetdetaillevel)
+- [getPlanetLevel](Backend_GameLogic_GameObjects.GameObjects.md#getplanetlevel)
+- [getPlanetMap](Backend_GameLogic_GameObjects.GameObjects.md#getplanetmap)
+- [getPlanetWithCoords](Backend_GameLogic_GameObjects.GameObjects.md#getplanetwithcoords)
+- [getPlanetWithId](Backend_GameLogic_GameObjects.GameObjects.md#getplanetwithid)
+- [getPlanetWithLocation](Backend_GameLogic_GameObjects.GameObjects.md#getplanetwithlocation)
+- [getPlanetsInWorldRectangle](Backend_GameLogic_GameObjects.GameObjects.md#getplanetsinworldrectangle)
+- [getRevealedLocations](Backend_GameLogic_GameObjects.GameObjects.md#getrevealedlocations)
+- [getSilverCurveAtPercent](Backend_GameLogic_GameObjects.GameObjects.md#getsilvercurveatpercent)
+- [getUnconfirmedBuyGPTCredits](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedbuygptcredits)
+- [getUnconfirmedMoves](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedmoves)
+- [getUnconfirmedReveal](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedreveal)
+- [getUnconfirmedUpgrades](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedupgrades)
+- [getUnconfirmedWormholeActivations](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedwormholeactivations)
+- [getWormholes](Backend_GameLogic_GameObjects.GameObjects.md#getwormholes)
+- [isPlanetInContract](Backend_GameLogic_GameObjects.GameObjects.md#isplanetincontract)
+- [markLocationRevealed](Backend_GameLogic_GameObjects.GameObjects.md#marklocationrevealed)
+- [onTxIntent](Backend_GameLogic_GameObjects.GameObjects.md#ontxintent)
+- [planetLevelFromHexPerlin](Backend_GameLogic_GameObjects.GameObjects.md#planetlevelfromhexperlin)
+- [planetTypeFromHexPerlin](Backend_GameLogic_GameObjects.GameObjects.md#planettypefromhexperlin)
+- [processArrivalsForPlanet](Backend_GameLogic_GameObjects.GameObjects.md#processarrivalsforplanet)
+- [replaceArtifactFromContractData](Backend_GameLogic_GameObjects.GameObjects.md#replaceartifactfromcontractdata)
+- [replaceArtifactsFromContractData](Backend_GameLogic_GameObjects.GameObjects.md#replaceartifactsfromcontractdata)
+- [replacePlanetFromContractData](Backend_GameLogic_GameObjects.GameObjects.md#replaceplanetfromcontractdata)
+- [setArtifact](Backend_GameLogic_GameObjects.GameObjects.md#setartifact)
+- [setPlanet](Backend_GameLogic_GameObjects.GameObjects.md#setplanet)
+- [spaceTypeFromPerlin](Backend_GameLogic_GameObjects.GameObjects.md#spacetypefromperlin)
+- [updatePlanet](Backend_GameLogic_GameObjects.GameObjects.md#updateplanet)
+- [updatePlanetIfStale](Backend_GameLogic_GameObjects.GameObjects.md#updateplanetifstale)
+- [updateScore](Backend_GameLogic_GameObjects.GameObjects.md#updatescore)
+- [getSilverNeeded](Backend_GameLogic_GameObjects.GameObjects.md#getsilverneeded)
+- [planetCanUpgrade](Backend_GameLogic_GameObjects.GameObjects.md#planetcanupgrade)
+
+## Constructors
+
+### constructor
+
+• **new GameObjects**(`address`, `touchedPlanets`, `allTouchedPlanetIds`, `revealedLocations`, `artifacts`, `allChunks`, `unprocessedArrivals`, `unprocessedPlanetArrivalIds`, `contractConstants`, `worldRadius`)
+
+#### Parameters
+
+| Name                          | Type                                                                                              |
+| :---------------------------- | :------------------------------------------------------------------------------------------------ |
+| `address`                     | `undefined` \| `EthAddress`                                                                       |
+| `touchedPlanets`              | `Map`<`LocationId`, `Planet`\>                                                                    |
+| `allTouchedPlanetIds`         | `Set`<`LocationId`\>                                                                              |
+| `revealedLocations`           | `Map`<`LocationId`, `RevealedLocation`\>                                                          |
+| `artifacts`                   | `Map`<`ArtifactId`, `Artifact`\>                                                                  |
+| `allChunks`                   | `Iterable`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>                                        |
+| `unprocessedArrivals`         | `Map`<`VoyageId`, `QueuedArrival`\>                                                               |
+| `unprocessedPlanetArrivalIds` | `Map`<`LocationId`, `VoyageId`[]\>                                                                |
+| `contractConstants`           | [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md) |
+| `worldRadius`                 | `number`                                                                                          |
+
+## Properties
+
+### address
+
+• `Private` `Readonly` **address**: `undefined` \| `EthAddress`
+
+This address of the player that is currently logged in.
+
+**`todo`** move this, along with all other objects relating to the currently logged-on player into a
+new field: {@code player: PlayerInfo}
+
+---
+
+### arrivals
+
+• `Private` `Readonly` **arrivals**: `Map`<`VoyageId`, `ArrivalWithTimer`\>
+
+Map of arrivals to timers that fire when an arrival arrives, in case that handler needs to be
+cancelled for whatever reason.
+
+---
+
+### artifactUpdated$
+
+• `Readonly` **artifactUpdated$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`ArtifactId`\>
+
+Event emitter which publishes whenever an artifact has been updated.
+
+---
+
+### artifacts
+
+• `Private` `Readonly` **artifacts**: `Map`<`ArtifactId`, `Artifact`\>
+
+Cached index of all known artifact data.
+
+**`see`** The same warning applys as the one on [GameObjects.planets](Backend_GameLogic_GameObjects.GameObjects.md#planets)
+
+---
+
+### contractConstants
+
+• `Private` `Readonly` **contractConstants**: [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)
+
+Some of the game's parameters are downloaded from the blockchain. This allows the client to be
+flexible, and connect to any compatible set of Dark Forest contracts, download the parameters,
+and join the game, taking into account the unique configuration of those specific Dark Forest
+contracts.
+
+---
+
+### coordsToLocation
+
+• `Private` `Readonly` **coordsToLocation**: `Map`<`CoordsString`, `WorldLocation`\>
+
+Map from a stringified representation of an x-y coordinate to an object that contains some more
+information about the world at that location.
+
+---
+
+### isBuyingCredits$
+
+• `Readonly` **isBuyingCredits$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`boolean`\>
+
+Event emitter which publishes whenever the player begins and finishes (whether with a success
+or an error) buying gpt credits.
+
+**`todo`** move into `PlayerInfo`
+
+---
+
+### layeredMap
+
+• `Private` `Readonly` **layeredMap**: [`LayeredMap`](Backend_GameLogic_LayeredMap.LayeredMap.md)
+
+This is a data structure that allows us to efficiently calculate which planets are visible on
+the player's screen given the viewport's position and size.
+
+---
+
+### myArtifacts
+
+• `Private` `Readonly` **myArtifacts**: `Map`<`ArtifactId`, `Artifact`\>
+
+Cached index of artifacts owned by the player.
+
+**`see`** The same warning applys as the one on [GameObjects.planets](Backend_GameLogic_GameObjects.GameObjects.md#planets)
+
+---
+
+### myArtifactsUpdated$
+
+• `Readonly` **myArtifactsUpdated$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`Map`<`ArtifactId`, `Artifact`\>\>
+
+Whenever one of the player's artifacts are updated, this event emitter publishes. See
+[GameObjects.myPlanetsUpdated$](Backend_GameLogic_GameObjects.GameObjects.md#myplanetsupdated$) for more info.
+
+---
+
+### myPlanets
+
+• `Private` `Readonly` **myPlanets**: `Map`<`LocationId`, `Planet`\>
+
+Cached index of planets owned by the player.
+
+**`see`** The same warning applys as the one on [GameObjects.planets](Backend_GameLogic_GameObjects.GameObjects.md#planets)
+
+---
+
+### myPlanetsUpdated$
+
+• `Readonly` **myPlanetsUpdated$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`Map`<`LocationId`, `Planet`\>\>
+
+Whenever a planet is updated, we publish to this event with a reference to a map from location
+id to planet. We need to rethink this event emitter because it currently publishes every time
+that any planet is updated, and if a lot of them are updated at once (which i think is the case
+once every two minutes) then this event emitter will publish a shitton of events.
+TODO: rethink this
+
+---
+
+### planetArrivalIds
+
+• `Private` `Readonly` **planetArrivalIds**: `Map`<`LocationId`, `VoyageId`[]\>
+
+Map from a location id (think of it as the unique id of each planet) to all the ids of the
+voyages that are arriving on that planet. These include both the player's own voyages, and also
+any potential invader's voyages.
+
+---
+
+### planetLocationMap
+
+• `Private` `Readonly` **planetLocationMap**: `Map`<`LocationId`, `WorldLocation`\>
+
+Map from location id (unique id of each planet) to some information about the location at which
+this planet is located, if this client happens to know the coordinates of this planet.
+
+---
+
+### planetUpdated$
+
+• `Readonly` **planetUpdated$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`LocationId`\>
+
+Event emitter which publishes whenever a planet is updated.
+
+---
+
+### planets
+
+• `Private` `Readonly` **planets**: `Map`<`LocationId`, `Planet`\>
+
+Cached index of all known planet data.
+
+Warning!
+
+This should NEVER be set to directly! Any time you want to update a planet, you must call the
+{@link GameObjects#setPlanet()} function. Following this rule enables us to reliably notify
+other parts of the client when a particular object has been updated. TODO: what is the best way
+to do this?
+
+**`todo`** extract the pattern we're using for the field tuples
+
+- {planets, myPlanets, myPlanetsUpdated, planetUpdated$}
+- {artifacts, myArtifacts, myArtifactsUpdated, artifactUpdated$}
+
+into some sort of class.
+
+---
+
+### revealedLocations
+
+• `Private` `Readonly` **revealedLocations**: `Map`<`LocationId`, `RevealedLocation`\>
+
+Map from location ids to, if that location id has been revealed on-chain, the world coordinates
+of that location id, as well as some extra information regarding the circumstances of the
+revealing of this planet.
+
+---
+
+### touchedPlanetIds
+
+• `Private` `Readonly` **touchedPlanetIds**: `Set`<`LocationId`\>
+
+Set of all planet ids that we know have been interacted-with on-chain.
+
+---
+
+### unconfirmedBuyGPTCredits
+
+• `Private` `Optional` **unconfirmedBuyGPTCredits**: `UnconfirmedBuyGPTCredits`
+
+---
+
+### unconfirmedBuyHats
+
+• `Private` `Readonly` **unconfirmedBuyHats**: `Record`<`string`, `UnconfirmedBuyHat`\>
+
+---
+
+### unconfirmedMoves
+
+• `Private` `Readonly` **unconfirmedMoves**: `Record`<`string`, `UnconfirmedMove`\>
+
+---
+
+### unconfirmedPlanetTransfers
+
+• `Private` `Readonly` **unconfirmedPlanetTransfers**: `Record`<`string`, `UnconfirmedPlanetTransfer`\>
+
+---
+
+### unconfirmedReveal
+
+• `Private` `Optional` **unconfirmedReveal**: `UnconfirmedReveal`
+
+The following set of fields represent actions which the user has initiated on the blockchain,
+and have not yet completed. The nature of the blockchain is that transactions could take up to
+several minutes to confirm (depending on network congestion). This means that we need to make
+it clear to players that the action that they have initiated is indeed in progress, and that
+something is actually happening. See `Prospect.tsx` for example.
+
+The storage and retrieval of unconfirmed transactions could, and
+probablu should be abstracted into some sort of class which keeps in sync both _these_ fields
+and each of these fields counterparts in their corresponding entity objects (Planet, Artifact,
+etc.)
+
+**`todo`** these are good candidates for being in the `PlayerInfo` class.
+
+---
+
+### unconfirmedUpgrades
+
+• `Private` `Readonly` **unconfirmedUpgrades**: `Record`<`string`, `UnconfirmedUpgrade`\>
+
+---
+
+### unconfirmedWormholeActivations
+
+• `Private` `Readonly` **unconfirmedWormholeActivations**: `UnconfirmedActivateArtifact`[]
+
+---
+
+### wormholes
+
+• `Private` `Readonly` **wormholes**: `Map`<`ArtifactId`, [`Wormhole`](../modules/_types_global_GlobalTypes.md#wormhole)\>
+
+Map from artifact ids to wormholes.
+
+## Methods
+
+### addPlanetLocation
+
+▸ **addPlanetLocation**(`planetLocation`): `void`
+
+Called when we load chunk data into memory (on startup), when we're loading all revealed locations (on startup),
+when miner has mined a new chunk while exploring, and when a planet's location is revealed onchain during the course of play
+Adds a WorldLocation to the planetLocationMap, making it known to the player locally
+Sets an unsynced default planet in the PlanetMap this.planets
+IMPORTANT: This is the only way a LocatablePlanet gets constructed
+IMPORTANT: Idempotent
+
+#### Parameters
+
+| Name             | Type            |
+| :--------------- | :-------------- |
+| `planetLocation` | `WorldLocation` |
+
+#### Returns
+
+`void`
+
+---
+
+### calculateSilverSpent
+
+▸ `Private` **calculateSilverSpent**(`planet`): `number`
+
+#### Parameters
+
+| Name     | Type     |
+| :------- | :------- |
+| `planet` | `Planet` |
+
+#### Returns
+
+`number`
+
+---
+
+### clearOldArrivals
+
+▸ `Private` **clearOldArrivals**(`planet`): `void`
+
+#### Parameters
+
+| Name     | Type     |
+| :------- | :------- |
+| `planet` | `Planet` |
+
+#### Returns
+
+`void`
+
+---
+
+### clearUnconfirmedTxIntent
+
+▸ **clearUnconfirmedTxIntent**(`txIntent`): `void`
+
+Whenever a transaction that the user initiated either succeeds or fails, we need to clear the
+fact that it was in progress from the event's corresponding entities. For example, whenever a
+transaction that sends a voyage from one planet to another either succeeds or fails, we need to
+remove the dashed line that connected them.
+
+Making sure that we never miss something here is very tedious.
+
+**`todo`** Make this less tedious.
+
+#### Parameters
+
+| Name       | Type       |
+| :--------- | :--------- |
+| `txIntent` | `TxIntent` |
+
+#### Returns
+
+`void`
+
+---
+
+### defaultPlanetFromLocation
+
+▸ `Private` **defaultPlanetFromLocation**(`location`): `LocatablePlanet`
+
+returns the data for an unowned, untouched planet at location
+most planets in the game are untouched and not stored in the contract,
+so we need to generate their data optimistically in the client
+
+#### Parameters
+
+| Name       | Type            |
+| :--------- | :-------------- |
+| `location` | `WorldLocation` |
+
+#### Returns
+
+`LocatablePlanet`
+
+---
+
+### emitArrivalNotifications
+
+▸ `Private` **emitArrivalNotifications**(`__namedParameters`): `void`
+
+Emit notifications based on a planet's state change
+
+#### Parameters
+
+| Name                | Type                                                                       |
+| :------------------ | :------------------------------------------------------------------------- |
+| `__namedParameters` | [`PlanetDiff`](../interfaces/Backend_GameLogic_ArrivalUtils.PlanetDiff.md) |
+
+#### Returns
+
+`void`
+
+---
+
+### getAllOwnedPlanets
+
+▸ **getAllOwnedPlanets**(): `Planet`[]
+
+Returns all the planets in the game which this client is aware of that have an owner, as a map
+from their id to the planet
+
+**`tutorial`** For plugin developers!
+
+**`see`** Warning in {@link GameObjects.getAllPlanets()}
+
+#### Returns
+
+`Planet`[]
+
+---
+
+### getAllPlanets
+
+▸ **getAllPlanets**(): `Iterable`<`Planet`\>
+
+Returns all planets in the game.
+
+Warning! Simply iterating over this is not performant, and is meant for scripting.
+
+**`tutorial`** For plugin developers!
+
+#### Returns
+
+`Iterable`<`Planet`\>
+
+---
+
+### getAllPlanetsMap
+
+▸ **getAllPlanetsMap**(): `Map`<`LocationId`, `Planet`\>
+
+Returns all planets in the game, as a map from their location id to the planet.
+
+**`tutorial`** For plugin developers!
+
+**`see`** Warning in {@link GameObjects.getAllPlanets()}
+
+#### Returns
+
+`Map`<`LocationId`, `Planet`\>
+
+---
+
+### getAllVoyages
+
+▸ **getAllVoyages**(): `QueuedArrival`[]
+
+Returns all voyages that are scheduled to arrive at some point in the future.
+
+**`tutorial`** For plugin developers!
+
+**`see`** Warning in {@link GameObjects.getAllPlanets()}
+
+#### Returns
+
+`QueuedArrival`[]
+
+---
+
+### getArtifactById
+
+▸ **getArtifactById**(`artifactId`): `undefined` \| `Artifact`
+
+#### Parameters
+
+| Name         | Type         |
+| :----------- | :----------- |
+| `artifactId` | `ArtifactId` |
+
+#### Returns
+
+`undefined` \| `Artifact`
+
+---
+
+### getArtifactController
+
+▸ **getArtifactController**(`artifactId`): `undefined` \| `EthAddress`
+
+Returns the EthAddress of the player who can control the owner:
+if the artifact is on a planet, this is the owner of the planet
+if the artifact is on a voyage, this is the initiator of the voyage
+if the artifact is not on either, then it is the owner of the artifact NFT
+
+#### Parameters
+
+| Name         | Type         |
+| :----------- | :----------- |
+| `artifactId` | `ArtifactId` |
+
+#### Returns
+
+`undefined` \| `EthAddress`
+
+---
+
+### getArtifactMap
+
+▸ **getArtifactMap**(): `Map`<`ArtifactId`, `Artifact`\>
+
+#### Returns
+
+`Map`<`ArtifactId`, `Artifact`\>
+
+---
+
+### getArtifactsOnPlanetsOwnedBy
+
+▸ **getArtifactsOnPlanetsOwnedBy**(`addr`): `Artifact`[]
+
+#### Parameters
+
+| Name   | Type         |
+| :----- | :----------- |
+| `addr` | `EthAddress` |
+
+#### Returns
+
+`Artifact`[]
+
+---
+
+### getArtifactsOwnedBy
+
+▸ **getArtifactsOwnedBy**(`addr`): `Artifact`[]
+
+#### Parameters
+
+| Name   | Type         |
+| :----- | :----------- |
+| `addr` | `EthAddress` |
+
+#### Returns
+
+`Artifact`[]
+
+---
+
+### getBiome
+
+▸ `Private` **getBiome**(`loc`): `Biome`
+
+#### Parameters
+
+| Name  | Type            |
+| :---- | :-------------- |
+| `loc` | `WorldLocation` |
+
+#### Returns
+
+`Biome`
+
+---
+
+### getEnergyCurveAtPercent
+
+▸ **getEnergyCurveAtPercent**(`planet`, `percent`): `number`
+
+returns timestamp (seconds) that planet will reach percent% of energycap
+time may be in the past
+
+#### Parameters
+
+| Name      | Type     |
+| :-------- | :------- |
+| `planet`  | `Planet` |
+| `percent` | `number` |
+
+#### Returns
+
+`number`
+
+---
+
+### getIsBuyingCreditsEmitter
+
+▸ **getIsBuyingCreditsEmitter**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`boolean`\>
+
+#### Returns
+
+[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`boolean`\>
+
+---
+
+### getLocationOfPlanet
+
+▸ **getLocationOfPlanet**(`planetId`): `undefined` \| `WorldLocation`
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `planetId` | `LocationId` |
+
+#### Returns
+
+`undefined` \| `WorldLocation`
+
+---
+
+### getMyArtifactMap
+
+▸ **getMyArtifactMap**(): `Map`<`ArtifactId`, `Artifact`\>
+
+#### Returns
+
+`Map`<`ArtifactId`, `Artifact`\>
+
+---
+
+### getMyPlanetMap
+
+▸ **getMyPlanetMap**(): `Map`<`LocationId`, `Planet`\>
+
+#### Returns
+
+`Map`<`LocationId`, `Planet`\>
+
+---
+
+### getPlanetArtifacts
+
+▸ **getPlanetArtifacts**(`planetId`): `Artifact`[]
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `planetId` | `LocationId` |
+
+#### Returns
+
+`Artifact`[]
+
+---
+
+### getPlanetDetailLevel
+
+▸ **getPlanetDetailLevel**(`planetId`): `undefined` \| `number`
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `planetId` | `LocationId` |
+
+#### Returns
+
+`undefined` \| `number`
+
+---
+
+### getPlanetLevel
+
+▸ **getPlanetLevel**(`planetId`): `undefined` \| `PlanetLevel`
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `planetId` | `LocationId` |
+
+#### Returns
+
+`undefined` \| `PlanetLevel`
+
+---
+
+### getPlanetMap
+
+▸ **getPlanetMap**(): `Map`<`LocationId`, `Planet`\>
+
+#### Returns
+
+`Map`<`LocationId`, `Planet`\>
+
+---
+
+### getPlanetWithCoords
+
+▸ **getPlanetWithCoords**(`coords`): `undefined` \| `Planet`
+
+#### Parameters
+
+| Name     | Type          |
+| :------- | :------------ |
+| `coords` | `WorldCoords` |
+
+#### Returns
+
+`undefined` \| `Planet`
+
+---
+
+### getPlanetWithId
+
+▸ **getPlanetWithId**(`planetId`, `updateIfStale?`): `undefined` \| `Planet`
+
+#### Parameters
+
+| Name            | Type         | Default value |
+| :-------------- | :----------- | :------------ |
+| `planetId`      | `LocationId` | `undefined`   |
+| `updateIfStale` | `boolean`    | `true`        |
+
+#### Returns
+
+`undefined` \| `Planet`
+
+---
+
+### getPlanetWithLocation
+
+▸ **getPlanetWithLocation**(`location`): `undefined` \| `Planet`
+
+#### Parameters
+
+| Name       | Type            |
+| :--------- | :-------------- |
+| `location` | `WorldLocation` |
+
+#### Returns
+
+`undefined` \| `Planet`
+
+---
+
+### getPlanetsInWorldRectangle
+
+▸ **getPlanetsInWorldRectangle**(`worldX`, `worldY`, `worldWidth`, `worldHeight`, `levels`, `planetLevelToRadii`, `updateIfStale?`): `LocatablePlanet`[]
+
+Gets the ids of all the planets that are both within the given bounding box (defined by its bottom
+left coordinate, width, and height) in the world and of a level that was passed in via the
+`planetLevels` parameter.
+
+#### Parameters
+
+| Name                 | Type                                                                                   | Default value |
+| :------------------- | :------------------------------------------------------------------------------------- | :------------ |
+| `worldX`             | `number`                                                                               | `undefined`   |
+| `worldY`             | `number`                                                                               | `undefined`   |
+| `worldWidth`         | `number`                                                                               | `undefined`   |
+| `worldHeight`        | `number`                                                                               | `undefined`   |
+| `levels`             | `number`[]                                                                             | `undefined`   |
+| `planetLevelToRadii` | `Map`<`number`, [`Radii`](../interfaces/Backend_GameLogic_ViewportEntities.Radii.md)\> | `undefined`   |
+| `updateIfStale`      | `boolean`                                                                              | `true`        |
+
+#### Returns
+
+`LocatablePlanet`[]
+
+---
+
+### getRevealedLocations
+
+▸ **getRevealedLocations**(): `Map`<`LocationId`, `RevealedLocation`\>
+
+#### Returns
+
+`Map`<`LocationId`, `RevealedLocation`\>
+
+---
+
+### getSilverCurveAtPercent
+
+▸ **getSilverCurveAtPercent**(`planet`, `percent`): `undefined` \| `number`
+
+returns timestamp (seconds) that planet will reach percent% of silcap if
+doesn't produce silver, returns undefined if already over percent% of silcap,
+returns undefined
+
+#### Parameters
+
+| Name      | Type     |
+| :-------- | :------- |
+| `planet`  | `Planet` |
+| `percent` | `number` |
+
+#### Returns
+
+`undefined` \| `number`
+
+---
+
+### getUnconfirmedBuyGPTCredits
+
+▸ **getUnconfirmedBuyGPTCredits**(): `undefined` \| `UnconfirmedBuyGPTCredits`
+
+#### Returns
+
+`undefined` \| `UnconfirmedBuyGPTCredits`
+
+---
+
+### getUnconfirmedMoves
+
+▸ **getUnconfirmedMoves**(): `UnconfirmedMove`[]
+
+#### Returns
+
+`UnconfirmedMove`[]
+
+---
+
+### getUnconfirmedReveal
+
+▸ **getUnconfirmedReveal**(): `undefined` \| `UnconfirmedReveal`
+
+#### Returns
+
+`undefined` \| `UnconfirmedReveal`
+
+---
+
+### getUnconfirmedUpgrades
+
+▸ **getUnconfirmedUpgrades**(): `UnconfirmedUpgrade`[]
+
+#### Returns
+
+`UnconfirmedUpgrade`[]
+
+---
+
+### getUnconfirmedWormholeActivations
+
+▸ **getUnconfirmedWormholeActivations**(): `UnconfirmedActivateArtifact`[]
+
+#### Returns
+
+`UnconfirmedActivateArtifact`[]
+
+---
+
+### getWormholes
+
+▸ **getWormholes**(): `Iterable`<[`Wormhole`](../modules/_types_global_GlobalTypes.md#wormhole)\>
+
+#### Returns
+
+`Iterable`<[`Wormhole`](../modules/_types_global_GlobalTypes.md#wormhole)\>
+
+---
+
+### isPlanetInContract
+
+▸ **isPlanetInContract**(`planetId`): `boolean`
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `planetId` | `LocationId` |
+
+#### Returns
+
+`boolean`
+
+---
+
+### markLocationRevealed
+
+▸ **markLocationRevealed**(`revealedLocation`): `void`
+
+#### Parameters
+
+| Name               | Type               |
+| :----------------- | :----------------- |
+| `revealedLocation` | `RevealedLocation` |
+
+#### Returns
+
+`void`
+
+---
+
+### onTxIntent
+
+▸ **onTxIntent**(`txIntent`): `void`
+
+We call this function whenever the user requests that we send a transaction to the blockchain
+with their localstorage wallet. You can think of it as one of the hubs which connects
+`GameObjects` to the rest of the world.
+
+Inside this function, we update the relevant internal game objects to reflect that the user has
+requested a particular action. Additionally, we publish the appropriate events to the relevant
+[Monomitter](../modules/Frontend_Utils_Monomitter.md#monomitter) instances that are stored in this class.
+
+In the case of something like prospecting for an artifact, this allows us to display a spinner
+text which says "Prospecting..."
+
+In the case of the user sending energy from one planet to another planet, this allows us to
+display a dashed line between the two planets in their new voyage.
+
+Whenever we update an entity, we must do it via that entity's type's corresponding
+`set<EntityType>` function, in order for us to publish these events.
+
+#### Parameters
+
+| Name       | Type       |
+| :--------- | :--------- |
+| `txIntent` | `TxIntent` |
+
+#### Returns
+
+`void`
+
+---
+
+### planetLevelFromHexPerlin
+
+▸ **planetLevelFromHexPerlin**(`hex`, `perlin`): `PlanetLevel`
+
+#### Parameters
+
+| Name     | Type         |
+| :------- | :----------- |
+| `hex`    | `LocationId` |
+| `perlin` | `number`     |
+
+#### Returns
+
+`PlanetLevel`
+
+---
+
+### planetTypeFromHexPerlin
+
+▸ **planetTypeFromHexPerlin**(`hex`, `perlin`): `PlanetType`
+
+#### Parameters
+
+| Name     | Type         |
+| :------- | :----------- |
+| `hex`    | `LocationId` |
+| `perlin` | `number`     |
+
+#### Returns
+
+`PlanetType`
+
+---
+
+### processArrivalsForPlanet
+
+▸ `Private` **processArrivalsForPlanet**(`planetId`, `arrivals`): `ArrivalWithTimer`[]
+
+#### Parameters
+
+| Name       | Type              |
+| :--------- | :---------------- |
+| `planetId` | `LocationId`      |
+| `arrivals` | `QueuedArrival`[] |
+
+#### Returns
+
+`ArrivalWithTimer`[]
+
+---
+
+### replaceArtifactFromContractData
+
+▸ **replaceArtifactFromContractData**(`artifact`): `void`
+
+received some artifact data from the contract. update our stores
+
+#### Parameters
+
+| Name       | Type       |
+| :--------- | :--------- |
+| `artifact` | `Artifact` |
+
+#### Returns
+
+`void`
+
+---
+
+### replaceArtifactsFromContractData
+
+▸ **replaceArtifactsFromContractData**(`artifacts`): `void`
+
+#### Parameters
+
+| Name        | Type                    |
+| :---------- | :---------------------- |
+| `artifacts` | `Iterable`<`Artifact`\> |
+
+#### Returns
+
+`void`
+
+---
+
+### replacePlanetFromContractData
+
+▸ **replacePlanetFromContractData**(`planet`, `updatedArrivals?`, `updatedArtifactsOnPlanet?`, `revealedLocation?`): `void`
+
+received some planet data from the contract. update our stores
+
+#### Parameters
+
+| Name                        | Type               |
+| :-------------------------- | :----------------- |
+| `planet`                    | `Planet`           |
+| `updatedArrivals?`          | `QueuedArrival`[]  |
+| `updatedArtifactsOnPlanet?` | `ArtifactId`[]     |
+| `revealedLocation?`         | `RevealedLocation` |
+
+#### Returns
+
+`void`
+
+---
+
+### setArtifact
+
+▸ `Private` **setArtifact**(`artifact`): `void`
+
+Set an artifact into our cached store. Should ALWAYS call this when setting an artifact.
+`this.artifacts` and `this.myArtifacts` should NEVER be accessed directly!
+This function also handles managing artifact update messages and indexing the map of owned artifacts.
+
+#### Parameters
+
+| Name       | Type       | Description         |
+| :--------- | :--------- | :------------------ |
+| `artifact` | `Artifact` | the artifact to set |
+
+#### Returns
+
+`void`
+
+---
+
+### setPlanet
+
+▸ `Private` **setPlanet**(`planet`): `void`
+
+Set a planet into our cached store. Should ALWAYS call this when setting a planet.
+`this.planets` and `this.myPlanets` should NEVER be accessed directly!
+This function also handles managing planet update messages and indexing the map of owned planets.
+
+#### Parameters
+
+| Name     | Type     | Description       |
+| :------- | :------- | :---------------- |
+| `planet` | `Planet` | the planet to set |
+
+#### Returns
+
+`void`
+
+---
+
+### spaceTypeFromPerlin
+
+▸ **spaceTypeFromPerlin**(`perlin`): `SpaceType`
+
+#### Parameters
+
+| Name     | Type     |
+| :------- | :------- |
+| `perlin` | `number` |
+
+#### Returns
+
+`SpaceType`
+
+---
+
+### updatePlanet
+
+▸ **updatePlanet**(`id`, `updateFn`): `void`
+
+Given a planet id, update the state of the given planet by calling the given update function.
+If the planet was updated, then also publish the appropriate event.
+
+#### Parameters
+
+| Name       | Type                      |
+| :--------- | :------------------------ |
+| `id`       | `LocationId`              |
+| `updateFn` | (`p`: `Planet`) => `void` |
+
+#### Returns
+
+`void`
+
+---
+
+### updatePlanetIfStale
+
+▸ `Private` **updatePlanetIfStale**(`planet`): `void`
+
+#### Parameters
+
+| Name     | Type     |
+| :------- | :------- |
+| `planet` | `Planet` |
+
+#### Returns
+
+`void`
+
+---
+
+### updateScore
+
+▸ `Private` **updateScore**(`planetId`): `void`
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `planetId` | `LocationId` |
+
+#### Returns
+
+`void`
+
+---
+
+### getSilverNeeded
+
+▸ `Static` **getSilverNeeded**(`planet`): `number`
+
+#### Parameters
+
+| Name     | Type     |
+| :------- | :------- |
+| `planet` | `Planet` |
+
+#### Returns
+
+`number`
+
+---
+
+### planetCanUpgrade
+
+▸ `Static` **planetCanUpgrade**(`planet`): `boolean`
+
+#### Parameters
+
+| Name     | Type     |
+| :------- | :------- |
+| `planet` | `Planet` |
+
+#### Returns
+
+`boolean`

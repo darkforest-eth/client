@@ -1,14 +1,62 @@
+import {
+  Artifact,
+  Biome,
+  EthTxStatus,
+  LocatablePlanet,
+  Planet,
+  SubmittedTx,
+  TxIntent,
+} from '@darkforest_eth/types';
 import EventEmitter from 'events';
 import React from 'react';
-import { TxIntent, EthTxStatus, SubmittedTx, Planet, LocatablePlanet } from '@darkforest_eth/types';
 import { biomeName } from '../../Backend/GameLogic/ArtifactUtils';
 import { getRandomActionId } from '../../Backend/Utils/Utils';
 import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
-import { EthIcon } from '../Components/Icons';
-import { CenterChunkLink, FAQ04Link, PlanetNameLink, TxLink } from '../Components/Text';
+import {
+  FoundSpace,
+  FoundDeepSpace,
+  FoundSwamp,
+  Quasar,
+  FoundDeadSpace,
+  FoundPirates,
+  FoundSilver,
+  FoundTradingPost,
+  FoundComet,
+  FoundRuins,
+  FoundForest,
+  FoundGrassland,
+  FoundTundra,
+  FoundDesert,
+  FoundWasteland,
+  FoundLava,
+  FoundIce,
+  FoundOcean,
+  FoundCorrupted,
+  PlanetAttacked,
+  PlanetLost,
+  PlanetConquered,
+  ArtifactFound,
+  ArtifactProspected,
+  TxInitialized,
+  TxAccepted,
+  TxConfirmed,
+  TxDeclined,
+} from '../Components/Icons';
+import {
+  ArtifactTypeText,
+  ArtifactRarityLabelAnim,
+  ArtifactBiomeText,
+} from '../Components/Labels/ArtifactLabels';
+import {
+  CenterChunkLink,
+  FAQ04Link,
+  PlanetNameLink,
+  TxLink,
+  ArtifactNameLink,
+} from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 
-export enum NotificationType {
+export const enum NotificationType {
   Tx,
   CanUpgrade,
   BalanceEmpty,
@@ -21,10 +69,42 @@ export enum NotificationType {
   FoundSilverBank,
   FoundTradingPost,
   FoundComet,
-  FoundArtifact,
+  FoundFoundry,
   FoundBiome,
+  FoundBiomeOcean,
+  FoundBiomeForest,
+  FoundBiomeGrassland,
+  FoundBiomeTundra,
+  FoundBiomeSwamp,
+  FoundBiomeDesert,
+  FoundBiomeIce,
+  FoundBiomeWasteland,
+  FoundBiomeLava,
+  FoundBiomeCorrupted,
+  PlanetLost,
+  PlanetWon,
+  PlanetAttacked,
+  ArtifactProspected,
+  ArtifactFound,
   ReceivedPlanet,
   Generic,
+}
+
+const BiomeNotificationMap = {
+  [Biome.OCEAN]: NotificationType.FoundBiomeOcean,
+  [Biome.FOREST]: NotificationType.FoundBiomeForest,
+  [Biome.GRASSLAND]: NotificationType.FoundBiomeGrassland,
+  [Biome.TUNDRA]: NotificationType.FoundBiomeTundra,
+  [Biome.SWAMP]: NotificationType.FoundBiomeSwamp,
+  [Biome.DESERT]: NotificationType.FoundBiomeDesert,
+  [Biome.ICE]: NotificationType.FoundBiomeIce,
+  [Biome.WASTELAND]: NotificationType.FoundBiomeWasteland,
+  [Biome.LAVA]: NotificationType.FoundBiomeLava,
+  [Biome.CORRUPTED]: NotificationType.FoundBiomeCorrupted,
+};
+function getNotificationTypeFromPlanetBiome(biome: Biome): NotificationType {
+  if (!biome) throw new Error('Biome is a required to get a NotificationType');
+  return BiomeNotificationMap[biome];
 }
 
 export type NotificationInfo = {
@@ -37,7 +117,7 @@ export type NotificationInfo = {
   txStatus?: EthTxStatus;
 };
 
-export enum NotificationManagerEvent {
+export const enum NotificationManagerEvent {
   Notify = 'Notify',
 }
 
@@ -66,9 +146,93 @@ class NotificationManager extends EventEmitter {
     return NotificationManager.instance;
   }
 
-  private getIcon(type: NotificationType) {
-    if (type === NotificationType.Tx) return <EthIcon />;
-    else return <span>!</span>;
+  private getIcon(type: NotificationType, txStatus?: EthTxStatus) {
+    switch (type) {
+      case NotificationType.Tx:
+        if (txStatus === EthTxStatus.Init) return <TxInitialized height={'48px'} width={'48px'} />;
+        else if (txStatus === EthTxStatus.Submit)
+          return <TxAccepted height={'px'} width={'48px'} />;
+        else if (txStatus === EthTxStatus.Confirm)
+          return <TxConfirmed height={'48px'} width={'48px'} />;
+        else if (txStatus === EthTxStatus.Fail)
+          return <TxDeclined height={'48px'} width={'48px'} />;
+
+        break;
+      case NotificationType.FoundSilverBank:
+        return <Quasar height={'48px'} width={'48px'} />;
+        break;
+      case NotificationType.FoundSpace:
+        return <FoundSpace height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.FoundDeepSpace:
+        return <FoundDeepSpace height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.FoundDeadSpace:
+        return <FoundDeadSpace height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.FoundPirates:
+        return <FoundPirates height={'48px'} width={'48px'} />;
+        break;
+      case NotificationType.FoundSilver:
+        return <FoundSilver height={'48px'} width={'48px'} />;
+        break;
+      case NotificationType.FoundTradingPost:
+        return <FoundTradingPost height={'48px'} width={'48px'} />;
+        break;
+      case NotificationType.FoundComet:
+        return <FoundComet height={'48px'} width={'48px'} />;
+        break;
+      case NotificationType.FoundFoundry:
+        return <FoundRuins height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.FoundBiomeOcean:
+        return <FoundOcean height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.FoundBiomeForest:
+        return <FoundForest height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.FoundBiomeGrassland:
+        return <FoundGrassland height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.FoundBiomeTundra:
+        return <FoundTundra height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.FoundBiomeSwamp:
+        return <FoundSwamp height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.FoundBiomeDesert:
+        return <FoundDesert height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.FoundBiomeIce:
+        return <FoundIce height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.FoundBiomeWasteland:
+        return <FoundWasteland height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.FoundBiomeLava:
+        return <FoundLava height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.FoundBiomeCorrupted:
+        return <FoundCorrupted height={'64px'} width={'64px'} />;
+        break;
+      case NotificationType.PlanetAttacked:
+        return <PlanetAttacked height={'48px'} width={'48px'} />;
+        break;
+      case NotificationType.PlanetLost:
+        return <PlanetLost height={'48px'} width={'48px'} />;
+        break;
+      case NotificationType.PlanetWon:
+        return <PlanetConquered height={'48px'} width={'48px'} />;
+        break;
+      case NotificationType.ArtifactProspected:
+        return <ArtifactProspected height={'48px'} width={'48px'} />;
+        break;
+      case NotificationType.ArtifactFound:
+        return <ArtifactFound height={'48px'} width={'48px'} />;
+      default:
+        return <span>!</span>;
+        break;
+    }
   }
 
   notify(type: NotificationType, message: React.ReactNode): void {
@@ -86,8 +250,7 @@ class NotificationManager extends EventEmitter {
       type: NotificationType.Tx,
       message,
       id: txData.actionId,
-      icon: this.getIcon(NotificationType.Tx),
-      color: getNotifColor(NotificationType.Tx, txStatus),
+      icon: this.getIcon(NotificationType.Tx, txStatus),
       txData,
       txStatus,
     });
@@ -248,7 +411,7 @@ class NotificationManager extends EventEmitter {
 
   foundBiome(planet: LocatablePlanet): void {
     this.notify(
-      NotificationType.FoundBiome,
+      getNotificationTypeFromPlanetBiome(planet.biome),
       <span>
         You have discovered the {biomeName(planet.biome)} biome! <br />
         Click to view <PlanetNameLink planet={planet} />
@@ -256,13 +419,59 @@ class NotificationManager extends EventEmitter {
     );
   }
 
-  foundArtifact(planet: LocatablePlanet): void {
+  foundFoundry(planet: LocatablePlanet): void {
     this.notify(
-      NotificationType.FoundArtifact,
+      NotificationType.FoundFoundry,
       <span>
         You have found a planet that can produce an artifact! Finding artifacts increases your
         score. Also, artifacts can be used to power up your planets and moves! <br />
         Click to view <PlanetNameLink planet={planet} />
+      </span>
+    );
+  }
+  artifactProspected(planet: LocatablePlanet): void {
+    this.notify(
+      NotificationType.ArtifactProspected,
+      <span>
+        You prospected a Foundry! <br />
+        What artifacts are waiting to be found on? Click to view <PlanetNameLink planet={planet} />
+      </span>
+    );
+  }
+
+  artifactFound(planet: LocatablePlanet, artifact: Artifact): void {
+    this.notify(
+      NotificationType.ArtifactFound,
+      <span>
+        You have found <ArtifactNameLink id={artifact.id} />, a{' '}
+        <ArtifactRarityLabelAnim artifact={artifact} /> <ArtifactBiomeText artifact={artifact} />{' '}
+        <ArtifactTypeText artifact={artifact} />
+        {'!'.repeat(artifact.rarity)} <br />
+        Click to view <PlanetNameLink planet={planet} />
+      </span>
+    );
+  }
+  planetConquered(planet: LocatablePlanet): void {
+    this.notify(
+      NotificationType.PlanetWon,
+      <span>
+        You conquered <PlanetNameLink planet={planet}></PlanetNameLink>, you're unstoppable!
+      </span>
+    );
+  }
+  planetLost(planet: LocatablePlanet): void {
+    this.notify(
+      NotificationType.PlanetLost,
+      <span>
+        You lost <PlanetNameLink planet={planet}></PlanetNameLink>, oh no!
+      </span>
+    );
+  }
+  planetAttacked(planet: LocatablePlanet): void {
+    this.notify(
+      NotificationType.PlanetAttacked,
+      <span>
+        Your Planet <PlanetNameLink planet={planet}></PlanetNameLink> has been attacked!
       </span>
     );
   }

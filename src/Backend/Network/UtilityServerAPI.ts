@@ -4,7 +4,7 @@ import { EthAddress } from '@darkforest_eth/types';
 
 export const WEBSERVER_URL = process.env.WEBSERVER_URL as string;
 
-export enum EmailResponse {
+export const enum EmailResponse {
   Success,
   Invalid,
   ServerError,

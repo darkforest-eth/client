@@ -19,6 +19,15 @@ const SVGWrapper = styled.span`
       fill: ${dfstyles.colors.text};
     }
   }
+  & img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const DefaultSVG = ({
@@ -709,4 +718,131 @@ export const StatIcon = ({ stat }: { stat: StatIdx }) => {
   else if (stat === StatIdx.Range) return <RangeIcon />;
   else if (stat === StatIdx.Speed) return <SpeedIcon />;
   else return <DefenseIcon />;
+};
+
+/** 
+ Allow for tweaking the size of an icon based on the context.
+ Biome & Spacetype Notifications should fill the notification box
+ Others should be 3/4's the size and centered
+*/
+interface AlertIcon {
+  height?: string;
+  width?: string;
+}
+
+export const Quasar = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/planettypes/quasar.svg' />;
+};
+
+export const FoundRuins = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/planettypes/ruins.svg' />;
+};
+
+export const FoundSpacetimeRip = ({ height, width }: AlertIcon) => {
+  return (
+    <img height={height} width={width} src='public/icons/alerts/planettypes/tradingpost.svg' />
+  );
+};
+
+export const FoundSilver = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/planettypes/asteroid.svg' />;
+};
+
+export const FoundTradingPost = ({ height, width }: AlertIcon) => {
+  return (
+    <img height={height} width={width} src='public/icons/alerts/planettypes/tradingpost.svg' />
+  );
+};
+
+export const FoundSpace = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/spacetypes/space.svg' />;
+};
+
+export const FoundDeepSpace = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/spacetypes/deepspace.svg' />;
+};
+
+export const FoundDeadSpace = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/spacetypes/deadspace.svg' />;
+};
+
+export const FoundPirates = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/combat/pirates.svg' />;
+};
+
+export const FoundComet = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/generic/generic.svg' />;
+};
+
+export const ArtifactFound = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/artifacts/find.svg' />;
+};
+export const ArtifactProspected = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/artifacts/prospect.svg' />;
+};
+
+export const FoundOcean = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/biomes/ocean.svg' />;
+};
+
+export const FoundForest = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/biomes/forest.svg' />;
+};
+
+export const FoundGrassland = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/biomes/grassland.svg' />;
+};
+
+export const FoundTundra = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/biomes/tundra.svg' />;
+};
+
+export const FoundSwamp = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/biomes/swamp.svg' />;
+};
+
+export const FoundDesert = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/biomes/desert.svg' />;
+};
+
+export const FoundIce = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/biomes/ice.svg' />;
+};
+
+export const FoundWasteland = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/biomes/wasteland.svg' />;
+};
+
+export const FoundLava = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/biomes/lava.svg' />;
+};
+
+export const FoundCorrupted = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/biomes/corrupted.svg' />;
+};
+export const PlanetAttacked = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/combat/planetattacked.svg' />;
+};
+export const PlanetLost = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/combat/planetlost.svg' />;
+};
+export const PlanetConquered = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/combat/planetwon.svg' />;
+};
+export const MetPlayer = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/combat/metplayer.svg' />;
+};
+export const TxAccepted = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/transactions/accepted.svg' />;
+};
+export const TxConfirmed = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/transactions/confirmed.svg' />;
+};
+export const TxInitialized = ({ height, width }: AlertIcon) => {
+  return (
+    <img height={height} width={width} src='public/icons/alerts/transactions/initialized.svg' />
+  );
+};
+export const TxDeclined = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='public/icons/alerts/transactions/declined.svg' />;
 };

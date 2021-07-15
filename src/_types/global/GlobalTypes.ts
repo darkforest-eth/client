@@ -40,7 +40,7 @@ export type HashConfig = {
   perlinMirrorY: boolean;
 };
 
-export enum StatIdx {
+export const enum StatIdx {
   EnergyCap = 0,
   EnergyGro = 1,
   Range = 2,

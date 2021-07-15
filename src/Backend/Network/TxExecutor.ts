@@ -63,7 +63,7 @@ export class TxExecutor extends EventEmitter {
    * Schedules this transaction to execute once all of the transactions
    * ahead of it have completed.
    */
-  public makeRequest<T, U>(
+  public makeRequest(
     type: EthTxType,
     actionId: string,
     contract: Contract,

@@ -3,12 +3,12 @@ import { css } from 'styled-components';
 
 export const ARTIFACT_ROW_H = 48;
 
-export const SPACE_TYPE_COLORS: Record<SpaceType, string> = {
+export const SPACE_TYPE_COLORS = {
   [SpaceType.NEBULA]: 'rgb(0, 20.4, 81.6)',
   [SpaceType.SPACE]: 'rgb(0, 5.4, 43.35)',
   [SpaceType.DEEP_SPACE]: 'rgb(2.04, 0, 6.12)',
   [SpaceType.DEAD_SPACE]: 'rgb(37.485, 0, 36)',
-};
+} as const;
 
 const dfstyles = {
   colors: {
@@ -26,7 +26,6 @@ const dfstyles = {
     dfgreen: '#00DC82',
     dfgreendark: '#025230',
     dfgreenlight: '#89facc',
-
     dfred: '#FF6492',
     dfyellow: '#e8e228',
 

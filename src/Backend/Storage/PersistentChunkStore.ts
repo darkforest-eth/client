@@ -22,14 +22,14 @@ import {
 } from '@darkforest_eth/types';
 import { DiagnosticUpdater } from '../Interfaces/DiagnosticUpdater';
 
-enum ObjectStore {
+const enum ObjectStore {
   DEFAULT = 'default',
   BOARD = 'knownBoard',
   UNCONFIRMED_ETH_TXS = 'unminedEthTxs',
   PLUGINS = 'plugins',
 }
 
-enum DBActionType {
+const enum DBActionType {
   UPDATE,
   DELETE,
 }

@@ -7,7 +7,7 @@ import { perlin, PerlinConfig } from '@darkforest_eth/hashing';
 import { ChunkStore } from '../../_types/darkforest/api/ChunkStoreTypes';
 import { getChunkKey } from './ChunkUtils';
 
-export enum MinerManagerEvent {
+export const enum MinerManagerEvent {
   DiscoveredNewChunk = 'DiscoveredNewChunk',
 }
 

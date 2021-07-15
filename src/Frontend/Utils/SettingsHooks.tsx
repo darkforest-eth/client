@@ -16,7 +16,7 @@ export const settingChanged$: Monomitter<Setting> = monomitter();
  * Each setting has a unique identifier. Each account gets to store its own local storage setting,
  * per instance of the dark forest contract that it's connected to.
  */
-export enum Setting {
+export const enum Setting {
   OptOutMetrics = 'OptOutMetrics',
   AutoApproveNonPurchaseTransactions = 'AutoApproveNonPurchaseTransactions',
   DrawChunkBorders = 'DrawChunkBorders',
@@ -40,7 +40,7 @@ export enum Setting {
   TutorialOpen = 'TutorialOpen',
 }
 
-export enum AutoGasSetting {
+export const enum AutoGasSetting {
   Slow = 'Slow',
   Average = 'Average',
   Fast = 'Fast',

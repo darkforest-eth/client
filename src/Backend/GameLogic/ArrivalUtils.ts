@@ -1,5 +1,6 @@
 import { CONTRACT_PRECISION } from '@darkforest_eth/constants';
 import { hasOwner } from '../Utils/Utils';
+import _ from 'lodash';
 import {
   Artifact,
   ArtifactType,
@@ -131,12 +132,23 @@ export const applyUpgrade = (planet: Planet, upgrade: Upgrade, unApply = false) 
   }
 };
 
+/**
+ * @param previous The previously calculated state of a planet
+ * @param current The current calculated state of the planet
+ * @param arrival The Arrival that caused the state change
+ */
+export interface PlanetDiff {
+  previous: Planet;
+  current: Planet;
+  arrival: QueuedArrival;
+}
+
 export const arrive = (
   toPlanet: Planet,
   artifactsOnPlanet: Artifact[],
   arrival: QueuedArrival,
   contractConstants: ContractConstants
-): void => {
+): PlanetDiff => {
   // this function optimistically simulates an arrival
   if (toPlanet.locationId !== arrival.toPlanet) {
     throw new Error(`attempted to apply arrival for wrong toPlanet ${toPlanet.locationId}`);
@@ -145,8 +157,9 @@ export const arrive = (
   // update toPlanet energy and silver right before arrival
   updatePlanetToTime(toPlanet, artifactsOnPlanet, arrival.arrivalTime * 1000, contractConstants);
 
+  const prevPlanet = _.cloneDeep(toPlanet);
   if (toPlanet.destroyed) {
-    return;
+    return { arrival: arrival, previous: toPlanet, current: toPlanet };
   }
 
   // apply energy
@@ -193,6 +206,7 @@ export const arrive = (
   if (arrival.artifactId) {
     toPlanet.heldArtifactIds.push(arrival.artifactId);
   }
+  return { arrival, current: toPlanet, previous: prevPlanet };
 };
 
 /**
