@@ -45,48 +45,33 @@ const html = htm.bind(h)
 function App() {
   console.log('Running Status Report')
 
-  // Grab currently selected planet
-  let [selectedPlanet, setSelectedPlanet] = useState(ui.getSelectedPlanet());
-
-  useLayoutEffect(() => {
-    let onClick = () => {
-      setSelectedPlanet(ui.getSelectedPlanet());
-    }
-    window.addEventListener('click', onClick);
-
-    return () => {
-      window.removeEventListener('click', onClick);
-    }
-  }, []);
-
   return html`
     <div>
-      Selected: ${selectedPlanet ? planetName(selectedPlanet) : '- none -'}
-      <${PlanetsWithEnergy} selectedPlanet=${selectedPlanet} />
+      <${PlanetsWithEnergy} />
       <br />
       <hr />
       <br />
-      <${FullSilver} selectedPlanet=${selectedPlanet} />
+      <${FullSilver} />
       <br />
       <hr />
       <br />
-      <${ProspectOrFind} selectedPlanet=${selectedPlanet} />
+      <${ProspectOrFind} />
       <br />
       <hr />
       <br />
-      <${Upgradable} selectedPlanet=${selectedPlanet} />
+      <${Upgradable} />
       <br />
       <hr />
       <br />
-      <${FoundriesToTake} selectedPlanet=${selectedPlanet} />
+      <${FoundriesToTake} />
       <br />
       <hr />
       <br />
-      <${Cannons} selectedPlanet=${selectedPlanet} />
+      <${Cannons} />
       <br />
       <hr />
       <br />
-      <${UsefulArtifacts} selectedPlanet=${selectedPlanet} />
+      <${UsefulArtifacts} />
     </div>
   `;
 }
@@ -107,7 +92,7 @@ class MissionControl implements DFPlugin {
       render(html`<${App} />`, container)
       this.loop = setInterval(
         () => render(html`<${App} />`, container),
-        1000 * 60 * 0.5
+        1000 * 60 * 10 // 10 minutes
       )
   }
 

@@ -156,9 +156,8 @@ export function availableSilver(planet: Planet) {
   return planet.silver - getPendingSilver(planet)
 }
 
-export function isFindable(planet: Planet, currentBlockNumber: number) {
+export function isFindable(planet: Planet) {
   return (
-    currentBlockNumber !== undefined &&
     df.isPlanetMineable(planet) &&
     planet.prospectedBlockNumber !== undefined &&
     !planet.hasTriedFindingArtifact &&

@@ -8,10 +8,14 @@ import { blocksLeft, blocksLeftToProspectExpiration, enoughEnergyToProspect, isF
 
 export function prospectAndFind()
 {
+  if (df.isRoundOver()) return
+
   df.getMyPlanets()
-    .filter(p => isFindable)
+    .filter(p => isFindable(p))
     .sort((a, b) => blocksLeft(a) - blocksLeft(b))
-    .map(p => df.findArtifact(p.locationId))
+    .map(p => {
+      df.findArtifact(p.locationId)
+    })
 
   df.getMyPlanets()
     .filter(isProspectable)

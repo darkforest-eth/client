@@ -5,6 +5,7 @@ import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManage
 import { PlanetLink } from '../components/PlanetLink'
 import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
+import { ManageInterval } from '../Components/ManageInterval'
 
 import { capturePlanets } from '../strategies/Crawl'
 import { buttonGridStyle, energy, hasPendingMove, isAsteroid, PlanetTypes, SelectedPlanetProp } from '../utils'
@@ -13,43 +14,44 @@ const pauseable = require('pauseable')
 declare const df: GameManager
 declare const ui: GameUIManager
 
-function onCrawlClick(selectedPlanet: Planet) {
+function onCrawlClick(selectedPlanet: Planet|null = null) {
   console.log('Crawling')
-  // capturePlanets({
-  //   fromId: selectedPlanet?.locationId,
-  //   toMinLevel: 2,
-  //   fromMaxLevel: 4,
-  //   fromMinEnergyLeftPercent: 37.5,
-  //   toPlanetType: PlanetTypes.RIP,
-  //   toTargetEnergy: 15
-  // })
 
-  // capturePlanets({
-  //   fromId: selectedPlanet?.locationId,
-  //   toMinLevel: 4,
-  //   fromMaxLevel: 4,
-  //   fromMinEnergyLeftPercent: 37.5,
-  //   toPlanetType: PlanetTypes.QUASAR,
-  //   toTargetEnergy: 0
-  // })
+  capturePlanets({
+    fromId: selectedPlanet?.locationId,
+    toMinLevel: 2,
+    fromMaxLevel: 4,
+    fromMinEnergyLeftPercent: 37.5,
+    toPlanetType: PlanetTypes.RIP,
+    toTargetEnergy: 15
+  })
 
-  // capturePlanets({
-  //   fromId: selectedPlanet?.locationId,
-  //   toMinLevel: 4,
-  //   fromMaxLevel: 4,
-  //   fromMinEnergyLeftPercent: 37.5,
-  //   toPlanetType: PlanetTypes.ASTEROID,
-  //   toTargetEnergy: 15
-  // })
+  capturePlanets({
+    fromId: selectedPlanet?.locationId,
+    toMinLevel: 4,
+    fromMaxLevel: 4,
+    fromMinEnergyLeftPercent: 37.5,
+    toPlanetType: PlanetTypes.QUASAR,
+    toTargetEnergy: 0
+  })
 
-  // capturePlanets({
-  //   fromId: selectedPlanet?.locationId,
-  //   toMinLevel: 4,
-  //   fromMaxLevel: 4,
-  //   fromMinEnergyLeftPercent: 37.5,
-  //   toPlanetType: PlanetTypes.PLANET,
-  //   toTargetEnergy: 15
-  // })
+  capturePlanets({
+    fromId: selectedPlanet?.locationId,
+    toMinLevel: 4,
+    fromMaxLevel: 4,
+    fromMinEnergyLeftPercent: 37.5,
+    toPlanetType: PlanetTypes.ASTEROID,
+    toTargetEnergy: 15
+  })
+
+  capturePlanets({
+    fromId: selectedPlanet?.locationId,
+    toMinLevel: 4,
+    fromMaxLevel: 4,
+    fromMinEnergyLeftPercent: 37.5,
+    toPlanetType: PlanetTypes.PLANET,
+    toTargetEnergy: 15
+  })
 }
 
 export class PlanetsWithEnergy extends Component
@@ -58,11 +60,10 @@ export class PlanetsWithEnergy extends Component
 
   constructor() {
     super()
-    console.log('mount')
-    this.interval = pauseable.setInterval(5 * 60 * 1000, onCrawlClick);
+    this.interval = pauseable.setInterval(10 * 60 * 1000, onCrawlClick)
   }
 
-  render(props: SelectedPlanetProp, state: any)
+  render()
   {
     console.log('PlanetsWithEnergy')
     const headers = ['Planet Name', 'Level', 'Energy'];
@@ -83,9 +84,9 @@ export class PlanetsWithEnergy extends Component
 
     return <div>
     <Header>Planets with &gt; 75% Energy</Header>
-    <div>Next Tick in {this.interval.next()}</div>
+    <ManageInterval interval={this.interval} />
     <div style={buttonGridStyle}>
-      <button onClick={() => onCrawlClick(props.selectedPlanet)}>
+      <button onClick={() => onCrawlClick(ui.getSelectedPlanet())}>
         Crawl
       </button>
     </div>

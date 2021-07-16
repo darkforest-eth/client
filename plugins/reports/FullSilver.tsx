@@ -1,10 +1,11 @@
-import { h } from 'preact'
+import { Component, h } from 'preact'
 import { Planet } from '@darkforest_eth/types'
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { PlanetLink } from '../components/PlanetLink'
 import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
+import { ManageInterval } from '../Components/ManageInterval'
 
 import { distributeSilver } from '../strategies/DistributeSilver'
 import { withdrawSilver } from '../strategies/WithdrawSilver'
@@ -12,58 +13,78 @@ import { withdrawSilver } from '../strategies/WithdrawSilver'
 import { capturePlanets } from '../strategies/Crawl'
 import { availableSilver, buttonGridStyle, energy, hasPendingMove, isAsteroid, PlanetTypes, SelectedPlanetProp } from '../utils'
 
+const pauseable = require('pauseable')
+
 declare const df: GameManager
 declare const ui: GameUIManager
 
-export function FullSilver(props: SelectedPlanetProp)
+function onDistributeClick(selectedPlanet: Planet|null = null) {
+  distributeSilver({
+    fromId: selectedPlanet?.locationId,
+    fromMaxLevel: 4,
+    toMinLevel: 4,
+    toPlanetType: PlanetTypes.PLANET,
+  })
+
+  distributeSilver({
+    fromId: selectedPlanet?.locationId,
+    fromMaxLevel: 4,
+    toMinLevel: 2,
+    toPlanetType: PlanetTypes.RIP,
+  })
+}
+
+function onWithdrawClick(selectedPlanet: Planet|null = null) {
+  withdrawSilver({
+    fromId: selectedPlanet?.locationId
+  })
+}
+
+export class FullSilver extends Component
 {
-  const headers = ['Planet Name', 'Level', 'Silver'];
-  const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
+  interval: any
 
-  const rows = df.getMyPlanets()
-    .filter(p => p.planetLevel >= 4)
-    .filter(p => availableSilver(p) == p.silverCap)
-    .sort((a, b) => b.silverCap - a.silverCap)
-
-  const columns = [
-    (planet: Planet) => <PlanetLink planet={planet}>{df.getProcgenUtils().getPlanetName(planet)}</PlanetLink>,
-    (planet: Planet) => <Sub>{planet.planetLevel}</Sub>,
-    (planet: Planet) => <Sub>{planet.silverCap / 1000}K</Sub>,
-  ];
-
-  function onDistributeClick() {
-    distributeSilver({
-      fromId: props.selectedPlanet?.locationId,
-      fromMaxLevel: 4,
-      toMinLevel: 4,
-      toPlanetType: PlanetTypes.PLANET,
-    })
-
-    distributeSilver({
-      fromId: props.selectedPlanet?.locationId,
-      fromMaxLevel: 4,
-      toMinLevel: 2,
-      toPlanetType: PlanetTypes.RIP,
+  constructor() {
+    super()
+    this.interval = pauseable.setInterval(5 * 60 * 1000, () => {
+      onDistributeClick()
+      onWithdrawClick()
     })
   }
 
-  function onWithdrawClick() {
-    withdrawSilver({
-      fromId: props.selectedPlanet?.locationId
-    })
-  }
+  render()
+  {
+    const headers = ['Planet Name', 'Level', 'Silver'];
+    const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
-  return <div>
-    <Header>Full Silver</Header>
-    <div style={buttonGridStyle}>
-      <button onClick={onDistributeClick}>Rip</button>
-      <button onClick={onWithdrawClick}>Withdraw</button>
+    const rows = df.getMyPlanets()
+      .filter(p => p.planetLevel >= 4)
+      .filter(p => availableSilver(p) == p.silverCap)
+      .sort((a, b) => b.silverCap - a.silverCap)
+
+    const columns = [
+      (planet: Planet) => <PlanetLink planet={planet}>{df.getProcgenUtils().getPlanetName(planet)}</PlanetLink>,
+      (planet: Planet) => <Sub>{planet.planetLevel}</Sub>,
+      (planet: Planet) => <Sub>{planet.silverCap / 1000}K</Sub>,
+    ];
+
+    return <div>
+      <Header>Full Silver</Header>
+      <ManageInterval interval={this.interval} />
+      <div style={buttonGridStyle}>
+        <button onClick={() => onDistributeClick(ui.getSelectedPlanet())}>Rip</button>
+        <button onClick={() => onWithdrawClick(ui.getSelectedPlanet())}>Withdraw</button>
+      </div>
+      <Table
+        rows={rows}
+        headers={headers}
+        columns={columns}
+        alignments={alignments}
+      />
     </div>
-    <Table
-      rows={rows}
-      headers={headers}
-      columns={columns}
-      alignments={alignments}
-    />
-  </div>
+  }
+
+  componentWillUnmount() {
+    this.interval.clear()
+  }
 }
