@@ -140,6 +140,28 @@ export function SettingsPane({
       setFailure('Unable to export map right now.');
     }
   };
+  const onExportMapToFile = async () => {
+    if (uiManager) {
+      const chunks = uiManager.getExploredChunks();
+      const chunksAsArray = Array.from(chunks);
+      try {
+        const map = JSON.stringify(chunksAsArray);
+        const blob = new Blob([map]);
+        const url = URL.createObjectURL(blob);
+        const tempElement = document.createElement("a");
+        tempElement.download = 'map.json';
+        tempElement.href = url;
+        tempElement.click();
+        URL.revokeObjectURL(url);
+        setSuccess('Map exported to file!');
+      } catch (err) {
+        console.error(err);
+        setFailure('Failed to export');
+      }
+    } else {
+      setFailure('Unable to export map right now.');
+    }
+  };
   const onImportMapFromTextBox = async () => {
     try {
       const chunks = JSON.parse(importMapByTextBoxValue);
@@ -166,6 +188,35 @@ export function SettingsPane({
       } catch (err) {
         console.error(err);
         setFailure('Invalid map data. Check the data in your clipboard.');
+        return;
+      }
+      await uiManager.bulkAddNewChunks(chunks as Chunk[]);
+      setSuccess('Successfully imported a map!');
+    } else {
+      setFailure('Unable to import map right now.');
+    }
+  };
+  const onImportMapFromFile = async () => {
+    if (uiManager) {
+      const file = await new Promise<File | null | undefined>((resolve, reject) => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.onchange = e => {
+          resolve(input.files?.item(0));
+        };
+        input.click();
+      });
+      if (!file) {
+        setFailure('No file selected.');
+        return;
+      }
+      let chunks;
+      const input = await file.text();
+      try {
+        chunks = JSON.parse(input);
+      } catch (err) {
+        console.error(err);
+        setFailure('Invaild map data. Check the data in your file.');
         return;
       }
       await uiManager.bulkAddNewChunks(chunks as Chunk[]);
@@ -324,6 +375,16 @@ export function SettingsPane({
 
           <Btn wide onClick={onImportMap}>
             Import Map from Clipboard
+          </Btn>
+          <Spacer height={8} />
+
+          <Btn wide onClick={onExportMapToFile}>
+            Export Map to File
+          </Btn>
+          <Spacer height={8} />
+
+          <Btn wide onClick={onImportMapFromFile}>
+            Import Map from File
           </Btn>
           <Spacer height={8} />
 
