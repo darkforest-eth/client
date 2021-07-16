@@ -32,8 +32,8 @@ export function UsefulArtifacts(props: SelectedPlanetProp)
     .sort((a, b) => b!.rarity - a!.rarity)
 
   const columns = [
-    (a: Artifact) => <Sub>${artifactNameFromArtifact(a)}</Sub>,
-    (a: Artifact) => <Sub>${Object.keys(ArtifactTypes)[a.artifactType]}</Sub>,
+    (a: Artifact) => <Sub>{artifactNameFromArtifact(a)}</Sub>,
+    (a: Artifact) => <Sub>{Object.keys(ArtifactTypes)[a.artifactType]}</Sub>,
     (a: Artifact) => {
       const planet = df.getPlanetWithId(a.onPlanetId)
 
