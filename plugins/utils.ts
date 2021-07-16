@@ -224,3 +224,13 @@ export function canBeActivated(a: Artifact) {
   const canBeActivatedAt = addHours(lastDeactivated, 24)
   return isAfter(new Date, canBeActivatedAt)
 }
+
+export const buttonGridStyle = {
+  display: 'grid',
+  gridAutoFlow: 'column',
+  gridColumnGap: '10px'
+}
+
+export interface SelectedPlanetProp {
+  selectedPlanet: Planet,
+}
