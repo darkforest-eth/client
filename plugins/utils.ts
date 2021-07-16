@@ -139,7 +139,7 @@ export function getEnergyNeeded(from: Planet, to: Planet, targetEnergy: number) 
 
   const energyNeeded = Math.ceil(df.getEnergyNeededForMove(from.locationId, to.locationId, energyArriving));
 
-  console.log(`${planetName(from)} to ${planetName(to)} will take ${energyNeeded}.`)
+  // console.log(`${planetName(from)} to ${planetName(to)} will take ${energyNeeded}.`)
 
   return energyNeeded
 }

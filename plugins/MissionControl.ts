@@ -107,7 +107,7 @@ class MissionControl implements DFPlugin {
       render(html`<${App} />`, container)
       this.loop = setInterval(
         () => render(html`<${App} />`, container),
-        1000 * 30 * 5
+        1000 * 60 * 0.5
       )
   }
 

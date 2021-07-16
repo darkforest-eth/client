@@ -27,7 +27,6 @@ export class Table<T> extends Component
     alignments?: Array<'r' | 'c' | 'l'>;
     headerStyle?: React.CSSProperties;
   }, state: any) {
-    console.log(headers)
     return (
       <table style={TableStyle}>
         <thead style={headerStyle}>
