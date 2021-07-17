@@ -11,7 +11,7 @@ import { withdrawSilver } from '../strategies/WithdrawSilver'
 import { upgrade } from '../strategies/Upgrade'
 
 import { capturePlanets } from '../strategies/Crawl'
-import { ArtifactRarities, ArtifactTypes, availableSilver, buttonGridStyle, canBeActivated, canHaveArtifact, canPlanetUpgrade, energy, enoughEnergyToProspect, getAllArtifacts, getPlanetRank, hasPendingMove, isActivated, isAsteroid, isFindable, isProspectable, isReachable, isUnowned, PlanetTypes, SelectedPlanetProp } from '../utils'
+import { ArtifactRarities, ArtifactTypes, canBeActivated, getAllArtifacts, getPlanetRank, hasPendingMove, isActivated, isAsteroid, isFindable, isProspectable, isReachable, isUnowned, PlanetTypes, SelectedPlanetProp } from '../utils'
 import { addHours, formatDistanceToNow, fromUnixTime, isAfter } from 'date-fns'
 
 declare const df: GameManager

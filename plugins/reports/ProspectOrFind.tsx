@@ -7,11 +7,7 @@ import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 
-import { distributeSilver } from '../strategies/DistributeSilver'
-import { withdrawSilver } from '../strategies/WithdrawSilver'
-
-import { capturePlanets } from '../strategies/Crawl'
-import { availableSilver, blocksLeft, buttonGridStyle, energy, enoughEnergyToProspect, hasPendingMove, isAsteroid, isFindable, isProspectable, PlanetTypes, SelectedPlanetProp } from '../utils'
+import { blocksLeft, buttonGridStyle, enoughEnergyToProspect, isFindable, isProspectable } from '../utils'
 import { prospectAndFind } from 'plugins/strategies/ProspectAndFind'
 
 const pauseable = require('pauseable')

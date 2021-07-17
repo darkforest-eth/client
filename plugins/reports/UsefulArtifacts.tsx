@@ -10,12 +10,9 @@ import { distributeSilver } from '../strategies/DistributeSilver'
 import { distributeArtifacts } from '../strategies/DistributeArtifacts'
 import { withdrawArtifacts } from '../strategies/WithdrawArtifacts'
 import { activateArtifacts } from '../strategies/ActivateArtifacts'
-import { upgrade } from '../strategies/Upgrade'
 import { ManageInterval } from '../Components/ManageInterval'
 
-import { capturePlanets } from '../strategies/Crawl'
-import { ArtifactRarities, ArtifactTypes, availableSilver, buttonGridStyle, canBeActivated, canHaveArtifact, canPlanetUpgrade, energy, enoughEnergyToProspect, getAllArtifacts, getPlanetRank, hasPendingMove, isActivated, isAsteroid, isFindable, isProspectable, isReachable, isUnowned, PlanetTypes, SelectedPlanetProp } from '../utils'
-import { addHours, formatDistanceToNow, fromUnixTime, isAfter } from 'date-fns'
+import { ArtifactRarities, ArtifactTypes, buttonGridStyle, canBeActivated, getAllArtifacts, isActivated, PlanetTypes } from '../utils'
 
 const pauseable = require('pauseable')
 

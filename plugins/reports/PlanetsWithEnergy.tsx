@@ -8,7 +8,7 @@ import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 
 import { capturePlanets } from '../strategies/Crawl'
-import { buttonGridStyle, energy, hasPendingMove, isAsteroid, PlanetTypes, SelectedPlanetProp } from '../utils'
+import { buttonGridStyle, energy, hasPendingMove, isAsteroid, PlanetTypes } from '../utils'
 const pauseable = require('pauseable')
 
 declare const df: GameManager

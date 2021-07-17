@@ -16,8 +16,6 @@ import { useState, useLayoutEffect } from 'preact/hooks'
 import GameManager from '@df/GameManager'
 import GameUIManager from '@df/GameUIManager'
 
-import { availableEnergy, availableSilver, canPlanetUpgrade, blocksLeft, blocksLeftToProspectExpiration, energy, enoughEnergyToProspect, getAllArtifacts, hasPendingMove, isAsteroid, isFindable, isProspectable, planetName, PlanetTypes, getPlanetRank, isUnowned, canHaveArtifact, isReachable, ArtifactTypes, isArtifact, ArtifactRarities, canBeActivated, isActivated, SelectedPlanetProp, buttonGridStyle } from './utils'
-
 import { Table } from './Components/Table';
 import { Header, Sub, Title } from './components/Text'
 import { PlanetLink } from './components/PlanetLink'

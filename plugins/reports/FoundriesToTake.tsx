@@ -7,12 +7,8 @@ import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 
-import { distributeSilver } from '../strategies/DistributeSilver'
-import { withdrawSilver } from '../strategies/WithdrawSilver'
-import { upgrade } from '../strategies/Upgrade'
-
 import { capturePlanets } from '../strategies/Crawl'
-import { availableSilver, buttonGridStyle, canHaveArtifact, canPlanetUpgrade, energy, enoughEnergyToProspect, getPlanetRank, hasPendingMove, isAsteroid, isFindable, isProspectable, isReachable, isUnowned, PlanetTypes, SelectedPlanetProp } from '../utils'
+import { buttonGridStyle, canHaveArtifact, isReachable, isUnowned, PlanetTypes } from '../utils'
 
 const pauseable = require('pauseable')
 

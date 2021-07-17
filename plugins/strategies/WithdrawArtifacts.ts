@@ -1,8 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
-import { LocationId, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { getBestMove, getPlanetCurrentAndFutureSilver, getPlanetRank, isMine, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove, planetWillHaveSilverAfterMove } from '../utils';
-import { ConsoleLogger } from 'typedoc/dist/lib/utils';
+import { LocationId } from '@darkforest_eth/types';
+import { PlanetTypes } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager

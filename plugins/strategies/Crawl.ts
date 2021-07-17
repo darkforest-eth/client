@@ -33,6 +33,7 @@ interface config {
 }
 export function capturePlanets(config: config)
 {
+  // @ts-ignore
   const to = Array.from(df.getAllPlanets()).filter(p => p.location)
     .filter(isUnowned)
     .filter(p => ! hasIncomingMove(p))

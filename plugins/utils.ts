@@ -1,4 +1,4 @@
-import { Artifact, ArtifactId, ArtifactRarity, ArtifactType, Planet, PlanetType, QueuedArrival, UnconfirmedMove, UpgradeBranchName } from "@darkforest_eth/types"
+import { Artifact, ArtifactId, ArtifactRarity, ArtifactType, Planet, PlanetType, QueuedArrival, SpaceType, UnconfirmedMove, UpgradeBranchName } from "@darkforest_eth/types"
 import { addHours, fromUnixTime, isAfter } from "date-fns"
 import { PlanetTypeWeightsBySpaceType } from "../src/_types/darkforest/api/ContractsAPITypes"
 
@@ -148,6 +148,12 @@ export function getPlanetRank(planet: Planet) {
   return planet.upgradeState.reduce((a, b) => a + b);
 }
 
+export function getPlanetMaxRank(planet: Planet) {
+  if (planet.spaceType === SpaceType.NEBULA) return 3;
+  else if (planet.spaceType === SpaceType.SPACE) return 4;
+  else return 5;
+}
+
 export function availableEnergy(planet: Planet) {
   return planet.energy - getPendingEnergy(planet)
 }
@@ -175,6 +181,7 @@ export function enoughEnergyToProspect(p: Planet) {
 }
 
 export function blocksLeftToProspectExpiration(prospectedBlockNumber: number | undefined) {
+  // @ts-ignore
   const currentBlockNumber = df.contractsAPI.ethConnection.blockNumber
 
   return (prospectedBlockNumber || 0) + 255 - currentBlockNumber;
@@ -197,6 +204,7 @@ export function getPlanetRankForBranch(planet: Planet, branch: UpgradeBranchName
 }
 
 export function canPlanetUpgrade(planet: Planet) {
+  // @ts-ignore
   return df.entityStore.constructor.planetCanUpgrade(planet)
 }
 

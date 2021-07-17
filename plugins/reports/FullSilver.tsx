@@ -21,6 +21,7 @@ declare const ui: GameUIManager
 function onDistributeClick(selectedPlanet: Planet|null = null) {
   distributeSilver({
     fromId: selectedPlanet?.locationId,
+    fromMinLevel: 3,
     fromMaxLevel: 4,
     toMinLevel: 4,
     toPlanetType: PlanetTypes.PLANET,
@@ -28,6 +29,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
 
   distributeSilver({
     fromId: selectedPlanet?.locationId,
+    fromMinLevel: 3,
     fromMaxLevel: 4,
     toMinLevel: 2,
     toPlanetType: PlanetTypes.RIP,

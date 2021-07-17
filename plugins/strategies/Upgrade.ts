@@ -12,14 +12,6 @@ const Branches: { [key:string]: UpgradeBranchName } = {
   SPEED: 2,
 }
 
-const upgradeOrder = [
-  Branches.RANGE,
-  Branches.SPEED,
-  Branches.RANGE,
-  Branches.SPEED,
-  Branches.RANGE,
-]
-
 interface config {
   fromId?: LocationId,
 }
@@ -27,8 +19,13 @@ export function upgrade(config: config)
 {
   df.getMyPlanets()
     .filter(canPlanetUpgrade)
+    .filter(p => p.unconfirmedUpgrades.length === 0)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
     .map(p => {
-      df.upgrade(p.locationId, upgradeOrder[getPlanetRank(p)])
+      const rangeHigher = p.upgradeState[Branches.RANGE] > p.upgradeState[Branches.SPEED]
+
+      const branch = rangeHigher ? Branches.SPEED : Branches.RANGE
+
+      df.upgrade(p.locationId, branch)
     })
 }

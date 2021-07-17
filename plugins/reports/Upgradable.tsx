@@ -6,13 +6,8 @@ import { PlanetLink } from '../components/PlanetLink'
 import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
-
-import { distributeSilver } from '../strategies/DistributeSilver'
-import { withdrawSilver } from '../strategies/WithdrawSilver'
 import { upgrade } from '../strategies/Upgrade'
-
-import { capturePlanets } from '../strategies/Crawl'
-import { availableSilver, buttonGridStyle, canPlanetUpgrade, energy, enoughEnergyToProspect, getPlanetRank, hasPendingMove, isAsteroid, isFindable, isProspectable, PlanetTypes, SelectedPlanetProp } from '../utils'
+import { buttonGridStyle, canPlanetUpgrade, getPlanetRank } from '../utils'
 
 const pauseable = require('pauseable')
 
@@ -41,6 +36,7 @@ export class Upgradable extends Component
 
    const rows = df.getMyPlanets()
      .filter(canPlanetUpgrade)
+     .filter(p => p.unconfirmedUpgrades.length === 0)
      .sort((a, b) => b.planetLevel - a.planetLevel)
 
    const columns = [

@@ -1,29 +1,31 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { getIncomingMoves, getPendingEnergy, getPlanetRank, isMine, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { availableSilver, getIncomingMoves, getPendingEnergy, getPlanetMaxRank, getPlanetRank, isMine, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
 
-function getPlanetCurrentAndFutureSilver(planet: Planet) {
+function getPlanetIncomingSilver(planet: Planet) {
+  // @ts-ignore
   const future = getIncomingMoves(planet).reduce((total, m) => total + (m.silver || m.silverMoved), 0)
 
-  return planet.silver + future
+  return future
 }
 
 function maxSilverToSend(from: Planet, to: Planet)
 {
-  const potential = Math.ceil(to.silverCap - getPlanetCurrentAndFutureSilver(to))
-  const pending = getPendingEnergy(from)
+  const potential = Math.ceil(to.silverCap - to.silver - getPlanetIncomingSilver(to))
+  const available = availableSilver(from)
 
-  const silver = Math.min(potential, from.silver - pending)
+  const silver = Math.min(potential, available)
 
   return silver
 }
 
 interface config {
   fromId?: LocationId,
+  fromMinLevel: PlanetLevel,
   fromMaxLevel: PlanetLevel,
   toMinLevel: PlanetLevel,
   toPlanetType: PlanetType,
@@ -31,6 +33,7 @@ interface config {
 export function distributeSilver(config: config)
 {
   const from = df.getMyPlanets()
+    .filter(p => p.planetLevel >= config.fromMinLevel)
     .filter(p => p.planetLevel <= config.fromMaxLevel)
     .filter(p => p.planetType === PlanetTypes.ASTEROID)
     .filter(p => p.silver / p.silverCap > 0.95)
@@ -41,7 +44,7 @@ export function distributeSilver(config: config)
       .filter(isMine)
       .filter(p => p.planetLevel >= config.toMinLevel)
       .filter(p => p.planetType === config.toPlanetType)
-      .filter(p => getPlanetRank(p) < 5)
+      .filter(p => getPlanetRank(p) < getPlanetMaxRank(p))
       .filter(p => p.silverCap !== p.silver)
 
     const moves = to.map(to => {
@@ -61,7 +64,7 @@ export function distributeSilver(config: config)
 
   // Make the moves with the MOST silver first - this will ensure largest amount of silver moves
   // before running out.
-  movesToMake.sort((a, b) => b.silver - a.silver || a.energy - b.energy)
+  movesToMake.sort((a, b) => b.silver! - a.silver! || a.energy - b.energy)
 
   console.log({ movesToMake })
 
@@ -69,7 +72,7 @@ export function distributeSilver(config: config)
     const silver = maxSilverToSend(move.from, move.to)
 
     if (
-      planetWillHaveMinEnergyAfterMove(move, 0)
+      planetWillHaveMinEnergyAfterMove(move, 1)
       && silver > 0
       && planetCanAcceptMove(move)
     ) {
