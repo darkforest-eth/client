@@ -4,20 +4,20 @@ import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManage
 declare const df: GameManager
 declare const ui: GameUIManager
 
-import { blocksLeft, blocksLeftToProspectExpiration, enoughEnergyToProspect, isFindable, isProspectable } from "../utils"
+import { blocksLeft, blocksLeftToProspectExpiration, enoughEnergyToProspect, getMyPlanets, isFindable, isProspectable } from "../utils"
 
 export function prospectAndFind()
 {
   if (df.isRoundOver()) return
 
-  df.getMyPlanets()
+  getMyPlanets()
     .filter(p => isFindable(p))
     .sort((a, b) => blocksLeft(a) - blocksLeft(b))
     .map(p => {
       df.findArtifact(p.locationId)
     })
 
-  df.getMyPlanets()
+  getMyPlanets()
     .filter(isProspectable)
     .filter(enoughEnergyToProspect)
     .slice(0, 10) // don't prospect too many at the same time

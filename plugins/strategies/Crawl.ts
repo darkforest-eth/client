@@ -1,7 +1,7 @@
 import GameManager from '@df/GameManager'
 import GameUIManager from '@df/GameUIManager'
 import { LocationId, Planet, PlanetLevel, PlanetType } from "@darkforest_eth/types";
-import { getEnergyNeeded, hasIncomingMove, isUnowned, Move, planetName, planetWillHaveMinEnergyAfterMove } from 'plugins/utils';
+import { getEnergyNeeded, getMyPlanets, hasIncomingMove, isUnowned, Move, planetName, planetWillHaveMinEnergyAfterMove } from 'plugins/utils';
 import { moveSyntheticComments } from 'typescript';
 // import { isUnowned } from 'utils/utils';
 // import { planetName, PlanetTypes } from './CM-utils'
@@ -40,7 +40,7 @@ export function capturePlanets(config: config)
     .filter(p => p.planetLevel >= config.toMinLevel)
     .filter(p => p.planetType === config.toPlanetType)
 
-  const from = df.getMyPlanets()
+  const from = getMyPlanets()
     .filter(p => p.planetLevel <= config.fromMaxLevel)
     // @todo only planets?
     .filter(p => ! config.fromId || p.locationId === config.fromId)

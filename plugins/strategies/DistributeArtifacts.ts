@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { artifactNameFromArtifact, ArtifactRarity, LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { getAllArtifacts, getIncomingMoves, getPendingEnergy, getPlanetRank, hasPendingMove, isMine, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { getMyPlanets, getMyPlanetsInRange, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -20,7 +20,7 @@ interface config {
 }
 export function distributeArtifacts(config: config)
 {
-  const from = df.getMyPlanets()
+  const from = getMyPlanets()
     .filter(p => p.planetType === PlanetTypes.FOUNDRY)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
     .filter(p => findArtifact(p, config.rarity))
@@ -29,8 +29,7 @@ export function distributeArtifacts(config: config)
   console.log(`Distributing artifacts from ${from.length} planets with `, config)
 
   const movesToMake: Move[] = from.flatMap(from => {
-    const to = df.getPlanetsInRange(from.locationId, 100)
-      .filter(isMine)
+    const to = getMyPlanetsInRange(from)
       .filter(p => p.planetLevel >= config.toMinLevel)
       .filter(p => p.planetType === config.toPlanetType)
       .filter(p => p.heldArtifactIds.length < 5)

@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { availableSilver, getIncomingMoves, getPendingEnergy, getPlanetMaxRank, getPlanetRank, isMine, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { availableSilver, getIncomingMoves, getMyPlanets, getMyPlanetsInRange, getPlanetMaxRank, getPlanetRank, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -32,7 +32,7 @@ interface config {
 }
 export function distributeSilver(config: config)
 {
-  const from = df.getMyPlanets()
+  const from = getMyPlanets()
     .filter(p => p.planetLevel >= config.fromMinLevel)
     .filter(p => p.planetLevel <= config.fromMaxLevel)
     .filter(p => p.planetType === PlanetTypes.ASTEROID)
@@ -40,8 +40,7 @@ export function distributeSilver(config: config)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
   const movesToMake: Move[] = from.flatMap(from => {
-    const to = df.getPlanetsInRange(from.locationId, 100)
-      .filter(isMine)
+    const to = getMyPlanetsInRange(from)
       .filter(p => p.planetLevel >= config.toMinLevel)
       .filter(p => p.planetType === config.toPlanetType)
       .filter(p => getPlanetRank(p) < getPlanetMaxRank(p))

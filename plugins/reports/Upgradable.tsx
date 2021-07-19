@@ -7,7 +7,7 @@ import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 import { upgrade } from '../strategies/Upgrade'
-import { buttonGridStyle, canPlanetUpgrade, getPlanetRank } from '../utils'
+import { buttonGridStyle, canPlanetUpgrade, getMyPlanets, getPlanetRank } from '../utils'
 
 const pauseable = require('pauseable')
 
@@ -27,6 +27,7 @@ export class Upgradable extends Component
   constructor() {
     super()
     this.interval = pauseable.setInterval(2 * 60 * 1000, onUpgradeClick)
+    this.interval.pause()
   }
 
   render()
@@ -34,7 +35,7 @@ export class Upgradable extends Component
    const headers = ['Planet Name', 'Level', 'Rank'];
    const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
-   const rows = df.getMyPlanets()
+   const rows = getMyPlanets()
      .filter(canPlanetUpgrade)
      .filter(p => p.unconfirmedUpgrades.length === 0)
      .sort((a, b) => b.planetLevel - a.planetLevel)

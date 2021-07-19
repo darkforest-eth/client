@@ -11,7 +11,7 @@ import { distributeSilver } from '../strategies/DistributeSilver'
 import { withdrawSilver } from '../strategies/WithdrawSilver'
 
 import { capturePlanets } from '../strategies/Crawl'
-import { availableSilver, buttonGridStyle, energy, hasPendingMove, isAsteroid, PlanetTypes, SelectedPlanetProp } from '../utils'
+import { availableSilver, buttonGridStyle, energy, getMyPlanets, hasPendingMove, isAsteroid, PlanetTypes, SelectedPlanetProp } from '../utils'
 
 const pauseable = require('pauseable')
 
@@ -52,6 +52,7 @@ export class FullSilver extends Component
       onDistributeClick()
       onWithdrawClick()
     })
+    this.interval.pause()
   }
 
   render()
@@ -59,7 +60,7 @@ export class FullSilver extends Component
     const headers = ['Planet Name', 'Level', 'Silver'];
     const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
-    const rows = df.getMyPlanets()
+    const rows = getMyPlanets()
       .filter(p => p.planetLevel >= 4)
       .filter(p => availableSilver(p) == p.silverCap)
       .sort((a, b) => b.silverCap - a.silverCap)

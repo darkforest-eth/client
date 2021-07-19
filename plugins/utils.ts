@@ -1,6 +1,5 @@
 import { Artifact, ArtifactId, ArtifactRarity, ArtifactType, Planet, PlanetType, QueuedArrival, SpaceType, UnconfirmedMove, UpgradeBranchName } from "@darkforest_eth/types"
 import { addHours, fromUnixTime, isAfter } from "date-fns"
-import { PlanetTypeWeightsBySpaceType } from "../src/_types/darkforest/api/ContractsAPITypes"
 
 export const PlanetTypes: { [ key:string]: PlanetType } = {
   PLANET: 0,
@@ -59,7 +58,7 @@ export function energy(p: Planet) {
  */
 export function getAllArtifacts()
 {
-  const artifactsFromPlanets = df.getMyPlanets().flatMap(p => {
+  const artifactsFromPlanets = getMyPlanets().flatMap(p => {
     const artifacts = df.getArtifactsWithIds(p.heldArtifactIds)
       .filter((a): a is Artifact => !!a)
 
@@ -78,6 +77,18 @@ export function getAllArtifacts()
   const artifacts = artifactsFromPlanets.concat(artifactsFromInventory)
 
   return artifacts
+}
+
+export function getMyPlanets() {
+  return df.getMyPlanets().filter(p => ! p.destroyed)
+}
+
+export function getMyPlanetsInRange(p: Planet) {
+  const planets = df.getPlanetsInRange(p.locationId, 100)
+    .filter(isMine)
+    .filter(p => ! p.destroyed)
+
+  return planets
 }
 
 const emptyAddress = "0x0000000000000000000000000000000000000000";
@@ -209,7 +220,7 @@ export function canPlanetUpgrade(planet: Planet) {
 }
 
 export function isReachable(p: Planet) {
-  return df.getMyPlanets().some(myPlanet => {
+  return getMyPlanets().some(myPlanet => {
     const dist = df.getDist(p.locationId, myPlanet.locationId)
     const reachable = dist < df.getMaxMoveDist(myPlanet.locationId, 100)
 

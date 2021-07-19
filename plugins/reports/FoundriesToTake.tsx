@@ -33,6 +33,7 @@ export class FoundriesToTake extends Component
   constructor() {
     super()
     this.interval = pauseable.setInterval(4 * 60 * 1000, onCrawlClick)
+    this.interval.pause()
   }
 
   render()

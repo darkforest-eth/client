@@ -8,7 +8,7 @@ import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 
 import { capturePlanets } from '../strategies/Crawl'
-import { buttonGridStyle, energy, hasPendingMove, isAsteroid, PlanetTypes } from '../utils'
+import { buttonGridStyle, energy, getMyPlanets, hasPendingMove, isAsteroid, PlanetTypes } from '../utils'
 const pauseable = require('pauseable')
 
 declare const df: GameManager
@@ -61,6 +61,7 @@ export class PlanetsWithEnergy extends Component
   constructor() {
     super()
     this.interval = pauseable.setInterval(10 * 60 * 1000, onCrawlClick)
+    this.interval.pause()
   }
 
   render()
@@ -69,7 +70,7 @@ export class PlanetsWithEnergy extends Component
     const headers = ['Planet Name', 'Level', 'Energy'];
     const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
-    const rows = df.getMyPlanets()
+    const rows = getMyPlanets()
       .filter(p => p.planetLevel >= 4)
       .filter(p => ! isAsteroid(p))
       .filter(p => ! hasPendingMove(p))

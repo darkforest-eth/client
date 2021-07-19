@@ -70,6 +70,7 @@ export class UsefulArtifacts extends Component
       onWithdrawClick()
       onActivateClick()
     })
+    this.interval.pause()
   }
 
   render()

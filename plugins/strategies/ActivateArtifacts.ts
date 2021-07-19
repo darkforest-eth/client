@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types'
-import { canBeActivated, isActivated } from '../utils'
+import { canBeActivated, getMyPlanets, isActivated } from '../utils'
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -19,7 +19,7 @@ interface config {
 }
 export function activateArtifacts(config: config)
 {
-  const from = df.getMyPlanets()
+  const from = getMyPlanets()
     .filter(p => p.planetType === config.planetType)
     .filter(p => ! p.unconfirmedActivateArtifact)
     .filter(p => p.heldArtifactIds.length > 0)

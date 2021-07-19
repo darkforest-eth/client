@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { LocationId } from '@darkforest_eth/types';
-import { PlanetTypes } from '../utils';
+import { getMyPlanets, PlanetTypes } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -11,7 +11,7 @@ interface config {
 }
 export function withdrawArtifacts(config: config)
 {
-  const from = df.getMyPlanets()
+  const from = getMyPlanets()
     .filter(p => p.planetType === PlanetTypes.RIP)
     .filter(p => p.heldArtifactIds.length > 0)
     .filter(p => ! p.unconfirmedWithdrawArtifact)

@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { LocationId, PlanetLevel, PlanetType, UpgradeBranchName } from '@darkforest_eth/types';
-import { canPlanetUpgrade, getPlanetRank, getPlanetRankForBranch } from '../utils'
+import { canPlanetUpgrade, getMyPlanets, getPlanetRank, getPlanetRankForBranch } from '../utils'
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -17,7 +17,7 @@ interface config {
 }
 export function upgrade(config: config)
 {
-  df.getMyPlanets()
+  getMyPlanets()
     .filter(canPlanetUpgrade)
     .filter(p => p.unconfirmedUpgrades.length === 0)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
