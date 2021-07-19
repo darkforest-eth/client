@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { availableSilver, getIncomingMoves, getMyPlanets, getMyPlanetsInRange, getPlanetMaxRank, getPlanetRank, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { availableSilver, getIncomingMoves, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, getPlanetMaxRank, getPlanetRank, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -48,7 +48,7 @@ export function distributeSilver(config: config)
 
     const moves = to.map(to => {
       const silver = maxSilverToSend(from, to)
-      const energy = Math.ceil(df.getEnergyNeededForMove(from.locationId, to.locationId, 1))
+      const energy = getMinimumEnergyNeeded(from, to)
 
       return {
         from,
@@ -67,10 +67,10 @@ export function distributeSilver(config: config)
 
   // Move max 100 at a time
   const moves = movesToMake.slice(0, 100).map(move => {
-    const silver = maxSilverToSend(move.from, move.to)
+    const silver = Math.floor(maxSilverToSend(move.from, move.to))
 
     if (
-      planetWillHaveMinEnergyAfterMove(move, 1) // @todo still getting not enough forces sometimes
+      planetWillHaveMinEnergyAfterMove(move, 1)
       && silver > 0
       && planetCanAcceptMove(move)
     ) {

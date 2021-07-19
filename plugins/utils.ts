@@ -155,6 +155,15 @@ export function getEnergyNeeded(from: Planet, to: Planet, targetEnergy: number) 
   return energyNeeded
 }
 
+/**
+ * Returns the min energy to make a move. This is any energy arriving
+ * > 0. It's specified as 2 to avoid rounding errors which can occur.
+ * https://discord.com/channels/793602508311232542/793603665826545696/866789371164622849
+ */
+export function getMinimumEnergyNeeded(from: Planet, to: Planet) {
+  return Math.ceil(df.getEnergyNeededForMove(from.locationId, to.locationId, 2))
+}
+
 export function getPlanetRank(planet: Planet) {
   return planet.upgradeState.reduce((a, b) => a + b);
 }

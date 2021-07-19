@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { artifactNameFromArtifact, ArtifactRarity, LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { getMyPlanets, getMyPlanetsInRange, isActivated, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, isActivated, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -34,7 +34,7 @@ export function distributeArtifacts(config: config)
       .filter(p => p.heldArtifactIds.length < 5)
 
     const moves = to.map(to => {
-      const energy = Math.ceil(df.getEnergyNeededForMove(from.locationId, to.locationId, 1))
+      const energy = getMinimumEnergyNeeded(from, to)
       const artifact = findArtifact(from, config.rarity)
 
       return {
