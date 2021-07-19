@@ -54,7 +54,7 @@ export function distributeArtifacts(config: config)
 
   const moves = movesToMake.map(move => {
     if (
-      planetWillHaveMinEnergyAfterMove(move, 0)
+      planetWillHaveMinEnergyAfterMove(move, 1)
       && ! move.artifact!.unconfirmedMove
       && planetCanAcceptMove(move)
     ) {
