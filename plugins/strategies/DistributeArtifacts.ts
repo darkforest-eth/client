@@ -1,14 +1,14 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { artifactNameFromArtifact, ArtifactRarity, LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { getMyPlanets, getMyPlanetsInRange, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { getMyPlanets, getMyPlanetsInRange, isActivated, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
 
 function findArtifact(p: Planet, rarity: ArtifactRarity) {
   return df.getArtifactsWithIds(p.heldArtifactIds).find(a => {
-    return a && ! a.unconfirmedMove && a.rarity === rarity
+    return a && ! a.unconfirmedMove && a.rarity === rarity && !isActivated(a)
   })
 }
 
@@ -24,7 +24,6 @@ export function distributeArtifacts(config: config)
     .filter(p => p.planetType === PlanetTypes.FOUNDRY)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
     .filter(p => findArtifact(p, config.rarity))
-    .slice(0, 100) // max 100 at a time
 
   console.log(`Distributing artifacts from ${from.length} planets with `, config)
 
@@ -52,11 +51,12 @@ export function distributeArtifacts(config: config)
   // Make the moves with the rarest artifacts first
   movesToMake.sort((a, b) => b.artifact!.rarity - a.artifact!.rarity || a.energy - b.energy)
 
-  const moves = movesToMake.map(move => {
+  // Max 100 at a time
+  const moves = movesToMake.slice(0, 100).map(move => {
     if (
       planetWillHaveMinEnergyAfterMove(move, 1)
       && ! move.artifact!.unconfirmedMove
-      && planetCanAcceptMove(move)
+      && planetCanAcceptMove(move) // @todo Include incoming artifacts as well
     ) {
       console.log(`SENDING ${artifactNameFromArtifact(move.artifact!)} FROM ${planetName(move.from)} (ui.centerLocationId('${move.from.locationId}')) TO ${planetName(move.to)} (ui.centerLocationId('${move.to.locationId}')) WITH ${move.energy}`)
       return df.move(move.from.locationId, move.to.locationId, move.energy, 0, move.artifact!.id);

@@ -65,13 +65,12 @@ export function distributeSilver(config: config)
   // before running out.
   movesToMake.sort((a, b) => b.silver! - a.silver! || a.energy - b.energy)
 
-  console.log({ movesToMake })
-
-  const moves = movesToMake.map(move => {
+  // Move max 100 at a time
+  const moves = movesToMake.slice(0, 100).map(move => {
     const silver = maxSilverToSend(move.from, move.to)
 
     if (
-      planetWillHaveMinEnergyAfterMove(move, 1)
+      planetWillHaveMinEnergyAfterMove(move, 1) // @todo still getting not enough forces sometimes
       && silver > 0
       && planetCanAcceptMove(move)
     ) {

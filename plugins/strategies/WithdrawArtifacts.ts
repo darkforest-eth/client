@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { LocationId } from '@darkforest_eth/types';
-import { getMyPlanets, PlanetTypes } from '../utils';
+import { getMyPlanets, isActivated, PlanetTypes } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -17,5 +17,9 @@ export function withdrawArtifacts(config: config)
     .filter(p => ! p.unconfirmedWithdrawArtifact)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
-  return from.map(from => df.withdrawArtifact(from.locationId, from.heldArtifactIds[0]))
+  return from.map(from => {
+    const artifact = df.getArtifactsWithIds(from.heldArtifactIds).find(a => a && ! isActivated(a))
+    artifact && df.withdrawArtifact(from.locationId, artifact.id)
+    artifact && console.log('Withdrawing from ' + from.locationId)
+  })
 }

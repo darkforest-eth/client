@@ -234,12 +234,10 @@ export function isActivated(a: Artifact) {
   return a.lastActivated > a.lastDeactivated
 }
 
-/**
- * @todo Add 48 hours for wormholes
- */
 export function canBeActivated(a: Artifact) {
   const lastDeactivated = fromUnixTime(a.lastDeactivated)
-  const canBeActivatedAt = addHours(lastDeactivated, 24)
+  const activationWait = a.artifactType === ArtifactTypes.Wormhole ? 48 : 24
+  const canBeActivatedAt = addHours(lastDeactivated, activationWait)
   return isAfter(new Date, canBeActivatedAt)
 }
 

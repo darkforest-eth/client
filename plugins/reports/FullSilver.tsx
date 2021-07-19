@@ -21,16 +21,16 @@ declare const ui: GameUIManager
 function onDistributeClick(selectedPlanet: Planet|null = null) {
   distributeSilver({
     fromId: selectedPlanet?.locationId,
-    fromMinLevel: 3,
-    fromMaxLevel: 4,
+    fromMinLevel: selectedPlanet?.planetLevel || 3,
+    fromMaxLevel: selectedPlanet?.planetLevel || 4,
     toMinLevel: 4,
     toPlanetType: PlanetTypes.PLANET,
   })
 
   distributeSilver({
     fromId: selectedPlanet?.locationId,
-    fromMinLevel: 3,
-    fromMaxLevel: 4,
+    fromMinLevel: selectedPlanet?.planetLevel || 3,
+    fromMaxLevel: selectedPlanet?.planetLevel || 4,
     toMinLevel: 2,
     toPlanetType: PlanetTypes.RIP,
   })
@@ -75,7 +75,7 @@ export class FullSilver extends Component
       <Header>Full Silver</Header>
       <ManageInterval interval={this.interval} />
       <div style={buttonGridStyle}>
-        <button onClick={() => onDistributeClick(ui.getSelectedPlanet())}>Rip</button>
+        <button onClick={() => onDistributeClick(ui.getSelectedPlanet())}>Distribute</button>
         <button onClick={() => onWithdrawClick(ui.getSelectedPlanet())}>Withdraw</button>
       </div>
       <Table

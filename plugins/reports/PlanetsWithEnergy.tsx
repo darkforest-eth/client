@@ -19,37 +19,37 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    toMinLevel: 2,
-    fromMaxLevel: 4,
+    fromMaxLevel: selectedPlanet?.planetLevel || 4,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetType: PlanetTypes.RIP,
+    toMinLevel: 2,
     toTargetEnergy: 15
   })
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    toMinLevel: 4,
-    fromMaxLevel: 4,
+    fromMaxLevel: selectedPlanet?.planetLevel || 4,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetType: PlanetTypes.QUASAR,
+    toMinLevel: 4,
     toTargetEnergy: 0
   })
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    toMinLevel: 4,
-    fromMaxLevel: 4,
+    fromMaxLevel: selectedPlanet?.planetLevel || 4,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetType: PlanetTypes.ASTEROID,
+    toMinLevel: 4,
     toTargetEnergy: 15
   })
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    toMinLevel: 4,
-    fromMaxLevel: 4,
+    fromMaxLevel: selectedPlanet?.planetLevel || 4,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetType: PlanetTypes.PLANET,
+    toMinLevel: 4,
     toTargetEnergy: 15
   })
 }
@@ -71,7 +71,7 @@ export class PlanetsWithEnergy extends Component
     const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
     const rows = getMyPlanets()
-      .filter(p => p.planetLevel >= 4)
+      .filter(p => p.planetLevel >= 5)
       .filter(p => ! isAsteroid(p))
       .filter(p => ! hasPendingMove(p))
       .filter(p => energy(p) > 75)
