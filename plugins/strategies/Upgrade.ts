@@ -22,9 +22,10 @@ export function upgrade(config: config)
     .filter(p => p.unconfirmedUpgrades.length === 0)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
     .map(p => {
-      const rangeHigher = p.upgradeState[Branches.RANGE] > p.upgradeState[Branches.SPEED]
+      const range = p.upgradeState[Branches.RANGE]
 
-      const branch = rangeHigher ? Branches.SPEED : Branches.RANGE
+      // 0 DEF, 4 RANGE, 1 SPEED (RANGE FIRST)
+      const branch = range < 4 ? Branches.RANGE : Branches.SPEED
 
       df.upgrade(p.locationId, branch)
     })
