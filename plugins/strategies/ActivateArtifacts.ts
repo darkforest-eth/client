@@ -31,6 +31,7 @@ export function activateArtifacts(config: config)
     ArtifactTypes.BlackDomain, // dont destroy my own planets!
     ArtifactTypes.BloomFilter, // only works on level 2, artifact not likely there
     ArtifactTypes.Wormhole, // needs human to specify destination
+    ArtifactTypes.PlanetaryShield, // drastically reduces range and speed
   ]
 
   return from.map(from => {
