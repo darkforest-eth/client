@@ -19,8 +19,8 @@ declare const ui: GameUIManager
 
 export function Cannons(props: SelectedPlanetProp)
 {
-  const headers = ['Name', 'Rarity', 'Planet Name', 'Planet Level', 'Status'];
-  const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
+  const headers = ['Name', 'Planet', 'Rarity', 'Status', 'Level'];
+  const alignments: Array<'r' | 'c' | 'l'> = ['l', 'l', 'c', 'c', 'r'];
 
   const rows = getAllArtifacts()
     .filter(a => a && a.artifactType == ArtifactTypes.PhotoidCannon)
@@ -29,7 +29,6 @@ export function Cannons(props: SelectedPlanetProp)
 
   const columns = [
     (a: Artifact) => <Sub>{artifactNameFromArtifact(a)}</Sub>,
-    (a: Artifact) => <Sub>{Object.keys(ArtifactRarities)[a.rarity]}</Sub>,
     (a: Artifact) => {
       const planet = df.getPlanetWithId(a.onPlanetId)
 
@@ -37,13 +36,7 @@ export function Cannons(props: SelectedPlanetProp)
 
       return <PlanetLink planet={planet}>{df.getProcgenUtils().getPlanetName(planet)}</PlanetLink>
     },
-    (a: Artifact) => {
-      const planet = df.getPlanetWithId(a.onPlanetId)
-
-      if (! planet) return <Sub>-</Sub>
-
-      return <Sub>{planet!.planetLevel}</Sub>
-    },
+    (a: Artifact) => <Sub>{Object.keys(ArtifactRarities)[a.rarity]}</Sub>,
     (a: Artifact) => {
       const lastActivated = fromUnixTime(a.lastActivated)
       const readyAt = addHours(lastActivated, 4)
@@ -53,6 +46,13 @@ export function Cannons(props: SelectedPlanetProp)
           : canBeActivated(a) ? 'IDLE' : `WAIT`
 
       return <Sub>{status}</Sub>
+    },
+    (a: Artifact) => {
+      const planet = df.getPlanetWithId(a.onPlanetId)
+
+      if (! planet) return <Sub>-</Sub>
+
+      return <Sub>{planet!.planetLevel}</Sub>
     },
   ];
 
