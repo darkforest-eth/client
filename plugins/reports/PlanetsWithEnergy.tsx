@@ -19,7 +19,7 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || 4,
+    fromMaxLevel: selectedPlanet?.planetLevel || 9,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetType: PlanetTypes.RIP,
     toMinLevel: 3,
@@ -28,7 +28,7 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || 4,
+    fromMaxLevel: selectedPlanet?.planetLevel || 9,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetType: PlanetTypes.QUASAR,
     toMinLevel: 4,
@@ -37,7 +37,7 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || 4,
+    fromMaxLevel: selectedPlanet?.planetLevel || 9,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetType: PlanetTypes.ASTEROID,
     toMinLevel: 4,
@@ -46,7 +46,7 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || 4,
+    fromMaxLevel: selectedPlanet?.planetLevel || 9,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetType: PlanetTypes.PLANET,
     toMinLevel: 4,

@@ -166,7 +166,7 @@ export function getEnergyNeeded(from: Planet, to: Planet, targetEnergy: number) 
  * https://discord.com/channels/793602508311232542/793603665826545696/866789371164622849
  */
 export function getMinimumEnergyNeeded(from: Planet, to: Planet) {
-  return Math.ceil(df.getEnergyNeededForMove(from.locationId, to.locationId, 2))
+  return Math.ceil(df.getEnergyNeededForMove(from.locationId, to.locationId, 10))
 }
 
 export function getPlanetRank(planet: Planet) {

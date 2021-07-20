@@ -1,5 +1,5 @@
 import { h } from 'preact'
-import { Artifact, Planet } from '@darkforest_eth/types'
+import { Artifact, artifactNameFromArtifact, Planet } from '@darkforest_eth/types'
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { PlanetLink } from '../components/PlanetLink'
@@ -19,7 +19,7 @@ declare const ui: GameUIManager
 
 export function Cannons(props: SelectedPlanetProp)
 {
-  const headers = ['Rarity', 'Planet Name', 'Planet Level', 'Status'];
+  const headers = ['Name', 'Rarity', 'Planet Name', 'Planet Level', 'Status'];
   const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
   const rows = getAllArtifacts()
@@ -28,6 +28,7 @@ export function Cannons(props: SelectedPlanetProp)
     .sort((a, b) => b!.rarity - a!.rarity)
 
   const columns = [
+    (a: Artifact) => <Sub>{artifactNameFromArtifact(a)}</Sub>,
     (a: Artifact) => <Sub>{Object.keys(ArtifactRarities)[a.rarity]}</Sub>,
     (a: Artifact) => {
       const planet = df.getPlanetWithId(a.onPlanetId)

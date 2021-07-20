@@ -22,7 +22,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
   distributeSilver({
     fromId: selectedPlanet?.locationId,
     fromMinLevel: selectedPlanet?.planetLevel || 4,
-    fromMaxLevel: selectedPlanet?.planetLevel || 4,
+    fromMaxLevel: selectedPlanet?.planetLevel || 9,
     toMinLevel: 4,
     toPlanetType: PlanetTypes.PLANET,
   })
@@ -30,7 +30,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
   distributeSilver({
     fromId: selectedPlanet?.locationId,
     fromMinLevel: selectedPlanet?.planetLevel || 4,
-    fromMaxLevel: selectedPlanet?.planetLevel || 4,
+    fromMaxLevel: selectedPlanet?.planetLevel || 9,
     toMinLevel: 3,
     toPlanetType: PlanetTypes.RIP,
   })
@@ -62,6 +62,7 @@ export class FullSilver extends Component
 
     const rows = getMyPlanets()
       .filter(p => p.planetLevel >= 4)
+      .filter(p => p.planetType === PlanetTypes.ASTEROID)
       .filter(p => availableSilver(p) == p.silverCap)
       .sort((a, b) => b.silverCap - a.silverCap)
 

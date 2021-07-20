@@ -45,6 +45,7 @@ function App() {
 
   return html`
     <div>
+      <div><a href="#" onClick=${() => this.forceUpdate()}>🔄</a></div>
       <${PlanetsWithEnergy} />
       <br />
       <hr />
