@@ -22,7 +22,7 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
     fromMaxLevel: selectedPlanet?.planetLevel || 4,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetType: PlanetTypes.RIP,
-    toMinLevel: 2,
+    toMinLevel: 3,
     toTargetEnergy: 15
   })
 
