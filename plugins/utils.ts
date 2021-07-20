@@ -141,7 +141,12 @@ export function planetWillHaveMinEnergyAfterMove(move: Move, minEnergy: number) 
 }
 
 export function planetCanAcceptMove(move: Move) {
-  return getIncomingMoves(move.to).length < 5
+  const incoming = getIncomingMoves(move.to)
+
+  // @ts-ignore
+  const artifactCount = move.to.heldArtifactIds.length + incoming.filter(m => m.artifactId || m.artifact).length
+
+  return incoming.length < 5 && artifactCount < 5
 }
 
 export function getEnergyNeeded(from: Planet, to: Planet, targetEnergy: number) {

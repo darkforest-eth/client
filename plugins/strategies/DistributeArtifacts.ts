@@ -56,7 +56,7 @@ export function distributeArtifacts(config: config)
     if (
       planetWillHaveMinEnergyAfterMove(move, 1)
       && ! move.artifact!.unconfirmedMove
-      && planetCanAcceptMove(move) // @todo Include incoming artifacts as well
+      && planetCanAcceptMove(move)
     ) {
       console.log(`SENDING ${artifactNameFromArtifact(move.artifact!)} FROM ${planetName(move.from)} (ui.centerLocationId('${move.from.locationId}')) TO ${planetName(move.to)} (ui.centerLocationId('${move.to.locationId}')) WITH ${move.energy}`)
       return df.move(move.from.locationId, move.to.locationId, move.energy, 0, move.artifact!.id);
