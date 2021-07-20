@@ -20,12 +20,13 @@ declare const df: GameManager
 declare const ui: GameUIManager
 
 function onDistributeClick(selectedPlanet: Planet|null = null) {
-  distributeArtifacts({
-    fromId: selectedPlanet?.locationId,
-    rarity: ArtifactRarities.Common,
-    toPlanetType: PlanetTypes.PLANET,
-    toMinLevel: 4,
-  })
+  // causes perf errors
+  // distributeArtifacts({
+  //   fromId: selectedPlanet?.locationId,
+  //   rarity: ArtifactRarities.Common,
+  //   toPlanetType: PlanetTypes.PLANET,
+  //   toMinLevel: 4,
+  // })
 
   const rarities = [
     // ArtifactRarities.Common,
