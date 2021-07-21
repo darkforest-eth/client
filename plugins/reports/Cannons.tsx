@@ -45,7 +45,7 @@ export function Cannons(props: SelectedPlanetProp)
       const readyAt = addHours(lastActivated, 4)
 
       const status = isActivated(a)
-          ? (isAfter(new Date, readyAt) ? 'FIRE' : `Fire in ${formatDistanceToNow(readyAt)}`)
+          ? (isAfter(new Date, readyAt) ? 'FIRE' : formatDistanceToNow(readyAt))
           : canBeActivated(a) ? 'IDLE' : `WAIT`
 
       return <Sub>{status}</Sub>
