@@ -17,9 +17,6 @@ import { addHours, formatDistanceToNow, fromUnixTime, isAfter } from 'date-fns'
 declare const df: GameManager
 declare const ui: GameUIManager
 
-/**
- * @todo Fix report format. Esp. time to fire.
- */
 export function Cannons(props: SelectedPlanetProp)
 {
   const headers = ['Name', 'Planet', 'Rarity', 'Status', 'Level'];
