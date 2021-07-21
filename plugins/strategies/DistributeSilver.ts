@@ -27,6 +27,7 @@ interface config {
   fromId?: LocationId,
   fromMinLevel: PlanetLevel,
   fromMaxLevel: PlanetLevel,
+  fromPlanetType: PlanetType,
   toMinLevel: PlanetLevel,
   toPlanetType: PlanetType,
 }
@@ -35,7 +36,7 @@ export function distributeSilver(config: config)
   const from = getMyPlanets()
     .filter(p => p.planetLevel >= config.fromMinLevel)
     .filter(p => p.planetLevel <= config.fromMaxLevel)
-    .filter(p => p.planetType === PlanetTypes.ASTEROID)
+    .filter(p => p.planetType === config.fromPlanetType)
     .filter(p => p.silver / p.silverCap > 0.95)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 

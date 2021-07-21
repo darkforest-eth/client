@@ -23,6 +23,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
     fromId: selectedPlanet?.locationId,
     fromMinLevel: selectedPlanet?.planetLevel || 4,
     fromMaxLevel: selectedPlanet?.planetLevel || 9,
+    fromPlanetType: selectedPlanet?.planetType || PlanetTypes.ASTEROID,
     toMinLevel: 4,
     toPlanetType: PlanetTypes.PLANET,
   })
@@ -31,6 +32,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
     fromId: selectedPlanet?.locationId,
     fromMinLevel: selectedPlanet?.planetLevel || 4,
     fromMaxLevel: selectedPlanet?.planetLevel || 9,
+    fromPlanetType: selectedPlanet?.planetType || PlanetTypes.ASTEROID,
     toMinLevel: 3,
     toPlanetType: PlanetTypes.RIP,
   })
