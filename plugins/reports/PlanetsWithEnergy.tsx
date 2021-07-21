@@ -26,14 +26,15 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
     toTargetEnergy: 15
   })
 
-  capturePlanets({
-    fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || 9,
-    fromMinEnergyLeftPercent: 37.5,
-    toPlanetType: PlanetTypes.QUASAR,
-    toMinLevel: 4,
-    toTargetEnergy: 0
-  })
+  // Best to take QUASAR's manually and send a bloom filter
+  // capturePlanets({
+  //   fromId: selectedPlanet?.locationId,
+  //   fromMaxLevel: selectedPlanet?.planetLevel || 9,
+  //   fromMinEnergyLeftPercent: 37.5,
+  //   toPlanetType: PlanetTypes.QUASAR,
+  //   toMinLevel: 4,
+  //   toTargetEnergy: 0
+  // })
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
