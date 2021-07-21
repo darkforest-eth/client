@@ -19,6 +19,10 @@ const pauseable = require('pauseable')
 declare const df: GameManager
 declare const ui: GameUIManager
 
+/**
+ * @todo Send boost upgrades to planets to be auto activated.
+ * The strategic ones should be sent to rips.
+ */
 function onDistributeClick(selectedPlanet: Planet|null = null) {
   // causes perf errors
   // distributeArtifacts({
