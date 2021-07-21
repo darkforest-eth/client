@@ -40,6 +40,8 @@ export function distributeSilver(config: config)
     .filter(p => p.planetType === PlanetTypes.QUASAR || p.silver / p.silverCap > 0.95)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
+  console.log('Sending silver from', from)
+
   const movesToMake: Move[] = from.flatMap(from => {
     const to = getMyPlanetsInRange(from)
       .filter(p => p.planetLevel >= config.toMinLevel)
@@ -65,6 +67,8 @@ export function distributeSilver(config: config)
   // Make the moves with the MOST silver first - this will ensure largest amount of silver moves
   // before running out.
   movesToMake.sort((a, b) => b.silver! - a.silver! || a.energy - b.energy)
+
+  console.log('Sending silver to ', movesToMake)
 
   // Move max 100 at a time
   const moves = movesToMake.slice(0, 100).map(move => {
