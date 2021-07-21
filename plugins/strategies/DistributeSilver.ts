@@ -37,7 +37,7 @@ export function distributeSilver(config: config)
     .filter(p => p.planetLevel >= config.fromMinLevel)
     .filter(p => p.planetLevel <= config.fromMaxLevel)
     .filter(p => p.planetType === config.fromPlanetType)
-    .filter(p => p.silver / p.silverCap > 0.95)
+    .filter(p => p.planetType === PlanetTypes.QUASAR || p.silver / p.silverCap > 0.95)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
   const movesToMake: Move[] = from.flatMap(from => {
@@ -75,7 +75,7 @@ export function distributeSilver(config: config)
       && silver > 0
       && planetCanAcceptMove(move)
     ) {
-      console.log(`SENDING ${move.silver} to ${planetName(move.to)} (ui.centerLocationId('${move.to.locationId}')) FROM ${planetName(move.from)} (ui.centerLocationId('${move.from.locationId}')) WITH ${move.energy}`)
+      console.log(`SENDING ${move.silver} silver to ${planetName(move.to)} (ui.centerLocationId('${move.to.locationId}')) FROM ${planetName(move.from)} (ui.centerLocationId('${move.from.locationId}')) WITH ${move.energy}`)
       return df.move(move.from.locationId, move.to.locationId, move.energy, silver);
     }
   })
