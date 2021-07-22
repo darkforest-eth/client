@@ -1,41 +1,29 @@
-# Module: Frontend/Styles/Colors
+# Module: Frontend/Styles/colors
 
 ## Table of contents
 
-### Variables
+### Properties
 
-- [ANCIENT_BLUE](Frontend_Styles_Colors.md#ancient_blue)
-- [ANCIENT_PURPLE](Frontend_Styles_Colors.md#ancient_purple)
-- [BiomeBackgroundColors](Frontend_Styles_Colors.md#biomebackgroundcolors)
-- [BiomeTextColors](Frontend_Styles_Colors.md#biometextcolors)
-- [RarityColors](Frontend_Styles_Colors.md#raritycolors)
+- [default](Frontend_Styles_colors.md#default)
 
-## Variables
+## Properties
 
-### ANCIENT_BLUE
+### default
 
-• `Const` **ANCIENT_BLUE**: `"#b2fffc"`
+• **default**: `Object`
 
----
+#### Type declaration
 
-### ANCIENT_PURPLE
-
-• `Const` **ANCIENT_PURPLE**: `"#d23191"`
-
----
-
-### BiomeBackgroundColors
-
-• `Const` **BiomeBackgroundColors**: `Object`
-
----
-
-### BiomeTextColors
-
-• `Const` **BiomeTextColors**: `Object`
-
----
-
-### RarityColors
-
-• `Const` **RarityColors**: `Object`
+| Name       | Type     |
+| :--------- | :------- |
+| `black`    | `string` |
+| `gray-100` | `string` |
+| `gray-200` | `string` |
+| `gray-300` | `string` |
+| `gray-400` | `string` |
+| `gray-500` | `string` |
+| `gray-600` | `string` |
+| `gray-700` | `string` |
+| `gray-800` | `string` |
+| `gray-900` | `string` |
+| `white`    | `string` |
