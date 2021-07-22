@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { artifactNameFromArtifact, ArtifactRarity, ArtifactType, LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, isActivated, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, isActivated, MAX_ARTIFACT_COUNT, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -32,11 +32,14 @@ export function distributeArtifacts(config: config)
 
   console.log(`Distributing artifacts from ${from.length} planets with `, config)
 
+  // current max artifacts on the planet (before the move)
+  const maxArtifacts = config.toPlanetType === PlanetType.PLANET ? 0 : 5
+
   const movesToMake: Move[] = from.flatMap(from => {
     const to = getMyPlanetsInRange(from)
       .filter(p => p.planetLevel >= config.toMinLevel)
       .filter(p => p.planetType === config.toPlanetType)
-      .filter(p => p.heldArtifactIds.length < 5)
+      .filter(p => planetCanAcceptMove(p, maxArtifacts))
 
     const moves = to.map(to => {
       const energy = getMinimumEnergyNeeded(from, to)
@@ -61,7 +64,7 @@ export function distributeArtifacts(config: config)
     if (
       planetWillHaveMinEnergyAfterMove(move, 1)
       && ! move.artifact!.unconfirmedMove
-      && planetCanAcceptMove(move)
+      && planetCanAcceptMove(move.to, maxArtifacts)
     ) {
       console.log(`SENDING ${artifactNameFromArtifact(move.artifact!)} FROM ${planetName(move.from)} (ui.centerLocationId('${move.from.locationId}')) TO ${planetName(move.to)} (ui.centerLocationId('${move.to.locationId}')) WITH ${move.energy}`)
       return df.move(move.from.locationId, move.to.locationId, move.energy, 0, move.artifact!.id);

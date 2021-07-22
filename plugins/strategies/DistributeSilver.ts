@@ -77,7 +77,7 @@ export function distributeSilver(config: config)
     if (
       planetWillHaveMinEnergyAfterMove(move, 1)
       && silver > 0
-      && planetCanAcceptMove(move)
+      && planetCanAcceptMove(move.to)
     ) {
       console.log(`SENDING ${move.silver} silver to ${planetName(move.to)} (ui.centerLocationId('${move.to.locationId}')) FROM ${planetName(move.from)} (ui.centerLocationId('${move.from.locationId}')) WITH ${move.energy}`)
       return df.move(move.from.locationId, move.to.locationId, move.energy, silver);
