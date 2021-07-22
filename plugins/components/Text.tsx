@@ -182,7 +182,6 @@ export const HideSmall = styled.span`
   }
 `;
 
-// todo make this work nicely with react router links
 export const BasicLink = styled.u`
   cursor: pointer;
   &:hover {

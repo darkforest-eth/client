@@ -1,20 +1,25 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
-import { artifactNameFromArtifact, ArtifactRarity, LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
+import { artifactNameFromArtifact, ArtifactRarity, ArtifactType, LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
 import { getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, isActivated, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
 
-function findArtifact(p: Planet, rarity: ArtifactRarity) {
+function findArtifact(p: Planet, rarities: ArtifactRarity[], types: ArtifactType[]) {
   return df.getArtifactsWithIds(p.heldArtifactIds).find(a => {
-    return a && ! a.unconfirmedMove && a.rarity === rarity && !isActivated(a)
+    return a
+    && ! a.unconfirmedMove
+    && rarities.includes(a.rarity)
+    && types.includes(a.artifactType)
+    && !isActivated(a)
   })
 }
 
 interface config {
   fromId?: LocationId,
-  rarity: ArtifactRarity,
+  types: ArtifactType[]
+  rarities: ArtifactRarity[],
   toMinLevel: PlanetLevel,
   toPlanetType: PlanetType,
 }
@@ -23,7 +28,7 @@ export function distributeArtifacts(config: config)
   const from = getMyPlanets()
     .filter(p => p.planetType === PlanetTypes.FOUNDRY)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
-    .filter(p => findArtifact(p, config.rarity))
+    .filter(p => findArtifact(p, config.rarities, config.types))
 
   console.log(`Distributing artifacts from ${from.length} planets with `, config)
 
@@ -35,7 +40,7 @@ export function distributeArtifacts(config: config)
 
     const moves = to.map(to => {
       const energy = getMinimumEnergyNeeded(from, to)
-      const artifact = findArtifact(from, config.rarity)
+      const artifact = findArtifact(from, config.rarities, config.types)
 
       return {
         from,

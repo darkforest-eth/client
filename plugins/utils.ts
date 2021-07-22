@@ -24,6 +24,21 @@ export const ArtifactTypes: { [ key:string]: ArtifactType } = {
   MAX: 9
 }
 
+export const artifactStatTypes = [
+  ArtifactTypes.Monolith,
+  ArtifactTypes.Colossus,
+  ArtifactTypes.Spaceship,
+  ArtifactTypes.Pyramid,
+]
+
+export const artifactTacticalTypes = [
+  ArtifactTypes.Wormhole,
+  ArtifactTypes.PlanetaryShield,
+  ArtifactTypes.PhotoidCannon,
+  ArtifactTypes.BloomFilter,
+  ArtifactTypes.BlackDomain,
+]
+
 export const ArtifactRarities: { [ key:string]: ArtifactRarity } = {
   Unknown: 0,
   Common: 1,

@@ -12,38 +12,34 @@ import { withdrawArtifacts } from '../strategies/WithdrawArtifacts'
 import { activateArtifacts } from '../strategies/ActivateArtifacts'
 import { ManageInterval } from '../Components/ManageInterval'
 
-import { ArtifactRarities, ArtifactTypes, buttonGridStyle, canBeActivated, getAllArtifacts, isActivated, PlanetTypes } from '../utils'
+import { ArtifactRarities, artifactStatTypes, artifactTacticalTypes, ArtifactTypes, buttonGridStyle, canBeActivated, getAllArtifacts, isActivated, PlanetTypes } from '../utils'
 
 const pauseable = require('pauseable')
 
 declare const df: GameManager
 declare const ui: GameUIManager
 
-/**
- * @todo Send boost upgrades to planets to be auto activated.
- * The strategic ones should be sent to rips.
- */
 function onDistributeClick(selectedPlanet: Planet|null = null) {
-  // causes perf errors
-  // distributeArtifacts({
-  //   fromId: selectedPlanet?.locationId,
-  //   rarity: ArtifactRarities.Common,
-  //   toPlanetType: PlanetTypes.PLANET,
-  //   toMinLevel: 4,
-  // })
-
   const rarities = [
-    // ArtifactRarities.Common,
     ArtifactRarities.Rare,
     ArtifactRarities.Epic,
     ArtifactRarities.Legendary,
     ArtifactRarities.Mythic,
   ]
 
+  distributeArtifacts({
+    fromId: selectedPlanet?.locationId,
+    types: artifactStatTypes,
+    rarities,
+    toPlanetType: PlanetTypes.PLANET,
+    toMinLevel: 4,
+  })
+
   for (const level of rarities) {
     distributeArtifacts({
       fromId: selectedPlanet?.locationId,
-      rarity: level,
+      types: artifactTacticalTypes,
+      rarities: [level],
       toPlanetType: PlanetTypes.RIP,
       toMinLevel: level + 1,
     })
