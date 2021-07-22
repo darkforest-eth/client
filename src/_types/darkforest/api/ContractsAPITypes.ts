@@ -1,14 +1,14 @@
 import { ArtifactPointValues, UpgradeBranches } from '@darkforest_eth/types';
 import { BigNumber as EthersBN } from 'ethers';
 
-export enum ZKArgIdx {
+export const enum ZKArgIdx {
   PROOF_A,
   PROOF_B,
   PROOF_C,
   DATA,
 }
 
-export enum InitArgIdxs {
+export const enum InitArgIdxs {
   LOCATION_ID,
   PERLIN,
   RADIUS,
@@ -19,7 +19,7 @@ export enum InitArgIdxs {
   PERLIN_MIRROR_Y,
 }
 
-export enum MoveArgIdxs {
+export const enum MoveArgIdxs {
   FROM_ID,
   TO_ID,
   TO_PERLIN,
@@ -35,12 +35,12 @@ export enum MoveArgIdxs {
   ARTIFACT_SENT,
 }
 
-export enum UpgradeArgIdxs {
+export const enum UpgradeArgIdxs {
   LOCATION_ID,
   UPGRADE_BRANCH,
 }
 
-export enum ContractEvent {
+export const enum ContractEvent {
   PlayerInitialized = 'PlayerInitialized',
   ArrivalQueued = 'ArrivalQueued',
   PlanetUpgraded = 'PlanetUpgraded',
@@ -58,7 +58,7 @@ export enum ContractEvent {
   ChangedGPTCreditPrice = 'ChangedCreditPrice',
 }
 
-export enum ContractsAPIEvent {
+export const enum ContractsAPIEvent {
   PlayerUpdate = 'PlayerUpdate',
   PlanetUpdate = 'PlanetUpdate',
   ArrivalQueued = 'ArrivalQueued',
@@ -187,6 +187,6 @@ export type ClientMockchainData =
       [key in string | number]: ClientMockchainData;
     };
 
-export enum PlanetEventType {
+export const enum PlanetEventType {
   ARRIVAL,
 }

@@ -4,11 +4,11 @@ import NotificationManager from '../../Frontend/Game/NotificationManager';
 import { Setting, setBooleanSetting } from '../../Frontend/Utils/SettingsHooks';
 import GameUIManager from './GameUIManager';
 
-export enum TutorialManagerEvent {
+export const enum TutorialManagerEvent {
   StateChanged = 'StateChanged',
 }
 
-export enum TutorialState {
+export const enum TutorialState {
   None,
 
   HomePlanet,

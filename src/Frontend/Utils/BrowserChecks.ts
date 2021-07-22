@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export enum Incompatibility {
+export const enum Incompatibility {
   NoIDB = 'no_idb',
   NotRopsten = 'not_ropsten',
   MobileOrTablet = 'mobile_or_tablet',

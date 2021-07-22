@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 
-export enum UIEmitterEvent {
+export const enum UIEmitterEvent {
   GamePlanetSelected = 'GamePlanetSelected',
   CenterPlanet = 'CenterPlanet',
   WindowResize = 'WindowResize',

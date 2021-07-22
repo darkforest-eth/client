@@ -1,4 +1,4 @@
-import { ArtifactRarity, RarityNames } from '@darkforest_eth/types';
+import { ArtifactRarity, ArtifactRarityNames } from '@darkforest_eth/types';
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { RarityColors } from '../../Styles/Colors';
@@ -27,7 +27,7 @@ const Anim = styled.span`
 function MythicLabelRaw() {
   return (
     <Anim>
-      {RarityNames[ArtifactRarity.Mythic].split('').map((c, i) => (
+      {ArtifactRarityNames[ArtifactRarity.Mythic].split('').map((c, i) => (
         <AnimDelay i={i} key={i}>
           {c === ' ' ? <>&nbsp;</> : c}
         </AnimDelay>

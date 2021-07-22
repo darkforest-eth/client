@@ -224,7 +224,7 @@ export default function UnsubscribePage() {
         <Link to='/' size='lg'>
           About
         </Link>
-          <BasicEmailInput isPlayer={false} /> 
+          <BasicEmailInput isPlayer={false} />
       </div>
       */}
     </div>

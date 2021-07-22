@@ -10,7 +10,7 @@ export type PerlinRand = ReturnType<typeof rand>;
 
 export type GridPoint = WorldCoords & { __value: never };
 
-export enum PerlinOctave {
+export const enum PerlinOctave {
   _0 = 0,
   _1 = 1,
   _2 = 2,

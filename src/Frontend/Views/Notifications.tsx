@@ -38,7 +38,7 @@ const StyledNotification = styled.div`
     border-radius: 8px;
     border: 1px solid ${dfstyles.colors.text};
     background: ${({ color }) => color || dfstyles.colors.backgroundlighter};
-
+    overflow: hidden;
     display: flex;
     flex-direction: row;
     justify-content: space-around;

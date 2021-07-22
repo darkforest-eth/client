@@ -29,7 +29,7 @@ import { GameWindowLayout } from '../Views/GameWindowLayout';
 import { Terminal, TerminalHandle } from '../Views/Terminal';
 import { address } from '@darkforest_eth/serde';
 
-enum TerminalPromptStep {
+const enum TerminalPromptStep {
   NONE,
   COMPATIBILITY_CHECKS_PASSED,
   DISPLAY_ACCOUNTS,
@@ -51,7 +51,7 @@ enum TerminalPromptStep {
   ERROR,
 }
 
-export enum InitRenderState {
+export const enum InitRenderState {
   NONE,
   LOADING,
   COMPLETE,

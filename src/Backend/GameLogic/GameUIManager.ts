@@ -57,13 +57,13 @@ import {
 import { GameObjects } from './GameObjects';
 import { PerlinConfig } from '@darkforest_eth/hashing';
 
-export enum GameUIManagerEvent {
+export const enum GameUIManagerEvent {
   InitializedPlayer = 'InitializedPlayer',
   InitializedPlayerError = 'InitializedPlayerError',
 }
 
 class GameUIManager extends EventEmitter {
-  private readonly radiusMap: Record<PlanetLevel, number>;
+  private readonly radiusMap: { [PlanetLevel: number]: number };
   private readonly gameManager: GameManager;
 
   private terminal: React.MutableRefObject<TerminalHandle | undefined>;
@@ -132,7 +132,7 @@ class GameUIManager extends EventEmitter {
       [PlanetLevel.SEVEN]: 729 * scaleFactor,
       [PlanetLevel.EIGHT]: 972 * scaleFactor,
       [PlanetLevel.NINE]: 1215 * scaleFactor,
-    };
+    } as const;
 
     this.plugins = new PluginManager(gameManager);
 
@@ -781,7 +781,7 @@ class GameUIManager extends EventEmitter {
           !this.getBooleanSetting(Setting.FoundArtifact) &&
           this.getBooleanSetting(Setting.TutorialCompleted)
         ) {
-          notifManager.foundArtifact(planet);
+          notifManager.foundFoundry(planet);
           setBooleanSetting(account, Setting.FoundArtifact, true);
         }
       }

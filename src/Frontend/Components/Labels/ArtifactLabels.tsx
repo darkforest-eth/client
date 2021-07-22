@@ -1,9 +1,9 @@
 import {
   Artifact,
-  ArtifactNames,
+  ArtifactTypeNames,
   ArtifactRarity,
   BiomeNames,
-  RarityNames,
+  ArtifactRarityNames,
 } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
@@ -14,7 +14,7 @@ import { MythicLabel } from './MythicLabel';
 // raw text
 
 export const ArtifactRarityText = ({ artifact }: { artifact: Artifact }) => (
-  <>{RarityNames[artifact.rarity]}</>
+  <>{ArtifactRarityNames[artifact.rarity]}</>
 );
 
 export const ArtifactBiomeText = ({ artifact }: { artifact: Artifact }) => (
@@ -22,7 +22,7 @@ export const ArtifactBiomeText = ({ artifact }: { artifact: Artifact }) => (
 );
 
 export const ArtifactTypeText = ({ artifact }: { artifact: Artifact }) => (
-  <>{ArtifactNames[artifact.artifactType]}</>
+  <>{ArtifactTypeNames[artifact.artifactType]}</>
 );
 
 // colored labels

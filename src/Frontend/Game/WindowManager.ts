@@ -8,7 +8,7 @@ export type MousePos = {
   y: number;
 };
 
-export enum WindowManagerEvent {
+export const enum WindowManagerEvent {
   StateChanged = 'StateChanged',
   MiningCoordsUpdate = 'MiningCoordsUpdate',
   TooltipUpdated = 'TooltipUpdated',
@@ -16,13 +16,13 @@ export enum WindowManagerEvent {
   CtrlUp = 'CtrlUp',
 }
 
-export enum CursorState {
+export const enum CursorState {
   Normal,
   TargetingExplorer,
   TargetingForces,
 }
 
-export enum TooltipName {
+export const enum TooltipName {
   None,
   SilverGrowth,
   SilverCap,

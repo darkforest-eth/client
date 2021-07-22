@@ -1,4 +1,5 @@
-import { Planet, PlanetLevel, WorldCoords } from '@darkforest_eth/types';
+import { Planet, WorldCoords } from '@darkforest_eth/types';
+import { MAX_PLANET_LEVEL } from '@darkforest_eth/constants';
 import Viewport from '../../../Game/Viewport';
 import { engineConsts } from '../EngineConsts';
 import EngineUtils from '../EngineUtils';
@@ -34,7 +35,7 @@ export class MineRenderer {
       this.beltRenderer.queueBeltAtIdx(planet, centerW, radiusW, white, 0, -now * 0.3, true);
     if (level >= 7)
       this.beltRenderer.queueBeltAtIdx(planet, centerW, radiusW, white, 0, now * 0.3, true);
-    if (level === PlanetLevel.MAX) {
+    if (level === MAX_PLANET_LEVEL) {
       this.beltRenderer.queueBeltAtIdx(planet, centerW, radiusW, silver, 2, 0, true);
     }
   }

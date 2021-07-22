@@ -95,7 +95,7 @@ const squid = {
   ],
 };
 
-export enum HatType {
+export const enum HatType {
   GraduationCap = 'GraduationCap',
   PartyHat = 'PartyHat',
   Fish = 'Fish',

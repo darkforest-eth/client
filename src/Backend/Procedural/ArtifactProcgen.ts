@@ -4,7 +4,7 @@ import {
   Artifact,
   Biome,
   ArtifactRarity,
-  ArtifactNames,
+  ArtifactTypeNames,
   ArtifactType,
   artifactNameFromArtifact,
 } from '@darkforest_eth/types';
@@ -13,7 +13,7 @@ import { artifactBiomeName } from '../GameLogic/ArtifactUtils';
 
 export const artifactBiomeAndName = (artifact: Artifact | undefined): string => {
   if (!artifact) return '';
-  return `${artifactBiomeName(artifact)} ${ArtifactNames[artifact.artifactType]}`;
+  return `${artifactBiomeName(artifact)} ${ArtifactTypeNames[artifact.artifactType]}`;
 };
 
 export const dateMintedAt = (artifact: Artifact | undefined): string => {

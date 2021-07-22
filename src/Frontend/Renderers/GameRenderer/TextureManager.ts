@@ -5,6 +5,7 @@ import {
   isRelic,
   RenderedArtifact,
 } from '../../../Backend/GameLogic/ArtifactUtils';
+import { MIN_ARTIFACT_TYPE, MAX_ARTIFACT_TYPE, MAX_BIOME } from '@darkforest_eth/constants';
 
 export const ARTIFACTS_URL = 'public/sprites/artifacts.png';
 export const ARTIFACTS_THUMBS_URL = 'public/sprites/artifactthumbs.png';
@@ -69,9 +70,9 @@ export const EMPTY_SPRITE: SpriteRectangle = { x1: -1, y1: -1, x2: -1, y2: -1 };
 export const EMPTY_SET: SpriteSet = { shiny: EMPTY_SPRITE, normal: EMPTY_SPRITE };
 
 // we're gonna create one of these per artifact
-type BiomeToSprite = Record<Biome, SpriteSet>;
+type BiomeToSprite = { [Biome: number]: SpriteSet };
 
-type BiomeSpriteLocations = Record<ArtifactType, BiomeToSprite>;
+type BiomeSpriteLocations = { [ArtifactType: number]: BiomeToSprite };
 
 function spriteRectangleFromIndex(xIdx: number, yIdx: number): SpriteRectangle {
   const x1 = xIdx * SPRITE_INTERVAL_X;
@@ -88,20 +89,20 @@ function spriteRectangleFromIndex(xIdx: number, yIdx: number): SpriteRectangle {
 const biomeSpriteInfo = (): BiomeSpriteLocations => {
   const result: Partial<BiomeSpriteLocations> = {};
 
-  for (let type: ArtifactType = ArtifactType.MIN; type <= ArtifactType.MAX; type++) {
+  for (let type = MIN_ARTIFACT_TYPE; type <= MAX_ARTIFACT_TYPE; type++) {
     const biomeInfo: Partial<BiomeToSprite> = {};
 
     if (isBasic(type)) {
       let yIdx = (type - 1) * 2;
       let xIdx = 0;
 
-      for (let biome: Biome = Biome.UNKNOWN; biome <= Biome.MAX; biome++) {
-        if (type === ArtifactType.Unknown || biome === Biome.UNKNOWN) {
+      for (let biome: Biome = Biome.UNKNOWN; biome <= MAX_BIOME; biome++) {
+        if (biome === Biome.UNKNOWN) {
           biomeInfo[biome] = EMPTY_SET;
           continue;
         }
 
-        biomeInfo[biome as Biome] = {
+        biomeInfo[biome] = {
           shiny: spriteRectangleFromIndex(xIdx, yIdx),
           normal: spriteRectangleFromIndex(xIdx + 1, yIdx),
         };
@@ -118,7 +119,7 @@ const biomeSpriteInfo = (): BiomeSpriteLocations => {
       const relicNo = type - ArtifactType.Wormhole;
       const xIdx = relicNo * 2;
 
-      for (let biome: Biome = Biome.UNKNOWN; biome <= Biome.MAX; biome++) {
+      for (let biome: Biome = Biome.UNKNOWN; biome <= MAX_BIOME; biome++) {
         biomeInfo[biome] = {
           shiny: spriteRectangleFromIndex(xIdx, yIdx),
           normal: spriteRectangleFromIndex(xIdx + 1, yIdx),
@@ -134,14 +135,14 @@ const biomeSpriteInfo = (): BiomeSpriteLocations => {
 const biomeSpriteLocs = biomeSpriteInfo();
 
 /* generate ancient sprite info */
-type AncientSpriteLocations = Record<ArtifactType, SpriteSet>;
+type AncientSpriteLocations = { [ArtifactType: number]: SpriteSet };
 function ancientSpriteInfo(): AncientSpriteLocations {
   const result: Partial<AncientSpriteLocations> = {};
 
   const normalY = 9;
   const shinyY = 10;
 
-  for (let type = ArtifactType.MIN; type <= ArtifactType.MAX; type++) {
+  for (let type = MIN_ARTIFACT_TYPE; type <= MAX_ARTIFACT_TYPE; type++) {
     const xIdx = type - 1;
     result[type] = {
       normal: spriteRectangleFromIndex(xIdx, normalY),

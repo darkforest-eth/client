@@ -44,7 +44,7 @@ const StyledOnboardingContent = styled.div`
   }
 `;
 
-enum OnboardState {
+const enum OnboardState {
   Money,
   Storage,
   Keys,

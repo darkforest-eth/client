@@ -19,7 +19,7 @@ export const RECOMMENDED_WIDTH = '450px';
 
 export type ModalHook = Hook<boolean>;
 
-export enum ModalName {
+export const enum ModalName {
   Help,
   PlanetDetails,
   Leaderboard,

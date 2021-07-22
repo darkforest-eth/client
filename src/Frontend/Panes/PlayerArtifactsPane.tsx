@@ -1,4 +1,4 @@
-import { Artifact, ArtifactNames } from '@darkforest_eth/types';
+import { Artifact, ArtifactTypeNames } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
@@ -112,7 +112,7 @@ export function PlayerArtifactsPane({
         </span>
       );
     },
-    (artifact: Artifact) => <Sub>{ArtifactNames[artifact.artifactType]}</Sub>,
+    (artifact: Artifact) => <Sub>{ArtifactTypeNames[artifact.artifactType]}</Sub>,
     (artifact: Artifact) => <ArtifactRarityLabelAnim artifact={artifact} />,
   ];
 
@@ -123,7 +123,9 @@ export function PlayerArtifactsPane({
         planetArtifactName(right, uiManager) || ''
       ) || 0,
     (left: Artifact, right: Artifact) =>
-      ArtifactNames[left.artifactType]?.localeCompare(ArtifactNames[right.artifactType] || '') || 0,
+      ArtifactTypeNames[left.artifactType]?.localeCompare(
+        ArtifactTypeNames[right.artifactType] || ''
+      ) || 0,
     (left: Artifact, right: Artifact) => left.rarity - right.rarity,
   ];
 

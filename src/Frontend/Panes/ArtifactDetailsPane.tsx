@@ -1,7 +1,7 @@
 import {
   ArtifactId,
   ArtifactType,
-  RarityNames,
+  ArtifactRarityNames,
   Upgrade,
   EthAddress,
   Artifact,
@@ -319,7 +319,7 @@ function ArtifactDescription({ artifact }: { artifact: Artifact }) {
   const maxLevelBloomFilter = maxLevelsBloomFilter[artifact.rarity];
 
   const wormholeShrinkLevels = [0, 2, 4, 8, 16, 32];
-  const rarityName = RarityNames[artifact.rarity];
+  const rarityName = ArtifactRarityNames[artifact.rarity];
   const photoidRanges = [0, 2, 4, 6, 8, 10];
   const photoidSpeeds = [0, 10, 20, 30, 40, 50];
 

@@ -18,7 +18,7 @@ import EthConnection from '../Network/EthConnection';
 import { getAllTwitters } from '../Network/UtilityServerAPI';
 import PersistentChunkStore from './PersistentChunkStore';
 
-export enum SinglePlanetDataStoreEvent {
+export const enum SinglePlanetDataStoreEvent {
   REFRESHED_PLANET = 'REFRESHED_PLANET',
   REFRESHED_ARTIFACT = 'REFRESHED_ARTIFACT',
 }
@@ -173,7 +173,7 @@ class ReaderDataStore {
     else if (biomebase < this.contractConstants.BIOME_THRESHOLD_2) biome += 2;
     else biome += 3;
 
-    return biome;
+    return biome as Biome;
   }
 }
 

@@ -3,42 +3,42 @@ import dfstyles from './dfstyles';
 
 /* tsx file so that we get color previews in VScode! */
 
-export const BiomeTextColors: Record<Biome, string> = [
-  '#000000',
-  '#0088ff', // OCEAN
-  '#46FB73', // FOREST
-  '#CFF391', // GRASSLAND
-  '#FB6A9D', // TUNDRA
-  '#b48812', // SWAMP
-  '#ffe554', // DESERT
-  'hsl(198, 78%, 77%)', // ICE
-  '#000000', // WASTELAND
-  '#FF5100', // LAVA
-  '#bf5bf1', // CORRUPTED
-];
+export const BiomeTextColors = {
+  [Biome.UNKNOWN]: '#000000',
+  [Biome.OCEAN]: '#0088ff',
+  [Biome.FOREST]: '#46FB73',
+  [Biome.GRASSLAND]: '#CFF391',
+  [Biome.TUNDRA]: '#FB6A9D',
+  [Biome.SWAMP]: '#b48812',
+  [Biome.DESERT]: '#ffe554',
+  [Biome.ICE]: 'hsl(198, 78%, 77%)',
+  [Biome.WASTELAND]: '#000000',
+  [Biome.LAVA]: '#FF5100',
+  [Biome.CORRUPTED]: '#bf5bf1',
+} as const;
 
-export const BiomeBackgroundColors: Record<Biome, string> = [
-  '#000000',
-  '#000e2d', // OCEAN
-  '#06251d', // FOREST
-  '#212617', // GRASSLAND
-  '#260f17', // TUNDRA
-  '#211b0e', // SWAMP
-  '#302e0e', // DESERT
-  '#0d212f', // ICE
-  '#321b1b', // WASTELAND
-  '#321000', // LAVA
-  '#1e0d26', // CORRUPTED
-];
+export const BiomeBackgroundColors = {
+  [Biome.UNKNOWN]: '#000000',
+  [Biome.OCEAN]: '#000e2d',
+  [Biome.FOREST]: '#06251d',
+  [Biome.GRASSLAND]: '#212617',
+  [Biome.TUNDRA]: '#260f17',
+  [Biome.SWAMP]: '#211b0e',
+  [Biome.DESERT]: '#302e0e',
+  [Biome.ICE]: '#0d212f',
+  [Biome.WASTELAND]: '#321b1b',
+  [Biome.LAVA]: '#321000',
+  [Biome.CORRUPTED]: '#1e0d26',
+} as const;
 
 export const ANCIENT_PURPLE = '#d23191';
 export const ANCIENT_BLUE = '#b2fffc';
 
-export const RarityColors: Record<ArtifactRarity, string> = [
-  '#000000',
-  dfstyles.colors.subtext, // Common
-  '#6b68ff', // Rare
-  '#c13cff', // Epic
-  '#f8b73e', // Legendary
-  '#ff44b7', // Mythic
-];
+export const RarityColors = {
+  [ArtifactRarity.Unknown]: '#000000',
+  [ArtifactRarity.Common]: dfstyles.colors.subtext,
+  [ArtifactRarity.Rare]: '#6b68ff',
+  [ArtifactRarity.Epic]: '#c13cff',
+  [ArtifactRarity.Legendary]: '#f8b73e',
+  [ArtifactRarity.Mythic]: '#ff44b7',
+} as const;
