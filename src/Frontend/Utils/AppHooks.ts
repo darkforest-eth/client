@@ -1,13 +1,22 @@
-import { useCallback, useMemo, useState } from 'react';
-import GameUIManager from '../../Backend/GameLogic/GameUIManager';
-import { Wrapper } from '../../Backend/Utils/Wrapper';
-import { EthAddress, Planet, ArtifactId, Artifact, Leaderboard } from '@darkforest_eth/types';
-import { createDefinedContext } from './createDefinedContext';
-import { useKeyPressed, useWrappedEmitter } from './EmitterHooks';
-import { ctrlDown$, ctrlUp$ } from './KeyEmitters';
+import {
+  Artifact,
+  ArtifactId,
+  EthAddress,
+  Leaderboard,
+  LocationId,
+  Planet,
+  Player,
+} from '@darkforest_eth/types';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getActivatedArtifact, isActivated } from '../../Backend/GameLogic/ArtifactUtils';
+import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { loadLeaderboard } from '../../Backend/Network/LeaderboardApi';
+import { Wrapper } from '../../Backend/Utils/Wrapper';
+import { ModalHandle } from '../Views/ModalPane';
+import { createDefinedContext } from './createDefinedContext';
+import { useEmitterSubscribe, useKeyPressed, useWrappedEmitter } from './EmitterHooks';
 import { usePoll } from './Hooks';
+import { ctrlDown$, ctrlUp$ } from './KeyEmitters';
 
 export const { useDefinedContext: useUIManager, provider: UIManagerProvider } =
   createDefinedContext<GameUIManager>();
@@ -25,11 +34,24 @@ export function useAccount(uiManager: GameUIManager): EthAddress | undefined {
   return account;
 }
 
-export function useTwitter(
-  account: EthAddress | undefined,
-  uiManager: GameUIManager
-): string | undefined {
-  return useMemo(() => account && uiManager.getTwitter(account), [account, uiManager]);
+/**
+ * Hook which gets you the player, and updates whenever that player's twitter or score changes.
+ */
+export function usePlayer(
+  uiManager: GameUIManager,
+  ethAddress?: EthAddress
+): Wrapper<Player | undefined> {
+  const [player, setPlayer] = useState<Wrapper<Player | undefined>>(
+    () => new Wrapper(uiManager.getPlayer(ethAddress))
+  );
+
+  const onUpdate = useCallback(() => {
+    setPlayer(new Wrapper(uiManager.getPlayer(ethAddress)));
+  }, [uiManager, ethAddress]);
+
+  useEmitterSubscribe(uiManager.getGameManager().playersUpdated$, onUpdate);
+
+  return player;
 }
 
 /**
@@ -40,6 +62,32 @@ export function useSelectedPlanet(uiManager: GameUIManager): Wrapper<Planet | un
   return useWrappedEmitter<Planet>(uiManager.selectedPlanet$, undefined);
 }
 
+export function useSelectedPlanetId(uiManager: GameUIManager, defaultId?: LocationId) {
+  return useWrappedEmitter<LocationId>(uiManager.selectedPlanetId$, defaultId);
+}
+
+export function usePlanet(
+  uiManager: GameUIManager,
+  locationId: LocationId | undefined
+): Wrapper<Planet | undefined> {
+  const [planet, setPlanet] = useState<Wrapper<Planet | undefined>>(
+    () => new Wrapper(uiManager.getPlanetWithId(locationId))
+  );
+
+  const callback = useCallback(
+    (id: LocationId) => {
+      if (id === locationId) {
+        setPlanet(new Wrapper(uiManager.getPlanetWithId(locationId)));
+      }
+    },
+    [uiManager, locationId]
+  );
+
+  useEmitterSubscribe(uiManager.getGameManager().getGameObjects().planetUpdated$, callback);
+
+  return planet;
+}
+
 /**
  * Create a subscription to the currently hovering planet.
  * @param uiManager instance of GameUIManager
@@ -48,13 +96,22 @@ export function useHoverPlanet(uiManager: GameUIManager): Wrapper<Planet | undef
   return useWrappedEmitter<Planet>(uiManager.hoverPlanet$, undefined);
 }
 
-export function useMyArtifacts(
-  uiManager: GameUIManager
-): Wrapper<Map<ArtifactId, Artifact> | undefined> {
-  return useWrappedEmitter<Map<ArtifactId, Artifact>>(
-    uiManager.myArtifacts$,
-    uiManager.getMyArtifactMap()
-  );
+export function useMyArtifacts(uiManager: GameUIManager): Wrapper<Artifact[]> {
+  const [myArtifacts, setMyArtifacts] = useState(new Wrapper(uiManager.getMyArtifacts()));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMyArtifacts(new Wrapper(uiManager.getMyArtifacts()));
+    }, 1000);
+    return () => clearInterval(interval);
+  });
+
+  return myArtifacts;
+}
+
+export function useMyArtifactsList(uiManager: GameUIManager) {
+  const myArtifactsMap = useMyArtifacts(uiManager);
+  return Array.from(myArtifactsMap.value?.values() || []);
 }
 
 // note that this is going to throw an error if the pointer to `artifacts` changes but not to `planet`
@@ -96,6 +153,22 @@ export function useSelectedArtifact(uiManager: GameUIManager): Wrapper<Artifact 
   return useWrappedEmitter<Artifact>(uiManager.selectedArtifact$, undefined);
 }
 
+export function useArtifact(uiManager: GameUIManager, artifactId: ArtifactId) {
+  const [artifact, setArtifact] = useState<Wrapper<Artifact | undefined>>(
+    new Wrapper(uiManager.getArtifactWithId(artifactId))
+  );
+
+  // @todo: actually hook this into the eventing system that we have in the game.
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setArtifact(new Wrapper(uiManager.getArtifactWithId(artifactId)));
+    }, 1000);
+    return () => clearInterval(interval);
+  });
+
+  return artifact;
+}
+
 /** Return a bool that indicates if the control key is pressed. */
 export function useControlDown(): boolean {
   return useKeyPressed(ctrlDown$, ctrlUp$);
@@ -123,4 +196,17 @@ export function useLeaderboard(poll: number | undefined = undefined): {
   usePoll(load, poll, true);
 
   return { leaderboard, error };
+}
+
+export function usePopAllOnSelectedPlanetChanged(
+  modal: ModalHandle,
+  startingId: LocationId | undefined
+) {
+  const selected = useSelectedPlanetId(useUIManager(), startingId).value;
+
+  useEffect(() => {
+    if (selected !== startingId) {
+      modal.popAll();
+    }
+  }, [selected, modal, startingId]);
 }

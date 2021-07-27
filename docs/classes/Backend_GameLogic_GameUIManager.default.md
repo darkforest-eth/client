@@ -60,6 +60,7 @@
 - [deactivateArtifact](Backend_GameLogic_GameUIManager.default.md#deactivateartifact)
 - [depositArtifact](Backend_GameLogic_GameUIManager.default.md#depositartifact)
 - [destroy](Backend_GameLogic_GameUIManager.default.md#destroy)
+- [disconnectTwitter](Backend_GameLogic_GameUIManager.default.md#disconnecttwitter)
 - [discoverBiome](Backend_GameLogic_GameUIManager.default.md#discoverbiome)
 - [findArtifact](Backend_GameLogic_GameUIManager.default.md#findartifact)
 - [generateVerificationTweet](Backend_GameLogic_GameUIManager.default.md#generateverificationtweet)
@@ -114,7 +115,7 @@
 - [getMyArtifacts](Backend_GameLogic_GameUIManager.default.md#getmyartifacts)
 - [getMyArtifactsNotOnPlanet](Backend_GameLogic_GameUIManager.default.md#getmyartifactsnotonplanet)
 - [getMyBalance](Backend_GameLogic_GameUIManager.default.md#getmybalance)
-- [getMyBalanceEmitter](Backend_GameLogic_GameUIManager.default.md#getmybalanceemitter)
+- [getMyBalance$](Backend_GameLogic_GameUIManager.default.md#getmybalance$)
 - [getMyPlanetMap](Backend_GameLogic_GameUIManager.default.md#getmyplanetmap)
 - [getMyScore](Backend_GameLogic_GameUIManager.default.md#getmyscore)
 - [getNextBroadcastAvailableTimestamp](Backend_GameLogic_GameUIManager.default.md#getnextbroadcastavailabletimestamp)
@@ -125,6 +126,7 @@
 - [getPlanetWithCoords](Backend_GameLogic_GameUIManager.default.md#getplanetwithcoords)
 - [getPlanetWithId](Backend_GameLogic_GameUIManager.default.md#getplanetwithid)
 - [getPlanetsInViewport](Backend_GameLogic_GameUIManager.default.md#getplanetsinviewport)
+- [getPlayer](Backend_GameLogic_GameUIManager.default.md#getplayer)
 - [getPluginManager](Backend_GameLogic_GameUIManager.default.md#getpluginmanager)
 - [getPreviousSelectedPlanet](Backend_GameLogic_GameUIManager.default.md#getpreviousselectedplanet)
 - [getPrivateKey](Backend_GameLogic_GameUIManager.default.md#getprivatekey)
@@ -244,13 +246,13 @@ EventEmitter.constructor
 
 ### hoverPlanet$
 
-• `Readonly` **hoverPlanet$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`undefined` \| `Planet`\>
+• `Readonly` **hoverPlanet$**: `Monomitter`<`undefined` \| `Planet`\>
 
 ---
 
 ### hoverPlanetId$
 
-• `Readonly` **hoverPlanetId$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`undefined` \| `LocationId`\>
+• `Readonly` **hoverPlanetId$**: `Monomitter`<`undefined` \| `LocationId`\>
 
 ---
 
@@ -301,7 +303,7 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### myArtifacts$
 
-• `Readonly` **myArtifacts$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`Map`<`ArtifactId`, `Artifact`\>\>
+• `Readonly` **myArtifacts$**: `Monomitter`<`Map`<`ArtifactId`, `Artifact`\>\>
 
 ---
 
@@ -349,13 +351,13 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### selectedArtifact$
 
-• `Readonly` **selectedArtifact$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`undefined` \| `Artifact`\>
+• `Readonly` **selectedArtifact$**: `Monomitter`<`undefined` \| `Artifact`\>
 
 ---
 
 ### selectedArtifactId$
 
-• `Readonly` **selectedArtifactId$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`undefined` \| `ArtifactId`\>
+• `Readonly` **selectedArtifactId$**: `Monomitter`<`undefined` \| `ArtifactId`\>
 
 ---
 
@@ -373,13 +375,13 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### selectedPlanet$
 
-• `Readonly` **selectedPlanet$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`undefined` \| `Planet`\>
+• `Readonly` **selectedPlanet$**: `Monomitter`<`undefined` \| `Planet`\>
 
 ---
 
 ### selectedPlanetId$
 
-• `Readonly` **selectedPlanetId$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`undefined` \| `LocationId`\>
+• `Readonly` **selectedPlanetId$**: `Monomitter`<`undefined` \| `LocationId`\>
 
 ---
 
@@ -604,6 +606,22 @@ indicates whether or not the player is currently selecting a target planet.
 #### Returns
 
 `void`
+
+---
+
+### disconnectTwitter
+
+▸ **disconnectTwitter**(`twitter`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name      | Type     |
+| :-------- | :------- |
+| `twitter` | `string` |
+
+#### Returns
+
+`Promise`<`void`\>
 
 ---
 
@@ -882,11 +900,11 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### getDiagnostics
 
-▸ **getDiagnostics**(): [`Diagnostics`](../interfaces/Frontend_Panes_DiagnosticsPane.Diagnostics.md)
+▸ **getDiagnostics**(): `Diagnostics`
 
 #### Returns
 
-[`Diagnostics`](../interfaces/Frontend_Panes_DiagnosticsPane.Diagnostics.md)
+`Diagnostics`
 
 ---
 
@@ -987,11 +1005,11 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### getEthConnection
 
-▸ **getEthConnection**(): [`default`](Backend_Network_EthConnection.default.md)
+▸ **getEthConnection**(): `EthConnection`
 
 #### Returns
 
-[`default`](Backend_Network_EthConnection.default.md)
+`EthConnection`
 
 ---
 
@@ -1047,21 +1065,21 @@ state in some way
 
 ### getGptCreditBalanceEmitter
 
-▸ **getGptCreditBalanceEmitter**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
+▸ **getGptCreditBalanceEmitter**(): `Monomitter`<`number`\>
 
 #### Returns
 
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
+`Monomitter`<`number`\>
 
 ---
 
 ### getGptCreditPriceEmitter
 
-▸ **getGptCreditPriceEmitter**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
+▸ **getGptCreditPriceEmitter**(): `Monomitter`<`number`\>
 
 #### Returns
 
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
+`Monomitter`<`number`\>
 
 ---
 
@@ -1137,11 +1155,11 @@ state in some way
 
 ### getIsBuyingCreditsEmitter
 
-▸ **getIsBuyingCreditsEmitter**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`boolean`\>
+▸ **getIsBuyingCreditsEmitter**(): `Monomitter`<`boolean`\>
 
 #### Returns
 
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`boolean`\>
+`Monomitter`<`boolean`\>
 
 ---
 
@@ -1276,13 +1294,13 @@ state in some way
 
 ---
 
-### getMyBalanceEmitter
+### getMyBalance$
 
-▸ **getMyBalanceEmitter**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
+▸ **getMyBalance$**(): `Monomitter`<`BigNumber`\>
 
 #### Returns
 
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
+`Monomitter`<`BigNumber`\>
 
 ---
 
@@ -1390,9 +1408,9 @@ state in some way
 
 #### Parameters
 
-| Name       | Type         |
-| :--------- | :----------- |
-| `planetId` | `LocationId` |
+| Name       | Type                        |
+| :--------- | :-------------------------- |
+| `planetId` | `undefined` \| `LocationId` |
 
 #### Returns
 
@@ -1407,6 +1425,22 @@ state in some way
 #### Returns
 
 `Planet`[]
+
+---
+
+### getPlayer
+
+▸ **getPlayer**(`address?`): `undefined` \| `Player`
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `address?` | `EthAddress` |
+
+#### Returns
+
+`undefined` \| `Player`
 
 ---
 
@@ -1432,11 +1466,11 @@ state in some way
 
 ### getPrivateKey
 
-▸ **getPrivateKey**(): `string`
+▸ **getPrivateKey**(): `undefined` \| `string`
 
 #### Returns
 
-`string`
+`undefined` \| `string`
 
 ---
 
@@ -2211,9 +2245,9 @@ drill fields like this anymore.
 
 #### Parameters
 
-| Name       | Type                                                                                          |
-| :--------- | :-------------------------------------------------------------------------------------------- |
-| `updateFn` | (`d`: [`Diagnostics`](../interfaces/Frontend_Panes_DiagnosticsPane.Diagnostics.md)) => `void` |
+| Name       | Type                           |
+| :--------- | :----------------------------- |
+| `updateFn` | (`d`: `Diagnostics`) => `void` |
 
 #### Returns
 

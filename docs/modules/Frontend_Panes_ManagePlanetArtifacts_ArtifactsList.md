@@ -14,13 +14,13 @@
 
 #### Parameters
 
-| Name                                    | Type                           |
-| :-------------------------------------- | :----------------------------- |
-| `__namedParameters`                     | `Object`                       |
-| `__namedParameters.artifacts`           | (`Artifact` \| `undefined`)[]  |
-| `__namedParameters.sortBy`              | keyof `Upgrade` \| `undefined` |
-| `__namedParameters.actions`             |                                |
-| `__namedParameters.openArtifactDetails` |                                |
+| Name                          | Type                                                                   |
+| :---------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`           | `Object`                                                               |
+| `__namedParameters.artifacts` | (`Artifact` \| `undefined`)[]                                          |
+| `__namedParameters.modal`     | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
+| `__namedParameters.sortBy`    | keyof `Upgrade` \| `undefined`                                         |
+| `__namedParameters.actions`   |                                                                        |
 
 #### Returns
 

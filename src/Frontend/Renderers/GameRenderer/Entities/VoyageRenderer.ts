@@ -1,11 +1,10 @@
+import { LocationId, Planet, Player, QueuedArrival } from '@darkforest_eth/types';
 import { ProcgenUtils } from '../../../../Backend/Procedural/ProcgenUtils';
-import { hasOwner, formatNumber } from '../../../../Backend/Utils/Utils';
-import { Planet, LocationId } from '@darkforest_eth/types';
+import { formatNumber, hasOwner } from '../../../../Backend/Utils/Utils';
 import Viewport from '../../../Game/Viewport';
-import Renderer from '../Renderer';
 import { engineConsts } from '../EngineConsts';
-import { TextAlign, TextAnchor, RenderZIndex } from '../EngineTypes';
-import { QueuedArrival } from '@darkforest_eth/types';
+import { RenderZIndex, TextAlign, TextAnchor } from '../EngineTypes';
+import Renderer from '../Renderer';
 
 const { white, gold } = engineConsts.colors;
 const { enemyA, mineA } = engineConsts.colors.voyage;
@@ -31,7 +30,7 @@ export default class VoyageRenderer {
     this.renderer = renderer;
   }
 
-  drawFleet(voyage: QueuedArrival) {
+  drawFleet(voyage: QueuedArrival, _player: Player | undefined) {
     const {
       now: nowMs,
       gameUIManager,
@@ -153,8 +152,9 @@ export default class VoyageRenderer {
       const nowS = now / 1000;
       if (nowS < voyage.arrivalTime) {
         const isMyVoyage = voyage.player === gameUIManager.getAccount();
+        const sender = gameUIManager.getPlayer(voyage.player);
         this.drawVoyagePath(voyage.fromPlanet, voyage.toPlanet, true, isMyVoyage);
-        this.drawFleet(voyage);
+        this.drawFleet(voyage, sender);
       }
     }
 

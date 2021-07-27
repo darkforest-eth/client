@@ -1,9 +1,9 @@
+import { Planet, WorldCoords } from '@darkforest_eth/types';
 import autoBind from 'auto-bind';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { CanvasCoords, distL2, vectorLength } from '../../Backend/Utils/Coordinates';
-import { isLocatable, Chunk } from '../../_types/global/GlobalTypes';
+import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
-import { WorldCoords, Planet } from '@darkforest_eth/types';
 import { AnimationManager, ViewportAnimation } from './ViewportAnimation';
 
 export const getDefaultScroll = (): number => {
@@ -263,28 +263,11 @@ class Viewport {
 
   centerPlanetAnimated(planet: Planet | undefined): void {
     if (planet && isLocatable(planet)) {
-      // if the user previously had a planet selected, then we want to move the viewport
-      // to the new planet in such a way that it occupies the same screen location that
-      // the previous planet occupied.
-
-      let endPoint = planet.location.coords;
-      const previousPlanet = this.gameUIManager.getPreviousSelectedPlanet();
-      if (
-        previousPlanet &&
-        isLocatable(previousPlanet) &&
-        this.isInViewport(previousPlanet.location.coords)
-      ) {
-        endPoint = {
-          x: this.centerWorldCoords.x - previousPlanet.location.coords.x + planet.location.coords.x,
-          y: this.centerWorldCoords.y - previousPlanet.location.coords.y + planet.location.coords.y,
-        };
-      }
-
       this.animationManager.replaceAnimation(
         ViewportAnimation.between(
           Date.now(),
           this.centerWorldCoords,
-          endPoint,
+          planet.location.coords,
           this.heightInWorldUnits,
           this.heightInWorldUnits
         )
@@ -297,12 +280,15 @@ class Viewport {
   }
 
   // centers on a planet and makes it fill the viewport
-  zoomPlanet(planet: Planet | undefined): void {
+  zoomPlanet(planet?: Planet, radii?: number): void {
     if (!planet || !isLocatable(planet)) return;
     this.centerPlanet(planet);
     // in world coords
     const rad = this.gameUIManager.getRadiusOfPlanetLevel(planet.planetLevel);
-    this.setWorldHeight(4 * rad);
+
+    if (radii !== undefined) {
+      this.setWorldHeight(radii * rad);
+    }
   }
 
   centerCoords(coords: WorldCoords): void {

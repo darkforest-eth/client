@@ -11,12 +11,12 @@ import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { ArtifactImage } from '../Components/ArtifactImage';
 import { Btn } from '../Components/Btn';
+import { FullWidth, Spacer } from '../Components/CoreUI';
 import { EnergyIcon, SilverIcon } from '../Components/Icons';
 import { LongDash, Sub } from '../Components/Text';
 import WindowManager, { CursorState } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
-import { planetBackground } from '../Styles/Mixins';
-import { useUIManager, useControlDown, usePlanetInactiveArtifacts } from '../Utils/AppHooks';
+import { useControlDown, usePlanetInactiveArtifacts, useUIManager } from '../Utils/AppHooks';
 import { useEmitterSubscribe, useEmitterValue } from '../Utils/EmitterHooks';
 import { escapeDown$, keyUp$ } from '../Utils/KeyEmitters';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
@@ -35,6 +35,7 @@ const enum RowType {
   Silver,
   Artifact,
 }
+
 function ResourceRowIcon({ rowType }: { rowType: RowType }) {
   return (
     <StyledRowIcon>
@@ -49,7 +50,6 @@ const StyledResourceBar = styled.div`
 
   input[type='range'] {
     width: 100%;
-    height: 3px;
   }
 
   & div {
@@ -134,6 +134,7 @@ function ResourceBar({
         </div>
         <ShowPercent value={value} setValue={setValue} />
       </div>
+      <Spacer height={2} />
       <input
         type='range'
         min={0}
@@ -152,12 +153,10 @@ const thumb = height - 2 * margin;
 const StyledSelectArtifactRow = styled.div<{ planet: Planet | undefined }>`
   width: 100%;
 
-  border-top: 1px solid ${dfstyles.colors.subtext};
-  border-bottom: 1px solid ${dfstyles.colors.subtext};
+  border-top: 1px solid ${dfstyles.colors.border};
+  border-bottom: 1px solid ${dfstyles.colors.border};
   height: ${height}em;
   padding: ${margin}em;
-
-  ${planetBackground}
 `;
 
 const RowWrapper = styled.div<{ artifacts: Artifact[] }>`
@@ -261,21 +260,12 @@ function SelectArtifactRow({
   );
 }
 
-const StyledSendRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 0.5em;
-  & > span:first-child {
-    margin-right: 0.5em;
-  }
-`;
-
 const First = styled.span`
   display: inline-flex;
   flex-direction: row;
   justify-content: space-between;
-  flex-grow: 1;
+  width: 100%;
+  padding: 8px;
 `;
 
 const Remove = styled.span`
@@ -290,26 +280,28 @@ function SendRow({
   doSend,
   artifact,
   remove,
+  sending,
 }: {
   doSend: () => void;
   artifact: Artifact | undefined;
   remove: () => void;
+  sending: boolean;
 }) {
   return (
-    <StyledSendRow>
-      <First>
-        {artifact && (
-          <>
-            <span>
-              {artifactNameFromArtifact(artifact)}{' '}
-              {artifact && <Sub>({ArtifactTypeNames[artifact.artifactType]})</Sub>}
-            </span>
-            <Remove onClick={remove}>remove</Remove>
-          </>
-        )}
-      </First>
-      <Btn onClick={doSend}>Send</Btn>
-    </StyledSendRow>
+    <>
+      {(artifact && (
+        <First>
+          {artifactNameFromArtifact(artifact)}{' '}
+          {artifact && <Sub>({ArtifactTypeNames[artifact.artifactType]})</Sub>}
+          <Remove onClick={remove}>remove</Remove>
+        </First>
+      )) || <></>}
+      <FullWidth padding='1px 8px'>
+        <Btn wide onClick={doSend} forceActive={sending}>
+          (S)end
+        </Btn>
+      </FullWidth>
+    </>
   );
 }
 
@@ -482,7 +474,7 @@ export function SendResources({
         <SelectArtifactRow planet={p.value} inactiveArtifacts={artifacts} {...artifactProps} />
       )}
 
-      <SendRow artifact={sendArtifact} remove={remove} doSend={doSend} />
+      <SendRow artifact={sendArtifact} remove={remove} doSend={doSend} sending={sending} />
     </StyledSendResources>
   );
 }

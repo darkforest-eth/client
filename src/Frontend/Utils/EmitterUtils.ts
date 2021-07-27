@@ -1,5 +1,5 @@
+import { monomitter, Monomitter } from '@darkforest_eth/events';
 import { Artifact, EthAddress, Planet } from '@darkforest_eth/types';
-import { monomitter, Monomitter } from './Monomitter';
 import _ from 'lodash';
 
 /**

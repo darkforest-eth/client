@@ -1,10 +1,10 @@
+import { Planet, PlanetType } from '@darkforest_eth/types';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Planet, PlanetType } from '@darkforest_eth/types';
-import { PlanetscapeRenderer } from './PlanetScapeRenderer';
-import { useUIManager } from '../../Utils/AppHooks';
-import dfstyles from '../../Styles/dfstyles';
 import { Wrapper } from '../../../Backend/Utils/Wrapper';
+import dfstyles from '../../Styles/dfstyles';
+import { useUIManager } from '../../Utils/AppHooks';
+import { PlanetscapeRenderer } from './PlanetScapeRenderer';
 
 const PlanetScapeContainer = styled.div`
   position: relative;

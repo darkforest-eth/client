@@ -40,13 +40,14 @@
 
 ### drawFleet
 
-▸ **drawFleet**(`voyage`): `void`
+▸ **drawFleet**(`voyage`, `_player`): `void`
 
 #### Parameters
 
-| Name     | Type            |
-| :------- | :-------------- |
-| `voyage` | `QueuedArrival` |
+| Name      | Type                    |
+| :-------- | :---------------------- |
+| `voyage`  | `QueuedArrival`         |
+| `_player` | `undefined` \| `Player` |
 
 #### Returns
 

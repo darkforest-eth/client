@@ -9,9 +9,12 @@
 - [TOGGLE_DIAGNOSTICS_PANE](Frontend_Utils_ShortcutConstants.md#toggle_diagnostics_pane)
 - [TOGGLE_HAT_PANE](Frontend_Utils_ShortcutConstants.md#toggle_hat_pane)
 - [TOGGLE_PLANET_ARTIFACTS_PANE](Frontend_Utils_ShortcutConstants.md#toggle_planet_artifacts_pane)
-- [TOGGLE_PLANET_DETAILS_PANE](Frontend_Utils_ShortcutConstants.md#toggle_planet_details_pane)
 - [TOGGLE_PLANET_DEX_PANE](Frontend_Utils_ShortcutConstants.md#toggle_planet_dex_pane)
 - [TOGGLE_UPGRADES_PANE](Frontend_Utils_ShortcutConstants.md#toggle_upgrades_pane)
+
+### Functions
+
+- [useSubscribeToShortcut](Frontend_Utils_ShortcutConstants.md#usesubscribetoshortcut)
 
 ## Variables
 
@@ -45,12 +48,6 @@
 
 ---
 
-### TOGGLE_PLANET_DETAILS_PANE
-
-• `Const` **TOGGLE_PLANET_DETAILS_PANE**: `"d"`
-
----
-
 ### TOGGLE_PLANET_DEX_PANE
 
 • `Const` **TOGGLE_PLANET_DEX_PANE**: `"q"`
@@ -60,3 +57,20 @@
 ### TOGGLE_UPGRADES_PANE
 
 • `Const` **TOGGLE_UPGRADES_PANE**: `"u"`
+
+## Functions
+
+### useSubscribeToShortcut
+
+▸ **useSubscribeToShortcut**(`key`, `callback`): `void`
+
+#### Parameters
+
+| Name       | Type                    |
+| :--------- | :---------------------- |
+| `key`      | `string` \| `undefined` |
+| `callback` | () => `void`            |
+
+#### Returns
+
+`void`

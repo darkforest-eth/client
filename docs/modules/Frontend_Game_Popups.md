@@ -14,12 +14,12 @@
 
 #### Parameters
 
-| Name            | Type                                                                             |
-| :-------------- | :------------------------------------------------------------------------------- |
-| `ethConnection` | [`default`](../classes/Backend_Network_EthConnection.default.md)                 |
-| `txRequest`     | [`QueuedTxRequest`](../interfaces/Backend_Network_TxExecutor.QueuedTxRequest.md) |
-| `from`          | `EthAddress`                                                                     |
-| `gasFeeGwei`    | `number`                                                                         |
+| Name            | Type                |
+| :-------------- | :------------------ |
+| `ethConnection` | `EthConnection`     |
+| `txRequest`     | `QueuedTransaction` |
+| `from`          | `EthAddress`        |
+| `gasFeeGwei`    | `EthersBN`          |
 
 #### Returns
 

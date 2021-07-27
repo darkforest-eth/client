@@ -2,7 +2,7 @@ import { PixelCoords } from '../../../Backend/Procedural/ProcgenUtils';
 import { RGBVec } from '../GameRenderer/EngineTypes';
 import AttribManager from '../GameRenderer/WebGL/AttribManager';
 import { WebGLManager } from '../GameRenderer/WebGL/WebGLManager';
-import { getPathProgramAndUniforms, scapePosProps, scapeColorProps } from './PathProgram';
+import { getPathProgramAndUniforms, scapeColorProps, scapePosProps } from './PathProgram';
 
 export class PathRenderer {
   private manager: WebGLManager;

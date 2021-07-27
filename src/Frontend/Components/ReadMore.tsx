@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled, { css } from 'styled-components';
 import dfstyles from '../Styles/dfstyles';
-import { Spacer } from './CoreUI';
 
 export function ReadMore({
   children,
@@ -19,31 +17,37 @@ export function ReadMore({
 
   return (
     <>
-      <ReadMoreContainer collapsed={collapsed} height={height}>
+      <ReadMoreContainer
+        onClick={toggle}
+        collapsed={collapsed}
+        height={(collapsed && height) || 'initial'}
+      >
         {children}
       </ReadMoreContainer>
-      <Spacer height={4} />
-      <Toggle onClick={toggle} color={dfstyles.colors.subbertext}>
-        Read {collapsed ? 'More' : 'Less'}
-      </Toggle>
     </>
   );
 }
 
-const Toggle = styled.span`
-  text-decoration: underline;
-  cursor: pointer;
-  color: ${dfstyles.colors.subtext};
-
-  &:hover {
-    color: white;
-  }
+const active = css`
+  background-color: ${dfstyles.colors.backgroundlighter};
+  border: 1px solid ${dfstyles.colors.border};
 `;
 
 const ReadMoreContainer = styled.div`
-  ${({ collapsed, height }: { collapsed: boolean; height?: string }) => css`
+  ${({ height, collapsed }: { height: string; collapsed?: boolean }) => css`
+    cursor: pointer;
+    border: 1px solid ${dfstyles.colors.darkBorder};
+    padding: 4px;
+    margin: 8px;
+    border-radius: 3px;
+    background-color: ${dfstyles.colors.backgroundlight};
+    height: ${height};
     overflow: hidden;
-    text-overflow: ellipsis;
-    ${collapsed && `max-height: ${height === undefined ? `50px` : height};`}
+    ${collapsed && 'user-select: none;'}
+
+    &:hover,
+    &:active {
+      ${active}
+    }
   `}
 `;

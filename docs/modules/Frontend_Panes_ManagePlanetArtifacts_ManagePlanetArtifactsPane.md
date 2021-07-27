@@ -4,9 +4,20 @@
 
 ### Functions
 
+- [ManagePlanetArtifactsHelpContent](Frontend_Panes_ManagePlanetArtifacts_ManagePlanetArtifactsPane.md#manageplanetartifactshelpcontent)
 - [ManagePlanetArtifactsPane](Frontend_Panes_ManagePlanetArtifacts_ManagePlanetArtifactsPane.md#manageplanetartifactspane)
 
 ## Functions
+
+### ManagePlanetArtifactsHelpContent
+
+▸ **ManagePlanetArtifactsHelpContent**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
 
 ### ManagePlanetArtifactsPane
 
@@ -18,11 +29,11 @@ activating, and deactivating artifacts.
 
 #### Parameters
 
-| Name                                       | Type                                                 |
-| :----------------------------------------- | :--------------------------------------------------- |
-| `__namedParameters`                        | `Object`                                             |
-| `__namedParameters.hook`                   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
-| `__namedParameters.setArtifactDetailsOpen` |                                                      |
+| Name                         | Type                                                                   |
+| :--------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`          | `Object`                                                               |
+| `__namedParameters.modal`    | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
+| `__namedParameters.planetId` | `LocationId` \| `undefined`                                            |
 
 #### Returns
 

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import { SettingsIcon } from '../Components/Icons';
 import { Green, Red, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { useUIManager, useAccount } from '../Utils/AppHooks';
+import { useAccount, useUIManager } from '../Utils/AppHooks';
 import { ModalName, ModalPane } from '../Views/ModalPane';
 
 const StyledOnboardingContent = styled.div`

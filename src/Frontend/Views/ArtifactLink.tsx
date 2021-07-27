@@ -1,26 +1,28 @@
 import { Artifact } from '@darkforest_eth/types';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
+import { artifactName } from '../../Backend/Procedural/ArtifactProcgen';
+import { ArtifactDetailsPane } from '../Panes/ArtifactDetailsPane';
 import dfstyles from '../Styles/dfstyles';
-import { useUIManager } from '../Utils/AppHooks';
+import { ModalHandle } from './ModalPane';
 
 export function ArtifactLink({
-  artifact,
-  setDetailsOpen,
+  modal,
   children,
+  artifact,
 }: {
+  modal: ModalHandle;
   artifact: Artifact;
-  setDetailsOpen: (open: boolean) => void;
-  children: React.ReactNode;
+  children: React.ReactNode | React.ReactNode[];
 }) {
-  const uiManager = useUIManager();
+  const onClick = useCallback(() => {
+    modal.push({
+      element: <ArtifactDetailsPane artifactId={artifact?.id} modal={modal} />,
+      title: artifactName(artifact),
+    });
+  }, [artifact, modal]);
 
-  const openArtifactDetails = useCallback(() => {
-    uiManager.selectedArtifactId$.publish(artifact.id);
-    setDetailsOpen(true);
-  }, [uiManager, artifact, setDetailsOpen]);
-
-  return <LinkContainer onClick={openArtifactDetails}>{children}</LinkContainer>;
+  return <LinkContainer onClick={onClick}>{children}</LinkContainer>;
 }
 
 const LinkContainer = styled.span`

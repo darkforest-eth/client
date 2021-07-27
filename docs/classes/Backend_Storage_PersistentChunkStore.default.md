@@ -95,7 +95,7 @@
 
 ### diagnosticUpdater
 
-• `Private` `Optional` **diagnosticUpdater**: [`DiagnosticUpdater`](../interfaces/Backend_Interfaces_DiagnosticUpdater.DiagnosticUpdater.md)
+• `Private` `Optional` **diagnosticUpdater**: `DiagnosticUpdater`
 
 ---
 
@@ -503,9 +503,9 @@ indexed db.
 
 #### Parameters
 
-| Name                 | Type                                                                                           |
-| :------------------- | :--------------------------------------------------------------------------------------------- |
-| `diagnosticUpdater?` | [`DiagnosticUpdater`](../interfaces/Backend_Interfaces_DiagnosticUpdater.DiagnosticUpdater.md) |
+| Name                 | Type                |
+| :------------------- | :------------------ |
+| `diagnosticUpdater?` | `DiagnosticUpdater` |
 
 #### Returns
 

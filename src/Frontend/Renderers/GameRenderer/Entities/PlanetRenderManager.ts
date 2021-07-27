@@ -1,13 +1,13 @@
-import { PlanetType, WorldCoords, Planet, Artifact, LocationId } from '@darkforest_eth/types';
+import { Artifact, LocationId, Planet, PlanetType, WorldCoords } from '@darkforest_eth/types';
+import { PlanetRenderInfo } from '../../../../Backend/GameLogic/ViewportEntities';
 import { ProcgenUtils } from '../../../../Backend/Procedural/ProcgenUtils';
-import { hasOwner, formatNumber } from '../../../../Backend/Utils/Utils';
+import { formatNumber, hasOwner } from '../../../../Backend/Utils/Utils';
 import { isLocatable } from '../../../../_types/global/GlobalTypes';
 import Viewport from '../../../Game/Viewport';
 import { HatType } from '../../../Utils/Hats';
-import Renderer from '../Renderer';
 import { engineConsts } from '../EngineConsts';
 import { TextAlign, TextAnchor } from '../EngineTypes';
-import { PlanetRenderInfo } from '../../../../Backend/GameLogic/ViewportEntities';
+import Renderer from '../Renderer';
 
 const { whiteA, barbsA, gold } = engineConsts.colors;
 const { maxRadius } = engineConsts.planet;
@@ -291,10 +291,9 @@ export default class PlanetRenderManager {
 
   private queueHat(planet: Planet, center: WorldCoords, radius: number) {
     const { gameUIManager: uiManager } = this.renderer;
+    const hoveringPlanet = uiManager.getHoveringOverPlanet() !== undefined;
     const myRotation = 0;
-
     const hatLevel = planet.hatLevel;
-
     const cosmetic = ProcgenUtils.getPlanetCosmetic(planet);
 
     if (hatLevel > 0) {
@@ -317,6 +316,7 @@ export default class PlanetRenderManager {
         1.2 * radius * hatScale,
         radius,
         myRotation,
+        hoveringPlanet,
         bg,
         base,
         hoverCoords

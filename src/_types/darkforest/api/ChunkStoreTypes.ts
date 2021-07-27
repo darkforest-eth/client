@@ -1,5 +1,5 @@
-import { Rectangle } from '../../global/GlobalTypes';
 import { LocationId } from '@darkforest_eth/types';
+import { Rectangle } from '../../global/GlobalTypes';
 
 /**
  * one of "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"

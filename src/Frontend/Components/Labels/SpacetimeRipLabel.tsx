@@ -1,4 +1,4 @@
-import { PlanetTypeNames, PlanetType } from '@darkforest_eth/types';
+import { PlanetType, PlanetTypeNames } from '@darkforest_eth/types';
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 

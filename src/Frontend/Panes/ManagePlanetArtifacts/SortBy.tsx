@@ -1,12 +1,12 @@
+import { Upgrade } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
-import { Upgrade } from '@darkforest_eth/types';
-import { CenterRow, Spacer, HoverableTooltip } from '../../Components/CoreUI';
+import { CenterRow, HoverableTooltip, Spacer } from '../../Components/CoreUI';
 import { Hoverable, TOOLTIP_SLOW } from '../../Components/Hoverable';
 import {
   DefenseIcon,
-  EnergyIcon,
   EnergyGrowthIcon,
+  EnergyIcon,
   RangeIcon,
   SpeedIcon,
 } from '../../Components/Icons';

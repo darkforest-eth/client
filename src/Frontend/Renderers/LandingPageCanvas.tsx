@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, RefObject, useCallback } from 'react';
 import autoBind from 'auto-bind';
+import React, { RefObject, useCallback, useEffect, useRef } from 'react';
 import dfstyles from '../Styles/dfstyles';
 import { hasTouchscreen, isMobileOrTablet } from '../Utils/BrowserChecks';
 

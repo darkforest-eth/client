@@ -1,14 +1,14 @@
-import React from 'react';
-import styled from 'styled-components';
 import {
-  Conversation,
-  Message,
-  ConversationArtifact,
-  ArtifactType,
   ArtifactRarity,
   ArtifactRarityNames,
+  ArtifactType,
   ArtifactTypeNames,
+  Conversation,
+  ConversationArtifact,
+  Message,
 } from '@darkforest_eth/types';
+import React from 'react';
+import styled from 'styled-components';
 import { WikiPane } from '../../Frontend/Panes/WikiPane';
 import { TerminalTextStyle } from '../../Frontend/Utils/TerminalTypes';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';

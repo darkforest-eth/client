@@ -1,3 +1,4 @@
+import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import dfstyles from '../Styles/dfstyles';
@@ -7,12 +8,12 @@ import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 import { PlanetCard } from '../Views/PlanetCard';
 
 const StyledHoverPlanetPane = styled.div<{ visible: boolean }>`
-  width: 22em;
+  width: ${RECOMMENDED_MODAL_WIDTH};
   position: absolute;
   top: 0;
   left: 0;
   border-radius: ${dfstyles.borderRadius};
-  border: 1px solid ${dfstyles.colors.subtext};
+  border: 1px solid ${dfstyles.colors.border};
   background: ${dfstyles.colors.background};
 
   ${({ visible }) =>
@@ -91,25 +92,9 @@ export function HoverPlanetPane() {
 
   const visible = beVisible;
 
-  /*
-  const [visible, setVisible] = useState<boolean>(false);
-  const [openTimeout, setOpenTimeout] = useState<ReturnType<typeof setTimeout> | undefined>();
-
-  useEffect(() => {
-    if (beVisible) {
-      setOpenTimeout(setTimeout(() => setVisible(true), 500));
-    } else setVisible(false);
-
-    return () => {
-      clearTimeout(openTimeout);
-      setOpenTimeout(undefined);
-    };
-  }, [beVisible, setVisible, setOpenTimeout]);
-  */
-
   return (
     <StyledHoverPlanetPane visible={visible} ref={paneRef}>
-      <PlanetCard planetWrapper={hoverWrapper} />
+      <PlanetCard standalone planetWrapper={hoverWrapper} />
     </StyledHoverPlanetPane>
   );
 }

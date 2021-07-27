@@ -1,4 +1,4 @@
-import { UniformType, AttribType } from '../EngineTypes';
+import { AttribType, UniformType } from '../EngineTypes';
 import { glsl } from '../EngineUtils';
 
 // mask shader - takes in world coords and spits out red rects

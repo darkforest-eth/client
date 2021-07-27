@@ -1,7 +1,6 @@
-import _ from 'lodash';
+import { Callback, Monomitter } from '@darkforest_eth/events';
 import { useEffect, useState } from 'react';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
-import { Monomitter, Callback } from './Monomitter';
 
 /**
  * Execute something on emitter callback

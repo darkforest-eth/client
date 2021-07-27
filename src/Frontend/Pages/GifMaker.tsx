@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import _ from 'lodash';
-import { GifRenderer } from '../Renderers/GifRenderer';
 import { ArtifactFileColor } from '../../Backend/GameLogic/ArtifactUtils';
+import { GifRenderer } from '../Renderers/GifRenderer';
 
 const IS_THUMB = true;
 const GIF_DIM = IS_THUMB ? 90 : 350;

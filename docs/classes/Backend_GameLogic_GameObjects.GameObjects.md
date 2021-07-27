@@ -141,7 +141,7 @@ cancelled for whatever reason.
 
 ### artifactUpdated$
 
-• `Readonly` **artifactUpdated$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`ArtifactId`\>
+• `Readonly` **artifactUpdated$**: `Monomitter`<`ArtifactId`\>
 
 Event emitter which publishes whenever an artifact has been updated.
 
@@ -179,7 +179,7 @@ information about the world at that location.
 
 ### isBuyingCredits$
 
-• `Readonly` **isBuyingCredits$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`boolean`\>
+• `Readonly` **isBuyingCredits$**: `Monomitter`<`boolean`\>
 
 Event emitter which publishes whenever the player begins and finishes (whether with a success
 or an error) buying gpt credits.
@@ -209,7 +209,7 @@ Cached index of artifacts owned by the player.
 
 ### myArtifactsUpdated$
 
-• `Readonly` **myArtifactsUpdated$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`Map`<`ArtifactId`, `Artifact`\>\>
+• `Readonly` **myArtifactsUpdated$**: `Monomitter`<`Map`<`ArtifactId`, `Artifact`\>\>
 
 Whenever one of the player's artifacts are updated, this event emitter publishes. See
 [GameObjects.myPlanetsUpdated$](Backend_GameLogic_GameObjects.GameObjects.md#myplanetsupdated$) for more info.
@@ -228,7 +228,7 @@ Cached index of planets owned by the player.
 
 ### myPlanetsUpdated$
 
-• `Readonly` **myPlanetsUpdated$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`Map`<`LocationId`, `Planet`\>\>
+• `Readonly` **myPlanetsUpdated$**: `Monomitter`<`Map`<`LocationId`, `Planet`\>\>
 
 Whenever a planet is updated, we publish to this event with a reference to a map from location
 id to planet. We need to rethink this event emitter because it currently publishes every time
@@ -259,7 +259,7 @@ this planet is located, if this client happens to know the coordinates of this p
 
 ### planetUpdated$
 
-• `Readonly` **planetUpdated$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`LocationId`\>
+• `Readonly` **planetUpdated$**: `Monomitter`<`LocationId`\>
 
 Event emitter which publishes whenever a planet is updated.
 
@@ -668,11 +668,11 @@ time may be in the past
 
 ### getIsBuyingCreditsEmitter
 
-▸ **getIsBuyingCreditsEmitter**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`boolean`\>
+▸ **getIsBuyingCreditsEmitter**(): `Monomitter`<`boolean`\>
 
 #### Returns
 
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`boolean`\>
+`Monomitter`<`boolean`\>
 
 ---
 
@@ -978,7 +978,7 @@ with their localstorage wallet. You can think of it as one of the hubs which con
 
 Inside this function, we update the relevant internal game objects to reflect that the user has
 requested a particular action. Additionally, we publish the appropriate events to the relevant
-[Monomitter](../modules/Frontend_Utils_Monomitter.md#monomitter) instances that are stored in this class.
+{@link Monomitter} instances that are stored in this class.
 
 In the case of something like prospecting for an artifact, this allows us to display a spinner
 text which says "Prospecting..."

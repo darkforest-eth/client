@@ -14,9 +14,10 @@
 
 #### Parameters
 
-| Name                | Type                                                                                                                                            |
-| :------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `__namedParameters` | { `hook`: [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) } & [`PlanetNotifHooks`](Frontend_Views_PlanetNotifications.md#planetnotifhooks) |
+| Name                     | Type                                                 |
+| :----------------------- | :--------------------------------------------------- |
+| `__namedParameters`      | `Object`                                             |
+| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 
 #### Returns
 

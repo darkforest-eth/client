@@ -1,39 +1,39 @@
-import FastQueue from 'fastq';
-import { BigInteger } from 'big-integer';
-import * as bigInt from 'big-integer';
 import {
-  PerlinConfig,
+  fakeHash,
   mimcHash,
   modPBigInt,
-  fakeHash,
-  perlin,
   modPBigIntNative,
+  perlin,
+  PerlinConfig,
 } from '@darkforest_eth/hashing';
-import { LRUMap } from 'mnemonist';
-import { TerminalTextStyle } from '../../Frontend/Utils/TerminalTypes';
-import { TerminalHandle } from '../../Frontend/Views/Terminal';
-import { HashConfig } from '../../_types/global/GlobalTypes';
 import {
-  SnarkJSProofAndSignals,
+  BiomebaseSnarkContractCallArgs,
+  BiomebaseSnarkInput,
   buildContractCallArgs,
   fakeProof,
-  RevealSnarkInput,
-  RevealSnarkContractCallArgs,
-  InitSnarkInput,
   InitSnarkContractCallArgs,
-  MoveSnarkInput,
+  InitSnarkInput,
   MoveSnarkContractCallArgs,
-  BiomebaseSnarkInput,
-  BiomebaseSnarkContractCallArgs,
+  MoveSnarkInput,
+  RevealSnarkContractCallArgs,
+  RevealSnarkInput,
+  SnarkJSProofAndSignals,
 } from '@darkforest_eth/snarks';
-import revealCircuitPath from '@darkforest_eth/snarks/reveal.wasm';
-import revealZkeyPath from '@darkforest_eth/snarks/reveal.zkey';
+import biomebaseCircuitPath from '@darkforest_eth/snarks/biomebase.wasm';
+import biomebaseZkeyPath from '@darkforest_eth/snarks/biomebase.zkey';
 import initCircuitPath from '@darkforest_eth/snarks/init.wasm';
 import initZkeyPath from '@darkforest_eth/snarks/init.zkey';
 import moveCircuitPath from '@darkforest_eth/snarks/move.wasm';
 import moveZkeyPath from '@darkforest_eth/snarks/move.zkey';
-import biomebaseCircuitPath from '@darkforest_eth/snarks/biomebase.wasm';
-import biomebaseZkeyPath from '@darkforest_eth/snarks/biomebase.zkey';
+import revealCircuitPath from '@darkforest_eth/snarks/reveal.wasm';
+import revealZkeyPath from '@darkforest_eth/snarks/reveal.zkey';
+import * as bigInt from 'big-integer';
+import { BigInteger } from 'big-integer';
+import FastQueue from 'fastq';
+import { LRUMap } from 'mnemonist';
+import { TerminalTextStyle } from '../../Frontend/Utils/TerminalTypes';
+import { TerminalHandle } from '../../Frontend/Views/Terminal';
+import { HashConfig } from '../../_types/global/GlobalTypes';
 
 type ZKPTask = {
   taskId: number;

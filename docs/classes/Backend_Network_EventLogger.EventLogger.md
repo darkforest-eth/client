@@ -8,15 +8,10 @@
 
 - [constructor](Backend_Network_EventLogger.EventLogger.md#constructor)
 
-### Properties
-
-- [instance](Backend_Network_EventLogger.EventLogger.md#instance)
-
 ### Methods
 
 - [logEvent](Backend_Network_EventLogger.EventLogger.md#logevent)
 - [augmentEvent](Backend_Network_EventLogger.EventLogger.md#augmentevent)
-- [getInstance](Backend_Network_EventLogger.EventLogger.md#getinstance)
 
 ## Constructors
 
@@ -24,23 +19,18 @@
 
 • **new EventLogger**()
 
-## Properties
-
-### instance
-
-▪ `Static` `Private` **instance**: [`EventLogger`](Backend_Network_EventLogger.EventLogger.md)
-
 ## Methods
 
 ### logEvent
 
-▸ **logEvent**(`event`): `void`
+▸ **logEvent**(`eventType`, `event`): `void`
 
 #### Parameters
 
-| Name    | Type      |
-| :------ | :-------- |
-| `event` | `unknown` |
+| Name        | Type                                                             |
+| :---------- | :--------------------------------------------------------------- |
+| `eventType` | [`EventType`](../enums/Backend_Network_EventLogger.EventType.md) |
+| `event`     | `unknown`                                                        |
 
 #### Returns
 
@@ -50,24 +40,19 @@
 
 ### augmentEvent
 
-▸ `Static` **augmentEvent**(`event`): `Object`
+▸ `Static` `Private` **augmentEvent**(`event`, `eventType`): `Object`
 
 #### Parameters
 
-| Name    | Type      |
-| :------ | :-------- |
-| `event` | `unknown` |
+| Name        | Type                                                             |
+| :---------- | :--------------------------------------------------------------- |
+| `event`     | `unknown`                                                        |
+| `eventType` | [`EventType`](../enums/Backend_Network_EventLogger.EventType.md) |
 
 #### Returns
 
 `Object`
 
----
-
-### getInstance
-
-▸ `Static` **getInstance**(): [`EventLogger`](Backend_Network_EventLogger.EventLogger.md)
-
-#### Returns
-
-[`EventLogger`](Backend_Network_EventLogger.EventLogger.md)
+| Name            | Type                                                             |
+| :-------------- | :--------------------------------------------------------------- |
+| `df_event_type` | [`EventType`](../enums/Backend_Network_EventLogger.EventType.md) |

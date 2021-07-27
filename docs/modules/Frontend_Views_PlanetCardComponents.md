@@ -4,20 +4,12 @@
 
 ### Variables
 
-- [ArtifactSection](Frontend_Views_PlanetCardComponents.md#artifactsection)
-- [BigStatCell](Frontend_Views_PlanetCardComponents.md#bigstatcell)
 - [DestroyedMarker](Frontend_Views_PlanetCardComponents.md#destroyedmarker)
-- [IconsWrapper](Frontend_Views_PlanetCardComponents.md#iconswrapper)
 - [PlanetTag](Frontend_Views_PlanetCardComponents.md#planettag)
-- [PreviewSection](Frontend_Views_PlanetCardComponents.md#previewsection)
-- [Small](Frontend_Views_PlanetCardComponents.md#small)
 - [StatCell](Frontend_Views_PlanetCardComponents.md#statcell)
+- [StatContainer](Frontend_Views_PlanetCardComponents.md#statcontainer)
 - [StatRow](Frontend_Views_PlanetCardComponents.md#statrow)
-- [StatSection](Frontend_Views_PlanetCardComponents.md#statsection)
-- [StyledPlanetCard](Frontend_Views_PlanetCardComponents.md#styledplanetcard)
-- [StyledStatIcon](Frontend_Views_PlanetCardComponents.md#styledstaticon)
 - [TitleBar](Frontend_Views_PlanetCardComponents.md#titlebar)
-- [TopRow](Frontend_Views_PlanetCardComponents.md#toprow)
 
 ### Functions
 
@@ -27,27 +19,9 @@
 
 ## Variables
 
-### ArtifactSection
-
-• `Const` **ArtifactSection**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
-
----
-
-### BigStatCell
-
-• `Const` **BigStatCell**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
-
----
-
 ### DestroyedMarker
 
 • `Const` **DestroyedMarker**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
-
----
-
-### IconsWrapper
-
-• `Const` **IconsWrapper**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
@@ -57,21 +31,15 @@
 
 ---
 
-### PreviewSection
-
-• `Const` **PreviewSection**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
-
----
-
-### Small
-
-• `Const` **Small**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
-
----
-
 ### StatCell
 
 • `Const` **StatCell**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+
+---
+
+### StatContainer
+
+• `Const` **StatContainer**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
@@ -81,33 +49,9 @@
 
 ---
 
-### StatSection
-
-• `Const` **StatSection**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
-
----
-
-### StyledPlanetCard
-
-• `Const` **StyledPlanetCard**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
-
----
-
-### StyledStatIcon
-
-• `Const` **StyledStatIcon**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
-
----
-
 ### TitleBar
 
 • `Const` **TitleBar**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
-
----
-
-### TopRow
-
-• `Const` **TopRow**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ## Functions
 

@@ -1,12 +1,12 @@
+import { PerlinConfig } from '@darkforest_eth/hashing';
+import { SpaceType } from '@darkforest_eth/types';
 import { Chunk } from '../../../../_types/global/GlobalTypes';
 import Viewport from '../../../Game/Viewport';
+import { RGBVec } from '../EngineTypes';
 import Renderer from '../Renderer';
 import { GameGLManager } from '../WebGL/GameGLManager';
 import { PerlinRenderer } from './PerlinRenderer';
 import RectRenderer from './RectRenderer';
-import { PerlinConfig } from '@darkforest_eth/hashing';
-import { SpaceType } from '@darkforest_eth/types';
-import { RGBVec } from '../EngineTypes';
 
 export default class BackgroundRenderer {
   manager: GameGLManager;

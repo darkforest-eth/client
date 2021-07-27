@@ -1,11 +1,9 @@
 /**
  * Hi there!
  *
- * Looks like you've found the new Dark Forest plugins system.
+ * Looks like you've found the Dark Forest plugins system.
  * Read through this script to learn how to write plugins!
- */
-
-/**
+ *
  * Most importantly, you have access these globals:
  * 1. df - Just like the df object in your console.
  * 2. ui - For interacting with the game's user interface.
@@ -21,7 +19,7 @@ console.log(df, ui);
 import confetti from 'https://cdn.skypack.dev/canvas-confetti';
 
 /**
- * A plugin is a Class with render and destory methods.
+ * A plugin is a Class with render and destroy methods.
  * Other than that, you are free to do whatever, so be careful!
  */
 class Readme implements DFPlugin {

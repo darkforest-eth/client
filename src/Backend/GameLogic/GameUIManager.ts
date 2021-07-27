@@ -1,61 +1,62 @@
+import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
+import { Monomitter, monomitter } from '@darkforest_eth/events';
+import { PerlinConfig } from '@darkforest_eth/hashing';
+import { planetHasBonus } from '@darkforest_eth/hexgen';
+import { EthConnection } from '@darkforest_eth/network';
 import {
-  LocationId,
-  ArtifactId,
-  EthAddress,
-  Player,
   Artifact,
-  Planet,
-  LocatablePlanet,
-  PlanetLevel,
-  UpgradeBranchName,
-  WorldLocation,
-  WorldCoords,
+  ArtifactId,
   Biome,
-  SpaceType,
-  PlanetType,
-  QueuedArrival,
-  Upgrade,
   Conversation,
+  Diagnostics,
+  EthAddress,
+  LocatablePlanet,
+  LocationId,
+  Planet,
+  PlanetLevel,
+  PlanetType,
+  Player,
+  QueuedArrival,
+  SpaceType,
+  UnconfirmedActivateArtifact,
   UnconfirmedMove,
   UnconfirmedUpgrade,
-  UnconfirmedActivateArtifact,
+  Upgrade,
+  UpgradeBranchName,
+  WorldCoords,
+  WorldLocation,
 } from '@darkforest_eth/types';
 import autoBind from 'auto-bind';
+import { BigNumber } from 'ethers';
 import EventEmitter from 'events';
+import deferred from 'p-defer';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import Viewport from '../../Frontend/Game/Viewport';
 import { getObjectWithIdFromMap } from '../../Frontend/Utils/EmitterUtils';
-import { Monomitter, monomitter } from '../../Frontend/Utils/Monomitter';
+import {
+  getBooleanSetting,
+  getSetting,
+  setBooleanSetting,
+  Setting,
+} from '../../Frontend/Utils/SettingsHooks';
 import UIEmitter, { UIEmitterEvent } from '../../Frontend/Utils/UIEmitter';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
 import {
   Chunk,
-  Rectangle,
-  isLocatable,
-  Wormhole,
   HashConfig,
+  isLocatable,
+  Rectangle,
+  Wormhole,
 } from '../../_types/global/GlobalTypes';
 import { MiningPattern } from '../Miner/MiningPatterns';
-import EthConnection from '../Network/EthConnection';
 import { coordsEqual } from '../Utils/Coordinates';
-import { deferred } from '../Utils/Utils';
 import { biomeName } from './ArtifactUtils';
 import GameManager, { GameManagerEvent } from './GameManager';
+import { GameObjects } from './GameObjects';
 import { PluginManager } from './PluginManager';
 import TutorialManager, { TutorialState } from './TutorialManager';
-import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
-import { planetHasBonus } from '@darkforest_eth/hexgen';
 import { ViewportEntities } from './ViewportEntities';
-import { Diagnostics } from '../../Frontend/Panes/DiagnosticsPane';
-import {
-  getBooleanSetting,
-  getSetting,
-  Setting,
-  setBooleanSetting,
-} from '../../Frontend/Utils/SettingsHooks';
-import { GameObjects } from './GameObjects';
-import { PerlinConfig } from '@darkforest_eth/hashing';
 
 export const enum GameUIManagerEvent {
   InitializedPlayer = 'InitializedPlayer',
@@ -136,7 +137,7 @@ class GameUIManager extends EventEmitter {
 
     this.plugins = new PluginManager(gameManager);
 
-    this.selectedPlanetId$ = monomitter<LocationId | undefined>();
+    this.selectedPlanetId$ = monomitter<LocationId | undefined>(true);
     this.selectedPlanet$ = getObjectWithIdFromMap<Planet, LocationId>(
       this.getPlanetMap(),
       this.selectedPlanetId$,
@@ -282,23 +283,27 @@ class GameUIManager extends EventEmitter {
   }
 
   public verifyTwitter(twitter: string): Promise<boolean> {
-    return this.gameManager.verifyTwitter(twitter);
+    return this.gameManager.submitVerifyTwitter(twitter);
+  }
+
+  public disconnectTwitter(twitter: string) {
+    return this.gameManager.submitDisconnectTwitter(twitter);
   }
 
   public getPluginManager(): PluginManager {
     return this.plugins;
   }
 
-  public getPrivateKey(): string {
+  public getPrivateKey(): string | undefined {
     return this.gameManager.getPrivateKey();
   }
 
   public getMyBalance(): number {
-    return this.gameManager.getMyBalance();
+    return this.gameManager.getMyBalanceEth();
   }
 
-  public getMyBalanceEmitter(): Monomitter<number> {
-    return this.gameManager.getMyBalanceEmitter();
+  public getMyBalance$(): Monomitter<BigNumber> {
+    return this.gameManager.getMyBalance$();
   }
 
   public findArtifact(planetId: LocationId) {
@@ -367,11 +372,11 @@ class GameUIManager extends EventEmitter {
     this.mouseDownOverCoords = planet.location.coords;
     this.mouseDownOverPlanet = planet;
 
-    const [resolve, _reject, resultPromise] = deferred<LocatablePlanet | undefined>();
+    const { resolve, promise } = deferred<LocatablePlanet | undefined>();
 
     this.onChooseTargetPlanet = resolve;
 
-    return resultPromise;
+    return promise;
   }
 
   public revealLocation(locationId: LocationId) {
@@ -452,6 +457,7 @@ class GameUIManager extends EventEmitter {
         this.setSelectedPlanet(mouseUpOverPlanet);
         this.selectedCoords = mouseUpOverCoords;
         this.terminal.current?.println(`Selected: ${mouseUpOverPlanet.locationId}`);
+        this.terminal.current?.println(``);
       } else if (mouseDownPlanet && mouseDownPlanet.owner === this.gameManager.getAccount()) {
         // move initiated if enough forces
         const from = mouseDownPlanet;
@@ -888,12 +894,16 @@ class GameUIManager extends EventEmitter {
     return this.getMyArtifacts().filter((a) => !a.onPlanetId);
   }
 
-  public getPlanetWithId(planetId: LocationId): Planet | undefined {
+  public getPlanetWithId(planetId: LocationId | undefined): Planet | undefined {
     return this.gameManager.getPlanetWithId(planetId);
   }
 
   public getMyScore(): number {
     return this.gameManager.getMyScore();
+  }
+
+  public getPlayer(address?: EthAddress): Player | undefined {
+    return this.gameManager.getPlayer(address);
   }
 
   public getArtifactWithId(artifactId: ArtifactId): Artifact | undefined {

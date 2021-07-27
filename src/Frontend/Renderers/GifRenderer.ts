@@ -1,24 +1,24 @@
-import JSZip from 'jszip';
+import {
+  EMPTY_LOCATION_ID,
+  MAX_ARTIFACT_RARITY,
+  MAX_ARTIFACT_TYPE,
+  MAX_BIOME,
+  MIN_ARTIFACT_RARITY,
+  MIN_ARTIFACT_TYPE,
+  MIN_BIOME,
+} from '@darkforest_eth/constants';
 import { Artifact, ArtifactRarity, ArtifactType, Biome } from '@darkforest_eth/types';
 import { mat4 } from 'gl-matrix';
-import { SpriteRenderer } from './GameRenderer/Entities/SpriteRenderer';
-import { WebGLManager } from './GameRenderer/WebGL/WebGLManager';
-import { mockArtifactWithRarity } from '../../Backend/Procedural/ArtifactProcgen';
+import JSZip from 'jszip';
 import {
   ArtifactFileColor,
   artifactFileName,
   setForceAncient,
 } from '../../Backend/GameLogic/ArtifactUtils';
-import {
-  EMPTY_LOCATION_ID,
-  MIN_ARTIFACT_TYPE,
-  MAX_ARTIFACT_TYPE,
-  MIN_ARTIFACT_RARITY,
-  MAX_ARTIFACT_RARITY,
-  MIN_BIOME,
-  MAX_BIOME,
-} from '@darkforest_eth/constants';
+import { mockArtifactWithRarity } from '../../Backend/Procedural/ArtifactProcgen';
 import { GIF_ARTIFACT_COLOR } from '../Pages/GifMaker';
+import { SpriteRenderer } from './GameRenderer/Entities/SpriteRenderer';
+import { WebGLManager } from './GameRenderer/WebGL/WebGLManager';
 
 const FileSaver = require('file-saver');
 

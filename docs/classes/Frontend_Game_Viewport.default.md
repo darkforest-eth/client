@@ -816,13 +816,14 @@
 
 ### zoomPlanet
 
-▸ **zoomPlanet**(`planet`): `void`
+▸ **zoomPlanet**(`planet?`, `radii?`): `void`
 
 #### Parameters
 
-| Name     | Type                    |
-| :------- | :---------------------- |
-| `planet` | `undefined` \| `Planet` |
+| Name      | Type     |
+| :-------- | :------- |
+| `planet?` | `Planet` |
+| `radii?`  | `number` |
 
 #### Returns
 

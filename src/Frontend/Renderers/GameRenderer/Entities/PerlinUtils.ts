@@ -1,6 +1,6 @@
+import { Fraction, getRandomGradientAt, PerlinConfig, rand } from '@darkforest_eth/hashing';
 import { WorldCoords } from '@darkforest_eth/types';
 import { Rectangle } from '../../../../_types/global/GlobalTypes';
-import { getRandomGradientAt, Fraction, rand, PerlinConfig } from '@darkforest_eth/hashing';
 
 /* types */
 type Vector = { x: number; y: number };

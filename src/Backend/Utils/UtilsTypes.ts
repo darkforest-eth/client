@@ -1,4 +1,4 @@
-import { RGBVec, HSLVec } from '../../Frontend/Renderers/GameRenderer/EngineTypes';
+import { HSLVec, RGBVec } from '../../Frontend/Renderers/GameRenderer/EngineTypes';
 import { HatType } from '../../Frontend/Utils/Hats';
 
 export type RuinsInfo = {

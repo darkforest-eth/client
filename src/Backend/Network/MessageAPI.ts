@@ -1,8 +1,8 @@
 import {
-  PlanetMessageResponse,
-  PlanetMessageRequest,
-  PostMessageRequest,
   DeleteMessagesRequest,
+  PlanetMessageRequest,
+  PlanetMessageResponse,
+  PostMessageRequest,
   SignedMessage,
 } from '@darkforest_eth/types';
 

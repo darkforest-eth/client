@@ -1,9 +1,9 @@
-import { formatNumber } from '../../../Backend/Utils/Utils';
+import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
 import { Planet, WorldCoords } from '@darkforest_eth/types';
-import Renderer from './Renderer';
+import { formatNumber } from '../../../Backend/Utils/Utils';
 import { engineConsts } from './EngineConsts';
 import { RenderZIndex, RGBVec, TextAlign, TextAnchor } from './EngineTypes';
-import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
+import Renderer from './Renderer';
 
 const {
   red,

@@ -1,8 +1,8 @@
+import { Planet } from '@darkforest_eth/types';
 import { ProcgenUtils } from '../../../../Backend/Procedural/ProcgenUtils';
 import { CanvasCoords } from '../../../../Backend/Utils/Coordinates';
-import { Planet } from '@darkforest_eth/types';
 import Viewport from '../../../Game/Viewport';
-import { RGBVec, DrawMode } from '../EngineTypes';
+import { DrawMode, RGBVec } from '../EngineTypes';
 import EngineUtils from '../EngineUtils';
 import { ASTEROID_PROGRAM_DEFINITION } from '../Programs/AsteroidProgram';
 import { GameGLManager } from '../WebGL/GameGLManager';

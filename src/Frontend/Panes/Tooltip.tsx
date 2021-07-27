@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from 'react';
-import styled, { keyframes, css } from 'styled-components';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import styled, { css, keyframes } from 'styled-components';
 import WindowManager, { TooltipName, WindowManagerEvent } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
 import { useControlDown } from '../Utils/AppHooks';
@@ -36,7 +36,6 @@ const StyledTooltipTrigger = styled.span<{
   display?: DisplayType;
 }>`
   border-radius: 2px;
-  transition: background-color 0.2s;
   background-color: ${(props) => (props.anim ? dfstyles.colors.dfblue : 'none')};
 
   display: ${(props) => props.display || 'inline'};
@@ -85,7 +84,7 @@ const StyledTooltip = styled.div<{
   height: fit-content;
   min-height: 1em;
   min-width: 5em;
-  border: 1px solid ${dfstyles.colors.subtext};
+  border: 1px solid ${dfstyles.colors.border};
   background: ${dfstyles.colors.background};
   padding: 0.5em;
   border-radius: 3px;

@@ -1,5 +1,5 @@
-import React from 'react';
 import { GasPrices } from '@darkforest_eth/types';
+import React from 'react';
 import { Underline } from './CoreUI';
 
 export function DisplayGasPrices({ gasPrices }: { gasPrices?: GasPrices }) {

@@ -1,19 +1,19 @@
-import { ArtifactRarity, Artifact, WorldCoords } from '@darkforest_eth/types';
+import { Artifact, ArtifactRarity, WorldCoords } from '@darkforest_eth/types';
+import { RenderedArtifact } from '../../../../Backend/GameLogic/ArtifactUtils';
 import { CanvasCoords } from '../../../../Backend/Utils/Coordinates';
 import Viewport from '../../../Game/Viewport';
-import { SPRITE_PROGRAM_DEFINITION } from '../Programs/SpriteProgram';
 import { engineConsts } from '../EngineConsts';
+import { RGBAVec, RGBVec } from '../EngineTypes';
+import EngineUtils from '../EngineUtils';
+import { SPRITE_PROGRAM_DEFINITION } from '../Programs/SpriteProgram';
+import {
+  loadArtifactAtlas,
+  loadArtifactThumbAtlas,
+  spriteFromArtifact,
+  SpriteRectangle,
+} from '../TextureManager';
 import { GenericRenderer } from '../WebGL/GenericRenderer';
 import { WebGLManager } from '../WebGL/WebGLManager';
-import { RGBVec, RGBAVec } from '../EngineTypes';
-import EngineUtils from '../EngineUtils';
-import {
-  loadArtifactThumbAtlas,
-  loadArtifactAtlas,
-  SpriteRectangle,
-  spriteFromArtifact,
-} from '../TextureManager';
-import { RenderedArtifact } from '../../../../Backend/GameLogic/ArtifactUtils';
 
 export class SpriteRenderer extends GenericRenderer<typeof SPRITE_PROGRAM_DEFINITION> {
   private posBuffer: number[];

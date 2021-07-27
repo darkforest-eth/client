@@ -1,4 +1,12 @@
 import { CORE_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
+import {
+  DiagnosticUpdater,
+  EthAddress,
+  LocationId,
+  RevealedCoords,
+  SubmittedTx,
+  WorldLocation,
+} from '@darkforest_eth/types';
 import { IDBPDatabase, openDB } from 'idb';
 import stringify from 'json-stable-stringify';
 import _ from 'lodash';
@@ -6,21 +14,13 @@ import { MAX_CHUNK_SIZE } from '../../Frontend/Utils/constants';
 import { ChunkId, ChunkStore, PersistedChunk } from '../../_types/darkforest/api/ChunkStoreTypes';
 import { Chunk, Rectangle } from '../../_types/global/GlobalTypes';
 import {
-  toPersistedChunk,
-  toExploredChunk,
-  getChunkOfSideLengthContainingPoint,
-  getChunkKey,
   addToChunkMap,
+  getChunkKey,
+  getChunkOfSideLengthContainingPoint,
+  toExploredChunk,
+  toPersistedChunk,
 } from '../Miner/ChunkUtils';
 import { SerializedPlugin } from '../Plugins/SerializedPlugin';
-import {
-  EthAddress,
-  LocationId,
-  SubmittedTx,
-  WorldLocation,
-  RevealedCoords,
-} from '@darkforest_eth/types';
-import { DiagnosticUpdater } from '../Interfaces/DiagnosticUpdater';
 
 const enum ObjectStore {
   DEFAULT = 'default',

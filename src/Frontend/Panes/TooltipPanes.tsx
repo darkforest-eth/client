@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import { getPlanetRank, isFullRank } from '../../Backend/Utils/Utils';
 import { ScoreLabel, SilverLabel } from '../Components/Labels/KeywordLabels';
 import { SpacetimeRipLabel } from '../Components/Labels/SpacetimeRipLabel';
-import { Sub, White, Green, Red } from '../Components/Text';
+import { Green, Red, Sub, White } from '../Components/Text';
 import { TooltipName } from '../Game/WindowManager';
-import { useUIManager, useSelectedPlanet, useAccount } from '../Utils/AppHooks';
+import { useAccount, useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 
 const TooltipInfo = styled.div`
   & > div {

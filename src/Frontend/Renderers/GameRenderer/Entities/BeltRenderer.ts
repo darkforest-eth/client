@@ -1,12 +1,12 @@
-import { CanvasCoords } from '../../../../Backend/Utils/Coordinates';
 import { Planet, WorldCoords } from '@darkforest_eth/types';
+import autoBind from 'auto-bind';
+import { CanvasCoords } from '../../../../Backend/Utils/Coordinates';
 import Viewport from '../../../Game/Viewport';
 import { RGBVec } from '../EngineTypes';
 import EngineUtils from '../EngineUtils';
-import { BELT_PROGRAM_DEFINITION, BeltProps, propsFromIdx } from '../Programs/BeltProgram';
+import { BeltProps, BELT_PROGRAM_DEFINITION, propsFromIdx } from '../Programs/BeltProgram';
 import { GenericRenderer } from '../WebGL/GenericRenderer';
 import { WebGLManager } from '../WebGL/WebGLManager';
-import autoBind from 'auto-bind';
 
 export default class BeltRenderer extends GenericRenderer<typeof BELT_PROGRAM_DEFINITION> {
   topRectPosBuffer: number[]; // 2d for rect pos

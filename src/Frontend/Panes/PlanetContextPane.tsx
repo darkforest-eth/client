@@ -1,94 +1,102 @@
-import { PlanetType } from '@darkforest_eth/types';
-import React, { useMemo } from 'react';
-import styled from 'styled-components';
+import { Planet, PlanetType } from '@darkforest_eth/types';
+import React, { useCallback, useMemo } from 'react';
+import GameUIManager from '../../Backend/GameLogic/GameUIManager';
+import { Wrapper } from '../../Backend/Utils/Wrapper';
+import { Padded, RecommendedModalWidth, Spacer, VerticalSplit } from '../Components/CoreUI';
+import {
+  OpenBroadcastPaneButton,
+  OpenHatPaneButton,
+  OpenManagePlanetArtifactsButton,
+  OpenUpgradeDetailsPaneButton,
+} from '../Components/OpenPaneButtons';
 import { SelectedPlanetHelpContent } from '../Copy/HelpContent';
-import dfstyles from '../Styles/dfstyles';
 import { useAccount, useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';
-import { ModalHook, ModalPane } from '../Views/ModalPane';
-import { PlanetCard } from '../Views/PlanetCard';
-import {
-  getNotifsForPlanet,
-  PlanetNotifications,
-  PlanetNotifHooks,
-} from '../Views/PlanetNotifications';
+import { ModalHandle, ModalHook, ModalPane } from '../Views/ModalPane';
+import { PlanetCard, PlanetCardTitle } from '../Views/PlanetCard';
+import { getNotifsForPlanet, PlanetNotifications } from '../Views/PlanetNotifications';
 import { SendResources } from '../Views/SendResources';
 import { WithdrawSilver } from '../Views/WithdrawSilver';
 
-const StyledSelectedPlanetPane = styled.div`
-  width: 22em;
-  min-width: 20em;
-  height: fit-content;
-`;
-
-const Header = styled.div`
-  font-size: ${dfstyles.fontSizeXS};
-  text-align: center;
-  background: ${dfstyles.colors.backgroundlight};
-  padding: 0.15em;
-  border-top: 1px solid ${dfstyles.colors.subtext};
-  border-bottom: 1px solid ${dfstyles.colors.subtext};
-`;
-
-const ContextSection = styled.div`
-  padding: 0.5em;
-`;
-
-export function PlanetContextPane({
-  hook,
-  upgradeDetHook,
+function PlanetContextPaneContent({
+  modal,
+  planet,
+  uiManager,
 }: {
-  hook: ModalHook;
-} & PlanetNotifHooks) {
-  const uiManager = useUIManager();
-  const s = useSelectedPlanet(uiManager);
-
+  modal: ModalHandle;
+  planet: Wrapper<Planet | undefined>;
+  uiManager: GameUIManager;
+}) {
   const account = useAccount(uiManager);
-
   const currentBlockNumber = useEmitterValue(uiManager.getEthConnection().blockNumber$, undefined);
   const notifs = useMemo(
-    () => getNotifsForPlanet(s.value, currentBlockNumber),
-    [s, currentBlockNumber]
+    () => getNotifsForPlanet(planet.value, currentBlockNumber),
+    [planet, currentBlockNumber]
   );
 
-  const notifProps = { upgradeDetHook };
+  const owned = planet.value?.owner === account;
+  const isPost = planet.value?.planetType === PlanetType.TRADING_POST;
 
-  const owned = s.value?.owner === account;
-  const isPost = s.value?.planetType === PlanetType.TRADING_POST;
+  return (
+    <RecommendedModalWidth>
+      <PlanetCard planetWrapper={planet} />
+      {owned && (
+        <>
+          <SendResources planetWrapper={planet} />
+        </>
+      )}
+      {owned && isPost && (
+        <>
+          <Padded>
+            <WithdrawSilver wrapper={planet} />
+          </Padded>
+        </>
+      )}
+      {owned && (
+        <VerticalSplit>
+          {[
+            <Padded right={'4px'} key={'left'}>
+              <OpenHatPaneButton modal={modal} planetId={planet.value?.locationId} />
+              <Spacer height={8} />
+              <OpenBroadcastPaneButton modal={modal} planetId={planet.value?.locationId} />
+            </Padded>,
+            <Padded left={'4px'} key={'right'}>
+              <OpenUpgradeDetailsPaneButton modal={modal} planetId={planet.value?.locationId} />
+              <Spacer height={8} />
+              <OpenManagePlanetArtifactsButton modal={modal} planetId={planet.value?.locationId} />
+            </Padded>,
+          ]}
+        </VerticalSplit>
+      )}
+      {owned && notifs.length > 0 && (
+        <Padded top={'0px'}>
+          <PlanetNotifications planet={planet} notifs={notifs} />
+        </Padded>
+      )}
+    </RecommendedModalWidth>
+  );
+}
+
+export function PlanetContextPane({ hook }: { hook: ModalHook }) {
+  const uiManager = useUIManager();
+  const planet = useSelectedPlanet(uiManager);
+
+  const render = useCallback(
+    (modal: ModalHandle) => (
+      <PlanetContextPaneContent modal={modal} planet={planet} uiManager={uiManager} />
+    ),
+    [uiManager, planet]
+  );
 
   return (
     <ModalPane
       hook={hook}
-      title={'Selected Planet'}
+      title={(small: boolean) => <PlanetCardTitle small={small} planet={planet} />}
       hideClose
       noPadding
       helpContent={SelectedPlanetHelpContent}
     >
-      <StyledSelectedPlanetPane>
-        <PlanetCard planetWrapper={s} />
-        {owned && (
-          <>
-            <Header>Send Resources</Header>
-            <SendResources planetWrapper={s} />
-          </>
-        )}
-        {owned && isPost && (
-          <>
-            <Header>Spacetime Rip</Header>
-            <ContextSection>
-              <WithdrawSilver wrapper={s} />
-            </ContextSection>
-          </>
-        )}
-        {owned && notifs.length > 0 && (
-          <>
-            <Header>Planet Notifications</Header>
-            <ContextSection>
-              <PlanetNotifications wrapper={s} notifs={notifs} {...notifProps} />
-            </ContextSection>
-          </>
-        )}
-      </StyledSelectedPlanetPane>
+      {render}
     </ModalPane>
   );
 }

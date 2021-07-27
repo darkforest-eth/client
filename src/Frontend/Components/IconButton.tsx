@@ -1,27 +1,31 @@
 import styled from 'styled-components';
 import dfstyles from '../Styles/dfstyles';
 
-export const IconButton = styled.div<{ width?: string }>`
-  width: ${(props) => props.width || '1.5em'};
-  height: 1.5em;
+export const IconButton = styled.div<{
+  iconColor?: string;
+}>`
   display: inline-flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
+  cursor: pointer;
+  border-radius: 3px;
+  border: 1px solid ${dfstyles.colors.border};
+  color: ${dfstyles.colors.text};
+  background-color: ${dfstyles.colors.backgrounddark};
+  user-select: none;
 
-  border-radius: 2px;
-  border: 1px solid ${dfstyles.colors.text};
+  & svg path {
+    fill: ${(props) => props.iconColor || dfstyles.colors.subtext};
+  }
 
-  transition: color 0.2s, background-color 0.2s;
-
-  &:hover,
-  &.active {
+  &:hover {
+    border: 1px solid ${dfstyles.colors.text};
     background: ${dfstyles.colors.text};
     color: ${dfstyles.colors.background};
     & svg path {
       fill: ${dfstyles.colors.background};
     }
-    cursor: pointer;
   }
 
   &:active {

@@ -1,4 +1,4 @@
-import { PlanetLevel, Planet, WorldCoords } from '@darkforest_eth/types';
+import { Planet, PlanetLevel, WorldCoords } from '@darkforest_eth/types';
 import { ProcgenUtils } from '../../../../Backend/Procedural/ProcgenUtils';
 import { CanvasCoords } from '../../../../Backend/Utils/Coordinates';
 import Viewport from '../../../Game/Viewport';

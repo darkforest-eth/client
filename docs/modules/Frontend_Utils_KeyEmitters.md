@@ -7,28 +7,55 @@
 - [ctrlDown$](Frontend_Utils_KeyEmitters.md#ctrldown$)
 - [ctrlUp$](Frontend_Utils_KeyEmitters.md#ctrlup$)
 - [escapeDown$](Frontend_Utils_KeyEmitters.md#escapedown$)
+- [keyDown$](Frontend_Utils_KeyEmitters.md#keydown$)
 - [keyUp$](Frontend_Utils_KeyEmitters.md#keyup$)
+
+### Functions
+
+- [useIsDown](Frontend_Utils_KeyEmitters.md#useisdown)
 
 ## Variables
 
 ### ctrlDown$
 
-• `Const` **ctrlDown$**: [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`KeyboardEvent`\>
+• `Const` **ctrlDown$**: `Monomitter`<`KeyboardEvent`\>
 
 ---
 
 ### ctrlUp$
 
-• `Const` **ctrlUp$**: [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`KeyboardEvent`\>
+• `Const` **ctrlUp$**: `Monomitter`<`KeyboardEvent`\>
 
 ---
 
 ### escapeDown$
 
-• `Const` **escapeDown$**: [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`KeyboardEvent`\>
+• `Const` **escapeDown$**: `Monomitter`<`KeyboardEvent`\>
+
+---
+
+### keyDown$
+
+• `Const` **keyDown$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
 
 ---
 
 ### keyUp$
 
-• `Const` **keyUp$**: [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
+• `Const` **keyUp$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
+
+## Functions
+
+### useIsDown
+
+▸ **useIsDown**(`key?`): `boolean`
+
+#### Parameters
+
+| Name   | Type     |
+| :----- | :------- |
+| `key?` | `string` |
+
+#### Returns
+
+`boolean`

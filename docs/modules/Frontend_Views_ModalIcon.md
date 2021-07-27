@@ -4,6 +4,7 @@
 
 ### Functions
 
+- [BroadcastPlanetIcon](Frontend_Views_ModalIcon.md#broadcastplaneticon)
 - [ModalAccountIcon](Frontend_Views_ModalIcon.md#modalaccounticon)
 - [ModalArtifactIcon](Frontend_Views_ModalIcon.md#modalartifacticon)
 - [ModalArtifactsConversationIcon](Frontend_Views_ModalIcon.md#modalartifactsconversationicon)
@@ -16,7 +17,6 @@
 - [ModalPlanetDexIcon](Frontend_Views_ModalIcon.md#modalplanetdexicon)
 - [ModalPluginIcon](Frontend_Views_ModalIcon.md#modalpluginicon)
 - [ModalSettingsIcon](Frontend_Views_ModalIcon.md#modalsettingsicon)
-- [ModalTwitterBroadcastIcon](Frontend_Views_ModalIcon.md#modaltwitterbroadcasticon)
 - [ModalTwitterVerifyIcon](Frontend_Views_ModalIcon.md#modaltwitterverifyicon)
 - [ModalUpgradeDetailsIcon](Frontend_Views_ModalIcon.md#modalupgradedetailsicon)
 - [ModalWithdrawIcon](Frontend_Views_ModalIcon.md#modalwithdrawicon)
@@ -24,16 +24,37 @@
 
 ## Functions
 
+### BroadcastPlanetIcon
+
+▸ **BroadcastPlanetIcon**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
+
+#### Returns
+
+`Element`
+
+---
+
 ### ModalAccountIcon
 
 ▸ **ModalAccountIcon**(`__namedParameters`): `Element`
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -47,10 +68,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -64,10 +87,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -81,10 +106,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -98,10 +125,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -115,11 +144,13 @@
 
 #### Parameters
 
-| Name                      | Type                                                          |
-| :------------------------ | :------------------------------------------------------------ |
-| `__namedParameters`       | `Object`                                                      |
-| `__namedParameters.hook`  | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook)          |
-| `__namedParameters.modal` | [`ModalName`](../enums/Frontend_Views_ModalPane.ModalName.md) |
+| Name                       | Type                                                          |
+| :------------------------- | :------------------------------------------------------------ |
+| `__namedParameters`        | `Object`                                                      |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook)          |
+| `__namedParameters.modal`  | [`ModalName`](../enums/Frontend_Views_ModalPane.ModalName.md) |
+| `__namedParameters.style?` | `React.CSSProperties`                                         |
+| `__namedParameters.text?`  | `string`                                                      |
 
 #### Returns
 
@@ -133,10 +164,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -150,10 +183,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -167,10 +202,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -184,10 +221,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -201,10 +240,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -218,27 +259,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
-
-#### Returns
-
-`Element`
-
----
-
-### ModalTwitterBroadcastIcon
-
-▸ **ModalTwitterBroadcastIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -252,10 +278,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -269,10 +297,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -286,10 +316,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 
@@ -303,10 +335,12 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                       | Type                                                 |
+| :------------------------- | :--------------------------------------------------- |
+| `__namedParameters`        | `Object`                                             |
+| `__namedParameters.hook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| `__namedParameters.style?` | `React.CSSProperties`                                |
+| `__namedParameters.text?`  | `string`                                             |
 
 #### Returns
 

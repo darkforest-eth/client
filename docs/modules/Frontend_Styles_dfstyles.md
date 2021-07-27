@@ -38,10 +38,13 @@
 | `colors.backgroundlight`       | `string`                     |
 | `colors.backgroundlighter`     | `string`                     |
 | `colors.blueBackground`        | `string`                     |
+| `colors.border`                | `string`                     |
+| `colors.darkBorder`            | `string`                     |
 | `colors.dfblue`                | `string`                     |
 | `colors.dfgreen`               | `string`                     |
 | `colors.dfgreendark`           | `string`                     |
 | `colors.dfgreenlight`          | `string`                     |
+| `colors.dfpurple`              | `string`                     |
 | `colors.dfred`                 | `string`                     |
 | `colors.dfyellow`              | `string`                     |
 | `colors.icons`                 | `Object`                     |

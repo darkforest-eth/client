@@ -8,6 +8,7 @@
 
 - [ArtifactConversation](Frontend_Views_ModalPane.ModalName.md#artifactconversation)
 - [ArtifactDetails](Frontend_Views_ModalPane.ModalName.md#artifactdetails)
+- [Broadcast](Frontend_Views_ModalPane.ModalName.md#broadcast)
 - [Hats](Frontend_Views_ModalPane.ModalName.md#hats)
 - [Help](Frontend_Views_ModalPane.ModalName.md#help)
 - [Leaderboard](Frontend_Views_ModalPane.ModalName.md#leaderboard)
@@ -20,7 +21,6 @@
 - [Plugins](Frontend_Views_ModalPane.ModalName.md#plugins)
 - [Private](Frontend_Views_ModalPane.ModalName.md#private)
 - [Settings](Frontend_Views_ModalPane.ModalName.md#settings)
-- [TwitterBroadcast](Frontend_Views_ModalPane.ModalName.md#twitterbroadcast)
 - [TwitterVerify](Frontend_Views_ModalPane.ModalName.md#twitterverify)
 - [UpgradeDetails](Frontend_Views_ModalPane.ModalName.md#upgradedetails)
 - [WithdrawSilver](Frontend_Views_ModalPane.ModalName.md#withdrawsilver)
@@ -37,6 +37,12 @@
 ### ArtifactDetails
 
 • **ArtifactDetails** = `14`
+
+---
+
+### Broadcast
+
+• **Broadcast** = `6`
 
 ---
 
@@ -109,12 +115,6 @@
 ### Settings
 
 • **Settings** = `8`
-
----
-
-### TwitterBroadcast
-
-• **TwitterBroadcast** = `6`
 
 ---
 

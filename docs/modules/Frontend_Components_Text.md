@@ -31,7 +31,6 @@
 - [FAQ04Link](Frontend_Components_Text.md#faq04link)
 - [FakeLine](Frontend_Components_Text.md#fakeline)
 - [Header](Frontend_Components_Text.md#header)
-- [Link](Frontend_Components_Text.md#link)
 - [LongDash](Frontend_Components_Text.md#longdash)
 - [PlanetNameLink](Frontend_Components_Text.md#planetnamelink)
 - [Space](Frontend_Components_Text.md#space)
@@ -256,22 +255,6 @@
 | `__namedParameters`          | `Object`              |
 | `__namedParameters.children` | `React.ReactNode`     |
 | `__namedParameters.style?`   | `React.CSSProperties` |
-
-#### Returns
-
-`Element`
-
----
-
-### Link
-
-▸ **Link**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                | Type        |
-| :------------------ | :---------- |
-| `__namedParameters` | `LinkProps` |
 
 #### Returns
 

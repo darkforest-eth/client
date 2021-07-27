@@ -1,15 +1,14 @@
+import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
+import { Artifact, ArtifactId, Planet, SubmittedTx, WorldCoords } from '@darkforest_eth/types';
 import _ from 'lodash';
-import React, { useState, useEffect } from 'react';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { SubmittedTx, Planet, ArtifactId, Artifact, WorldCoords } from '@darkforest_eth/types';
 import { artifactName } from '../../Backend/Procedural/ArtifactProcgen';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { Chunk } from '../../_types/global/GlobalTypes';
 import Viewport from '../Game/Viewport';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
-import { BLOCK_EXPLORER_URL } from '../Utils/constants';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 
 interface TextProps {
@@ -61,39 +60,6 @@ export function Header({
       {children}
     </Text>
   );
-}
-
-// At least one of "href" and "to" must be defined.
-// - "to" is used for internal links, i.e. "/tutorial"
-// - "href" is used for external links, i.e. "https://google.com"
-interface LinkProps extends TextProps {
-  href?: string;
-  to?: string;
-}
-
-export function Link({ href, to, children, size = 'base', style = {} }: LinkProps) {
-  const props = {
-    href,
-    to,
-    style: {
-      fontSize: fontSizes[size],
-      textDecoration: 'underline',
-      ...style,
-    },
-  };
-  if (href) {
-    return (
-      <a {...props} target='_blank'>
-        {children}
-      </a>
-    );
-  } else {
-    const propsWithTo = {
-      ...props,
-      to: to || '/',
-    };
-    return <ReactRouterLink {...propsWithTo}>{children}</ReactRouterLink>;
-  }
 }
 
 export const Paragraph = styled.p`
@@ -209,9 +175,16 @@ export function CenterPlanetLink({
   planet: Planet;
   children: React.ReactNode;
 }) {
+  const uiManager = useUIManager();
   return (
     <a>
-      <u onClick={() => Viewport.getInstance().zoomPlanet(planet)}>{children}</u>
+      <u
+        onClick={() => {
+          uiManager.centerPlanet(planet);
+        }}
+      >
+        {children}
+      </u>
     </a>
   );
 }

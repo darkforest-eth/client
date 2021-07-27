@@ -1,4 +1,5 @@
 import { SpaceType } from '@darkforest_eth/types';
+import color from 'color';
 import { css } from 'styled-components';
 
 export const ARTIFACT_ROW_H = 48;
@@ -10,24 +11,51 @@ export const SPACE_TYPE_COLORS = {
   [SpaceType.DEAD_SPACE]: 'rgb(37.485, 0, 36)',
 } as const;
 
+const text = '#ddd';
+const subtext = color(text).darken(0.05).hex();
+const subbertext = color(text).darken(0.3).hex();
+const subbesttext = color(text).darken(0.5).hex();
+
+const background = '#151515';
+const backgrounddark = '#252525';
+const backgroundlight = color(background).lighten(0.5).hex();
+const backgroundlighter = color(backgroundlight).lighten(0.3).hex();
+
+const border = '#777';
+const darkBorder = color(border).darken(0.2).hex();
+
+const blueBackground = '#0a0a23';
+
+const dfblue = '#00ADE1';
+const dfgreen = '#00DC82';
+const dfgreendark = color(dfgreen).darken(0.7).hex();
+const dfgreenlight = color(dfgreen).lighten(0.1).hex();
+const dfred = '#FF6492';
+const dfyellow = '#e8e228';
+const dfpurple = '#9189d9';
+
 const dfstyles = {
   colors: {
-    text: '#ffffff',
-    subtext: '#a0a0a0',
-    subbertext: '#565656',
-    subbesttext: '#383838',
-    blueBackground: '#0a0a23',
-    background: '#080808',
-    backgrounddark: '#080808',
-    backgroundlight: '#282834',
-    backgroundlighter: '#4a4a5a',
-    dfblue: '#00ADE1',
+    text,
+    subtext,
+    subbertext,
+    subbesttext,
+    blueBackground,
+    background,
+    backgrounddark,
+    backgroundlight,
+    backgroundlighter,
+    dfblue,
 
-    dfgreen: '#00DC82',
-    dfgreendark: '#025230',
-    dfgreenlight: '#89facc',
-    dfred: '#FF6492',
-    dfyellow: '#e8e228',
+    border,
+    darkBorder,
+
+    dfgreen,
+    dfgreendark,
+    dfgreenlight,
+    dfred,
+    dfyellow,
+    dfpurple,
 
     artifactBackground: 'rgb(21, 17, 71)',
     icons: {

@@ -1,5 +1,5 @@
-import { LocatablePlanet, LocationId, PlanetLevel, WorldCoords } from '@darkforest_eth/types';
 import { MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
+import { LocatablePlanet, LocationId, PlanetLevel, WorldCoords } from '@darkforest_eth/types';
 import Viewport from '../../Frontend/Game/Viewport';
 import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import { planetLevelToAnimationSpeed, sinusoidalAnimation } from '../Utils/Animation';

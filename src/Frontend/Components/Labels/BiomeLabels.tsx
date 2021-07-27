@@ -5,7 +5,7 @@ import { isAncient } from '../../../Backend/GameLogic/ArtifactUtils';
 import { isLocatable } from '../../../_types/global/GlobalTypes';
 import { BiomeTextColors } from '../../Styles/Colors';
 import { AncientLabel, AncientLabelAnim } from '../AncientLabel';
-import { shakeAnim, icyAnim } from '../BiomeAnims';
+import { icyAnim, shakeAnim } from '../BiomeAnims';
 import { LavaLabel } from './LavaLabel';
 import { WastelandLabel } from './WastelandLabel';
 

@@ -1,5 +1,5 @@
 import { Planet, PlanetType } from '@darkforest_eth/types';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
   blocksLeftToProspectExpiration,
@@ -7,10 +7,10 @@ import {
   isProspectable,
 } from '../../Backend/GameLogic/ArrivalUtils';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
-import { getPlanetRank, formatNumber } from '../../Backend/Utils/Utils';
+import { formatNumber, getPlanetRank } from '../../Backend/Utils/Utils';
 import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
 import { ArtifactIcon, SilverGrowthIcon, SilverIcon, WithdrawIcon } from '../Components/Icons';
-import { Sub, Green } from '../Components/Text';
+import { Green, Sub } from '../Components/Text';
 import { engineConsts } from '../Renderers/GameRenderer/EngineConsts';
 import { RGBVec } from '../Renderers/GameRenderer/EngineTypes';
 import { useUIManager } from '../Utils/AppHooks';

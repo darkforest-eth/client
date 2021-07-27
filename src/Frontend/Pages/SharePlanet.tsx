@@ -1,16 +1,16 @@
+import { LocationId, Planet } from '@darkforest_eth/types';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
-import { LocationId, Planet } from '@darkforest_eth/types';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import ReaderDataStore from '../../Backend/Storage/ReaderDataStore';
 import { getPlanetShortHash } from '../../Backend/Utils/Utils';
+import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { isLocatable } from '../../_types/global/GlobalTypes';
 import { Sub } from '../Components/Text';
 import { PlanetScape } from '../Renderers/PlanetscapeRenderer/PlanetScape';
 import dfstyles from '../Styles/dfstyles';
 import { Share } from '../Views/Share';
-import { Wrapper } from '../../Backend/Utils/Wrapper';
 
 const PlanetCard = styled.div`
   width: 36em;

@@ -1,19 +1,19 @@
 import { CONTRACT_PRECISION } from '@darkforest_eth/constants';
-import { hasOwner } from '../Utils/Utils';
-import _ from 'lodash';
 import {
   Artifact,
   ArtifactType,
-  QueuedArrival,
-  Planet,
-  Upgrade,
-  PlanetType,
   EmojiFlagBody,
+  Planet,
   PlanetMessage,
+  PlanetType,
+  QueuedArrival,
+  Upgrade,
 } from '@darkforest_eth/types';
-import { isActivated } from './ArtifactUtils';
+import _ from 'lodash';
 import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
 import { isEmojiFlagMessage } from '../../_types/global/GlobalTypes';
+import { hasOwner } from '../Utils/Utils';
+import { isActivated } from './ArtifactUtils';
 
 // TODO: planet class, cmon, let's go
 export const blocksLeftToProspectExpiration = (

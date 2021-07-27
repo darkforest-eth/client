@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { formatNumber } from '../../Backend/Utils/Utils';
 import { TooltipName } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
-import { useUIManager, useAccount } from '../Utils/AppHooks';
+import { useAccount, useUIManager } from '../Utils/AppHooks';
 import { ModalHook } from '../Views/ModalPane';
 import { TooltipTrigger } from './Tooltip';
 

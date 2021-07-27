@@ -2,10 +2,6 @@
 
 ## Table of contents
 
-### Interfaces
-
-- [Diagnostics](../interfaces/Frontend_Panes_DiagnosticsPane.Diagnostics.md)
-
 ### Functions
 
 - [DiagnosticsPane](Frontend_Panes_DiagnosticsPane.md#diagnosticspane)

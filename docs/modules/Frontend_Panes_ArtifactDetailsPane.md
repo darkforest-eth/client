@@ -5,6 +5,7 @@
 ### Functions
 
 - [ArtifactDetailsBody](Frontend_Panes_ArtifactDetailsPane.md#artifactdetailsbody)
+- [ArtifactDetailsHelpContent](Frontend_Panes_ArtifactDetailsPane.md#artifactdetailshelpcontent)
 - [ArtifactDetailsPane](Frontend_Panes_ArtifactDetailsPane.md#artifactdetailspane)
 - [UpgradeStatInfo](Frontend_Panes_ArtifactDetailsPane.md#upgradestatinfo)
 
@@ -16,16 +17,26 @@
 
 #### Parameters
 
-| Name                                            | Type                                                                                              |
-| :---------------------------------------------- | :------------------------------------------------------------------------------------------------ |
-| `__namedParameters`                             | `Object`                                                                                          |
-| `__namedParameters.artifactWrapper`             | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Artifact` \| `undefined`\>              |
-| `__namedParameters.contractConstants`           | [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md) |
-| `__namedParameters.openConversationForArtifact` |                                                                                                   |
+| Name                                  | Type                                                                                              |
+| :------------------------------------ | :------------------------------------------------------------------------------------------------ |
+| `__namedParameters`                   | `Object`                                                                                          |
+| `__namedParameters.artifactId`        | `ArtifactId`                                                                                      |
+| `__namedParameters.contractConstants` | [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md) |
+| `__namedParameters.modal`             | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md)                            |
 
 #### Returns
 
 `null` \| `Element`
+
+---
+
+### ArtifactDetailsHelpContent
+
+▸ **ArtifactDetailsHelpContent**(): `Element`
+
+#### Returns
+
+`Element`
 
 ---
 
@@ -35,11 +46,11 @@
 
 #### Parameters
 
-| Name                                            | Type                                                 |
-| :---------------------------------------------- | :--------------------------------------------------- |
-| `__namedParameters`                             | `Object`                                             |
-| `__namedParameters.hook`                        | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
-| `__namedParameters.openConversationForArtifact` |                                                      |
+| Name                           | Type                                                                   |
+| :----------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`            | `Object`                                                               |
+| `__namedParameters.artifactId` | `ArtifactId`                                                           |
+| `__namedParameters.modal`      | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
 
 #### Returns
 

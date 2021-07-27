@@ -1,11 +1,11 @@
-import { EthAddress } from '@darkforest_eth/types';
+import { CORE_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
+import { monomitter, Monomitter } from '@darkforest_eth/events';
+import { AutoGasSetting, EthAddress } from '@darkforest_eth/types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { CORE_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { SelectFrom } from '../Components/CoreUI';
 import { useEmitterSubscribe } from './EmitterHooks';
-import { monomitter, Monomitter } from './Monomitter';
 
 /**
  * Whenever a setting changes, we publish the setting's name to this event emitter.
@@ -16,6 +16,7 @@ export const settingChanged$: Monomitter<Setting> = monomitter();
  * Each setting has a unique identifier. Each account gets to store its own local storage setting,
  * per instance of the dark forest contract that it's connected to.
  */
+
 export const enum Setting {
   OptOutMetrics = 'OptOutMetrics',
   AutoApproveNonPurchaseTransactions = 'AutoApproveNonPurchaseTransactions',
@@ -38,12 +39,7 @@ export const enum Setting {
   NewPlayer = 'NewPlayer',
   MiningCores = 'MiningCores',
   TutorialOpen = 'TutorialOpen',
-}
-
-export const enum AutoGasSetting {
-  Slow = 'Slow',
-  Average = 'Average',
-  Fast = 'Fast',
+  IsMining = 'IsMining',
 }
 
 export const ALL_AUTO_GAS_SETTINGS = [
@@ -52,16 +48,24 @@ export const ALL_AUTO_GAS_SETTINGS = [
   AutoGasSetting.Fast,
 ];
 
+function onlyInProduction(): string {
+  return process.env.NODE_ENV === 'production' ? 'true' : 'false';
+}
+
+function onlyInDevelopment(): string {
+  return process.env.NODE_ENV !== 'production' ? 'true' : 'false';
+}
+
 const defaultSettings: Record<Setting, string> = {
-  OptOutMetrics: 'false',
-  AutoApproveNonPurchaseTransactions: 'false',
+  OptOutMetrics: onlyInDevelopment(),
+  AutoApproveNonPurchaseTransactions: onlyInDevelopment(),
   DrawChunkBorders: 'false',
   HighPerformanceRendering: 'false',
   MoveNotifications: 'true',
-  HasAcceptedPluginRisk: 'false',
+  HasAcceptedPluginRisk: onlyInDevelopment(),
   GasFeeGwei: AutoGasSetting.Average,
   TerminalVisible: 'true',
-  TutorialOpen: 'true',
+  TutorialOpen: onlyInProduction(),
 
   FoundPirates: 'false',
   TutorialCompleted: 'false',
@@ -72,8 +76,10 @@ const defaultSettings: Record<Setting, string> = {
   FoundArtifact: 'false',
   FoundDeepSpace: 'false',
   FoundSpace: 'false',
-  NewPlayer: 'true',
+  // prevent the tutorial and help pane popping up in development mode.
+  NewPlayer: onlyInProduction(),
   MiningCores: '1',
+  IsMining: 'true',
 };
 
 /**
@@ -244,25 +250,26 @@ export function MultiSelectSetting({
   values,
   labels,
   style,
+  wide,
 }: {
   uiManager: GameUIManager;
   setting: Setting;
   values: string[];
   labels: string[];
   style?: React.CSSProperties;
+  wide?: boolean;
 }) {
   const [settingValue, setSettingValue] = useSetting(uiManager, setting);
 
   return (
-    <>
-      <SelectFrom
-        style={style}
-        values={values}
-        labels={labels}
-        value={settingValue}
-        setValue={setSettingValue}
-      />
-    </>
+    <SelectFrom
+      wide={wide}
+      style={style}
+      values={values}
+      labels={labels}
+      value={settingValue}
+      setValue={setSettingValue}
+    />
   );
 }
 

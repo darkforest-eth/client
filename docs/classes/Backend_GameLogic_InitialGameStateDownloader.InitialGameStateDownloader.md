@@ -43,10 +43,10 @@
 
 #### Parameters
 
-| Name                   | Type                                                         |
-| :--------------------- | :----------------------------------------------------------- |
-| `contractsAPI`         | [`default`](Backend_GameLogic_ContractsAPI.default.md)       |
-| `persistentChunkStore` | [`default`](Backend_Storage_PersistentChunkStore.default.md) |
+| Name                   | Type                                                             |
+| :--------------------- | :--------------------------------------------------------------- |
+| `contractsAPI`         | [`ContractsAPI`](Backend_GameLogic_ContractsAPI.ContractsAPI.md) |
+| `persistentChunkStore` | [`default`](Backend_Storage_PersistentChunkStore.default.md)     |
 
 #### Returns
 

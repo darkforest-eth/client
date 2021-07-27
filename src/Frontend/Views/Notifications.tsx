@@ -1,11 +1,11 @@
+import { ContractMethodName } from '@darkforest_eth/types';
 import _ from 'lodash';
-import React, { useState, useEffect } from 'react';
-import styled, { keyframes, css } from 'styled-components';
-import { EthTxType } from '@darkforest_eth/types';
+import React, { useEffect, useState } from 'react';
+import styled, { css, keyframes } from 'styled-components';
 import NotificationManager, {
   NotificationInfo,
-  NotificationType,
   NotificationManagerEvent,
+  NotificationType,
 } from '../Game/NotificationManager';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
@@ -114,7 +114,11 @@ export function NotificationsPane() {
     const addNotif = (notif: NotificationInfo) => {
       const notifMove = uiManager.getBooleanSetting(Setting.MoveNotifications);
 
-      if (!notifMove && notif.type === NotificationType.Tx && notif.txData?.type === EthTxType.MOVE)
+      if (
+        !notifMove &&
+        notif.type === NotificationType.Tx &&
+        notif.txData?.methodName === ContractMethodName.MOVE
+      )
         return;
 
       setNotifs((arr) => {

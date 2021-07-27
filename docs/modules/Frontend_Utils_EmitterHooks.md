@@ -25,10 +25,10 @@ Execute something on emitter callback
 
 #### Parameters
 
-| Name       | Type                                                          | Description                  |
-| :--------- | :------------------------------------------------------------ | :--------------------------- |
-| `emitter`  | [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`T`\> | `Monomitter` to subscribe to |
-| `callback` | [`Callback`](Frontend_Utils_Monomitter.md#callback)<`T`\>     | callback to subscribe        |
+| Name       | Type               | Description                  |
+| :--------- | :----------------- | :--------------------------- |
+| `emitter`  | `Monomitter`<`T`\> | `Monomitter` to subscribe to |
+| `callback` | `Callback`<`T`\>   | callback to subscribe        |
 
 #### Returns
 
@@ -50,10 +50,10 @@ Use returned value from an emitter
 
 #### Parameters
 
-| Name         | Type                                                          | Description                  |
-| :----------- | :------------------------------------------------------------ | :--------------------------- |
-| `emitter`    | [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`T`\> | `Monomitter` to subscribe to |
-| `initialVal` | `T`                                                           | initial state value          |
+| Name         | Type               | Description                  |
+| :----------- | :----------------- | :--------------------------- |
+| `emitter`    | `Monomitter`<`T`\> | `Monomitter` to subscribe to |
+| `initialVal` | `T`                | initial state value          |
 
 #### Returns
 
@@ -69,10 +69,10 @@ Return a bool indicating if a key is pressed
 
 #### Parameters
 
-| Name       | Type                                                                      | Description        |
-| :--------- | :------------------------------------------------------------------------ | :----------------- |
-| `keydown$` | [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`KeyboardEvent`\> | keydown monomitter |
-| `keyup$`   | [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`KeyboardEvent`\> | keyup monomitter   |
+| Name       | Type                           | Description        |
+| :--------- | :----------------------------- | :----------------- |
+| `keydown$` | `Monomitter`<`KeyboardEvent`\> | keydown monomitter |
+| `keyup$`   | `Monomitter`<`KeyboardEvent`\> | keyup monomitter   |
 
 #### Returns
 
@@ -94,10 +94,10 @@ Use returned value from an emitter, and clone the reference - used to force an u
 
 #### Parameters
 
-| Name         | Type                                                                         | Description                  |
-| :----------- | :--------------------------------------------------------------------------- | :--------------------------- |
-| `emitter`    | [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`T` \| `undefined`\> | `Monomitter` to subscribe to |
-| `initialVal` | `T` \| `undefined`                                                           | initial state value          |
+| Name         | Type                              | Description                  |
+| :----------- | :-------------------------------- | :--------------------------- |
+| `emitter`    | `Monomitter`<`T` \| `undefined`\> | `Monomitter` to subscribe to |
+| `initialVal` | `T` \| `undefined`                | initial state value          |
 
 #### Returns
 

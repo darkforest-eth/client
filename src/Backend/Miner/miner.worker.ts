@@ -1,11 +1,11 @@
-import { mimcHash, PerlinConfig, perlin } from '@darkforest_eth/hashing';
-import { LOCATION_ID_UB } from '../../Frontend/Utils/constants';
-import { Rectangle, Chunk, MinerWorkerMessage } from '../../_types/global/GlobalTypes';
+import { mimcHash, perlin, PerlinConfig } from '@darkforest_eth/hashing';
+import { locationIdFromBigInt } from '@darkforest_eth/serde';
+import { WorldLocation } from '@darkforest_eth/types';
 import * as bigInt from 'big-integer';
 import { BigInteger } from 'big-integer';
+import { LOCATION_ID_UB } from '../../Frontend/Utils/constants';
+import { Chunk, MinerWorkerMessage, Rectangle } from '../../_types/global/GlobalTypes';
 import { getPlanetLocations } from './permutation';
-import { WorldLocation } from '@darkforest_eth/types';
-import { locationIdFromBigInt } from '@darkforest_eth/serde';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const ctx: Worker = self as any;

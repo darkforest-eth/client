@@ -1,64 +1,64 @@
-import { ethers } from 'ethers';
+import { EMPTY_ADDRESS, MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
+import { Monomitter, monomitter } from '@darkforest_eth/events';
+import { bonusFromHex, getBytesFromHex } from '@darkforest_eth/hexgen';
 import {
-  EthAddress,
-  LocationId,
-  ArtifactId,
-  VoyageId,
-  Planet,
-  LocatablePlanet,
+  ArrivalWithTimer,
   Artifact,
-  WorldCoords,
-  WorldLocation,
-  PlanetLevel,
+  ArtifactId,
   ArtifactType,
-  SpaceType,
   Biome,
+  EthAddress,
+  LocatablePlanet,
+  LocationId,
+  Planet,
+  PlanetLevel,
   PlanetType,
   QueuedArrival,
-  ArrivalWithTimer,
-  UnconfirmedMove,
-  UnconfirmedUpgrade,
-  UnconfirmedBuyHat,
-  UnconfirmedPlanetTransfer,
-  UnconfirmedActivateArtifact,
-  TxIntent,
-  UnconfirmedReveal,
-  UnconfirmedBuyGPTCredits,
   RevealedLocation,
+  SpaceType,
+  TxIntent,
+  UnconfirmedActivateArtifact,
+  UnconfirmedBuyGPTCredits,
+  UnconfirmedBuyHat,
+  UnconfirmedMove,
+  UnconfirmedPlanetTransfer,
+  UnconfirmedReveal,
+  UnconfirmedUpgrade,
+  VoyageId,
+  WorldCoords,
+  WorldLocation,
 } from '@darkforest_eth/types';
 import autoBind from 'auto-bind';
 import bigInt from 'big-integer';
+import { ethers } from 'ethers';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import {
-  setObjectSyncState,
-  getPlanetId,
-  getPlanetOwner,
   getArtifactId,
   getArtifactOwner,
+  getPlanetId,
+  getPlanetOwner,
+  setObjectSyncState,
 } from '../../Frontend/Utils/EmitterUtils';
-import { Monomitter, monomitter } from '../../Frontend/Utils/Monomitter';
 import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
-import { Wormhole, isLocatable, Chunk } from '../../_types/global/GlobalTypes';
+import { Chunk, isLocatable, Wormhole } from '../../_types/global/GlobalTypes';
 import {
-  isUnconfirmedMove,
-  isUnconfirmedUpgrade,
-  isUnconfirmedBuyHat,
-  isUnconfirmedTransfer,
-  isUnconfirmedProspectPlanet,
-  isUnconfirmedFindArtifact,
-  isUnconfirmedDepositArtifact,
-  isUnconfirmedWithdrawArtifact,
   isUnconfirmedActivateArtifact,
-  isUnconfirmedDeactivateArtifact,
-  isUnconfirmedReveal,
   isUnconfirmedBuyGPTCredits,
+  isUnconfirmedBuyHat,
+  isUnconfirmedDeactivateArtifact,
+  isUnconfirmedDepositArtifact,
+  isUnconfirmedFindArtifact,
+  isUnconfirmedMove,
+  isUnconfirmedProspectPlanet,
+  isUnconfirmedReveal,
+  isUnconfirmedTransfer,
+  isUnconfirmedUpgrade,
+  isUnconfirmedWithdrawArtifact,
   isUnconfirmedWithdrawSilver,
 } from '../Utils/TypeAssertions';
 import { hasOwner } from '../Utils/Utils';
-import { updatePlanetToTime, arrive, PlanetDiff } from './ArrivalUtils';
+import { arrive, PlanetDiff, updatePlanetToTime } from './ArrivalUtils';
 import { isActivated } from './ArtifactUtils';
-import { EMPTY_ADDRESS, MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
-import { bonusFromHex, getBytesFromHex } from '@darkforest_eth/hexgen';
 import { LayeredMap } from './LayeredMap';
 import { Radii } from './ViewportEntities';
 
@@ -1388,12 +1388,12 @@ export class GameObjects {
       silCap *= 2;
     }
 
-    let barbarians =
+    let pirates =
       (energyCap * this.contractConstants.defaultBarbarianPercentage[planetLevel]) / 100;
-    // increase barbarians
-    if (spaceType === SpaceType.DEAD_SPACE) barbarians *= 20;
-    else if (spaceType === SpaceType.DEEP_SPACE) barbarians *= 10;
-    else if (spaceType === SpaceType.SPACE) barbarians *= 4;
+    // increase pirates
+    if (spaceType === SpaceType.DEAD_SPACE) pirates *= 20;
+    else if (spaceType === SpaceType.DEEP_SPACE) pirates *= 10;
+    else if (spaceType === SpaceType.SPACE) pirates *= 4;
 
     const silver = planetType === PlanetType.SILVER_MINE ? silCap / 2 : 0;
 
@@ -1425,7 +1425,7 @@ export class GameObjects {
       speed,
       defense,
 
-      energy: barbarians,
+      energy: pirates,
       silver,
 
       lastUpdated: Math.floor(Date.now() / 1000),

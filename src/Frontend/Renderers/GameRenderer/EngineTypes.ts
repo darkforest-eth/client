@@ -1,4 +1,4 @@
-import { mat4, mat3 } from 'gl-matrix';
+import { mat3, mat4 } from 'gl-matrix';
 
 //eslint-disable-next-line @projectsophon/typescript-enum/no-enum
 export enum AttribType {

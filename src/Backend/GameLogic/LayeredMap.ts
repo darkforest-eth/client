@@ -1,7 +1,7 @@
-import { LocationId, WorldLocation } from '@darkforest_eth/types';
-import { QuadTree, Box, Point } from 'js-quadtree';
-import { QuadTreeConfig } from 'js-quadtree/dist/types';
 import { MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
+import { LocationId, WorldLocation } from '@darkforest_eth/types';
+import { Box, Point, QuadTree } from 'js-quadtree';
+import { QuadTreeConfig } from 'js-quadtree/dist/types';
 import { Radii } from './ViewportEntities';
 
 /**

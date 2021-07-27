@@ -1,15 +1,15 @@
+import { mat3, mat4 } from 'gl-matrix';
+import {
+  AttribProps,
+  DrawMode,
+  UniformJSType,
+  UniformProps,
+  UniformType,
+  Vec3,
+} from '../EngineTypes';
 import AttribManager from './AttribManager';
 import ProgramUtils from './ProgramUtils';
 import { WebGLManager } from './WebGLManager';
-import { mat3, mat4 } from 'gl-matrix';
-import {
-  UniformProps,
-  AttribProps,
-  UniformJSType,
-  UniformType,
-  DrawMode,
-  Vec3,
-} from '../EngineTypes';
 
 type UniformData = {
   [key: string]: UniformProps;

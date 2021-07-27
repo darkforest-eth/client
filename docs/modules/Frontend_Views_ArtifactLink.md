@@ -14,12 +14,12 @@
 
 #### Parameters
 
-| Name                               | Type              |
-| :--------------------------------- | :---------------- |
-| `__namedParameters`                | `Object`          |
-| `__namedParameters.artifact`       | `Artifact`        |
-| `__namedParameters.children`       | `React.ReactNode` |
-| `__namedParameters.setDetailsOpen` |                   |
+| Name                         | Type                                                                   |
+| :--------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`          | `Object`                                                               |
+| `__namedParameters.artifact` | `Artifact`                                                             |
+| `__namedParameters.children` | `React.ReactNode` \| `React.ReactNode`[]                               |
+| `__namedParameters.modal`    | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
 
 #### Returns
 

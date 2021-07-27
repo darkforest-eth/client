@@ -1,13 +1,14 @@
+import { weiToGwei } from '@darkforest_eth/network';
+import { EthAddress } from '@darkforest_eth/types';
+import { BigNumber as EthersBN } from 'ethers';
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled, { css, keyframes } from 'styled-components';
-import dfstyles from '../Styles/dfstyles';
 import { ONE_DAY } from '../../Backend/Utils/Utils';
 import Button from '../Components/Button';
 import { Spacer } from '../Components/CoreUI';
-import { setBooleanSetting } from '../Utils/SettingsHooks';
-import { EthAddress } from '@darkforest_eth/types';
-import { Setting } from '../Utils/SettingsHooks';
+import dfstyles from '../Styles/dfstyles';
+import { setBooleanSetting, Setting } from '../Utils/SettingsHooks';
 
 const StyledTxConfirmPopup = styled.div`
   width: 100%;
@@ -149,7 +150,7 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
     else approve();
   };
 
-  const gasFeeGwei = parseInt(localStorage.getItem(`${addr}-gasFeeGwei`) || '1', 10);
+  const gasFee = EthersBN.from(localStorage.getItem(`${addr}-gasFeeGwei`) || '');
 
   const fromPlanet = localStorage.getItem(`${addr.toLowerCase()}-fromPlanet`);
   const toPlanet = localStorage.getItem(`${addr.toLowerCase()}-toPlanet`);
@@ -159,7 +160,7 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
   const hatCost: number = method === 'buyHat' && hatLevel ? 2 ** parseInt(hatLevel) : 0;
   const gptCost: number = method === 'buyCredits' ? 0.5 : 0;
 
-  const txCost: number = hatCost + gptCost + 0.002 * gasFeeGwei;
+  const txCost: number = hatCost + gptCost + 0.002 * weiToGwei(gasFee);
 
   const upPlanet = localStorage.getItem(`${addr.toLowerCase()}-upPlanet`);
   const branch = localStorage.getItem(`${addr.toLowerCase()}-branch`);
@@ -338,7 +339,7 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
       <div>
         <div>
           <b>Gas Fee</b>
-          <span>{gasFeeGwei} gwei</span>
+          <span>{weiToGwei(gasFee)} gwei</span>
         </div>
         <div>
           <b>Gas Limit</b>
@@ -382,7 +383,7 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
           </span>
           <span>
             Auto-confirm all transactions except purchases. Currently, you can only purchase GPT
-            Credits, and Hats. <Spacer width={8} />
+            Credits, and Hats, as well as anything 3rd party plugins offer. <Spacer width={8} />
             <input
               type='checkbox'
               checked={autoApproveChecked}

@@ -1,11 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Text, Sub, HideSmall, Invisible, BlinkCursor } from '../Components/Text';
-import dfstyles from '../Styles/dfstyles';
 import styled from 'styled-components';
 import Button from '../Components/Button';
 import { EmailCTA, EmailCTAMode } from '../Components/Email';
+import { BlinkCursor, HideSmall, Invisible, Sub, Text } from '../Components/Text';
 import LandingPageCanvas from '../Renderers/LandingPageCanvas';
+import dfstyles from '../Styles/dfstyles';
 
 export const enum LandingPageZIndex {
   Background = 0,

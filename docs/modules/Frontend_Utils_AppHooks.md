@@ -11,16 +11,21 @@
 
 - [useAccount](Frontend_Utils_AppHooks.md#useaccount)
 - [useActiveArtifact](Frontend_Utils_AppHooks.md#useactiveartifact)
+- [useArtifact](Frontend_Utils_AppHooks.md#useartifact)
 - [useControlDown](Frontend_Utils_AppHooks.md#usecontroldown)
 - [useHoverPlanet](Frontend_Utils_AppHooks.md#usehoverplanet)
 - [useLeaderboard](Frontend_Utils_AppHooks.md#useleaderboard)
 - [useMyArtifacts](Frontend_Utils_AppHooks.md#usemyartifacts)
+- [useMyArtifactsList](Frontend_Utils_AppHooks.md#usemyartifactslist)
+- [usePlanet](Frontend_Utils_AppHooks.md#useplanet)
 - [usePlanetArtifacts](Frontend_Utils_AppHooks.md#useplanetartifacts)
 - [usePlanetInactiveArtifacts](Frontend_Utils_AppHooks.md#useplanetinactiveartifacts)
+- [usePlayer](Frontend_Utils_AppHooks.md#useplayer)
+- [usePopAllOnSelectedPlanetChanged](Frontend_Utils_AppHooks.md#usepopallonselectedplanetchanged)
 - [useSelectedArtifact](Frontend_Utils_AppHooks.md#useselectedartifact)
 - [useSelectedPlanet](Frontend_Utils_AppHooks.md#useselectedplanet)
+- [useSelectedPlanetId](Frontend_Utils_AppHooks.md#useselectedplanetid)
 - [useTopLevelDiv](Frontend_Utils_AppHooks.md#usetopleveldiv)
-- [useTwitter](Frontend_Utils_AppHooks.md#usetwitter)
 - [useUIManager](Frontend_Utils_AppHooks.md#useuimanager)
 
 ## Variables
@@ -69,6 +74,23 @@ Get the currently used account on the client.
 #### Returns
 
 `Artifact` \| `undefined`
+
+---
+
+### useArtifact
+
+▸ **useArtifact**(`uiManager`, `artifactId`): [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Artifact`\>
+
+#### Parameters
+
+| Name         | Type                                                               |
+| :----------- | :----------------------------------------------------------------- |
+| `uiManager`  | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+| `artifactId` | `ArtifactId`                                                       |
+
+#### Returns
+
+[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Artifact`\>
 
 ---
 
@@ -127,7 +149,7 @@ Loads the leaderboard
 
 ### useMyArtifacts
 
-▸ **useMyArtifacts**(`uiManager`): [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Map`<`ArtifactId`, `Artifact`\> \| `undefined`\>
+▸ **useMyArtifacts**(`uiManager`): [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Artifact`[]\>
 
 #### Parameters
 
@@ -137,7 +159,40 @@ Loads the leaderboard
 
 #### Returns
 
-[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Map`<`ArtifactId`, `Artifact`\> \| `undefined`\>
+[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Artifact`[]\>
+
+---
+
+### useMyArtifactsList
+
+▸ **useMyArtifactsList**(`uiManager`): `Artifact`[]
+
+#### Parameters
+
+| Name        | Type                                                               |
+| :---------- | :----------------------------------------------------------------- |
+| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+
+#### Returns
+
+`Artifact`[]
+
+---
+
+### usePlanet
+
+▸ **usePlanet**(`uiManager`, `locationId`): [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\>
+
+#### Parameters
+
+| Name         | Type                                                               |
+| :----------- | :----------------------------------------------------------------- |
+| `uiManager`  | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+| `locationId` | `LocationId` \| `undefined`                                        |
+
+#### Returns
+
+[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\>
 
 ---
 
@@ -172,6 +227,42 @@ Loads the leaderboard
 #### Returns
 
 `Artifact`[]
+
+---
+
+### usePlayer
+
+▸ **usePlayer**(`uiManager`, `ethAddress?`): [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Player` \| `undefined`\>
+
+Hook which gets you the player, and updates whenever that player's twitter or score changes.
+
+#### Parameters
+
+| Name          | Type                                                               |
+| :------------ | :----------------------------------------------------------------- |
+| `uiManager`   | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+| `ethAddress?` | `EthAddress`                                                       |
+
+#### Returns
+
+[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Player` \| `undefined`\>
+
+---
+
+### usePopAllOnSelectedPlanetChanged
+
+▸ **usePopAllOnSelectedPlanetChanged**(`modal`, `startingId`): `void`
+
+#### Parameters
+
+| Name         | Type                                                                   |
+| :----------- | :--------------------------------------------------------------------- |
+| `modal`      | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
+| `startingId` | `LocationId` \| `undefined`                                            |
+
+#### Returns
+
+`void`
 
 ---
 
@@ -211,6 +302,23 @@ Create a subscription to the currently selected planet.
 
 ---
 
+### useSelectedPlanetId
+
+▸ **useSelectedPlanetId**(`uiManager`, `defaultId?`): [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `LocationId`\>
+
+#### Parameters
+
+| Name         | Type                                                               |
+| :----------- | :----------------------------------------------------------------- |
+| `uiManager`  | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+| `defaultId?` | `LocationId`                                                       |
+
+#### Returns
+
+[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `LocationId`\>
+
+---
+
 ### useTopLevelDiv
 
 ▸ **useTopLevelDiv**(): `HTMLDivElement`
@@ -218,23 +326,6 @@ Create a subscription to the currently selected planet.
 #### Returns
 
 `HTMLDivElement`
-
----
-
-### useTwitter
-
-▸ **useTwitter**(`account`, `uiManager`): `string` \| `undefined`
-
-#### Parameters
-
-| Name        | Type                                                               |
-| :---------- | :----------------------------------------------------------------- |
-| `account`   | `EthAddress` \| `undefined`                                        |
-| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
-
-#### Returns
-
-`string` \| `undefined`
 
 ---
 

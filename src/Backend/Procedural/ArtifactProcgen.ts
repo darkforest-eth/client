@@ -1,14 +1,14 @@
+import { EMPTY_ADDRESS, EMPTY_LOCATION_ID } from '@darkforest_eth/constants';
 import {
-  ArtifactId,
-  LocationId,
   Artifact,
-  Biome,
-  ArtifactRarity,
-  ArtifactTypeNames,
-  ArtifactType,
+  ArtifactId,
   artifactNameFromArtifact,
+  ArtifactRarity,
+  ArtifactType,
+  ArtifactTypeNames,
+  Biome,
+  LocationId,
 } from '@darkforest_eth/types';
-import { EMPTY_LOCATION_ID, EMPTY_ADDRESS } from '@darkforest_eth/constants';
 import { artifactBiomeName } from '../GameLogic/ArtifactUtils';
 
 export const artifactBiomeAndName = (artifact: Artifact | undefined): string => {

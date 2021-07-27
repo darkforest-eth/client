@@ -1,9 +1,9 @@
 import {
   Artifact,
-  ArtifactTypeNames,
   ArtifactRarity,
-  BiomeNames,
   ArtifactRarityNames,
+  ArtifactTypeNames,
+  BiomeNames,
 } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';

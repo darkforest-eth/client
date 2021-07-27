@@ -1,16 +1,16 @@
+import { bonusFromHex } from '@darkforest_eth/hexgen';
 import { Artifact, Planet, PlanetType } from '@darkforest_eth/types';
+import autoBind from 'auto-bind';
 import { mat4 } from 'gl-matrix';
 import GameUIManager from '../../../Backend/GameLogic/GameUIManager';
 import { mockCommon } from '../../../Backend/Procedural/ArtifactProcgen';
 import { PixelCoords, ProcgenUtils } from '../../../Backend/Procedural/ProcgenUtils';
-import { bonusFromHex } from '@darkforest_eth/hexgen';
 import { StatIdx } from '../../../_types/global/GlobalTypes';
 import dfstyles from '../../Styles/dfstyles';
 import { RGBVec } from '../GameRenderer/EngineTypes';
 import { SpriteRenderer } from '../GameRenderer/Entities/SpriteRenderer';
 import { WebGLManager } from '../GameRenderer/WebGL/WebGLManager';
 import { PathRenderer } from './PathRenderer';
-import autoBind from 'auto-bind';
 
 const ARTIFACT_W = 128;
 

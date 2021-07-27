@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
-import { ModalPane, ModalName, ModalHook } from '../Views/ModalPane';
+import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 import { WithdrawSilver } from '../Views/WithdrawSilver';
 
 const StyledWithdrawSilverPane = styled.div`

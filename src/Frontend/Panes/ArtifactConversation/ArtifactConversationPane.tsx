@@ -1,11 +1,11 @@
+import { Artifact, Conversation } from '@darkforest_eth/types';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { ModalHook, ModalPane } from '../../Views/ModalPane';
-import { ConversationSuggestions } from './ConversationSuggestions';
-import { Artifact, Conversation } from '@darkforest_eth/types';
 import { ConversationManager } from '../../../Backend/GameLogic/ConversationManager';
 import dfstyles from '../../Styles/dfstyles';
-import { TerminalHandle, Terminal } from '../../Views/Terminal';
+import { ModalHook, ModalPane } from '../../Views/ModalPane';
+import { Terminal, TerminalHandle } from '../../Views/Terminal';
+import { ConversationSuggestions } from './ConversationSuggestions';
 
 export function ArtifactConversationPane({
   hook,

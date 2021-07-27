@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { PluginManager } from '../../Backend/GameLogic/PluginManager';
 import { PluginId, SerializedPlugin } from '../../Backend/Plugins/SerializedPlugin';
 import { Btn } from '../Components/Btn';
-import { PluginElements, Truncate, Spacer } from '../Components/CoreUI';
+import { PluginElements, Spacer, Truncate } from '../Components/CoreUI';
 import { RemoteModal } from '../Components/RemoteModal';
 import dfstyles from '../Styles/dfstyles';
 

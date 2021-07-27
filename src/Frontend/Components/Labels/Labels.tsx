@@ -1,19 +1,29 @@
-import { EthAddress } from '@darkforest_eth/types';
 import React from 'react';
-import { useTwitter, useUIManager } from '../../Utils/AppHooks';
+import { usePlayer, useUIManager } from '../../Utils/AppHooks';
+import { HoverLink } from '../CoreUI';
 import { TextPreview } from '../TextPreview';
 
-export function AccountLabel({ account }: { account: EthAddress | undefined }) {
+export function AccountLabel() {
   const uiManager = useUIManager();
-  const twitter = useTwitter(account, uiManager);
+  const player = usePlayer(uiManager);
 
-  let content;
-  if (account)
-    content = twitter ? (
-      <>@{twitter}</>
-    ) : (
-      <TextPreview text={account} unFocusedWidthPx={100} focusedWidthPx={100} />
-    );
+  if (player.value !== undefined && player.value.twitter !== undefined) {
+    return <TwitterLink twitter={player.value.twitter} />;
+  }
 
-  return <>{content}</>;
+  return (
+    <TextPreview
+      text={uiManager.getAccount() || '<no account>'}
+      unFocusedWidth={'350px'}
+      focusedWidth={'350px'}
+    />
+  );
+}
+
+export function TwitterLink({ twitter, color }: { twitter: string; color?: string }) {
+  return (
+    <HoverLink color={color} href={`https://twitter.com/${twitter}`} target='_blank'>
+      @{twitter}
+    </HoverLink>
+  );
 }

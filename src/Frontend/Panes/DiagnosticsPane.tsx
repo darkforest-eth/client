@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import { Diagnostics } from '@darkforest_eth/types';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { GasPrices } from '@darkforest_eth/types';
+import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { Spacer, Underline } from '../Components/CoreUI';
 import { DisplayGasPrices } from '../Components/DisplayGasPrices';
 import { White } from '../Components/Text';
+import { TextPreview } from '../Components/TextPreview';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
 import { BooleanSetting, Setting } from '../Utils/SettingsHooks';
@@ -15,27 +16,15 @@ const DiagnosticsContent = styled.div`
   min-width: 350px;
 `;
 
-export interface Diagnostics {
-  visiblePlanets: number;
-  visibleChunks: number;
-  fps: number;
-  totalPlanets: number;
-  chunkUpdates: number;
-  totalCalls: number;
-  callsInQueue: number;
-  totalTransactions: number;
-  transactionsInQueue: number;
-  totalChunks: number;
-  gasPrices?: GasPrices;
-}
-
 export function DiagnosticsPane({ hook }: { hook: ModalHook }) {
   const uiManager = useUIManager();
-  const [currentDiagnostics, setCurrentDiagnostics] = useState(uiManager.getDiagnostics());
+  const [currentDiagnostics, setCurrentDiagnostics] = useState(
+    new Wrapper(uiManager.getDiagnostics())
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentDiagnostics(uiManager.getDiagnostics());
+      setCurrentDiagnostics(new Wrapper(uiManager.getDiagnostics()));
     }, 250);
 
     return () => clearInterval(interval);
@@ -50,7 +39,7 @@ export function DiagnosticsPane({ hook }: { hook: ModalHook }) {
   );
 }
 
-function DiagnosticsTabs({ diagnostics }: { diagnostics: Diagnostics }) {
+function DiagnosticsTabs({ diagnostics }: { diagnostics: Wrapper<Diagnostics> }) {
   return (
     <TabbedView
       tabTitles={['rendering', 'networking']}
@@ -66,7 +55,7 @@ function DiagnosticsTabs({ diagnostics }: { diagnostics: Diagnostics }) {
   );
 }
 
-function RenderingTab({ diagnostics }: { diagnostics: Diagnostics }) {
+function RenderingTab({ diagnostics }: { diagnostics: Wrapper<Diagnostics> }) {
   const uiManager = useUIManager();
 
   return (
@@ -75,27 +64,27 @@ function RenderingTab({ diagnostics }: { diagnostics: Diagnostics }) {
         <tbody>
           <tr>
             <td>fps</td>
-            <td>{Math.floor(diagnostics.fps)}</td>
+            <td>{Math.floor(diagnostics.value.fps)}</td>
           </tr>
           <tr>
             <td>visible chunks</td>
-            <td>{diagnostics.visibleChunks.toLocaleString()}</td>
+            <td>{diagnostics.value.visibleChunks.toLocaleString()}</td>
           </tr>
           <tr>
             <td>total chunks</td>
-            <td>{diagnostics.totalChunks.toLocaleString()}</td>
+            <td>{diagnostics.value.totalChunks.toLocaleString()}</td>
           </tr>
           <tr>
             <td>visible planets</td>
-            <td>{diagnostics.visiblePlanets.toLocaleString()}</td>
+            <td>{diagnostics.value.visiblePlanets.toLocaleString()}</td>
           </tr>
           <tr>
             <td>total planets</td>
-            <td>{diagnostics.totalPlanets.toLocaleString()}</td>
+            <td>{diagnostics.value.totalPlanets.toLocaleString()}</td>
           </tr>
           <tr>
             <td>queued chunk writes</td>
-            <td>{diagnostics.chunkUpdates.toLocaleString()}</td>
+            <td>{diagnostics.value.chunkUpdates.toLocaleString()}</td>
           </tr>
         </tbody>
       </DiagnosticsTableStyle>
@@ -113,34 +102,44 @@ function RenderingTab({ diagnostics }: { diagnostics: Diagnostics }) {
   );
 }
 
-function NetworkingTab({ diagnostics }: { diagnostics: Diagnostics }) {
+function NetworkingTab({ diagnostics }: { diagnostics: Wrapper<Diagnostics> }) {
   return (
     <DiagnosticsTableStyle>
       <tbody>
         <tr>
+          <td>rpc url</td>
+          <td>
+            <TextPreview
+              text={diagnostics.value.rpcUrl}
+              unFocusedWidth={'200px'}
+              focusedWidth={'300px'}
+            />
+          </td>
+        </tr>
+        <tr>
           <td>completed calls</td>
-          <td>{diagnostics.totalCalls.toLocaleString()}</td>
+          <td>{diagnostics.value.totalCalls.toLocaleString()}</td>
         </tr>
 
         <tr>
           <td>queued calls</td>
-          <td>{diagnostics.callsInQueue.toLocaleString()}</td>
+          <td>{diagnostics.value.callsInQueue.toLocaleString()}</td>
         </tr>
 
         <tr>
           <td>completed transactions</td>
-          <td>{diagnostics.totalTransactions.toLocaleString()}</td>
+          <td>{diagnostics.value.totalTransactions.toLocaleString()}</td>
         </tr>
 
         <tr>
           <td>queued transactions</td>
-          <td>{diagnostics.transactionsInQueue.toLocaleString()}</td>
+          <td>{diagnostics.value.transactionsInQueue.toLocaleString()}</td>
         </tr>
 
         <tr>
           <td>oracle gas prices (gwei)</td>
           <td>
-            <DisplayGasPrices gasPrices={diagnostics.gasPrices} />
+            <DisplayGasPrices gasPrices={diagnostics.value.gasPrices} />
           </td>
         </tr>
       </tbody>

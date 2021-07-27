@@ -22,6 +22,7 @@
 - [players](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#players)
 - [revealedCoordsMap](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#revealedcoordsmap)
 - [touchedAndLocatedPlanets](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#touchedandlocatedplanets)
+- [twitters](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#twitters)
 - [worldRadius](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#worldradius)
 
 ## Properties
@@ -119,6 +120,12 @@
 ### touchedAndLocatedPlanets
 
 • **touchedAndLocatedPlanets**: `Map`<`LocationId`, `Planet`\>
+
+---
+
+### twitters
+
+• **twitters**: [`AddressTwitterMap`](../modules/_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)
 
 ---
 

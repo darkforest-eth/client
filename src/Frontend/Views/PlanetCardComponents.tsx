@@ -1,11 +1,7 @@
-import { Artifact, Planet, PlanetType } from '@darkforest_eth/types';
+import { Artifact, Planet } from '@darkforest_eth/types';
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { StatIdx } from '../../_types/global/GlobalTypes';
-import { TooltipName } from '../Game/WindowManager';
-import { TooltipTrigger } from '../Panes/Tooltip';
-import { planetBackground } from '../Styles/Mixins';
-import dfstyles from '../Styles/dfstyles';
 import { ArtifactImage } from '../Components/ArtifactImage';
 import {
   ArtifactBiomeText,
@@ -13,18 +9,10 @@ import {
   ArtifactTypeText,
 } from '../Components/Labels/ArtifactLabels';
 import { Sub } from '../Components/Text';
-
-export const StyledPlanetCard = styled.div`
-  width: 100%;
-`;
-
-export const PreviewSection = styled.div`
-  height: fit-content;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  position: relative;
-`;
+import { TooltipName } from '../Game/WindowManager';
+import { TooltipTrigger } from '../Panes/Tooltip';
+import dfstyles from '../Styles/dfstyles';
+import { planetBackground } from '../Styles/Mixins';
 
 export const DestroyedMarker = styled.div`
   position: absolute;
@@ -40,38 +28,14 @@ export const DestroyedMarker = styled.div`
 `;
 
 export const PlanetTag = styled.div<{ planet: Planet | undefined }>`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 0.5em;
-  border-left: 1px solid ${dfstyles.colors.subtext};
-
-  ${planetBackground}
-`;
-
-export const IconsWrapper = styled.div`
-  position: relative;
-
-  width: fit-content;
-`;
-
-export const StatSection = styled.div`
-  border-top: 1px solid ${dfstyles.colors.subtext};
-`;
-
-export const ArtifactSection = styled.div`
-  border-top: 1px solid ${dfstyles.colors.subtext};
+  width: 100%;
+  overflow: hidden;
 `;
 
 export const StatRow = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-`;
-
-export const TopRow = styled(StatRow)`
-  border-bottom: 1px solid ${dfstyles.colors.subbertext};
 `;
 
 export const StatCell = styled.div`
@@ -83,7 +47,6 @@ export const StatCell = styled.div`
   flex-direction: row;
   align-items: center;
 
-  border-left: 1px solid ${dfstyles.colors.subbertext};
   &:first-child {
     border-left: none;
   }
@@ -97,8 +60,6 @@ const StyledTimesTwo = styled.span`
 
 const TimesTwo = () => <StyledTimesTwo>x2</StyledTimesTwo>;
 
-export const StyledStatIcon = styled.span``;
-
 export function PCStatIcon({
   planet,
   children,
@@ -109,24 +70,22 @@ export function PCStatIcon({
   stat: StatIdx;
 }) {
   return (
-    <StyledStatIcon>
+    <span>
       <RowTip name={TooltipName.Energy + stat}>{children}</RowTip>
       {planet?.bonus && planet.bonus[stat] && (
         <TooltipTrigger name={TooltipName.BonusEnergyCap + stat}>
           <TimesTwo />
         </TooltipTrigger>
       )}
-    </StyledStatIcon>
+    </span>
   );
 }
 
-export const Small = styled(StatCell)<{ planet: Planet | undefined }>`
-  width: ${({ planet: p }) => (p?.planetType === PlanetType.SILVER_MINE ? '25%' : '20%')};
-  font-size: 0.8em;
-`;
-
-export const BigStatCell = styled(StatCell)`
-  width: 50%;
+export const StatContainer = styled(StatCell)`
+  ${({ wide }: { wide?: boolean }) => css`
+    width: ${wide ? '100%' : '50%'};
+    box-sizing: border-box;
+  `}
 `;
 
 export const RowTip = ({ name, children }: { name: TooltipName; children: React.ReactNode }) => (
@@ -137,11 +96,11 @@ export const RowTip = ({ name, children }: { name: TooltipName; children: React.
 
 export const TitleBar = styled.div`
   height: 2em;
-  border-bottom: 1px solid ${dfstyles.colors.subtext};
   padding: 0.25em 0.5em;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  border-bottom: 1px solid ${dfstyles.colors.border};
 `;
 
 const StyledPlanetActiveArtifact = styled.div<{ planet: Planet | undefined }>`

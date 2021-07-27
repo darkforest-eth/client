@@ -1,6 +1,6 @@
+import { Artifact } from '@darkforest_eth/types';
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { Artifact } from '@darkforest_eth/types';
 import { ArtifactFileColor, artifactFileName } from '../../Backend/GameLogic/ArtifactUtils';
 import dfstyles from '../Styles/dfstyles';
 

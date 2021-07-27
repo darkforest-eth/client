@@ -1,26 +1,14 @@
 import _ from 'lodash';
-import React, { useState } from 'react';
-import { useCallback } from 'react';
-import { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { White } from '../Components/Text';
+import { HeaderText, Spacer, TextButton } from '../Components/CoreUI';
 import dfstyles from '../Styles/dfstyles';
-
-const TextButton = styled.span`
-  color: ${dfstyles.colors.subtext};
-  text-decoration: underline;
-  cursor: pointer;
-  user-select: none;
-
-  &:hover {
-    color: white;
-  }
-`;
 
 const TipText = styled.div`
   max-width: 500px;
   color: ${dfstyles.colors.subtext};
   word-break: keep-all;
+  text-align: justify;
 `;
 
 const Link = styled.a`
@@ -59,20 +47,38 @@ export function DarkForestTips() {
   }, [incrementTipIndex]);
 
   return (
-    <>
-      <White>Dark Forest Tips</White>{' '}
-      <TextButton onClick={() => incrementTipIndex(-1, true)}>previous</TextButton>{' '}
-      <TextButton onClick={() => incrementTipIndex(1, true)}>next</TextButton>
+    <TipsContainer>
+      <HeaderText>Dark Forest Tips</HeaderText>{' '}
+      <PrevNextContainer>
+        <TextButton onClick={() => incrementTipIndex(-1, true)}>previous</TextButton>
+        <Spacer width={16} />
+        <TextButton onClick={() => incrementTipIndex(1, true)}>next</TextButton>
+      </PrevNextContainer>
       <br />
       <br />
       <TipText>{shuffledTips[tipIndex]}</TipText>
-    </>
+    </TipsContainer>
   );
 }
 
 export function MakeDarkForestTips() {
   return <DarkForestTips />;
 }
+
+const PrevNextContainer = styled.div`
+  float: right;
+`;
+
+const TipsContainer = styled.div`
+  margin-bottom: 8px;
+  background-color: ${dfstyles.colors.backgroundlighter};
+  width: 400px;
+  height: 250px;
+  padding: 16px;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid ${dfstyles.colors.border};
+`;
 
 const tips = [
   'Beware of pirates! To capture a planet with pirates, simply send an attack large enough to overcome its current energy.',
@@ -85,7 +91,7 @@ const tips = [
   </>,
   'There are many different artifact types, each with unique properties... try activating one on a planet!',
   'You can talk to artifacts that you own. They are powered by GPT3. Try it out from the Artifact Details pane!',
-  'The top 63 players get NFT rewards at the end of this round!',
+  'The top 63 players get NFT rewards at the end of each v0.6 round!',
   "There are many different ways to enjoy Dark Forest - as long as you're having fun, you're doing it right.",
   'Be careful when capturing planets - if you attack a player-owned planet, it may look like an act of war!',
   'A planet can have at most one active artifact.',
@@ -112,7 +118,7 @@ const tips = [
   'Defense upgrades make your planets less vulnerable to attack, Range upgrades make your voyages go further and decay less, and Speed upgrades make your voyages go much faster.',
   'Wormhole artifacts reduce the effective distance between 2 planets. Try using them to link 2 planets very far apart!',
   'Upon deactivation, most artifacts must cooldown for 24-hours before they can be activated again. However, wormholes go on a 48-hour cooldown!',
-  'Photoid Cannon artifacts will debuff your planet on activation, but get a massive stat boost for the first voyage from the planet after that 4 hours. Photoid Cannon artifacts are destroyed upon use.',
+  'Photoid Cannon artifacts will debuff your planet on activation, but get a massive stat boost for the first voyage from the planet after that a charging period. Photoid Cannon artifacts are destroyed upon use.',
   "Planetary Shield artifacts will massively boost a planet's defense, but at the cost of energy and energy growth stats. Planetary Shield artifacts are destroyed upon deactivation.",
   "Bloom Filter artifacts instantly set a planet's energy and silver to full, but are destroyed upon activation. Try using them on a Quasar!",
   'Dark Forest exists on the blockchain, so you can play with an entirely different client if you want.',

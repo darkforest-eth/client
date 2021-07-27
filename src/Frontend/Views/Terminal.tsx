@@ -1,9 +1,9 @@
 import EventEmitter from 'events';
-import React, { useRef, useState, useCallback, useEffect, useImperativeHandle } from 'react';
+import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { Hoverable } from '../Components/Hoverable';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
-import { BasicLink, Green, Blue, Sub, White, Red, Invisible } from '../Components/Text';
+import { BasicLink, Blue, Green, Invisible, Red, Sub, White } from '../Components/Text';
 import { LoadingBarHandle, TextLoadingBar } from '../Components/TextLoadingBar';
 import dfstyles from '../Styles/dfstyles';
 import { isFirefox } from '../Utils/BrowserChecks';

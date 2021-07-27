@@ -1,10 +1,10 @@
 // should be able to be treated as a text element
+import { Planet, UpgradeBranchName } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
-import { UpgradeBranchName, Planet } from '@darkforest_eth/types';
-import dfstyles from '../Styles/dfstyles';
-import { StatIdx } from '../../_types/global/GlobalTypes';
 import { getPlanetRank, isFullRank } from '../../Backend/Utils/Utils';
+import { StatIdx } from '../../_types/global/GlobalTypes';
+import dfstyles from '../Styles/dfstyles';
 
 const SVGWrapper = styled.span`
   width: 1em;

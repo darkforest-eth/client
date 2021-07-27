@@ -168,23 +168,24 @@
 
 ### drawHat
 
-▸ **drawHat**(`hatType`, `pathHeight`, `pathWidth`, `center`, `width`, `height`, `radius`, `rotation`, `fill1?`, `fill2?`, `hoverCoords?`): `void`
+▸ **drawHat**(`hatType`, `pathHeight`, `pathWidth`, `center`, `width`, `height`, `radius`, `rotation`, `hoveringPlanet`, `fill1?`, `fill2?`, `hoverCoords?`): `void`
 
 #### Parameters
 
-| Name          | Type                                                 | Default value |
-| :------------ | :--------------------------------------------------- | :------------ |
-| `hatType`     | [`HatType`](../enums/Frontend_Utils_Hats.HatType.md) | `undefined`   |
-| `pathHeight`  | `number`                                             | `undefined`   |
-| `pathWidth`   | `number`                                             | `undefined`   |
-| `center`      | `WorldCoords`                                        | `undefined`   |
-| `width`       | `number`                                             | `undefined`   |
-| `height`      | `number`                                             | `undefined`   |
-| `radius`      | `number`                                             | `undefined`   |
-| `rotation`    | `number`                                             | `undefined`   |
-| `fill1`       | `string` \| `CanvasPattern`                          | `'white'`     |
-| `fill2`       | `string` \| `CanvasPattern`                          | `'red'`       |
-| `hoverCoords` | `null` \| `WorldCoords`                              | `null`        |
+| Name             | Type                                                 | Default value |
+| :--------------- | :--------------------------------------------------- | :------------ |
+| `hatType`        | [`HatType`](../enums/Frontend_Utils_Hats.HatType.md) | `undefined`   |
+| `pathHeight`     | `number`                                             | `undefined`   |
+| `pathWidth`      | `number`                                             | `undefined`   |
+| `center`         | `WorldCoords`                                        | `undefined`   |
+| `width`          | `number`                                             | `undefined`   |
+| `height`         | `number`                                             | `undefined`   |
+| `radius`         | `number`                                             | `undefined`   |
+| `rotation`       | `number`                                             | `undefined`   |
+| `hoveringPlanet` | `boolean`                                            | `undefined`   |
+| `fill1`          | `string` \| `CanvasPattern`                          | `'white'`     |
+| `fill2`          | `string` \| `CanvasPattern`                          | `'red'`       |
+| `hoverCoords`    | `null` \| `WorldCoords`                              | `null`        |
 
 #### Returns
 

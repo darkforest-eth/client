@@ -1,7 +1,6 @@
 import { EMPTY_LOCATION_ID } from '@darkforest_eth/constants';
-import { ArtifactType, Biome, ArtifactRarity } from '@darkforest_eth/types';
-import React from 'react';
-import { useEffect } from 'react';
+import { ArtifactRarity, ArtifactType, Biome } from '@darkforest_eth/types';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import {
   ArtifactFileColor,

@@ -1,7 +1,7 @@
 import { EMPTY_LOCATION_ID } from '@darkforest_eth/constants';
 import { Planet, PlanetType } from '@darkforest_eth/types';
 import autoBind from 'auto-bind';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { MineRenderer } from '../Renderers/GameRenderer/Entities/MineRenderer';
 import PlanetRenderer from '../Renderers/GameRenderer/Entities/PlanetRenderer';
@@ -9,14 +9,13 @@ import { QuasarRenderer } from '../Renderers/GameRenderer/Entities/QuasarRendere
 import { RuinsRenderer } from '../Renderers/GameRenderer/Entities/RuinsRenderer';
 import { SpacetimeRipRenderer } from '../Renderers/GameRenderer/Entities/SpacetimeRipRenderer';
 import { WebGLManager } from '../Renderers/GameRenderer/WebGL/WebGLManager';
-import { SPACE_TYPE_COLORS } from '../Styles/dfstyles';
 
 const PlanetPreviewWrapper = styled.div<{ size: string; color: string }>`
   ${({ size, color }) => `
   position: relative;
 
   width: ${size};
-  height: ${size};
+  height: 100%;
 
   background: ${color};
 
@@ -172,10 +171,7 @@ export function PlanetPreview({
   res: number;
 }) {
   return (
-    <PlanetPreviewWrapper
-      size={size}
-      color={planet ? SPACE_TYPE_COLORS[planet.spaceType] : 'rgba(0,0,0,0)'}
-    >
+    <PlanetPreviewWrapper size={size} color={'rgba(0,0,0,0)'}>
       <PlanetPreviewImage planet={planet} res={res} />
     </PlanetPreviewWrapper>
   );

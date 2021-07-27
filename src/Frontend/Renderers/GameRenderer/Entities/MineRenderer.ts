@@ -1,5 +1,5 @@
-import { Planet, WorldCoords } from '@darkforest_eth/types';
 import { MAX_PLANET_LEVEL } from '@darkforest_eth/constants';
+import { Planet, WorldCoords } from '@darkforest_eth/types';
 import Viewport from '../../../Game/Viewport';
 import { engineConsts } from '../EngineConsts';
 import EngineUtils from '../EngineUtils';

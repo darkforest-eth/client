@@ -1,12 +1,12 @@
 import { PerlinConfig } from '@darkforest_eth/hashing';
+import { Chunk, Rectangle } from '../../../../_types/global/GlobalTypes';
 import Viewport from '../../../Game/Viewport';
+import { Vec3 } from '../EngineTypes';
 import EngineUtils from '../EngineUtils';
 import { PERLIN_PROGRAM_DEFINITION } from '../Programs/PerlinProgram';
+import AttribManager from '../WebGL/AttribManager';
 import { GameGLManager } from '../WebGL/GameGLManager';
 import { GenericRenderer } from '../WebGL/GenericRenderer';
-import RectRenderer from './RectRenderer';
-import { Vec3 } from '../EngineTypes';
-import { Chunk, Rectangle } from '../../../../_types/global/GlobalTypes';
 import {
   getCachedGradient,
   getGridPoint,
@@ -16,7 +16,7 @@ import {
   up,
   valueOf,
 } from './PerlinUtils';
-import AttribManager from '../WebGL/AttribManager';
+import RectRenderer from './RectRenderer';
 
 export class PerlinRenderer extends GenericRenderer<typeof PERLIN_PROGRAM_DEFINITION> {
   manager: GameGLManager;

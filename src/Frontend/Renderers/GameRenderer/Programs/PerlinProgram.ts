@@ -1,6 +1,6 @@
-import { UniformType, AttribType } from '../EngineTypes';
-import { glsl } from '../EngineUtils';
 import { MAX_PERLIN_VALUE } from '@darkforest_eth/hashing';
+import { AttribType, UniformType } from '../EngineTypes';
+import { glsl } from '../EngineUtils';
 import { ShaderMixins } from '../WebGL/ShaderMixins';
 
 const a = {

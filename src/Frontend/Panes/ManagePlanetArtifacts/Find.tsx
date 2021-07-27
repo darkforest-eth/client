@@ -1,14 +1,14 @@
-import React from 'react';
 import { Planet } from '@darkforest_eth/types';
-import { Btn } from '../../Components/Btn';
-import { Spacer } from '../../Components/CoreUI';
-import { LoadingSpinner } from '../../Components/LoadingSpinner';
-import { Red, Sub, White } from '../../Components/Text';
+import React from 'react';
 import {
   blocksLeftToProspectExpiration,
   prospectExpired,
 } from '../../../Backend/GameLogic/ArrivalUtils';
+import { Btn } from '../../Components/Btn';
+import { Spacer } from '../../Components/CoreUI';
 import { ScoreLabel } from '../../Components/Labels/KeywordLabels';
+import { LoadingSpinner } from '../../Components/LoadingSpinner';
+import { Red, Sub, White } from '../../Components/Text';
 
 export function Find({
   find,
