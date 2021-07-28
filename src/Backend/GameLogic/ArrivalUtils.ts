@@ -218,3 +218,8 @@ export function getEmojiMessage(
 ): PlanetMessage<EmojiFlagBody> | undefined {
   return planet?.messages?.find(isEmojiFlagMessage);
 }
+
+export function getRange(planet: Planet, percentEnergySending = 100): number {
+  if (percentEnergySending === 0) return 0;
+  return Math.max(Math.log2(percentEnergySending / 5), 0) * planet.range;
+}

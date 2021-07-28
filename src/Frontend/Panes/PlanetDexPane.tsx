@@ -8,7 +8,7 @@ import {
 } from '../../Backend/GameLogic/ArrivalUtils';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { formatNumber, getPlanetRank } from '../../Backend/Utils/Utils';
-import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
+import { CenterBackgroundSubtext, Padded, Spacer } from '../Components/CoreUI';
 import { ArtifactIcon, SilverGrowthIcon, SilverIcon, WithdrawIcon } from '../Components/Icons';
 import { Green, Sub } from '../Components/Text';
 import { engineConsts } from '../Renderers/GameRenderer/EngineConsts';
@@ -290,7 +290,7 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
       width='unset'
       helpContent={HelpContent}
     >
-      {content}
+      <Padded>{content}</Padded>
     </ModalPane>
   );
 }

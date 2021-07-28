@@ -7,7 +7,7 @@ import { PluginManager } from '../../Backend/GameLogic/PluginManager';
 import { PLUGIN_TEMPLATE } from '../../Backend/Plugins/PluginTemplate';
 import { PluginId } from '../../Backend/Plugins/SerializedPlugin';
 import { Btn } from '../Components/Btn';
-import { Spacer } from '../Components/CoreUI';
+import { Padded, Spacer } from '../Components/CoreUI';
 import { Input } from '../Components/Input';
 import dfstyles from '../Styles/dfstyles';
 require('prismjs/themes/prism-dark.css');
@@ -60,7 +60,7 @@ export function PluginEditorPane({
   }
 
   return (
-    <>
+    <Padded>
       <Input wide placeholder='no name' value={name} onChange={onNameInputChange} />
       <Spacer height={8} />
       <EditorContainer>
@@ -80,6 +80,6 @@ export function PluginEditorPane({
       <Btn wide onClick={onSaveClick} style={{ height: '3em' }}>
         Save
       </Btn>
-    </>
+    </Padded>
   );
 }

@@ -1,7 +1,6 @@
 import { Artifact, Planet } from '@darkforest_eth/types';
 import React from 'react';
-import styled, { css } from 'styled-components';
-import { StatIdx } from '../../_types/global/GlobalTypes';
+import styled from 'styled-components';
 import { ArtifactImage } from '../Components/ArtifactImage';
 import {
   ArtifactBiomeText,
@@ -14,6 +13,9 @@ import { TooltipTrigger } from '../Panes/Tooltip';
 import dfstyles from '../Styles/dfstyles';
 import { planetBackground } from '../Styles/Mixins';
 
+/**
+ * Displayed in {@link PlanetContextPane} when a planet is {@code destroyed}.
+ */
 export const DestroyedMarker = styled.div`
   position: absolute;
   bottom: 0;
@@ -27,21 +29,24 @@ export const DestroyedMarker = styled.div`
   background-repeat: no-repeat;
 `;
 
-export const PlanetTag = styled.div<{ planet: Planet | undefined }>`
+const StyledTimesTwo = styled.span`
+  color: ${dfstyles.colors.dfgreen};
+  font-size: 0.8em;
+  vertical-align: center;
+  line-height: 1.5em;
+  margin-left: 8px;
+`;
+
+export const TimesTwo = () => <StyledTimesTwo>x2</StyledTimesTwo>;
+
+/**
+ * Expands to fit the width of container. Is itself a flex box that spreads out its children
+ * horizontally.
+ */
+export const SpreadApart = styled.div`
   width: 100%;
-  overflow: hidden;
-`;
-
-export const StatRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-export const StatCell = styled.div`
+  box-sizing: border-box;
   flex-grow: 1;
-  padding: 3px 6px;
-
   display: inline-flex;
   justify-content: space-between;
   flex-direction: row;
@@ -50,42 +55,6 @@ export const StatCell = styled.div`
   &:first-child {
     border-left: none;
   }
-`;
-
-const StyledTimesTwo = styled.span`
-  color: ${dfstyles.colors.dfgreen};
-  font-size: 0.8em;
-  margin-left: 3px;
-`;
-
-const TimesTwo = () => <StyledTimesTwo>x2</StyledTimesTwo>;
-
-export function PCStatIcon({
-  planet,
-  children,
-  stat: stat,
-}: {
-  planet: Planet | undefined;
-  children: React.ReactNode;
-  stat: StatIdx;
-}) {
-  return (
-    <span>
-      <RowTip name={TooltipName.Energy + stat}>{children}</RowTip>
-      {planet?.bonus && planet.bonus[stat] && (
-        <TooltipTrigger name={TooltipName.BonusEnergyCap + stat}>
-          <TimesTwo />
-        </TooltipTrigger>
-      )}
-    </span>
-  );
-}
-
-export const StatContainer = styled(StatCell)`
-  ${({ wide }: { wide?: boolean }) => css`
-    width: ${wide ? '100%' : '50%'};
-    box-sizing: border-box;
-  `}
 `;
 
 export const RowTip = ({ name, children }: { name: TooltipName; children: React.ReactNode }) => (

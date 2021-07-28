@@ -69,13 +69,13 @@ class GameUIManager extends EventEmitter {
 
   private terminal: React.MutableRefObject<TerminalHandle | undefined>;
   private previousSelectedPlanet: Planet | undefined;
-  private selectedPlanet: Planet | undefined;
+  private selectedPlanet: LocatablePlanet | undefined;
   private selectedCoords: WorldCoords | undefined;
-  private mouseDownOverPlanet: Planet | undefined;
+  private mouseDownOverPlanet: LocatablePlanet | undefined;
   private mouseDownOverCoords: WorldCoords | undefined;
-  private mouseHoveringOverPlanet: Planet | undefined;
+  private mouseHoveringOverPlanet: LocatablePlanet | undefined;
   private mouseHoveringOverCoords: WorldCoords | undefined;
-  private sendingPlanet: Planet | undefined;
+  private sendingPlanet: LocatablePlanet | undefined;
   private sendingCoords: WorldCoords | undefined;
   private isSending = false;
   private viewportEntities: ViewportEntities;
@@ -248,7 +248,7 @@ class GameUIManager extends EventEmitter {
 
   // actions
 
-  public centerPlanet(planet: Planet | undefined) {
+  public centerPlanet(planet: LocatablePlanet | undefined) {
     if (planet) {
       Viewport.getInstance().centerPlanet(planet);
       this.setSelectedPlanet(planet);
@@ -257,7 +257,7 @@ class GameUIManager extends EventEmitter {
 
   public centerCoords(coords: WorldCoords) {
     const planet = this.gameManager.getPlanetWithCoords(coords);
-    if (planet) {
+    if (planet && isLocatable(planet)) {
       this.centerPlanet(planet);
     } else {
       Viewport.getInstance().centerCoords(coords);
@@ -266,7 +266,9 @@ class GameUIManager extends EventEmitter {
 
   public centerLocationId(planetId: LocationId) {
     const planet = this.getPlanetWithId(planetId);
-    this.centerPlanet(planet);
+    if (planet && isLocatable(planet)) {
+      this.centerPlanet(planet);
+    }
   }
 
   public joinGame(beforeRetry: (e: Error) => Promise<boolean>): GameUIManager {
@@ -628,7 +630,7 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getAllPlayers();
   }
 
-  public getSelectedPlanet(): Planet | undefined {
+  public getSelectedPlanet(): LocatablePlanet | undefined {
     return this.selectedPlanet;
   }
 
@@ -638,10 +640,10 @@ class GameUIManager extends EventEmitter {
 
   public setSelectedId(id: LocationId): void {
     const planet = this.getPlanetWithId(id);
-    if (planet) this.setSelectedPlanet(planet);
+    if (planet && isLocatable(planet)) this.setSelectedPlanet(planet);
   }
 
-  public setSelectedPlanet(planet: Planet | undefined): void {
+  public setSelectedPlanet(planet: LocatablePlanet | undefined): void {
     this.previousSelectedPlanet = this.selectedPlanet;
 
     if (!planet) {
@@ -675,12 +677,12 @@ class GameUIManager extends EventEmitter {
     return this.selectedCoords;
   }
 
-  public getMouseDownPlanet(): Planet | undefined {
+  public getMouseDownPlanet(): LocatablePlanet | undefined {
     if (this.isSending && this.sendingPlanet) return this.sendingPlanet;
     return this.mouseDownOverPlanet;
   }
 
-  public onSendInit(planet: Planet | undefined): void {
+  public onSendInit(planet: LocatablePlanet | undefined): void {
     this.isSending = true;
     this.sendingPlanet = planet;
     const loc = planet && this.getLocationOfPlanet(planet.locationId);
@@ -847,7 +849,7 @@ class GameUIManager extends EventEmitter {
     return this.mouseDownOverCoords;
   }
 
-  private setHoveringOverPlanet(planet: Planet | undefined) {
+  private setHoveringOverPlanet(planet: LocatablePlanet | undefined) {
     const lastHover = this.mouseHoveringOverPlanet;
 
     this.mouseHoveringOverPlanet = planet;
@@ -1138,16 +1140,18 @@ class GameUIManager extends EventEmitter {
 
   private updatePlanets() {
     if (this.selectedPlanet) {
-      this.selectedPlanet = this.gameManager.getPlanetWithId(this.selectedPlanet.locationId);
+      this.selectedPlanet = this.gameManager.getPlanetWithId(
+        this.selectedPlanet.locationId
+      ) as LocatablePlanet;
     }
     if (this.mouseDownOverPlanet) {
       this.mouseDownOverPlanet = this.gameManager.getPlanetWithId(
         this.mouseDownOverPlanet.locationId
-      );
+      ) as LocatablePlanet;
     }
     if (this.mouseHoveringOverPlanet) {
       this.setHoveringOverPlanet(
-        this.gameManager.getPlanetWithId(this.mouseHoveringOverPlanet.locationId)
+        this.gameManager.getPlanetWithId(this.mouseHoveringOverPlanet.locationId) as LocatablePlanet
       );
     }
   }

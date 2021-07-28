@@ -1,6 +1,6 @@
-import { timeoutAfter } from '@darkforest_eth/network';
 import { EthAddress, SignedMessage } from '@darkforest_eth/types';
 import * as EmailValidator from 'email-validator';
+import timeout from 'p-timeout';
 import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
 
 export const WEBSERVER_URL = process.env.WEBSERVER_URL as string;
@@ -112,7 +112,7 @@ export const requestDevFaucet = async (address: EthAddress): Promise<boolean> =>
  */
 export const tryGetAllTwitters = async (): Promise<AddressTwitterMap> => {
   try {
-    return await timeoutAfter(getAllTwitters(), 1000 * 5, "couldn't get twitter map");
+    return await timeout(getAllTwitters(), 1000 * 5, "couldn't get twitter map");
   } catch (e) {}
   return {};
 };

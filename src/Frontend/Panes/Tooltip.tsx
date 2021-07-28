@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import WindowManager, { TooltipName, WindowManagerEvent } from '../Game/WindowManager';
-import dfstyles from '../Styles/dfstyles';
+import dfstyles, { snips } from '../Styles/dfstyles';
 import { useControlDown } from '../Utils/AppHooks';
 import { GameWindowZIndex } from '../Utils/constants';
 import { TooltipContent } from './TooltipPanes';
@@ -32,12 +32,9 @@ const _animation = css`
 
 // ${(props) => (props.anim ? animation : 'animation: none;')}
 const StyledTooltipTrigger = styled.span<{
-  anim: boolean;
   display?: DisplayType;
 }>`
   border-radius: 2px;
-  background-color: ${(props) => (props.anim ? dfstyles.colors.dfblue : 'none')};
-
   display: ${(props) => props.display || 'inline'};
 `;
 
@@ -67,7 +64,6 @@ export function TooltipTrigger({
       display={display}
       style={{ ...style }}
       className={className}
-      anim={ctrl}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
@@ -79,15 +75,15 @@ export function TooltipTrigger({
 const StyledTooltip = styled.div<{
   visible: boolean;
 }>`
+  ${snips.defaultModalWidth}
   position: absolute;
-  width: fit-content;
-  height: fit-content;
   min-height: 1em;
   min-width: 5em;
   border: 1px solid ${dfstyles.colors.border};
   background: ${dfstyles.colors.background};
   padding: 0.5em;
   border-radius: 3px;
+  text-align: justify;
 
   z-index: ${GameWindowZIndex.Tooltip};
   display: ${(props) => (props.visible ? 'block' : 'none')};

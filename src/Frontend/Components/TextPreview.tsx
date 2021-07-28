@@ -9,11 +9,13 @@ export function TextPreview({
   text,
   unFocusedWidth,
   focusedWidth,
+  style,
 }: {
   text?: string;
   unFocusedWidth?: string;
   focusedWidth?: string;
   maxLength?: number;
+  style?: React.CSSProperties;
 }) {
   const [isTextBox, setIsTextbox] = useState(false);
   const [inputRef, setInputRef] = useState<HTMLInputElement | null>(null);
@@ -37,7 +39,7 @@ export function TextPreview({
 
   if (isTextBox) {
     return (
-      <InputContainer width={focusedWidth || DEFAULT_FOCUSED_WIDTH}>
+      <InputContainer style={style} width={focusedWidth || DEFAULT_FOCUSED_WIDTH}>
         <PreviewTextInput
           value={text || ''}
           onChange={() => {}}
@@ -49,7 +51,11 @@ export function TextPreview({
   }
 
   return (
-    <ShortenedText width={unFocusedWidth || DEFAULT_UNFOCUSED_WIDTH} onClick={onClick}>
+    <ShortenedText
+      style={style}
+      width={unFocusedWidth || DEFAULT_UNFOCUSED_WIDTH}
+      onClick={onClick}
+    >
       {text || ''}
     </ShortenedText>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Btn } from '../Components/Btn';
-import { Expand, Spacer } from '../Components/CoreUI';
+import { Expand, PaddedRecommendedModalWidth, Spacer } from '../Components/CoreUI';
 import { Input } from '../Components/Input';
 import { TwitterLink } from '../Components/Labels/Labels';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
@@ -69,75 +69,78 @@ export function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
     <ModalPane
       name={ModalName.TwitterVerify}
       title='Connect/Disconnect Twitter'
-      width={user.value ? '350px' : '500px'}
       hook={hook}
       initialPosition={{ y: 100, x: window.innerWidth / 2 - 300 }}
     >
-      {user.value !== undefined && user.value.twitter === undefined && (
-        <TabbedView
-          tabTitles={['Tweet Proof', 'Verify Tweet']}
-          tabContents={(i: number) => {
-            if (i === 0)
-              return (
-                <>
-                  <Sub>Tweet a signed message, proving account ownership!</Sub>
-                  <Spacer height={8} />
-                  <Input
-                    wide
-                    value={twitterHandleInputValue}
-                    onChange={(e) => onTwitterInputChange(e.target.value)}
-                    placeholder={'your twitter handle'}
-                  />
-                  <Spacer height={8} />
-                  <Expand />
-                  <Btn wide onClick={onTweetClick}>
-                    Tweet
-                  </Btn>
-                </>
-              );
+      <PaddedRecommendedModalWidth>
+        {user.value !== undefined && user.value.twitter === undefined && (
+          <TabbedView
+            tabTitles={['Tweet Proof', 'Verify Tweet']}
+            tabContents={(i: number) => {
+              if (i === 0)
+                return (
+                  <>
+                    <Sub>Tweet a signed message, proving account ownership!</Sub>
+                    <Spacer height={8} />
+                    <Input
+                      wide
+                      value={twitterHandleInputValue}
+                      onChange={(e) => onTwitterInputChange(e.target.value)}
+                      placeholder={'your twitter handle'}
+                    />
+                    <Spacer height={8} />
+                    <Expand />
+                    <Btn wide onClick={onTweetClick}>
+                      Tweet
+                    </Btn>
+                  </>
+                );
 
-            if (i === 1) {
-              return (
-                <>
-                  <Spacer height={16} />
-                  <Input
-                    wide
-                    value={twitterHandleInputValue}
-                    onChange={(e) => onTwitterInputChange(e.target.value)}
-                    placeholder={'your twitter handle'}
-                  />
-                  <Spacer height={8} />
-                  <Expand />
-                  {error && (
-                    <>
-                      <Spacer height={8} />
-                      <Red>error verifying ownership</Red>
-                    </>
-                  )}
-                  <Btn wide disabled={verifying} onClick={onVerifyClick}>
-                    {verifying ? <LoadingSpinner initialText={'Verifying...'} /> : 'Verify'}
-                  </Btn>
-                </>
-              );
-            }
-          }}
-        />
-      )}
+              if (i === 1) {
+                return (
+                  <>
+                    <Sub>After tweeting, click the button below to verify ownership!</Sub>
 
-      {user.value !== undefined && user.value.twitter && (
-        <>
-          You are connected, <TwitterLink twitter={user.value.twitter} />. You can disconnect it
-          anytime by clicking the button below.
-          <Spacer height={16} />
-          <Btn wide disabled={disconnecting} onClick={onDisconnectClick}>
-            {verifying ? (
-              <LoadingSpinner initialText={'Disconnecting Twitter...'} />
-            ) : (
-              'Disconnect Twitter'
-            )}
-          </Btn>
-        </>
-      )}
+                    <Spacer height={8} />
+                    <Input
+                      wide
+                      value={twitterHandleInputValue}
+                      onChange={(e) => onTwitterInputChange(e.target.value)}
+                      placeholder={'your twitter handle'}
+                    />
+                    <Spacer height={8} />
+                    <Expand />
+                    {error && (
+                      <>
+                        <Spacer height={8} />
+                        <Red>error verifying ownership</Red>
+                      </>
+                    )}
+                    <Btn wide disabled={verifying} onClick={onVerifyClick}>
+                      {verifying ? <LoadingSpinner initialText={'Verifying...'} /> : 'Verify'}
+                    </Btn>
+                  </>
+                );
+              }
+            }}
+          />
+        )}
+
+        {user.value !== undefined && user.value.twitter && (
+          <>
+            You are connected, <TwitterLink twitter={user.value.twitter} />. You can disconnect it
+            anytime by clicking the button below.
+            <Spacer height={16} />
+            <Btn wide disabled={disconnecting} onClick={onDisconnectClick}>
+              {verifying ? (
+                <LoadingSpinner initialText={'Disconnecting Twitter...'} />
+              ) : (
+                'Disconnect Twitter'
+              )}
+            </Btn>
+          </>
+        )}
+      </PaddedRecommendedModalWidth>
     </ModalPane>
   );
 }

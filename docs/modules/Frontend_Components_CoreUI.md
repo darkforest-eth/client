@@ -4,10 +4,13 @@
 
 ### Variables
 
+- [AlignCenterHorizontally](Frontend_Components_CoreUI.md#aligncenterhorizontally)
+- [AlignCenterVertically](Frontend_Components_CoreUI.md#aligncentervertically)
 - [BorderlessPane](Frontend_Components_CoreUI.md#borderlesspane)
 - [Bottom](Frontend_Components_CoreUI.md#bottom)
 - [CenterBackgroundSubtext](Frontend_Components_CoreUI.md#centerbackgroundsubtext)
 - [CenterRow](Frontend_Components_CoreUI.md#centerrow)
+- [CenteredText](Frontend_Components_CoreUI.md#centeredtext)
 - [Display](Frontend_Components_CoreUI.md#display)
 - [DontShrink](Frontend_Components_CoreUI.md#dontshrink)
 - [EmSpacer](Frontend_Components_CoreUI.md#emspacer)
@@ -18,10 +21,9 @@
 - [FullWidth](Frontend_Components_CoreUI.md#fullwidth)
 - [HeaderText](Frontend_Components_CoreUI.md#headertext)
 - [Hidden](Frontend_Components_CoreUI.md#hidden)
-- [HorizontalFlex](Frontend_Components_CoreUI.md#horizontalflex)
-- [HoverLink](Frontend_Components_CoreUI.md#hoverlink)
 - [HoverableTooltip](Frontend_Components_CoreUI.md#hoverabletooltip)
 - [InlineBlock](Frontend_Components_CoreUI.md#inlineblock)
+- [KeyboardBtn](Frontend_Components_CoreUI.md#keyboardbtn)
 - [MaxWidth](Frontend_Components_CoreUI.md#maxwidth)
 - [Padded](Frontend_Components_CoreUI.md#padded)
 - [PaddedRecommendedModalWidth](Frontend_Components_CoreUI.md#paddedrecommendedmodalwidth)
@@ -30,11 +32,11 @@
 - [Section](Frontend_Components_CoreUI.md#section)
 - [SectionHeader](Frontend_Components_CoreUI.md#sectionheader)
 - [Select](Frontend_Components_CoreUI.md#select)
+- [Separator](Frontend_Components_CoreUI.md#separator)
 - [Spacer](Frontend_Components_CoreUI.md#spacer)
 - [TextButton](Frontend_Components_CoreUI.md#textbutton)
 - [Truncate](Frontend_Components_CoreUI.md#truncate)
 - [Underline](Frontend_Components_CoreUI.md#underline)
-- [VerticalFlex](Frontend_Components_CoreUI.md#verticalflex)
 
 ### Functions
 
@@ -43,6 +45,20 @@
 - [VerticalSplit](Frontend_Components_CoreUI.md#verticalsplit)
 
 ## Variables
+
+### AlignCenterHorizontally
+
+• `Const` **AlignCenterHorizontally**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+
+Fills parent width, aligns children horizontally in the center.
+
+---
+
+### AlignCenterVertically
+
+• `Const` **AlignCenterVertically**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+
+---
 
 ### BorderlessPane
 
@@ -72,6 +88,12 @@ be displayed. Think of it as a placeholder.
 
 ---
 
+### CenteredText
+
+• `Const` **CenteredText**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+
+---
+
 ### Display
 
 • `Const` **Display**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
@@ -82,11 +104,15 @@ be displayed. Think of it as a placeholder.
 
 • `Const` **DontShrink**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
+Don't shrink in a flexbox.
+
 ---
 
 ### EmSpacer
 
 • `Const` **EmSpacer**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+
+Inline block rectangle, measured in ems, default 1em by 1em.
 
 ---
 
@@ -99,6 +125,8 @@ be displayed. Think of it as a placeholder.
 ### Expand
 
 • `Const` **Expand**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+
+Expands to fill space in a flexbox.
 
 ---
 
@@ -132,18 +160,6 @@ be displayed. Think of it as a placeholder.
 
 ---
 
-### HorizontalFlex
-
-• `Const` **HorizontalFlex**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
-
----
-
-### HoverLink
-
-• `Const` **HoverLink**: `StyledComponent`<`"a"`, `any`, `Object`, `never`\>
-
----
-
 ### HoverableTooltip
 
 • `Const` **HoverableTooltip**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
@@ -153,6 +169,12 @@ be displayed. Think of it as a placeholder.
 ### InlineBlock
 
 • `Const` **InlineBlock**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+
+---
+
+### KeyboardBtn
+
+• `Const` **KeyboardBtn**: `StyledComponent`<`"kbd"`, `any`, `Object`, `never`\>
 
 ---
 
@@ -210,6 +232,12 @@ way to do this.
 
 ---
 
+### Separator
+
+• `Const` **Separator**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+
+---
+
 ### Spacer
 
 • `Const` **Spacer**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
@@ -232,27 +260,23 @@ way to do this.
 
 • `Const` **Underline**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
----
-
-### VerticalFlex
-
-• `Const` **VerticalFlex**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
-
 ## Functions
 
 ### Link
 
 ▸ **Link**(`__namedParameters`): `Element`
 
+This is the link that all core ui in Dark Forest should use. Please!
+
 #### Parameters
 
-| Name                              | Type              |
-| :-------------------------------- | :---------------- |
-| `__namedParameters`               | `Object`          |
-| `__namedParameters.children`      | `React.ReactNode` |
-| `__namedParameters.color?`        | `string`          |
-| `__namedParameters.openInNewTab?` | `boolean`         |
-| `__namedParameters.to`            | `string`          |
+| Name                               | Type              |
+| :--------------------------------- | :---------------- |
+| `__namedParameters`                | `Object`          |
+| `__namedParameters.children`       | `React.ReactNode` |
+| `__namedParameters.color?`         | `string`          |
+| `__namedParameters.openInThisTab?` | `boolean`         |
+| `__namedParameters.to`             | `string`          |
 
 #### Returns
 

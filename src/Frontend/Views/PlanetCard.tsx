@@ -1,13 +1,15 @@
 import { Planet, PlanetType } from '@darkforest_eth/types';
 import React from 'react';
+import styled from 'styled-components';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { StatIdx } from '../../_types/global/GlobalTypes';
-import { EmSpacer, HorizontalFlex, InlineBlock, Padded } from '../Components/CoreUI';
+import { AlignCenterHorizontally, EmSpacer, InlineBlock } from '../Components/CoreUI';
 import {
   DefenseIcon,
   EnergyGrowthIcon,
   EnergyIcon,
+  RangeIcon,
   SilverGrowthIcon,
   SilverIcon,
   SpeedIcon,
@@ -20,20 +22,22 @@ import {
   PlanetLevel,
   PlanetRank,
   PlanetSilverLabel,
+  RangeText,
   SilverGrowthText,
   SpeedText,
 } from '../Components/Labels/PlanetLabels';
-import { ReadMore } from '../Components/ReadMore';
+import { Subber } from '../Components/Text';
 import { TextPreview } from '../Components/TextPreview';
 import { TooltipName } from '../Game/WindowManager';
 import { PlanetIcons } from '../Renderers/PlanetscapeRenderer/PlanetIcons';
+import dfstyles, { snips } from '../Styles/dfstyles';
 import { useActiveArtifact, useUIManager } from '../Utils/AppHooks';
 import {
   DestroyedMarker,
-  PCStatIcon,
   PlanetActiveArtifact,
   RowTip,
-  StatContainer,
+  SpreadApart,
+  TimesTwo,
   TitleBar,
 } from './PlanetCardComponents';
 
@@ -48,7 +52,7 @@ export function PlanetCardTitle({
   if (small) return <>{ProcgenUtils.getPlanetName(planet.value)}</>;
 
   return (
-    <HorizontalFlex style={{ width: 'initial', display: 'inline-flex' }}>
+    <AlignCenterHorizontally style={{ width: 'initial', display: 'inline-flex' }}>
       {planet.value.destroyed && (
         <>
           <DestroyedMarker />
@@ -58,9 +62,18 @@ export function PlanetCardTitle({
       {ProcgenUtils.getPlanetName(planet.value)}
       <EmSpacer width={0.5} />
       <PlanetIcons planet={planet.value} />
-    </HorizontalFlex>
+    </AlignCenterHorizontally>
   );
 }
+
+const StatsContainer = styled.div`
+  ${snips.bigPadding}
+  ${snips.roundedBordersWithEdge}
+  border-color: ${dfstyles.colors.borderDarker};
+  background-color: ${dfstyles.colors.backgroundlight};
+  margin-top: 8px;
+  margin-bottom: 8px;
+`;
 
 /** Preview basic planet information - used in `PlanetContextPane` and `HoverPlanetPane` */
 export function PlanetCard({
@@ -75,112 +88,144 @@ export function PlanetCard({
   const planet = p.value;
 
   return (
-    <div>
+    <>
       {standalone && (
         <TitleBar>
           <PlanetCardTitle planet={p} />
         </TitleBar>
       )}
-
-      <Padded bottom={'0'}>
-        <HorizontalFlex style={{ justifyContent: 'space-between' }}>
+      <div style={{ padding: standalone ? '8px' : undefined }}>
+        <AlignCenterHorizontally style={{ justifyContent: 'space-between' }}>
           <InlineBlock>
             <PlanetLevel planet={planet} />
             <EmSpacer width={0.5} />
             <PlanetRank planet={planet} />
-            <EmSpacer width={1} />
-            <PlanetBiomeTypeLabelAnim planet={planet} />
-          </InlineBlock>
-        </HorizontalFlex>
-      </Padded>
-
-      <ReadMore height={(!standalone && '5em') || undefined}>
-        <StatContainer wide>
-          <div>
-            <HorizontalFlex>
-              <EnergyIcon />
-              <EmSpacer width={0.5} />
-              Energy
-            </HorizontalFlex>
-          </div>
-
-          <PlanetEnergyLabel planet={planet} />
-        </StatContainer>
-
-        <StatContainer wide>
-          <div>
-            <SilverIcon />
             <EmSpacer width={0.5} />
-            Silver
-          </div>
-          <PlanetSilverLabel planet={planet} />
-        </StatContainer>
+            <PlanetBiomeTypeLabelAnim planet={planet} />
+            <EmSpacer width={0.5} />
+          </InlineBlock>
+        </AlignCenterHorizontally>
 
-        <StatContainer wide>
-          <div>
-            <HorizontalFlex>
-              <PCStatIcon planet={planet} stat={StatIdx.EnergyGro}>
-                <EnergyGrowthIcon />
-              </PCStatIcon>
-              <EmSpacer width={0.5} />
-              Energy Growth
-            </HorizontalFlex>
-          </div>
-          <EnergyGrowthText planet={planet} />
-        </StatContainer>
-
-        {(p.value?.planetType === PlanetType.SILVER_MINE && (
-          <StatContainer wide>
-            <div>
-              <HorizontalFlex>
-                <RowTip name={TooltipName.SilverGrowth}>
-                  <SilverGrowthIcon />
-                </RowTip>
+        <StatsContainer>
+          <StatRow>
+            <RowTip name={TooltipName.Energy}>
+              <AlignCenterHorizontally>
+                <EnergyIcon />
                 <EmSpacer width={0.5} />
-                Silver Growth
-              </HorizontalFlex>
-            </div>
-            <SilverGrowthText planet={planet} />
-          </StatContainer>
-        )) || <></>}
+                <Subber>energy</Subber>
+                <EmSpacer width={0.5} />
+                <PlanetEnergyLabel planet={planet} />
+                {planet?.bonus && planet.bonus[StatIdx.EnergyCap] && <TimesTwo />}
+              </AlignCenterHorizontally>
+            </RowTip>
+            <EmSpacer width={1} />
 
-        <StatContainer wide>
-          <div>
-            <HorizontalFlex>
-              <PCStatIcon planet={planet} stat={StatIdx.Defense}>
+            <RowTip name={TooltipName.EnergyGrowth}>
+              <AlignCenterHorizontally>
+                <EnergyGrowthIcon />
+                <EmSpacer width={0.5} />
+                <Subber>growth</Subber>
+                <EmSpacer width={0.5} />
+                <EnergyGrowthText planet={planet} />
+                {planet?.bonus && planet.bonus[StatIdx.EnergyGro] && <TimesTwo />}
+              </AlignCenterHorizontally>
+            </RowTip>
+          </StatRow>
+
+          <StatRow>
+            <RowTip name={TooltipName.Silver}>
+              <AlignCenterHorizontally>
+                <SilverIcon />
+                <EmSpacer width={0.5} />
+                <Subber>silver</Subber>
+                <EmSpacer width={0.5} />
+                <PlanetSilverLabel planet={planet} />
+              </AlignCenterHorizontally>
+            </RowTip>
+            {(p.value?.planetType === PlanetType.SILVER_MINE && (
+              <>
+                <EmSpacer width={1} />
+                <RowTip name={TooltipName.SilverGrowth}>
+                  <AlignCenterHorizontally>
+                    <SilverGrowthIcon />
+                    <EmSpacer width={0.5} />
+                    <Subber>growth</Subber>
+                    <EmSpacer width={0.5} />
+                    <SilverGrowthText planet={p.value} />
+                  </AlignCenterHorizontally>
+                </RowTip>
+              </>
+            )) || <></>}
+          </StatRow>
+
+          <StatRow>
+            <RowTip name={TooltipName.Defense}>
+              <AlignCenterHorizontally>
                 <DefenseIcon />
-              </PCStatIcon>
-              <EmSpacer width={0.5} />
-              Defense
-            </HorizontalFlex>
-          </div>
-          <DefenseText planet={planet} />
-        </StatContainer>
+                <EmSpacer width={0.5} />
+                <Subber>defense</Subber>
+                <EmSpacer width={0.5} />
+                <DefenseText planet={planet} />
+                {planet?.bonus && planet.bonus[StatIdx.Defense] && <TimesTwo />}
+              </AlignCenterHorizontally>
+            </RowTip>
+          </StatRow>
 
-        <StatContainer wide>
-          <div>
-            <HorizontalFlex>
-              <PCStatIcon planet={planet} stat={StatIdx.Speed}>
+          <StatRow>
+            <RowTip name={TooltipName.Speed}>
+              <AlignCenterHorizontally>
                 <SpeedIcon />
-              </PCStatIcon>
-              <EmSpacer width={0.5} />
-              Speed
-            </HorizontalFlex>
-          </div>
-          <SpeedText planet={planet} />
-        </StatContainer>
+                <EmSpacer width={0.5} />
+                <Subber>speed</Subber>
+                <EmSpacer width={0.5} />
+                <SpeedText planet={planet} />
+                {planet?.bonus && planet.bonus[StatIdx.Speed] && <TimesTwo />}
+              </AlignCenterHorizontally>
+            </RowTip>
+          </StatRow>
 
-        <StatContainer wide>
-          <div>Owner Address</div>
-          <TextPreview text={planet?.owner} focusedWidth={'150px'} unFocusedWidth={'150px'} />{' '}
-        </StatContainer>
+          <StatRow>
+            <RowTip name={TooltipName.Range}>
+              <AlignCenterHorizontally>
+                <RangeIcon />
+                <EmSpacer width={0.5} />
+                <Subber>range</Subber>
+                <EmSpacer width={0.5} />
+                <RangeText planet={planet} />
+                {planet?.bonus && planet.bonus[StatIdx.Range] && <TimesTwo />}
+              </AlignCenterHorizontally>
+            </RowTip>
+          </StatRow>
+        </StatsContainer>
 
-        <StatContainer wide>
-          <div>Planet Id</div>
-          <TextPreview text={planet?.locationId} focusedWidth={'150px'} unFocusedWidth={'150px'} />
-        </StatContainer>
-      </ReadMore>
-      {active && <PlanetActiveArtifact artifact={active} planet={planet} />}
-    </div>
+        <SpreadApart>
+          <Subber>owner address</Subber>
+          <TextPreview
+            style={{ color: dfstyles.colors.subbertext }}
+            text={planet?.owner}
+            focusedWidth={'150px'}
+            unFocusedWidth={'150px'}
+          />{' '}
+        </SpreadApart>
+
+        <SpreadApart>
+          <Subber>planet id</Subber>
+          <TextPreview
+            style={{ color: dfstyles.colors.subbertext }}
+            text={planet?.locationId}
+            focusedWidth={'150px'}
+            unFocusedWidth={'150px'}
+          />
+        </SpreadApart>
+        {active && <PlanetActiveArtifact artifact={active} planet={planet} />}
+      </div>
+    </>
   );
 }
+
+const StatRow = styled(AlignCenterHorizontally)`
+  ${snips.roundedBorders}
+  display: inline-block;
+  box-sizing: border-box;
+  width: 100%;
+`;

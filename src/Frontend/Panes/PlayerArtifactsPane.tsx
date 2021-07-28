@@ -1,3 +1,4 @@
+import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
 import { Artifact, ArtifactTypeNames } from '@darkforest_eth/types';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
@@ -93,7 +94,7 @@ function PlayerArtifactsPaneContent({ modal }: { modal: ModalHandle }) {
 
   if (myArtifacts.length === 0) {
     return (
-      <CenterBackgroundSubtext width='100%' height='100px'>
+      <CenterBackgroundSubtext width={RECOMMENDED_MODAL_WIDTH} height='100px'>
         You Don't Have <br /> Any Artifacts
       </CenterBackgroundSubtext>
     );

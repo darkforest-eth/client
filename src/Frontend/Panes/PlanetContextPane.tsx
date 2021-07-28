@@ -2,7 +2,7 @@ import { Planet, PlanetType } from '@darkforest_eth/types';
 import React, { useCallback, useMemo } from 'react';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
-import { Padded, RecommendedModalWidth, Spacer, VerticalSplit } from '../Components/CoreUI';
+import { Padded, PaddedRecommendedModalWidth, Spacer, VerticalSplit } from '../Components/CoreUI';
 import {
   OpenBroadcastPaneButton,
   OpenHatPaneButton,
@@ -38,7 +38,7 @@ function PlanetContextPaneContent({
   const isPost = planet.value?.planetType === PlanetType.TRADING_POST;
 
   return (
-    <RecommendedModalWidth>
+    <PaddedRecommendedModalWidth>
       <PlanetCard planetWrapper={planet} />
       {owned && (
         <>
@@ -55,25 +55,21 @@ function PlanetContextPaneContent({
       {owned && (
         <VerticalSplit>
           {[
-            <Padded right={'4px'} key={'left'}>
-              <OpenHatPaneButton modal={modal} planetId={planet.value?.locationId} />
+            <Padded right='4px' left='0' key={'left'}>
+              <OpenUpgradeDetailsPaneButton modal={modal} planetId={planet.value?.locationId} />
               <Spacer height={8} />
               <OpenBroadcastPaneButton modal={modal} planetId={planet.value?.locationId} />
             </Padded>,
-            <Padded left={'4px'} key={'right'}>
-              <OpenUpgradeDetailsPaneButton modal={modal} planetId={planet.value?.locationId} />
-              <Spacer height={8} />
+            <Padded right='0' left='4px' key={'right'}>
               <OpenManagePlanetArtifactsButton modal={modal} planetId={planet.value?.locationId} />
+              <Spacer height={8} />
+              <OpenHatPaneButton modal={modal} planetId={planet.value?.locationId} />
             </Padded>,
           ]}
         </VerticalSplit>
       )}
-      {owned && notifs.length > 0 && (
-        <Padded top={'0px'}>
-          <PlanetNotifications planet={planet} notifs={notifs} />
-        </Padded>
-      )}
-    </RecommendedModalWidth>
+      {owned && notifs.length > 0 && <PlanetNotifications planet={planet} notifs={notifs} />}
+    </PaddedRecommendedModalWidth>
   );
 }
 

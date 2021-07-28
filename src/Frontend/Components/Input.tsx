@@ -34,13 +34,13 @@ export const DFInput = styled.input`
     background: ${dfstyles.colors.background};
     color: ${dfstyles.colors.subtext};
     border-radius: 4px;
-    border: 1px solid ${dfstyles.colors.border};
+    border: 1px solid ${dfstyles.colors.borderDark};
     ${wide ? `width: 100%;` : `width: 21em;`}
     padding: 2px 12px;
 
     &:hover,
     &:focus {
-      border: 1px solid ${dfstyles.colors.text};
+      border: 1px solid ${dfstyles.colors.border};
       background: ${dfstyles.colors.backgroundlight};
       color: ${dfstyles.colors.text};
     }

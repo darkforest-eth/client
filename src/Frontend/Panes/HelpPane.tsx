@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { EmSpacer, Link, Section, SectionHeader } from '../Components/CoreUI';
+import { EmSpacer, Link, Padded, Section, SectionHeader } from '../Components/CoreUI';
 import { ScoreLabel } from '../Components/Labels/KeywordLabels';
 import { LegendaryLabel } from '../Components/Labels/LegendaryLabel';
 import { MythicLabel } from '../Components/Labels/MythicLabel';
@@ -8,7 +8,7 @@ import { White } from '../Components/Text';
 import { useUIManager } from '../Utils/AppHooks';
 import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 
-const HelpContent = styled.div`
+const HelpContent = styled(Padded)`
   width: 500px;
   height: 500px;
   max-height: 500px;
@@ -31,9 +31,7 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
 
         <Section>
           <EmSpacer height={1} />
-          <Link to='https://blog.zkga.me' openInNewTab={true}>
-            Official Info and Announcements
-          </Link>
+          <Link to='https://blog.zkga.me'>Official Info and Announcements</Link>
         </Section>
 
         <Section>

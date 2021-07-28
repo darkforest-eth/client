@@ -1,3 +1,4 @@
+import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
 import { SpaceType } from '@darkforest_eth/types';
 import color from 'color';
 import { css } from 'styled-components';
@@ -22,7 +23,8 @@ const backgroundlight = color(background).lighten(0.5).hex();
 const backgroundlighter = color(backgroundlight).lighten(0.3).hex();
 
 const border = '#777';
-const darkBorder = color(border).darken(0.2).hex();
+const borderDark = color(border).darken(0.2).hex();
+const borderDarker = color(borderDark).darken(0.2).hex();
 
 const blueBackground = '#0a0a23';
 
@@ -48,7 +50,8 @@ const dfstyles = {
     dfblue,
 
     border,
-    darkBorder,
+    borderDark,
+    borderDarker,
 
     dfgreen,
     dfgreendark,
@@ -58,6 +61,7 @@ const dfstyles = {
     dfpurple,
 
     artifactBackground: 'rgb(21, 17, 71)',
+
     icons: {
       twitter: '#1DA1F2',
       github: '#8e65db',
@@ -119,6 +123,28 @@ const dfstyles = {
       user-select: none;
     `,
   },
+};
+
+export const snips = {
+  bigPadding: css`
+    padding: 2px 12px;
+  `,
+  defaultModalWidth: css`
+    width: ${RECOMMENDED_MODAL_WIDTH};
+    max-width: ${RECOMMENDED_MODAL_WIDTH};
+  `,
+  defaultBackground: `background: ${dfstyles.colors.background};`,
+  roundedBorders: `border-radius:${dfstyles.borderRadius};`,
+  roundedBordersWithEdge: css`
+    border-radius: 3px;
+    border: 1px solid ${dfstyles.colors.borderDark};
+  `,
+  absoluteTopLeft: css`
+    position: absolute;
+    top: 0;
+    left: 0;
+  `,
+  pane: ``,
 };
 
 export default dfstyles;

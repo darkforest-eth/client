@@ -9,6 +9,15 @@ export const InlineBlock = styled.div`
   display: inline-block;
 `;
 
+export const Separator = styled.div`
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 2px;
+  padding-right: 2px;
+  height: 1px;
+  background-color: ${dfstyles.colors.borderDark};
+`;
+
 export const FloatRight = styled.div`
   float: right;
 `;
@@ -142,17 +151,17 @@ export const FullHeight = styled.div`
   height: 100%;
 `;
 
-export const HorizontalFlex = styled.div`
-  ${({ justifyContent }: { justifyContent?: string }) => css`
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: ${justifyContent || 'center'};
-    align-items: center;
-  `}
+/**
+ * Fills parent width, aligns children horizontally in the center.
+ */
+export const AlignCenterHorizontally = styled.div`
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
 
-export const VerticalFlex = styled.div`
+export const AlignCenterVertically = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -160,52 +169,64 @@ export const VerticalFlex = styled.div`
   align-items: center;
 `;
 
+/**
+ * Expands to fill space in a flexbox.
+ */
 export const Expand = styled.div`
   display: inline-box;
   flex-grow: 1;
 `;
 
+/**
+ * Don't shrink in a flexbox.
+ */
 export const DontShrink = styled.div`
   display: inline-box;
   flex-shrink: 0;
 `;
 
+/**
+ * This is the link that all core ui in Dark Forest should use. Please!
+ */
 export function Link({
   to,
   color,
-  openInNewTab,
+  openInThisTab,
   children,
 }: {
   to: string;
   color?: string;
-  openInNewTab?: boolean;
+  openInThisTab?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <HoverLink href={to} color={color} target={openInNewTab ? '_blank' : undefined}>
+    <LinkImpl href={to} color={color} target={openInThisTab ? undefined : '_blank'}>
       {children}
-    </HoverLink>
+    </LinkImpl>
   );
 }
 
-export const HoverLink = styled.a`
+const LinkImpl = styled.a`
   ${({ color }: { color?: string }) => css`
     text-decoration: underline;
-    color: ${color || dfstyles.colors.dfpurple};
+    color: ${color || dfstyles.colors.dfblue};
   }
 
     &:hover {
-      color: ${colors(color || dfstyles.colors.dfpurple)
+      color: ${colors(color || dfstyles.colors.dfblue)
         .lighten(0.3)
         .hex()};
     }
   `}
 `;
 
+/**
+ * Inline block rectangle, measured in ems, default 1em by 1em.
+ */
 export const EmSpacer = styled.div`
   ${({ width, height }: { width?: number; height?: number }) => css`
-    width: 1px;
-    height: 1px;
+    width: ${width === undefined ? '1em' : width};
+    height: ${height === undefined ? '1em' : height};
     ${width && !height ? 'display: inline-block;' : ''}
     ${width ? `width: ${width}em;` : ''}
     ${height ? `height: ${height}em;min-height:${height}em;` : ''}
@@ -372,4 +393,52 @@ export const CenterBackgroundSubtext = styled.div`
     user-select: none;
     text-align: center;
   `}
+`;
+
+// Styling from https://www.npmjs.com/package/keyboard-css
+export const KeyboardBtn = styled.kbd`
+  ${({ active }: { active?: boolean }) => css`
+    font-size: 0.7rem;
+    line-height: 1.5;
+    margin: 0.25rem 0.25rem 0.375rem;
+    padding: 0.1rem 0.3rem;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border: 1px solid #4b545c;
+    border-radius: 0.25rem;
+    display: inline-block;
+    font-weight: 400;
+    text-align: left;
+    transform: ${active ? 'translate3d(0, 2px, 0)' : 'translateZ(5px)'};
+    transform-style: preserve-3d;
+    transition: all 0.25s cubic-bezier(0.2, 1, 0.2, 1);
+    box-shadow: ${active
+      ? '0 0 1px 1px #7a8793'
+      : '0 0 #56606a, 0 0 #56606a, 0 1px #56606a, 0 2px #56606a, 2px 1px 4px #adb5bd, 0 -1px 1px #adb5bd'};
+    background-color: ${active ? dfstyles.colors.text : '#343a40'};
+    color: ${active ? dfstyles.colors.background : '#f8f9fa'};
+    &:after {
+      border-radius: 0.375rem;
+      border-width: 0.0625rem;
+      bottom: -6px;
+      left: -0.25rem;
+      right: -0.25rem;
+      top: -2px;
+      transform: ${active ? 'translate3d(0, -2px, 0)' : 'translateZ(-2px)'};
+      border-style: solid;
+      box-sizing: content-box;
+      content: '';
+      display: block;
+      position: absolute;
+      transform-style: preserve-3d;
+      transition: all 0.25s cubic-bezier(0.2, 1, 0.2, 1);
+      border-color: #626d78;
+      background: ${active ? 'transparent' : dfstyles.colors.background};
+    }
+  `}
+`;
+
+export const CenteredText = styled.span`
+  margin: auto;
+  text-align: center;
 `;

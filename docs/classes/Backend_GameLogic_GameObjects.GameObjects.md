@@ -69,7 +69,9 @@ Representation of the objects which exist in the world.
 - [getPlanetWithCoords](Backend_GameLogic_GameObjects.GameObjects.md#getplanetwithcoords)
 - [getPlanetWithId](Backend_GameLogic_GameObjects.GameObjects.md#getplanetwithid)
 - [getPlanetWithLocation](Backend_GameLogic_GameObjects.GameObjects.md#getplanetwithlocation)
+- [getPlanetsInWorldCircle](Backend_GameLogic_GameObjects.GameObjects.md#getplanetsinworldcircle)
 - [getPlanetsInWorldRectangle](Backend_GameLogic_GameObjects.GameObjects.md#getplanetsinworldrectangle)
+- [getPlanetsWithIds](Backend_GameLogic_GameObjects.GameObjects.md#getplanetswithids)
 - [getRevealedLocations](Backend_GameLogic_GameObjects.GameObjects.md#getrevealedlocations)
 - [getSilverCurveAtPercent](Backend_GameLogic_GameObjects.GameObjects.md#getsilvercurveatpercent)
 - [getUnconfirmedBuyGPTCredits](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedbuygptcredits)
@@ -772,7 +774,7 @@ time may be in the past
 
 ### getPlanetWithCoords
 
-▸ **getPlanetWithCoords**(`coords`): `undefined` \| `Planet`
+▸ **getPlanetWithCoords**(`coords`): `undefined` \| `LocatablePlanet`
 
 #### Parameters
 
@@ -782,7 +784,7 @@ time may be in the past
 
 #### Returns
 
-`undefined` \| `Planet`
+`undefined` \| `LocatablePlanet`
 
 ---
 
@@ -819,6 +821,23 @@ time may be in the past
 
 ---
 
+### getPlanetsInWorldCircle
+
+▸ **getPlanetsInWorldCircle**(`coords`, `radius`): `LocatablePlanet`[]
+
+#### Parameters
+
+| Name     | Type          |
+| :------- | :------------ |
+| `coords` | `WorldCoords` |
+| `radius` | `number`      |
+
+#### Returns
+
+`LocatablePlanet`[]
+
+---
+
 ### getPlanetsInWorldRectangle
 
 ▸ **getPlanetsInWorldRectangle**(`worldX`, `worldY`, `worldWidth`, `worldHeight`, `levels`, `planetLevelToRadii`, `updateIfStale?`): `LocatablePlanet`[]
@@ -842,6 +861,23 @@ left coordinate, width, and height) in the world and of a level that was passed 
 #### Returns
 
 `LocatablePlanet`[]
+
+---
+
+### getPlanetsWithIds
+
+▸ **getPlanetsWithIds**(`locationIds`, `updateIfStale?`): `Planet`[]
+
+#### Parameters
+
+| Name            | Type           | Default value |
+| :-------------- | :------------- | :------------ |
+| `locationIds`   | `LocationId`[] | `undefined`   |
+| `updateIfStale` | `boolean`      | `true`        |
+
+#### Returns
+
+`Planet`[]
 
 ---
 

@@ -115,7 +115,7 @@ import {
   isUnconfirmedWithdrawSilver,
 } from '../Utils/TypeAssertions';
 import { getRandomActionId, hexifyBigIntNestedArray } from '../Utils/Utils';
-import { getEmojiMessage } from './ArrivalUtils';
+import { getEmojiMessage, getRange } from './ArrivalUtils';
 import { isActivated } from './ArtifactUtils';
 import { ContractsAPI, makeContractsAPI } from './ContractsAPI';
 import { GameObjects } from './GameObjects';
@@ -365,6 +365,8 @@ class GameManager extends EventEmitter {
       totalTransactions: 0,
       transactionsInQueue: 0,
       totalChunks: 0,
+      width: 0,
+      height: 0,
     };
 
     this.terminal = terminal;
@@ -1213,7 +1215,7 @@ class GameManager extends EventEmitter {
    * location or if no planet exists at location. If the planet needs to be updated (because
    * some time has passed since we last updated the planet), then updates that planet first.
    */
-  getPlanetWithCoords(coords: WorldCoords): Planet | undefined {
+  getPlanetWithCoords(coords: WorldCoords): LocatablePlanet | undefined {
     return this.entityStore.getPlanetWithCoords(coords);
   }
 
@@ -1236,6 +1238,14 @@ class GameManager extends EventEmitter {
 
   getStalePlanetWithId(planetId: LocationId): Planet | undefined {
     return this.entityStore.getPlanetWithId(planetId, false);
+  }
+
+  /**
+   * Gets all the planets that this planet could reach if it sent 100% of its energy.
+   */
+  getPlanetsWithinRange(planet: LocatablePlanet) {
+    const maxRange = getRange(planet, 100);
+    return this.getGameObjects().getPlanetsInWorldCircle(planet.location.coords, maxRange);
   }
 
   /**

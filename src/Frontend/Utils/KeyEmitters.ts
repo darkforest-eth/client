@@ -16,7 +16,10 @@ export const keyDown$ = monomitter<Wrapper<string>>();
  */
 function shouldIgnoreShortcutKeypress(e: KeyboardEvent): boolean {
   const targetElement = e.target as HTMLElement;
-  return ['INPUT', 'TEXTAREA'].includes(targetElement.tagName);
+  if (targetElement.tagName === 'INPUT')
+    return targetElement.attributes.getNamedItem('type')?.value !== 'range';
+
+  return targetElement.tagName === 'TEXTAREA';
 }
 
 document.addEventListener('keydown', (e: KeyboardEvent) => {

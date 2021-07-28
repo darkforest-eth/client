@@ -207,7 +207,7 @@ export function GameLandingPage() {
       terminal.current?.println(`Select an option:`, TerminalTextStyle.White);
 
       const userInput = await terminal.current?.getInput();
-      if (userInput === 'a') {
+      if (userInput === 'a' && accounts.length > 0) {
         setStep(TerminalPromptStep.DISPLAY_ACCOUNTS);
       } else if (userInput === 'n') {
         setStep(TerminalPromptStep.GENERATE_ACCOUNT);

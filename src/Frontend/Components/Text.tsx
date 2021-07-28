@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { artifactName } from '../../Backend/Procedural/ArtifactProcgen';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
-import { Chunk } from '../../_types/global/GlobalTypes';
+import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import Viewport from '../Game/Viewport';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
@@ -180,7 +180,9 @@ export function CenterPlanetLink({
     <a>
       <u
         onClick={() => {
-          uiManager.centerPlanet(planet);
+          if (isLocatable(planet)) {
+            uiManager.centerPlanet(planet);
+          }
         }}
       >
         {children}

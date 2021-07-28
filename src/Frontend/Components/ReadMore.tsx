@@ -36,7 +36,7 @@ const active = css`
 const ReadMoreContainer = styled.div`
   ${({ height, collapsed }: { height: string; collapsed?: boolean }) => css`
     cursor: pointer;
-    border: 1px solid ${dfstyles.colors.darkBorder};
+    border: 1px solid ${dfstyles.colors.borderDark};
     padding: 4px;
     margin: 8px;
     border-radius: 3px;

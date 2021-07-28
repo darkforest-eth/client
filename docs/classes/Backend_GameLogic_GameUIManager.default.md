@@ -285,7 +285,7 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### mouseDownOverPlanet
 
-• `Private` **mouseDownOverPlanet**: `undefined` \| `Planet`
+• `Private` **mouseDownOverPlanet**: `undefined` \| `LocatablePlanet`
 
 ---
 
@@ -297,7 +297,7 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### mouseHoveringOverPlanet
 
-• `Private` **mouseHoveringOverPlanet**: `undefined` \| `Planet`
+• `Private` **mouseHoveringOverPlanet**: `undefined` \| `LocatablePlanet`
 
 ---
 
@@ -369,7 +369,7 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### selectedPlanet
 
-• `Private` **selectedPlanet**: `undefined` \| `Planet`
+• `Private` **selectedPlanet**: `undefined` \| `LocatablePlanet`
 
 ---
 
@@ -393,7 +393,7 @@ indicates whether or not the player is currently selecting a target planet.
 
 ### sendingPlanet
 
-• `Private` **sendingPlanet**: `undefined` \| `Planet`
+• `Private` **sendingPlanet**: `undefined` \| `LocatablePlanet`
 
 ---
 
@@ -555,9 +555,9 @@ indicates whether or not the player is currently selecting a target planet.
 
 #### Parameters
 
-| Name     | Type                    |
-| :------- | :---------------------- |
-| `planet` | `undefined` \| `Planet` |
+| Name     | Type                             |
+| :------- | :------------------------------- |
+| `planet` | `undefined` \| `LocatablePlanet` |
 
 #### Returns
 
@@ -1246,11 +1246,11 @@ state in some way
 
 ### getMouseDownPlanet
 
-▸ **getMouseDownPlanet**(): `undefined` \| `Planet`
+▸ **getMouseDownPlanet**(): `undefined` \| `LocatablePlanet`
 
 #### Returns
 
-`undefined` \| `Planet`
+`undefined` \| `LocatablePlanet`
 
 ---
 
@@ -1502,11 +1502,11 @@ state in some way
 
 ### getSelectedPlanet
 
-▸ **getSelectedPlanet**(): `undefined` \| `Planet`
+▸ **getSelectedPlanet**(): `undefined` \| `LocatablePlanet`
 
 #### Returns
 
-`undefined` \| `Planet`
+`undefined` \| `LocatablePlanet`
 
 ---
 
@@ -1964,9 +1964,9 @@ drill fields like this anymore.
 
 #### Parameters
 
-| Name     | Type                    |
-| :------- | :---------------------- |
-| `planet` | `undefined` \| `Planet` |
+| Name     | Type                             |
+| :------- | :------------------------------- |
+| `planet` | `undefined` \| `LocatablePlanet` |
 
 #### Returns
 
@@ -2079,9 +2079,9 @@ drill fields like this anymore.
 
 #### Parameters
 
-| Name     | Type                    |
-| :------- | :---------------------- |
-| `planet` | `undefined` \| `Planet` |
+| Name     | Type                             |
+| :------- | :------------------------------- |
+| `planet` | `undefined` \| `LocatablePlanet` |
 
 #### Returns
 
@@ -2127,9 +2127,9 @@ drill fields like this anymore.
 
 #### Parameters
 
-| Name     | Type                    |
-| :------- | :---------------------- |
-| `planet` | `undefined` \| `Planet` |
+| Name     | Type                             |
+| :------- | :------------------------------- |
+| `planet` | `undefined` \| `LocatablePlanet` |
 
 #### Returns
 

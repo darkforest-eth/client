@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { PluginId, SerializedPlugin } from '../../Backend/Plugins/SerializedPlugin';
 import { Btn } from '../Components/Btn';
-import { MaxWidth, Spacer } from '../Components/CoreUI';
+import { PaddedRecommendedModalWidth, Spacer } from '../Components/CoreUI';
 import { RemoteModal } from '../Components/RemoteModal';
 import dfstyles from '../Styles/dfstyles';
 import { useEmitterValue } from '../Utils/EmitterHooks';
@@ -172,13 +172,13 @@ export function PluginLibraryPane({
   }
 
   return (
-    <>
+    <PaddedRecommendedModalWidth>
       <RemoteModal
         container={modalsContainer}
         title={'WARNING'}
         hook={[warningIsOpen, setWarningIsOpen]}
       >
-        <MaxWidth width='400px'>
+        <PaddedRecommendedModalWidth>
           <p>
             Dark Forest supports plugins, which allow you to write JavaScript code that can interact
             with the game. Plugins are powerful and can enhance your gameplay experience, but they
@@ -198,7 +198,7 @@ export function PluginLibraryPane({
           >
             Click {clicksUntilHasPlugins} times for Plugins
           </Btn>
-        </MaxWidth>
+        </PaddedRecommendedModalWidth>
       </RemoteModal>
       <RemoteModal
         container={modalsContainer}
@@ -219,12 +219,13 @@ export function PluginLibraryPane({
         title='Plugin Library'
         name={ModalName.Plugins}
         helpContent={HelpContent}
-        width='350px'
       >
-        {renderPluginsList()}
-        <Spacer height={8} />
-        <Btn onClick={addPluginClicked}>Add Plugin</Btn>
+        <PaddedRecommendedModalWidth>
+          {renderPluginsList()}
+          <Spacer height={8} />
+          <Btn onClick={addPluginClicked}>Add Plugin</Btn>
+        </PaddedRecommendedModalWidth>
       </ModalPane>
-    </>
+    </PaddedRecommendedModalWidth>
   );
 }

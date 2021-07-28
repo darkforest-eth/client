@@ -11,14 +11,15 @@ import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { ArtifactImage } from '../Components/ArtifactImage';
 import { Btn } from '../Components/Btn';
-import { FullWidth, Spacer } from '../Components/CoreUI';
+import { CenteredText, FullWidth, KeyboardBtn, Spacer } from '../Components/CoreUI';
 import { EnergyIcon, SilverIcon } from '../Components/Icons';
 import { LongDash, Sub } from '../Components/Text';
 import WindowManager, { CursorState } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
 import { useControlDown, usePlanetInactiveArtifacts, useUIManager } from '../Utils/AppHooks';
 import { useEmitterSubscribe, useEmitterValue } from '../Utils/EmitterHooks';
-import { escapeDown$, keyUp$ } from '../Utils/KeyEmitters';
+import { escapeDown$, keyUp$, useIsDown } from '../Utils/KeyEmitters';
+import { TOGGLE_SEND } from '../Utils/ShortcutConstants';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 
 const DEFAULT_ENERGY_PERCENT = 50;
@@ -287,6 +288,8 @@ function SendRow({
   remove: () => void;
   sending: boolean;
 }) {
+  const isDown = useIsDown(TOGGLE_SEND);
+
   return (
     <>
       {(artifact && (
@@ -296,9 +299,10 @@ function SendRow({
           <Remove onClick={remove}>remove</Remove>
         </First>
       )) || <></>}
-      <FullWidth padding='1px 8px'>
+      <FullWidth>
         <Btn wide onClick={doSend} forceActive={sending}>
-          (S)end
+          <CenteredText>Send</CenteredText>
+          <KeyboardBtn active={isDown}>{TOGGLE_SEND}</KeyboardBtn>
         </Btn>
       </FullWidth>
     </>
@@ -392,7 +396,7 @@ export function SendResources({
     } else if (keyUp.value === '=') {
       setPercent(Math.min(currentPercent + 1, 100));
       return;
-    } else if (keyUp.value === 's') {
+    } else if (keyUp.value === TOGGLE_SEND) {
       doSend();
       return;
     }

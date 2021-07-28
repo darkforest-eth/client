@@ -21,8 +21,8 @@ const BtnElement = styled.span`
     user-select: none;
     display: inline-flex;
     border-radius: 3px;
-    padding: 0 0.3em;
-    border: ${noBorder ? 0 : 1}px solid ${borderColor || color || dfstyles.colors.border};
+    padding: 0.15em;
+    border: ${noBorder ? 0 : 1}px solid ${borderColor || color || dfstyles.colors.borderDark};
     justify-content: center;
     align-items: center;
     cursor: pointer;
@@ -35,7 +35,7 @@ const BtnElement = styled.span`
     &:hover {
       ${!disabled &&
       css`
-        border: ${noBorder ? 0 : 1}px solid ${borderColor || color || dfstyles.colors.text};
+        border: ${noBorder ? 0 : 1}px solid ${borderColor || color || dfstyles.colors.border};
         color: ${dfstyles.colors.background};
         background: ${color || dfstyles.colors.text};
       `}
@@ -55,7 +55,7 @@ const BtnElement = styled.span`
 
     ${forceActive &&
     css`
-      border: ${noBorder ? 0 : 1}px solid ${borderColor || color || dfstyles.colors.text};
+      border: ${noBorder ? 0 : 1}px solid ${borderColor || color || dfstyles.colors.border};
       color: ${dfstyles.colors.background};
       background: ${color || dfstyles.colors.text};
     `}

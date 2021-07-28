@@ -13,6 +13,7 @@
 - [animationManager](Frontend_Game_Viewport.default.md#animationmanager)
 - [canvas](Frontend_Game_Viewport.default.md#canvas)
 - [centerWorldCoords](Frontend_Game_Viewport.default.md#centerworldcoords)
+- [diagnosticUpdater](Frontend_Game_Viewport.default.md#diagnosticupdater)
 - [frameRequestId](Frontend_Game_Viewport.default.md#framerequestid)
 - [gameUIManager](Frontend_Game_Viewport.default.md#gameuimanager)
 - [heightInWorldUnits](Frontend_Game_Viewport.default.md#heightinworldunits)
@@ -47,7 +48,6 @@
 - [centerPlanet](Frontend_Game_Viewport.default.md#centerplanet)
 - [centerPlanetAnimated](Frontend_Game_Viewport.default.md#centerplanetanimated)
 - [getBottomBound](Frontend_Game_Viewport.default.md#getbottombound)
-- [getDetailLevel](Frontend_Game_Viewport.default.md#getdetaillevel)
 - [getLeftBound](Frontend_Game_Viewport.default.md#getleftbound)
 - [getRightBound](Frontend_Game_Viewport.default.md#getrightbound)
 - [getStorage](Frontend_Game_Viewport.default.md#getstorage)
@@ -70,10 +70,12 @@
 - [onSendInit](Frontend_Game_Viewport.default.md#onsendinit)
 - [onWindowResize](Frontend_Game_Viewport.default.md#onwindowresize)
 - [setData](Frontend_Game_Viewport.default.md#setdata)
+- [setDiagnosticUpdater](Frontend_Game_Viewport.default.md#setdiagnosticupdater)
 - [setMouseSensitivty](Frontend_Game_Viewport.default.md#setmousesensitivty)
 - [setStorage](Frontend_Game_Viewport.default.md#setstorage)
 - [setWorldHeight](Frontend_Game_Viewport.default.md#setworldheight)
 - [setWorldWidth](Frontend_Game_Viewport.default.md#setworldwidth)
+- [updateDiagnostics](Frontend_Game_Viewport.default.md#updatediagnostics)
 - [worldToCanvasCoords](Frontend_Game_Viewport.default.md#worldtocanvascoords)
 - [worldToCanvasDist](Frontend_Game_Viewport.default.md#worldtocanvasdist)
 - [worldToCanvasX](Frontend_Game_Viewport.default.md#worldtocanvasx)
@@ -119,6 +121,12 @@
 ### centerWorldCoords
 
 • **centerWorldCoords**: `WorldCoords`
+
+---
+
+### diagnosticUpdater
+
+• `Optional` **diagnosticUpdater**: `DiagnosticUpdater`
 
 ---
 
@@ -375,16 +383,6 @@
 ### getBottomBound
 
 ▸ **getBottomBound**(): `number`
-
-#### Returns
-
-`number`
-
----
-
-### getDetailLevel
-
-▸ `Private` **getDetailLevel**(): `number`
 
 #### Returns
 
@@ -672,6 +670,22 @@
 
 ---
 
+### setDiagnosticUpdater
+
+▸ **setDiagnosticUpdater**(`diagnosticUpdater`): `void`
+
+#### Parameters
+
+| Name                | Type                |
+| :------------------ | :------------------ |
+| `diagnosticUpdater` | `DiagnosticUpdater` |
+
+#### Returns
+
+`void`
+
+---
+
 ### setMouseSensitivty
 
 ▸ **setMouseSensitivty**(`mouseSensitivity`): `void`
@@ -723,6 +737,16 @@
 | Name    | Type     |
 | :------ | :------- |
 | `width` | `number` |
+
+#### Returns
+
+`void`
+
+---
+
+### updateDiagnostics
+
+▸ `Private` **updateDiagnostics**(): `void`
 
 #### Returns
 

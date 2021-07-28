@@ -1,24 +1,11 @@
 import { PlanetType } from '@darkforest_eth/types';
 import React from 'react';
-import styled from 'styled-components';
 import { getPlanetRank, isFullRank } from '../../Backend/Utils/Utils';
 import { ScoreLabel, SilverLabel } from '../Components/Labels/KeywordLabels';
 import { SpacetimeRipLabel } from '../Components/Labels/SpacetimeRipLabel';
 import { Green, Red, Sub, White } from '../Components/Text';
 import { TooltipName } from '../Game/WindowManager';
 import { useAccount, useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
-
-const TooltipInfo = styled.div`
-  & > div {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
-    & > span:first-child {
-      margin-right: 0.5em;
-    }
-  }
-`;
 
 export function TwitterHandleTooltipPane() {
   return (
@@ -69,8 +56,8 @@ export function MiningTargetTooltipPane() {
     <div>
       <Sub>
         Change the location of your <White>explorer</White>. Click anywhere on the{' '}
-        <White>Game Screen</White>, <br />
-        and your <White>miner</White> will start hashing around that chunk.
+        <White>Game Screen</White>, and your <White>miner</White> will start hashing around that
+        chunk.
       </Sub>
     </div>
   );
@@ -98,9 +85,8 @@ export function SilverTooltipPane() {
   return (
     <div>
       <Sub>
-        <White>Silver:</White> the universe's monetary resource. It allows you to buy upgrades.{' '}
-        <br />
-        Only <White>silver mines</White> produce silver. They're much rarer than planets!
+        <White>Silver:</White> the universe's monetary resource. It allows you to buy upgrades. Only
+        <White> Asteroid Fields</White> produce silver. They're much rarer than planets!
       </Sub>
     </div>
   );
@@ -110,34 +96,9 @@ export function EnergyTooltipPane() {
   return (
     <div>
       <Sub>
-        <White>Energy:</White> Energy allows you to make moves. <br />
-        Energy grows following an <White>S-curve</White>, and grows fastest at{' '}
-        <White>50% capacity</White>.
+        <White>Energy:</White> allows you to make moves. Energy grows following an{' '}
+        <White>s-curve</White>, and grows fastest at <White>50% capacity</White>.
       </Sub>
-    </div>
-  );
-}
-
-export function SelectedEnergyTooltipPane() {
-  const uiManager = useUIManager();
-  const selected = useSelectedPlanet(uiManager);
-
-  return (
-    <div>
-      {selected.value ? (
-        <TooltipInfo>
-          <div>
-            <Sub>Energy:</Sub>
-            <span>{selected.value.energy}</span>
-          </div>
-          <div>
-            <Sub>Growth:</Sub>
-            <span>{selected.value.energyGrowth}</span>
-          </div>
-        </TooltipInfo>
-      ) : (
-        <>Select a planet to view more about its stats.</>
-      )}
     </div>
   );
 }
@@ -184,7 +145,7 @@ export function SelectedSilverTooltipPane() {
   return (
     <div>
       {selected.value ? (
-        <TooltipInfo>
+        <>
           <div>
             <Sub>Silver:</Sub>
             <span>{selected.value.silver}</span>
@@ -203,7 +164,7 @@ export function SelectedSilverTooltipPane() {
               <Red>This planet does not produce silver.</Red>
             </div>
           )}
-        </TooltipInfo>
+        </>
       ) : (
         <>Select a planet to view more about its stats.</>
       )}
@@ -248,8 +209,8 @@ export function Time90TooltipPane() {
   return (
     <div>
       <Sub>
-        Time to <White>90%</White> of full energy. Since energy grows on an <br />
-        s-curve, energy growth slows drastically by this point.
+        Time to <White>90%</White> of full energy. Since energy grows on an s-curve, energy growth
+        slows drastically by this point.
       </Sub>
     </div>
   );
@@ -259,8 +220,8 @@ export function EnergyGrowthTooltipPane() {
   return (
     <div>
       <Sub>
-        <White>Energy Growth:</White> the maximum growth rate of this planet's energy <br />
-        representing the rate at the middle of the <White>s-curve</White>.
+        <White>Energy Growth:</White> the maximum growth rate of this planet's energy representing
+        the rate at the middle of the <White>s-curve</White>.
       </Sub>
     </div>
   );
@@ -455,7 +416,6 @@ export function TooltipContent({ name }: { name: TooltipName }) {
   if (name === TooltipName.PlanetRank) return <PlanetRankTooltipPane />;
   if (name === TooltipName.MaxLevel) return <MaxLevelTooltipPane />;
   if (name === TooltipName.SelectedSilver) return <SelectedSilverTooltipPane />;
-  if (name === TooltipName.SelectedEnergy) return <SelectedEnergyTooltipPane />;
   if (name === TooltipName.Rank) return <RankTooltipPane />;
   if (name === TooltipName.Score) return <ScoreTooltipPane />;
   if (name === TooltipName.MiningPause) return <MiningPauseTooltipPane />;

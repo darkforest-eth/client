@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import styled, { css } from 'styled-components';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
-import { EmSpacer, Spacer, Truncate } from '../Components/CoreUI';
+import { CenteredText, EmSpacer, KeyboardBtn, Spacer, Truncate } from '../Components/CoreUI';
 import { PaneProps } from '../Components/GameWindowComponents';
 import {
   CloseCircleIcon,
@@ -13,6 +13,8 @@ import {
 import WindowManager from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
 import { GameWindowZIndex } from '../Utils/constants';
+import { useIsDown } from '../Utils/KeyEmitters';
+import { MODAL_BACK_SHORTCUT, useSubscribeToShortcut } from '../Utils/ShortcutConstants';
 import { DFErrorBoundary } from './DFErrorBoundary';
 
 export type ModalHook = Hook<boolean>;
@@ -134,17 +136,7 @@ const Modal = styled.div`
   height: fit-content;
   background: ${dfstyles.colors.background};
   border-radius: ${dfstyles.borderRadius};
-  border: 1px solid ${dfstyles.colors.border};
-`;
-
-/**
- * Contains all the UI inside of this modal, which the
- * users of the `ModalPane` class have full controll over.
- */
-const Content = styled.div`
-  ${({ noPadding }: { noPadding?: boolean }) => css`
-    ${!noPadding && 'padding: 8px;'}
-  `}
+  border: 1px solid ${dfstyles.colors.borderDark};
 `;
 
 const Title = styled(Truncate)`
@@ -162,11 +154,10 @@ const TitleBar = styled.div`
     user-select: none;
     line-height: 1.5em;
     width: 100%;
-    height: 2.5em;
     cursor: grab;
     padding: 8px;
     background-color: ${dfstyles.colors.background};
-    border-bottom: 1px solid ${minimized ? 'transparent' : dfstyles.colors.subbertext};
+    border-bottom: 1px solid ${minimized ? 'transparent' : dfstyles.colors.borderDark};
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -233,7 +224,6 @@ export function ModalPane({
   hook: [visible, setVisible],
   hideClose,
   style,
-  noPadding,
   helpContent,
   width,
   borderColor,
@@ -255,6 +245,7 @@ export function ModalPane({
   const containerRef = useRef<HTMLDivElement>(document.createElement('div'));
   const headerRef = useRef<HTMLDivElement>(document.createElement('div'));
   const push = useCallback(() => setZIndex(windowManager.getIndex()), [windowManager]);
+  const [hasSetInitialPosition, setHasSetInitialPosition] = useState(false);
   const [gameSize, setGameSize] =
     useState<
       | {
@@ -380,8 +371,11 @@ export function ModalPane({
     };
   }, [visible, clicking, mousedownCoords, coords]);
 
-  // inits at, or provided initial coordinates
+  // inits at center, or provided initial coordinates
   useLayoutEffect(() => {
+    if (hasSetInitialPosition) return;
+    setHasSetInitialPosition(true);
+
     if (initialPosition) {
       setCoords(initialPosition);
     } else {
@@ -444,17 +438,26 @@ export function ModalPane({
   }
   const modalTitleElement = typeof title === 'string' ? title : title(frames.length > 0);
   const allSubModalTitleElements = frames.map(getFrameTitle);
+  const isBackShortcutDown = useIsDown(MODAL_BACK_SHORTCUT);
+  useSubscribeToShortcut(
+    MODAL_BACK_SHORTCUT,
+    useCallback(() => {
+      api.pop();
+    }, [api])
+  );
 
   const mainTitle = (
     <>
       {frames.length > 0 && (
         <>
           <Btn
+            style={{ width: '100px' }}
             onClick={() => {
               api.pop();
             }}
           >
-            Back
+            <CenteredText>Back</CenteredText>
+            <KeyboardBtn active={isBackShortcutDown}>{MODAL_BACK_SHORTCUT}</KeyboardBtn>
           </Btn>
           <EmSpacer width={1} />
         </>
@@ -532,12 +535,10 @@ export function ModalPane({
       >
         {renderedFrameHelp || (helpContent && helpContent())}
       </InformationSection>
-      <Content
-        style={{ display: minimized || showingHelp ? 'none' : undefined }}
-        noPadding={noPadding}
-      >
+
+      <div style={{ display: minimized || showingHelp ? 'none' : undefined }}>
         <DFErrorBoundary>{content}</DFErrorBoundary>
-      </Content>
+      </div>
     </Modal>
   );
 }

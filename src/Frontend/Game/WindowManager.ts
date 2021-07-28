@@ -39,7 +39,6 @@ export const enum TooltipName {
   FindArtifact,
   ArtifactStored,
   SelectedSilver,
-  SelectedEnergy,
   Rank,
   Score,
   MiningPause,

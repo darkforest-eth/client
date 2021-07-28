@@ -10,7 +10,7 @@ const StyledUpgradePreview = styled.div`
   min-width: 15em;
   width: 100%;
   border-radius: 3px;
-  border: 1px solid ${dfstyles.colors.darkBorder};
+  border: 1px solid ${dfstyles.colors.borderDark};
 `;
 
 const StatRow = styled.div`

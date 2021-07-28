@@ -1,8 +1,8 @@
 import { EthAddress } from '@darkforest_eth/types';
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
-import { EmSpacer, HorizontalFlex, Spacer } from '../Components/CoreUI';
-import { AccountLabel } from '../Components/Labels/Labels';
+import { AlignCenterHorizontally, EmSpacer, Spacer } from '../Components/CoreUI';
+import { LoggedInPlayer } from '../Components/Labels/Labels';
 import { Sub, White } from '../Components/Text';
 import { TooltipName } from '../Game/WindowManager';
 import { TooltipTrigger } from '../Panes/Tooltip';
@@ -73,21 +73,22 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: ModalHook }) 
 
   return (
     <TopBarContainer>
-      <HorizontalFlex style={{ justifyContent: 'space-between' }}>
-        <AccountLabel />
+      <AlignCenterHorizontally style={{ width: '100%', justifyContent: 'space-between' }}>
+        <LoggedInPlayer />
         <EmSpacer width={1} />
         <ModalTwitterVerifyIcon
           hook={twitterVerifyHook}
           style={{
             width: !twitter ? '100px' : '1.5em',
             height: !twitter ? '2em' : '1.5em',
-            padding: !twitter ? '8px 8px' : '4px 4px',
+            padding: '8px 8px',
+            borderColor: !twitter ? undefined : 'none',
           }}
           text={!twitter ? 'Connect' : undefined}
         />
         <EmSpacer width={1} />
         <ScoreSection account={account} />
-      </HorizontalFlex>
+      </AlignCenterHorizontally>
     </TopBarContainer>
   );
 }

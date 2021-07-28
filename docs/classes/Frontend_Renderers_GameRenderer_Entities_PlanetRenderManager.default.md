@@ -18,6 +18,7 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 ### Methods
 
 - [drawPlanetMessages](Frontend_Renderers_GameRenderer_Entities_PlanetRenderManager.default.md#drawplanetmessages)
+- [drawRangeAtPercent](Frontend_Renderers_GameRenderer_Entities_PlanetRenderManager.default.md#drawrangeatpercent)
 - [flush](Frontend_Renderers_GameRenderer_Entities_PlanetRenderManager.default.md#flush)
 - [getLockedEnergy](Frontend_Renderers_GameRenderer_Entities_PlanetRenderManager.default.md#getlockedenergy)
 - [getMouseAtk](Frontend_Renderers_GameRenderer_Entities_PlanetRenderManager.default.md#getmouseatk)
@@ -31,6 +32,7 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 - [queuePlanetEnergyText](Frontend_Renderers_GameRenderer_Entities_PlanetRenderManager.default.md#queueplanetenergytext)
 - [queuePlanetSilverText](Frontend_Renderers_GameRenderer_Entities_PlanetRenderManager.default.md#queueplanetsilvertext)
 - [queuePlanets](Frontend_Renderers_GameRenderer_Entities_PlanetRenderManager.default.md#queueplanets)
+- [queueRangeRings](Frontend_Renderers_GameRenderer_Entities_PlanetRenderManager.default.md#queuerangerings)
 - [queueRings](Frontend_Renderers_GameRenderer_Entities_PlanetRenderManager.default.md#queuerings)
 
 ## Constructors
@@ -65,6 +67,26 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 | `coords`     | `WorldCoords`                                                                              |
 | `radiusW`    | `number`                                                                                   |
 | `textAlpha`  | `number`                                                                                   |
+
+#### Returns
+
+`void`
+
+---
+
+### drawRangeAtPercent
+
+▸ **drawRangeAtPercent**(`planet`, `pct`): `void`
+
+Renders rings around planet that show how far sending the given percentage of this planet's
+energy would be able to travel.
+
+#### Parameters
+
+| Name     | Type              |
+| :------- | :---------------- |
+| `planet` | `LocatablePlanet` |
+| `pct`    | `number`          |
 
 #### Returns
 
@@ -286,6 +308,24 @@ to CanvasCoords. responsible for rendering planets by calling primitive renderer
 | `cachedPlanets` | `Map`<`LocationId`, [`PlanetRenderInfo`](../interfaces/Backend_GameLogic_ViewportEntities.PlanetRenderInfo.md)\> |
 | `now`           | `number`                                                                                                         |
 | `highPerfMode`  | `boolean`                                                                                                        |
+
+#### Returns
+
+`void`
+
+---
+
+### queueRangeRings
+
+▸ **queueRangeRings**(`planet`): `void`
+
+Renders three rings around the planet that show the player how far this planet can attack.
+
+#### Parameters
+
+| Name     | Type              |
+| :------- | :---------------- |
+| `planet` | `LocatablePlanet` |
 
 #### Returns
 

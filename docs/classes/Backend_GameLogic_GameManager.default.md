@@ -124,6 +124,7 @@
 - [getPlanetsInRange](Backend_GameLogic_GameManager.default.md#getplanetsinrange)
 - [getPlanetsInWorldRectangle](Backend_GameLogic_GameManager.default.md#getplanetsinworldrectangle)
 - [getPlanetsWithIds](Backend_GameLogic_GameManager.default.md#getplanetswithids)
+- [getPlanetsWithinRange](Backend_GameLogic_GameManager.default.md#getplanetswithinrange)
 - [getPlayer](Backend_GameLogic_GameManager.default.md#getplayer)
 - [getPrivateKey](Backend_GameLogic_GameManager.default.md#getprivatekey)
 - [getProcgenUtils](Backend_GameLogic_GameManager.default.md#getprocgenutils)
@@ -1544,7 +1545,7 @@ Gets the rarity of planets in the universe
 
 ### getPlanetWithCoords
 
-▸ **getPlanetWithCoords**(`coords`): `undefined` \| `Planet`
+▸ **getPlanetWithCoords**(`coords`): `undefined` \| `LocatablePlanet`
 
 Gets the planet that is located at the given coordinates. Returns undefined if not a valid
 location or if no planet exists at location. If the planet needs to be updated (because
@@ -1558,7 +1559,7 @@ some time has passed since we last updated the planet), then updates that planet
 
 #### Returns
 
-`undefined` \| `Planet`
+`undefined` \| `LocatablePlanet`
 
 ---
 
@@ -1644,6 +1645,24 @@ doesn't exist, no entry for that planet will be returned in the result.
 #### Returns
 
 `Planet`[]
+
+---
+
+### getPlanetsWithinRange
+
+▸ **getPlanetsWithinRange**(`planet`): `LocatablePlanet`[]
+
+Gets all the planets that this planet could reach if it sent 100% of its energy.
+
+#### Parameters
+
+| Name     | Type              |
+| :------- | :---------------- |
+| `planet` | `LocatablePlanet` |
+
+#### Returns
+
+`LocatablePlanet`[]
 
 ---
 

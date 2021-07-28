@@ -71,7 +71,6 @@ export function PaidArtifactConversationPane({
     <ModalPane
       title={title}
       hook={hook}
-      noPadding
       backgroundColor={dfstyles.colors.dfyellow}
       titlebarColor={dfstyles.colors.dfyellow}
       borderColor={'#918d0c'}

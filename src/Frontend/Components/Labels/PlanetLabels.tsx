@@ -142,7 +142,8 @@ export const PlanetBiomeTypeLabelAnim = ({ planet }: { planet: Planet | undefine
   <>
     {planet?.planetType !== PlanetType.TRADING_POST && (
       <>
-        <OptionalPlanetBiomeLabelAnim planet={planet} />{' '}
+        <OptionalPlanetBiomeLabelAnim planet={planet} />
+        <EmSpacer width={0.5} />
       </>
     )}
     <PlanetTypeLabelAnim planet={planet} />

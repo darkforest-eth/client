@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import TutorialManager from '../../Backend/GameLogic/TutorialManager';
 import { Chunk } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
-import { Section, SectionHeader, Spacer } from '../Components/CoreUI';
+import { Padded, Section, SectionHeader, Spacer } from '../Components/CoreUI';
 import { Input } from '../Components/Input';
 import { Green, Red } from '../Components/Text';
 import Viewport, { getDefaultScroll } from '../Game/Viewport';
@@ -21,7 +21,7 @@ const DEFAULT_SCROLL = Math.round(10000 * (getDefaultScroll() - 1));
 
 const Range = styled.input``;
 
-const SettingsContent = styled.div`
+const SettingsContent = styled(Padded)`
   width: 500px;
   height: 500px;
   overflow-y: scroll;
@@ -199,33 +199,6 @@ export function SettingsPane({
         </Section>
 
         <Section>
-          <SectionHeader>Burner Wallet Info (Private)</SectionHeader>
-          Your secret key, together with your home planet's coordinates, grant you access to your
-          Dark Forest account on different browsers. You should save this info somewhere on your
-          computer.
-          <Spacer height={16} />
-          <Red>WARNING:</Red> Never ever send this to anyone!
-          <Spacer height={8} />
-          <Btn wide onClick={doPrivateClick}>
-            Click {clicks} times to view info
-          </Btn>
-        </Section>
-
-        <Section>
-          <SectionHeader>Auto Confirm Transactions</SectionHeader>
-          Whether or not to auto-confirm all transactions, except purchases. This will allow you to
-          make moves, spend silver on upgrades, etc. without requiring you to confirm each
-          transaction. However, the client WILL ask for confirmation before sending transactions
-          that spend wallet funds.
-          <Spacer height={16} />
-          <BooleanSetting
-            uiManager={uiManager}
-            setting={Setting.AutoApproveNonPurchaseTransactions}
-            settingDescription={'auto confirm non-purchase transactions'}
-          />
-        </Section>
-
-        <Section>
           <SectionHeader>Gas Price</SectionHeader>
           Your gas price setting determines the price you pay for each transaction. A higher gas
           price means your transactions will be prioritized by the blockchain, making them confirm
@@ -258,6 +231,33 @@ export function SettingsPane({
               `average auto (~${gasPrices.average} gwei)`,
               `fast auto (~${gasPrices.fast} gwei)`,
             ]}
+          />
+        </Section>
+
+        <Section>
+          <SectionHeader>Burner Wallet Info (Private)</SectionHeader>
+          Your secret key, together with your home planet's coordinates, grant you access to your
+          Dark Forest account on different browsers. You should save this info somewhere on your
+          computer.
+          <Spacer height={16} />
+          <Red>WARNING:</Red> Never ever send this to anyone!
+          <Spacer height={8} />
+          <Btn wide onClick={doPrivateClick}>
+            Click {clicks} times to view info
+          </Btn>
+        </Section>
+
+        <Section>
+          <SectionHeader>Auto Confirm Transactions</SectionHeader>
+          Whether or not to auto-confirm all transactions, except purchases. This will allow you to
+          make moves, spend silver on upgrades, etc. without requiring you to confirm each
+          transaction. However, the client WILL ask for confirmation before sending transactions
+          that spend wallet funds.
+          <Spacer height={16} />
+          <BooleanSetting
+            uiManager={uiManager}
+            setting={Setting.AutoApproveNonPurchaseTransactions}
+            settingDescription={'auto confirm non-purchase transactions'}
           />
         </Section>
 

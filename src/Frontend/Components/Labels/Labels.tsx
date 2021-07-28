@@ -1,9 +1,12 @@
 import React from 'react';
 import { usePlayer, useUIManager } from '../../Utils/AppHooks';
-import { HoverLink } from '../CoreUI';
+import { Link } from '../CoreUI';
 import { TextPreview } from '../TextPreview';
 
-export function AccountLabel() {
+/**
+ * Returns a either a link to the player's twitter, or a {@link TextPreview} of their address.
+ */
+export function LoggedInPlayer() {
   const uiManager = useUIManager();
   const player = usePlayer(uiManager);
 
@@ -20,10 +23,13 @@ export function AccountLabel() {
   );
 }
 
+/**
+ * Link to a twitter account.
+ */
 export function TwitterLink({ twitter, color }: { twitter: string; color?: string }) {
   return (
-    <HoverLink color={color} href={`https://twitter.com/${twitter}`} target='_blank'>
+    <Link color={color} to={`https://twitter.com/${twitter}`}>
       @{twitter}
-    </HoverLink>
+    </Link>
   );
 }

@@ -28,7 +28,6 @@ const StyledPlanetIcons = styled.div`
   flex-wrap: wrap-reverse;
   align-items: center;
   justify-content: center;
-  margin-right: 0.5em;
 
   & > span {
     font-size: 0.9em;

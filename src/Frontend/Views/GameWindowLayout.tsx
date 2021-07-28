@@ -61,6 +61,7 @@ export function GameWindowLayout({
   const uiManager = useUIManager();
   const newPlayerHook = useBooleanSetting(uiManager, Setting.NewPlayer);
   const tutorialHook = useBooleanSetting(uiManager, Setting.TutorialOpen);
+  const [sidebarHovered, setSidebarHovered] = useState<boolean>(false);
 
   const selected = useSelectedPlanet(uiManager).value;
   const selectedPlanetHook = useState<boolean>(!!selected);
@@ -108,6 +109,14 @@ export function GameWindowLayout({
     }, [diagnosticsHook])
   );
 
+  function onSidebarMouseEnter() {
+    setSidebarHovered(true);
+  }
+
+  function onSidebarMouseLeave() {
+    setSidebarHovered(false);
+  }
+
   return (
     <WindowWrapper>
       <TopBarPaneContainer>
@@ -148,57 +157,60 @@ export function GameWindowLayout({
           <UpperLeft>
             <ZoomPane />
           </UpperLeft>
-          <WindowTogglesPaneContainer>
+          <WindowTogglesPaneContainer
+            onMouseEnter={onSidebarMouseEnter}
+            onMouseLeave={onSidebarMouseLeave}
+          >
             <BorderlessPane>
               <ModalSettingsIcon
                 hook={settingsHook}
-                text={'Settings'}
                 style={{
-                  width: '180px',
+                  width: '100%',
                   height: '2em',
                   padding: '4px 8px',
                 }}
+                text={sidebarHovered ? 'Settings' : undefined}
               />
               <EmSpacer height={0.5} />
               <ModalHelpIcon
                 hook={helpHook}
                 style={{
-                  width: '180px',
+                  width: '100%',
                   height: '2em',
                   padding: '4px 8px',
                 }}
-                text={'Help'}
+                text={sidebarHovered ? 'Help' : undefined}
               />
               <EmSpacer height={0.5} />
 
               <ModalPluginIcon
                 hook={pluginsHook}
                 style={{
-                  width: '180px',
+                  width: '100%',
                   height: '2em',
                   padding: '4px 8px',
                 }}
-                text={'Plugins'}
+                text={sidebarHovered ? 'Plugins' : undefined}
               />
               <EmSpacer height={0.5} />
               <ModalYourArtifactsIcon
                 hook={yourArtifactsHook}
                 style={{
-                  width: '180px',
+                  width: '100%',
                   height: '2em',
                   padding: '4px 8px',
                 }}
-                text={'Your Artifacts'}
+                text={sidebarHovered ? 'Your Artifacts' : undefined}
               />
               <EmSpacer height={0.5} />
               <ModalPlanetDexIcon
                 hook={planetdexHook}
                 style={{
-                  width: '180px',
+                  width: '100%',
                   height: '2em',
                   padding: '4px 8px',
                 }}
-                text={'Your Planets'}
+                text={sidebarHovered ? 'Your Planets' : undefined}
               />
             </BorderlessPane>
           </WindowTogglesPaneContainer>

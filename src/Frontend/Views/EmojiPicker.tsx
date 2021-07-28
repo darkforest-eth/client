@@ -14,7 +14,9 @@ export function EmojiPicker({
 
   return (
     <EmojiPickerContainer>
-      <SelectedEmoji onClick={() => setPickerOpen(true)}>{emoji || '\u00a0'}</SelectedEmoji>
+      <SelectedEmoji onClick={() => setPickerOpen((open) => !open)}>
+        {emoji || '\u00a0'}
+      </SelectedEmoji>
       {pickerOpen && (
         <EmojiPickerElementContainer>
           <Picker

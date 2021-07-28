@@ -17,6 +17,7 @@ import {
 } from '../Utils/ShortcutConstants';
 import { ModalHandle } from '../Views/ModalPane';
 import { Btn } from './Btn';
+import { CenteredText, KeyboardBtn } from './CoreUI';
 
 export function OpenPaneButton({
   modal,
@@ -43,8 +44,9 @@ export function OpenPaneButton({
   const isDown = useIsDown(shortcutKey);
 
   return (
-    <Btn wide onClick={open} forceActive={isDown}>
-      {title}
+    <Btn wide onClick={open}>
+      <CenteredText>{title}</CenteredText>
+      <KeyboardBtn active={isDown}>{shortcutKey}</KeyboardBtn>
     </Btn>
   );
 }
@@ -59,7 +61,7 @@ export function OpenHatPaneButton({
   return (
     <OpenPaneButton
       modal={modal}
-      title='(H)at'
+      title='Hat'
       shortcutKey={TOGGLE_HAT_PANE}
       element={<HatPane modal={modal} planetId={planetId} />}
     />
@@ -76,7 +78,7 @@ export function OpenBroadcastPaneButton({
   return (
     <OpenPaneButton
       modal={modal}
-      title='(B)roadcast'
+      title='Broadcast'
       shortcutKey={TOGGLE_BROADCAST_PANE}
       element={<BroadcastPane modal={modal} planetId={planetId} />}
       helpContent={BroadcastPaneHelpContent()}
@@ -94,7 +96,7 @@ export function OpenUpgradeDetailsPaneButton({
   return (
     <OpenPaneButton
       modal={modal}
-      title='(U)pgrade'
+      title='Upgrade'
       shortcutKey={TOGGLE_UPGRADES_PANE}
       element={<UpgradeDetailsPane modal={modal} planetId={planetId} />}
       helpContent={UpgradeDetailsPaneHelpContent()}
@@ -111,7 +113,7 @@ export function OpenManagePlanetArtifactsButton({
   return (
     <OpenPaneButton
       modal={modal}
-      title='(A)rtifacts'
+      title='Artifacts'
       shortcutKey={TOGGLE_PLANET_ARTIFACTS_PANE}
       element={<ManagePlanetArtifactsPane modal={modal} planetId={planetId} />}
       helpContent={ManagePlanetArtifactsHelpContent()}

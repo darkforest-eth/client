@@ -561,7 +561,7 @@ export class GameObjects {
 
   // returns an empty planet if planet is not in contract
   // returns undefined if this isn't a planet, according to hash and coords
-  public getPlanetWithCoords(coords: WorldCoords): Planet | undefined {
+  public getPlanetWithCoords(coords: WorldCoords): LocatablePlanet | undefined {
     const str = getCoordsString(coords);
 
     const location = this.coordsToLocation.get(str);
@@ -569,7 +569,7 @@ export class GameObjects {
       return undefined;
     }
 
-    return this.getPlanetWithLocation(location);
+    return this.getPlanetWithLocation(location) as LocatablePlanet;
   }
 
   // returns an empty planet if planet is not in contract
@@ -1040,6 +1040,17 @@ export class GameObjects {
     return this.revealedLocations;
   }
 
+  public getPlanetsWithIds(locationIds: LocationId[], updateIfStale = true): Planet[] {
+    return locationIds
+      .map((id) => this.getPlanetWithId(id, updateIfStale))
+      .filter((p) => p !== undefined) as LocatablePlanet[];
+  }
+
+  public getPlanetsInWorldCircle(coords: WorldCoords, radius: number): LocatablePlanet[] {
+    const locationIds = this.layeredMap.getPlanetsInCircle(coords, radius);
+    return this.getPlanetsWithIds(locationIds) as LocatablePlanet[];
+  }
+
   /**
    * Gets the ids of all the planets that are both within the given bounding box (defined by its bottom
    * left coordinate, width, and height) in the world and of a level that was passed in via the
@@ -1062,9 +1073,7 @@ export class GameObjects {
       levels,
       planetLevelToRadii
     );
-    return locationIds
-      .map((id) => this.getPlanetWithId(id, updateIfStale))
-      .filter((p) => p !== undefined) as LocatablePlanet[];
+    return this.getPlanetsWithIds(locationIds) as LocatablePlanet[];
   }
 
   /**

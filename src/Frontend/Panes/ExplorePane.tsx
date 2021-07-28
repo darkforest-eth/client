@@ -65,7 +65,7 @@ function HashesPerSec() {
   }, [uiManager]);
 
   const getHashes = () => {
-    return hashRate.toFixed(0);
+    return hashRate.toFixed(0).toLocaleString();
   };
 
   return (
