@@ -423,7 +423,8 @@ export default class PlanetRenderManager {
 
     const percentForces = gameUIManager.getForcesSending(planet.locationId); // [0, 100]
     const forces = (percentForces / 100) * planet.energy;
-    const range = getRange(planet, percentForces);
+    const scaledForces = (percentForces * planet.energy) / planet.energyCap;
+    const range = getRange(planet, scaledForces);
 
     if (range > 1) {
       cR.queueCircleWorld({ x, y }, range, [...energy, 255], 1, 1, true);

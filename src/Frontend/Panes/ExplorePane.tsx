@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
 import { SpiralPattern } from '../../Backend/Miner/MiningPatterns';
-import { Spacer } from '../Components/CoreUI';
-import { IconButton } from '../Components/IconButton';
+import { EmSpacer, ShortcutButton } from '../Components/CoreUI';
 import { PauseIcon, PlayIcon, TargetIcon } from '../Components/Icons';
 import { Coords, Sub } from '../Components/Text';
 import WindowManager, { CursorState, TooltipName, WindowManagerEvent } from '../Game/WindowManager';
@@ -12,6 +11,7 @@ import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
 import { MIN_CHUNK_SIZE } from '../Utils/constants';
 import { MultiSelectSetting, Setting, useBooleanSetting } from '../Utils/SettingsHooks';
+import { TOGGLE_EXPLORE, TOGGLE_TARGETTING } from '../Utils/ShortcutConstants';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 import { TooltipTrigger } from './Tooltip';
 
@@ -36,7 +36,7 @@ function Cores() {
 
   return (
     <MultiSelectSetting
-      style={{ width: '7em', height: '2em' }}
+      style={{ width: '7em' }}
       uiManager={uiManager}
       setting={Setting.MiningCores}
       values={values}
@@ -65,14 +65,14 @@ function HashesPerSec() {
   }, [uiManager]);
 
   const getHashes = () => {
-    return hashRate.toFixed(0).toLocaleString();
+    return Math.floor(hashRate).toLocaleString();
   };
 
   return (
     <>
-      {getHashes()}
-      <Spacer width={8} />
       <TooltipTrigger name={TooltipName.HashesPerSec}>
+        {getHashes()}
+        <EmSpacer width={0.5} />
         <Sub>#/s</Sub>
       </TooltipTrigger>
     </>
@@ -83,19 +83,10 @@ export function ExplorePane() {
   const uiManager = useUIManager();
   const windowManager = WindowManager.getInstance();
   const uiEmitter = UIEmitter.getInstance();
-
-  const [mining] = useBooleanSetting(uiManager, Setting.IsMining);
-
-  const minerButtonClicked = () => {
-    if (mining) uiManager?.stopExplore();
-    else {
-      uiManager?.startExplore();
-      const tutorialManager = TutorialManager.getInstance();
-      tutorialManager.acceptInput(TutorialState.MinerPause);
-    }
-  };
-
   const [pattern, setPattern] = useState<SpiralPattern | undefined>(undefined);
+  const [mining] = useBooleanSetting(uiManager, Setting.IsMining);
+  const [targetting, setTargetting] = useState(false);
+
   useEffect(() => {
     if (!uiManager) return;
     setPattern(uiManager.getMiningPattern() as SpiralPattern | undefined);
@@ -117,18 +108,22 @@ export function ExplorePane() {
       tutorialManager.acceptInput(TutorialState.MinerMove);
     };
 
+    const cursorStateChanged = (state: CursorState) => {
+      setTargetting(state === CursorState.TargetingExplorer);
+    };
+
     uiEmitter.on(UIEmitterEvent.WorldMouseDown, doMouseDown);
     windowManager.on(WindowManagerEvent.MiningCoordsUpdate, updatePattern);
+    uiEmitter.on(WindowManagerEvent.StateChanged, cursorStateChanged);
     return () => {
       uiEmitter.removeListener(UIEmitterEvent.WorldMouseDown, doMouseDown);
       windowManager.removeListener(WindowManagerEvent.MiningCoordsUpdate, updatePattern);
+      uiEmitter.removeListener(WindowManagerEvent.StateChanged, cursorStateChanged);
     };
   }, [uiEmitter, windowManager, uiManager]);
 
   const doTarget = (_e: React.MouseEvent) => {
-    if (windowManager.getCursorState() === CursorState.TargetingExplorer)
-      windowManager.setCursorState(CursorState.Normal);
-    else windowManager.setCursorState(CursorState.TargetingExplorer);
+    uiManager.toggleTargettingExplorer();
   };
 
   const getCorner = (pattern: SpiralPattern): WorldCoords => ({
@@ -140,50 +135,39 @@ export function ExplorePane() {
     return pattern ? getCorner(pattern) : { x: 0, y: 0 };
   };
 
-  const minerMoveText =
-    windowManager.getCursorState() === CursorState.TargetingExplorer
-      ? 'Moving Explorer...'
-      : 'Move Explorer';
-  const playPauseText = mining ? 'Pause' : 'Explore!';
   return (
     <StyledExplorePane>
       {/* button which allows player to preposition the center of their miner */}
       <TooltipTrigger needsCtrl display={'inline-block'} name={TooltipName.MiningTarget}>
-        <IconButton
-          style={{
-            height: '2em',
-            padding: '4px 8px',
-          }}
-          onClick={doTarget}
-        >
-          {minerMoveText}
-          <Spacer width={8} />
+        <ShortcutButton onClick={doTarget} shortcutKey={TOGGLE_TARGETTING}>
+          {targetting ? 'Moving...' : 'Move'}
+          <EmSpacer width={1} />
           <TargetIcon />
-        </IconButton>
+        </ShortcutButton>
       </TooltipTrigger>
-      <Spacer width={8} />
+      <EmSpacer width={0.5} />
       {/* button which toggles whether or not the game is mining. this persists between refreshes */}
       <TooltipTrigger needsCtrl display={'inline-block'} name={TooltipName.MiningPause}>
-        <IconButton
-          style={{
-            height: '2em',
-            padding: '4px 8px',
-          }}
-          onClick={minerButtonClicked}
+        <ShortcutButton
+          style={{ width: '110px' }}
+          onClick={uiManager.toggleExplore.bind(uiManager)}
+          shortcutKey={TOGGLE_EXPLORE}
+          shortcutText={'space'}
         >
-          {playPauseText} <Spacer width={8} /> {mining ? <PauseIcon /> : <PlayIcon />}
-        </IconButton>
+          {mining ? 'Pause' : 'Explore!'} <EmSpacer width={1} />{' '}
+          {mining ? <PauseIcon /> : <PlayIcon />}
+        </ShortcutButton>
       </TooltipTrigger>
 
       {mining && (
         <>
-          <Spacer width={8} />
+          <EmSpacer width={0.5} />
           <Cores />
-          <Spacer width={8} />
+          <EmSpacer width={1} />
           <Sub>
             <Coords coords={getCoords()} />
           </Sub>
-          <Spacer width={8} />
+          <EmSpacer width={0.5} />
           <HashesPerSec />
         </>
       )}

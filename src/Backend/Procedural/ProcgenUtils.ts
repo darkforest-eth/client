@@ -51,7 +51,7 @@ export class ProcgenUtils {
     [Biome.ICE]: [198, 78, 77],
     [Biome.WASTELAND]: [0, 0, 18],
     [Biome.LAVA]: [19, 100, 50],
-    [Biome.CORRUPTED]: [280, 100, 54],
+    [Biome.CORRUPTED]: [100, 80, 54],
   } as const;
   private static oceanByBiome: { readonly [Biome: number]: HSLVec } = {
     [Biome.UNKNOWN]: [0, 0, 0],
@@ -64,7 +64,7 @@ export class ProcgenUtils {
     [Biome.ICE]: [198, 90, 85],
     [Biome.WASTELAND]: [0, 98, 42],
     [Biome.LAVA]: [12, 92, 39],
-    [Biome.CORRUPTED]: [308, 90, 63],
+    [Biome.CORRUPTED]: [128, 90, 63],
   } as const;
 
   private static strByBiome = new Map<Biome, string>();

@@ -9,13 +9,13 @@ export const SPACE_TYPE_COLORS = {
   [SpaceType.NEBULA]: 'rgb(0, 20.4, 81.6)',
   [SpaceType.SPACE]: 'rgb(0, 5.4, 43.35)',
   [SpaceType.DEEP_SPACE]: 'rgb(2.04, 0, 6.12)',
-  [SpaceType.DEAD_SPACE]: 'rgb(37.485, 0, 36)',
+  [SpaceType.DEAD_SPACE]: 'rgb(0, 37, 1)',
 } as const;
 
-const text = '#ddd';
-const subtext = color(text).darken(0.05).hex();
-const subbertext = color(text).darken(0.3).hex();
-const subbesttext = color(text).darken(0.5).hex();
+const text = color('#bbb').hex();
+const subtext = color(text).darken(0.3).hex();
+const subbertext = color(text).darken(0.5).hex();
+const subbesttext = color(text).darken(0.8).hex();
 
 const background = '#151515';
 const backgrounddark = '#252525';

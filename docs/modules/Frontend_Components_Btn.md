@@ -14,7 +14,7 @@
 
 ### BtnProps
 
-Ƭ **BtnProps**: { `borderColor?`: `string` ; `color?`: `string` ; `disabled?`: `boolean` ; `forceActive?`: `boolean` ; `noBorder?`: `boolean` ; `textColor?`: `string` ; `wide?`: `boolean` } & `React.HTMLAttributes`<`HTMLSpanElement`\>
+Ƭ **BtnProps**: { `borderColor?`: `string` ; `color?`: `string` ; `disabled?`: `boolean` ; `forceActive?`: `boolean` ; `noBorder?`: `boolean` ; `small?`: `boolean` ; `textColor?`: `string` ; `wide?`: `boolean` } & `React.HTMLAttributes`<`HTMLSpanElement`\>
 
 ## Functions
 

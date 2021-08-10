@@ -41,9 +41,4 @@ the algorithms implemented in {@link ChunkUtils}.
 
 ### MIN_CHUNK_SIZE
 
-• `Const` **MIN_CHUNK_SIZE**: `256`
-
-To code reviewer, make sure this does not change!
-
-To developer, increase this number to a large power of two. This, in combination with setting
-`DISABLE_ZK_CHECKS` in darkforest.toml, will make you mine the map at ULTRA SPEED!
+• `Const` **MIN_CHUNK_SIZE**: `16`

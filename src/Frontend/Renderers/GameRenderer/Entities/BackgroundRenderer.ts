@@ -72,7 +72,7 @@ export default class BackgroundRenderer {
         // if (space === SpaceType.NEBULA) ctx.fillStyle = '#ff0000';
         if (space === SpaceType.SPACE) color = [0, 255, 0];
         if (space === SpaceType.DEEP_SPACE) color = [0, 0, 255];
-        if (space === SpaceType.DEAD_SPACE) color = [255, 0, 255];
+        if (space === SpaceType.DEAD_SPACE) color = [0, 255, 0];
 
         // ctx.beginPath();
         // ctx.fillRect(x, y, 20, 20);

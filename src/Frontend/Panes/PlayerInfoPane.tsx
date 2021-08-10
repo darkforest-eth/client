@@ -52,7 +52,7 @@ export function PlayerInfoPane({ hook: twitterHook }: { hook: ModalHook }) {
     const updateEnergyAndSilver = () => {
       setEnergy(uiManager.getEnergyOfPlayer(account));
       setSilver(uiManager.getSilverOfPlayer(account));
-      _setScore(uiManager.getWithdrawnSilverOfPlayer(account));
+      _setScore(uiManager.getPlayerScore(account));
     };
 
     const energySilverInterval = setInterval(updateEnergyAndSilver, 60 * 1000);

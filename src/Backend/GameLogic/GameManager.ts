@@ -1,4 +1,8 @@
-import { BLOCK_EXPLORER_URL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
+import {
+  BLOCK_EXPLORER_URL,
+  MIN_PLANET_LEVEL,
+  PLANET_CLAIM_MIN_LEVEL,
+} from '@darkforest_eth/constants';
 import { monomitter, Monomitter, Subscription } from '@darkforest_eth/events';
 import { fakeHash, mimcHash, perlin } from '@darkforest_eth/hashing';
 import {
@@ -14,6 +18,8 @@ import {
   ArtifactId,
   ArtifactRarity,
   ArtifactType,
+  ClaimedCoords,
+  ClaimedLocation,
   ContractMethodName,
   Conversation,
   Diagnostics,
@@ -34,6 +40,7 @@ import {
   TxIntent,
   UnconfirmedActivateArtifact,
   UnconfirmedBuyGPTCredits,
+  UnconfirmedClaim,
   UnconfirmedDeactivateArtifact,
   UnconfirmedDepositArtifact,
   UnconfirmedFindArtifact,
@@ -51,6 +58,7 @@ import {
   WorldLocation,
 } from '@darkforest_eth/types';
 import { BigInteger } from 'big-integer';
+import delay from 'delay';
 import { BigNumber, Contract, ContractInterface } from 'ethers';
 import { EventEmitter } from 'events';
 import stringify from 'json-stable-stringify';
@@ -77,6 +85,7 @@ import {
 import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
 import {
   Chunk,
+  ClaimCountdownInfo,
   HashConfig,
   isLocatable,
   Rectangle,
@@ -103,6 +112,7 @@ import {
   isUnconfirmedActivateArtifact,
   isUnconfirmedBuyGPTCredits,
   isUnconfirmedBuyHat,
+  isUnconfirmedClaim,
   isUnconfirmedDeactivateArtifact,
   isUnconfirmedDepositArtifact,
   isUnconfirmedFindArtifact,
@@ -337,6 +347,7 @@ class GameManager extends EventEmitter {
     touchedPlanets: Map<LocationId, Planet>,
     allTouchedPlanetIds: Set<LocationId>,
     revealedCoords: Map<LocationId, RevealedCoords>,
+    claimedCoords: Map<LocationId, ClaimedCoords>,
     worldRadius: number,
     unprocessedArrivals: Map<VoyageId, QueuedArrival>,
     unprocessedPlanetArrivalIds: Map<LocationId, VoyageId[]>,
@@ -408,11 +419,32 @@ class GameManager extends EventEmitter {
       }
     }
 
+    const claimedLocations = new Map<LocationId, ClaimedLocation>();
+
+    for (const [locationId, coords] of claimedCoords) {
+      const planet = touchedPlanets.get(locationId);
+
+      if (planet) {
+        const location: WorldLocation = {
+          hash: locationId,
+          coords,
+          perlin: planet.perlin,
+          biomebase: this.biomebasePerlin(coords, true),
+        };
+
+        const revealedLocation = { ...location, revealer: coords.revealer };
+
+        revealedLocations.set(locationId, revealedLocation);
+        claimedLocations.set(locationId, revealedLocation);
+      }
+    }
+
     this.entityStore = new GameObjects(
       account,
       touchedPlanets,
       allTouchedPlanetIds,
       revealedLocations,
+      claimedLocations,
       artifacts,
       persistentChunkStore.allChunks(),
       unprocessedArrivals,
@@ -447,6 +479,8 @@ class GameManager extends EventEmitter {
         }
       }
     });
+
+    this.refreshScoreboard();
   }
 
   private async uploadDiagnostics() {
@@ -454,15 +488,20 @@ class GameManager extends EventEmitter {
   }
 
   private async refreshScoreboard() {
-    const leaderboard = await loadLeaderboard();
-    for (const entry of leaderboard.entries) {
-      const player = this.players.get(entry.ethAddress);
-      if (player) {
-        player.score = entry.score;
+    try {
+      const leaderboard = await loadLeaderboard();
+      for (const entry of leaderboard.entries) {
+        const player = this.players.get(entry.ethAddress);
+        if (player) {
+          player.score = entry.score;
+        }
       }
-    }
 
-    this.playersUpdated$.publish();
+      this.playersUpdated$.publish();
+    } catch (e) {
+      // @todo - what do we do if we can't connect to the webserver? in general this should be a
+      // state of affairs because arenas is a thing.
+    }
   }
 
   public getEthConnection() {
@@ -515,6 +554,7 @@ class GameManager extends EventEmitter {
 
     await persistentChunkStore.saveTouchedPlanetIds(initialState.allTouchedPlanetIds);
     await persistentChunkStore.saveRevealedCoords(initialState.allRevealedCoords);
+    await persistentChunkStore.saveClaimedCoords(initialState.allClaimedCoords);
 
     const knownArtifacts: Map<ArtifactId, Artifact> = new Map();
 
@@ -569,6 +609,7 @@ class GameManager extends EventEmitter {
       initialState.touchedAndLocatedPlanets,
       new Set(Array.from(initialState.allTouchedPlanetIds)),
       initialState.revealedCoordsMap,
+      initialState.claimedCoordsMap,
       initialState.worldRadius,
       initialState.arrivals,
       initialState.planetVoyageIdMap,
@@ -639,6 +680,10 @@ class GameManager extends EventEmitter {
           }
         }
       )
+      .on(ContractsAPIEvent.PlanetClaimed, async (planetId: LocationId, _address: EthAddress) => {
+        await gameManager.hardRefreshPlanet(planetId);
+        gameManager.emit(GameManagerEvent.PlanetUpdate);
+      })
       .on(
         ContractsAPIEvent.LocationRevealed,
         async (planetId: LocationId, _revealer: EthAddress) => {
@@ -660,9 +705,22 @@ class GameManager extends EventEmitter {
         if (isUnconfirmedReveal(unconfirmedTx)) {
           await gameManager.hardRefreshPlanet(unconfirmedTx.locationId);
         } else if (isUnconfirmedInit(unconfirmedTx)) {
+          terminal.current?.println('Loading Home Planet from Blockchain...');
+          const retries = 5;
+          for (let i = 0; i < retries; i++) {
+            const planet = await gameManager.contractsAPI.getPlanetById(unconfirmedTx.locationId);
+            if (planet) {
+              break;
+            } else if (i === retries - 1) {
+              console.error("couldn't load player's home planet");
+            } else {
+              await delay(2000);
+            }
+          }
+          await gameManager.hardRefreshPlanet(unconfirmedTx.locationId);
           gameManager.emit(GameManagerEvent.InitializedPlayer);
           // mining manager should be initialized already via joinGame, but just in case...
-          gameManager.initMiningManager(unconfirmedTx.location.coords);
+          gameManager.initMiningManager(unconfirmedTx.location.coords, 4);
         } else if (isUnconfirmedMove(unconfirmedTx)) {
           const promises = [
             gameManager.bulkHardRefreshPlanets([unconfirmedTx.from, unconfirmedTx.to]),
@@ -705,6 +763,11 @@ class GameManager extends EventEmitter {
           await gameManager.softRefreshPlanet(unconfirmedTx.locationId);
         } else if (isUnconfirmedBuyGPTCredits(unconfirmedTx)) {
           await gameManager.refreshMyGPTCredits();
+        } else if (isUnconfirmedClaim(unconfirmedTx)) {
+          gameManager.entityStore.updatePlanet(
+            unconfirmedTx.locationId,
+            (p) => (p.claimer = gameManager.getAccount())
+          );
         }
 
         gameManager.entityStore.clearUnconfirmedTxIntent(unconfirmedTx);
@@ -742,13 +805,19 @@ class GameManager extends EventEmitter {
 
   private async hardRefreshPlayer(address: EthAddress): Promise<void> {
     const player = await this.contractsAPI.getPlayerById(address);
+
     if (!player) {
       return;
     }
+
     const existingPlayerTwitter = this.players.get(address)?.twitter;
+    const existingPlayerScore = this.players.get(address)?.score;
+
     if (existingPlayerTwitter) {
       player.twitter = existingPlayerTwitter;
+      player.score = existingPlayerScore;
     }
+
     this.players.set(address, player);
   }
 
@@ -767,8 +836,17 @@ class GameManager extends EventEmitter {
     const artifactsOnPlanet = artifactsOnPlanets[0];
 
     const revealedCoords = await this.contractsAPI.getRevealedCoordsByIdIfExists(planetId);
+    const claimedCoords = await this.contractsAPI.getClaimedCoordsByIdIfExists(planetId);
+
     let revealedLocation: RevealedLocation | undefined;
-    if (revealedCoords) {
+
+    if (claimedCoords) {
+      revealedLocation = {
+        ...this.locationFromCoords(claimedCoords),
+        revealer: claimedCoords.revealer,
+      };
+      this.getGameObjects().setClaimedLocation(revealedLocation);
+    } else if (revealedCoords) {
       revealedLocation = {
         ...this.locationFromCoords(revealedCoords),
         revealer: revealedCoords.revealer,
@@ -779,7 +857,8 @@ class GameManager extends EventEmitter {
       planet,
       arrivals,
       artifactsOnPlanet.map((a) => a.id),
-      revealedLocation
+      revealedLocation,
+      claimedCoords?.revealer
     );
 
     // it's important that we reload the artifacts that are on the planet after the move
@@ -1092,13 +1171,13 @@ class GameManager extends EventEmitter {
       .reduce((totalSoFar: number, nextPlanet: Planet) => totalSoFar + nextPlanet.energy, 0);
   }
 
-  public getWithdrawnSilverOfPlayer(addr: EthAddress): number {
+  public getPlayerScore(addr: EthAddress): number {
     const player = this.players.get(addr);
     if (!player) return 0;
-    return player.withdrawnSilver;
+    return player?.score || 0;
   }
 
-  private initMiningManager(homeCoords: WorldCoords): void {
+  private initMiningManager(homeCoords: WorldCoords, cores?: number): void {
     if (this.minerManager) return;
 
     const myPattern: MiningPattern = new SpiralPattern(homeCoords, MIN_CHUNK_SIZE);
@@ -1112,7 +1191,7 @@ class GameManager extends EventEmitter {
       this.useMockHash
     );
 
-    this.minerManager.setCores(getNumberSetting(this.account, Setting.MiningCores));
+    this.minerManager.setCores(cores || getNumberSetting(this.account, Setting.MiningCores));
 
     this.minerManager.on(
       MinerManagerEvent.DiscoveredNewChunk,
@@ -1199,6 +1278,20 @@ class GameManager extends EventEmitter {
       revealCooldownTime: this.contractConstants.LOCATION_REVEAL_COOLDOWN,
     };
   }
+  /**
+   * Returns info about the next time you can claim a Planet
+   */
+  getNextClaimCountdownInfo(): ClaimCountdownInfo {
+    if (!this.account) {
+      throw new Error('no account set');
+    }
+    const myLastClaimTimestamp = this.players.get(this.account)?.lastClaimTimestamp;
+    return {
+      myLastClaimTimestamp: myLastClaimTimestamp || undefined,
+      currentlyClaiming: !!this.entityStore.getUnconfirmedClaim(),
+      claimCooldownTime: this.contractConstants.CLAIM_PLANET_COOLDOWN,
+    };
+  }
 
   /**
    * gets both deposited artifacts that are on planets i own as well as artifacts i own
@@ -1241,14 +1334,6 @@ class GameManager extends EventEmitter {
   }
 
   /**
-   * Gets all the planets that this planet could reach if it sent 100% of its energy.
-   */
-  getPlanetsWithinRange(planet: LocatablePlanet) {
-    const maxRange = getRange(planet, 100);
-    return this.getGameObjects().getPlanetsInWorldCircle(planet.location.coords, maxRange);
-  }
-
-  /**
    * Get the score of the currently logged-in account.
    */
   getMyScore(): number {
@@ -1259,7 +1344,7 @@ class GameManager extends EventEmitter {
     if (!player) {
       return 0;
     }
-    return player.withdrawnSilver + player.totalArtifactPoints;
+    return player?.score || 0;
   }
 
   /**
@@ -1325,10 +1410,17 @@ class GameManager extends EventEmitter {
   }
 
   /**
-   * Gets a map of all location IDs whose coords have been publicly revealed
+   * Gets a map of all location IDs whose coords have been publically revealed
    */
   getRevealedLocations(): Map<LocationId, RevealedLocation> {
     return this.entityStore.getRevealedLocations();
+  }
+
+  /**
+   * Gets a map of all location IDs which have been claimed.
+   */
+  getClaimedLocations(): Map<LocationId, ClaimedLocation> {
+    return this.entityStore.getClaimedLocations();
   }
 
   /**
@@ -1534,6 +1626,91 @@ class GameManager extends EventEmitter {
   }
 
   /**
+   * Gets the timestamp (ms) of the next time that we can claim a planet.
+   */
+  public getNextClaimAvailableTimestamp() {
+    if (!this.account) {
+      throw new Error('no account set');
+    }
+    const myLastClaimTimestamp = this.players.get(this.account)?.lastClaimTimestamp;
+
+    if (!myLastClaimTimestamp) {
+      return Date.now();
+    }
+
+    // both the variables in the next line are denominated in seconds
+    return (myLastClaimTimestamp + this.contractConstants.CLAIM_PLANET_COOLDOWN) * 1000;
+  }
+
+  public claimLocation(planetId: LocationId): GameManager {
+    if (this.checkGameHasEnded()) return this;
+
+    if (!this.account) {
+      throw new Error('no account set');
+    }
+
+    const planet = this.entityStore.getPlanetWithId(planetId);
+
+    if (!planet) {
+      throw new Error("you can't reveal a planet you haven't discovered");
+    }
+
+    if (!isLocatable(planet)) {
+      throw new Error("you can't reveal a planet whose coordinates you don't know");
+    }
+
+    if (planet.unconfirmedClaim) {
+      throw new Error("you're already claiming this planet's location");
+    }
+
+    if (planet.planetLevel < PLANET_CLAIM_MIN_LEVEL) {
+      throw new Error(
+        `you can't claim a planet whose level is less than ${PLANET_CLAIM_MIN_LEVEL}`
+      );
+    }
+
+    if (!!this.entityStore.getUnconfirmedClaim()) {
+      throw new Error("you're already broadcasting coordinates");
+    }
+    const myLastClaimTimestamp = this.players.get(this.account)?.lastClaimTimestamp;
+    if (myLastClaimTimestamp && Date.now() < this.getNextClaimAvailableTimestamp()) {
+      throw new Error('still on cooldown for broadcasting');
+    }
+
+    // this is shitty. used for the popup window
+    localStorage.setItem(`${this.getAccount()?.toLowerCase()}-claimLocationId`, planetId);
+
+    const actionId = getRandomActionId();
+    const txIntent: UnconfirmedClaim = {
+      actionId,
+      methodName: ContractMethodName.CLAIM_LOCATION,
+      locationId: planetId,
+      location: planet.location,
+    };
+
+    this.handleTxIntent(txIntent);
+
+    this.snarkHelper
+      .getRevealArgs(planet.location.coords.x, planet.location.coords.y)
+      .then((snarkArgs) => {
+        this.terminal.current?.println('CLAIM: calculated SNARK with args:', TerminalTextStyle.Sub);
+        this.terminal.current?.println(
+          JSON.stringify(hexifyBigIntNestedArray(snarkArgs.slice(0, 3))),
+          TerminalTextStyle.Sub
+        );
+        this.terminal.current?.newline();
+
+        // blehh
+        return this.contractsAPI.claim(snarkArgs, txIntent);
+      })
+      .catch((err) => {
+        this.onTxIntentFail(txIntent, err);
+      });
+
+    return this;
+  }
+
+  /**
    * Reveals a planet's location on-chain.
    */
   public revealLocation(planetId: LocationId): GameManager {
@@ -1611,24 +1788,36 @@ class GameManager extends EventEmitter {
     if (this.checkGameHasEnded()) return this;
     let actionId: string;
     let txIntent: UnconfirmedInit;
-    this.getRandomHomePlanetCoords()
-      .then(async (loc) => {
-        const {
-          coords: { x, y },
-          hash: h,
-        } = loc;
-        this.homeLocation = loc;
-        await this.persistentChunkStore.addHomeLocation(loc);
+    this.findRandomHomePlanet()
+      .then(async (planet) => {
+        this.homeLocation = planet.location;
+        this.terminal.current?.println('');
+        this.terminal.current?.println(
+          `Found Suitable Home Planet: ${ProcgenUtils.getPlanetName(planet)} `
+        );
+        // @todo: add planet preview render here, the planet procedural generation text, etc.
+        this.terminal.current?.println(
+          `Its coordinates are: (${planet.location.coords.x}, ${planet.location.coords.y})`
+        );
+        this.terminal.current?.println('');
+
+        await this.persistentChunkStore.addHomeLocation(planet.location);
+
         actionId = getRandomActionId();
         txIntent = {
           actionId,
           methodName: ContractMethodName.INIT,
-          locationId: h,
-          location: loc,
+          locationId: planet.location.hash,
+          location: planet.location,
         };
         this.handleTxIntent(txIntent as TxIntent);
-        const callArgs = await this.snarkHelper.getInitArgs(x, y, this.worldRadius);
-        this.initMiningManager(loc.coords); // get an early start
+        this.terminal.current?.println('INIT: proving that planet exists', TerminalTextStyle.Sub);
+        const callArgs = await this.snarkHelper.getInitArgs(
+          planet.location.coords.x,
+          planet.location.coords.y,
+          Math.floor(Math.sqrt(planet.location.coords.x ** 2 + planet.location.coords.y ** 2)) + 1 // floor(sqrt(x^2 + y^2)) + 1
+        );
+        this.initMiningManager(planet.location.coords); // get an early start
 
         // if player initialization causes an error, give the caller an opportunity
         // to resolve that error. if the asynchronous `beforeRetry` function returns
@@ -1693,8 +1882,8 @@ class GameManager extends EventEmitter {
     return true;
   }
 
-  private async getRandomHomePlanetCoords(): Promise<WorldLocation> {
-    return new Promise<WorldLocation>((resolve) => {
+  private async findRandomHomePlanet(): Promise<LocatablePlanet> {
+    return new Promise<LocatablePlanet>((resolve, reject) => {
       const initPerlinMin = this.contractConstants.INIT_PERLIN_MIN;
       const initPerlinMax = this.contractConstants.INIT_PERLIN_MAX;
       let minedChunksCount = 0;
@@ -1704,13 +1893,11 @@ class GameManager extends EventEmitter {
       let d: number;
       let p: number;
 
-      const isProd = process.env.NODE_ENV === 'production';
-      let spawnInnerRadius = 0;
-      if (isProd) {
-        // there is always a fixed area for players to spawn in, equal to the
-        // area of a 32 radius disc
-        spawnInnerRadius = Math.sqrt(Math.max(this.worldRadius ** 2 - 32000 ** 2, 0));
-      }
+      // there is always a fixed area for players to spawn in, set by the contract
+      const spawnInnerRadius = Math.sqrt(
+        Math.max(Math.PI * this.worldRadius ** 2 - this.contractConstants.SPAWN_RIM_AREA, 0) /
+          Math.PI
+      );
 
       do {
         // sample from square
@@ -1757,31 +1944,52 @@ class GameManager extends EventEmitter {
         this.hashConfig,
         this.useMockHash
       );
+
+      this.terminal.current?.println(``);
+      this.terminal.current?.println(`Initializing Home Planet Search...`);
+      this.terminal.current?.println(``);
+      this.terminal.current?.println(`Chunked explorer: start!`);
+      this.terminal.current?.println(
+        `Each chunk contains ${MIN_CHUNK_SIZE}x${MIN_CHUNK_SIZE} coordinates.`
+      );
+      const percentSpawn = (1 / this.contractConstants.PLANET_RARITY) * 100;
+      const printProgress = 8;
+      this.terminal.current?.print(`Each coordinate has a`);
+      this.terminal.current?.print(` ${percentSpawn}%`, TerminalTextStyle.White);
+      this.terminal.current?.print(` chance of spawning a planet.`);
+      this.terminal.current?.println('');
+
+      this.terminal.current?.println(
+        `Hashing first ${MIN_CHUNK_SIZE ** 2 * printProgress} potential home planets...`
+      );
+
       homePlanetFinder.on(MinerManagerEvent.DiscoveredNewChunk, (chunk: Chunk) => {
         chunkStore.addChunk(chunk);
         minedChunksCount++;
-        if (minedChunksCount % 8 === 0) {
+        if (minedChunksCount % printProgress === 0) {
           this.terminal.current?.println(
             `Hashed ${minedChunksCount * MIN_CHUNK_SIZE ** 2} potential home planets...`
           );
         }
-        for (const planetLoc of chunk.planetLocations) {
-          const planetPerlin = planetLoc.perlin;
-          const planetX = planetLoc.coords.x;
-          const planetY = planetLoc.coords.y;
+        for (const homePlanetLocation of chunk.planetLocations) {
+          const planetPerlin = homePlanetLocation.perlin;
+          const planetX = homePlanetLocation.coords.x;
+          const planetY = homePlanetLocation.coords.y;
           const planetLevel = this.entityStore.planetLevelFromHexPerlin(
-            planetLoc.hash,
-            planetLoc.perlin
+            homePlanetLocation.hash,
+            homePlanetLocation.perlin
           );
           const planetType = this.entityStore.planetTypeFromHexPerlin(
-            planetLoc.hash,
-            planetLoc.perlin
+            homePlanetLocation.hash,
+            homePlanetLocation.perlin
           );
-          const planet = this.getPlanetWithId(planetLoc.hash);
+          const planet = this.getPlanetWithId(homePlanetLocation.hash);
+          const distFromOrigin = Math.sqrt(planetX ** 2 + planetY ** 2);
           if (
             planetPerlin < initPerlinMax &&
             planetPerlin >= initPerlinMin &&
-            planetX ** 2 + planetY ** 2 < this.worldRadius ** 2 &&
+            distFromOrigin < this.worldRadius &&
+            distFromOrigin > spawnInnerRadius &&
             planetLevel === MIN_PLANET_LEVEL &&
             planetType === PlanetType.PLANET &&
             (!planet || !planet.isInContract) // init will fail if planet has been initialized in contract already
@@ -1789,7 +1997,16 @@ class GameManager extends EventEmitter {
             // valid home planet
             homePlanetFinder.stopExplore();
             homePlanetFinder.destroy();
-            resolve(planetLoc);
+
+            const homePlanet = this.getGameObjects().getPlanetWithLocation(homePlanetLocation);
+
+            if (!homePlanet) {
+              reject(new Error("Unable to create default planet for your home planet's location."));
+            } else {
+              // can cast to `LocatablePlanet` because we know its location, as we just mined it.
+              resolve(homePlanet as LocatablePlanet);
+            }
+
             break;
           }
         }
@@ -2688,23 +2905,31 @@ class GameManager extends EventEmitter {
   getMaxMoveDist(planetId: LocationId, sendingPercent: number): number {
     const planet = this.getPlanetWithId(planetId);
     if (!planet) throw new Error('origin planet unknown');
-    // log_2(sendingPercent / 5%)
-    let ratio = Math.log(sendingPercent / 5) / Math.log(2);
-    ratio = Math.max(ratio, 0);
-    return ratio * planet.range;
+    return getRange(planet, sendingPercent);
   }
 
   /**
    * Gets the distance between two planets. Throws an exception if you don't
-   * know the location of either planet.
+   * know the location of either planet. Takes into account wormholes.
    */
   getDist(fromId: LocationId, toId: LocationId): number {
-    const fromLoc = this.entityStore.getLocationOfPlanet(fromId);
-    if (!fromLoc) throw new Error('origin location unknown');
-    const toLoc = this.entityStore.getLocationOfPlanet(toId);
-    if (!toLoc) throw new Error('destination location unknown');
+    const from = this.entityStore.getPlanetWithId(fromId);
+    const to = this.entityStore.getPlanetWithId(toId);
 
-    return this.getDistCoords(fromLoc.coords, toLoc.coords);
+    if (!from) throw new Error('origin planet unknown');
+    if (!to) throw new Error('destination planet unknown');
+    if (!isLocatable(from)) throw new Error('origin location unknown');
+    if (!isLocatable(to)) throw new Error('destination location unknown');
+
+    const wormholeFactors = this.getWormholeFactors(from, to);
+
+    let distance = this.getDistCoords(from.location.coords, to.location.coords);
+
+    if (wormholeFactors) {
+      distance /= wormholeFactors.distanceFactor;
+    }
+
+    return distance;
   }
 
   /**
@@ -2716,26 +2941,17 @@ class GameManager extends EventEmitter {
 
   /**
    * Gets all the planets that you can reach with at least 1 energy from
-   * the given planet.
+   * the given planet. Does not take into account wormholes.
    */
   getPlanetsInRange(planetId: LocationId, sendingPercent: number): Planet[] {
-    const loc = this.entityStore.getLocationOfPlanet(planetId);
-    if (!loc) throw new Error('origin planet location unknown');
+    const planet = this.entityStore.getPlanetWithId(planetId);
+    if (!planet) throw new Error('planet unknown');
+    if (!isLocatable(planet)) throw new Error('planet location unknown');
 
-    const ret: Planet[] = [];
-    const maxDist = this.getMaxMoveDist(planetId, sendingPercent);
-    const planetsIt = this.entityStore.getAllPlanets();
-    for (const toPlanet of planetsIt) {
-      const toLoc = this.entityStore.getLocationOfPlanet(toPlanet.locationId);
-      if (!toLoc) continue;
-
-      const { x: fromX, y: fromY } = loc.coords;
-      const { x: toX, y: toY } = toLoc.coords;
-      if ((fromX - toX) ** 2 + (fromY - toY) ** 2 < maxDist ** 2) {
-        ret.push(toPlanet);
-      }
-    }
-    return ret;
+    return this.getGameObjects().getPlanetsInWorldCircle(
+      planet.location.coords,
+      getRange(planet, sendingPercent)
+    );
   }
 
   /**
@@ -2771,14 +2987,12 @@ class GameManager extends EventEmitter {
     if (distance === undefined && toId === undefined)
       throw new Error(`you must provide either a target planet or a distance`);
 
-    let dist = (toId && this.getDist(fromId, toId)) || (distance as number);
+    const dist = (toId && this.getDist(fromId, toId)) || (distance as number);
 
     if (to && toId) {
       const wormholeFactors = this.getWormholeFactors(from, to);
       if (wormholeFactors !== undefined) {
-        if (to.owner === from.owner) {
-          dist /= wormholeFactors.distanceFactor;
-        } else {
+        if (to.owner !== from.owner) {
           return 0;
         }
       }

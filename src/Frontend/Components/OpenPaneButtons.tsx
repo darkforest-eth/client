@@ -1,23 +1,23 @@
 import { LocationId } from '@darkforest_eth/types';
 import React, { useCallback } from 'react';
 import { BroadcastPane, BroadcastPaneHelpContent } from '../Panes/BroadcastPane';
+import { ClaimPlanetPane } from '../Panes/ClaimPlanetPane';
 import { HatPane } from '../Panes/HatPane';
 import {
   ManagePlanetArtifactsHelpContent,
   ManagePlanetArtifactsPane,
 } from '../Panes/ManagePlanetArtifacts/ManagePlanetArtifactsPane';
 import { UpgradeDetailsPane, UpgradeDetailsPaneHelpContent } from '../Panes/UpgradeDetailsPane';
-import { useIsDown } from '../Utils/KeyEmitters';
+import { useOnUp } from '../Utils/KeyEmitters';
 import {
   TOGGLE_BROADCAST_PANE,
+  TOGGLE_CLAIM_PLANET_PANE,
   TOGGLE_HAT_PANE,
   TOGGLE_PLANET_ARTIFACTS_PANE,
   TOGGLE_UPGRADES_PANE,
-  useSubscribeToShortcut,
 } from '../Utils/ShortcutConstants';
 import { ModalHandle } from '../Views/ModalPane';
-import { Btn } from './Btn';
-import { CenteredText, KeyboardBtn } from './CoreUI';
+import { AlignCenterHorizontally, CenteredText, ShortcutButton } from './CoreUI';
 
 export function OpenPaneButton({
   modal,
@@ -28,7 +28,7 @@ export function OpenPaneButton({
 }: {
   modal: ModalHandle;
   title: string;
-  element: React.ReactElement;
+  element: () => React.ReactElement;
   helpContent?: React.ReactElement;
   shortcutKey?: string;
 }) {
@@ -40,14 +40,31 @@ export function OpenPaneButton({
     });
   }, [title, element, helpContent, modal]);
 
-  useSubscribeToShortcut(shortcutKey, open);
-  const isDown = useIsDown(shortcutKey);
+  useOnUp(shortcutKey, open);
 
   return (
-    <Btn wide onClick={open}>
-      <CenteredText>{title}</CenteredText>
-      <KeyboardBtn active={isDown}>{shortcutKey}</KeyboardBtn>
-    </Btn>
+    <AlignCenterHorizontally style={{ width: '100%' }} key={shortcutKey}>
+      <ShortcutButton style={{ flexGrow: 1 }} wide onClick={open} shortcutKey={shortcutKey}>
+        <CenteredText>{title}</CenteredText>
+      </ShortcutButton>
+    </AlignCenterHorizontally>
+  );
+}
+
+export function OpenClaimPlanetPane({
+  modal,
+  planetId,
+}: {
+  modal: ModalHandle;
+  planetId: LocationId | undefined;
+}) {
+  return (
+    <OpenPaneButton
+      modal={modal}
+      title='Claim Planet'
+      shortcutKey={TOGGLE_CLAIM_PLANET_PANE}
+      element={() => <ClaimPlanetPane modal={modal} planetId={planetId} />}
+    />
   );
 }
 
@@ -63,7 +80,7 @@ export function OpenHatPaneButton({
       modal={modal}
       title='Hat'
       shortcutKey={TOGGLE_HAT_PANE}
-      element={<HatPane modal={modal} planetId={planetId} />}
+      element={() => <HatPane modal={modal} planetId={planetId} />}
     />
   );
 }
@@ -80,7 +97,7 @@ export function OpenBroadcastPaneButton({
       modal={modal}
       title='Broadcast'
       shortcutKey={TOGGLE_BROADCAST_PANE}
-      element={<BroadcastPane modal={modal} planetId={planetId} />}
+      element={() => <BroadcastPane modal={modal} planetId={planetId} />}
       helpContent={BroadcastPaneHelpContent()}
     />
   );
@@ -98,7 +115,7 @@ export function OpenUpgradeDetailsPaneButton({
       modal={modal}
       title='Upgrade'
       shortcutKey={TOGGLE_UPGRADES_PANE}
-      element={<UpgradeDetailsPane modal={modal} planetId={planetId} />}
+      element={() => <UpgradeDetailsPane modal={modal} planetId={planetId} />}
       helpContent={UpgradeDetailsPaneHelpContent()}
     />
   );
@@ -115,7 +132,7 @@ export function OpenManagePlanetArtifactsButton({
       modal={modal}
       title='Artifacts'
       shortcutKey={TOGGLE_PLANET_ARTIFACTS_PANE}
-      element={<ManagePlanetArtifactsPane modal={modal} planetId={planetId} />}
+      element={() => <ManagePlanetArtifactsPane modal={modal} planetId={planetId} />}
       helpContent={ManagePlanetArtifactsHelpContent()}
     />
   );

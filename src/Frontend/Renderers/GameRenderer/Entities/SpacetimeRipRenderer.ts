@@ -37,7 +37,7 @@ export class SpacetimeRipRenderer extends GenericRenderer<typeof SPACETIMERIP_PR
 
     if (planet.spaceType === SpaceType.SPACE) c = [0, 5, 43];
     else if (planet.spaceType === SpaceType.DEEP_SPACE) c = [2, 0, 6];
-    else if (planet.spaceType === SpaceType.DEAD_SPACE) c = [38, 0, 36];
+    else if (planet.spaceType === SpaceType.DEAD_SPACE) c = [0, 36, 0];
 
     const cosmetic = ProcgenUtils.getPlanetCosmetic(planet);
 

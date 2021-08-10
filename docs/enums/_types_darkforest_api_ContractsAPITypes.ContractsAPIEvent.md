@@ -10,6 +10,7 @@
 - [ArtifactUpdate](_types_darkforest_api_ContractsAPITypes.ContractsAPIEvent.md#artifactupdate)
 - [ChangedGPTCreditPrice](_types_darkforest_api_ContractsAPITypes.ContractsAPIEvent.md#changedgptcreditprice)
 - [LocationRevealed](_types_darkforest_api_ContractsAPITypes.ContractsAPIEvent.md#locationrevealed)
+- [PlanetClaimed](_types_darkforest_api_ContractsAPITypes.ContractsAPIEvent.md#planetclaimed)
 - [PlanetTransferred](_types_darkforest_api_ContractsAPITypes.ContractsAPIEvent.md#planettransferred)
 - [PlanetUpdate](_types_darkforest_api_ContractsAPITypes.ContractsAPIEvent.md#planetupdate)
 - [PlayerUpdate](_types_darkforest_api_ContractsAPITypes.ContractsAPIEvent.md#playerupdate)
@@ -42,6 +43,12 @@
 ### LocationRevealed
 
 • **LocationRevealed** = `"LocationRevealed"`
+
+---
+
+### PlanetClaimed
+
+• **PlanetClaimed** = `"PlanetClaimed"`
 
 ---
 

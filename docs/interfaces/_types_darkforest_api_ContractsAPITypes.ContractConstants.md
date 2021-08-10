@@ -10,6 +10,7 @@
 - [BIOMEBASE_KEY](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#biomebase_key)
 - [BIOME_THRESHOLD_1](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#biome_threshold_1)
 - [BIOME_THRESHOLD_2](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#biome_threshold_2)
+- [CLAIM_PLANET_COOLDOWN](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#claim_planet_cooldown)
 - [DISABLE_ZK_CHECKS](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#disable_zk_checks)
 - [INIT_PERLIN_MAX](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#init_perlin_max)
 - [INIT_PERLIN_MIN](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#init_perlin_min)
@@ -26,6 +27,7 @@
 - [PLANET_RARITY](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#planet_rarity)
 - [PLANET_TYPE_WEIGHTS](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#planet_type_weights)
 - [SPACETYPE_KEY](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#spacetype_key)
+- [SPAWN_RIM_AREA](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#spawn_rim_area)
 - [TIME_FACTOR_HUNDREDTHS](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#time_factor_hundredths)
 - [TOKEN_MINT_END_SECONDS](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#token_mint_end_seconds)
 - [defaultBarbarianPercentage](_types_darkforest_api_ContractsAPITypes.ContractConstants.md#defaultbarbarianpercentage)
@@ -63,6 +65,12 @@
 ### BIOME_THRESHOLD_2
 
 • **BIOME_THRESHOLD_2**: `number`
+
+---
+
+### CLAIM_PLANET_COOLDOWN
+
+• **CLAIM_PLANET_COOLDOWN**: `number`
 
 ---
 
@@ -164,6 +172,12 @@ four ranges: `PERLIN_THRESHOLD_1`, `PERLIN_THRESHOLD_2`, `PERLIN_THRESHOLD_3`.
 ### SPACETYPE_KEY
 
 • **SPACETYPE_KEY**: `number`
+
+---
+
+### SPAWN_RIM_AREA
+
+• **SPAWN_RIM_AREA**: `number`
 
 ---
 

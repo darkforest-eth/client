@@ -4,6 +4,8 @@ import React, { ChangeEvent, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 import dfstyles from '../Styles/dfstyles';
 import { GameWindowZIndex } from '../Utils/constants';
+import { useIsDown } from '../Utils/KeyEmitters';
+import { Btn, BtnProps } from './Btn';
 
 export const InlineBlock = styled.div`
   display: inline-block;
@@ -188,25 +190,26 @@ export const DontShrink = styled.div`
 /**
  * This is the link that all core ui in Dark Forest should use. Please!
  */
-export function Link({
-  to,
-  color,
-  openInThisTab,
-  children,
-}: {
-  to: string;
-  color?: string;
-  openInThisTab?: boolean;
-  children: React.ReactNode;
-}) {
+export function Link(
+  props: {
+    to?: string;
+    color?: string;
+    openInThisTab?: boolean;
+    children: React.ReactNode;
+  } & React.HtmlHTMLAttributes<HTMLAnchorElement>
+) {
+  const { to, color, openInThisTab, children } = props;
+
   return (
-    <LinkImpl href={to} color={color} target={openInThisTab ? undefined : '_blank'}>
+    <LinkImpl {...props} href={to} color={color} target={openInThisTab ? undefined : '_blank'}>
       {children}
     </LinkImpl>
   );
 }
 
 const LinkImpl = styled.a`
+  cursor: pointer;
+
   ${({ color }: { color?: string }) => css`
     text-decoration: underline;
     color: ${color || dfstyles.colors.dfblue};
@@ -227,6 +230,8 @@ export const EmSpacer = styled.div`
   ${({ width, height }: { width?: number; height?: number }) => css`
     width: ${width === undefined ? '1em' : width};
     height: ${height === undefined ? '1em' : height};
+    flex-grow: 0;
+    flex-shrink: 0;
     ${width && !height ? 'display: inline-block;' : ''}
     ${width ? `width: ${width}em;` : ''}
     ${height ? `height: ${height}em;min-height:${height}em;` : ''}
@@ -245,6 +250,7 @@ export const Spacer = styled.div`
 
 export const Truncate = styled.div`
   ${({ maxWidth }: { maxWidth?: string }) => css`
+    vertical-align: bottom;
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
@@ -261,7 +267,7 @@ export const Truncate = styled.div`
  * way to do this.
  */
 export const PluginElements = styled.div`
-  color: white;
+  color: ${dfstyles.colors.text};
   width: 400px;
   min-height: 100px;
   max-height: 600px;
@@ -275,7 +281,7 @@ export const PluginElements = styled.div`
     transition: background-color 0.2s colors 0.2s;
 
     &:hover {
-      background-color: white;
+      background-color: ${dfstyles.colors.text};
       color: black;
       border: 1px transparent;
     }
@@ -306,8 +312,8 @@ export const Select = styled.select`
     cursor: pointer;
 
     &:hover {
-      border: 1px solid ${dfstyles.colors.text};
-      background: ${dfstyles.colors.text};
+      border: 1px solid ${dfstyles.colors.subtext};
+      background: ${dfstyles.colors.subtext};
       color: ${dfstyles.colors.background};
     }
   `}
@@ -395,16 +401,38 @@ export const CenterBackgroundSubtext = styled.div`
   `}
 `;
 
+/**
+ * A button that also displays a {@code KeyboardBtn} directly next to it, which shows the user
+ * whether or not the given shortcut key is down. In the case that now {@code shortcutKey} was
+ * provided, this is just a normal button.
+ */
+export function ShortcutButton(
+  props: { children: React.ReactNode; shortcutKey?: string; shortcutText?: string } & BtnProps
+) {
+  return (
+    <Expand style={{ display: 'flex' }}>
+      <AlignCenterHorizontally style={{ flexGrow: 1 }}>
+        <Btn {...props} />
+        {props.shortcutKey && (
+          <>
+            <EmSpacer width={0.5} />
+            <ShortcutKeyDown shortcutKey={props.shortcutKey} text={props.shortcutText} />
+          </>
+        )}
+      </AlignCenterHorizontally>
+    </Expand>
+  );
+}
+
 // Styling from https://www.npmjs.com/package/keyboard-css
 export const KeyboardBtn = styled.kbd`
   ${({ active }: { active?: boolean }) => css`
     font-size: 0.7rem;
-    line-height: 1.5;
-    margin: 0.25rem 0.25rem 0.375rem;
-    padding: 0.1rem 0.3rem;
+    line-height: 1.4;
+    padding: 0.1rem 0.45rem;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    border: 1px solid #4b545c;
+    border: 1px solid ${dfstyles.colors.border};
     border-radius: 0.25rem;
     display: inline-block;
     font-weight: 400;
@@ -413,10 +441,10 @@ export const KeyboardBtn = styled.kbd`
     transform-style: preserve-3d;
     transition: all 0.25s cubic-bezier(0.2, 1, 0.2, 1);
     box-shadow: ${active
-      ? '0 0 1px 1px #7a8793'
-      : '0 0 #56606a, 0 0 #56606a, 0 1px #56606a, 0 2px #56606a, 2px 1px 4px #adb5bd, 0 -1px 1px #adb5bd'};
+      ? '0 0 1px 1px #929292'
+      : '0 0 #6b6b6b, 0 0 #6b6b6b, 0 1px #6d6d6d, 0 2px #6d6d6d, 2px 1px 4px #adb5bd, 0 -1px 1px #adb5bd'};
     background-color: ${active ? dfstyles.colors.text : '#343a40'};
-    color: ${active ? dfstyles.colors.background : '#f8f9fa'};
+    color: ${active ? dfstyles.colors.background : dfstyles.colors.text};
     &:after {
       border-radius: 0.375rem;
       border-width: 0.0625rem;
@@ -432,7 +460,7 @@ export const KeyboardBtn = styled.kbd`
       position: absolute;
       transform-style: preserve-3d;
       transition: all 0.25s cubic-bezier(0.2, 1, 0.2, 1);
-      border-color: #626d78;
+      border-color: ${dfstyles.colors.borderDarker};
       background: ${active ? 'transparent' : dfstyles.colors.background};
     }
   `}
@@ -442,3 +470,9 @@ export const CenteredText = styled.span`
   margin: auto;
   text-align: center;
 `;
+
+export function ShortcutKeyDown({ shortcutKey, text }: { shortcutKey?: string; text?: string }) {
+  const isDown = useIsDown(shortcutKey);
+
+  return <KeyboardBtn active={isDown}>{text === undefined ? shortcutKey : text}</KeyboardBtn>;
+}

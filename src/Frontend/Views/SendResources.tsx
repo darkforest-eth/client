@@ -1,25 +1,27 @@
-import {
-  Artifact,
-  artifactNameFromArtifact,
-  ArtifactTypeNames,
-  Planet,
-} from '@darkforest_eth/types';
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
+import { Artifact, artifactNameFromArtifact, Planet } from '@darkforest_eth/types';
+import _ from 'lodash';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { formatNumber } from '../../Backend/Utils/Utils';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { ArtifactImage } from '../Components/ArtifactImage';
 import { Btn } from '../Components/Btn';
-import { CenteredText, FullWidth, KeyboardBtn, Spacer } from '../Components/CoreUI';
+import {
+  AlignCenterHorizontally,
+  CenteredText,
+  EmSpacer,
+  FullWidth,
+  ShortcutKeyDown,
+  Spacer,
+} from '../Components/CoreUI';
 import { EnergyIcon, SilverIcon } from '../Components/Icons';
-import { LongDash, Sub } from '../Components/Text';
+import { LongDash, Sub, Subber } from '../Components/Text';
 import WindowManager, { CursorState } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
-import { useControlDown, usePlanetInactiveArtifacts, useUIManager } from '../Utils/AppHooks';
-import { useEmitterSubscribe, useEmitterValue } from '../Utils/EmitterHooks';
-import { escapeDown$, keyUp$, useIsDown } from '../Utils/KeyEmitters';
-import { TOGGLE_SEND } from '../Utils/ShortcutConstants';
+import { useOnSendCompleted, usePlanetInactiveArtifacts, useUIManager } from '../Utils/AppHooks';
+import { SpecialKey, useIsDown, useOnUp } from '../Utils/KeyEmitters';
+import { EXIT_PANE, TOGGLE_SEND } from '../Utils/ShortcutConstants';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 
 const DEFAULT_ENERGY_PERCENT = 50;
@@ -129,9 +131,9 @@ function ResourceBar({
       <div>
         <div>
           <ResourceRowIcon rowType={isSilver ? RowType.Silver : RowType.Energy} />
-          <Sub>
-            {getResource(value)} {isSilver ? 'silver' : 'energy'}
-          </Sub>
+          {getResource(value)}
+          <EmSpacer width={1} />
+          <Subber>{isSilver ? 'silver' : 'energy'}</Subber>
         </div>
         <ShowPercent value={value} setValue={setValue} />
       </div>
@@ -148,44 +150,28 @@ function ResourceBar({
   );
 }
 
-const height = 3.5;
-const margin = 0.5;
-const thumb = height - 2 * margin;
-const StyledSelectArtifactRow = styled.div<{ planet: Planet | undefined }>`
-  width: 100%;
-
-  border-top: 1px solid ${dfstyles.colors.border};
-  border-bottom: 1px solid ${dfstyles.colors.border};
-  height: ${height}em;
-  padding: ${margin}em;
-`;
-
 const RowWrapper = styled.div<{ artifacts: Artifact[] }>`
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: ${({ artifacts }) => (artifacts.length > 0 ? 'flex-start' : 'space-around')};
   align-items: center;
-
   overflow-x: scroll;
 `;
 
 const thumbActive = css`
-  border: 1px solid ${dfstyles.colors.text};
-  outline: 2px solid ${dfstyles.colors.text};
-  outline-offset: -2px;
+  border: 1px solid ${dfstyles.colors.border};
 `;
 
 const StyledArtifactThumb = styled.div<{ active: boolean }>`
-  min-width: ${thumb}em;
-  min-height: ${thumb}em;
-  width: ${thumb}em;
-  height: ${thumb}em;
+  min-width: ${2.5}em;
+  min-height: ${2.5}em;
+  width: ${2.5}em;
+  height: ${2.5}em;
 
-  border: 1px solid ${dfstyles.colors.subtext};
+  border: 1px solid ${dfstyles.colors.borderDark};
   border-radius: 1px;
 
-  margin-right: ${margin}em;
   &:last-child {
     margin-right: none;
   }
@@ -233,31 +219,27 @@ function ArtifactThumb({
 }
 
 function SelectArtifactRow({
-  planet,
   sendArtifact,
   setSendArtifact,
   inactiveArtifacts,
 }: {
-  planet: Planet;
   sendArtifact: Artifact | undefined;
   setSendArtifact: Hook<Artifact | undefined>[1];
   inactiveArtifacts: Artifact[];
 }) {
   return (
-    <StyledSelectArtifactRow planet={planet}>
-      <RowWrapper artifacts={inactiveArtifacts}>
-        {inactiveArtifacts.length > 0 &&
-          inactiveArtifacts.map((a) => (
-            <ArtifactThumb
-              artifact={a}
-              key={a.id}
-              sendArtifact={sendArtifact}
-              setSendArtifact={setSendArtifact}
-            />
-          ))}
-        {inactiveArtifacts.length === 0 && <Sub>No movable artifacts!</Sub>}
-      </RowWrapper>
-    </StyledSelectArtifactRow>
+    <RowWrapper artifacts={inactiveArtifacts}>
+      {inactiveArtifacts.length > 0 &&
+        inactiveArtifacts.map((a) => (
+          <ArtifactThumb
+            artifact={a}
+            key={a.id}
+            sendArtifact={sendArtifact}
+            setSendArtifact={setSendArtifact}
+          />
+        ))}
+      {inactiveArtifacts.length === 0 && <Sub>No movable artifacts!</Sub>}
+    </RowWrapper>
   );
 }
 
@@ -266,7 +248,6 @@ const First = styled.span`
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  padding: 8px;
 `;
 
 const Remove = styled.span`
@@ -288,22 +269,22 @@ function SendRow({
   remove: () => void;
   sending: boolean;
 }) {
-  const isDown = useIsDown(TOGGLE_SEND);
-
   return (
     <>
       {(artifact && (
         <First>
-          {artifactNameFromArtifact(artifact)}{' '}
-          {artifact && <Sub>({ArtifactTypeNames[artifact.artifactType]})</Sub>}
-          <Remove onClick={remove}>remove</Remove>
+          <Sub>{'sending ' + artifactNameFromArtifact(artifact)} </Sub>
+          <Remove onClick={remove}>don't send</Remove>
         </First>
       )) || <></>}
       <FullWidth>
-        <Btn wide onClick={doSend} forceActive={sending}>
-          <CenteredText>Send</CenteredText>
-          <KeyboardBtn active={isDown}>{TOGGLE_SEND}</KeyboardBtn>
-        </Btn>
+        <AlignCenterHorizontally style={{ width: '100%' }}>
+          <Btn wide onClick={doSend} forceActive={sending}>
+            <CenteredText>Send</CenteredText>
+          </Btn>
+          <EmSpacer width={0.5} />
+          <ShortcutKeyDown shortcutKey={TOGGLE_SEND} />
+        </AlignCenterHorizontally>
       </FullWidth>
     </>
   );
@@ -315,32 +296,24 @@ export function SendResources({
   planetWrapper: Wrapper<Planet | undefined>;
 }) {
   const uiManager = useUIManager();
-
   const energyHook = useState<number>(
     p.value && uiManager.getForcesSending(p.value.locationId)
       ? uiManager.getForcesSending(p.value.locationId)
       : DEFAULT_ENERGY_PERCENT
   );
   const [energyPercent, setEnergyPercent] = energyHook;
-
   const silverHook = useState<number>(
     p.value && uiManager.getSilverSending(p.value.locationId)
       ? uiManager.getSilverSending(p.value.locationId)
       : DEFAULT_SILVER_PERCENT
   );
   const [silverPercent, setSilverPercent] = silverHook;
-
   const [sending, setSending] = useState<boolean>(false);
 
   const windowManager = WindowManager.getInstance();
 
-  const ctrlDown = useControlDown();
-  const keyUp = useEmitterValue(keyUp$, undefined);
-  const lastKeyUp = useRef(keyUp);
-
   useEffect(() => {
     if (!p.value || !uiManager) return;
-
     uiManager.setForcesSending(p.value.locationId, energyPercent);
     uiManager.setSilverSending(p.value.locationId, silverPercent);
   }, [energyPercent, silverPercent, p, uiManager]);
@@ -359,9 +332,7 @@ export function SendResources({
 
   const doSend = useCallback(() => {
     if (!uiManager || !windowManager) return;
-
     const uiEmitter = UIEmitter.getInstance();
-
     if (windowManager.getCursorState() === CursorState.TargetingForces) {
       setSending(false);
       windowManager.setCursorState(CursorState.Normal);
@@ -373,53 +344,42 @@ export function SendResources({
     }
   }, [p, windowManager, uiManager]);
 
-  /**
-   * If the user presses 0-9, set the energy percent we're sending to be
-   * that value times 10. If they press '-' or '=', decrease or increase
-   * the energy percent we're sending respectively.
-   */
-  useEffect(() => {
-    if (!keyUp) return;
-    if (lastKeyUp.current === keyUp) return;
-    lastKeyUp.current = keyUp;
+  const shiftDown = useIsDown(SpecialKey.Shift);
 
-    let setPercent = setEnergyPercent;
-    let currentPercent = energyPercent;
-    if (ctrlDown) {
-      setPercent = setSilverPercent;
-      currentPercent = silverPercent;
-    }
-
-    if (keyUp.value === '-') {
-      setPercent(Math.max(currentPercent - 1, 0));
-      return;
-    } else if (keyUp.value === '=') {
-      setPercent(Math.min(currentPercent + 1, 100));
-      return;
-    } else if (keyUp.value === TOGGLE_SEND) {
-      doSend();
-      return;
-    }
-
-    const digitValue = parseInt(keyUp.value, 10);
-    if (isNaN(digitValue)) return;
-
-    setPercent(digitValue * 10 + (digitValue === 0 ? 100 : 0));
-  }, [keyUp, energyPercent, setEnergyPercent, setSilverPercent, ctrlDown, doSend, silverPercent]);
-
-  useEffect(() => {
-    const uiEmitter = UIEmitter.getInstance();
-
-    const onComplete = () => {
+  useOnUp(TOGGLE_SEND, doSend);
+  useOnUp(EXIT_PANE, () => {
+    if (!sending) uiManager.selectedPlanetId$.publish(undefined);
+    else {
+      UIEmitter.getInstance().emit(UIEmitterEvent.SendCancelled);
       setSending(false);
-      windowManager.setCursorState(CursorState.Normal);
-    };
+    }
+  });
 
-    uiEmitter.on(UIEmitterEvent.SendCompleted, onComplete);
+  for (let i = 0; i < 10; i++) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useOnUp(i + '', () => {
+      let percent = i * 10;
 
-    return () => {
-      uiEmitter.removeListener(UIEmitterEvent.SendCompleted, onComplete);
-    };
+      if (i === 0) {
+        percent = 100;
+      }
+
+      !shiftDown && setEnergyPercent(percent);
+      shiftDown && setSilverPercent(percent);
+    });
+  }
+
+  const setPercent = shiftDown ? setSilverPercent : setEnergyPercent;
+  useOnUp('-', () => {
+    setPercent((p) => _.clamp(p - 10, 0, 100));
+  });
+  useOnUp('+', () => {
+    setPercent((p) => _.clamp(p + 10, 0, 100));
+  });
+
+  useOnSendCompleted(() => {
+    setSending(false);
+    windowManager.setCursorState(CursorState.Normal);
   });
 
   /* sending artifacts stuff */
@@ -448,20 +408,8 @@ export function SendResources({
     uiManager.setArtifactSending(p.value.locationId, sendArtifact);
   }, [sendArtifact, uiManager, p]);
 
-  const remove = useCallback(() => setSendArtifact(undefined), [setSendArtifact]);
+  const removeArtifact = useCallback(() => setSendArtifact(undefined), [setSendArtifact]);
   const artifacts = usePlanetInactiveArtifacts(p, uiManager);
-
-  // attach escape key listener
-  /* TODO rethink this. this is a trash way of doing this. this only works because
-    `SendResources` is always open when `PlanetContextPane` is, but we shouldn't trust this.  */
-  const onEscapeDown = useCallback(() => {
-    if (!sending) uiManager.selectedPlanetId$.publish(undefined);
-    else {
-      UIEmitter.getInstance().emit(UIEmitterEvent.SendCancelled);
-      setSending(false);
-    }
-  }, [uiManager, sending]);
-  useEmitterSubscribe(escapeDown$, onEscapeDown);
 
   return (
     <StyledSendResources>
@@ -475,10 +423,13 @@ export function SendResources({
         />
       )}
       {p.value && artifacts.length > 0 && (
-        <SelectArtifactRow planet={p.value} inactiveArtifacts={artifacts} {...artifactProps} />
+        <>
+          <SelectArtifactRow inactiveArtifacts={artifacts} {...artifactProps} />
+          <EmSpacer height={0.5} />
+        </>
       )}
 
-      <SendRow artifact={sendArtifact} remove={remove} doSend={doSend} sending={sending} />
+      <SendRow artifact={sendArtifact} remove={removeArtifact} doSend={doSend} sending={sending} />
     </StyledSendResources>
   );
 }

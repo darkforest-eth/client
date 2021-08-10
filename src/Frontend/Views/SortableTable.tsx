@@ -11,7 +11,7 @@ const Header = styled(TableCell)`
   ${({ isActive, isReverse }: { isActive: boolean; isReverse: boolean }) => css`
     padding: 2px 4px;
     font-weight: normal;
-    color: white;
+    color: ${dfstyles.colors.text};
     user-select: none;
     cursor: pointer;
     ${isActive && 'text-decoration: underline;'}

@@ -131,14 +131,14 @@ export function GameLandingPage() {
       terminal.current?.newline();
 
       terminal.current?.print('    ');
-      terminal.current?.print('Version', TerminalTextStyle.Underline);
+      terminal.current?.print('Version', TerminalTextStyle.Sub);
       terminal.current?.print('    ');
-      terminal.current?.print('Date', TerminalTextStyle.Underline);
+      terminal.current?.print('Date', TerminalTextStyle.Sub);
       terminal.current?.print('              ');
-      terminal.current?.print('Champion', TerminalTextStyle.Underline);
+      terminal.current?.print('Champion', TerminalTextStyle.Sub);
       terminal.current?.newline();
 
-      terminal.current?.print('    v0.1       ');
+      terminal.current?.print('    v0.1       ', TerminalTextStyle.White);
       terminal.current?.print('02/05/2020        ', TerminalTextStyle.White);
       terminal.current?.printLink(
         'Dylan Field',
@@ -148,9 +148,9 @@ export function GameLandingPage() {
         TerminalTextStyle.White
       );
       terminal.current?.newline();
-      terminal.current?.print('    v0.2       ');
+      terminal.current?.print('    v0.2       ', TerminalTextStyle.White);
       terminal.current?.println('06/06/2020        Nate Foss', TerminalTextStyle.White);
-      terminal.current?.print('    v0.3       ');
+      terminal.current?.print('    v0.3       ', TerminalTextStyle.White);
       terminal.current?.print('08/07/2020        ', TerminalTextStyle.White);
       terminal.current?.printLink(
         '[ANON] Singer',
@@ -160,7 +160,7 @@ export function GameLandingPage() {
         TerminalTextStyle.White
       );
       terminal.current?.newline();
-      terminal.current?.print('    v0.4       ');
+      terminal.current?.print('    v0.4       ', TerminalTextStyle.White);
       terminal.current?.print('10/02/2020        ', TerminalTextStyle.White);
       terminal.current?.printLink(
         'Jacob Rosenthal',
@@ -170,18 +170,18 @@ export function GameLandingPage() {
         TerminalTextStyle.White
       );
       terminal.current?.newline();
-      terminal.current?.print('    v0.5       ');
+      terminal.current?.print('    v0.5       ', TerminalTextStyle.White);
       terminal.current?.print('12/25/2020        ', TerminalTextStyle.White);
       terminal.current?.printElement(
         <TextPreview
           text={'0xb05d95422bf8d5024f9c340e8f7bd696d67ee3a9'}
-          focusedWidth={'400px'}
-          unFocusedWidth={'150px'}
+          focusedWidth={'100px'}
+          unFocusedWidth={'100px'}
         />
       );
       terminal.current?.println('');
 
-      terminal.current?.print('    v0.6 r1    ');
+      terminal.current?.print('    v0.6 r1    ', TerminalTextStyle.White);
       terminal.current?.print('05/22/2021        ', TerminalTextStyle.White);
       terminal.current?.printLink(
         'Ansgar Dietrichs',
@@ -198,11 +198,14 @@ export function GameLandingPage() {
       terminal.current?.println(``);
 
       if (accounts.length > 0) {
-        terminal.current?.println('(a) Login with existing account.');
+        terminal.current?.print('(a) ', TerminalTextStyle.Sub);
+        terminal.current?.println('Login with existing account.');
       }
 
-      terminal.current?.println(`(n) Generate new burner wallet account.`);
-      terminal.current?.println(`(i) Import private key.`);
+      terminal.current?.print('(n) ', TerminalTextStyle.Sub);
+      terminal.current?.println(`Generate new burner wallet account.`);
+      terminal.current?.print('(i) ', TerminalTextStyle.Sub);
+      terminal.current?.println(`Import private key.`);
       terminal.current?.println(``);
       terminal.current?.println(`Select an option:`, TerminalTextStyle.White);
 
@@ -226,7 +229,8 @@ export function GameLandingPage() {
       terminal.current?.println(``);
       const accounts = getAccounts();
       for (let i = 0; i < accounts.length; i += 1) {
-        terminal.current?.println(`(${i + 1}): ${accounts[i].address}`);
+        terminal.current?.print(`(${i + 1}): `, TerminalTextStyle.Sub);
+        terminal.current?.println(`${accounts[i].address}`);
       }
       terminal.current?.println(``);
       terminal.current?.println(`Select an account:`, TerminalTextStyle.White);
@@ -619,16 +623,16 @@ export function GameLandingPage() {
 
       terminal.current?.newline();
 
-      terminal.current?.println(
-        'We collect a minimal set of statistics such as SNARK proving' +
-          ' times and average transaction times across browsers, to help ' +
-          'us optimize performance and fix bugs. You can opt out of ' +
-          'this in the settings pane.'
-      );
+      terminal.current?.println('We collect a minimal set of statistics such as SNARK proving');
+      terminal.current?.println('times and average transaction times across browsers, to help ');
+      terminal.current?.println('us optimize performance and fix bugs. You can opt out of this');
+      terminal.current?.println('in the Settings pane.');
+      terminal.current?.println('');
 
       terminal.current?.newline();
 
       terminal.current?.println('Press ENTER to find a home planet. This may take up to 120s.');
+      terminal.current?.println('This will consume a lot of CPU.');
 
       await terminal.current?.getInput();
 
@@ -638,13 +642,12 @@ export function GameLandingPage() {
           .joinGame(async (e) => {
             console.error(e);
 
-            terminal.current?.println(
-              '[ERROR] please enable popups to confirm the transaction.',
-              TerminalTextStyle.Red
-            );
-            terminal.current?.println(
-              'Press ENTER to try again. The previous popup is invalidated.'
-            );
+            terminal.current?.println('Error Joining Game:');
+            terminal.current?.println('');
+            terminal.current?.println(e.message, TerminalTextStyle.Red);
+            terminal.current?.println('');
+            terminal.current?.println('Press Enter to Try Again:');
+
             await terminal.current?.getInput();
             return true;
           })
@@ -660,7 +663,6 @@ export function GameLandingPage() {
       });
 
       if (success) {
-        terminal.current?.println('Found suitable home planet!');
         terminal.current?.println('Initializing game...');
         setStep(TerminalPromptStep.ALL_CHECKS_PASS);
       }

@@ -148,7 +148,14 @@ export function ArtifactActions({
           hoverDelay={TOOLTIP_SLOW}
           hoverContents={() => <HoverableTooltip>{a.tooltip}</HoverableTooltip>}
         >
-          <ArtifactActionIconContainer onClick={a.action}>{a.icon}</ArtifactActionIconContainer>
+          <ArtifactActionIconContainer
+            onClick={(e) => {
+              a.action();
+              e.stopPropagation();
+            }}
+          >
+            {a.icon}
+          </ArtifactActionIconContainer>
         </Hoverable>
       ))}
     </ActionsContainer>

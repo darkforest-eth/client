@@ -118,7 +118,7 @@ const StyledArtifactDetailsBody = styled.div`
 `;
 
 const ArtifactName = styled.div`
-  color: white;
+  color: ${dfstyles.colors.text};
   font-weight: bold;
 `;
 

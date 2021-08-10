@@ -4,7 +4,7 @@ import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { Padded, PaddedRecommendedModalWidth, Spacer, VerticalSplit } from '../Components/CoreUI';
 import {
-  OpenBroadcastPaneButton,
+  OpenClaimPlanetPane,
   OpenHatPaneButton,
   OpenManagePlanetArtifactsButton,
   OpenUpgradeDetailsPaneButton,
@@ -58,7 +58,7 @@ function PlanetContextPaneContent({
             <Padded right='4px' left='0' key={'left'}>
               <OpenUpgradeDetailsPaneButton modal={modal} planetId={planet.value?.locationId} />
               <Spacer height={8} />
-              <OpenBroadcastPaneButton modal={modal} planetId={planet.value?.locationId} />
+              <OpenClaimPlanetPane modal={modal} planetId={planet.value?.locationId} />
             </Padded>,
             <Padded right='0' left='4px' key={'right'}>
               <OpenManagePlanetArtifactsButton modal={modal} planetId={planet.value?.locationId} />

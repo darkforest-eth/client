@@ -2,11 +2,13 @@
 import coreContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestCore.json';
 import gettersContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestGetters.json';
 import gptCreditContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestGPTCredit.json';
+import scoringContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestScoringRound3.json';
 import whitelistContractAbiUrl from '@darkforest_eth/contracts/abis/Whitelist.json';
 import type {
   DarkForestCore,
   DarkForestGetters,
   DarkForestGPTCredit,
+  DarkForestScoringRound3,
   Whitelist,
 } from '@darkforest_eth/contracts/typechain';
 import { createContract, createEthConnection, EthConnection } from '@darkforest_eth/network';
@@ -67,6 +69,20 @@ export async function loadGptCreditContract(
   const gptCreditContractAbi = await fetch(gptCreditContractAbiUrl).then((r) => r.json());
 
   return createContract<DarkForestGPTCredit>(address, gptCreditContractAbi, provider, signer);
+}
+
+/**
+ * Loads ths GPT Credit contract, which players can pay to talk to artifacts.
+ * @see https://github.com/darkforest-eth/eth/blob/master/contracts/DarkForestGPTCredit.sol
+ */
+export async function loadScoringContract(
+  address: string,
+  provider: providers.JsonRpcProvider,
+  signer?: Wallet
+): Promise<DarkForestScoringRound3> {
+  const scoringContractAbi = await fetch(scoringContractAbiUrl).then((r) => r.json());
+
+  return createContract<DarkForestScoringRound3>(address, scoringContractAbi, provider, signer);
 }
 
 export function getEthConnection(): Promise<EthConnection> {

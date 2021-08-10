@@ -1,9 +1,11 @@
 import EventEmitter from 'events';
 import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
+import { Link } from '../Components/CoreUI';
 import { Hoverable } from '../Components/Hoverable';
+import { MythicLabelText } from '../Components/Labels/MythicLabel';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
-import { BasicLink, Blue, Green, Invisible, Red, Sub, White } from '../Components/Text';
+import { Blue, Green, Invisible, Red, Sub, Subber, White } from '../Components/Text';
 import { LoadingBarHandle, TextLoadingBar } from '../Components/TextLoadingBar';
 import dfstyles from '../Styles/dfstyles';
 import { isFirefox } from '../Utils/BrowserChecks';
@@ -75,7 +77,7 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
   const print = useCallback(
     (
       str: string,
-      style = TerminalTextStyle.Default,
+      style = TerminalTextStyle.White,
       onClick: (() => void) | undefined = undefined,
       hoverContents?: () => JSX.Element
     ) => {
@@ -83,10 +85,13 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
       let innerFragment: JSX.Element = <span>{str}</span>;
 
       if (onClick !== undefined) {
-        innerFragment = <BasicLink onClick={onClick}>{innerFragment}</BasicLink>;
+        innerFragment = <Link onClick={onClick}>{innerFragment}</Link>;
       }
 
       switch (style) {
+        case TerminalTextStyle.Mythic:
+          fragment = <MythicLabelText text={str} />;
+          break;
         case TerminalTextStyle.Green:
           fragment = <Green>{innerFragment}</Green>;
           break;
@@ -95,6 +100,9 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
           break;
         case TerminalTextStyle.Sub:
           fragment = <Sub>{innerFragment}</Sub>;
+          break;
+        case TerminalTextStyle.Subber:
+          fragment = <Subber>{innerFragment}</Subber>;
           break;
         case TerminalTextStyle.White:
           fragment = <White>{innerFragment}</White>;

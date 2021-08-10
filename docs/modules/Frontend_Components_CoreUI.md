@@ -42,6 +42,8 @@
 
 - [Link](Frontend_Components_CoreUI.md#link)
 - [SelectFrom](Frontend_Components_CoreUI.md#selectfrom)
+- [ShortcutButton](Frontend_Components_CoreUI.md#shortcutbutton)
+- [ShortcutKeyDown](Frontend_Components_CoreUI.md#shortcutkeydown)
 - [VerticalSplit](Frontend_Components_CoreUI.md#verticalsplit)
 
 ## Variables
@@ -264,19 +266,15 @@ way to do this.
 
 ### Link
 
-▸ **Link**(`__namedParameters`): `Element`
+▸ **Link**(`props`): `Element`
 
 This is the link that all core ui in Dark Forest should use. Please!
 
 #### Parameters
 
-| Name                               | Type              |
-| :--------------------------------- | :---------------- |
-| `__namedParameters`                | `Object`          |
-| `__namedParameters.children`       | `React.ReactNode` |
-| `__namedParameters.color?`         | `string`          |
-| `__namedParameters.openInThisTab?` | `boolean`         |
-| `__namedParameters.to`             | `string`          |
+| Name    | Type                                                                                                                                                      |
+| :------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `props` | { `children`: `React.ReactNode` ; `color?`: `string` ; `openInThisTab?`: `boolean` ; `to?`: `string` } & `React.HtmlHTMLAttributes`<`HTMLAnchorElement`\> |
 
 #### Returns
 
@@ -302,6 +300,44 @@ given string values.
 | `__namedParameters.values`   | `string`[]            |
 | `__namedParameters.wide?`    | `boolean`             |
 | `__namedParameters.setValue` |                       |
+
+#### Returns
+
+`Element`
+
+---
+
+### ShortcutButton
+
+▸ **ShortcutButton**(`props`): `Element`
+
+A button that also displays a {@code KeyboardBtn} directly next to it, which shows the user
+whether or not the given shortcut key is down. In the case that now {@code shortcutKey} was
+provided, this is just a normal button.
+
+#### Parameters
+
+| Name    | Type                                                                                                                                         |
+| :------ | :------------------------------------------------------------------------------------------------------------------------------------------- |
+| `props` | { `children`: `React.ReactNode` ; `shortcutKey?`: `string` ; `shortcutText?`: `string` } & [`BtnProps`](Frontend_Components_Btn.md#btnprops) |
+
+#### Returns
+
+`Element`
+
+---
+
+### ShortcutKeyDown
+
+▸ **ShortcutKeyDown**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                             | Type     |
+| :------------------------------- | :------- |
+| `__namedParameters`              | `Object` |
+| `__namedParameters.shortcutKey?` | `string` |
+| `__namedParameters.text?`        | `string` |
 
 #### Returns
 

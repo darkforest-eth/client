@@ -26,7 +26,7 @@ import {
   SilverGrowthText,
   SpeedText,
 } from '../Components/Labels/PlanetLabels';
-import { Subber } from '../Components/Text';
+import { Sub } from '../Components/Text';
 import { TextPreview } from '../Components/TextPreview';
 import { TooltipName } from '../Game/WindowManager';
 import { PlanetIcons } from '../Renderers/PlanetscapeRenderer/PlanetIcons';
@@ -106,13 +106,20 @@ export function PlanetCard({
           </InlineBlock>
         </AlignCenterHorizontally>
 
+        {active && (
+          <>
+            <EmSpacer height={0.5} />
+            <PlanetActiveArtifact artifact={active} planet={planet} />
+          </>
+        )}
+
         <StatsContainer>
           <StatRow>
             <RowTip name={TooltipName.Energy}>
               <AlignCenterHorizontally>
-                <EnergyIcon />
+                <EnergyIcon color={dfstyles.colors.subtext} />
                 <EmSpacer width={0.5} />
-                <Subber>energy</Subber>
+                <Sub>energy</Sub>
                 <EmSpacer width={0.5} />
                 <PlanetEnergyLabel planet={planet} />
                 {planet?.bonus && planet.bonus[StatIdx.EnergyCap] && <TimesTwo />}
@@ -122,9 +129,9 @@ export function PlanetCard({
 
             <RowTip name={TooltipName.EnergyGrowth}>
               <AlignCenterHorizontally>
-                <EnergyGrowthIcon />
+                <EnergyGrowthIcon color={dfstyles.colors.subtext} />
                 <EmSpacer width={0.5} />
-                <Subber>growth</Subber>
+                <Sub>growth</Sub>
                 <EmSpacer width={0.5} />
                 <EnergyGrowthText planet={planet} />
                 {planet?.bonus && planet.bonus[StatIdx.EnergyGro] && <TimesTwo />}
@@ -135,9 +142,9 @@ export function PlanetCard({
           <StatRow>
             <RowTip name={TooltipName.Silver}>
               <AlignCenterHorizontally>
-                <SilverIcon />
+                <SilverIcon color={dfstyles.colors.subtext} />
                 <EmSpacer width={0.5} />
-                <Subber>silver</Subber>
+                <Sub>silver</Sub>
                 <EmSpacer width={0.5} />
                 <PlanetSilverLabel planet={planet} />
               </AlignCenterHorizontally>
@@ -147,9 +154,9 @@ export function PlanetCard({
                 <EmSpacer width={1} />
                 <RowTip name={TooltipName.SilverGrowth}>
                   <AlignCenterHorizontally>
-                    <SilverGrowthIcon />
+                    <SilverGrowthIcon color={dfstyles.colors.subtext} />
                     <EmSpacer width={0.5} />
-                    <Subber>growth</Subber>
+                    <Sub>growth</Sub>
                     <EmSpacer width={0.5} />
                     <SilverGrowthText planet={p.value} />
                   </AlignCenterHorizontally>
@@ -161,9 +168,9 @@ export function PlanetCard({
           <StatRow>
             <RowTip name={TooltipName.Defense}>
               <AlignCenterHorizontally>
-                <DefenseIcon />
+                <DefenseIcon color={dfstyles.colors.subtext} />
                 <EmSpacer width={0.5} />
-                <Subber>defense</Subber>
+                <Sub>defense</Sub>
                 <EmSpacer width={0.5} />
                 <DefenseText planet={planet} />
                 {planet?.bonus && planet.bonus[StatIdx.Defense] && <TimesTwo />}
@@ -174,9 +181,9 @@ export function PlanetCard({
           <StatRow>
             <RowTip name={TooltipName.Speed}>
               <AlignCenterHorizontally>
-                <SpeedIcon />
+                <SpeedIcon color={dfstyles.colors.subtext} />
                 <EmSpacer width={0.5} />
-                <Subber>speed</Subber>
+                <Sub>speed</Sub>
                 <EmSpacer width={0.5} />
                 <SpeedText planet={planet} />
                 {planet?.bonus && planet.bonus[StatIdx.Speed] && <TimesTwo />}
@@ -187,9 +194,9 @@ export function PlanetCard({
           <StatRow>
             <RowTip name={TooltipName.Range}>
               <AlignCenterHorizontally>
-                <RangeIcon />
+                <RangeIcon color={dfstyles.colors.subtext} />
                 <EmSpacer width={0.5} />
-                <Subber>range</Subber>
+                <Sub>range</Sub>
                 <EmSpacer width={0.5} />
                 <RangeText planet={planet} />
                 {planet?.bonus && planet.bonus[StatIdx.Range] && <TimesTwo />}
@@ -199,9 +206,9 @@ export function PlanetCard({
         </StatsContainer>
 
         <SpreadApart>
-          <Subber>owner address</Subber>
+          <Sub>owner address</Sub>
           <TextPreview
-            style={{ color: dfstyles.colors.subbertext }}
+            style={{ color: dfstyles.colors.subtext }}
             text={planet?.owner}
             focusedWidth={'150px'}
             unFocusedWidth={'150px'}
@@ -209,15 +216,14 @@ export function PlanetCard({
         </SpreadApart>
 
         <SpreadApart>
-          <Subber>planet id</Subber>
+          <Sub>planet id</Sub>
           <TextPreview
-            style={{ color: dfstyles.colors.subbertext }}
+            style={{ color: dfstyles.colors.subtext }}
             text={planet?.locationId}
             focusedWidth={'150px'}
             unFocusedWidth={'150px'}
           />
         </SpreadApart>
-        {active && <PlanetActiveArtifact artifact={active} planet={planet} />}
       </div>
     </>
   );
@@ -228,4 +234,8 @@ const StatRow = styled(AlignCenterHorizontally)`
   display: inline-block;
   box-sizing: border-box;
   width: 100%;
+
+  path {
+    fill: ${dfstyles.colors.subtext};
+  }
 `;

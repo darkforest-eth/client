@@ -7,7 +7,7 @@ import { formatNumber, getPlanetRank } from '../../../Backend/Utils/Utils';
 import dfstyles from '../../Styles/dfstyles';
 import { useAccount, usePlayer, useUIManager } from '../../Utils/AppHooks';
 import { EmSpacer } from '../CoreUI';
-import { Colored, Sub, White } from '../Text';
+import { Colored, Sub, Subber, White } from '../Text';
 import { TextPreview } from '../TextPreview';
 import { OptionalPlanetBiomeLabelAnim } from './BiomeLabels';
 import { TwitterLink } from './Labels';
@@ -21,21 +21,23 @@ import { SpacetimeRipLabel } from './SpacetimeRipLabel';
 export function StatText({
   planet,
   getStat,
+  style,
 }: {
   planet: Planet | undefined;
   getStat: (p: Planet) => number;
+  style?: React.CSSProperties;
 }) {
-  return <>{planet ? formatNumber(getStat(planet), 2) : 'n/a'}</>;
+  return <span style={style}>{planet ? formatNumber(getStat(planet), 2) : 'n/a'}</span>;
 }
 
 const getSilver = (p: Planet) => p.silver;
 export const SilverText = ({ planet }: { planet: Planet | undefined }) => (
-  <StatText planet={planet} getStat={getSilver} />
+  <StatText style={{ color: dfstyles.colors.dfyellow }} planet={planet} getStat={getSilver} />
 );
 
 const getSilverCap = (p: Planet) => p.silverCap;
 export const SilverCapText = ({ planet }: { planet: Planet | undefined }) => (
-  <StatText planet={planet} getStat={getSilverCap} />
+  <StatText style={{ color: dfstyles.colors.dfyellow }} planet={planet} getStat={getSilverCap} />
 );
 
 const getEnergy = (p: Planet) => p.energy;
@@ -51,7 +53,7 @@ export const EnergyCapText = ({ planet }: { planet: Planet | undefined }) => (
 export function PlanetEnergyLabel({ planet }: { planet: Planet | undefined }) {
   return (
     <span>
-      <EnergyText planet={planet} /> <Sub>/</Sub> <EnergyCapText planet={planet} />
+      <EnergyText planet={planet} /> <Subber>/</Subber> <EnergyCapText planet={planet} />
     </span>
   );
 }
@@ -59,7 +61,7 @@ export function PlanetEnergyLabel({ planet }: { planet: Planet | undefined }) {
 export function PlanetSilverLabel({ planet }: { planet: Planet | undefined }) {
   return (
     <span>
-      <SilverText planet={planet} /> <Sub>/</Sub> <SilverCapText planet={planet} />
+      <SilverText planet={planet} /> <Subber>/</Subber> <SilverCapText planet={planet} />
     </span>
   );
 }
@@ -86,7 +88,7 @@ export const EnergyGrowthText = ({ planet }: { planet: Planet | undefined }) => 
 
 const getSilverGrowth = (p: Planet) => p.silverGrowth;
 export const SilverGrowthText = ({ planet }: { planet: Planet | undefined }) => (
-  <StatText planet={planet} getStat={getSilverGrowth} />
+  <StatText style={{ color: dfstyles.colors.dfyellow }} planet={planet} getStat={getSilverGrowth} />
 );
 
 // level and rank stuff

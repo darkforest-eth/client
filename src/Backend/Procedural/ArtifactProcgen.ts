@@ -7,7 +7,6 @@ import {
   ArtifactType,
   ArtifactTypeNames,
   Biome,
-  LocationId,
 } from '@darkforest_eth/types';
 import { artifactBiomeName } from '../GameLogic/ArtifactUtils';
 
@@ -21,7 +20,7 @@ export const dateMintedAt = (artifact: Artifact | undefined): string => {
   return new Date(artifact.mintedAtTimestamp * 1000).toDateString();
 };
 
-const namesById = new Map<LocationId, string>();
+const namesById = new Map<ArtifactId, string>();
 export const artifactName = (artifact: Artifact | undefined): string => {
   if (!artifact) return 'Unknown';
 

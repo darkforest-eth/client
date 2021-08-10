@@ -37,7 +37,8 @@ export function ArtifactsList({
     <ArtifactsListContainer>
       {sortedArtifacts.length === 0 && (
         <CenterBackgroundSubtext width='100%' height='100%'>
-          No Artifacts
+          No Artifacts <br />
+          On This Planet
         </CenterBackgroundSubtext>
       )}
       {sortedArtifacts.map((a, i) => (

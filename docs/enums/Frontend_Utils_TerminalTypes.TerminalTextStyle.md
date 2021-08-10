@@ -7,12 +7,13 @@
 ### Enumeration members
 
 - [Blue](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#blue)
-- [Default](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#default)
 - [Green](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#green)
 - [Hoverable](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#hoverable)
 - [Invisible](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#invisible)
+- [Mythic](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#mythic)
 - [Red](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#red)
 - [Sub](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#sub)
+- [Subber](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#subber)
 - [Underline](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#underline)
 - [White](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#white)
 
@@ -20,13 +21,7 @@
 
 ### Blue
 
-• **Blue** = `4`
-
----
-
-### Default
-
-• **Default** = `6`
+• **Blue** = `5`
 
 ---
 
@@ -44,19 +39,31 @@
 
 ### Invisible
 
-• **Invisible** = `5`
+• **Invisible** = `6`
+
+---
+
+### Mythic
+
+• **Mythic** = `9`
 
 ---
 
 ### Red
 
-• **Red** = `3`
+• **Red** = `4`
 
 ---
 
 ### Sub
 
 • **Sub** = `1`
+
+---
+
+### Subber
+
+• **Subber** = `2`
 
 ---
 
@@ -68,4 +75,4 @@
 
 ### White
 
-• **White** = `2`
+• **White** = `3`

@@ -1,7 +1,7 @@
 import { Artifact } from '@darkforest_eth/types';
 import React, { useCallback } from 'react';
-import styled from 'styled-components';
 import { artifactName } from '../../Backend/Procedural/ArtifactProcgen';
+import { Link } from '../Components/CoreUI';
 import { ArtifactDetailsPane } from '../Panes/ArtifactDetailsPane';
 import dfstyles from '../Styles/dfstyles';
 import { ModalHandle } from './ModalPane';
@@ -17,20 +17,16 @@ export function ArtifactLink({
 }) {
   const onClick = useCallback(() => {
     modal.push({
-      element: <ArtifactDetailsPane artifactId={artifact?.id} modal={modal} />,
+      element() {
+        return <ArtifactDetailsPane artifactId={artifact?.id} modal={modal} />;
+      },
       title: artifactName(artifact),
     });
   }, [artifact, modal]);
 
-  return <LinkContainer onClick={onClick}>{children}</LinkContainer>;
+  return (
+    <Link color={dfstyles.colors.text} onClick={onClick}>
+      {children}
+    </Link>
+  );
 }
-
-const LinkContainer = styled.span`
-  color: ${dfstyles.colors.subtext};
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-    color: white;
-  }
-`;

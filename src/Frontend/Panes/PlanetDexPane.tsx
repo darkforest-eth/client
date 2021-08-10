@@ -1,3 +1,4 @@
+import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
 import { Planet, PlanetType } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -264,7 +265,7 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
 
   if (planets.length === 0) {
     content = (
-      <CenterBackgroundSubtext width='300px' height='100px'>
+      <CenterBackgroundSubtext width={RECOMMENDED_MODAL_WIDTH} height='100px'>
         Loading Your Home Planet...
       </CenterBackgroundSubtext>
     );

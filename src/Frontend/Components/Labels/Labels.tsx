@@ -1,22 +1,42 @@
+import { EthAddress } from '@darkforest_eth/types';
 import React from 'react';
 import { usePlayer, useUIManager } from '../../Utils/AppHooks';
 import { Link } from '../CoreUI';
+import { Sub } from '../Text';
 import { TextPreview } from '../TextPreview';
 
-/**
- * Returns a either a link to the player's twitter, or a {@link TextPreview} of their address.
- */
-export function LoggedInPlayer() {
+export function AccountLabel({
+  includeAddressIfHasTwitter,
+  ethAddress,
+}: {
+  includeAddressIfHasTwitter?: boolean;
+  ethAddress?: EthAddress;
+}) {
   const uiManager = useUIManager();
-  const player = usePlayer(uiManager);
+  const player = usePlayer(uiManager, ethAddress);
 
   if (player.value !== undefined && player.value.twitter !== undefined) {
-    return <TwitterLink twitter={player.value.twitter} />;
+    return (
+      <>
+        <TwitterLink twitter={player.value.twitter} />
+        {includeAddressIfHasTwitter && (
+          <Sub>
+            (
+            <TextPreview
+              text={ethAddress || uiManager.getAccount() || '<no account>'}
+              unFocusedWidth={'100px'}
+              focusedWidth={'100px'}
+            />
+            )
+          </Sub>
+        )}
+      </>
+    );
   }
 
   return (
     <TextPreview
-      text={uiManager.getAccount() || '<no account>'}
+      text={ethAddress || uiManager.getAccount() || '<no account>'}
       unFocusedWidth={'350px'}
       focusedWidth={'350px'}
     />

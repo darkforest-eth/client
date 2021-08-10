@@ -172,7 +172,7 @@ export function PluginLibraryPane({
   }
 
   return (
-    <PaddedRecommendedModalWidth>
+    <>
       <RemoteModal
         container={modalsContainer}
         title={'WARNING'}
@@ -226,6 +226,6 @@ export function PluginLibraryPane({
           <Btn onClick={addPluginClicked}>Add Plugin</Btn>
         </PaddedRecommendedModalWidth>
       </ModalPane>
-    </PaddedRecommendedModalWidth>
+    </>
   );
 }

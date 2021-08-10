@@ -1,17 +1,15 @@
 import { Artifact, Planet } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
-import { ArtifactImage } from '../Components/ArtifactImage';
 import {
   ArtifactBiomeText,
   ArtifactRarityLabelAnim,
   ArtifactTypeText,
 } from '../Components/Labels/ArtifactLabels';
-import { Sub } from '../Components/Text';
+import { Sub, White } from '../Components/Text';
 import { TooltipName } from '../Game/WindowManager';
 import { TooltipTrigger } from '../Panes/Tooltip';
 import dfstyles from '../Styles/dfstyles';
-import { planetBackground } from '../Styles/Mixins';
 
 /**
  * Displayed in {@link PlanetContextPane} when a planet is {@code destroyed}.
@@ -58,7 +56,10 @@ export const SpreadApart = styled.div`
 `;
 
 export const RowTip = ({ name, children }: { name: TooltipName; children: React.ReactNode }) => (
-  <TooltipTrigger name={name} style={{ lineHeight: '100%', position: 'relative', top: '0.2em' }}>
+  <TooltipTrigger
+    name={name}
+    style={{ lineHeight: '100%', position: 'relative', top: '0.2em', cursor: 'help' }}
+  >
     {children}
   </TooltipTrigger>
 );
@@ -69,6 +70,7 @@ export const TitleBar = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  color: ${dfstyles.colors.subtext};
   border-bottom: 1px solid ${dfstyles.colors.border};
 `;
 
@@ -76,21 +78,8 @@ const StyledPlanetActiveArtifact = styled.div<{ planet: Planet | undefined }>`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  padding: 0.4em;
   align-items: center;
-
-  font-size: ${dfstyles.fontSizeXS};
-
-  ${planetBackground}
-`;
-
-const ImageWrapper = styled.span`
-  display: inline-block;
-  border: 1px solid ${dfstyles.colors.subtext};
-  margin-right: 0.4em;
-
-  width: 22px;
-  height: 22px;
+  color: ${dfstyles.colors.text};
 `;
 
 export function PlanetActiveArtifact({
@@ -102,13 +91,13 @@ export function PlanetActiveArtifact({
 }) {
   return (
     <StyledPlanetActiveArtifact planet={planet}>
-      <ImageWrapper>
-        <ArtifactImage artifact={artifact} size={20} thumb />
-      </ImageWrapper>
       <Sub>
-        Active:
-        <ArtifactRarityLabelAnim artifact={artifact} /> <ArtifactBiomeText artifact={artifact} />{' '}
-        <ArtifactTypeText artifact={artifact} />
+        Active Artifact:{' '}
+        <White>
+          {' '}
+          <ArtifactRarityLabelAnim artifact={artifact} /> <ArtifactBiomeText artifact={artifact} />{' '}
+          <ArtifactTypeText artifact={artifact} />
+        </White>
       </Sub>
     </StyledPlanetActiveArtifact>
   );

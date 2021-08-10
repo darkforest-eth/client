@@ -5,6 +5,7 @@ import { ScoreLabel } from '../Components/Labels/KeywordLabels';
 import { LegendaryLabel } from '../Components/Labels/LegendaryLabel';
 import { MythicLabel } from '../Components/Labels/MythicLabel';
 import { White } from '../Components/Text';
+import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
 import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 
@@ -15,6 +16,7 @@ const HelpContent = styled(Padded)`
   max-width: 500px;
   overflow-y: scroll;
   text-align: justify;
+  color: ${dfstyles.colors.text};
 `;
 
 export function HelpPane({ hook }: { hook: ModalHook }) {
@@ -30,7 +32,6 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
         )}
 
         <Section>
-          <EmSpacer height={1} />
           <Link to='https://blog.zkga.me'>Official Info and Announcements</Link>
         </Section>
 
@@ -50,7 +51,6 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
           <EmSpacer height={1} /> Some planets contain <White>Artifacts</White> - ERC721 tokens that
           can be traded with other players. Artifacts can be harvested and deposited onto planets,
           buffing their stats. Harvesting artifacts also increases your <ScoreLabel />
-          <EmSpacer height={1} />
         </Section>
 
         <Section>
@@ -63,7 +63,6 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
           from the universe, plus additional bonuses for finding artifacts. Artifacts of different
           rarities are worth different amounts of points: Common are 5k, Rare are 20k, Epic are
           200k, <LegendaryLabel /> are 3M, and <MythicLabel /> are 20M.
-          <EmSpacer height={1} />
         </Section>
       </HelpContent>
     </ModalPane>

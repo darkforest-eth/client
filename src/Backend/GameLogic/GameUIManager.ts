@@ -32,7 +32,9 @@ import EventEmitter from 'events';
 import deferred from 'p-defer';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import Viewport from '../../Frontend/Game/Viewport';
+import WindowManager, { CursorState } from '../../Frontend/Game/WindowManager';
 import { getObjectWithIdFromMap } from '../../Frontend/Utils/EmitterUtils';
+import { listenForKeyboardEvents, unlinkKeyboardEvents } from '../../Frontend/Utils/KeyEmitters';
 import {
   getBooleanSetting,
   getSetting,
@@ -167,6 +169,7 @@ class GameUIManager extends EventEmitter {
     gameManager: GameManager,
     terminalHandle: React.MutableRefObject<TerminalHandle | undefined>
   ) {
+    listenForKeyboardEvents();
     const uiEmitter = UIEmitter.getInstance();
 
     const uiManager = new GameUIManager(gameManager, terminalHandle);
@@ -187,6 +190,7 @@ class GameUIManager extends EventEmitter {
   }
 
   public destroy(): void {
+    unlinkKeyboardEvents();
     const uiEmitter = UIEmitter.getInstance();
 
     uiEmitter.removeListener(UIEmitterEvent.WorldMouseDown, this.onMouseDown);
@@ -384,6 +388,9 @@ class GameUIManager extends EventEmitter {
   public revealLocation(locationId: LocationId) {
     this.gameManager.revealLocation(locationId);
   }
+  public claimLocation(locationId: LocationId) {
+    this.gameManager.claimLocation(locationId);
+  }
 
   public getNextBroadcastAvailableTimestamp() {
     return this.gameManager.getNextBroadcastAvailableTimestamp();
@@ -539,6 +546,22 @@ class GameUIManager extends EventEmitter {
   public stopExplore() {
     this.gameManager.stopExplore();
     this.minerLocation = undefined;
+  }
+
+  public toggleExplore() {
+    if (this.isMining()) {
+      this?.stopExplore();
+      TutorialManager.getInstance().acceptInput(TutorialState.MinerPause);
+    } else {
+      this?.startExplore();
+    }
+  }
+
+  public toggleTargettingExplorer() {
+    const windowManager = WindowManager.getInstance();
+    if (windowManager.getCursorState() === CursorState.TargetingExplorer)
+      windowManager.setCursorState(CursorState.Normal);
+    else windowManager.setCursorState(CursorState.TargetingExplorer);
   }
 
   public setForcesSending(planetId: LocationId, percentage: number) {
@@ -867,10 +890,17 @@ class GameUIManager extends EventEmitter {
     return this.mouseHoveringOverCoords;
   }
 
+  /**
+   * Percent from 0 to 100.
+   */
   public getForcesSending(planetId: LocationId): number {
-    return this.forcesSending[planetId] || 50;
+    const forces = this.forcesSending[planetId];
+    return forces ?? 50;
   }
 
+  /**
+   * Percent from 0 to 100.
+   */
   public getSilverSending(planetId: LocationId): number {
     return this.silverSending[planetId] || 0;
   }
@@ -954,6 +984,9 @@ class GameUIManager extends EventEmitter {
   public isCurrentlyRevealing(): boolean {
     return this.gameManager.getNextRevealCountdownInfo().currentlyRevealing;
   }
+  public isCurrentlyClaiming(): boolean {
+    return this.gameManager.getNextClaimCountdownInfo().currentlyClaiming;
+  }
 
   public getUnconfirmedWormholeActivations(): UnconfirmedActivateArtifact[] {
     return this.gameManager.getUnconfirmedWormholeActivations();
@@ -1011,8 +1044,8 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getEnergyOfPlayer(player);
   }
 
-  public getWithdrawnSilverOfPlayer(player: EthAddress): number {
-    return this.gameManager.getWithdrawnSilverOfPlayer(player);
+  public getPlayerScore(player: EthAddress): number {
+    return this.gameManager.getPlayerScore(player);
   }
 
   public upgrade(planet: Planet, branch: number): void {

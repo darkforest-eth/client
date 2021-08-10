@@ -1,5 +1,5 @@
 import {
-  EMPTY_LOCATION_ID,
+  EMPTY_ARTIFACT_ID,
   MAX_ARTIFACT_RARITY,
   MAX_ARTIFACT_TYPE,
   MAX_BIOME,
@@ -95,7 +95,7 @@ export class GifRenderer extends WebGLManager {
     return artifactFileName(
       video,
       this.thumb,
-      { artifactType: type, planetBiome: biome, rarity, id: EMPTY_LOCATION_ID },
+      { artifactType: type, planetBiome: biome, rarity, id: EMPTY_ARTIFACT_ID },
       GIF_ARTIFACT_COLOR,
       { skipCaching: true, forceAncient: ancient }
     );

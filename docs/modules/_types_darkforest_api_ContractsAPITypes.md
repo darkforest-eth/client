@@ -18,6 +18,7 @@
 
 ### Type aliases
 
+- [ClaimArgs](_types_darkforest_api_ContractsAPITypes.md#claimargs)
 - [ClientMockchainData](_types_darkforest_api_ContractsAPITypes.md#clientmockchaindata)
 - [DepositArtifactArgs](_types_darkforest_api_ContractsAPITypes.md#depositartifactargs)
 - [MoveArgs](_types_darkforest_api_ContractsAPITypes.md#moveargs)
@@ -28,6 +29,12 @@
 - [WithdrawArtifactArgs](_types_darkforest_api_ContractsAPITypes.md#withdrawartifactargs)
 
 ## Type aliases
+
+### ClaimArgs
+
+Ƭ **ClaimArgs**: [[`string`, `string`], [[`string`, `string`], [`string`, `string`]], [`string`, `string`], [`string`, `string`, `string`, `string`, `string`, `string`, `string`, `string`, `string`]]
+
+---
 
 ### ClientMockchainData
 

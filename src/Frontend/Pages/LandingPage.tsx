@@ -51,7 +51,7 @@ export default function LandingPage() {
 
             <p>
               <Sub>
-                zkSNARK space warfare <HideSmall>(v0.6 Round 2)</HideSmall>
+                zkSNARK space warfare <HideSmall>(v0.6 round 3)</HideSmall>
               </Sub>
             </p>
 
@@ -137,7 +137,7 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.6 Round 2
+                    <HideSmall>v</HideSmall>0.6 round 3
                   </td>
                   <td>
                     06/28/<HideSmall>20</HideSmall>21

@@ -2,11 +2,13 @@ import { EMPTY_ADDRESS, MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_e
 import { Monomitter, monomitter } from '@darkforest_eth/events';
 import { bonusFromHex, getBytesFromHex } from '@darkforest_eth/hexgen';
 import {
+  Abstract,
   ArrivalWithTimer,
   Artifact,
   ArtifactId,
   ArtifactType,
   Biome,
+  ClaimedLocation,
   EthAddress,
   LocatablePlanet,
   LocationId,
@@ -20,6 +22,7 @@ import {
   UnconfirmedActivateArtifact,
   UnconfirmedBuyGPTCredits,
   UnconfirmedBuyHat,
+  UnconfirmedClaim,
   UnconfirmedMove,
   UnconfirmedPlanetTransfer,
   UnconfirmedReveal,
@@ -62,9 +65,7 @@ import { isActivated } from './ArtifactUtils';
 import { LayeredMap } from './LayeredMap';
 import { Radii } from './ViewportEntities';
 
-type CoordsString = string & {
-  __value__: never;
-};
+type CoordsString = Abstract<string, 'CoordString'>;
 
 const getCoordsString = (coords: WorldCoords): CoordsString => {
   return `${coords.x},${coords.y}` as CoordsString;
@@ -164,6 +165,13 @@ export class GameObjects {
   private readonly revealedLocations: Map<LocationId, RevealedLocation>;
 
   /**
+   * Map from location ids to, if that location id has been claimed on-chain, the world coordinates
+   * of that location id, as well as some extra information regarding the circumstances of the
+   * revealing of this planet.
+   */
+  private readonly claimedLocations: Map<LocationId, ClaimedLocation>;
+
+  /**
    * Some of the game's parameters are downloaded from the blockchain. This allows the client to be
    * flexible, and connect to any compatible set of Dark Forest contracts, download the parameters,
    * and join the game, taking into account the unique configuration of those specific Dark Forest
@@ -194,6 +202,7 @@ export class GameObjects {
 
   private unconfirmedReveal?: UnconfirmedReveal; // at most one at a time
   private unconfirmedBuyGPTCredits?: UnconfirmedBuyGPTCredits; // at most one at a time
+  private unconfirmedClaim?: UnconfirmedClaim; // at most one at a time
   private readonly unconfirmedMoves: Record<string, UnconfirmedMove>;
   private readonly unconfirmedUpgrades: Record<string, UnconfirmedUpgrade>;
   private readonly unconfirmedBuyHats: Record<string, UnconfirmedBuyHat>;
@@ -238,6 +247,7 @@ export class GameObjects {
     touchedPlanets: Map<LocationId, Planet>,
     allTouchedPlanetIds: Set<LocationId>,
     revealedLocations: Map<LocationId, RevealedLocation>,
+    claimedLocations: Map<LocationId, ClaimedLocation>,
     artifacts: Map<ArtifactId, Artifact>,
     allChunks: Iterable<Chunk>,
     unprocessedArrivals: Map<VoyageId, QueuedArrival>,
@@ -251,7 +261,8 @@ export class GameObjects {
     this.planets = touchedPlanets;
     this.myPlanets = new Map();
     this.touchedPlanetIds = allTouchedPlanetIds;
-    this.revealedLocations = new Map();
+    this.revealedLocations = revealedLocations;
+    this.claimedLocations = claimedLocations;
     this.artifacts = artifacts;
     this.myArtifacts = new Map();
     this.contractConstants = contractConstants;
@@ -473,7 +484,8 @@ export class GameObjects {
     planet: Planet,
     updatedArrivals?: QueuedArrival[],
     updatedArtifactsOnPlanet?: ArtifactId[],
-    revealedLocation?: RevealedLocation
+    revealedLocation?: RevealedLocation,
+    claimerEthAddress?: EthAddress
   ): void {
     this.touchedPlanetIds.add(planet.locationId);
     // does not modify unconfirmed txs
@@ -540,6 +552,10 @@ export class GameObjects {
       planet.revealer = revealedLocation.revealer;
     }
 
+    if (claimerEthAddress) {
+      planet.claimer = claimerEthAddress;
+    }
+
     this.setPlanet(planet);
 
     if (updatedArrivals) {
@@ -572,8 +588,9 @@ export class GameObjects {
     return this.getPlanetWithLocation(location) as LocatablePlanet;
   }
 
-  // returns an empty planet if planet is not in contract
-  // returns undefined if this isn't a planet, according to hash and coords
+  // - returns an empty planet if planet is not in contract
+  // - returns undefined if this isn't a planet, according to hash and coords
+  // - if this planet hasn't been initialized in the client yet, initializes it
   public getPlanetWithLocation(location: WorldLocation): Planet | undefined {
     const planet = this.planets.get(location.hash);
     if (planet) {
@@ -603,7 +620,8 @@ export class GameObjects {
   public addPlanetLocation(planetLocation: WorldLocation): void {
     this.layeredMap.insertPlanet(
       planetLocation,
-      this.planetLevelFromHexPerlin(planetLocation.hash, planetLocation.perlin)
+      this.getPlanetWithId(planetLocation.hash)?.planetLevel ||
+        this.planetLevelFromHexPerlin(planetLocation.hash, planetLocation.perlin)
     );
 
     this.planetLocationMap.set(planetLocation.hash, planetLocation);
@@ -1015,6 +1033,9 @@ export class GameObjects {
   public getUnconfirmedReveal(): UnconfirmedReveal | undefined {
     return this.unconfirmedReveal;
   }
+  public getUnconfirmedClaim(): UnconfirmedClaim | undefined {
+    return this.unconfirmedClaim;
+  }
 
   public getUnconfirmedBuyGPTCredits(): UnconfirmedBuyGPTCredits | undefined {
     return this.unconfirmedBuyGPTCredits;
@@ -1040,21 +1061,36 @@ export class GameObjects {
     return this.revealedLocations;
   }
 
+  public getClaimedLocations(): Map<LocationId, ClaimedLocation> {
+    return this.claimedLocations;
+  }
+
+  public setClaimedLocation(claimedLocation: ClaimedLocation) {
+    this.claimedLocations.set(claimedLocation.hash, claimedLocation);
+  }
+
+  /**
+   * Gets all the planets with the given ids, giltering out the ones that we don't have.
+   */
   public getPlanetsWithIds(locationIds: LocationId[], updateIfStale = true): Planet[] {
     return locationIds
       .map((id) => this.getPlanetWithId(id, updateIfStale))
-      .filter((p) => p !== undefined) as LocatablePlanet[];
+      .filter((p) => p !== undefined) as Planet[];
   }
 
+  /**
+   * Gets all the planets that are within {@code radius} world units from the given coordinate. Fast
+   * because it uses {@link LayeredMap}.
+   */
   public getPlanetsInWorldCircle(coords: WorldCoords, radius: number): LocatablePlanet[] {
     const locationIds = this.layeredMap.getPlanetsInCircle(coords, radius);
     return this.getPlanetsWithIds(locationIds) as LocatablePlanet[];
   }
 
   /**
-   * Gets the ids of all the planets that are both within the given bounding box (defined by its bottom
-   * left coordinate, width, and height) in the world and of a level that was passed in via the
-   * `planetLevels` parameter.
+   * Gets the ids of all the planets that are both within the given bounding box (defined by its
+   * bottom left coordinate, width, and height) in the world and of a level that was passed in via
+   * the `planetLevels` parameter. Fast because it uses {@link LayeredMap}.
    */
   public getPlanetsInWorldRectangle(
     worldX: number,
@@ -1073,7 +1109,7 @@ export class GameObjects {
       levels,
       planetLevelToRadii
     );
-    return this.getPlanetsWithIds(locationIds) as LocatablePlanet[];
+    return this.getPlanetsWithIds(locationIds, updateIfStale) as LocatablePlanet[];
   }
 
   /**

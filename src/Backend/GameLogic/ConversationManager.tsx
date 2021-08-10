@@ -10,6 +10,7 @@ import {
 import React from 'react';
 import styled from 'styled-components';
 import { WikiPane } from '../../Frontend/Panes/WikiPane';
+import dfstyles from '../../Frontend/Styles/dfstyles';
 import { TerminalTextStyle } from '../../Frontend/Utils/TerminalTypes';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import { startConversationOpenAI, stepConversationOpenAI } from '../Network/ConversationAPI';
@@ -172,5 +173,5 @@ const WikiEntryTitle = styled.div`
   font-size: 150%;
   margin-bottom: 8px;
   text-decoration: underline;
-  color: white;
+  color: ${dfstyles.colors.text};
 `;

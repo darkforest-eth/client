@@ -8,6 +8,7 @@
 - [loadCoreContract](Backend_Network_Blockchain.md#loadcorecontract)
 - [loadGettersContract](Backend_Network_Blockchain.md#loadgetterscontract)
 - [loadGptCreditContract](Backend_Network_Blockchain.md#loadgptcreditcontract)
+- [loadScoringContract](Backend_Network_Blockchain.md#loadscoringcontract)
 - [loadWhitelistContract](Backend_Network_Blockchain.md#loadwhitelistcontract)
 
 ## Functions
@@ -86,6 +87,28 @@ Loads ths GPT Credit contract, which players can pay to talk to artifacts.
 #### Returns
 
 `Promise`<`DarkForestGPTCredit`\>
+
+---
+
+### loadScoringContract
+
+▸ **loadScoringContract**(`address`, `provider`, `signer?`): `Promise`<`DarkForestScoringRound3`\>
+
+Loads ths GPT Credit contract, which players can pay to talk to artifacts.
+
+**`see`** https://github.com/darkforest-eth/eth/blob/master/contracts/DarkForestGPTCredit.sol
+
+#### Parameters
+
+| Name       | Type                        |
+| :--------- | :-------------------------- |
+| `address`  | `string`                    |
+| `provider` | `providers.JsonRpcProvider` |
+| `signer?`  | `Wallet`                    |
+
+#### Returns
+
+`Promise`<`DarkForestScoringRound3`\>
 
 ---
 

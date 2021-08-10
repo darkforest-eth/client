@@ -31,7 +31,7 @@ export class LayeredMap {
 
     for (let i = MIN_PLANET_LEVEL; i <= MAX_PLANET_LEVEL; i++) {
       const config: QuadTreeConfig = {
-        maximumDepth: i <= 3 ? 10 : 10,
+        maximumDepth: 10,
         removeEmptyNodes: true,
       };
 

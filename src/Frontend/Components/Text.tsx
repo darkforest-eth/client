@@ -147,14 +147,6 @@ export const HideSmall = styled.span`
   }
 `;
 
-// todo make this work nicely with react router links
-export const BasicLink = styled.u`
-  cursor: pointer;
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
 export function TxLink({ tx }: { tx: SubmittedTx }) {
   return (
     <>
@@ -230,7 +222,7 @@ export const LongDash = () => (
 );
 
 export const Coords = ({ coords: { x, y } }: { coords: WorldCoords }) => (
-  <>
-    ({x}, {y})
-  </>
+  <Sub>
+    (<White>{x}</White>, <White>{y}</White>)
+  </Sub>
 );

@@ -36,6 +36,7 @@
 - [getHomeLocations](Backend_Storage_PersistentChunkStore.default.md#gethomelocations)
 - [getKey](Backend_Storage_PersistentChunkStore.default.md#getkey)
 - [getMinedSubChunks](Backend_Storage_PersistentChunkStore.default.md#getminedsubchunks)
+- [getSavedClaimedCoords](Backend_Storage_PersistentChunkStore.default.md#getsavedclaimedcoords)
 - [getSavedRevealedCoords](Backend_Storage_PersistentChunkStore.default.md#getsavedrevealedcoords)
 - [getSavedTouchedPlanetIds](Backend_Storage_PersistentChunkStore.default.md#getsavedtouchedplanetids)
 - [getUnconfirmedSubmittedEthTxs](Backend_Storage_PersistentChunkStore.default.md#getunconfirmedsubmittedethtxs)
@@ -47,6 +48,7 @@
 - [persistQueuedChunks](Backend_Storage_PersistentChunkStore.default.md#persistqueuedchunks)
 - [recomputeSaveThrottleAfterUpdate](Backend_Storage_PersistentChunkStore.default.md#recomputesavethrottleafterupdate)
 - [removeKey](Backend_Storage_PersistentChunkStore.default.md#removekey)
+- [saveClaimedCoords](Backend_Storage_PersistentChunkStore.default.md#saveclaimedcoords)
 - [savePlugins](Backend_Storage_PersistentChunkStore.default.md#saveplugins)
 - [saveRevealedCoords](Backend_Storage_PersistentChunkStore.default.md#saverevealedcoords)
 - [saveTouchedPlanetIds](Backend_Storage_PersistentChunkStore.default.md#savetouchedplanetids)
@@ -304,6 +306,16 @@ the function named `addToChunkMap`.
 
 ---
 
+### getSavedClaimedCoords
+
+▸ **getSavedClaimedCoords**(): `Promise`<`ClaimedCoords`[]\>
+
+#### Returns
+
+`Promise`<`ClaimedCoords`[]\>
+
+---
+
 ### getSavedRevealedCoords
 
 ▸ **getSavedRevealedCoords**(): `Promise`<`RevealedCoords`[]\>
@@ -442,6 +454,22 @@ indexed db.
 | :--------- | :------------ |
 | `key`      | `string`      |
 | `objStore` | `ObjectStore` |
+
+#### Returns
+
+`Promise`<`void`\>
+
+---
+
+### saveClaimedCoords
+
+▸ **saveClaimedCoords**(`claimedCoordTupps`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name                | Type              |
+| :------------------ | :---------------- |
+| `claimedCoordTupps` | `ClaimedCoords`[] |
 
 #### Returns
 

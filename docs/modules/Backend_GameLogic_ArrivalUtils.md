@@ -114,6 +114,8 @@
 
 ▸ **getRange**(`planet`, `percentEnergySending?`): `number`
 
+**`todo`** - planet class
+
 #### Parameters
 
 | Name                   | Type     | Default value |

@@ -9,7 +9,6 @@ import { Padded, Section, SectionHeader, Spacer } from '../Components/CoreUI';
 import { Input } from '../Components/Input';
 import { Green, Red } from '../Components/Text';
 import Viewport, { getDefaultScroll } from '../Game/Viewport';
-import dfstyles from '../Styles/dfstyles';
 import { useAccount, useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';
 import { BooleanSetting, MultiSelectSetting, Setting } from '../Utils/SettingsHooks';
@@ -27,7 +26,6 @@ const SettingsContent = styled(Padded)`
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  color: ${dfstyles.colors.subtext};
   text-align: justify;
 `;
 

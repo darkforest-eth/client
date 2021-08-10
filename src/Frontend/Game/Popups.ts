@@ -53,7 +53,9 @@ export async function openConfirmationWindowForTransaction(
         }, 100);
       });
     } else {
-      throw new Error('You need to enable popups to confirm this transaction.');
+      throw new Error(
+        "Please enable popups to confirm this transaction. After you've done so, try again."
+      );
     }
   }
 }

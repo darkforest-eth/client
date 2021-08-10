@@ -31,6 +31,7 @@ reading and writing to and from the blockchain.
 - [coreContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#corecontract)
 - [gettersContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getterscontract)
 - [gptCreditContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#gptcreditcontract)
+- [scoreContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#scorecontract)
 - [whitelistContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#whitelistcontract)
 
 ### Methods
@@ -43,6 +44,7 @@ reading and writing to and from the blockchain.
 - [bulkGetPlanets](Backend_GameLogic_ContractsAPI.ContractsAPI.md#bulkgetplanets)
 - [buyGPTCredits](Backend_GameLogic_ContractsAPI.ContractsAPI.md#buygptcredits)
 - [buyHat](Backend_GameLogic_ContractsAPI.ContractsAPI.md#buyhat)
+- [claim](Backend_GameLogic_ContractsAPI.ContractsAPI.md#claim)
 - [deactivateArtifact](Backend_GameLogic_ContractsAPI.ContractsAPI.md#deactivateartifact)
 - [depositArtifact](Backend_GameLogic_ContractsAPI.ContractsAPI.md#depositartifact)
 - [destroy](Backend_GameLogic_ContractsAPI.ContractsAPI.md#destroy)
@@ -53,6 +55,8 @@ reading and writing to and from the blockchain.
 - [getArrivalsForPlanet](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getarrivalsforplanet)
 - [getArtifactById](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getartifactbyid)
 - [getBalance](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getbalance)
+- [getClaimedCoordsByIdIfExists](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getclaimedcoordsbyidifexists)
+- [getClaimedPlanetsCoords](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getclaimedplanetscoords)
 - [getConstants](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getconstants)
 - [getContractAddress](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getcontractaddress)
 - [getContractBalance](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getcontractbalance)
@@ -160,6 +164,16 @@ Don't allow users to submit txs if balance falls below this amount/
 #### Returns
 
 `DarkForestGPTCredit`
+
+---
+
+### scoreContract
+
+• `get` **scoreContract**(): `DarkForestScoringRound3`
+
+#### Returns
+
+`DarkForestScoringRound3`
 
 ---
 
@@ -313,6 +327,23 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 
 ---
 
+### claim
+
+▸ **claim**(`args`, `action`): `Promise`<`TransactionReceipt`\>
+
+#### Parameters
+
+| Name     | Type                                                                           |
+| :------- | :----------------------------------------------------------------------------- |
+| `args`   | [`ClaimArgs`](../modules/_types_darkforest_api_ContractsAPITypes.md#claimargs) |
+| `action` | `UnconfirmedClaim`                                                             |
+
+#### Returns
+
+`Promise`<`TransactionReceipt`\>
+
+---
+
 ### deactivateArtifact
 
 ▸ **deactivateArtifact**(`action`): `Promise`<`TransactionReceipt`\>
@@ -455,6 +486,40 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 #### Returns
 
 `Promise`<`BigNumber`\>
+
+---
+
+### getClaimedCoordsByIdIfExists
+
+▸ **getClaimedCoordsByIdIfExists**(`planetId`): `Promise`<`undefined` \| `ClaimedCoords`\>
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `planetId` | `LocationId` |
+
+#### Returns
+
+`Promise`<`undefined` \| `ClaimedCoords`\>
+
+---
+
+### getClaimedPlanetsCoords
+
+▸ **getClaimedPlanetsCoords**(`startingAt`, `onProgressIds?`, `onProgressCoords?`): `Promise`<`ClaimedCoords`[]\>
+
+#### Parameters
+
+| Name                | Type                                      |
+| :------------------ | :---------------------------------------- |
+| `startingAt`        | `number`                                  |
+| `onProgressIds?`    | (`fractionCompleted`: `number`) => `void` |
+| `onProgressCoords?` | (`fractionCompleted`: `number`) => `void` |
+
+#### Returns
+
+`Promise`<`ClaimedCoords`[]\>
 
 ---
 

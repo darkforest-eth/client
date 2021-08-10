@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { BorderlessPane, EmSpacer } from '../Components/CoreUI';
+import { BorderlessPane } from '../Components/CoreUI';
 import {
   CanvasContainer,
   CanvasWrapper,
@@ -26,21 +26,20 @@ import { TutorialPane } from '../Panes/TutorialPane';
 import { TwitterVerifyPane } from '../Panes/TwitterVerifyPane';
 import { ZoomPane } from '../Panes/ZoomPane';
 import { useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
+import { useOnUp } from '../Utils/KeyEmitters';
 import { Setting, useBooleanSetting } from '../Utils/SettingsHooks';
 import {
-  TOGGLE_ARTIFACTS_DEX_PANE,
   TOGGLE_DIAGNOSTICS_PANE,
-  TOGGLE_PLANET_DEX_PANE,
-  useSubscribeToShortcut,
+  TOGGLE_EXPLORE,
+  TOGGLE_HELP_PANE,
+  TOGGLE_PLUGINS_PANE,
+  TOGGLE_SETTINGS_PANE,
+  TOGGLE_TARGETTING,
+  TOGGLE_YOUR_ARTIFACTS_PANE,
+  TOGGLE_YOUR_PLANETS_DEX_PANE,
 } from '../Utils/ShortcutConstants';
-import {
-  ModalHelpIcon,
-  ModalPlanetDexIcon,
-  ModalPluginIcon,
-  ModalSettingsIcon,
-  ModalYourArtifactsIcon,
-} from './ModalIcon';
 import { NotificationsPane } from './Notifications';
+import { SidebarPane } from './SidebarPane';
 import { TopBar } from './TopBar';
 
 export function GameWindowLayout({
@@ -61,8 +60,6 @@ export function GameWindowLayout({
   const uiManager = useUIManager();
   const newPlayerHook = useBooleanSetting(uiManager, Setting.NewPlayer);
   const tutorialHook = useBooleanSetting(uiManager, Setting.TutorialOpen);
-  const [sidebarHovered, setSidebarHovered] = useState<boolean>(false);
-
   const selected = useSelectedPlanet(uiManager).value;
   const selectedPlanetHook = useState<boolean>(!!selected);
   const diagnosticsHook = useState<boolean>(false);
@@ -88,34 +85,56 @@ export function GameWindowLayout({
 
   useEffect(() => setSelectedPlanetVisible(!!selected), [selected, setSelectedPlanetVisible]);
 
-  useSubscribeToShortcut(
-    TOGGLE_PLANET_DEX_PANE,
+  const setSettingsHookOpen = settingsHook[1];
+  useOnUp(
+    TOGGLE_SETTINGS_PANE,
     useCallback(() => {
-      planetdexHook[1](true);
-    }, [planetdexHook])
+      setSettingsHookOpen((value) => !value);
+    }, [setSettingsHookOpen])
   );
 
-  useSubscribeToShortcut(
-    TOGGLE_ARTIFACTS_DEX_PANE,
+  const setHelpHookOpen = helpHook[1];
+  useOnUp(
+    TOGGLE_HELP_PANE,
     useCallback(() => {
-      yourArtifactsHook[1](true);
-    }, [yourArtifactsHook])
+      setHelpHookOpen((value) => !value);
+    }, [setHelpHookOpen])
   );
 
-  useSubscribeToShortcut(
+  const setPluginsHookOpen = pluginsHook[1];
+  useOnUp(
+    TOGGLE_PLUGINS_PANE,
+    useCallback(() => {
+      setPluginsHookOpen((value) => !value);
+    }, [setPluginsHookOpen])
+  );
+
+  const setPlanetDexOpen = planetdexHook[1];
+  useOnUp(
+    TOGGLE_YOUR_PLANETS_DEX_PANE,
+    useCallback(() => {
+      setPlanetDexOpen((value) => !value);
+    }, [setPlanetDexOpen])
+  );
+
+  const setYourArtifactsOpen = yourArtifactsHook[1];
+  useOnUp(
+    TOGGLE_YOUR_ARTIFACTS_PANE,
+    useCallback(() => {
+      setYourArtifactsOpen((value) => !value);
+    }, [setYourArtifactsOpen])
+  );
+
+  const setDiagnosticsHookOpen = diagnosticsHook[1];
+  useOnUp(
     TOGGLE_DIAGNOSTICS_PANE,
     useCallback(() => {
-      diagnosticsHook[1](true);
-    }, [diagnosticsHook])
+      setDiagnosticsHookOpen((value) => !value);
+    }, [setDiagnosticsHookOpen])
   );
 
-  function onSidebarMouseEnter() {
-    setSidebarHovered(true);
-  }
-
-  function onSidebarMouseLeave() {
-    setSidebarHovered(false);
-  }
+  useOnUp(TOGGLE_EXPLORE, uiManager.toggleExplore.bind(uiManager));
+  useOnUp(TOGGLE_TARGETTING, uiManager.toggleTargettingExplorer.bind(uiManager));
 
   return (
     <WindowWrapper>
@@ -157,63 +176,13 @@ export function GameWindowLayout({
           <UpperLeft>
             <ZoomPane />
           </UpperLeft>
-          <WindowTogglesPaneContainer
-            onMouseEnter={onSidebarMouseEnter}
-            onMouseLeave={onSidebarMouseLeave}
-          >
-            <BorderlessPane>
-              <ModalSettingsIcon
-                hook={settingsHook}
-                style={{
-                  width: '100%',
-                  height: '2em',
-                  padding: '4px 8px',
-                }}
-                text={sidebarHovered ? 'Settings' : undefined}
-              />
-              <EmSpacer height={0.5} />
-              <ModalHelpIcon
-                hook={helpHook}
-                style={{
-                  width: '100%',
-                  height: '2em',
-                  padding: '4px 8px',
-                }}
-                text={sidebarHovered ? 'Help' : undefined}
-              />
-              <EmSpacer height={0.5} />
-
-              <ModalPluginIcon
-                hook={pluginsHook}
-                style={{
-                  width: '100%',
-                  height: '2em',
-                  padding: '4px 8px',
-                }}
-                text={sidebarHovered ? 'Plugins' : undefined}
-              />
-              <EmSpacer height={0.5} />
-              <ModalYourArtifactsIcon
-                hook={yourArtifactsHook}
-                style={{
-                  width: '100%',
-                  height: '2em',
-                  padding: '4px 8px',
-                }}
-                text={sidebarHovered ? 'Your Artifacts' : undefined}
-              />
-              <EmSpacer height={0.5} />
-              <ModalPlanetDexIcon
-                hook={planetdexHook}
-                style={{
-                  width: '100%',
-                  height: '2em',
-                  padding: '4px 8px',
-                }}
-                text={sidebarHovered ? 'Your Planets' : undefined}
-              />
-            </BorderlessPane>
-          </WindowTogglesPaneContainer>
+          <SidebarPane
+            settingsHook={settingsHook}
+            helpHook={helpHook}
+            pluginsHook={pluginsHook}
+            yourArtifactsHook={yourArtifactsHook}
+            planetdexHook={planetdexHook}
+          />
           <CanvasWrapper>
             <ControllableCanvas />
           </CanvasWrapper>
@@ -230,16 +199,6 @@ export function GameWindowLayout({
     </WindowWrapper>
   );
 }
-
-const WindowTogglesPaneContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-`;
 
 const TopBarPaneContainer = styled.div`
   display: flex;

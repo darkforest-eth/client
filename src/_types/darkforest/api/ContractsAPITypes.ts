@@ -56,6 +56,8 @@ export const enum ContractEvent {
 
   // DarkForestGPTCredit
   ChangedGPTCreditPrice = 'ChangedCreditPrice',
+  // DarkForestScoringRound3
+  LocationClaimed = 'LocationClaimed',
 }
 
 export const enum ContractsAPIEvent {
@@ -71,6 +73,7 @@ export const enum ContractsAPIEvent {
   TxConfirmed = 'TxConfirmed',
   TxReverted = 'TxReverted',
   PlanetTransferred = 'PlanetTransferred',
+  PlanetClaimed = 'PlanetClaimed',
 }
 
 // planet locationID(BigInt), branch number
@@ -99,6 +102,14 @@ export type MoveArgs = [
     string, // silver sent
     string // artifactId sent
   ]
+];
+
+// Same as reveal args with Explicit coords attached
+export type ClaimArgs = [
+  [string, string],
+  [[string, string], [string, string]],
+  [string, string],
+  [string, string, string, string, string, string, string, string, string]
 ];
 
 export type DepositArtifactArgs = [string, string]; // locationId, artifactId
@@ -149,6 +160,7 @@ export interface ContractConstants {
   PERLIN_THRESHOLD_3: number;
   INIT_PERLIN_MIN: number;
   INIT_PERLIN_MAX: number;
+  SPAWN_RIM_AREA: number;
   BIOME_THRESHOLD_1: number;
   BIOME_THRESHOLD_2: number;
   PLANET_RARITY: number;
@@ -157,6 +169,7 @@ export interface ContractConstants {
 
   PHOTOID_ACTIVATION_DELAY: number;
   LOCATION_REVEAL_COOLDOWN: number;
+  CLAIM_PLANET_COOLDOWN: number;
 
   defaultPopulationCap: number[];
   defaultPopulationGrowth: number[];

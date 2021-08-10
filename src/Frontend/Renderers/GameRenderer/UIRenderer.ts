@@ -3,14 +3,7 @@ import { engineConsts } from './EngineConsts';
 import { RenderZIndex, RGBVec } from './EngineTypes';
 import Renderer from './Renderer';
 
-const {
-  red,
-  white,
-  redA,
-  whiteA,
-  purpleA,
-  range: { dash, energy },
-} = engineConsts.colors;
+const { red, white, redA, whiteA, purpleA } = engineConsts.colors;
 
 export class UIRenderer {
   renderer: Renderer;
@@ -109,6 +102,9 @@ export class UIRenderer {
 
   queueSelectedRangeRing() {
     const selectedPlanet = this.renderer.gameUIManager.getSelectedPlanet();
-    selectedPlanet && this.renderer.planetRenderManager.queueRangeRings(selectedPlanet);
+    const hoverPlanet = this.renderer.gameUIManager.getHoveringOverPlanet();
+    selectedPlanet &&
+      (!hoverPlanet || hoverPlanet?.locationId === selectedPlanet.locationId) &&
+      this.renderer.planetRenderManager.queueRangeRings(selectedPlanet);
   }
 }

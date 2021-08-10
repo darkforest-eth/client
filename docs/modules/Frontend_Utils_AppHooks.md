@@ -12,11 +12,11 @@
 - [useAccount](Frontend_Utils_AppHooks.md#useaccount)
 - [useActiveArtifact](Frontend_Utils_AppHooks.md#useactiveartifact)
 - [useArtifact](Frontend_Utils_AppHooks.md#useartifact)
-- [useControlDown](Frontend_Utils_AppHooks.md#usecontroldown)
 - [useHoverPlanet](Frontend_Utils_AppHooks.md#usehoverplanet)
 - [useLeaderboard](Frontend_Utils_AppHooks.md#useleaderboard)
 - [useMyArtifacts](Frontend_Utils_AppHooks.md#usemyartifacts)
 - [useMyArtifactsList](Frontend_Utils_AppHooks.md#usemyartifactslist)
+- [useOnSendCompleted](Frontend_Utils_AppHooks.md#useonsendcompleted)
 - [usePlanet](Frontend_Utils_AppHooks.md#useplanet)
 - [usePlanetArtifacts](Frontend_Utils_AppHooks.md#useplanetartifacts)
 - [usePlanetInactiveArtifacts](Frontend_Utils_AppHooks.md#useplanetinactiveartifacts)
@@ -94,18 +94,6 @@ Get the currently used account on the client.
 
 ---
 
-### useControlDown
-
-▸ **useControlDown**(): `boolean`
-
-Return a bool that indicates if the control key is pressed.
-
-#### Returns
-
-`boolean`
-
----
-
 ### useHoverPlanet
 
 ▸ **useHoverPlanet**(`uiManager`): [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\>
@@ -176,6 +164,24 @@ Loads the leaderboard
 #### Returns
 
 `Artifact`[]
+
+---
+
+### useOnSendCompleted
+
+▸ **useOnSendCompleted**(`onCompleted`): `void`
+
+Calls {@code onCompleted} when the user sends a move via the ui.
+
+#### Parameters
+
+| Name          | Type         |
+| :------------ | :----------- |
+| `onCompleted` | () => `void` |
+
+#### Returns
+
+`void`
 
 ---
 

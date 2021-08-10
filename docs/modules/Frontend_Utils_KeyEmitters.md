@@ -4,33 +4,32 @@
 
 ### Variables
 
-- [ctrlDown$](Frontend_Utils_KeyEmitters.md#ctrldown$)
-- [ctrlUp$](Frontend_Utils_KeyEmitters.md#ctrlup$)
-- [escapeDown$](Frontend_Utils_KeyEmitters.md#escapedown$)
+- [SpecialKey](Frontend_Utils_KeyEmitters.md#specialkey)
 - [keyDown$](Frontend_Utils_KeyEmitters.md#keydown$)
 - [keyUp$](Frontend_Utils_KeyEmitters.md#keyup$)
 
 ### Functions
 
+- [listenForKeyboardEvents](Frontend_Utils_KeyEmitters.md#listenforkeyboardevents)
+- [unlinkKeyboardEvents](Frontend_Utils_KeyEmitters.md#unlinkkeyboardevents)
 - [useIsDown](Frontend_Utils_KeyEmitters.md#useisdown)
+- [useOnUp](Frontend_Utils_KeyEmitters.md#useonup)
 
 ## Variables
 
-### ctrlDown$
+### SpecialKey
 
-• `Const` **ctrlDown$**: `Monomitter`<`KeyboardEvent`\>
+• `Const` **SpecialKey**: `Object`
 
----
+#### Type declaration
 
-### ctrlUp$
-
-• `Const` **ctrlUp$**: `Monomitter`<`KeyboardEvent`\>
-
----
-
-### escapeDown$
-
-• `Const` **escapeDown$**: `Monomitter`<`KeyboardEvent`\>
+| Name      | Type        |
+| :-------- | :---------- |
+| `Control` | `"Control"` |
+| `Escape`  | `"Escape"`  |
+| `Shift`   | `"Shift"`   |
+| `Space`   | `" "`       |
+| `Tab`     | `"Tab"`     |
 
 ---
 
@@ -46,6 +45,26 @@
 
 ## Functions
 
+### listenForKeyboardEvents
+
+▸ **listenForKeyboardEvents**(): `void`
+
+#### Returns
+
+`void`
+
+---
+
+### unlinkKeyboardEvents
+
+▸ **unlinkKeyboardEvents**(): `void`
+
+#### Returns
+
+`void`
+
+---
+
 ### useIsDown
 
 ▸ **useIsDown**(`key?`): `boolean`
@@ -59,3 +78,20 @@
 #### Returns
 
 `boolean`
+
+---
+
+### useOnUp
+
+▸ **useOnUp**(`key?`, `onUp?`): `void`
+
+#### Parameters
+
+| Name    | Type         |
+| :------ | :----------- |
+| `key?`  | `string`     |
+| `onUp?` | () => `void` |
+
+#### Returns
+
+`void`

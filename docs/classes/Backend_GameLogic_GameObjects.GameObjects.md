@@ -16,6 +16,7 @@ Representation of the objects which exist in the world.
 - [arrivals](Backend_GameLogic_GameObjects.GameObjects.md#arrivals)
 - [artifactUpdated$](Backend_GameLogic_GameObjects.GameObjects.md#artifactupdated$)
 - [artifacts](Backend_GameLogic_GameObjects.GameObjects.md#artifacts)
+- [claimedLocations](Backend_GameLogic_GameObjects.GameObjects.md#claimedlocations)
 - [contractConstants](Backend_GameLogic_GameObjects.GameObjects.md#contractconstants)
 - [coordsToLocation](Backend_GameLogic_GameObjects.GameObjects.md#coordstolocation)
 - [isBuyingCredits$](Backend_GameLogic_GameObjects.GameObjects.md#isbuyingcredits$)
@@ -32,6 +33,7 @@ Representation of the objects which exist in the world.
 - [touchedPlanetIds](Backend_GameLogic_GameObjects.GameObjects.md#touchedplanetids)
 - [unconfirmedBuyGPTCredits](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedbuygptcredits)
 - [unconfirmedBuyHats](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedbuyhats)
+- [unconfirmedClaim](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedclaim)
 - [unconfirmedMoves](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedmoves)
 - [unconfirmedPlanetTransfers](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedplanettransfers)
 - [unconfirmedReveal](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedreveal)
@@ -57,6 +59,7 @@ Representation of the objects which exist in the world.
 - [getArtifactsOnPlanetsOwnedBy](Backend_GameLogic_GameObjects.GameObjects.md#getartifactsonplanetsownedby)
 - [getArtifactsOwnedBy](Backend_GameLogic_GameObjects.GameObjects.md#getartifactsownedby)
 - [getBiome](Backend_GameLogic_GameObjects.GameObjects.md#getbiome)
+- [getClaimedLocations](Backend_GameLogic_GameObjects.GameObjects.md#getclaimedlocations)
 - [getEnergyCurveAtPercent](Backend_GameLogic_GameObjects.GameObjects.md#getenergycurveatpercent)
 - [getIsBuyingCreditsEmitter](Backend_GameLogic_GameObjects.GameObjects.md#getisbuyingcreditsemitter)
 - [getLocationOfPlanet](Backend_GameLogic_GameObjects.GameObjects.md#getlocationofplanet)
@@ -75,6 +78,7 @@ Representation of the objects which exist in the world.
 - [getRevealedLocations](Backend_GameLogic_GameObjects.GameObjects.md#getrevealedlocations)
 - [getSilverCurveAtPercent](Backend_GameLogic_GameObjects.GameObjects.md#getsilvercurveatpercent)
 - [getUnconfirmedBuyGPTCredits](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedbuygptcredits)
+- [getUnconfirmedClaim](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedclaim)
 - [getUnconfirmedMoves](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedmoves)
 - [getUnconfirmedReveal](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedreveal)
 - [getUnconfirmedUpgrades](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedupgrades)
@@ -90,6 +94,7 @@ Representation of the objects which exist in the world.
 - [replaceArtifactsFromContractData](Backend_GameLogic_GameObjects.GameObjects.md#replaceartifactsfromcontractdata)
 - [replacePlanetFromContractData](Backend_GameLogic_GameObjects.GameObjects.md#replaceplanetfromcontractdata)
 - [setArtifact](Backend_GameLogic_GameObjects.GameObjects.md#setartifact)
+- [setClaimedLocation](Backend_GameLogic_GameObjects.GameObjects.md#setclaimedlocation)
 - [setPlanet](Backend_GameLogic_GameObjects.GameObjects.md#setplanet)
 - [spaceTypeFromPerlin](Backend_GameLogic_GameObjects.GameObjects.md#spacetypefromperlin)
 - [updatePlanet](Backend_GameLogic_GameObjects.GameObjects.md#updateplanet)
@@ -102,7 +107,7 @@ Representation of the objects which exist in the world.
 
 ### constructor
 
-• **new GameObjects**(`address`, `touchedPlanets`, `allTouchedPlanetIds`, `revealedLocations`, `artifacts`, `allChunks`, `unprocessedArrivals`, `unprocessedPlanetArrivalIds`, `contractConstants`, `worldRadius`)
+• **new GameObjects**(`address`, `touchedPlanets`, `allTouchedPlanetIds`, `revealedLocations`, `claimedLocations`, `artifacts`, `allChunks`, `unprocessedArrivals`, `unprocessedPlanetArrivalIds`, `contractConstants`, `worldRadius`)
 
 #### Parameters
 
@@ -112,6 +117,7 @@ Representation of the objects which exist in the world.
 | `touchedPlanets`              | `Map`<`LocationId`, `Planet`\>                                                                    |
 | `allTouchedPlanetIds`         | `Set`<`LocationId`\>                                                                              |
 | `revealedLocations`           | `Map`<`LocationId`, `RevealedLocation`\>                                                          |
+| `claimedLocations`            | `Map`<`LocationId`, `ClaimedLocation`\>                                                           |
 | `artifacts`                   | `Map`<`ArtifactId`, `Artifact`\>                                                                  |
 | `allChunks`                   | `Iterable`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>                                        |
 | `unprocessedArrivals`         | `Map`<`VoyageId`, `QueuedArrival`\>                                                               |
@@ -156,6 +162,16 @@ Event emitter which publishes whenever an artifact has been updated.
 Cached index of all known artifact data.
 
 **`see`** The same warning applys as the one on [GameObjects.planets](Backend_GameLogic_GameObjects.GameObjects.md#planets)
+
+---
+
+### claimedLocations
+
+• `Private` `Readonly` **claimedLocations**: `Map`<`LocationId`, `ClaimedLocation`\>
+
+Map from location ids to, if that location id has been claimed on-chain, the world coordinates
+of that location id, as well as some extra information regarding the circumstances of the
+revealing of this planet.
 
 ---
 
@@ -316,6 +332,12 @@ Set of all planet ids that we know have been interacted-with on-chain.
 ### unconfirmedBuyHats
 
 • `Private` `Readonly` **unconfirmedBuyHats**: `Record`<`string`, `UnconfirmedBuyHat`\>
+
+---
+
+### unconfirmedClaim
+
+• `Private` `Optional` **unconfirmedClaim**: `UnconfirmedClaim`
 
 ---
 
@@ -648,6 +670,16 @@ if the artifact is not on either, then it is the owner of the artifact NFT
 
 ---
 
+### getClaimedLocations
+
+▸ **getClaimedLocations**(): `Map`<`LocationId`, `ClaimedLocation`\>
+
+#### Returns
+
+`Map`<`LocationId`, `ClaimedLocation`\>
+
+---
+
 ### getEnergyCurveAtPercent
 
 ▸ **getEnergyCurveAtPercent**(`planet`, `percent`): `number`
@@ -825,6 +857,9 @@ time may be in the past
 
 ▸ **getPlanetsInWorldCircle**(`coords`, `radius`): `LocatablePlanet`[]
 
+Gets all the planets that are within {@code radius} world units from the given coordinate. Fast
+because it uses [LayeredMap](Backend_GameLogic_LayeredMap.LayeredMap.md).
+
 #### Parameters
 
 | Name     | Type          |
@@ -842,9 +877,9 @@ time may be in the past
 
 ▸ **getPlanetsInWorldRectangle**(`worldX`, `worldY`, `worldWidth`, `worldHeight`, `levels`, `planetLevelToRadii`, `updateIfStale?`): `LocatablePlanet`[]
 
-Gets the ids of all the planets that are both within the given bounding box (defined by its bottom
-left coordinate, width, and height) in the world and of a level that was passed in via the
-`planetLevels` parameter.
+Gets the ids of all the planets that are both within the given bounding box (defined by its
+bottom left coordinate, width, and height) in the world and of a level that was passed in via
+the `planetLevels` parameter. Fast because it uses [LayeredMap](Backend_GameLogic_LayeredMap.LayeredMap.md).
 
 #### Parameters
 
@@ -867,6 +902,8 @@ left coordinate, width, and height) in the world and of a level that was passed 
 ### getPlanetsWithIds
 
 ▸ **getPlanetsWithIds**(`locationIds`, `updateIfStale?`): `Planet`[]
+
+Gets all the planets with the given ids, giltering out the ones that we don't have.
 
 #### Parameters
 
@@ -919,6 +956,16 @@ returns undefined
 #### Returns
 
 `undefined` \| `UnconfirmedBuyGPTCredits`
+
+---
+
+### getUnconfirmedClaim
+
+▸ **getUnconfirmedClaim**(): `undefined` \| `UnconfirmedClaim`
+
+#### Returns
+
+`undefined` \| `UnconfirmedClaim`
 
 ---
 
@@ -1124,7 +1171,7 @@ received some artifact data from the contract. update our stores
 
 ### replacePlanetFromContractData
 
-▸ **replacePlanetFromContractData**(`planet`, `updatedArrivals?`, `updatedArtifactsOnPlanet?`, `revealedLocation?`): `void`
+▸ **replacePlanetFromContractData**(`planet`, `updatedArrivals?`, `updatedArtifactsOnPlanet?`, `revealedLocation?`, `claimerEthAddress?`): `void`
 
 received some planet data from the contract. update our stores
 
@@ -1136,6 +1183,7 @@ received some planet data from the contract. update our stores
 | `updatedArrivals?`          | `QueuedArrival`[]  |
 | `updatedArtifactsOnPlanet?` | `ArtifactId`[]     |
 | `revealedLocation?`         | `RevealedLocation` |
+| `claimerEthAddress?`        | `EthAddress`       |
 
 #### Returns
 
@@ -1156,6 +1204,22 @@ This function also handles managing artifact update messages and indexing the ma
 | Name       | Type       | Description         |
 | :--------- | :--------- | :------------------ |
 | `artifact` | `Artifact` | the artifact to set |
+
+#### Returns
+
+`void`
+
+---
+
+### setClaimedLocation
+
+▸ **setClaimedLocation**(`claimedLocation`): `void`
+
+#### Parameters
+
+| Name              | Type              |
+| :---------------- | :---------------- |
+| `claimedLocation` | `ClaimedLocation` |
 
 #### Returns
 

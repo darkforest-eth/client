@@ -14,9 +14,9 @@ import { loadLeaderboard } from '../../Backend/Network/LeaderboardApi';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { ModalHandle } from '../Views/ModalPane';
 import { createDefinedContext } from './createDefinedContext';
-import { useEmitterSubscribe, useKeyPressed, useWrappedEmitter } from './EmitterHooks';
+import { useEmitterSubscribe, useWrappedEmitter } from './EmitterHooks';
 import { usePoll } from './Hooks';
-import { ctrlDown$, ctrlUp$ } from './KeyEmitters';
+import UIEmitter, { UIEmitterEvent } from './UIEmitter';
 
 export const { useDefinedContext: useUIManager, provider: UIManagerProvider } =
   createDefinedContext<GameUIManager>();
@@ -169,11 +169,6 @@ export function useArtifact(uiManager: GameUIManager, artifactId: ArtifactId) {
   return artifact;
 }
 
-/** Return a bool that indicates if the control key is pressed. */
-export function useControlDown(): boolean {
-  return useKeyPressed(ctrlDown$, ctrlUp$);
-}
-
 // TODO cache this globally
 
 /** Loads the leaderboard */
@@ -209,4 +204,17 @@ export function usePopAllOnSelectedPlanetChanged(
       modal.popAll();
     }
   }, [selected, modal, startingId]);
+}
+
+/**
+ * Calls {@code onCompleted} when the user sends a move via the ui.
+ */
+export function useOnSendCompleted(onCompleted: () => void) {
+  useEffect(() => {
+    const uiEmitter = UIEmitter.getInstance();
+    uiEmitter.on(UIEmitterEvent.SendCompleted, onCompleted);
+    return () => {
+      uiEmitter.removeListener(UIEmitterEvent.SendCompleted, onCompleted);
+    };
+  }, [onCompleted]);
 }

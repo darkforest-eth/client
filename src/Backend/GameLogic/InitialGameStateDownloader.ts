@@ -2,6 +2,7 @@ import { weiToEth } from '@darkforest_eth/network';
 import {
   Artifact,
   ArtifactId,
+  ClaimedCoords,
   LocationId,
   Planet,
   Player,
@@ -28,6 +29,7 @@ export interface InitialGameState {
   myGPTCredits: number;
   allTouchedPlanetIds: LocationId[];
   allRevealedCoords: RevealedCoords[];
+  allClaimedCoords: ClaimedCoords[];
   pendingMoves: QueuedArrival[];
   touchedAndLocatedPlanets: Map<LocationId, Planet>;
   artifactsOnVoyages: Artifact[];
@@ -36,6 +38,7 @@ export interface InitialGameState {
   loadedPlanets: LocationId[];
   balance: number;
   revealedCoordsMap: Map<LocationId, RevealedCoords>;
+  claimedCoordsMap: Map<LocationId, ClaimedCoords>;
   planetVoyageIdMap: Map<LocationId, VoyageId[]>;
   arrivals: Map<VoyageId, QueuedArrival>;
   twitters: AddressTwitterMap;
@@ -64,6 +67,7 @@ export class InitialGameStateDownloader {
   ): Promise<InitialGameState> {
     const storedTouchedPlanetIds = await persistentChunkStore.getSavedTouchedPlanetIds();
     const storedRevealedCoords = await persistentChunkStore.getSavedRevealedCoords();
+    const storedClaimedCoords = await persistentChunkStore.getSavedClaimedCoords();
 
     this.terminal.printElement(MakeDarkForestTips());
     this.terminal.newline();
@@ -74,6 +78,8 @@ export class InitialGameStateDownloader {
     const revealedPlanetsCoordsLoadingBar = this.makeProgressListener(
       'Revealed Planet Coordinates'
     );
+    const claimedPlanetsLoadingBar = this.makeProgressListener('Claimed Planet IDs');
+    const claimedPlanetsCoordsLoadingBar = this.makeProgressListener('Claimed Planet Coordinates');
     const pendingMovesLoadingBar = this.makeProgressListener('Pending Moves');
     const planetsLoadingBar = this.makeProgressListener('Planets');
     const planetsMetadataLoadingBar = this.makeProgressListener('Planet Metadatas');
@@ -107,16 +113,26 @@ export class InitialGameStateDownloader {
       revealedPlanetsLoadingBar,
       revealedPlanetsCoordsLoadingBar
     );
+    const loadedClaimedCoords = contractsAPI.getClaimedPlanetsCoords(
+      storedClaimedCoords.length,
+      claimedPlanetsLoadingBar,
+      claimedPlanetsCoordsLoadingBar
+    );
 
     const allTouchedPlanetIds = storedTouchedPlanetIds.concat(await loadedTouchedPlanetIds);
     const allRevealedCoords = storedRevealedCoords.concat(await loadedRevealedCoords);
+    const allClaimedCoords = storedClaimedCoords.concat(await loadedClaimedCoords);
     const revealedCoordsMap = new Map<LocationId, RevealedCoords>();
     for (const revealedCoords of allRevealedCoords) {
       revealedCoordsMap.set(revealedCoords.hash, revealedCoords);
     }
+    const claimedCoordsMap = new Map<LocationId, ClaimedCoords>();
+    for (const claimedCoords of allClaimedCoords) {
+      claimedCoordsMap.set(claimedCoords.hash, claimedCoords);
+    }
 
     let planetsToLoad = allTouchedPlanetIds.filter(
-      (id) => minedPlanetIds.has(id) || revealedCoordsMap.has(id)
+      (id) => minedPlanetIds.has(id) || revealedCoordsMap.has(id) || claimedCoordsMap.has(id)
     );
 
     const pendingMoves = await contractsAPI.getAllArrivals(planetsToLoad, pendingMovesLoadingBar);
@@ -180,6 +196,7 @@ export class InitialGameStateDownloader {
       myGPTCredits: await myGPTCredits,
       allTouchedPlanetIds,
       allRevealedCoords,
+      allClaimedCoords,
       pendingMoves,
       touchedAndLocatedPlanets,
       artifactsOnVoyages,
@@ -188,6 +205,7 @@ export class InitialGameStateDownloader {
       loadedPlanets: planetsToLoad,
       balance: weiToEth(await balance),
       revealedCoordsMap,
+      claimedCoordsMap,
       planetVoyageIdMap,
       arrivals,
       twitters,

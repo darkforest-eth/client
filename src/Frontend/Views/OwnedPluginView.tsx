@@ -5,6 +5,7 @@ import { PluginId, SerializedPlugin } from '../../Backend/Plugins/SerializedPlug
 import { Btn } from '../Components/Btn';
 import { PluginElements, Spacer, Truncate } from '../Components/CoreUI';
 import { RemoteModal } from '../Components/RemoteModal';
+import { Sub } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 
 const Error = styled.span`
@@ -98,9 +99,11 @@ export class OwnedPluginView extends React.Component<Props, State> {
           </RemoteModal>
         ) : null}
         <div>
-          <Truncate maxWidth={'150px'}>
-            {this.props.plugin.name}
-            {this.state.error && <Error>{' ' + this.state.error}</Error>}
+          <Truncate maxWidth={'150px'} style={{ verticalAlign: 'unset' }}>
+            <Sub>
+              {this.props.plugin.name}
+              {this.state.error && <Error>{' ' + this.state.error}</Error>}
+            </Sub>
           </Truncate>
 
           <Spacer width={8} />

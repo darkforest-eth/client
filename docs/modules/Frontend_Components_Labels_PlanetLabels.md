@@ -384,6 +384,7 @@ Either 'yours' in green text,
 | :-------------------------- | :---------------------- |
 | `__namedParameters`         | `Object`                |
 | `__namedParameters.planet`  | `Planet` \| `undefined` |
+| `__namedParameters.style?`  | `React.CSSProperties`   |
 | `__namedParameters.getStat` |                         |
 
 #### Returns

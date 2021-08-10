@@ -4,31 +4,41 @@
 
 ### Variables
 
+- [CLOSE_MODAL](Frontend_Utils_ShortcutConstants.md#close_modal)
+- [EXIT_PANE](Frontend_Utils_ShortcutConstants.md#exit_pane)
 - [MODAL_BACK_SHORTCUT](Frontend_Utils_ShortcutConstants.md#modal_back_shortcut)
-- [TOGGLE_ARTIFACTS_DEX_PANE](Frontend_Utils_ShortcutConstants.md#toggle_artifacts_dex_pane)
 - [TOGGLE_BROADCAST_PANE](Frontend_Utils_ShortcutConstants.md#toggle_broadcast_pane)
+- [TOGGLE_CLAIM_PLANET_PANE](Frontend_Utils_ShortcutConstants.md#toggle_claim_planet_pane)
 - [TOGGLE_DIAGNOSTICS_PANE](Frontend_Utils_ShortcutConstants.md#toggle_diagnostics_pane)
+- [TOGGLE_EXPLORE](Frontend_Utils_ShortcutConstants.md#toggle_explore)
 - [TOGGLE_HAT_PANE](Frontend_Utils_ShortcutConstants.md#toggle_hat_pane)
+- [TOGGLE_HELP_PANE](Frontend_Utils_ShortcutConstants.md#toggle_help_pane)
 - [TOGGLE_PLANET_ARTIFACTS_PANE](Frontend_Utils_ShortcutConstants.md#toggle_planet_artifacts_pane)
-- [TOGGLE_PLANET_DEX_PANE](Frontend_Utils_ShortcutConstants.md#toggle_planet_dex_pane)
+- [TOGGLE_PLUGINS_PANE](Frontend_Utils_ShortcutConstants.md#toggle_plugins_pane)
 - [TOGGLE_SEND](Frontend_Utils_ShortcutConstants.md#toggle_send)
+- [TOGGLE_SETTINGS_PANE](Frontend_Utils_ShortcutConstants.md#toggle_settings_pane)
+- [TOGGLE_TARGETTING](Frontend_Utils_ShortcutConstants.md#toggle_targetting)
 - [TOGGLE_UPGRADES_PANE](Frontend_Utils_ShortcutConstants.md#toggle_upgrades_pane)
-
-### Functions
-
-- [useSubscribeToShortcut](Frontend_Utils_ShortcutConstants.md#usesubscribetoshortcut)
+- [TOGGLE_YOUR_ARTIFACTS_PANE](Frontend_Utils_ShortcutConstants.md#toggle_your_artifacts_pane)
+- [TOGGLE_YOUR_PLANETS_DEX_PANE](Frontend_Utils_ShortcutConstants.md#toggle_your_planets_dex_pane)
 
 ## Variables
 
-### MODAL_BACK_SHORTCUT
+### CLOSE_MODAL
 
-• `Const` **MODAL_BACK_SHORTCUT**: `"r"`
+• `Const` **CLOSE_MODAL**: `"t"`
 
 ---
 
-### TOGGLE_ARTIFACTS_DEX_PANE
+### EXIT_PANE
 
-• `Const` **TOGGLE_ARTIFACTS_DEX_PANE**: `"o"`
+• `Const` **EXIT_PANE**: `"Escape"`
+
+---
+
+### MODAL_BACK_SHORTCUT
+
+• `Const` **MODAL_BACK_SHORTCUT**: `"t"`
 
 ---
 
@@ -38,9 +48,21 @@
 
 ---
 
+### TOGGLE_CLAIM_PLANET_PANE
+
+• `Const` **TOGGLE_CLAIM_PLANET_PANE**: `"c"`
+
+---
+
 ### TOGGLE_DIAGNOSTICS_PANE
 
 • `Const` **TOGGLE_DIAGNOSTICS_PANE**: `"i"`
+
+---
+
+### TOGGLE_EXPLORE
+
+• `Const` **TOGGLE_EXPLORE**: `" "`
 
 ---
 
@@ -50,15 +72,21 @@
 
 ---
 
+### TOGGLE_HELP_PANE
+
+• `Const` **TOGGLE_HELP_PANE**: `"j"`
+
+---
+
 ### TOGGLE_PLANET_ARTIFACTS_PANE
 
 • `Const` **TOGGLE_PLANET_ARTIFACTS_PANE**: `"s"`
 
 ---
 
-### TOGGLE_PLANET_DEX_PANE
+### TOGGLE_PLUGINS_PANE
 
-• `Const` **TOGGLE_PLANET_DEX_PANE**: `"p"`
+• `Const` **TOGGLE_PLUGINS_PANE**: `"k"`
 
 ---
 
@@ -68,23 +96,30 @@
 
 ---
 
+### TOGGLE_SETTINGS_PANE
+
+• `Const` **TOGGLE_SETTINGS_PANE**: `"h"`
+
+---
+
+### TOGGLE_TARGETTING
+
+• `Const` **TOGGLE_TARGETTING**: `` "`" ``
+
+---
+
 ### TOGGLE_UPGRADES_PANE
 
 • `Const` **TOGGLE_UPGRADES_PANE**: `"a"`
 
-## Functions
+---
 
-### useSubscribeToShortcut
+### TOGGLE_YOUR_ARTIFACTS_PANE
 
-▸ **useSubscribeToShortcut**(`key`, `callback`): `void`
+• `Const` **TOGGLE_YOUR_ARTIFACTS_PANE**: `"l"`
 
-#### Parameters
+---
 
-| Name       | Type                    |
-| :--------- | :---------------------- |
-| `key`      | `string` \| `undefined` |
-| `callback` | () => `void`            |
+### TOGGLE_YOUR_PLANETS_DEX_PANE
 
-#### Returns
-
-`void`
+• `Const` **TOGGLE_YOUR_PLANETS_DEX_PANE**: `";"`

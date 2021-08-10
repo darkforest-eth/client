@@ -9,9 +9,7 @@ import { Wrapper } from '../../Backend/Utils/Wrapper';
  */
 export function useEmitterSubscribe<T>(emitter: Monomitter<T>, callback: Callback<T>) {
   useEffect(() => {
-    const sub = emitter.subscribe(callback);
-
-    return sub.unsubscribe;
+    return emitter.subscribe(callback).unsubscribe;
   }, [emitter, callback]);
 }
 
@@ -52,28 +50,4 @@ export function useWrappedEmitter<T>(
   }, [emitter]);
 
   return val;
-}
-
-/**
- * Return a bool indicating if a key is pressed
- * @param keydown$ keydown monomitter
- * @param keyup$ keyup monomitter
- */
-export function useKeyPressed(
-  keydown$: Monomitter<KeyboardEvent>,
-  keyup$: Monomitter<KeyboardEvent>
-): boolean {
-  const [pressed, setPressed] = useState<boolean>(false);
-
-  useEffect(() => {
-    const downSub = keydown$.subscribe((_e) => setPressed(true));
-    const upSub = keyup$.subscribe((_e) => setPressed(false));
-
-    return () => {
-      downSub.unsubscribe();
-      upSub.unsubscribe();
-    };
-  }, [keydown$, keyup$]);
-
-  return pressed;
 }

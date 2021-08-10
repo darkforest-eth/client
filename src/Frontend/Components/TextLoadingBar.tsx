@@ -41,12 +41,16 @@ export function TextLoadingBarImpl(
 
   return (
     <span>
-      [<Sub>{progressText}</Sub>] {percentText}% <LoadingTitle>{prettyEntityName}</LoadingTitle>
+      [<Sub>{progressText}</Sub>]{' '}
+      <span style={{ fontWeight: percentText === '100' ? 'bold' : undefined }}>
+        {percentText}%{' '}
+      </span>
+      <LoadingTitle>{prettyEntityName}</LoadingTitle>
     </span>
   );
 }
 
 const LoadingTitle = styled.div`
   display: inline-block;
-  color: ${dfstyles.colors.subtext};
+  color: ${dfstyles.colors.text};
 `;

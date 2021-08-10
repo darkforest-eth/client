@@ -4,6 +4,7 @@ import {
   UnconfirmedActivateArtifact,
   UnconfirmedBuyGPTCredits,
   UnconfirmedBuyHat,
+  UnconfirmedClaim,
   UnconfirmedDeactivateArtifact,
   UnconfirmedDepositArtifact,
   UnconfirmedFindArtifact,
@@ -85,4 +86,8 @@ export function isUnconfirmedBuyGPTCredits(
   txIntent: TxIntent
 ): txIntent is UnconfirmedBuyGPTCredits {
   return txIntent.methodName === ContractMethodName.BUY_GPT_CREDITS;
+}
+
+export function isUnconfirmedClaim(txIntent: TxIntent): txIntent is UnconfirmedClaim {
+  return txIntent.methodName === ContractMethodName.CLAIM_LOCATION;
 }

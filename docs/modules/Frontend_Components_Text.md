@@ -4,7 +4,6 @@
 
 ### Variables
 
-- [BasicLink](Frontend_Components_Text.md#basiclink)
 - [Blue](Frontend_Components_Text.md#blue)
 - [Colored](Frontend_Components_Text.md#colored)
 - [Gold](Frontend_Components_Text.md#gold)
@@ -40,12 +39,6 @@
 - [TxLink](Frontend_Components_Text.md#txlink)
 
 ## Variables
-
-### BasicLink
-
-• `Const` **BasicLink**: `StyledComponent`<`"u"`, `any`, `Object`, `never`\>
-
----
 
 ### Blue
 

@@ -1,5 +1,6 @@
 import { CORE_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import {
+  ClaimedCoords,
   DiagnosticUpdater,
   EthAddress,
   LocationId,
@@ -242,6 +243,21 @@ class PersistentChunkStore implements ChunkStore {
 
     return [];
   }
+  public async getSavedClaimedCoords(): Promise<ClaimedCoords[]> {
+    const claimedPlanetIds = await this.getKey('claimedPlanetIds');
+
+    if (claimedPlanetIds) {
+      const parsed = JSON.parse(claimedPlanetIds);
+      // changed the type on 6/1/21 to include revealer field
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (parsed.length === 0 || !(parsed[0] as any).revealer) {
+        return [];
+      }
+      return parsed as ClaimedCoords[];
+    }
+
+    return [];
+  }
 
   public async saveTouchedPlanetIds(ids: LocationId[]) {
     await this.setKey('touchedPlanetIds', stringify(ids));
@@ -249,6 +265,9 @@ class PersistentChunkStore implements ChunkStore {
 
   public async saveRevealedCoords(revealedCoordTups: RevealedCoords[]) {
     await this.setKey('revealedPlanetIds', stringify(revealedCoordTups));
+  }
+  public async saveClaimedCoords(claimedCoordTupps: ClaimedCoords[]) {
+    await this.setKey('claimedPlanetIds', stringify(claimedCoordTupps));
   }
 
   /**

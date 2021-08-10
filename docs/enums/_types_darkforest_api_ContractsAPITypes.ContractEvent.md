@@ -13,6 +13,7 @@
 - [ArtifactFound](_types_darkforest_api_ContractsAPITypes.ContractEvent.md#artifactfound)
 - [ArtifactWithdrawn](_types_darkforest_api_ContractsAPITypes.ContractEvent.md#artifactwithdrawn)
 - [ChangedGPTCreditPrice](_types_darkforest_api_ContractsAPITypes.ContractEvent.md#changedgptcreditprice)
+- [LocationClaimed](_types_darkforest_api_ContractsAPITypes.ContractEvent.md#locationclaimed)
 - [LocationRevealed](_types_darkforest_api_ContractsAPITypes.ContractEvent.md#locationrevealed)
 - [PlanetHatBought](_types_darkforest_api_ContractsAPITypes.ContractEvent.md#planethatbought)
 - [PlanetSilverWithdrawn](_types_darkforest_api_ContractsAPITypes.ContractEvent.md#planetsilverwithdrawn)
@@ -61,6 +62,12 @@
 ### ChangedGPTCreditPrice
 
 • **ChangedGPTCreditPrice** = `"ChangedCreditPrice"`
+
+---
+
+### LocationClaimed
+
+• **LocationClaimed** = `"LocationClaimed"`
 
 ---
 

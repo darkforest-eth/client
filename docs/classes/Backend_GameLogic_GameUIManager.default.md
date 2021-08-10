@@ -57,6 +57,7 @@
 - [centerCoords](Backend_GameLogic_GameUIManager.default.md#centercoords)
 - [centerLocationId](Backend_GameLogic_GameUIManager.default.md#centerlocationid)
 - [centerPlanet](Backend_GameLogic_GameUIManager.default.md#centerplanet)
+- [claimLocation](Backend_GameLogic_GameUIManager.default.md#claimlocation)
 - [deactivateArtifact](Backend_GameLogic_GameUIManager.default.md#deactivateartifact)
 - [depositArtifact](Backend_GameLogic_GameUIManager.default.md#depositartifact)
 - [destroy](Backend_GameLogic_GameUIManager.default.md#destroy)
@@ -127,6 +128,7 @@
 - [getPlanetWithId](Backend_GameLogic_GameUIManager.default.md#getplanetwithid)
 - [getPlanetsInViewport](Backend_GameLogic_GameUIManager.default.md#getplanetsinviewport)
 - [getPlayer](Backend_GameLogic_GameUIManager.default.md#getplayer)
+- [getPlayerScore](Backend_GameLogic_GameUIManager.default.md#getplayerscore)
 - [getPluginManager](Backend_GameLogic_GameUIManager.default.md#getpluginmanager)
 - [getPreviousSelectedPlanet](Backend_GameLogic_GameUIManager.default.md#getpreviousselectedplanet)
 - [getPrivateKey](Backend_GameLogic_GameUIManager.default.md#getprivatekey)
@@ -146,11 +148,11 @@
 - [getUniverseTotalEnergy](Backend_GameLogic_GameUIManager.default.md#getuniversetotalenergy)
 - [getUpgrade](Backend_GameLogic_GameUIManager.default.md#getupgrade)
 - [getViewport](Backend_GameLogic_GameUIManager.default.md#getviewport)
-- [getWithdrawnSilverOfPlayer](Backend_GameLogic_GameUIManager.default.md#getwithdrawnsilverofplayer)
 - [getWorldRadius](Backend_GameLogic_GameUIManager.default.md#getworldradius)
 - [getWorldSilver](Backend_GameLogic_GameUIManager.default.md#getworldsilver)
 - [getWormholes](Backend_GameLogic_GameUIManager.default.md#getwormholes)
 - [hasMinedChunk](Backend_GameLogic_GameUIManager.default.md#hasminedchunk)
+- [isCurrentlyClaiming](Backend_GameLogic_GameUIManager.default.md#iscurrentlyclaiming)
 - [isCurrentlyRevealing](Backend_GameLogic_GameUIManager.default.md#iscurrentlyrevealing)
 - [isMining](Backend_GameLogic_GameUIManager.default.md#ismining)
 - [isOverOwnPlanet](Backend_GameLogic_GameUIManager.default.md#isoverownplanet)
@@ -184,6 +186,8 @@
 - [startWormholeFrom](Backend_GameLogic_GameUIManager.default.md#startwormholefrom)
 - [stepConversation](Backend_GameLogic_GameUIManager.default.md#stepconversation)
 - [stopExplore](Backend_GameLogic_GameUIManager.default.md#stopexplore)
+- [toggleExplore](Backend_GameLogic_GameUIManager.default.md#toggleexplore)
+- [toggleTargettingExplorer](Backend_GameLogic_GameUIManager.default.md#toggletargettingexplorer)
 - [updateDiagnostics](Backend_GameLogic_GameUIManager.default.md#updatediagnostics)
 - [updateMouseHoveringOverCoords](Backend_GameLogic_GameUIManager.default.md#updatemousehoveringovercoords)
 - [updatePlanets](Backend_GameLogic_GameUIManager.default.md#updateplanets)
@@ -558,6 +562,22 @@ indicates whether or not the player is currently selecting a target planet.
 | Name     | Type                             |
 | :------- | :------------------------------- |
 | `planet` | `undefined` \| `LocatablePlanet` |
+
+#### Returns
+
+`void`
+
+---
+
+### claimLocation
+
+▸ **claimLocation**(`locationId`): `void`
+
+#### Parameters
+
+| Name         | Type         |
+| :----------- | :----------- |
+| `locationId` | `LocationId` |
 
 #### Returns
 
@@ -1027,6 +1047,8 @@ indicates whether or not the player is currently selecting a target planet.
 
 ▸ **getForcesSending**(`planetId`): `number`
 
+Percent from 0 to 100.
+
 #### Parameters
 
 | Name       | Type         |
@@ -1444,6 +1466,22 @@ state in some way
 
 ---
 
+### getPlayerScore
+
+▸ **getPlayerScore**(`player`): `number`
+
+#### Parameters
+
+| Name     | Type         |
+| :------- | :----------- |
+| `player` | `EthAddress` |
+
+#### Returns
+
+`number`
+
+---
+
 ### getPluginManager
 
 ▸ **getPluginManager**(): [`PluginManager`](Backend_GameLogic_PluginManager.PluginManager.md)
@@ -1546,6 +1584,8 @@ state in some way
 ### getSilverSending
 
 ▸ **getSilverSending**(`planetId`): `number`
+
+Percent from 0 to 100.
 
 #### Parameters
 
@@ -1692,22 +1732,6 @@ drill fields like this anymore.
 
 ---
 
-### getWithdrawnSilverOfPlayer
-
-▸ **getWithdrawnSilverOfPlayer**(`player`): `number`
-
-#### Parameters
-
-| Name     | Type         |
-| :------- | :----------- |
-| `player` | `EthAddress` |
-
-#### Returns
-
-`number`
-
----
-
 ### getWorldRadius
 
 ▸ **getWorldRadius**(): `number`
@@ -1747,6 +1771,16 @@ drill fields like this anymore.
 | Name            | Type                                                                |
 | :-------------- | :------------------------------------------------------------------ |
 | `chunkLocation` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
+
+#### Returns
+
+`boolean`
+
+---
+
+### isCurrentlyClaiming
+
+▸ **isCurrentlyClaiming**(): `boolean`
 
 #### Returns
 
@@ -2232,6 +2266,26 @@ drill fields like this anymore.
 ### stopExplore
 
 ▸ **stopExplore**(): `void`
+
+#### Returns
+
+`void`
+
+---
+
+### toggleExplore
+
+▸ **toggleExplore**(): `void`
+
+#### Returns
+
+`void`
+
+---
+
+### toggleTargettingExplorer
+
+▸ **toggleTargettingExplorer**(): `void`
 
 #### Returns
 

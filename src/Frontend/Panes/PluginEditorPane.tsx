@@ -17,7 +17,7 @@ require('prismjs/themes/prism-dark.css');
  */
 const EditorContainer = styled.div`
   overflow-y: scroll;
-  border: 1px solid ${dfstyles.colors.border};
+  border: 1px solid ${dfstyles.colors.borderDark};
   border-radius: ${dfstyles.borderRadius};
   width: 500px;
   height: 500px;

@@ -4,16 +4,22 @@
 
 ### Functions
 
-- [LoggedInPlayer](Frontend_Components_Labels_Labels.md#loggedinplayer)
+- [AccountLabel](Frontend_Components_Labels_Labels.md#accountlabel)
 - [TwitterLink](Frontend_Components_Labels_Labels.md#twitterlink)
 
 ## Functions
 
-### LoggedInPlayer
+### AccountLabel
 
-▸ **LoggedInPlayer**(): `Element`
+▸ **AccountLabel**(`__namedParameters`): `Element`
 
-Returns a either a link to the player's twitter, or a [TextPreview](Frontend_Components_TextPreview.md#textpreview) of their address.
+#### Parameters
+
+| Name                                            | Type         |
+| :---------------------------------------------- | :----------- |
+| `__namedParameters`                             | `Object`     |
+| `__namedParameters.ethAddress?`                 | `EthAddress` |
+| `__namedParameters.includeAddressIfHasTwitter?` | `boolean`    |
 
 #### Returns
 

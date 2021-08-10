@@ -6,7 +6,6 @@
 
 - [useEmitterSubscribe](Frontend_Utils_EmitterHooks.md#useemittersubscribe)
 - [useEmitterValue](Frontend_Utils_EmitterHooks.md#useemittervalue)
-- [useKeyPressed](Frontend_Utils_EmitterHooks.md#usekeypressed)
 - [useWrappedEmitter](Frontend_Utils_EmitterHooks.md#usewrappedemitter)
 
 ## Functions
@@ -58,25 +57,6 @@ Use returned value from an emitter
 #### Returns
 
 `T`
-
----
-
-### useKeyPressed
-
-▸ **useKeyPressed**(`keydown$`, `keyup$`): `boolean`
-
-Return a bool indicating if a key is pressed
-
-#### Parameters
-
-| Name       | Type                           | Description        |
-| :--------- | :----------------------------- | :----------------- |
-| `keydown$` | `Monomitter`<`KeyboardEvent`\> | keydown monomitter |
-| `keyup$`   | `Monomitter`<`KeyboardEvent`\> | keyup monomitter   |
-
-#### Returns
-
-`boolean`
 
 ---
 

@@ -6,6 +6,7 @@ export type BtnProps = {
   disabled?: boolean;
   noBorder?: boolean;
   wide?: boolean;
+  small?: boolean;
   color?: string;
   borderColor?: string;
   textColor?: string;
@@ -17,37 +18,48 @@ export function Btn(props: BtnProps) {
 }
 
 const BtnElement = styled.span`
-  ${({ disabled, color, borderColor, textColor, noBorder, wide, forceActive }: BtnProps) => css`
+  ${({
+    disabled,
+    color,
+    borderColor,
+    textColor,
+    noBorder,
+    wide,
+    forceActive,
+    small,
+  }: BtnProps) => css`
     user-select: none;
     display: inline-flex;
     border-radius: 3px;
-    padding: 0.15em;
+    padding: 2px 8px;
+    ${small ? `padding: 0 4px;` : `padding: 2px 8px;`}
     border: ${noBorder ? 0 : 1}px solid ${borderColor || color || dfstyles.colors.borderDark};
     justify-content: center;
     align-items: center;
     cursor: pointer;
     background-color: ${dfstyles.colors.backgrounddark};
 
+    ${small && `font-size: 0.8em;`}
     ${wide && `width: 100%;`}
-    ${(textColor || color) && `color: ${textColor || color};`}
+    ${(textColor || color) && `color: ${textColor || color || dfstyles.colors.text};`}
 
     &:active,
     &:hover {
       ${!disabled &&
       css`
+        ${dfstyles.game.styles.active};
         border: ${noBorder ? 0 : 1}px solid ${borderColor || color || dfstyles.colors.border};
         color: ${dfstyles.colors.background};
         background: ${color || dfstyles.colors.text};
+        span svg path {
+          fill: ${dfstyles.colors.background};
+        }
       `}
-    }
-
-    &:active {
-      ${dfstyles.game.styles.active};
     }
 
     ${disabled &&
     css`
-      color: ${dfstyles.colors.subbesttext};
+      color: ${dfstyles.colors.subtext};
       border-color: ${dfstyles.colors.border};
       background: none;
       filter: none;

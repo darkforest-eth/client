@@ -98,3 +98,9 @@ export interface RevealCountdownInfo {
   currentlyRevealing: boolean; // true iff player has an unconfirmedReveal currently being processed
   revealCooldownTime: number; // in seconds
 }
+
+export interface ClaimCountdownInfo {
+  myLastClaimTimestamp?: number; // if undefined, never revealed before
+  currentlyClaiming: boolean; // true iff player has an unconfirmedReveal currently being processed
+  claimCooldownTime: number; // in seconds
+}

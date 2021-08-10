@@ -27,13 +27,11 @@ export function LeadboardDisplay() {
   );
 }
 
-function scoreToString(score: number) {
-  score = Math.floor(score);
-
-  if (score === 0) {
+function scoreToString(score?: number | null) {
+  if (score === null || score === undefined) {
     return 'n/a';
   }
-
+  score = Math.floor(score);
   if (score < 10000) {
     return score + '';
   }

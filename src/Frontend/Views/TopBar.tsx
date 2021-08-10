@@ -1,14 +1,13 @@
 import { EthAddress } from '@darkforest_eth/types';
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { AlignCenterHorizontally, EmSpacer, Spacer } from '../Components/CoreUI';
-import { LoggedInPlayer } from '../Components/Labels/Labels';
+import { AccountLabel } from '../Components/Labels/Labels';
 import { Sub, White } from '../Components/Text';
 import { TooltipName } from '../Game/WindowManager';
 import { TooltipTrigger } from '../Panes/Tooltip';
 import { usePlayer, useUIManager } from '../Utils/AppHooks';
 import { GameWindowZIndex } from '../Utils/constants';
-import { usePoll } from '../Utils/Hooks';
 import { ModalTwitterVerifyIcon } from './ModalIcon';
 import { ModalHook } from './ModalPane';
 
@@ -28,23 +27,17 @@ function TopBarSection({ children }: { children: React.ReactNode }) {
 
 function BoardPlacement({ account }: { account: EthAddress | undefined }) {
   const uiManager = useUIManager();
-  const [score, setScore] = useState<number | undefined>();
-
-  const syncScore = useCallback(() => {
-    setScore(uiManager.getMyScore());
-  }, [uiManager, setScore]);
-
-  usePoll(syncScore, 5000);
+  const player = usePlayer(uiManager, account);
 
   let content;
 
-  if (!account) {
-    content = <Sub>error loading account</Sub>;
+  if (!player.value) {
+    content = <Sub>n/a</Sub>;
   } else {
     content = (
       <Sub>
         <TooltipTrigger name={TooltipName.Score}>
-          <White>{score || 0}</White> pts
+          <White>{player.value.score ?? 'n/a'}</White> pts
         </TooltipTrigger>
       </Sub>
     );
@@ -74,15 +67,14 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: ModalHook }) 
   return (
     <TopBarContainer>
       <AlignCenterHorizontally style={{ width: '100%', justifyContent: 'space-between' }}>
-        <LoggedInPlayer />
+        <AccountLabel />
         <EmSpacer width={1} />
         <ModalTwitterVerifyIcon
+          small
           hook={twitterVerifyHook}
           style={{
             width: !twitter ? '100px' : '1.5em',
             height: !twitter ? '2em' : '1.5em',
-            padding: '8px 8px',
-            borderColor: !twitter ? undefined : 'none',
           }}
           text={!twitter ? 'Connect' : undefined}
         />

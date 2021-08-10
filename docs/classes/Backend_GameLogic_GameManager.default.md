@@ -59,11 +59,13 @@
 - [buyGPTCredits](Backend_GameLogic_GameManager.default.md#buygptcredits)
 - [buyHat](Backend_GameLogic_GameManager.default.md#buyhat)
 - [checkGameHasEnded](Backend_GameLogic_GameManager.default.md#checkgamehasended)
+- [claimLocation](Backend_GameLogic_GameManager.default.md#claimlocation)
 - [clearEmoji](Backend_GameLogic_GameManager.default.md#clearemoji)
 - [deactivateArtifact](Backend_GameLogic_GameManager.default.md#deactivateartifact)
 - [depositArtifact](Backend_GameLogic_GameManager.default.md#depositartifact)
 - [destroy](Backend_GameLogic_GameManager.default.md#destroy)
 - [findArtifact](Backend_GameLogic_GameManager.default.md#findartifact)
+- [findRandomHomePlanet](Backend_GameLogic_GameManager.default.md#findrandomhomeplanet)
 - [getAccount](Backend_GameLogic_GameManager.default.md#getaccount)
 - [getActiveArtifact](Backend_GameLogic_GameManager.default.md#getactiveartifact)
 - [getAllOwnedPlanets](Backend_GameLogic_GameManager.default.md#getallownedplanets)
@@ -76,6 +78,7 @@
 - [getArtifactsWithIds](Backend_GameLogic_GameManager.default.md#getartifactswithids)
 - [getChunk](Backend_GameLogic_GameManager.default.md#getchunk)
 - [getChunkStore](Backend_GameLogic_GameManager.default.md#getchunkstore)
+- [getClaimedLocations](Backend_GameLogic_GameManager.default.md#getclaimedlocations)
 - [getConstructors](Backend_GameLogic_GameManager.default.md#getconstructors)
 - [getContractAddress](Backend_GameLogic_GameManager.default.md#getcontractaddress)
 - [getContractConstants](Backend_GameLogic_GameManager.default.md#getcontractconstants)
@@ -112,6 +115,8 @@
 - [getMyPlanetsUpdated$](Backend_GameLogic_GameManager.default.md#getmyplanetsupdated$)
 - [getMyScore](Backend_GameLogic_GameManager.default.md#getmyscore)
 - [getNextBroadcastAvailableTimestamp](Backend_GameLogic_GameManager.default.md#getnextbroadcastavailabletimestamp)
+- [getNextClaimAvailableTimestamp](Backend_GameLogic_GameManager.default.md#getnextclaimavailabletimestamp)
+- [getNextClaimCountdownInfo](Backend_GameLogic_GameManager.default.md#getnextclaimcountdowninfo)
 - [getNextRevealCountdownInfo](Backend_GameLogic_GameManager.default.md#getnextrevealcountdowninfo)
 - [getNotificationsManager](Backend_GameLogic_GameManager.default.md#getnotificationsmanager)
 - [getPerlinThresholds](Backend_GameLogic_GameManager.default.md#getperlinthresholds)
@@ -124,11 +129,10 @@
 - [getPlanetsInRange](Backend_GameLogic_GameManager.default.md#getplanetsinrange)
 - [getPlanetsInWorldRectangle](Backend_GameLogic_GameManager.default.md#getplanetsinworldrectangle)
 - [getPlanetsWithIds](Backend_GameLogic_GameManager.default.md#getplanetswithids)
-- [getPlanetsWithinRange](Backend_GameLogic_GameManager.default.md#getplanetswithinrange)
 - [getPlayer](Backend_GameLogic_GameManager.default.md#getplayer)
+- [getPlayerScore](Backend_GameLogic_GameManager.default.md#getplayerscore)
 - [getPrivateKey](Backend_GameLogic_GameManager.default.md#getprivatekey)
 - [getProcgenUtils](Backend_GameLogic_GameManager.default.md#getprocgenutils)
-- [getRandomHomePlanetCoords](Backend_GameLogic_GameManager.default.md#getrandomhomeplanetcoords)
 - [getRevealedLocations](Backend_GameLogic_GameManager.default.md#getrevealedlocations)
 - [getSignedTwitter](Backend_GameLogic_GameManager.default.md#getsignedtwitter)
 - [getSilverCurveAtPercent](Backend_GameLogic_GameManager.default.md#getsilvercurveatpercent)
@@ -144,7 +148,6 @@
 - [getUnconfirmedWormholeActivations](Backend_GameLogic_GameManager.default.md#getunconfirmedwormholeactivations)
 - [getUniverseTotalEnergy](Backend_GameLogic_GameManager.default.md#getuniversetotalenergy)
 - [getUpgrade](Backend_GameLogic_GameManager.default.md#getupgrade)
-- [getWithdrawnSilverOfPlayer](Backend_GameLogic_GameManager.default.md#getwithdrawnsilverofplayer)
 - [getWorldRadius](Backend_GameLogic_GameManager.default.md#getworldradius)
 - [getWorldSilver](Backend_GameLogic_GameManager.default.md#getworldsilver)
 - [getWormholeFactors](Backend_GameLogic_GameManager.default.md#getwormholefactors)
@@ -206,7 +209,7 @@
 
 ### constructor
 
-• `Private` **new default**(`terminal`, `account`, `players`, `touchedPlanets`, `allTouchedPlanetIds`, `revealedCoords`, `worldRadius`, `unprocessedArrivals`, `unprocessedPlanetArrivalIds`, `contractsAPI`, `contractConstants`, `persistentChunkStore`, `snarkHelper`, `homeLocation`, `useMockHash`, `artifacts`, `ethConnection`, `gptCreditPriceEther`, `myGPTCredits`)
+• `Private` **new default**(`terminal`, `account`, `players`, `touchedPlanets`, `allTouchedPlanetIds`, `revealedCoords`, `claimedCoords`, `worldRadius`, `unprocessedArrivals`, `unprocessedPlanetArrivalIds`, `contractsAPI`, `contractConstants`, `persistentChunkStore`, `snarkHelper`, `homeLocation`, `useMockHash`, `artifacts`, `ethConnection`, `gptCreditPriceEther`, `myGPTCredits`)
 
 #### Parameters
 
@@ -218,6 +221,7 @@
 | `touchedPlanets`              | `Map`<`LocationId`, `Planet`\>                                                                                  |
 | `allTouchedPlanetIds`         | `Set`<`LocationId`\>                                                                                            |
 | `revealedCoords`              | `Map`<`LocationId`, `RevealedCoords`\>                                                                          |
+| `claimedCoords`               | `Map`<`LocationId`, `ClaimedCoords`\>                                                                           |
 | `worldRadius`                 | `number`                                                                                                        |
 | `unprocessedArrivals`         | `Map`<`VoyageId`, `QueuedArrival`\>                                                                             |
 | `unprocessedPlanetArrivalIds` | `Map`<`LocationId`, `VoyageId`[]\>                                                                              |
@@ -700,6 +704,22 @@ look your best. Just like in the real world, more money means more hat.
 
 ---
 
+### claimLocation
+
+▸ **claimLocation**(`planetId`): [`default`](Backend_GameLogic_GameManager.default.md)
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `planetId` | `LocationId` |
+
+#### Returns
+
+[`default`](Backend_GameLogic_GameManager.default.md)
+
+---
+
 ### clearEmoji
 
 ▸ **clearEmoji**(`locationId`): `Promise`<`void`\>
@@ -784,6 +804,16 @@ Calls the contract to find an artifact on the given planet.
 #### Returns
 
 [`default`](Backend_GameLogic_GameManager.default.md)
+
+---
+
+### findRandomHomePlanet
+
+▸ `Private` **findRandomHomePlanet**(): `Promise`<`LocatablePlanet`\>
+
+#### Returns
+
+`Promise`<`LocatablePlanet`\>
 
 ---
 
@@ -953,6 +983,18 @@ represented by `undefined`.
 
 ---
 
+### getClaimedLocations
+
+▸ **getClaimedLocations**(): `Map`<`LocationId`, `ClaimedLocation`\>
+
+Gets a map of all location IDs which have been claimed.
+
+#### Returns
+
+`Map`<`LocationId`, `ClaimedLocation`\>
+
+---
+
 ### getConstructors
 
 ▸ **getConstructors**(): `Object`
@@ -1042,7 +1084,7 @@ Gets some diagnostic information about the game. Returns a copy, you can't modif
 ▸ **getDist**(`fromId`, `toId`): `number`
 
 Gets the distance between two planets. Throws an exception if you don't
-know the location of either planet.
+know the location of either planet. Takes into account wormholes.
 
 #### Parameters
 
@@ -1453,6 +1495,30 @@ Gets the timestamp (ms) of the next time that we can broadcast the coordinates o
 
 ---
 
+### getNextClaimAvailableTimestamp
+
+▸ **getNextClaimAvailableTimestamp**(): `number`
+
+Gets the timestamp (ms) of the next time that we can claim a planet.
+
+#### Returns
+
+`number`
+
+---
+
+### getNextClaimCountdownInfo
+
+▸ **getNextClaimCountdownInfo**(): [`ClaimCountdownInfo`](../interfaces/_types_global_GlobalTypes.ClaimCountdownInfo.md)
+
+Returns info about the next time you can claim a Planet
+
+#### Returns
+
+[`ClaimCountdownInfo`](../interfaces/_types_global_GlobalTypes.ClaimCountdownInfo.md)
+
+---
+
 ### getNextRevealCountdownInfo
 
 ▸ **getNextRevealCountdownInfo**(): [`RevealCountdownInfo`](../interfaces/_types_global_GlobalTypes.RevealCountdownInfo.md)
@@ -1588,7 +1654,7 @@ passed since we last updated the planet), then updates that planet first.
 ▸ **getPlanetsInRange**(`planetId`, `sendingPercent`): `Planet`[]
 
 Gets all the planets that you can reach with at least 1 energy from
-the given planet.
+the given planet. Does not take into account wormholes.
 
 #### Parameters
 
@@ -1648,24 +1714,6 @@ doesn't exist, no entry for that planet will be returned in the result.
 
 ---
 
-### getPlanetsWithinRange
-
-▸ **getPlanetsWithinRange**(`planet`): `LocatablePlanet`[]
-
-Gets all the planets that this planet could reach if it sent 100% of its energy.
-
-#### Parameters
-
-| Name     | Type              |
-| :------- | :---------------- |
-| `planet` | `LocatablePlanet` |
-
-#### Returns
-
-`LocatablePlanet`[]
-
----
-
 ### getPlayer
 
 ▸ **getPlayer**(`address?`): `undefined` \| `Player`
@@ -1682,6 +1730,22 @@ this client.
 #### Returns
 
 `undefined` \| `Player`
+
+---
+
+### getPlayerScore
+
+▸ **getPlayerScore**(`addr`): `number`
+
+#### Parameters
+
+| Name   | Type         |
+| :----- | :----------- |
+| `addr` | `EthAddress` |
+
+#### Returns
+
+`number`
 
 ---
 
@@ -1709,21 +1773,11 @@ typeof [`ProcgenUtils`](Backend_Procedural_ProcgenUtils.ProcgenUtils.md)
 
 ---
 
-### getRandomHomePlanetCoords
-
-▸ `Private` **getRandomHomePlanetCoords**(): `Promise`<`WorldLocation`\>
-
-#### Returns
-
-`Promise`<`WorldLocation`\>
-
----
-
 ### getRevealedLocations
 
 ▸ **getRevealedLocations**(): `Map`<`LocationId`, `RevealedLocation`\>
 
-Gets a map of all location IDs whose coords have been publicly revealed
+Gets a map of all location IDs whose coords have been publically revealed
 
 #### Returns
 
@@ -1954,22 +2008,6 @@ upgrade branch (defense, range, speed) and level of upgrade.
 
 ---
 
-### getWithdrawnSilverOfPlayer
-
-▸ **getWithdrawnSilverOfPlayer**(`addr`): `number`
-
-#### Parameters
-
-| Name   | Type         |
-| :----- | :----------- |
-| `addr` | `EthAddress` |
-
-#### Returns
-
-`number`
-
----
-
 ### getWorldRadius
 
 ▸ **getWorldRadius**(): `number`
@@ -2121,13 +2159,14 @@ Whether or not the given rectangle has been mined.
 
 ### initMiningManager
 
-▸ `Private` **initMiningManager**(`homeCoords`): `void`
+▸ `Private` **initMiningManager**(`homeCoords`, `cores?`): `void`
 
 #### Parameters
 
 | Name         | Type          |
 | :----------- | :------------ |
 | `homeCoords` | `WorldCoords` |
+| `cores?`     | `number`      |
 
 #### Returns
 

@@ -32,7 +32,7 @@ const OnTop = styled.div`
 
 const AddressChooserContainer = styled.div`
   width: 500px;
-  background-color: white;
+  background-color: ${dfstyles.colors.text};
   color: black;
   padding: 8px;
   margin: 4px;
@@ -40,7 +40,7 @@ const AddressChooserContainer = styled.div`
 
 const AddressOption = styled.div`
   ${({ selected }: { selected: boolean }) => css`
-    background-color: white;
+    background-color: ${dfstyles.colors.text};
     cursor: pointer;
     display: block;
     margin: 3px;

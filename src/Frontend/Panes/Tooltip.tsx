@@ -1,8 +1,7 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import WindowManager, { TooltipName, WindowManagerEvent } from '../Game/WindowManager';
 import dfstyles, { snips } from '../Styles/dfstyles';
-import { useControlDown } from '../Utils/AppHooks';
 import { GameWindowZIndex } from '../Utils/constants';
 import { TooltipContent } from './TooltipPanes';
 
@@ -38,26 +37,13 @@ const StyledTooltipTrigger = styled.span<{
   display: ${(props) => props.display || 'inline'};
 `;
 
-export function TooltipTrigger({
-  children,
-  name,
-  needsCtrl,
-  display,
-  style,
-  className,
-}: TooltipProps) {
-  // the model for this is a state machine on the state of {hovering, ctrl -> shouldShow}
-  const ctrl = useControlDown();
-  const shouldShow = useMemo(() => !needsCtrl || (needsCtrl && ctrl), [ctrl, needsCtrl]);
+export function TooltipTrigger({ children, name, display, style, className }: TooltipProps) {
+  const windowManager = WindowManager.getInstance();
   const [hovering, setHovering] = useState<boolean>(false);
 
-  const active = useMemo(() => shouldShow && hovering, [shouldShow, hovering]);
-
-  const windowManager = WindowManager.getInstance();
-
   useEffect(() => {
-    windowManager.setTooltip(active ? name : TooltipName.None);
-  }, [active, windowManager, name]);
+    windowManager.setTooltip(hovering ? name : TooltipName.None);
+  }, [hovering, windowManager, name]);
 
   return (
     <StyledTooltipTrigger
