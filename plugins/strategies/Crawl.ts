@@ -1,19 +1,39 @@
 import GameManager from '@df/GameManager'
 import GameUIManager from '@df/GameUIManager'
-import { LocationId, Planet, PlanetLevel, PlanetType } from "@darkforest_eth/types";
-import { getEnergyNeeded, getMyPlanets, hasIncomingMove, isUnowned, Move, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from 'plugins/utils';
+import { LocatablePlanet, LocationId, Planet, PlanetLevel, PlanetType, WorldCoords } from "@darkforest_eth/types";
+import { center, getEnergyNeeded, getMyPlanets, hasIncomingMove, isUnowned, Move, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove, distToCenter } from 'plugins/utils';
 import { moveSyntheticComments } from 'typescript';
+import { isLocatable } from 'src/_types/global/GlobalTypes';
 // import { isUnowned } from 'utils/utils';
 // import { planetName, PlanetTypes } from './CM-utils'
 
 declare const df: GameManager
 declare const ui: GameUIManager
 
-export function getMovesToTake(to: Planet, from: Planet[], targetEnergy: number): Move[] {
+type MoveWithData = Move & {
+  angleToCenter: number,
+  angleToTarget: number,
+  angleDiff: number,
+  angleDiffGroup: number,
+  fromName: string,
+  toName: string,
+}
+
+export function getMovesToTake(to: LocatablePlanet, from: LocatablePlanet[], targetEnergy: number): MoveWithData[] {
   const moves = from.map(from => {
+    const angleToCenter = angle(from.location.coords, center)
+    const angleToTarget = angle(from.location.coords, to.location.coords)
+    const angleDiff = Math.abs(angleToCenter - angleToTarget) // 0 to 270
+    const angleDiffGroup = Math.floor(angleDiff / 10) // 27 segments
+
     return {
       from,
       to,
+      angleToCenter,
+      angleToTarget,
+      angleDiff,
+      angleDiffGroup,
+      distanceToCenter: distToCenter(to.location.coords),
       fromName: planetName(from),
       toName: planetName(to),
       energy: getEnergyNeeded(from, to, targetEnergy)
@@ -23,48 +43,47 @@ export function getMovesToTake(to: Planet, from: Planet[], targetEnergy: number)
   return moves
 }
 
-export type SortFunction = (a: Move, b: Move) => number
+export type SortFunction = (a: MoveWithData, b: MoveWithData) => number
 
 // Make moves with the smallest amount of energy first -
 // this will make the most moves before running out
-export function lowestEnergy(a: Move, b: Move) {
+export function lowestEnergy(a: MoveWithData, b: MoveWithData) {
   return a.energy - b.energy
 }
 
-function distToCenter(m: Move) {
-  const center = { x: 0, y: 0 };
-  return Math.floor(df.getDistCoords(m.to.location?.coords, center))
-}
+
 
 // Make moves closest to the center first -
 // this will make least moves before running out
-export function closestToCenter(a: Move, b: Move) {
-  return distToCenter(a) - distToCenter(b)
+export function closestToCenter(a: MoveWithData, b: MoveWithData) {
+  return distToCenter(a.to.location.coords) - distToCenter(b.to.location.coords)
 }
 
-function angleBetween(m: Move) {
-  const from = m.from.location?.coords
-  const to = m.to.location?.coords
-
-  return Math.atan2(from.y - to.y, from.x - to.x)
+/**
+ * Returns -180 to 180
+ */
+function angle(p1: WorldCoords, p2: WorldCoords) {
+  return Math.atan2(p1.y - p2.y, p1.x - p2.x) * 180 / Math.PI
 }
 
-export function directionToCenter(a: Move, b: Move) {
-  const from = a.from.location?.coords
-  const fromToCenter = Math.atan2(from.y, from.x)
-
-  const diffA = Math.abs(angleBetween(a) - fromToCenter)
-  const diffB = Math.abs(angleBetween(b) - fromToCenter)
-
-  return diffA - diffB || a.energy - b.energy
+/**
+ * @todo Use something like https://github.com/mikolalysenko/compare-angle
+ * but still "group" them so we use the least energy.
+ */
+export function directionToCenter(a: MoveWithData, b: MoveWithData) {
+  return a.angleDiffGroup - b.angleDiffGroup || a.energy - b.energy
 }
 
 export function highestLevel(a: Move, b: Move) {
   return b.to.planetLevel - a.to.planetLevel || a.energy - b.energy
 }
 
-export function sevenBridges(a: Move, b: Move) {
-  return 0;
+/**
+ * @todo Build a graph database with the "energy" as the weight
+ * between the planets and calculate the shortest path to the
+ * center.
+ */
+export function shortestPathToCenter(a: MoveWithData, b: MoveWithData) {
 }
 
 interface config {
@@ -79,13 +98,15 @@ interface config {
 export function capturePlanets(config: config)
 {
   // @ts-ignore
-  const to = Array.from(df.getAllPlanets()).filter(p => p.location)
+  const to = Array.from(df.getAllPlanets())
+    .filter(isLocatable)
     .filter(isUnowned)
     .filter(p => ! hasIncomingMove(p))
     .filter(p => p.planetLevel >= config.toMinLevel)
     .filter(p => config.toPlanetTypes.includes(p.planetType))
 
   const from = getMyPlanets()
+    .filter(isLocatable)
     .filter(p => p.planetLevel <= config.fromMaxLevel)
     .filter(p => p.planetType === PlanetTypes.PLANET)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
@@ -97,6 +118,8 @@ export function capturePlanets(config: config)
   const movesToMake = to.flatMap(to => getMovesToTake(to, from, config.toTargetEnergy))
 
   movesToMake.sort(config.sortFunction)
+
+  console.log({ movesToMake })
 
   // Max 100 at a time
   let count = 0

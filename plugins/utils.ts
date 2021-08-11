@@ -1,4 +1,4 @@
-import { Artifact, ArtifactId, ArtifactRarity, ArtifactType, Planet, PlanetType, QueuedArrival, SpaceType, UnconfirmedMove, UpgradeBranchName } from "@darkforest_eth/types"
+import { Artifact, ArtifactId, ArtifactRarity, ArtifactType, LocatablePlanet, Planet, PlanetType, QueuedArrival, SpaceType, UnconfirmedMove, UpgradeBranchName, WorldCoords } from "@darkforest_eth/types"
 import { addHours, fromUnixTime, isAfter } from "date-fns"
 
 export const PlanetTypes: { [ key:string]: PlanetType } = {
@@ -132,14 +132,18 @@ export function hasIncomingMove(p: Planet) {
   return getIncomingMoves(p).length > 0
 }
 
+export const center = { x: 0, y: 0 }
+
 export interface Move {
-  from: Planet,
-  to: Planet,
-  fromName?: string,
-  toName?: string,
+  from: LocatablePlanet,
+  to: LocatablePlanet,
   energy: number,
   silver?: number,
   artifact?: Artifact
+}
+
+export function distToCenter(coords: WorldCoords) {
+  return Math.floor(df.getDistCoords(coords, center))
 }
 
 export function getPendingEnergy(p: Planet) {
