@@ -21,20 +21,10 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
     fromId: selectedPlanet?.locationId,
     fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
     fromMinEnergyLeftPercent: 37.5,
-    toPlanetType: PlanetTypes.PLANET,
+    toPlanetTypes: [PlanetTypes.PLANET, PlanetTypes.ASTEROID],
     toMinLevel: PlanetLevel.FOUR,
     toTargetEnergy: 15,
     sortFunction: directionToCenter,
-  })
-
-  capturePlanets({
-    fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
-    fromMinEnergyLeftPercent: 37.5,
-    toPlanetType: PlanetTypes.ASTEROID,
-    toMinLevel: PlanetLevel.FOUR,
-    toTargetEnergy: 15,
-    sortFunction: closestToCenter,
   })
 }
 

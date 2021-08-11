@@ -21,7 +21,7 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
     fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
     fromMinEnergyLeftPercent: 37.5,
     toMinLevel: PlanetLevel.THREE,
-    toPlanetType: PlanetTypes.FOUNDRY,
+    toPlanetTypes: [PlanetTypes.FOUNDRY],
     toTargetEnergy: 95.5,
     sortFunction: highestLevel,
   })

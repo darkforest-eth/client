@@ -9,7 +9,7 @@ import { moveSyntheticComments } from 'typescript';
 declare const df: GameManager
 declare const ui: GameUIManager
 
-export function getBestMove(to: Planet, from: Planet[], targetEnergy: number, sortFunction: SortFunction): Move {
+export function getMovesToTake(to: Planet, from: Planet[], targetEnergy: number): Move[] {
   const moves = from.map(from => {
     return {
       from,
@@ -20,9 +20,7 @@ export function getBestMove(to: Planet, from: Planet[], targetEnergy: number, so
     }
   })
 
-  moves.sort(sortFunction)
-
-  return moves[0]
+  return moves
 }
 
 export type SortFunction = (a: Move, b: Move) => number
@@ -58,7 +56,7 @@ export function directionToCenter(a: Move, b: Move) {
   const diffA = Math.abs(angleBetween(a) - fromToCenter)
   const diffB = Math.abs(angleBetween(b) - fromToCenter)
 
-  return diffA - diffB
+  return diffA - diffB || a.energy - b.energy
 }
 
 export function highestLevel(a: Move, b: Move) {
@@ -74,7 +72,7 @@ interface config {
   fromMaxLevel: PlanetLevel,
   fromMinEnergyLeftPercent: number,
   toMinLevel: PlanetLevel,
-  toPlanetType: PlanetType,
+  toPlanetTypes: PlanetType[],
   toTargetEnergy: number,
   sortFunction: SortFunction
 }
@@ -85,7 +83,7 @@ export function capturePlanets(config: config)
     .filter(isUnowned)
     .filter(p => ! hasIncomingMove(p))
     .filter(p => p.planetLevel >= config.toMinLevel)
-    .filter(p => p.planetType === config.toPlanetType)
+    .filter(p => config.toPlanetTypes.includes(p.planetType))
 
   const from = getMyPlanets()
     .filter(p => p.planetLevel <= config.fromMaxLevel)
@@ -96,15 +94,18 @@ export function capturePlanets(config: config)
   // Note: This will get the best possible move but might be skipped if the
   // planet doesn't have enough energy to make it - should we try the
   // next best move - or wait until the best move is possible?
-  const movesToMake = to.map(to => getBestMove(to, from, config.toTargetEnergy, config.sortFunction))
+  const movesToMake = to.flatMap(to => getMovesToTake(to, from, config.toTargetEnergy))
 
   movesToMake.sort(config.sortFunction)
 
-  console.log({ movesToMake })
-
   // Max 100 at a time
-  const moves = movesToMake.slice(0, 100).map(move => {
-    if (planetWillHaveMinEnergyAfterMove(move, config.fromMinEnergyLeftPercent)) {
+  let count = 0
+  const moves = movesToMake.map(move => {
+    if (
+      planetWillHaveMinEnergyAfterMove(move, config.fromMinEnergyLeftPercent)
+      && ! hasIncomingMove(move.to)
+      && count++ < 100
+    ) {
       console.log(`CAPTURING ${planetName(move.to)} (${move.to.locationId}) FROM ${planetName(move.from)} WITH ${move.energy}`)
       return df.move(move.from.locationId, move.to.locationId, move.energy, 0);
     }
