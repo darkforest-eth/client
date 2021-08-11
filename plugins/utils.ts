@@ -135,6 +135,8 @@ export function hasIncomingMove(p: Planet) {
 export interface Move {
   from: Planet,
   to: Planet,
+  fromName?: string,
+  toName?: string,
   energy: number,
   silver?: number,
   artifact?: Artifact

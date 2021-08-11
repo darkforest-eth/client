@@ -1,5 +1,5 @@
 import { Component, h } from 'preact'
-import { Planet } from '@darkforest_eth/types'
+import { Planet, PlanetLevel } from '@darkforest_eth/types'
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { PlanetLink } from '../components/PlanetLink'
@@ -21,21 +21,21 @@ declare const ui: GameUIManager
 function onDistributeClick(selectedPlanet: Planet|null = null) {
   distributeSilver({
     fromId: selectedPlanet?.locationId,
-    fromMinLevel: selectedPlanet?.planetLevel || 4,
-    fromMaxLevel: selectedPlanet?.planetLevel || 9,
+    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
     fromPlanetType: selectedPlanet?.planetType || PlanetTypes.ASTEROID,
-    toMinLevel: 4,
+    toMinLevel: PlanetLevel.FOUR,
     toPlanetType: PlanetTypes.PLANET,
   })
 
-  distributeSilver({
-    fromId: selectedPlanet?.locationId,
-    fromMinLevel: selectedPlanet?.planetLevel || 4,
-    fromMaxLevel: selectedPlanet?.planetLevel || 9,
-    fromPlanetType: selectedPlanet?.planetType || PlanetTypes.ASTEROID,
-    toMinLevel: 3,
-    toPlanetType: PlanetTypes.RIP,
-  })
+  // distributeSilver({
+  //   fromId: selectedPlanet?.locationId,
+  //   fromMinLevel: selectedPlanet?.planetLevel || 4,
+  //   fromMaxLevel: selectedPlanet?.planetLevel || 9,
+  //   fromPlanetType: selectedPlanet?.planetType || PlanetTypes.ASTEROID,
+  //   toMinLevel: 3,
+  //   toPlanetType: PlanetTypes.RIP,
+  // })
 }
 
 function onWithdrawClick(selectedPlanet: Planet|null = null) {

@@ -1,5 +1,5 @@
 import { Component, h } from 'preact'
-import { Planet } from '@darkforest_eth/types'
+import { Planet, PlanetLevel } from '@darkforest_eth/types'
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { PlanetLink } from '../components/PlanetLink'
@@ -7,7 +7,7 @@ import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 
-import { capturePlanets } from '../strategies/Crawl'
+import { capturePlanets, closestToCenter, directionToCenter, lowestEnergy } from '../strategies/Crawl'
 import { buttonGridStyle, energy, getMyPlanets, hasPendingMove, isAsteroid, PlanetTypes } from '../utils'
 const pauseable = require('pauseable')
 
@@ -19,39 +19,22 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || 9,
-    fromMinEnergyLeftPercent: 37.5,
-    toPlanetType: PlanetTypes.RIP,
-    toMinLevel: 3,
-    toTargetEnergy: 15
-  })
-
-  // Best to take QUASAR's manually and send a bloom filter
-  // capturePlanets({
-  //   fromId: selectedPlanet?.locationId,
-  //   fromMaxLevel: selectedPlanet?.planetLevel || 9,
-  //   fromMinEnergyLeftPercent: 37.5,
-  //   toPlanetType: PlanetTypes.QUASAR,
-  //   toMinLevel: 4,
-  //   toTargetEnergy: 0
-  // })
-
-  capturePlanets({
-    fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || 9,
-    fromMinEnergyLeftPercent: 37.5,
-    toPlanetType: PlanetTypes.ASTEROID,
-    toMinLevel: 4,
-    toTargetEnergy: 15
-  })
-
-  capturePlanets({
-    fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || 9,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetType: PlanetTypes.PLANET,
-    toMinLevel: 4,
-    toTargetEnergy: 15
+    toMinLevel: PlanetLevel.FOUR,
+    toTargetEnergy: 15,
+    sortFunction: directionToCenter,
+  })
+
+  capturePlanets({
+    fromId: selectedPlanet?.locationId,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
+    fromMinEnergyLeftPercent: 37.5,
+    toPlanetType: PlanetTypes.ASTEROID,
+    toMinLevel: PlanetLevel.FOUR,
+    toTargetEnergy: 15,
+    sortFunction: closestToCenter,
   })
 }
 

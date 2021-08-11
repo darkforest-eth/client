@@ -1,5 +1,5 @@
 import { Component, h } from 'preact'
-import { Planet } from '@darkforest_eth/types'
+import { Planet, PlanetLevel } from '@darkforest_eth/types'
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { PlanetLink } from '../components/PlanetLink'
@@ -7,7 +7,7 @@ import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 
-import { capturePlanets } from '../strategies/Crawl'
+import { capturePlanets, highestLevel, lowestEnergy } from '../strategies/Crawl'
 import { buttonGridStyle, canHaveArtifact, isReachable, isUnowned, PlanetTypes } from '../utils'
 
 const pauseable = require('pauseable')
@@ -18,12 +18,23 @@ declare const ui: GameUIManager
 function onCrawlClick(selectedPlanet: Planet|null = null) {
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || 9,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
     fromMinEnergyLeftPercent: 37.5,
-    toMinLevel: 3,
+    toMinLevel: PlanetLevel.THREE,
     toPlanetType: PlanetTypes.FOUNDRY,
-    toTargetEnergy: 95.5
+    toTargetEnergy: 95.5,
+    sortFunction: highestLevel,
   })
+
+  // capturePlanets({
+  //   fromId: selectedPlanet?.locationId,
+  //   fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
+  //   fromMinEnergyLeftPercent: 37.5,
+  //   toPlanetType: PlanetTypes.RIP,
+  //   toMinLevel: PlanetLevel.THREE,
+  //   toTargetEnergy: 15,
+  //   sortFunction: lowestEnergy,
+  // })
 }
 
 export class FoundriesToTake extends Component
