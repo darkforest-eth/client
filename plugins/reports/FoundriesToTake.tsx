@@ -18,7 +18,7 @@ declare const ui: GameUIManager
 function onCrawlClick(selectedPlanet: Planet|null = null) {
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || 4,
+    fromMaxLevel: selectedPlanet?.planetLevel || 9,
     fromMinEnergyLeftPercent: 37.5,
     toMinLevel: 3,
     toPlanetType: PlanetTypes.FOUNDRY,
