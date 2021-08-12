@@ -48,6 +48,7 @@
 | `colors.dfgreenlight`          | `string`                     |
 | `colors.dfpurple`              | `string`                     |
 | `colors.dfred`                 | `string`                     |
+| `colors.dfwhite`               | `string`                     |
 | `colors.dfyellow`              | `string`                     |
 | `colors.icons`                 | `Object`                     |
 | `colors.icons.blog`            | `string`                     |

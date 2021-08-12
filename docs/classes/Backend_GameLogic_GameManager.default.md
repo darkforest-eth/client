@@ -1473,13 +1473,13 @@ Gets a list of the planets that the player logged into this `GameManager` owns.
 
 ### getMyScore
 
-▸ **getMyScore**(): `number`
+▸ **getMyScore**(): `undefined` \| `number`
 
 Get the score of the currently logged-in account.
 
 #### Returns
 
-`number`
+`undefined` \| `number`
 
 ---
 
@@ -1735,7 +1735,7 @@ this client.
 
 ### getPlayerScore
 
-▸ **getPlayerScore**(`addr`): `number`
+▸ **getPlayerScore**(`addr`): `undefined` \| `number`
 
 #### Parameters
 
@@ -1745,7 +1745,7 @@ this client.
 
 #### Returns
 
-`number`
+`undefined` \| `number`
 
 ---
 

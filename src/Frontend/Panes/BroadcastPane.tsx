@@ -7,7 +7,8 @@ import { LoadingSpinner } from '../Components/LoadingSpinner';
 import { Blue, Sub, White } from '../Components/Text';
 import { TimeUntil } from '../Components/TimeUntil';
 import dfstyles from '../Styles/dfstyles';
-import { usePlanet, usePopAllOnSelectedPlanetChanged, useUIManager } from '../Utils/AppHooks';
+import { usePlanet, useUIManager } from '../Utils/AppHooks';
+import { useEmitterValue } from '../Utils/EmitterHooks';
 import { ModalHandle } from '../Views/ModalPane';
 
 const BroadcastWrapper = styled.div`
@@ -47,17 +48,15 @@ export function BroadcastPaneHelpContent() {
 }
 
 export function BroadcastPane({
-  planetId,
+  initialPlanetId,
   modal,
 }: {
   modal: ModalHandle;
-  planetId: LocationId | undefined;
+  initialPlanetId: LocationId | undefined;
 }) {
   const uiManager = useUIManager();
-  const planetWrapper = usePlanet(uiManager, planetId);
-  const planet = planetWrapper.value;
-
-  usePopAllOnSelectedPlanetChanged(modal, planetId);
+  const planetId = useEmitterValue(uiManager.selectedPlanetId$, initialPlanetId);
+  const planet = usePlanet(uiManager, planetId).value;
 
   const getLoc = () => {
     if (!planet || !uiManager) return { x: 0, y: 0 };

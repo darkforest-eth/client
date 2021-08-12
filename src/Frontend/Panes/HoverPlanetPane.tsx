@@ -9,8 +9,8 @@ import { PlanetCard } from '../Views/PlanetCard';
 const StyledHoverPlanetPane = styled.div`
   ${snips.absoluteTopLeft}
   ${snips.defaultBackground}
-  ${snips.defaultModalWidth}
   ${snips.roundedBordersWithEdge}
+  width: 350px;
 `;
 
 /**

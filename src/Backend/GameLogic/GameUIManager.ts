@@ -930,7 +930,7 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getPlanetWithId(planetId);
   }
 
-  public getMyScore(): number {
+  public getMyScore(): number | undefined {
     return this.gameManager.getMyScore();
   }
 
@@ -1044,7 +1044,7 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getEnergyOfPlayer(player);
   }
 
-  public getPlayerScore(player: EthAddress): number {
+  public getPlayerScore(player: EthAddress): number | undefined {
     return this.gameManager.getPlayerScore(player);
   }
 

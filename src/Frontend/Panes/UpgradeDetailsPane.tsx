@@ -12,12 +12,8 @@ import { Btn } from '../Components/Btn';
 import { CenterBackgroundSubtext, Padded, Spacer } from '../Components/CoreUI';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
 import { Gold, Red, Sub, Subber } from '../Components/Text';
-import {
-  useAccount,
-  usePlanet,
-  usePopAllOnSelectedPlanetChanged,
-  useUIManager,
-} from '../Utils/AppHooks';
+import { useAccount, usePlanet, useUIManager } from '../Utils/AppHooks';
+import { useEmitterValue } from '../Utils/EmitterHooks';
 import { ModalHandle } from '../Views/ModalPane';
 import { TabbedView } from '../Views/TabbedView';
 import { UpgradePreview } from '../Views/UpgradePreview';
@@ -73,19 +69,17 @@ function SilverRequired({ planet }: { planet: Planet }) {
 }
 
 export function UpgradeDetailsPane({
-  planetId,
+  initialPlanetId,
   modal,
 }: {
   modal: ModalHandle;
-  planetId: LocationId | undefined;
+  initialPlanetId: LocationId | undefined;
 }) {
   const uiManager = useUIManager();
-  const planetWrapper = usePlanet(uiManager, planetId);
-  const planet = planetWrapper.value;
+  const planetId = useEmitterValue(uiManager.selectedPlanetId$, initialPlanetId);
+  const planet = usePlanet(uiManager, planetId).value;
   const account = useAccount(uiManager);
   const planetAtMaxRank = isFullRank(planet);
-
-  usePopAllOnSelectedPlanetChanged(modal, planetId);
 
   let content = (
     <CenterBackgroundSubtext width={RECOMMENDED_MODAL_WIDTH} height='100px'>

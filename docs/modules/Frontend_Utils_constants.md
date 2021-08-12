@@ -41,4 +41,4 @@ the algorithms implemented in {@link ChunkUtils}.
 
 ### MIN_CHUNK_SIZE
 
-• `Const` **MIN_CHUNK_SIZE**: `16`
+• `Const` **MIN_CHUNK_SIZE**: `256`

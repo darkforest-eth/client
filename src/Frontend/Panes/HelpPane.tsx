@@ -1,9 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { EmSpacer, Link, Padded, Section, SectionHeader } from '../Components/CoreUI';
-import { ScoreLabel } from '../Components/Labels/KeywordLabels';
-import { LegendaryLabel } from '../Components/Labels/LegendaryLabel';
-import { MythicLabel } from '../Components/Labels/MythicLabel';
 import { White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
@@ -25,8 +22,8 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
       <HelpContent>
         {useUIManager().isRoundOver() && (
           <Section>
-            <SectionHeader>Round 2 Complete</SectionHeader>
-            Dark Forest v0.6 Round 2 is now complete! Scores are being compiled and winners will be
+            <SectionHeader>Round 3 Complete</SectionHeader>
+            Dark Forest v0.6 Round 3 is now complete! Scores are being compiled and winners will be
             announced shortly. Also, Artifacts will no longer be mintable. Thanks for playing!
           </Section>
         )}
@@ -36,33 +33,43 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
         </Section>
 
         <Section>
-          <SectionHeader>The Universe</SectionHeader>
+          <Link to='https://discord.gg/2u2TN6v8r6'>Official Discord Server</Link>
+        </Section>
+
+        <Section>
+          <Link to='https://dfwiki.net/'>Community-Run Wiki</Link>
+        </Section>
+
+        <Section>
+          <SectionHeader>Dark Forest v0.6 R3: Grape Extra-Small</SectionHeader>
           Dark Forest is a vast universe, obfuscated by zero-knowledge cryptography. Your{' '}
           <White>explorer</White> explores the universe, searching for <White>Planets</White> and
           other players.
           <EmSpacer height={1} />
-          All planets produce <White>Energy</White>. You can move energy from planets you own to new
-          planets to conquer them.
+          All planets produce <White>Energy</White>. You can click-drag to move energy from planets
+          you own to new planets to conquer them.
           <EmSpacer height={1} />
           Also scattered through the universe are <White>Asteroid Fields</White>, which produce{' '}
           <White>Silver</White>. Silver can be sent to planets and can be spent on{' '}
-          <White>Upgrades</White>. Withdrawing silver from spacetime rips increases your{' '}
-          <ScoreLabel />.
+          <White>Upgrades</White>.
           <EmSpacer height={1} /> Some planets contain <White>Artifacts</White> - ERC721 tokens that
           can be traded with other players. Artifacts can be harvested and deposited onto planets,
-          buffing their stats. Harvesting artifacts also increases your <ScoreLabel />
+          buffing their stats.
         </Section>
 
         <Section>
           <SectionHeader>Prizes and Scoring</SectionHeader>A snapshot of scores will be taken on{' '}
-          <White>July 3, 2021</White> at 9PM Pacific Time. At that time, the top 63 highest-scoring
-          players will be awarded prizes from a pool 63 prize planets. You can see the current
-          rankings by scrolling down on the landing page of the game.
+          <White>August 22, 2021</White> at 9AM Pacific Time. At that time, the top 63
+          highest-scoring players will be awarded prizes from a pool 63 prize planets. You can see
+          the current rankings by scrolling down on the landing page of the game.
           <EmSpacer height={1} />
-          Your score is determined by the total amount of <White>Silver</White> you have withdrawn
-          from the universe, plus additional bonuses for finding artifacts. Artifacts of different
-          rarities are worth different amounts of points: Common are 5k, Rare are 20k, Epic are
-          200k, <LegendaryLabel /> are 3M, and <MythicLabel /> are 20M.
+          This round is a race to the center. You can <White>claim</White> any level 3+ planet that
+          you own; there is a 3 hour cooldown on claiming planets. Your score at the end of the
+          round is the distance of your closest claimed planet from the center (0, 0).
+          <EmSpacer height={1} />
+          Note that planets that are destroyed with black domain artifacts do not count towards
+          score, and other players can conquer and claim planets you've already claimed, overwriting
+          your claim!
         </Section>
       </HelpContent>
     </ModalPane>

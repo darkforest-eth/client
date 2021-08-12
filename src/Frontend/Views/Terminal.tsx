@@ -5,7 +5,7 @@ import { Link } from '../Components/CoreUI';
 import { Hoverable } from '../Components/Hoverable';
 import { MythicLabelText } from '../Components/Labels/MythicLabel';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
-import { Blue, Green, Invisible, Red, Sub, Subber, White } from '../Components/Text';
+import { Blue, Green, Invisible, Red, Sub, Subber, Text, White } from '../Components/Text';
 import { LoadingBarHandle, TextLoadingBar } from '../Components/TextLoadingBar';
 import dfstyles from '../Styles/dfstyles';
 import { isFirefox } from '../Utils/BrowserChecks';
@@ -77,7 +77,7 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
   const print = useCallback(
     (
       str: string,
-      style = TerminalTextStyle.White,
+      style = TerminalTextStyle.Sub,
       onClick: (() => void) | undefined = undefined,
       hoverContents?: () => JSX.Element
     ) => {
@@ -103,6 +103,9 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
           break;
         case TerminalTextStyle.Subber:
           fragment = <Subber>{innerFragment}</Subber>;
+          break;
+        case TerminalTextStyle.Text:
+          fragment = <Text>{innerFragment}</Text>;
           break;
         case TerminalTextStyle.White:
           fragment = <White>{innerFragment}</White>;

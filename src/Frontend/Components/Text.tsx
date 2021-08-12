@@ -1,6 +1,5 @@
 import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
 import { Artifact, ArtifactId, Planet, SubmittedTx, WorldCoords } from '@darkforest_eth/types';
-import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { artifactName } from '../../Backend/Procedural/ArtifactProcgen';
@@ -10,69 +9,7 @@ import Viewport from '../Game/Viewport';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
-
-interface TextProps {
-  children: React.ReactNode;
-  size?: string;
-  style?: React.CSSProperties;
-}
-
-const fontSizes: {
-  [size: string]: string;
-} = {
-  title: '4rem',
-  '4xl': '2rem',
-  '3xl': '1.875rem',
-  '2xl': '1.5rem',
-  xl: '1.25rem',
-  lg: '1.125rem',
-  base: '1rem',
-  sm: '0.875rem',
-  xs: '0.75rem',
-};
-
-export function Text({ children, size = 'base', style = {} }: TextProps) {
-  return (
-    <div
-      style={{
-        fontSize: fontSizes[size],
-        ...style,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-export function Title({ children }: { children: React.ReactNode }) {
-  return <Text size='title'>{children}</Text>;
-}
-
-export function Header({
-  children,
-  style = {},
-}: {
-  children: React.ReactNode;
-  style?: React.CSSProperties;
-}) {
-  return (
-    <Text size='2xl' style={{ fontWeight: 'bold', ...style }}>
-      {children}
-    </Text>
-  );
-}
-
-export const Paragraph = styled.p`
-  margin: 0.5rem 0;
-`;
-
-export const List = styled.ul`
-  list-style-type: disc;
-  list-style-position: inside;
-  margin-left: 1.5rem;
-`;
-
-export const Item = styled.li``;
+import { Link } from './CoreUI';
 
 export function BlinkCursor() {
   const [visible, setVisible] = useState<boolean>(false);
@@ -98,8 +35,11 @@ export const Sub = styled.span`
 export const Subber = styled.span`
   color: ${dfstyles.colors.subbertext};
 `;
-export const White = styled.span`
+export const Text = styled.span`
   color: ${dfstyles.colors.text};
+`;
+export const White = styled.span`
+  color: ${dfstyles.colors.dfwhite};
 `;
 export const Red = styled.span`
   color: ${dfstyles.colors.dfred};
@@ -122,24 +62,6 @@ export const Invisible = styled.span`
 export const Smaller = styled.span`
   font-size: 80%;
 `;
-
-export const FakeLine = () => (
-  <span>
-    <Invisible>line</Invisible>
-  </span>
-);
-
-export function Space({ length }: { length: number }) {
-  return (
-    <>
-      {_.range(0, length).map((el, i) => (
-        <span key={i}>{'\u00A0'}</span>
-      ))}
-    </>
-  );
-}
-
-export const Tab = () => <Space length={4} />;
 
 export const HideSmall = styled.span`
   @media (max-width: ${dfstyles.screenSizeS}) {
@@ -183,13 +105,6 @@ export function CenterPlanetLink({
   );
 }
 
-export const StyledLink = styled.span`
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
-`;
-
 export function ArtifactNameLink({ id }: { id: ArtifactId }) {
   const uiManager = useUIManager();
   const artifact: Artifact | undefined = uiManager && uiManager.getArtifactWithId(id);
@@ -198,7 +113,7 @@ export function ArtifactNameLink({ id }: { id: ArtifactId }) {
     UIEmitter.getInstance().emit(UIEmitterEvent.ShowArtifact, artifact);
   };
 
-  return <StyledLink onClick={click}>{artifactName(artifact)}</StyledLink>;
+  return <Link onClick={click}>{artifactName(artifact)}</Link>;
 }
 
 export function PlanetNameLink({ planet }: { planet: Planet }) {
@@ -206,15 +121,11 @@ export function PlanetNameLink({ planet }: { planet: Planet }) {
 }
 
 export function CenterChunkLink({ chunk, children }: { chunk: Chunk; children: React.ReactNode }) {
-  return (
-    <a>
-      <u onClick={() => Viewport.getInstance().centerChunk(chunk)}>{children}</u>
-    </a>
-  );
+  return <Link onClick={() => Viewport.getInstance().centerChunk(chunk)}>{children}</Link>;
 }
 
 export function FAQ04Link({ children }: { children: React.ReactNode }) {
-  return <a href={'https://blog.zkga.me/df-04-faq'}>{children} </a>;
+  return <Link to={'https://blog.zkga.me/df-04-faq'}>{children} </Link>;
 }
 
 export const LongDash = () => (

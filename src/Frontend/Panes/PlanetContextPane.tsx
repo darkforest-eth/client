@@ -2,7 +2,7 @@ import { Planet, PlanetType } from '@darkforest_eth/types';
 import React, { useCallback, useMemo } from 'react';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
-import { Padded, PaddedRecommendedModalWidth, Spacer, VerticalSplit } from '../Components/CoreUI';
+import { Padded, Spacer, VerticalSplit } from '../Components/CoreUI';
 import {
   OpenClaimPlanetPane,
   OpenHatPaneButton,
@@ -38,7 +38,7 @@ function PlanetContextPaneContent({
   const isPost = planet.value?.planetType === PlanetType.TRADING_POST;
 
   return (
-    <PaddedRecommendedModalWidth>
+    <Padded style={{ width: '350px' }}>
       <PlanetCard planetWrapper={planet} />
       {owned && (
         <>
@@ -69,7 +69,7 @@ function PlanetContextPaneContent({
         </VerticalSplit>
       )}
       {owned && notifs.length > 0 && <PlanetNotifications planet={planet} notifs={notifs} />}
-    </PaddedRecommendedModalWidth>
+    </Padded>
   );
 }
 

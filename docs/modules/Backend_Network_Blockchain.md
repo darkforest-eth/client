@@ -94,9 +94,9 @@ Loads ths GPT Credit contract, which players can pay to talk to artifacts.
 
 ▸ **loadScoringContract**(`address`, `provider`, `signer?`): `Promise`<`DarkForestScoringRound3`\>
 
-Loads ths GPT Credit contract, which players can pay to talk to artifacts.
+Loads the Round 3 Scoring contract which tracks claimed planets and player claim cooldowns.
 
-**`see`** https://github.com/darkforest-eth/eth/blob/master/contracts/DarkForestGPTCredit.sol
+**`see`** https://github.com/darkforest-eth/eth/blob/master/contracts/DarkForestRound3Scoring.sol
 
 #### Parameters
 

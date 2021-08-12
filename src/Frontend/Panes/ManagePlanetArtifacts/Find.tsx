@@ -51,7 +51,7 @@ export function Find({
     <>
       {button}
       <Spacer height={8} />
-      {roundOver && <Red>Round 2 is over, and you can no longer mint artifacts!</Red>}
+      {roundOver && <Red>Round 3 is over, and you can no longer mint artifacts!</Red>}
       <Sub>
         Once the artifact is found, it will be placed directly onto this planet. You have{' '}
         <White>

@@ -10,16 +10,16 @@
 
 ### ClaimPlanetPane
 
-▸ **ClaimPlanetPane**(`__namedParameters`): `null` \| `Element`
+▸ **ClaimPlanetPane**(`__namedParameters`): `React.ReactElement`
 
 #### Parameters
 
-| Name                          | Type                                                                   |
-| :---------------------------- | :--------------------------------------------------------------------- |
-| `__namedParameters`           | `Object`                                                               |
-| `__namedParameters.modal`     | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
-| `__namedParameters.planetId?` | `LocationId`                                                           |
+| Name                                 | Type                                                                   |
+| :----------------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`                  | `Object`                                                               |
+| `__namedParameters.initialPlanetId?` | `LocationId`                                                           |
+| `__namedParameters.modal`            | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
 
 #### Returns
 
-`null` \| `Element`
+`React.ReactElement`

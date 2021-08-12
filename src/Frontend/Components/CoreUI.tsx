@@ -3,8 +3,10 @@ import colors from 'color';
 import React, { ChangeEvent, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 import dfstyles from '../Styles/dfstyles';
+import { useUIManager } from '../Utils/AppHooks';
 import { GameWindowZIndex } from '../Utils/constants';
 import { useIsDown } from '../Utils/KeyEmitters';
+import { Setting, useBooleanSetting } from '../Utils/SettingsHooks';
 import { Btn, BtnProps } from './Btn';
 
 export const InlineBlock = styled.div`
@@ -409,11 +411,16 @@ export const CenterBackgroundSubtext = styled.div`
 export function ShortcutButton(
   props: { children: React.ReactNode; shortcutKey?: string; shortcutText?: string } & BtnProps
 ) {
+  const [disableDefaultShortcuts] = useBooleanSetting(
+    useUIManager(),
+    Setting.DisableDefaultShortcuts
+  );
+
   return (
     <Expand style={{ display: 'flex' }}>
       <AlignCenterHorizontally style={{ flexGrow: 1 }}>
         <Btn {...props} />
-        {props.shortcutKey && (
+        {props.shortcutKey && !disableDefaultShortcuts && (
           <>
             <EmSpacer width={0.5} />
             <ShortcutKeyDown shortcutKey={props.shortcutKey} text={props.shortcutText} />

@@ -1,13 +1,15 @@
 import React, { useCallback, useState } from 'react';
-import styled, { css } from 'styled-components';
-import dfstyles from '../Styles/dfstyles';
+import styled from 'styled-components';
+import { EmSpacer, TextButton } from './CoreUI';
 
 export function ReadMore({
   children,
   height,
+  text,
 }: {
   children: React.ReactChild[] | React.ReactChild;
   height?: string;
+  text?: string;
 }) {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -17,37 +19,15 @@ export function ReadMore({
 
   return (
     <>
-      <ReadMoreContainer
-        onClick={toggle}
-        collapsed={collapsed}
-        height={(collapsed && height) || 'initial'}
-      >
+      <ContentContainer style={{ height: collapsed ? height : 'unset' }}>
         {children}
-      </ReadMoreContainer>
+      </ContentContainer>
+      <EmSpacer height={0.1} />
+      <TextButton onClick={toggle}>{text ?? (collapsed ? 'more' : 'less')} info</TextButton>
     </>
   );
 }
 
-const active = css`
-  background-color: ${dfstyles.colors.backgroundlighter};
-  border: 1px solid ${dfstyles.colors.border};
-`;
-
-const ReadMoreContainer = styled.div`
-  ${({ height, collapsed }: { height: string; collapsed?: boolean }) => css`
-    cursor: pointer;
-    border: 1px solid ${dfstyles.colors.borderDark};
-    padding: 4px;
-    margin: 8px;
-    border-radius: 3px;
-    background-color: ${dfstyles.colors.backgroundlight};
-    height: ${height};
-    overflow: hidden;
-    ${collapsed && 'user-select: none;'}
-
-    &:hover,
-    &:active {
-      ${active}
-    }
-  `}
+const ContentContainer = styled.div`
+  overflow: hidden;
 `;

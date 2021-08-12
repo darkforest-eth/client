@@ -22,6 +22,10 @@ import { ModalHook, ModalName } from './ModalPane';
 
 const ModalIconText = styled.span`
   flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 `;
 
 const icon = (modal: ModalName): React.ReactNode => {
@@ -68,13 +72,15 @@ export function ModalToggleButton(
         e.stopPropagation();
       }}
     >
-      {icon(modal)}
-      {text !== undefined && (
-        <ModalIconText>
-          <Spacer width={8} />
-          {text}
-        </ModalIconText>
-      )}
+      <ModalIconText>
+        {icon(modal)}
+        {text !== undefined && (
+          <>
+            <Spacer width={8} />
+            {text}
+          </>
+        )}
+      </ModalIconText>
     </ShortcutButton>
   );
 }

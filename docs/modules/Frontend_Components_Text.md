@@ -10,14 +10,11 @@
 - [Green](Frontend_Components_Text.md#green)
 - [HideSmall](Frontend_Components_Text.md#hidesmall)
 - [Invisible](Frontend_Components_Text.md#invisible)
-- [Item](Frontend_Components_Text.md#item)
-- [List](Frontend_Components_Text.md#list)
-- [Paragraph](Frontend_Components_Text.md#paragraph)
 - [Red](Frontend_Components_Text.md#red)
 - [Smaller](Frontend_Components_Text.md#smaller)
-- [StyledLink](Frontend_Components_Text.md#styledlink)
 - [Sub](Frontend_Components_Text.md#sub)
 - [Subber](Frontend_Components_Text.md#subber)
+- [Text](Frontend_Components_Text.md#text)
 - [White](Frontend_Components_Text.md#white)
 
 ### Functions
@@ -28,14 +25,8 @@
 - [CenterPlanetLink](Frontend_Components_Text.md#centerplanetlink)
 - [Coords](Frontend_Components_Text.md#coords)
 - [FAQ04Link](Frontend_Components_Text.md#faq04link)
-- [FakeLine](Frontend_Components_Text.md#fakeline)
-- [Header](Frontend_Components_Text.md#header)
 - [LongDash](Frontend_Components_Text.md#longdash)
 - [PlanetNameLink](Frontend_Components_Text.md#planetnamelink)
-- [Space](Frontend_Components_Text.md#space)
-- [Tab](Frontend_Components_Text.md#tab)
-- [Text](Frontend_Components_Text.md#text)
-- [Title](Frontend_Components_Text.md#title)
 - [TxLink](Frontend_Components_Text.md#txlink)
 
 ## Variables
@@ -76,24 +67,6 @@
 
 ---
 
-### Item
-
-• `Const` **Item**: `StyledComponent`<`"li"`, `any`, `Object`, `never`\>
-
----
-
-### List
-
-• `Const` **List**: `StyledComponent`<`"ul"`, `any`, `Object`, `never`\>
-
----
-
-### Paragraph
-
-• `Const` **Paragraph**: `StyledComponent`<`"p"`, `any`, `Object`, `never`\>
-
----
-
 ### Red
 
 • `Const` **Red**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
@@ -106,12 +79,6 @@
 
 ---
 
-### StyledLink
-
-• `Const` **StyledLink**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
-
----
-
 ### Sub
 
 • `Const` **Sub**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
@@ -121,6 +88,12 @@
 ### Subber
 
 • `Const` **Subber**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+
+---
+
+### Text
+
+• `Const` **Text**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
@@ -227,34 +200,6 @@
 
 ---
 
-### FakeLine
-
-▸ `Const` **FakeLine**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### Header
-
-▸ **Header**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                         | Type                  |
-| :--------------------------- | :-------------------- |
-| `__namedParameters`          | `Object`              |
-| `__namedParameters.children` | `React.ReactNode`     |
-| `__namedParameters.style?`   | `React.CSSProperties` |
-
-#### Returns
-
-`Element`
-
----
-
 ### LongDash
 
 ▸ `Const` **LongDash**(): `Element`
@@ -275,66 +220,6 @@
 | :------------------------- | :------- |
 | `__namedParameters`        | `Object` |
 | `__namedParameters.planet` | `Planet` |
-
-#### Returns
-
-`Element`
-
----
-
-### Space
-
-▸ **Space**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.length` | `number` |
-
-#### Returns
-
-`Element`
-
----
-
-### Tab
-
-▸ `Const` **Tab**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### Text
-
-▸ **Text**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                | Type        |
-| :------------------ | :---------- |
-| `__namedParameters` | `TextProps` |
-
-#### Returns
-
-`Element`
-
----
-
-### Title
-
-▸ **Title**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                         | Type              |
-| :--------------------------- | :---------------- |
-| `__namedParameters`          | `Object`          |
-| `__namedParameters.children` | `React.ReactNode` |
 
 #### Returns
 

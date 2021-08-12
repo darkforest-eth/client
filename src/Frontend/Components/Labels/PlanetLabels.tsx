@@ -32,12 +32,12 @@ export function StatText({
 
 const getSilver = (p: Planet) => p.silver;
 export const SilverText = ({ planet }: { planet: Planet | undefined }) => (
-  <StatText style={{ color: dfstyles.colors.dfyellow }} planet={planet} getStat={getSilver} />
+  <StatText planet={planet} getStat={getSilver} />
 );
 
 const getSilverCap = (p: Planet) => p.silverCap;
 export const SilverCapText = ({ planet }: { planet: Planet | undefined }) => (
-  <StatText style={{ color: dfstyles.colors.dfyellow }} planet={planet} getStat={getSilverCap} />
+  <StatText planet={planet} getStat={getSilverCap} />
 );
 
 const getEnergy = (p: Planet) => p.energy;
@@ -88,7 +88,7 @@ export const EnergyGrowthText = ({ planet }: { planet: Planet | undefined }) => 
 
 const getSilverGrowth = (p: Planet) => p.silverGrowth;
 export const SilverGrowthText = ({ planet }: { planet: Planet | undefined }) => (
-  <StatText style={{ color: dfstyles.colors.dfyellow }} planet={planet} getStat={getSilverGrowth} />
+  <StatText planet={planet} getStat={getSilverGrowth} />
 );
 
 // level and rank stuff

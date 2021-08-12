@@ -6,15 +6,7 @@ import { formatNumber } from '../../Backend/Utils/Utils';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { ArtifactImage } from '../Components/ArtifactImage';
-import { Btn } from '../Components/Btn';
-import {
-  AlignCenterHorizontally,
-  CenteredText,
-  EmSpacer,
-  FullWidth,
-  ShortcutKeyDown,
-  Spacer,
-} from '../Components/CoreUI';
+import { CenteredText, EmSpacer, FullWidth, ShortcutButton, Spacer } from '../Components/CoreUI';
 import { EnergyIcon, SilverIcon } from '../Components/Icons';
 import { LongDash, Sub, Subber } from '../Components/Text';
 import WindowManager, { CursorState } from '../Game/WindowManager';
@@ -278,13 +270,15 @@ function SendRow({
         </First>
       )) || <></>}
       <FullWidth>
-        <AlignCenterHorizontally style={{ width: '100%' }}>
-          <Btn wide onClick={doSend} forceActive={sending}>
-            <CenteredText>Send</CenteredText>
-          </Btn>
-          <EmSpacer width={0.5} />
-          <ShortcutKeyDown shortcutKey={TOGGLE_SEND} />
-        </AlignCenterHorizontally>
+        <ShortcutButton
+          wide
+          onClick={doSend}
+          forceActive={sending}
+          style={{ width: '100%' }}
+          shortcutKey={TOGGLE_SEND}
+        >
+          <CenteredText>Send</CenteredText>
+        </ShortcutButton>
       </FullWidth>
     </>
   );

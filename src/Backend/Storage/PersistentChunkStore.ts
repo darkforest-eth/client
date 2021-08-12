@@ -266,6 +266,7 @@ class PersistentChunkStore implements ChunkStore {
   public async saveRevealedCoords(revealedCoordTups: RevealedCoords[]) {
     await this.setKey('revealedPlanetIds', stringify(revealedCoordTups));
   }
+
   public async saveClaimedCoords(claimedCoordTupps: ClaimedCoords[]) {
     await this.setKey('claimedPlanetIds', stringify(claimedCoordTupps));
   }

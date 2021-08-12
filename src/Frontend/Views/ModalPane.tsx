@@ -412,7 +412,9 @@ export function ModalPane({
       {visible && !minimized && !showingHelp && (
         <>
           {renderedFrame}
-          {!renderedFrame && (typeof children === 'function' ? children(api) : children)}
+          <div style={{ display: renderedFrame ? 'none' : undefined }}>
+            {typeof children === 'function' ? children(api) : children}
+          </div>
         </>
       )}
     </>

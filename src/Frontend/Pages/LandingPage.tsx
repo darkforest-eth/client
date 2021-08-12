@@ -101,7 +101,7 @@ export default function LandingPage() {
                     08/07/<HideSmall>20</HideSmall>20
                   </td>
                   <td>
-                    <a href='https://twitter.com/hideandcleanse'>@HideAndCleanse</a>
+                    <a href='https://twitter.com/hideandcleanse'>@hideandcleanse</a>
                   </td>
                 </TRow>
                 <TRow>
@@ -137,12 +137,25 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
+                    <HideSmall>v</HideSmall>0.6 round 2
+                  </td>
+                  <td>
+                    07/07/<HideSmall>20</HideSmall>21
+                  </td>
+                  <td>
+                    <a href='https://twitter.com/orden_gg'>@orden_gg</a>
+                  </td>
+                </TRow>
+                <TRow>
+                  <td>
                     <HideSmall>v</HideSmall>0.6 round 3
                   </td>
                   <td>
-                    06/28/<HideSmall>20</HideSmall>21
+                    08/22/<HideSmall>20</HideSmall>21
                   </td>
-                  <td>t.b.d.</td>
+                  <td>
+                    <a href='https://twitter.com/ghst_gg'>ghst_gg</a>
+                  </td>
                 </TRow>
               </tbody>
             </table>
@@ -205,7 +218,7 @@ const VariousLinksContainer = styled.div`
 const PrettyOverlayGradient = styled.div`
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to left top, rgba(194, 83, 10, 0.2), rgba(28, 187, 201, 0.2)) fixed;
+  background: linear-gradient(to left top, rgba(219, 10, 20, 0.2), rgba(1, 255, 22, 0.2)) fixed;
   background-position: 50%, 50%;
   display: inline-block;
   position: fixed;
@@ -330,7 +343,7 @@ const Page = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  color: ${dfstyles.colors.text};
+  color: white;
   font-size: ${dfstyles.fontSize};
   display: flex;
   flex-direction: column;

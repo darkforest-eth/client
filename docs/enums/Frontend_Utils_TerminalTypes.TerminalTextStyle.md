@@ -14,6 +14,7 @@
 - [Red](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#red)
 - [Sub](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#sub)
 - [Subber](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#subber)
+- [Text](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#text)
 - [Underline](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#underline)
 - [White](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#white)
 
@@ -21,7 +22,7 @@
 
 ### Blue
 
-• **Blue** = `5`
+• **Blue** = `6`
 
 ---
 
@@ -33,25 +34,25 @@
 
 ### Hoverable
 
-• **Hoverable** = `8`
+• **Hoverable** = `9`
 
 ---
 
 ### Invisible
 
-• **Invisible** = `6`
+• **Invisible** = `7`
 
 ---
 
 ### Mythic
 
-• **Mythic** = `9`
+• **Mythic** = `10`
 
 ---
 
 ### Red
 
-• **Red** = `4`
+• **Red** = `5`
 
 ---
 
@@ -67,12 +68,18 @@
 
 ---
 
+### Text
+
+• **Text** = `3`
+
+---
+
 ### Underline
 
-• **Underline** = `7`
+• **Underline** = `8`
 
 ---
 
 ### White
 
-• **White** = `3`
+• **White** = `4`

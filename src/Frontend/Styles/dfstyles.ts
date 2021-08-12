@@ -35,6 +35,7 @@ const dfgreenlight = color(dfgreen).lighten(0.1).hex();
 const dfred = '#FF6492';
 const dfyellow = '#e8e228';
 const dfpurple = '#9189d9';
+const dfwhite = '#ffffff';
 
 const dfstyles = {
   colors: {
@@ -59,6 +60,7 @@ const dfstyles = {
     dfred,
     dfyellow,
     dfpurple,
+    dfwhite,
 
     artifactBackground: 'rgb(21, 17, 71)',
 

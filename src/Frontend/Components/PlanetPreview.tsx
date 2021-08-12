@@ -15,7 +15,6 @@ const PlanetPreviewWrapper = styled.div<{ size: string; color: string }>`
   position: relative;
 
   width: ${size};
-  height: 100%;
 
   background: ${color};
 

@@ -12,12 +12,7 @@ import {
   PaddedRecommendedModalWidth,
 } from '../Components/CoreUI';
 import { Sub } from '../Components/Text';
-import {
-  useAccount,
-  usePlanet,
-  usePopAllOnSelectedPlanetChanged,
-  useUIManager,
-} from '../Utils/AppHooks';
+import { useAccount, usePlanet, useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';
 import { ModalHandle } from '../Views/ModalPane';
 
@@ -49,9 +44,16 @@ const hatUpgradePending = (planet: Planet): boolean => {
   return planet.unconfirmedBuyHats.length > 0;
 };
 
-export function HatPane({ planetId, modal }: { modal: ModalHandle; planetId?: LocationId }) {
+export function HatPane({
+  initialPlanetId,
+  modal,
+}: {
+  modal: ModalHandle;
+  initialPlanetId?: LocationId;
+}) {
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
+  const planetId = useEmitterValue(uiManager.selectedPlanetId$, initialPlanetId);
   const planetWrapper = usePlanet(uiManager, planetId);
   const planet = planetWrapper.value;
   const balanceEth = weiToEth(
@@ -59,7 +61,6 @@ export function HatPane({ planetId, modal }: { modal: ModalHandle; planetId?: Lo
   );
   const enabled = (planet: Planet): boolean =>
     !hatUpgradePending(planet) && planet?.owner === account && balanceEth > getHatCostEth(planet);
-  usePopAllOnSelectedPlanetChanged(modal, planetId);
 
   let content;
 

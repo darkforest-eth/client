@@ -3,7 +3,7 @@ import * as bigInt from 'big-integer';
 // To developer, increase this number to 256. This, in combination with setting `DISABLE_ZK_CHECKS`
 // in darkforest.toml, will make you mine the map at ULTRA SPEED!
 // To code reviewer, make sure this does not change in a PR to develop!
-const MIN_CHUNK_SIZE = 16;
+const MIN_CHUNK_SIZE = 256;
 
 /**
  * @tutorial to speed up the game's background rendering code, it is possible to set this value to

@@ -40,6 +40,7 @@ export const enum Setting {
   MiningCores = 'MiningCores',
   TutorialOpen = 'TutorialOpen',
   IsMining = 'IsMining',
+  DisableDefaultShortcuts = 'DisableDefaultShortcuts',
 }
 
 export const ALL_AUTO_GAS_SETTINGS = [
@@ -80,6 +81,7 @@ const defaultSettings: Record<Setting, string> = {
   NewPlayer: onlyInProduction(),
   MiningCores: '1',
   IsMining: 'true',
+  DisableDefaultShortcuts: 'false',
 };
 
 /**

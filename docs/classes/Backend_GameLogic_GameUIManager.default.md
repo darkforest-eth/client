@@ -1338,11 +1338,11 @@ state in some way
 
 ### getMyScore
 
-▸ **getMyScore**(): `number`
+▸ **getMyScore**(): `undefined` \| `number`
 
 #### Returns
 
-`number`
+`undefined` \| `number`
 
 ---
 
@@ -1468,7 +1468,7 @@ state in some way
 
 ### getPlayerScore
 
-▸ **getPlayerScore**(`player`): `number`
+▸ **getPlayerScore**(`player`): `undefined` \| `number`
 
 #### Parameters
 
@@ -1478,7 +1478,7 @@ state in some way
 
 #### Returns
 
-`number`
+`undefined` \| `number`
 
 ---
 

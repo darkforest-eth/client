@@ -1,7 +1,9 @@
 import { monomitter } from '@darkforest_eth/events';
 import { useEffect, useState } from 'react';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
+import { useUIManager } from './AppHooks';
 import { useEmitterSubscribe } from './EmitterHooks';
+import { Setting, useBooleanSetting } from './SettingsHooks';
 
 export const SpecialKey = {
   Space: ' ',
@@ -59,14 +61,19 @@ export function useIsDown(key?: string) {
 }
 
 export function useOnUp(key?: string, onUp?: () => void) {
+  const [disableDefaultShortcuts] = useBooleanSetting(
+    useUIManager(),
+    Setting.DisableDefaultShortcuts
+  );
+
   useEffect(() => {
     const onKeyUp = (e: KeyboardEvent) => {
       if (e.key.toLowerCase() === key && !shouldIgnoreShortcutKeypress(e)) {
-        onUp && onUp();
+        !disableDefaultShortcuts && onUp && onUp();
       }
     };
 
     document.addEventListener('keyup', onKeyUp);
     return () => document.removeEventListener('keyup', onKeyUp);
-  }, [key, onUp]);
+  }, [key, onUp, disableDefaultShortcuts]);
 }

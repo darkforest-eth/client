@@ -364,6 +364,18 @@ export function SettingsPane({
             Reset Tutorial
           </Btn>
         </Section>
+
+        <Section>
+          <SectionHeader>Disable Default Shortcuts</SectionHeader>
+          If you'd like to use custom shortcuts via a plugin, you can disable the default shortcuts
+          here.
+          <Spacer height={8} />
+          <BooleanSetting
+            uiManager={uiManager}
+            setting={Setting.DisableDefaultShortcuts}
+            settingDescription='toggle disable default shortcuts'
+          />
+        </Section>
       </SettingsContent>
     </ModalPane>
   );

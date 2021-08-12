@@ -10,6 +10,7 @@ per instance of the dark forest contract that it's connected to.
 ### Enumeration members
 
 - [AutoApproveNonPurchaseTransactions](Frontend_Utils_SettingsHooks.Setting.md#autoapprovenonpurchasetransactions)
+- [DisableDefaultShortcuts](Frontend_Utils_SettingsHooks.Setting.md#disabledefaultshortcuts)
 - [DrawChunkBorders](Frontend_Utils_SettingsHooks.Setting.md#drawchunkborders)
 - [FoundArtifact](Frontend_Utils_SettingsHooks.Setting.md#foundartifact)
 - [FoundComet](Frontend_Utils_SettingsHooks.Setting.md#foundcomet)
@@ -36,6 +37,12 @@ per instance of the dark forest contract that it's connected to.
 ### AutoApproveNonPurchaseTransactions
 
 • **AutoApproveNonPurchaseTransactions** = `"AutoApproveNonPurchaseTransactions"`
+
+---
+
+### DisableDefaultShortcuts
+
+• **DisableDefaultShortcuts** = `"DisableDefaultShortcuts"`
 
 ---
 

@@ -1,35 +1,35 @@
 import { PLANET_CLAIM_MIN_LEVEL } from '@darkforest_eth/constants';
 import { LocationId } from '@darkforest_eth/types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { isLocatable } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import { EmSpacer, PaddedRecommendedModalWidth } from '../Components/CoreUI';
 import { AccountLabel } from '../Components/Labels/Labels';
 import { MythicLabelText } from '../Components/Labels/MythicLabel';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
-import {
-  usePlanet,
-  usePlayer,
-  usePopAllOnSelectedPlanetChanged,
-  useUIManager,
-} from '../Utils/AppHooks';
+import { usePlanet, usePlayer, useUIManager } from '../Utils/AppHooks';
+import { useEmitterValue } from '../Utils/EmitterHooks';
 import { ModalHandle } from '../Views/ModalPane';
 
 export function ClaimPlanetPane({
-  planetId,
+  initialPlanetId,
   modal,
 }: {
   modal: ModalHandle;
-  planetId?: LocationId;
-}) {
-  usePopAllOnSelectedPlanetChanged(modal, planetId);
+  initialPlanetId?: LocationId;
+}): React.ReactElement {
   const uiManager = useUIManager();
   const gameManager = uiManager.getGameManager();
-  const planetWrapper = usePlanet(uiManager, planetId);
-  const planet = planetWrapper.value;
+  const planetId = useEmitterValue(uiManager.selectedPlanetId$, initialPlanetId);
+  const planet = usePlanet(uiManager, planetId).value;
   const player = usePlayer(uiManager);
+  const claimPlanet = useCallback(() => {
+    if (planetId) {
+      uiManager.revealLocation(planetId);
+    }
+  }, [planetId]);
 
-  if (!planetId || !planet || !isLocatable(planet) || !player.value) return null;
+  if (!planetId || !planet || !isLocatable(planet) || !player.value) return <></>;
 
   const center = { x: 0, y: 0 };
   const distanceFromCenter = Math.floor(gameManager.getDistCoords(planet.location.coords, center));
@@ -45,6 +45,7 @@ export function ClaimPlanetPane({
   const planetIsLargeEnough = planet.planetLevel >= PLANET_CLAIM_MIN_LEVEL;
   const disableClaimButton = !planetIsLargeEnough || claimedByThisPlayer || isClaimingNow;
   const isCloserThanPlayersCurrentClosest = currentPlayerScore > distanceFromCenter;
+  const claimed = planet?.coordsRevealed;
 
   let description = <></>;
   let claimButtonContent = <></>;
@@ -91,9 +92,6 @@ export function ClaimPlanetPane({
     claimButtonContent = <>Claim Planet</>;
   }
 
-  if (claimedByOtherPlayer && existingClaim) {
-  }
-
   return (
     <PaddedRecommendedModalWidth>
       This planet is <MythicLabelText text={distanceFromCenter.toLocaleString()} /> away from the
@@ -103,6 +101,15 @@ export function ClaimPlanetPane({
       <EmSpacer height={1} />
       <Btn disabled={disableClaimButton} onClick={() => gameManager.claimLocation(planetId)}>
         {claimButtonContent}
+      </Btn>
+      <Btn disabled={isClaimingNow || claimed} onClick={claimPlanet}>
+        {claimed ? (
+          'Already Claimed'
+        ) : isClaimingNow ? (
+          <LoadingSpinner initialText={'Claiming...'} />
+        ) : (
+          'Claim Planet!'
+        )}
       </Btn>
     </PaddedRecommendedModalWidth>
   );

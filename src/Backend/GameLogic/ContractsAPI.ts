@@ -1104,6 +1104,7 @@ export class ContractsAPI extends EventEmitter {
 
     return rawRevealedCoords.map(decodeRevealedCoords);
   }
+
   public async getClaimedCoordsByIdIfExists(
     planetId: LocationId
   ): Promise<ClaimedCoords | undefined> {
@@ -1115,6 +1116,7 @@ export class ContractsAPI extends EventEmitter {
     }
     return ret;
   }
+
   public async getClaimedPlanetsCoords(
     startingAt: number,
     onProgressIds?: (fractionCompleted: number) => void,

@@ -61,9 +61,9 @@ export function OpenClaimPlanetPane({
   return (
     <OpenPaneButton
       modal={modal}
-      title='Claim Planet'
+      title='Claim'
       shortcutKey={TOGGLE_CLAIM_PLANET_PANE}
-      element={() => <ClaimPlanetPane modal={modal} planetId={planetId} />}
+      element={() => <ClaimPlanetPane modal={modal} initialPlanetId={planetId} />}
     />
   );
 }
@@ -80,7 +80,7 @@ export function OpenHatPaneButton({
       modal={modal}
       title='Hat'
       shortcutKey={TOGGLE_HAT_PANE}
-      element={() => <HatPane modal={modal} planetId={planetId} />}
+      element={() => <HatPane modal={modal} initialPlanetId={planetId} />}
     />
   );
 }
@@ -97,7 +97,7 @@ export function OpenBroadcastPaneButton({
       modal={modal}
       title='Broadcast'
       shortcutKey={TOGGLE_BROADCAST_PANE}
-      element={() => <BroadcastPane modal={modal} planetId={planetId} />}
+      element={() => <BroadcastPane modal={modal} initialPlanetId={planetId} />}
       helpContent={BroadcastPaneHelpContent()}
     />
   );
@@ -115,7 +115,7 @@ export function OpenUpgradeDetailsPaneButton({
       modal={modal}
       title='Upgrade'
       shortcutKey={TOGGLE_UPGRADES_PANE}
-      element={() => <UpgradeDetailsPane modal={modal} planetId={planetId} />}
+      element={() => <UpgradeDetailsPane modal={modal} initialPlanetId={planetId} />}
       helpContent={UpgradeDetailsPaneHelpContent()}
     />
   );
@@ -132,7 +132,7 @@ export function OpenManagePlanetArtifactsButton({
       modal={modal}
       title='Artifacts'
       shortcutKey={TOGGLE_PLANET_ARTIFACTS_PANE}
-      element={() => <ManagePlanetArtifactsPane modal={modal} planetId={planetId} />}
+      element={() => <ManagePlanetArtifactsPane modal={modal} initialPlanetId={planetId} />}
       helpContent={ManagePlanetArtifactsHelpContent()}
     />
   );

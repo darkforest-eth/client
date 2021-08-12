@@ -14,11 +14,11 @@
 
 #### Parameters
 
-| Name                          | Type                                                                   |
-| :---------------------------- | :--------------------------------------------------------------------- |
-| `__namedParameters`           | `Object`                                                               |
-| `__namedParameters.modal`     | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
-| `__namedParameters.planetId?` | `LocationId`                                                           |
+| Name                                 | Type                                                                   |
+| :----------------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`                  | `Object`                                                               |
+| `__namedParameters.initialPlanetId?` | `LocationId`                                                           |
+| `__namedParameters.modal`            | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
 
 #### Returns
 

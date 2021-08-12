@@ -15,11 +15,11 @@
 
 #### Parameters
 
-| Name                         | Type                                                                   |
-| :--------------------------- | :--------------------------------------------------------------------- |
-| `__namedParameters`          | `Object`                                                               |
-| `__namedParameters.modal`    | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
-| `__namedParameters.planetId` | `LocationId` \| `undefined`                                            |
+| Name                                | Type                                                                   |
+| :---------------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`                 | `Object`                                                               |
+| `__namedParameters.initialPlanetId` | `LocationId` \| `undefined`                                            |
+| `__namedParameters.modal`           | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
 
 #### Returns
 

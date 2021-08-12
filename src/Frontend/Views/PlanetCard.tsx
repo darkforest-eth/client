@@ -1,10 +1,10 @@
-import { Planet, PlanetType } from '@darkforest_eth/types';
+import { Planet } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { StatIdx } from '../../_types/global/GlobalTypes';
-import { AlignCenterHorizontally, EmSpacer, InlineBlock } from '../Components/CoreUI';
+import { AlignCenterHorizontally, EmSpacer, FullWidth, InlineBlock } from '../Components/CoreUI';
 import {
   DefenseIcon,
   EnergyGrowthIcon,
@@ -26,6 +26,7 @@ import {
   SilverGrowthText,
   SpeedText,
 } from '../Components/Labels/PlanetLabels';
+import { ReadMore } from '../Components/ReadMore';
 import { Sub } from '../Components/Text';
 import { TextPreview } from '../Components/TextPreview';
 import { TooltipName } from '../Game/WindowManager';
@@ -66,13 +67,13 @@ export function PlanetCardTitle({
   );
 }
 
-const StatsContainer = styled.div`
-  ${snips.bigPadding}
+const ElevatedContainer = styled.div`
   ${snips.roundedBordersWithEdge}
   border-color: ${dfstyles.colors.borderDarker};
   background-color: ${dfstyles.colors.backgroundlight};
   margin-top: 8px;
   margin-bottom: 8px;
+  font-size: 85%;
 `;
 
 /** Preview basic planet information - used in `PlanetContextPane` and `HoverPlanetPane` */
@@ -113,117 +114,216 @@ export function PlanetCard({
           </>
         )}
 
-        <StatsContainer>
-          <StatRow>
-            <RowTip name={TooltipName.Energy}>
-              <AlignCenterHorizontally>
-                <EnergyIcon color={dfstyles.colors.subtext} />
-                <EmSpacer width={0.5} />
-                <Sub>energy</Sub>
-                <EmSpacer width={0.5} />
-                <PlanetEnergyLabel planet={planet} />
-                {planet?.bonus && planet.bonus[StatIdx.EnergyCap] && <TimesTwo />}
-              </AlignCenterHorizontally>
-            </RowTip>
-            <EmSpacer width={1} />
+        <FullWidth>
+          <ElevatedContainer
+            style={{
+              padding: '2px',
+              marginRight: '8px',
+              backgroundColor: 'rgba(0, 20, 80, 1.0)',
+              display: 'inline-flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '110px',
+            }}
+          >
+            {/* <PlanetPreview planet={planet} size={'50px'} res={128} /> */}
+          </ElevatedContainer>
+          <ElevatedContainer>
+            <StatRow>
+              <SpreadApart>
+                <div
+                  style={{
+                    border: `1px solid ${dfstyles.colors.borderDarker}`,
+                    borderTop: 'none',
+                    borderLeft: 'none',
+                    width: '50%',
+                  }}
+                >
+                  <RowTip name={TooltipName.Energy}>
+                    <SpreadApart>
+                      <AlignCenterHorizontally>
+                        <EmSpacer width={0.5} />
+                        <EnergyIcon color={dfstyles.colors.subtext} />
+                      </AlignCenterHorizontally>
+                      <AlignCenterHorizontally>
+                        <PlanetEnergyLabel planet={planet} />
+                        {planet?.bonus && planet.bonus[StatIdx.EnergyCap] && <TimesTwo />}
+                        <EmSpacer width={0.5} />
+                      </AlignCenterHorizontally>
+                    </SpreadApart>
+                  </RowTip>
+                </div>
+                <div
+                  style={{
+                    border: `1px solid ${dfstyles.colors.borderDarker}`,
+                    borderTop: 'none',
+                    borderRight: 'none',
+                    borderLeft: 'none',
+                    width: '50%',
+                  }}
+                >
+                  <RowTip name={TooltipName.Silver}>
+                    <SpreadApart>
+                      <AlignCenterHorizontally>
+                        <EmSpacer width={0.5} />
+                        <SilverIcon color={dfstyles.colors.subtext} />
+                      </AlignCenterHorizontally>
+                      <AlignCenterHorizontally>
+                        <PlanetSilverLabel planet={planet} />
+                        <EmSpacer width={0.5} />
+                      </AlignCenterHorizontally>
+                    </SpreadApart>
+                  </RowTip>
+                </div>
+              </SpreadApart>
+            </StatRow>
+            <StatRow>
+              <SpreadApart>
+                <div
+                  style={{
+                    border: `1px solid ${dfstyles.colors.borderDarker}`,
+                    borderTop: 'none',
+                    borderLeft: 'none',
+                    borderBottom: 'none',
+                    width: '50%',
+                  }}
+                >
+                  <RowTip name={TooltipName.EnergyGrowth}>
+                    <SpreadApart>
+                      <AlignCenterHorizontally>
+                        <EmSpacer width={0.5} />
+                        <EnergyGrowthIcon color={dfstyles.colors.subtext} />
+                      </AlignCenterHorizontally>
+                      <AlignCenterHorizontally>
+                        <EnergyGrowthText planet={planet} />
+                        {planet?.bonus && planet.bonus[StatIdx.EnergyGro] && <TimesTwo />}
+                        <EmSpacer width={0.5} />
+                      </AlignCenterHorizontally>
+                    </SpreadApart>
+                  </RowTip>
+                </div>
+                <div
+                  style={{
+                    borderBottom: 'none',
+                    borderTop: 'none',
+                    borderRight: 'none',
+                    width: '50%',
+                  }}
+                >
+                  <RowTip name={TooltipName.SilverGrowth}>
+                    <SpreadApart>
+                      <AlignCenterHorizontally>
+                        <EmSpacer width={0.5} />
+                        <SilverGrowthIcon color={dfstyles.colors.subtext} />
+                      </AlignCenterHorizontally>
+                      <AlignCenterHorizontally>
+                        <SilverGrowthText planet={p.value} />
+                        <EmSpacer width={0.5} />
+                      </AlignCenterHorizontally>
+                    </SpreadApart>
+                  </RowTip>
+                </div>
+              </SpreadApart>
+            </StatRow>
 
-            <RowTip name={TooltipName.EnergyGrowth}>
-              <AlignCenterHorizontally>
-                <EnergyGrowthIcon color={dfstyles.colors.subtext} />
-                <EmSpacer width={0.5} />
-                <Sub>growth</Sub>
-                <EmSpacer width={0.5} />
-                <EnergyGrowthText planet={planet} />
-                {planet?.bonus && planet.bonus[StatIdx.EnergyGro] && <TimesTwo />}
-              </AlignCenterHorizontally>
-            </RowTip>
-          </StatRow>
+            <StatRow>
+              <SpreadApart>
+                <div
+                  style={{
+                    border: `1px solid ${dfstyles.colors.borderDarker}`,
+                    borderBottom: 'none',
+                    borderLeft: 'none',
+                    width: '33%',
+                  }}
+                >
+                  <RowTip name={TooltipName.Defense}>
+                    <SpreadApart>
+                      <AlignCenterHorizontally>
+                        <EmSpacer width={0.5} />
+                        <DefenseIcon color={dfstyles.colors.subtext} />
+                      </AlignCenterHorizontally>
+                      <AlignCenterHorizontally>
+                        <DefenseText planet={planet} />
+                        {planet?.bonus && planet.bonus[StatIdx.Defense] && <TimesTwo />}
+                        <EmSpacer width={0.5} />
+                      </AlignCenterHorizontally>
+                    </SpreadApart>
+                  </RowTip>
+                </div>
 
-          <StatRow>
-            <RowTip name={TooltipName.Silver}>
-              <AlignCenterHorizontally>
-                <SilverIcon color={dfstyles.colors.subtext} />
-                <EmSpacer width={0.5} />
-                <Sub>silver</Sub>
-                <EmSpacer width={0.5} />
-                <PlanetSilverLabel planet={planet} />
-              </AlignCenterHorizontally>
-            </RowTip>
-            {(p.value?.planetType === PlanetType.SILVER_MINE && (
-              <>
-                <EmSpacer width={1} />
-                <RowTip name={TooltipName.SilverGrowth}>
-                  <AlignCenterHorizontally>
-                    <SilverGrowthIcon color={dfstyles.colors.subtext} />
-                    <EmSpacer width={0.5} />
-                    <Sub>growth</Sub>
-                    <EmSpacer width={0.5} />
-                    <SilverGrowthText planet={p.value} />
-                  </AlignCenterHorizontally>
-                </RowTip>
-              </>
-            )) || <></>}
-          </StatRow>
+                <div
+                  style={{
+                    border: `1px solid ${dfstyles.colors.borderDarker}`,
+                    borderLeft: 'none',
+                    borderBottom: 'none',
+                    width: '33%',
+                  }}
+                >
+                  <RowTip name={TooltipName.Speed}>
+                    <SpreadApart>
+                      <AlignCenterHorizontally>
+                        <EmSpacer width={0.5} />
+                        <SpeedIcon color={dfstyles.colors.subtext} />
+                      </AlignCenterHorizontally>
+                      <AlignCenterHorizontally>
+                        <SpeedText planet={planet} />
+                        {planet?.bonus && planet.bonus[StatIdx.Speed] && <TimesTwo />}
+                        <EmSpacer width={0.5} />
+                      </AlignCenterHorizontally>
+                    </SpreadApart>
+                  </RowTip>
+                </div>
 
-          <StatRow>
-            <RowTip name={TooltipName.Defense}>
-              <AlignCenterHorizontally>
-                <DefenseIcon color={dfstyles.colors.subtext} />
-                <EmSpacer width={0.5} />
-                <Sub>defense</Sub>
-                <EmSpacer width={0.5} />
-                <DefenseText planet={planet} />
-                {planet?.bonus && planet.bonus[StatIdx.Defense] && <TimesTwo />}
-              </AlignCenterHorizontally>
-            </RowTip>
-          </StatRow>
+                <div
+                  style={{
+                    border: `1px solid ${dfstyles.colors.borderDarker}`,
+                    borderLeft: 'none',
+                    borderRight: 'none',
+                    borderBottom: 'none',
+                    width: '33%',
+                  }}
+                >
+                  <RowTip name={TooltipName.Range}>
+                    <SpreadApart>
+                      <AlignCenterHorizontally>
+                        <EmSpacer width={0.5} />
+                        <RangeIcon color={dfstyles.colors.subtext} />
+                      </AlignCenterHorizontally>
 
-          <StatRow>
-            <RowTip name={TooltipName.Speed}>
-              <AlignCenterHorizontally>
-                <SpeedIcon color={dfstyles.colors.subtext} />
-                <EmSpacer width={0.5} />
-                <Sub>speed</Sub>
-                <EmSpacer width={0.5} />
-                <SpeedText planet={planet} />
-                {planet?.bonus && planet.bonus[StatIdx.Speed] && <TimesTwo />}
-              </AlignCenterHorizontally>
-            </RowTip>
-          </StatRow>
+                      <AlignCenterHorizontally>
+                        <RangeText planet={planet} />
+                        {planet?.bonus && planet.bonus[StatIdx.Range] && <TimesTwo />}
+                        <EmSpacer width={0.5} />
+                      </AlignCenterHorizontally>
+                    </SpreadApart>
+                  </RowTip>
+                </div>
+              </SpreadApart>
+            </StatRow>
+          </ElevatedContainer>
+        </FullWidth>
 
-          <StatRow>
-            <RowTip name={TooltipName.Range}>
-              <AlignCenterHorizontally>
-                <RangeIcon color={dfstyles.colors.subtext} />
-                <EmSpacer width={0.5} />
-                <Sub>range</Sub>
-                <EmSpacer width={0.5} />
-                <RangeText planet={planet} />
-                {planet?.bonus && planet.bonus[StatIdx.Range] && <TimesTwo />}
-              </AlignCenterHorizontally>
-            </RowTip>
-          </StatRow>
-        </StatsContainer>
+        <ReadMore text={'More Info'} height={'0'}>
+          <SpreadApart>
+            <Sub>owner address</Sub>
+            <TextPreview
+              style={{ color: dfstyles.colors.subtext }}
+              text={planet?.owner}
+              focusedWidth={`150px`}
+              unFocusedWidth={`150px`}
+            />{' '}
+          </SpreadApart>
 
-        <SpreadApart>
-          <Sub>owner address</Sub>
-          <TextPreview
-            style={{ color: dfstyles.colors.subtext }}
-            text={planet?.owner}
-            focusedWidth={'150px'}
-            unFocusedWidth={'150px'}
-          />{' '}
-        </SpreadApart>
-
-        <SpreadApart>
-          <Sub>planet id</Sub>
-          <TextPreview
-            style={{ color: dfstyles.colors.subtext }}
-            text={planet?.locationId}
-            focusedWidth={'150px'}
-            unFocusedWidth={'150px'}
-          />
-        </SpreadApart>
+          <SpreadApart>
+            <Sub>planet id</Sub>
+            <TextPreview
+              style={{ color: dfstyles.colors.subtext }}
+              text={planet?.locationId}
+              focusedWidth={'150px'}
+              unFocusedWidth={'150px'}
+            />
+          </SpreadApart>
+        </ReadMore>
       </div>
     </>
   );
