@@ -1,15 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 import { TwitterLink } from '../Components/Labels/Labels';
-import { Text } from '../Components/Text';
+import { Smaller, Text } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 
 export function LandingPageRoundArt() {
   return (
     <Container>
       <ImgContainer>
-        <LandingPageRoundArtImg src={'/public/round_art/round3.png'} />
-        <Text>Art by</Text> <TwitterLink twitter='JannehMoe' />
+        <LandingPageRoundArtImg src={'/public/round_art/round3.jpg'} />
+        <Smaller>
+          <Text>Art by</Text> <TwitterLink twitter='JannehMoe' />{' '}
+        </Smaller>
       </ImgContainer>
     </Container>
   );
@@ -27,7 +29,7 @@ const ImgContainer = styled.div`
 `;
 
 const LandingPageRoundArtImg = styled.img`
-  width: 900px;
+  width: 750px;
   max-width: 80vw;
   border-radius: 8px;
   border: 1px solid ${dfstyles.colors.borderDark};

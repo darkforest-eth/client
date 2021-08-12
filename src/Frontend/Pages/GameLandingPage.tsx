@@ -325,7 +325,7 @@ export function GameLandingPage() {
 
         addAccount(newSKey);
 
-        ethConnection?.setAccount(newAddr);
+        ethConnection?.setAccount(newSKey);
         terminal.current?.println(`Imported account with address ${newAddr}.`);
         setStep(TerminalPromptStep.ACCOUNT_SET);
       } catch (e) {

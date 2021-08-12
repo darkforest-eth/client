@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { EmSpacer, Link, Spacer } from '../Components/CoreUI';
 import { EmailCTA, EmailCTAMode } from '../Components/Email';
-import { HideSmall, Sub } from '../Components/Text';
+import { HideSmall, Sub, Text } from '../Components/Text';
 import LandingPageCanvas from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
 import { LandingPageRoundArt } from '../Views/LandingPageRoundArt';
@@ -37,10 +37,12 @@ export default function LandingPage() {
         <MainContentContainer>
           <Header>
             <LandingPageRoundArt />
-            <EmSpacer height={5} />
+            <EmSpacer height={1.5} />
 
             <p>
-              <Sub>zkSNARK space warfare</Sub>
+              <Text>zkSNARK space warfare</Text>
+              <br />
+              <Text>Round 3: Grape Extra-Small - Race to the Center</Text>
             </p>
 
             <Spacer height={16} />
@@ -54,7 +56,7 @@ export default function LandingPage() {
             </CTA>
           </Header>
 
-          <Spacer height={128} />
+          <EmSpacer height={3} />
 
           <div>
             <HallOfFameTitle>Space Masters</HallOfFameTitle>
