@@ -49,7 +49,7 @@ function Preview({ type, biome, level }: { type: PlanetType; biome: Biome; level
   return (
     <div>
       <StyledPreview>
-        <PlanetPreviewImage planet={planet} res={512} />;
+        <PlanetPreviewImage planet={planet} />;
       </StyledPreview>
     </div>
   );

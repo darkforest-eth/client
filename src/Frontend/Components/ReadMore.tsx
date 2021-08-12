@@ -22,8 +22,10 @@ export function ReadMore({
       <ContentContainer style={{ height: collapsed ? height : 'unset' }}>
         {children}
       </ContentContainer>
-      <EmSpacer height={0.1} />
-      <TextButton onClick={toggle}>{text ?? (collapsed ? 'more' : 'less')} info</TextButton>
+      {!collapsed && <EmSpacer height={0.1} />}
+      <TextButton style={{ fontSize: '80%' }} onClick={toggle}>
+        {text ?? (collapsed ? 'more' : 'less')} info
+      </TextButton>
     </>
   );
 }

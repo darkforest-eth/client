@@ -1,8 +1,7 @@
 import { PlanetType } from '@darkforest_eth/types';
 import React from 'react';
 import { getPlanetRank, isFullRank } from '../../Backend/Utils/Utils';
-import { ScoreLabel, SilverLabel } from '../Components/Labels/KeywordLabels';
-import { SpacetimeRipLabel } from '../Components/Labels/SpacetimeRipLabel';
+import { ScoreLabel } from '../Components/Labels/KeywordLabels';
 import { Green, Red, Sub, White } from '../Components/Text';
 import { TooltipName } from '../Game/WindowManager';
 import { useAccount, useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
@@ -33,8 +32,8 @@ export function ScoreTooltipPane() {
   return (
     <div>
       <Sub>
-        Your current score. <ScoreLabel /> is obtained by withdrawing <SilverLabel /> on a{' '}
-        <SpacetimeRipLabel />, and by finding Artifacts!
+        Your current <ScoreLabel /> is the distance between your closest to the center claimed
+        planet and the center. Check out the <White>Help Pane</White> for more info on scoring.
       </Sub>
     </div>
   );

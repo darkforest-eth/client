@@ -1651,6 +1651,10 @@ class GameManager extends EventEmitter {
       throw new Error("you can't reveal a planet you haven't discovered");
     }
 
+    if (planet.owner !== this.account) {
+      throw new Error("you can't claim a planet you down't own");
+    }
+
     if (!isLocatable(planet)) {
       throw new Error("you can't reveal a planet whose coordinates you don't know");
     }
@@ -1671,7 +1675,7 @@ class GameManager extends EventEmitter {
 
     const myLastClaimTimestamp = this.players.get(this.account)?.lastClaimTimestamp;
     if (myLastClaimTimestamp && Date.now() < this.getNextClaimAvailableTimestamp()) {
-      throw new Error('still on cooldown for broadcasting');
+      throw new Error('still on cooldown for claiming');
     }
 
     // this is shitty. used for the popup window
@@ -1950,7 +1954,7 @@ class GameManager extends EventEmitter {
       const percentSpawn = (1 / this.contractConstants.PLANET_RARITY) * 100;
       const printProgress = 8;
       this.terminal.current?.print(`Each coordinate has a`);
-      this.terminal.current?.print(` ${percentSpawn}%`, TerminalTextStyle.White);
+      this.terminal.current?.print(` ${percentSpawn}%`, TerminalTextStyle.Text);
       this.terminal.current?.print(` chance of spawning a planet.`);
       this.terminal.current?.println('');
 

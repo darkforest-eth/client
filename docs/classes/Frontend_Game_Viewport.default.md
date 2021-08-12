@@ -46,7 +46,6 @@
 - [centerChunk](Frontend_Game_Viewport.default.md#centerchunk)
 - [centerCoords](Frontend_Game_Viewport.default.md#centercoords)
 - [centerPlanet](Frontend_Game_Viewport.default.md#centerplanet)
-- [centerPlanetAnimated](Frontend_Game_Viewport.default.md#centerplanetanimated)
 - [getBottomBound](Frontend_Game_Viewport.default.md#getbottombound)
 - [getLeftBound](Frontend_Game_Viewport.default.md#getleftbound)
 - [getRightBound](Frontend_Game_Viewport.default.md#getrightbound)
@@ -351,22 +350,6 @@
 ### centerPlanet
 
 ▸ **centerPlanet**(`planet`): `void`
-
-#### Parameters
-
-| Name     | Type                    |
-| :------- | :---------------------- |
-| `planet` | `undefined` \| `Planet` |
-
-#### Returns
-
-`void`
-
----
-
-### centerPlanetAnimated
-
-▸ **centerPlanetAnimated**(`planet`): `void`
 
 #### Parameters
 

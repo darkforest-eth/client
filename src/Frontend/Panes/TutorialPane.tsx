@@ -167,10 +167,10 @@ const StyledTutorialPane = styled.div<{ visible: boolean }>`
   left: 0;
 
   background: ${dfstyles.colors.backgroundlighter};
-  color: #e6c3b8;
+  color: ${dfstyles.colors.text};
   padding: 8px;
-  border-bottom: 1px solid ${dfstyles.colors.text};
-  border-right: 1px solid ${dfstyles.colors.text};
+  border-bottom: 1px solid ${dfstyles.colors.border};
+  border-right: 1px solid ${dfstyles.colors.border};
 
   width: 24em;
   height: fit-content;

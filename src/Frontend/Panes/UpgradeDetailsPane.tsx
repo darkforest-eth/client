@@ -70,7 +70,7 @@ function SilverRequired({ planet }: { planet: Planet }) {
 
 export function UpgradeDetailsPane({
   initialPlanetId,
-  modal,
+  modal: _modal,
 }: {
   modal: ModalHandle;
   initialPlanetId: LocationId | undefined;

@@ -29,22 +29,22 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
         )}
 
         <Section>
+          <SectionHeader>Firstly, Some Links:</SectionHeader>
           <Link to='https://blog.zkga.me'>Official Info and Announcements</Link>
-        </Section>
-
-        <Section>
+          <br />
           <Link to='https://discord.gg/2u2TN6v8r6'>Official Discord Server</Link>
-        </Section>
-
-        <Section>
+          <br />
           <Link to='https://dfwiki.net/'>Community-Run Wiki</Link>
+          <br />
+          <br />
+          Secondly... welcome to
         </Section>
 
         <Section>
           <SectionHeader>Dark Forest v0.6 R3: Grape Extra-Small</SectionHeader>
           Dark Forest is a vast universe, obfuscated by zero-knowledge cryptography. Your{' '}
-          <White>explorer</White> explores the universe, searching for <White>Planets</White> and
-          other players.
+          <White>explorer</White> (bottom left) explores the universe, searching for{' '}
+          <White>Planets</White> and other players.
           <EmSpacer height={1} />
           All planets produce <White>Energy</White>. You can click-drag to move energy from planets
           you own to new planets to conquer them.

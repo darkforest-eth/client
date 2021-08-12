@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { AlignCenterHorizontally, EmSpacer } from '../Components/CoreUI';
 import { AccountLabel } from '../Components/Labels/Labels';
-import { Sub, White } from '../Components/Text';
+import { Sub, Text } from '../Components/Text';
 import { TooltipName } from '../Game/WindowManager';
 import { TooltipTrigger } from '../Panes/Tooltip';
 import { usePlayer, useUIManager } from '../Utils/AppHooks';
@@ -33,7 +33,7 @@ function BoardPlacement({ account }: { account: EthAddress | undefined }) {
     content = (
       <Sub>
         <TooltipTrigger name={TooltipName.Score}>
-          score: <White>{formattedScore}</White>
+          score: <Text>{formattedScore}</Text>
         </TooltipTrigger>
       </Sub>
     );
@@ -55,6 +55,7 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: ModalHook }) 
   return (
     <TopBarContainer>
       <AlignCenterHorizontally style={{ width: '100%', justifyContent: 'space-between' }}>
+        <EmSpacer width={1} />
         <AccountLabel />
         <EmSpacer width={0.5} />
         <ModalTwitterVerifyIcon
@@ -69,6 +70,7 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: ModalHook }) 
         />
         <EmSpacer width={1} />
         <BoardPlacement account={account} />
+        <EmSpacer width={1} />
       </AlignCenterHorizontally>
     </TopBarContainer>
   );

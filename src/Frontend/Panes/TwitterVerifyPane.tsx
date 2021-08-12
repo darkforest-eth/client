@@ -4,7 +4,7 @@ import { Expand, PaddedRecommendedModalWidth, Spacer } from '../Components/CoreU
 import { Input } from '../Components/Input';
 import { TwitterLink } from '../Components/Labels/Labels';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
-import { Red, Sub } from '../Components/Text';
+import { Red } from '../Components/Text';
 import { usePlayer, useUIManager } from '../Utils/AppHooks';
 import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 import { TabbedView } from '../Views/TabbedView';
@@ -80,7 +80,7 @@ export function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
               if (i === 0)
                 return (
                   <>
-                    <Sub>Tweet a signed message, proving account ownership!</Sub>
+                    Tweet a signed message, proving account ownership!
                     <Spacer height={8} />
                     <Input
                       wide
@@ -99,8 +99,7 @@ export function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
               if (i === 1) {
                 return (
                   <>
-                    <Sub>After tweeting, click the button below to verify ownership!</Sub>
-
+                    After tweeting, click the button below to verify ownership!
                     <Spacer height={8} />
                     <Input
                       wide

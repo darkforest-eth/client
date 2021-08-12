@@ -232,6 +232,7 @@
 - [Frontend/Views/EmojiPlanetNotification](modules/Frontend_Views_EmojiPlanetNotification.md)
 - [Frontend/Views/GameWindowLayout](modules/Frontend_Views_GameWindowLayout.md)
 - [Frontend/Views/GenericErrorBoundary](modules/Frontend_Views_GenericErrorBoundary.md)
+- [Frontend/Views/LandingPageRoundArt](modules/Frontend_Views_LandingPageRoundArt.md)
 - [Frontend/Views/Leaderboard](modules/Frontend_Views_Leaderboard.md)
 - [Frontend/Views/ModalIcon](modules/Frontend_Views_ModalIcon.md)
 - [Frontend/Views/ModalPane](modules/Frontend_Views_ModalPane.md)

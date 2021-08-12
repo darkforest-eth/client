@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
-import { StatIdx } from '../../_types/global/GlobalTypes';
+import { isLocatable, StatIdx } from '../../_types/global/GlobalTypes';
 import { AlignCenterHorizontally, EmSpacer, FullWidth, InlineBlock } from '../Components/CoreUI';
 import {
   DefenseIcon,
@@ -26,6 +26,7 @@ import {
   SilverGrowthText,
   SpeedText,
 } from '../Components/Labels/PlanetLabels';
+import { PlanetPreview } from '../Components/PlanetPreview';
 import { ReadMore } from '../Components/ReadMore';
 import { Sub } from '../Components/Text';
 import { TextPreview } from '../Components/TextPreview';
@@ -88,6 +89,8 @@ export function PlanetCard({
   const active = useActiveArtifact(p, uiManager);
   const planet = p.value;
 
+  if (!planet || !isLocatable(planet)) return <></>;
+
   return (
     <>
       {standalone && (
@@ -126,7 +129,7 @@ export function PlanetCard({
               width: '110px',
             }}
           >
-            {/* <PlanetPreview planet={planet} size={'50px'} res={128} /> */}
+            <PlanetPreview planet={planet} size={'50px'} />
           </ElevatedContainer>
           <ElevatedContainer>
             <StatRow>
@@ -233,7 +236,7 @@ export function PlanetCard({
                     border: `1px solid ${dfstyles.colors.borderDarker}`,
                     borderBottom: 'none',
                     borderLeft: 'none',
-                    width: '33%',
+                    width: '34%',
                   }}
                 >
                   <RowTip name={TooltipName.Defense}>
@@ -303,27 +306,39 @@ export function PlanetCard({
           </ElevatedContainer>
         </FullWidth>
 
-        <ReadMore text={'More Info'} height={'0'}>
-          <SpreadApart>
-            <Sub>owner address</Sub>
-            <TextPreview
-              style={{ color: dfstyles.colors.subtext }}
-              text={planet?.owner}
-              focusedWidth={`150px`}
-              unFocusedWidth={`150px`}
-            />{' '}
-          </SpreadApart>
+        {!standalone && (
+          <ReadMore height={'0'}>
+            <SpreadApart>
+              <Sub>id</Sub>
+              <TextPreview
+                style={{ color: dfstyles.colors.subtext }}
+                text={planet?.locationId}
+                focusedWidth={'150px'}
+                unFocusedWidth={'150px'}
+              />
+            </SpreadApart>
 
-          <SpreadApart>
-            <Sub>planet id</Sub>
-            <TextPreview
-              style={{ color: dfstyles.colors.subtext }}
-              text={planet?.locationId}
-              focusedWidth={'150px'}
-              unFocusedWidth={'150px'}
-            />
-          </SpreadApart>
-        </ReadMore>
+            <SpreadApart>
+              <Sub>coords</Sub>
+              <TextPreview
+                style={{ color: dfstyles.colors.subtext }}
+                text={`(${planet.location.coords.x}, ${planet.location.coords.y})`}
+                focusedWidth={'150px'}
+                unFocusedWidth={'150px'}
+              />
+            </SpreadApart>
+
+            <SpreadApart>
+              <Sub>owner address</Sub>
+              <TextPreview
+                style={{ color: dfstyles.colors.subtext }}
+                text={planet?.owner}
+                focusedWidth={`150px`}
+                unFocusedWidth={`150px`}
+              />
+            </SpreadApart>
+          </ReadMore>
+        )}
       </div>
     </>
   );

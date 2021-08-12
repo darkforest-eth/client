@@ -1,11 +1,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { Spacer } from '../Components/CoreUI';
+import { EmSpacer, Link, Spacer } from '../Components/CoreUI';
 import { EmailCTA, EmailCTAMode } from '../Components/Email';
-import { BlinkCursor, HideSmall, Invisible, Sub } from '../Components/Text';
+import { HideSmall, Sub } from '../Components/Text';
 import LandingPageCanvas from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
+import { LandingPageRoundArt } from '../Views/LandingPageRoundArt';
 import { LeadboardDisplay } from '../Views/Leaderboard';
 
 export const enum LandingPageZIndex {
@@ -31,35 +32,22 @@ export default function LandingPage() {
       <PrettyOverlayGradient />
 
       <Page>
-        <Spacer height={256} />
+        <Spacer height={150} />
 
         <MainContentContainer>
           <Header>
-            <Title>
-              <h1>
-                dark forest
-                <Fat>
-                  <Sub>
-                    <BlinkCursor />
-                  </Sub>
-                </Fat>
-              </h1>
-              <h1>
-                <Invisible>dark forest</Invisible>
-              </h1>
-            </Title>
+            <LandingPageRoundArt />
+            <EmSpacer height={5} />
 
             <p>
-              <Sub>
-                zkSNARK space warfare <HideSmall>(v0.6 round 3)</HideSmall>
-              </Sub>
+              <Sub>zkSNARK space warfare</Sub>
             </p>
 
             <Spacer height={16} />
 
             <CTA
               onClick={() => {
-                history.push('/game1');
+                history.push('/play');
               }}
             >
               Enter
@@ -101,7 +89,7 @@ export default function LandingPage() {
                     08/07/<HideSmall>20</HideSmall>20
                   </td>
                   <td>
-                    <a href='https://twitter.com/hideandcleanse'>@hideandcleanse</a>
+                    <Link to='https://twitter.com/hideandcleanse'>@hideandcleanse</Link>
                   </td>
                 </TRow>
                 <TRow>
@@ -112,7 +100,7 @@ export default function LandingPage() {
                     10/02/<HideSmall>20</HideSmall>20
                   </td>
                   <td>
-                    <a href='https://twitter.com/jacobrosenthal'>Jacob Rosenthal</a>
+                    <Link to='https://twitter.com/jacobrosenthal'>Jacob Rosenthal</Link>
                   </td>
                 </TRow>
                 <TRow>
@@ -126,13 +114,13 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.6 Round 1
+                    <HideSmall>v</HideSmall>0.6 round 1
                   </td>
                   <td>
                     05/22/<HideSmall>20</HideSmall>21
                   </td>
                   <td>
-                    <a href='https://twitter.com/adietrichs'>Ansgar Dietrichs</a>
+                    <Link to='https://twitter.com/adietrichs'>Ansgar Dietrichs</Link>
                   </td>
                 </TRow>
                 <TRow>
@@ -143,7 +131,7 @@ export default function LandingPage() {
                     07/07/<HideSmall>20</HideSmall>21
                   </td>
                   <td>
-                    <a href='https://twitter.com/orden_gg'>@orden_gg</a>
+                    <Link to='https://twitter.com/orden_gg'>@orden_gg</Link>
                   </td>
                 </TRow>
                 <TRow>
@@ -154,7 +142,7 @@ export default function LandingPage() {
                     08/22/<HideSmall>20</HideSmall>21
                   </td>
                   <td>
-                    <a href='https://twitter.com/ghst_gg'>ghst_gg</a>
+                    <Link to='https://twitter.com/ghst_gg'>@ghst_gg</Link>
                   </td>
                 </TRow>
               </tbody>
@@ -304,39 +292,6 @@ const CTA = styled.div`
     color: ${dfstyles.colors.dfgreen};
     border-bottom: 1px solid ${dfstyles.colors.dfgreen};
   }
-`;
-
-const Title = styled.div`
-  font-size: ${dfstyles.fontH1};
-  font-family: ${dfstyles.titleFont};
-  position: relative;
-
-  @media (max-width: ${dfstyles.screenSizeS}) {
-    font-size: ${dfstyles.fontH1S};
-  }
-
-  & h1 {
-    white-space: nowrap;
-  }
-
-  & h1:first-child {
-    position: absolute;
-  }
-
-  & h1:last-child {
-    &:before {
-      content: '>';
-      position: absolute;
-      top: 0;
-      left: -1em;
-      color: #00ff00;
-    }
-  }
-`;
-
-const Fat = styled.span`
-  display: inline-block;
-  transform: scale(1, 1.2);
 `;
 
 const Page = styled.div`

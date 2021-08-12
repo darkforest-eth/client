@@ -134,6 +134,6 @@ export const LongDash = () => (
 
 export const Coords = ({ coords: { x, y } }: { coords: WorldCoords }) => (
   <Sub>
-    (<White>{x}</White>, <White>{y}</White>)
+    (<Text>{x}</Text>, <Text>{y}</Text>)
   </Sub>
 );

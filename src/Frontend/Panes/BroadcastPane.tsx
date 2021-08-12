@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Btn } from '../Components/Btn';
 import { CenterBackgroundSubtext, PaddedRecommendedModalWidth, Spacer } from '../Components/CoreUI';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
-import { Blue, Sub, White } from '../Components/Text';
+import { Blue, White } from '../Components/Text';
 import { TimeUntil } from '../Components/TimeUntil';
 import dfstyles from '../Styles/dfstyles';
 import { usePlanet, useUIManager } from '../Utils/AppHooks';
@@ -49,7 +49,7 @@ export function BroadcastPaneHelpContent() {
 
 export function BroadcastPane({
   initialPlanetId,
-  modal,
+  modal: _modal,
 }: {
   modal: ModalHandle;
   initialPlanetId: LocationId | undefined;
@@ -108,32 +108,24 @@ export function BroadcastPane({
     <div>
       {currentlyBroadcastingAnyPlanet && (
         <p>
-          <Blue>INFO:</Blue> <Sub>Revealing...</Sub>
+          <Blue>INFO:</Blue> Revealing...
         </p>
       )}
       {planet?.owner === account && (
         <p>
-          <Blue>INFO:</Blue>{' '}
-          <Sub>You own this planet! Revealing its location is a dangerous flex.</Sub>
+          <Blue>INFO:</Blue> You own this planet! Revealing its location is a dangerous flex.
         </p>
       )}
       {isRevealed && (
         <p>
-          <Blue>INFO:</Blue>{' '}
-          <Sub>This planet's location is already, and can't be revealed again!</Sub>
+          <Blue>INFO:</Blue> This planet's location is already, and can't be revealed again!
         </p>
       )}
       {!broadcastCooldownPassed && (
         <p>
-          <Blue>INFO:</Blue>{' '}
-          <Sub>
-            You must wait{' '}
-            <TimeUntil
-              timestamp={uiManager.getNextBroadcastAvailableTimestamp()}
-              ifPassed={'now!'}
-            />{' '}
-            to reveal another planet.
-          </Sub>
+          <Blue>INFO:</Blue> You must wait{' '}
+          <TimeUntil timestamp={uiManager.getNextBroadcastAvailableTimestamp()} ifPassed={'now!'} />{' '}
+          to reveal another planet.
         </p>
       )}
     </div>
@@ -144,14 +136,12 @@ export function BroadcastPane({
       {planet ? (
         <BroadcastWrapper>
           <div>
-            <Sub>
-              You can broadcast a planet to publically reveal its location on the map. You can only
-              broadcast a planet's location once every{' '}
-              <White>
-                {Math.floor(uiManager.getContractConstants().LOCATION_REVEAL_COOLDOWN / 60 / 60)}
-              </White>{' '}
-              hours.
-            </Sub>
+            You can broadcast a planet to publically reveal its location on the map. You can only
+            broadcast a planet's location once every{' '}
+            <White>
+              {Math.floor(uiManager.getContractConstants().LOCATION_REVEAL_COOLDOWN / 60 / 60)}
+            </White>{' '}
+            hours.
           </div>
           <div className='message'>{warningsSection}</div>
           <div className='row'>

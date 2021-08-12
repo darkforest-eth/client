@@ -50,8 +50,8 @@ function playerToEntry(playerStr: string, color: string) {
   return <TwitterLink twitter={playerStr} color={color} />;
 }
 
-function getRankColor([rank, score]: [number, number]) {
-  if (score === 0) {
+function getRankColor([rank, score]: [number, number | undefined]) {
+  if (!score) {
     return dfstyles.colors.subtext;
   }
 
@@ -82,7 +82,7 @@ function getRankColor([rank, score]: [number, number]) {
   return dfstyles.colors.subtext;
 }
 
-function LeaderboardTable({ rows }: { rows: Array<[string, number]> }) {
+function LeaderboardTable({ rows }: { rows: Array<[string, number | undefined]> }) {
   return (
     <TableContainer>
       <Table
@@ -99,7 +99,7 @@ function LeaderboardTable({ rows }: { rows: Array<[string, number]> }) {
               {row[1] === 0 ? 'unranked' : i + 1 + '.'}
             </Cell>
           ),
-          (row: [string, number], i) => {
+          (row: [string, number | undefined], i) => {
             const color = getRankColor([i, row[1]]);
             return <Cell style={{ color }}>{playerToEntry(row[0], color)}</Cell>;
           },
@@ -144,13 +144,23 @@ function CountDown() {
 }
 
 function LeaderboardBody({ leaderboard }: { leaderboard: Leaderboard }) {
-  const rankedPlayers = leaderboard.entries.filter((entry) => entry.score > 0);
+  const rankedPlayers = leaderboard.entries.filter(
+    (entry) => entry.score !== undefined && entry.score > 0
+  );
 
   leaderboard.entries.sort((a, b) => {
-    return b.score - a.score;
+    if (typeof a.score !== 'number' && typeof b.score !== 'number') {
+      return 0;
+    } else if (typeof a.score !== 'number') {
+      return 1;
+    } else if (typeof b.score !== 'number') {
+      return -1;
+    }
+
+    return a.score - b.score;
   });
 
-  const rows: [string, number][] = leaderboard.entries.map((entry) => {
+  const rows: [string, number | undefined][] = leaderboard.entries.map((entry) => {
     if (typeof entry.twitter === 'string') {
       return [entry.twitter, entry.score];
     }

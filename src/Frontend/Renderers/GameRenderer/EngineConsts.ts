@@ -36,7 +36,7 @@ export const engineConsts = {
       enemy: [255, 0, 0] as RGBVec,
       enemyA: [255, 0, 0, 255] as RGBAVec,
       mine: [0, 0, 255] as RGBVec,
-      mineA: [0, 0, 255, 255] as RGBAVec,
+      mineA: [255, 255, 255, 255] as RGBAVec,
     },
     bonus: {
       energyCap: ProcgenUtils.hslToRgb([360, 73, 70]) as RGBVec,

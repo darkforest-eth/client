@@ -46,7 +46,7 @@ const hatUpgradePending = (planet: Planet): boolean => {
 
 export function HatPane({
   initialPlanetId,
-  modal,
+  modal: _modal,
 }: {
   modal: ModalHandle;
   initialPlanetId?: LocationId;
@@ -88,19 +88,17 @@ export function HatPane({
 
         <EmSpacer height={1} />
         <Link to={'https://blog.zkga.me/df-04-faq'}>Get More xDai</Link>
-        <EmSpacer height={1} />
+        <EmSpacer height={0.5} />
 
-        <div>
-          <Btn
-            onClick={() => {
-              if (!enabled(planet) || !uiManager || !planet) return;
-              uiManager.buyHat(planet);
-            }}
-            disabled={!enabled(planet)}
-          >
-            {planet && planet.hatLevel > 0 ? 'Upgrade' : 'Buy'} HAT
-          </Btn>
-        </div>
+        <Btn
+          onClick={() => {
+            if (!enabled(planet) || !uiManager || !planet) return;
+            uiManager.buyHat(planet);
+          }}
+          disabled={!enabled(planet)}
+        >
+          {planet && planet.hatLevel > 0 ? 'Upgrade' : 'Buy'} HAT
+        </Btn>
       </StyledHatPane>
     );
   } else {

@@ -250,7 +250,7 @@ function _GamesTable() {
               <Button
                 style={{ margin: '0 1rem' }}
                 onClick={() => {
-                  history.push('/game1');
+                  history.push('/play');
                 }}
               >
                 Enter

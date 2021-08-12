@@ -4,7 +4,7 @@ import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { CanvasCoords, distL2, vectorLength } from '../../Backend/Utils/Coordinates';
 import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
-import { AnimationManager, ViewportAnimation } from './ViewportAnimation';
+import { AnimationManager } from './ViewportAnimation';
 
 export const getDefaultScroll = (): number => {
   const isFirefox = navigator.userAgent.indexOf('Firefox') > 0;
@@ -268,22 +268,10 @@ class Viewport {
     typeof data.widthInWorldUnits === 'number' && this.centerCoords(data.centerWorldCoords);
   }
 
-  centerPlanetAnimated(planet: Planet | undefined): void {
-    if (planet && isLocatable(planet)) {
-      this.animationManager.replaceAnimation(
-        ViewportAnimation.between(
-          Date.now(),
-          this.centerWorldCoords,
-          planet.location.coords,
-          this.heightInWorldUnits,
-          this.heightInWorldUnits
-        )
-      );
-    }
-  }
-
   centerPlanet(planet: Planet | undefined): void {
-    this.centerPlanetAnimated(planet);
+    if (planet && isLocatable(planet)) {
+      this.centerCoords(planet.location.coords);
+    }
   }
 
   // centers on a planet and makes it fill the viewport
@@ -299,7 +287,7 @@ class Viewport {
   }
 
   centerCoords(coords: WorldCoords): void {
-    this.centerWorldCoords = coords;
+    this.centerWorldCoords = { ...coords };
   }
 
   centerChunk(chunk: Chunk): void {

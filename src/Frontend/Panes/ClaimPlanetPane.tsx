@@ -1,6 +1,6 @@
 import { PLANET_CLAIM_MIN_LEVEL } from '@darkforest_eth/constants';
 import { LocationId } from '@darkforest_eth/types';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { isLocatable } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import { EmSpacer, PaddedRecommendedModalWidth } from '../Components/CoreUI';
@@ -13,7 +13,7 @@ import { ModalHandle } from '../Views/ModalPane';
 
 export function ClaimPlanetPane({
   initialPlanetId,
-  modal,
+  modal: _modal,
 }: {
   modal: ModalHandle;
   initialPlanetId?: LocationId;
@@ -23,17 +23,12 @@ export function ClaimPlanetPane({
   const planetId = useEmitterValue(uiManager.selectedPlanetId$, initialPlanetId);
   const planet = usePlanet(uiManager, planetId).value;
   const player = usePlayer(uiManager);
-  const claimPlanet = useCallback(() => {
-    if (planetId) {
-      uiManager.revealLocation(planetId);
-    }
-  }, [planetId]);
 
   if (!planetId || !planet || !isLocatable(planet) || !player.value) return <></>;
 
   const center = { x: 0, y: 0 };
   const distanceFromCenter = Math.floor(gameManager.getDistCoords(planet.location.coords, center));
-  const currentPlayerScore = player.value.score || 0;
+  const currentPlayerScore = player.value.score;
   const isClaimingNow =
     !!planet?.unconfirmedClaim || !!gameManager.getGameObjects().getUnconfirmedClaim();
   const isClaimingThisPlanetNow = !!planet?.unconfirmedClaim;
@@ -43,14 +38,19 @@ export function ClaimPlanetPane({
     (planet.claimer === player.value?.address && !!planet.claimer);
   const claimedByOtherPlayer = !!existingClaim && existingClaim.revealer !== player.value?.address;
   const planetIsLargeEnough = planet.planetLevel >= PLANET_CLAIM_MIN_LEVEL;
-  const disableClaimButton = !planetIsLargeEnough || claimedByThisPlayer || isClaimingNow;
-  const isCloserThanPlayersCurrentClosest = currentPlayerScore > distanceFromCenter;
-  const claimed = planet?.coordsRevealed;
+  const planetOwnedByMe = player.value?.address && planet.owner === player.value?.address;
+  const disableClaimButton =
+    !planetOwnedByMe || !planetIsLargeEnough || claimedByThisPlayer || isClaimingNow;
+  const isCloserThanPlayersCurrentClosest =
+    currentPlayerScore && currentPlayerScore > distanceFromCenter;
+  // const claimed = planet?.coordsRevealed;
 
   let description = <></>;
   let claimButtonContent = <></>;
 
-  if (planet.planetLevel < PLANET_CLAIM_MIN_LEVEL) {
+  if (!planetOwnedByMe) {
+    description = <></>;
+  } else if (planet.planetLevel < PLANET_CLAIM_MIN_LEVEL) {
     description = (
       <>
         Unfortunately, you cannot claim it planet because it is below level {PLANET_CLAIM_MIN_LEVEL}
@@ -66,7 +66,7 @@ export function ClaimPlanetPane({
     );
   } else if (claimedByThisPlayer) {
     description = <>You've claimed this planet!</>;
-  } else if (currentPlayerScore === 0) {
+  } else if (typeof currentPlayerScore !== 'number') {
     description = (
       <>You haven't claimed a planet yet. Claiming this planet gets you on the board!</>
     );
@@ -82,7 +82,9 @@ export function ClaimPlanetPane({
     );
   }
 
-  if (planet.planetLevel < PLANET_CLAIM_MIN_LEVEL) {
+  if (!planetOwnedByMe) {
+    claimButtonContent = <>You don't own this planet</>;
+  } else if (planet.planetLevel < PLANET_CLAIM_MIN_LEVEL) {
     claimButtonContent = <>Too Small</>;
   } else if (isClaimingNow && !isClaimingThisPlanetNow) {
     claimButtonContent = <>Claiming Other Planet</>;
@@ -101,15 +103,6 @@ export function ClaimPlanetPane({
       <EmSpacer height={1} />
       <Btn disabled={disableClaimButton} onClick={() => gameManager.claimLocation(planetId)}>
         {claimButtonContent}
-      </Btn>
-      <Btn disabled={isClaimingNow || claimed} onClick={claimPlanet}>
-        {claimed ? (
-          'Already Claimed'
-        ) : isClaimingNow ? (
-          <LoadingSpinner initialText={'Claiming...'} />
-        ) : (
-          'Claim Planet!'
-        )}
       </Btn>
     </PaddedRecommendedModalWidth>
   );

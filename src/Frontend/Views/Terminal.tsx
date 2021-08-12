@@ -142,7 +142,7 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
     if (e.keyCode === ENTER_KEY_CODE && !e.shiftKey) {
       e.preventDefault();
       print(promptCharacter + ' ', TerminalTextStyle.Green);
-      print(inputText, TerminalTextStyle.White);
+      print(inputText, TerminalTextStyle.Text);
       newline();
       onInputEmitter.emit(ON_INPUT, inputText);
       setPreviousInput(inputText);

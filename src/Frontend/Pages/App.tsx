@@ -24,7 +24,7 @@ function App() {
       <GlobalStyle />
       <Router>
         <Switch>
-          <Route path='/game1' component={GameLandingPage} />
+          <Route path='/play' component={GameLandingPage} />
           <Route path='/' exact component={LandingPage} />
           <Route path='/planet/:locationId' component={SharePlanet} />
           <Route path='/artifact/:artifactId' component={ShareArtifact} />
