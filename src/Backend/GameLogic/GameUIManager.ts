@@ -1,61 +1,64 @@
+import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
+import { Monomitter, monomitter } from '@darkforest_eth/events';
+import { PerlinConfig } from '@darkforest_eth/hashing';
+import { planetHasBonus } from '@darkforest_eth/hexgen';
+import { EthConnection } from '@darkforest_eth/network';
 import {
-  LocationId,
-  ArtifactId,
-  EthAddress,
-  Player,
   Artifact,
-  Planet,
-  LocatablePlanet,
-  PlanetLevel,
-  UpgradeBranchName,
-  WorldLocation,
-  WorldCoords,
+  ArtifactId,
   Biome,
-  SpaceType,
-  PlanetType,
-  QueuedArrival,
-  Upgrade,
   Conversation,
+  Diagnostics,
+  EthAddress,
+  LocatablePlanet,
+  LocationId,
+  Planet,
+  PlanetLevel,
+  PlanetType,
+  Player,
+  QueuedArrival,
+  SpaceType,
+  UnconfirmedActivateArtifact,
   UnconfirmedMove,
   UnconfirmedUpgrade,
-  UnconfirmedActivateArtifact,
+  Upgrade,
+  UpgradeBranchName,
+  WorldCoords,
+  WorldLocation,
 } from '@darkforest_eth/types';
 import autoBind from 'auto-bind';
+import { BigNumber } from 'ethers';
 import EventEmitter from 'events';
+import deferred from 'p-defer';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import Viewport from '../../Frontend/Game/Viewport';
+import WindowManager, { CursorState } from '../../Frontend/Game/WindowManager';
 import { getObjectWithIdFromMap } from '../../Frontend/Utils/EmitterUtils';
-import { Monomitter, monomitter } from '../../Frontend/Utils/Monomitter';
+import { listenForKeyboardEvents, unlinkKeyboardEvents } from '../../Frontend/Utils/KeyEmitters';
+import {
+  getBooleanSetting,
+  getSetting,
+  setBooleanSetting,
+  Setting,
+} from '../../Frontend/Utils/SettingsHooks';
 import UIEmitter, { UIEmitterEvent } from '../../Frontend/Utils/UIEmitter';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
 import {
   Chunk,
-  Rectangle,
-  isLocatable,
-  Wormhole,
   HashConfig,
+  isLocatable,
+  Rectangle,
+  Wormhole,
 } from '../../_types/global/GlobalTypes';
 import { MiningPattern } from '../Miner/MiningPatterns';
-import EthConnection from '../Network/EthConnection';
 import { coordsEqual } from '../Utils/Coordinates';
-import { deferred } from '../Utils/Utils';
 import { biomeName } from './ArtifactUtils';
 import GameManager, { GameManagerEvent } from './GameManager';
+import { GameObjects } from './GameObjects';
 import { PluginManager } from './PluginManager';
 import TutorialManager, { TutorialState } from './TutorialManager';
-import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
-import { planetHasBonus } from '@darkforest_eth/hexgen';
 import { ViewportEntities } from './ViewportEntities';
-import { Diagnostics } from '../../Frontend/Panes/DiagnosticsPane';
-import {
-  getBooleanSetting,
-  getSetting,
-  Setting,
-  setBooleanSetting,
-} from '../../Frontend/Utils/SettingsHooks';
-import { GameObjects } from './GameObjects';
-import { PerlinConfig } from '@darkforest_eth/hashing';
 
 export const enum GameUIManagerEvent {
   InitializedPlayer = 'InitializedPlayer',
@@ -68,13 +71,13 @@ class GameUIManager extends EventEmitter {
 
   private terminal: React.MutableRefObject<TerminalHandle | undefined>;
   private previousSelectedPlanet: Planet | undefined;
-  private selectedPlanet: Planet | undefined;
+  private selectedPlanet: LocatablePlanet | undefined;
   private selectedCoords: WorldCoords | undefined;
-  private mouseDownOverPlanet: Planet | undefined;
+  private mouseDownOverPlanet: LocatablePlanet | undefined;
   private mouseDownOverCoords: WorldCoords | undefined;
-  private mouseHoveringOverPlanet: Planet | undefined;
+  private mouseHoveringOverPlanet: LocatablePlanet | undefined;
   private mouseHoveringOverCoords: WorldCoords | undefined;
-  private sendingPlanet: Planet | undefined;
+  private sendingPlanet: LocatablePlanet | undefined;
   private sendingCoords: WorldCoords | undefined;
   private isSending = false;
   private viewportEntities: ViewportEntities;
@@ -136,7 +139,7 @@ class GameUIManager extends EventEmitter {
 
     this.plugins = new PluginManager(gameManager);
 
-    this.selectedPlanetId$ = monomitter<LocationId | undefined>();
+    this.selectedPlanetId$ = monomitter<LocationId | undefined>(true);
     this.selectedPlanet$ = getObjectWithIdFromMap<Planet, LocationId>(
       this.getPlanetMap(),
       this.selectedPlanetId$,
@@ -166,6 +169,7 @@ class GameUIManager extends EventEmitter {
     gameManager: GameManager,
     terminalHandle: React.MutableRefObject<TerminalHandle | undefined>
   ) {
+    listenForKeyboardEvents();
     const uiEmitter = UIEmitter.getInstance();
 
     const uiManager = new GameUIManager(gameManager, terminalHandle);
@@ -186,6 +190,7 @@ class GameUIManager extends EventEmitter {
   }
 
   public destroy(): void {
+    unlinkKeyboardEvents();
     const uiEmitter = UIEmitter.getInstance();
 
     uiEmitter.removeListener(UIEmitterEvent.WorldMouseDown, this.onMouseDown);
@@ -247,7 +252,7 @@ class GameUIManager extends EventEmitter {
 
   // actions
 
-  public centerPlanet(planet: Planet | undefined) {
+  public centerPlanet(planet: LocatablePlanet | undefined) {
     if (planet) {
       Viewport.getInstance().centerPlanet(planet);
       this.setSelectedPlanet(planet);
@@ -256,7 +261,7 @@ class GameUIManager extends EventEmitter {
 
   public centerCoords(coords: WorldCoords) {
     const planet = this.gameManager.getPlanetWithCoords(coords);
-    if (planet) {
+    if (planet && isLocatable(planet)) {
       this.centerPlanet(planet);
     } else {
       Viewport.getInstance().centerCoords(coords);
@@ -265,7 +270,9 @@ class GameUIManager extends EventEmitter {
 
   public centerLocationId(planetId: LocationId) {
     const planet = this.getPlanetWithId(planetId);
-    this.centerPlanet(planet);
+    if (planet && isLocatable(planet)) {
+      this.centerPlanet(planet);
+    }
   }
 
   public joinGame(beforeRetry: (e: Error) => Promise<boolean>): GameUIManager {
@@ -282,23 +289,27 @@ class GameUIManager extends EventEmitter {
   }
 
   public verifyTwitter(twitter: string): Promise<boolean> {
-    return this.gameManager.verifyTwitter(twitter);
+    return this.gameManager.submitVerifyTwitter(twitter);
+  }
+
+  public disconnectTwitter(twitter: string) {
+    return this.gameManager.submitDisconnectTwitter(twitter);
   }
 
   public getPluginManager(): PluginManager {
     return this.plugins;
   }
 
-  public getPrivateKey(): string {
+  public getPrivateKey(): string | undefined {
     return this.gameManager.getPrivateKey();
   }
 
   public getMyBalance(): number {
-    return this.gameManager.getMyBalance();
+    return this.gameManager.getMyBalanceEth();
   }
 
-  public getMyBalanceEmitter(): Monomitter<number> {
-    return this.gameManager.getMyBalanceEmitter();
+  public getMyBalance$(): Monomitter<BigNumber> {
+    return this.gameManager.getMyBalance$();
   }
 
   public findArtifact(planetId: LocationId) {
@@ -367,15 +378,18 @@ class GameUIManager extends EventEmitter {
     this.mouseDownOverCoords = planet.location.coords;
     this.mouseDownOverPlanet = planet;
 
-    const [resolve, _reject, resultPromise] = deferred<LocatablePlanet | undefined>();
+    const { resolve, promise } = deferred<LocatablePlanet | undefined>();
 
     this.onChooseTargetPlanet = resolve;
 
-    return resultPromise;
+    return promise;
   }
 
   public revealLocation(locationId: LocationId) {
     this.gameManager.revealLocation(locationId);
+  }
+  public claimLocation(locationId: LocationId) {
+    this.gameManager.claimLocation(locationId);
   }
 
   public getNextBroadcastAvailableTimestamp() {
@@ -452,6 +466,7 @@ class GameUIManager extends EventEmitter {
         this.setSelectedPlanet(mouseUpOverPlanet);
         this.selectedCoords = mouseUpOverCoords;
         this.terminal.current?.println(`Selected: ${mouseUpOverPlanet.locationId}`);
+        this.terminal.current?.println(``);
       } else if (mouseDownPlanet && mouseDownPlanet.owner === this.gameManager.getAccount()) {
         // move initiated if enough forces
         const from = mouseDownPlanet;
@@ -531,6 +546,22 @@ class GameUIManager extends EventEmitter {
   public stopExplore() {
     this.gameManager.stopExplore();
     this.minerLocation = undefined;
+  }
+
+  public toggleExplore() {
+    if (this.isMining()) {
+      this?.stopExplore();
+      TutorialManager.getInstance().acceptInput(TutorialState.MinerPause);
+    } else {
+      this?.startExplore();
+    }
+  }
+
+  public toggleTargettingExplorer() {
+    const windowManager = WindowManager.getInstance();
+    if (windowManager.getCursorState() === CursorState.TargetingExplorer)
+      windowManager.setCursorState(CursorState.Normal);
+    else windowManager.setCursorState(CursorState.TargetingExplorer);
   }
 
   public setForcesSending(planetId: LocationId, percentage: number) {
@@ -622,7 +653,7 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getAllPlayers();
   }
 
-  public getSelectedPlanet(): Planet | undefined {
+  public getSelectedPlanet(): LocatablePlanet | undefined {
     return this.selectedPlanet;
   }
 
@@ -632,10 +663,10 @@ class GameUIManager extends EventEmitter {
 
   public setSelectedId(id: LocationId): void {
     const planet = this.getPlanetWithId(id);
-    if (planet) this.setSelectedPlanet(planet);
+    if (planet && isLocatable(planet)) this.setSelectedPlanet(planet);
   }
 
-  public setSelectedPlanet(planet: Planet | undefined): void {
+  public setSelectedPlanet(planet: LocatablePlanet | undefined): void {
     this.previousSelectedPlanet = this.selectedPlanet;
 
     if (!planet) {
@@ -669,12 +700,12 @@ class GameUIManager extends EventEmitter {
     return this.selectedCoords;
   }
 
-  public getMouseDownPlanet(): Planet | undefined {
+  public getMouseDownPlanet(): LocatablePlanet | undefined {
     if (this.isSending && this.sendingPlanet) return this.sendingPlanet;
     return this.mouseDownOverPlanet;
   }
 
-  public onSendInit(planet: Planet | undefined): void {
+  public onSendInit(planet: LocatablePlanet | undefined): void {
     this.isSending = true;
     this.sendingPlanet = planet;
     const loc = planet && this.getLocationOfPlanet(planet.locationId);
@@ -841,7 +872,7 @@ class GameUIManager extends EventEmitter {
     return this.mouseDownOverCoords;
   }
 
-  private setHoveringOverPlanet(planet: Planet | undefined) {
+  private setHoveringOverPlanet(planet: LocatablePlanet | undefined) {
     const lastHover = this.mouseHoveringOverPlanet;
 
     this.mouseHoveringOverPlanet = planet;
@@ -859,10 +890,17 @@ class GameUIManager extends EventEmitter {
     return this.mouseHoveringOverCoords;
   }
 
+  /**
+   * Percent from 0 to 100.
+   */
   public getForcesSending(planetId: LocationId): number {
-    return this.forcesSending[planetId] || 50;
+    const forces = this.forcesSending[planetId];
+    return forces ?? 50;
   }
 
+  /**
+   * Percent from 0 to 100.
+   */
   public getSilverSending(planetId: LocationId): number {
     return this.silverSending[planetId] || 0;
   }
@@ -888,12 +926,16 @@ class GameUIManager extends EventEmitter {
     return this.getMyArtifacts().filter((a) => !a.onPlanetId);
   }
 
-  public getPlanetWithId(planetId: LocationId): Planet | undefined {
+  public getPlanetWithId(planetId: LocationId | undefined): Planet | undefined {
     return this.gameManager.getPlanetWithId(planetId);
   }
 
-  public getMyScore(): number {
+  public getMyScore(): number | undefined {
     return this.gameManager.getMyScore();
+  }
+
+  public getPlayer(address?: EthAddress): Player | undefined {
+    return this.gameManager.getPlayer(address);
   }
 
   public getArtifactWithId(artifactId: ArtifactId): Artifact | undefined {
@@ -941,6 +983,9 @@ class GameUIManager extends EventEmitter {
 
   public isCurrentlyRevealing(): boolean {
     return this.gameManager.getNextRevealCountdownInfo().currentlyRevealing;
+  }
+  public isCurrentlyClaiming(): boolean {
+    return this.gameManager.getNextClaimCountdownInfo().currentlyClaiming;
   }
 
   public getUnconfirmedWormholeActivations(): UnconfirmedActivateArtifact[] {
@@ -999,8 +1044,8 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getEnergyOfPlayer(player);
   }
 
-  public getWithdrawnSilverOfPlayer(player: EthAddress): number {
-    return this.gameManager.getWithdrawnSilverOfPlayer(player);
+  public getPlayerScore(player: EthAddress): number | undefined {
+    return this.gameManager.getPlayerScore(player);
   }
 
   public upgrade(planet: Planet, branch: number): void {
@@ -1128,16 +1173,18 @@ class GameUIManager extends EventEmitter {
 
   private updatePlanets() {
     if (this.selectedPlanet) {
-      this.selectedPlanet = this.gameManager.getPlanetWithId(this.selectedPlanet.locationId);
+      this.selectedPlanet = this.gameManager.getPlanetWithId(
+        this.selectedPlanet.locationId
+      ) as LocatablePlanet;
     }
     if (this.mouseDownOverPlanet) {
       this.mouseDownOverPlanet = this.gameManager.getPlanetWithId(
         this.mouseDownOverPlanet.locationId
-      );
+      ) as LocatablePlanet;
     }
     if (this.mouseHoveringOverPlanet) {
       this.setHoveringOverPlanet(
-        this.gameManager.getPlanetWithId(this.mouseHoveringOverPlanet.locationId)
+        this.gameManager.getPlanetWithId(this.mouseHoveringOverPlanet.locationId) as LocatablePlanet
       );
     }
   }

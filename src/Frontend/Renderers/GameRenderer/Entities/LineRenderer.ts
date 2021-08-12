@@ -1,10 +1,10 @@
+import { WorldCoords } from '@darkforest_eth/types';
 import { CanvasCoords } from '../../../../Backend/Utils/Coordinates';
 import Viewport from '../../../Game/Viewport';
-import { RGBAVec, RenderZIndex, DrawMode } from '../EngineTypes';
+import { DrawMode, RenderZIndex, RGBAVec } from '../EngineTypes';
 import { LINE_PROGRAM_DEFINITION } from '../Programs/LineProgram';
 import { GameGLManager } from '../WebGL/GameGLManager';
 import { GenericRenderer } from '../WebGL/GenericRenderer';
-import { WorldCoords } from '@darkforest_eth/types';
 
 export default class LineRenderer extends GenericRenderer<typeof LINE_PROGRAM_DEFINITION> {
   constructor(glManager: GameGLManager) {

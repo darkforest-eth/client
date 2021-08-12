@@ -45,7 +45,6 @@
 - [Range](Frontend_Game_WindowManager.TooltipName.md#range)
 - [Rank](Frontend_Game_WindowManager.TooltipName.md#rank)
 - [Score](Frontend_Game_WindowManager.TooltipName.md#score)
-- [SelectedEnergy](Frontend_Game_WindowManager.TooltipName.md#selectedenergy)
 - [SelectedSilver](Frontend_Game_WindowManager.TooltipName.md#selectedsilver)
 - [Silver](Frontend_Game_WindowManager.TooltipName.md#silver)
 - [SilverCap](Frontend_Game_WindowManager.TooltipName.md#silvercap)
@@ -61,7 +60,7 @@
 
 ### ArtifactBuff
 
-• **ArtifactBuff** = `36`
+• **ArtifactBuff** = `35`
 
 ---
 
@@ -79,61 +78,61 @@
 
 ### BonusDefense
 
-• **BonusDefense** = `29`
+• **BonusDefense** = `28`
 
 ---
 
 ### BonusEnergyCap
 
-• **BonusEnergyCap** = `25`
+• **BonusEnergyCap** = `24`
 
 ---
 
 ### BonusEnergyGro
 
-• **BonusEnergyGro** = `26`
+• **BonusEnergyGro** = `25`
 
 ---
 
 ### BonusRange
 
-• **BonusRange** = `27`
+• **BonusRange** = `26`
 
 ---
 
 ### BonusSpeed
 
-• **BonusSpeed** = `28`
+• **BonusSpeed** = `27`
 
 ---
 
 ### Clowntown
 
-• **Clowntown** = `35`
+• **Clowntown** = `34`
 
 ---
 
 ### CurrentMining
 
-• **CurrentMining** = `22`
+• **CurrentMining** = `21`
 
 ---
 
 ### Defense
 
-• **Defense** = `34`
+• **Defense** = `33`
 
 ---
 
 ### Energy
 
-• **Energy** = `30`
+• **Energy** = `29`
 
 ---
 
 ### EnergyGrowth
 
-• **EnergyGrowth** = `31`
+• **EnergyGrowth** = `30`
 
 ---
 
@@ -145,13 +144,13 @@
 
 ### HashesPerSec
 
-• **HashesPerSec** = `21`
+• **HashesPerSec** = `20`
 
 ---
 
 ### HoverPlanet
 
-• **HoverPlanet** = `23`
+• **HoverPlanet** = `22`
 
 ---
 
@@ -169,91 +168,91 @@
 
 ### MiningPause
 
-• **MiningPause** = `19`
+• **MiningPause** = `18`
 
 ---
 
 ### MiningTarget
 
-• **MiningTarget** = `20`
+• **MiningTarget** = `19`
 
 ---
 
 ### ModalFindArtifact
 
-• **ModalFindArtifact** = `47`
+• **ModalFindArtifact** = `46`
 
 ---
 
 ### ModalHats
 
-• **ModalHats** = `44`
+• **ModalHats** = `43`
 
 ---
 
 ### ModalHelp
 
-• **ModalHelp** = `37`
+• **ModalHelp** = `36`
 
 ---
 
 ### ModalLeaderboard
 
-• **ModalLeaderboard** = `39`
+• **ModalLeaderboard** = `38`
 
 ---
 
 ### ModalPlanetDetails
 
-• **ModalPlanetDetails** = `38`
+• **ModalPlanetDetails** = `37`
 
 ---
 
 ### ModalPlanetDex
 
-• **ModalPlanetDex** = `40`
+• **ModalPlanetDex** = `39`
 
 ---
 
 ### ModalPlugins
 
-• **ModalPlugins** = `48`
+• **ModalPlugins** = `47`
 
 ---
 
 ### ModalSettings
 
-• **ModalSettings** = `45`
+• **ModalSettings** = `44`
 
 ---
 
 ### ModalTwitterBroadcast
 
-• **ModalTwitterBroadcast** = `43`
+• **ModalTwitterBroadcast** = `42`
 
 ---
 
 ### ModalTwitterVerification
 
-• **ModalTwitterVerification** = `42`
+• **ModalTwitterVerification** = `41`
 
 ---
 
 ### ModalUpgradeDetails
 
-• **ModalUpgradeDetails** = `41`
+• **ModalUpgradeDetails** = `40`
 
 ---
 
 ### ModalWithdrawSilver
 
-• **ModalWithdrawSilver** = `49`
+• **ModalWithdrawSilver** = `48`
 
 ---
 
 ### ModalYourArtifacts
 
-• **ModalYourArtifacts** = `46`
+• **ModalYourArtifacts** = `45`
 
 ---
 
@@ -277,25 +276,19 @@
 
 ### Range
 
-• **Range** = `32`
+• **Range** = `31`
 
 ---
 
 ### Rank
 
-• **Rank** = `17`
+• **Rank** = `16`
 
 ---
 
 ### Score
 
-• **Score** = `18`
-
----
-
-### SelectedEnergy
-
-• **SelectedEnergy** = `16`
+• **Score** = `17`
 
 ---
 
@@ -325,13 +318,13 @@
 
 ### SilverProd
 
-• **SilverProd** = `24`
+• **SilverProd** = `23`
 
 ---
 
 ### Speed
 
-• **Speed** = `33`
+• **Speed** = `32`
 
 ---
 

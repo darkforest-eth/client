@@ -5,6 +5,7 @@
 ### Functions
 
 - [UpgradeDetailsPane](Frontend_Panes_UpgradeDetailsPane.md#upgradedetailspane)
+- [UpgradeDetailsPaneHelpContent](Frontend_Panes_UpgradeDetailsPane.md#upgradedetailspanehelpcontent)
 
 ## Functions
 
@@ -14,10 +15,21 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                                | Type                                                                   |
+| :---------------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`                 | `Object`                                                               |
+| `__namedParameters.initialPlanetId` | `LocationId` \| `undefined`                                            |
+| `__namedParameters.modal`           | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
+
+#### Returns
+
+`Element`
+
+---
+
+### UpgradeDetailsPaneHelpContent
+
+▸ **UpgradeDetailsPaneHelpContent**(): `Element`
 
 #### Returns
 

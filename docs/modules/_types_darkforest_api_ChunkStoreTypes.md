@@ -17,7 +17,7 @@
 
 ### BucketId
 
-Ƭ **BucketId**: `string` & { `__value__`: `never` }
+Ƭ **BucketId**: `Abstract`<`string`, `"BucketId"`\>
 
 one of "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -25,6 +25,6 @@ one of "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 ### ChunkId
 
-Ƭ **ChunkId**: `string` & { `__value__`: `never` }
+Ƭ **ChunkId**: `Abstract`<`string`, `"ChunkId"`\>
 
 Don't worry about the values here. Never base code off the values here. PLEASE.

@@ -1,16 +1,16 @@
+import { Planet, WorldCoords } from '@darkforest_eth/types';
 import { mat4 } from 'gl-matrix';
 import { ProcgenUtils } from '../../../../Backend/Procedural/ProcgenUtils';
-import { Planet, WorldCoords } from '@darkforest_eth/types';
 import Viewport from '../../../Game/Viewport';
+import { engineConsts } from '../EngineConsts';
+import EngineUtils from '../EngineUtils';
 import {
   distortFromPlanet,
   PLANET_PROGRAM_DEFINITION,
   propsFromPlanet,
 } from '../Programs/PlanetProgram';
-import { engineConsts } from '../EngineConsts';
 import { GenericRenderer } from '../WebGL/GenericRenderer';
 import { WebGLManager } from '../WebGL/WebGLManager';
-import EngineUtils from '../EngineUtils';
 
 const { maxRadius } = engineConsts.planet;
 

@@ -1,6 +1,6 @@
-import { EthAddress, EthTxType, TxTypeToEthFunctionName } from '@darkforest_eth/types';
-import { QueuedTxRequest } from '../../Backend/Network/TxExecutor';
-import EthConnection from '../../Backend/Network/EthConnection';
+import { EthConnection, isPurchase, QueuedTransaction, weiToEth } from '@darkforest_eth/network';
+import { EthAddress } from '@darkforest_eth/types';
+import { BigNumber as EthersBN } from 'ethers';
 import { getBooleanSetting, Setting } from '../Utils/SettingsHooks';
 
 // tx is killed if user doesn't click popup within 20s
@@ -8,25 +8,23 @@ const POPUP_TIMEOUT = 20000;
 
 export async function openConfirmationWindowForTransaction(
   ethConnection: EthConnection,
-  txRequest: QueuedTxRequest,
+  txRequest: QueuedTransaction,
   from: EthAddress,
-  gasFeeGwei: number
+  gasFeeGwei: EthersBN
 ): Promise<void> {
   const autoApprove = getBooleanSetting(
     ethConnection.getAddress(),
     Setting.AutoApproveNonPurchaseTransactions
   );
 
-  const isPurchase =
-    txRequest.type === EthTxType.BUY_HAT || txRequest.type === EthTxType.BUY_GPT_CREDITS;
-
-  if (!autoApprove || isPurchase) {
-    localStorage.setItem(`${from}-gasFeeGwei`, gasFeeGwei + '');
+  if (!autoApprove || isPurchase(txRequest.overrides)) {
+    localStorage.setItem(`${from}-gasFeeGwei`, gasFeeGwei.toString());
     const account = ethConnection.getAddress();
-    const balance = await ethConnection.getBalance(account);
-    const method = TxTypeToEthFunctionName[txRequest.type];
+    if (!account) throw new Error('no account');
+    const balanceEth = weiToEth(await ethConnection.loadBalance(account));
+    const method = txRequest.methodName;
     const popup = window.open(
-      `/wallet/${from}/${txRequest.actionId}/${balance}/${method}`,
+      `/wallet/${from}/${txRequest.actionId}/${balanceEth}/${method}`,
       'confirmationwindow',
       'width=600,height=440'
     );
@@ -55,7 +53,9 @@ export async function openConfirmationWindowForTransaction(
         }, 100);
       });
     } else {
-      throw new Error('You need to enable popups to confirm this transaction.');
+      throw new Error(
+        "Please enable popups to confirm this transaction. After you've done so, try again."
+      );
     }
   }
 }

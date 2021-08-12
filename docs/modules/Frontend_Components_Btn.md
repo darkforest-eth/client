@@ -2,13 +2,19 @@
 
 ## Table of contents
 
-### Interfaces
+### Type aliases
 
-- [BtnProps](../interfaces/Frontend_Components_Btn.BtnProps.md)
+- [BtnProps](Frontend_Components_Btn.md#btnprops)
 
 ### Functions
 
 - [Btn](Frontend_Components_Btn.md#btn)
+
+## Type aliases
+
+### BtnProps
+
+Ƭ **BtnProps**: { `borderColor?`: `string` ; `color?`: `string` ; `disabled?`: `boolean` ; `forceActive?`: `boolean` ; `noBorder?`: `boolean` ; `small?`: `boolean` ; `textColor?`: `string` ; `wide?`: `boolean` } & `React.HTMLAttributes`<`HTMLSpanElement`\>
 
 ## Functions
 
@@ -18,9 +24,9 @@
 
 #### Parameters
 
-| Name    | Type                                                                                                         |
-| :------ | :----------------------------------------------------------------------------------------------------------- |
-| `props` | [`BtnProps`](../interfaces/Frontend_Components_Btn.BtnProps.md) & `React.HTMLAttributes`<`HTMLSpanElement`\> |
+| Name    | Type                                              |
+| :------ | :------------------------------------------------ |
+| `props` | [`BtnProps`](Frontend_Components_Btn.md#btnprops) |
 
 #### Returns
 

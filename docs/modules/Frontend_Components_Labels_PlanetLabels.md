@@ -12,8 +12,10 @@
 - [LevelRankTextEm](Frontend_Components_Labels_PlanetLabels.md#levelranktextem)
 - [PlanetBiomeTypeLabelAnim](Frontend_Components_Labels_PlanetLabels.md#planetbiometypelabelanim)
 - [PlanetEnergyLabel](Frontend_Components_Labels_PlanetLabels.md#planetenergylabel)
+- [PlanetLevel](Frontend_Components_Labels_PlanetLabels.md#planetlevel)
 - [PlanetLevelText](Frontend_Components_Labels_PlanetLabels.md#planetleveltext)
 - [PlanetOwnerLabel](Frontend_Components_Labels_PlanetLabels.md#planetownerlabel)
+- [PlanetRank](Frontend_Components_Labels_PlanetLabels.md#planetrank)
 - [PlanetRankText](Frontend_Components_Labels_PlanetLabels.md#planetranktext)
 - [PlanetSilverLabel](Frontend_Components_Labels_PlanetLabels.md#planetsilverlabel)
 - [PlanetTypeLabelAnim](Frontend_Components_Labels_PlanetLabels.md#planettypelabelanim)
@@ -164,6 +166,23 @@
 
 ---
 
+### PlanetLevel
+
+▸ `Const` **PlanetLevel**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                       | Type                    |
+| :------------------------- | :---------------------- |
+| `__namedParameters`        | `Object`                |
+| `__namedParameters.planet` | `undefined` \| `Planet` |
+
+#### Returns
+
+`Element`
+
+---
+
 ### PlanetLevelText
 
 ▸ `Const` **PlanetLevelText**(`__namedParameters`): `Element`
@@ -185,14 +204,33 @@
 
 ▸ **PlanetOwnerLabel**(`__namedParameters`): `Element`
 
+Either 'yours' in green text,
+
 #### Parameters
 
-| Name                           | Type                    |
-| :----------------------------- | :---------------------- |
-| `__namedParameters`            | `Object`                |
-| `__namedParameters.color?`     | `boolean`               |
-| `__namedParameters.planet`     | `Planet` \| `undefined` |
-| `__namedParameters.showYours?` | `boolean`               |
+| Name                                      | Type                    |
+| :---------------------------------------- | :---------------------- |
+| `__namedParameters`                       | `Object`                |
+| `__namedParameters.abbreviateOwnAddress?` | `boolean`               |
+| `__namedParameters.colorWithOwnerColor?`  | `boolean`               |
+| `__namedParameters.planet`                | `Planet` \| `undefined` |
+
+#### Returns
+
+`Element`
+
+---
+
+### PlanetRank
+
+▸ `Const` **PlanetRank**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                       | Type                    |
+| :------------------------- | :---------------------- |
+| `__namedParameters`        | `Object`                |
+| `__namedParameters.planet` | `undefined` \| `Planet` |
 
 #### Returns
 
@@ -346,6 +384,7 @@
 | :-------------------------- | :---------------------- |
 | `__namedParameters`         | `Object`                |
 | `__namedParameters.planet`  | `Planet` \| `undefined` |
+| `__namedParameters.style?`  | `React.CSSProperties`   |
 | `__namedParameters.getStat` |                         |
 
 #### Returns

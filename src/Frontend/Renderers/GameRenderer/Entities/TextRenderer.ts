@@ -1,12 +1,12 @@
+import { WorldCoords } from '@darkforest_eth/types';
 import { CanvasCoords } from '../../../../Backend/Utils/Coordinates';
 import Viewport from '../../../Game/Viewport';
-import { TEXT_PROGRAM_DEFINITION } from '../Programs/TextProgram';
 import { engineConsts } from '../EngineConsts';
-import { WebGLManager } from '../WebGL/WebGLManager';
+import { RenderZIndex, RGBAVec, TextAlign, TextAnchor } from '../EngineTypes';
 import EngineUtils from '../EngineUtils';
-import { RGBAVec, TextAlign, TextAnchor, RenderZIndex } from '../EngineTypes';
+import { TEXT_PROGRAM_DEFINITION } from '../Programs/TextProgram';
 import { GenericRenderer } from '../WebGL/GenericRenderer';
-import { WorldCoords } from '@darkforest_eth/types';
+import { WebGLManager } from '../WebGL/WebGLManager';
 
 type GlyphInfo = {
   x: number;

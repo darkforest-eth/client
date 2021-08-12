@@ -1,128 +1,145 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
 import { Btn } from '../Components/Btn';
+import { Expand, PaddedRecommendedModalWidth, Spacer } from '../Components/CoreUI';
 import { Input } from '../Components/Input';
-import { Sub, Green, White, Red } from '../Components/Text';
-import dfstyles from '../Styles/dfstyles';
-import { useUIManager } from '../Utils/AppHooks';
+import { TwitterLink } from '../Components/Labels/Labels';
+import { LoadingSpinner } from '../Components/LoadingSpinner';
+import { Red } from '../Components/Text';
+import { usePlayer, useUIManager } from '../Utils/AppHooks';
 import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
+import { TabbedView } from '../Views/TabbedView';
 
-const TwitterWrapper = styled.div`
-  width: 30em;
-  height: 15em;
-
-  & > .row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
-    & .input-twitter {
-      transition: background-color 0.2s, color 0.2s, width 0.2s !important;
-      outline: none;
-      background: ${dfstyles.colors.background};
-      color: ${dfstyles.colors.subtext};
-      border-radius: 4px;
-      border: 1px solid ${dfstyles.colors.text};
-      margin-left: 0.75em;
-      width: 6em;
-      padding: 2px 6px;
-
-      &:focus {
-        background: ${dfstyles.colors.backgroundlight};
-        color: ${dfstyles.colors.text};
-        width: 8em;
-      }
-    }
-  }
-
-  & span.clickable {
-    &:hover {
-      cursor: pointer;
-      text-decoration: underline;
-    }
-  }
-  & > div,
-  & > p {
-    margin: 0.5em 0;
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-`;
 export function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
   const uiManager = useUIManager();
-  const [twitter, setTwitter] = useState<string | undefined>(undefined);
-  const [twitterInput, setTwitterInput] = useState<string>('');
-  const [failedVerify, setFailedVerify] = useState<boolean>(false);
+  const user = usePlayer(uiManager);
+  const [twitterHandleInputValue, setTwitterHandleInputValue] = useState<string>('');
+  const [verifying, setVerifying] = useState(false);
+  const [disconnecting, setDisconnecting] = useState(false);
+  const [error, setError] = useState(false);
 
-  useEffect(() => {
-    if (!uiManager) return;
-    setTwitter(uiManager.getTwitter(undefined));
-  }, [uiManager]);
+  const onTwitterInputChange = (newHandle: string) => {
+    setTwitterHandleInputValue(newHandle.replace('@', ''));
+  };
 
+  /**
+   * Called when the user clicks on the 'tweet' button. Opens up a popup that prompts them to tweet
+   * the required verification tweet from the account that they entered into the pane.
+   */
   const onTweetClick = async () => {
     if (uiManager) {
-      const tweetText = await uiManager.generateVerificationTweet(twitterInput);
+      const tweetText = await uiManager.generateVerificationTweet(twitterHandleInputValue);
       const str = `Verifying my @darkforest_eth v0.6 account (https://zkga.me): ${tweetText}`;
       window.open(`https://twitter.com/intent/tweet?hashtags=darkforest&text=${encodeURI(str)}`);
     }
   };
 
+  /**
+   * Called when the user clicks on the 'verify' button. Asks the webserver whether or not the given
+   * twitter account tweeted the correct verification tweet. If that happened, sets the twitter
+   * account internally.
+   */
   const onVerifyClick = async () => {
-    if (uiManager) {
-      const success = await uiManager.verifyTwitter(twitterInput);
-      if (success) {
-        setTwitter(twitterInput);
-      } else {
-        setFailedVerify(true);
+    try {
+      setVerifying(true);
+      await uiManager?.verifyTwitter(twitterHandleInputValue);
+    } catch (e) {
+      setError(true);
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  /**
+   * Called when the user clicks the 'disconnect' button. Allows them to disconnect their account from twitter.
+   */
+  const onDisconnectClick = async () => {
+    if (confirm('are you sure you want to disconnect your twitter?')) {
+      try {
+        setDisconnecting(true);
+        await uiManager?.disconnectTwitter(twitterHandleInputValue);
+      } catch (e) {
+        setError(true);
+      } finally {
+        setDisconnecting(false);
       }
     }
   };
 
   return (
-    <ModalPane hook={hook} title='Twitter Verification' name={ModalName.TwitterVerify}>
-      <TwitterWrapper>
-        <div className='row'>
-          <p onClick={onTweetClick}>Connect to Twitter by signing a public tweet.</p>
-        </div>
-        {twitter && (
-          <p>
-            <Sub>
-              <Green>You are connected.</Green> Thank you for verifying your twitter account,{' '}
-              <White>@{twitter}</White>.
-            </Sub>
-          </p>
+    <ModalPane
+      name={ModalName.TwitterVerify}
+      title='Connect/Disconnect Twitter'
+      hook={hook}
+      initialPosition={{ y: 100, x: window.innerWidth / 2 - 300 }}
+    >
+      <PaddedRecommendedModalWidth>
+        {user.value !== undefined && user.value.twitter === undefined && (
+          <TabbedView
+            tabTitles={['Tweet Proof', 'Verify Tweet']}
+            tabContents={(i: number) => {
+              if (i === 0)
+                return (
+                  <>
+                    Tweet a signed message, proving account ownership!
+                    <Spacer height={8} />
+                    <Input
+                      wide
+                      value={twitterHandleInputValue}
+                      onChange={(e) => onTwitterInputChange(e.target.value)}
+                      placeholder={'your twitter handle'}
+                    />
+                    <Spacer height={8} />
+                    <Expand />
+                    <Btn wide onClick={onTweetClick}>
+                      Tweet
+                    </Btn>
+                  </>
+                );
+
+              if (i === 1) {
+                return (
+                  <>
+                    After tweeting, click the button below to verify ownership!
+                    <Spacer height={8} />
+                    <Input
+                      wide
+                      value={twitterHandleInputValue}
+                      onChange={(e) => onTwitterInputChange(e.target.value)}
+                      placeholder={'your twitter handle'}
+                    />
+                    <Spacer height={8} />
+                    <Expand />
+                    {error && (
+                      <>
+                        <Spacer height={8} />
+                        <Red>error verifying ownership</Red>
+                      </>
+                    )}
+                    <Btn wide disabled={verifying} onClick={onVerifyClick}>
+                      {verifying ? <LoadingSpinner initialText={'Verifying...'} /> : 'Verify'}
+                    </Btn>
+                  </>
+                );
+              }
+            }}
+          />
         )}
-        {!twitter && (
+
+        {user.value !== undefined && user.value.twitter && (
           <>
-            <div className='row'>
-              <Sub>Verify using this handle:</Sub>
-              <span>
-                @
-                <Input
-                  className='input-twitter'
-                  value={twitterInput}
-                  onChange={(e) => setTwitterInput(e.target.value)}
-                  placeholder={'my-twitter'}
-                />
-              </span>
-            </div>
-            <div className='row'>
-              <Btn onClick={onTweetClick}>Tweet</Btn>
-            </div>
-            <p>Once you've tweeted, you can verify your account.</p>
-            <div className='row'>
-              <span> </span>
-              <Btn onClick={onVerifyClick}>Verify</Btn>
-            </div>
-            {failedVerify && (
-              <p>
-                <Red>ERROR: failed to verify signature.</Red> <Sub>Please try again.</Sub>
-              </p>
-            )}
+            You are connected, <TwitterLink twitter={user.value.twitter} />. You can disconnect it
+            anytime by clicking the button below.
+            <Spacer height={16} />
+            <Btn wide disabled={disconnecting} onClick={onDisconnectClick}>
+              {verifying ? (
+                <LoadingSpinner initialText={'Disconnecting Twitter...'} />
+              ) : (
+                'Disconnect Twitter'
+              )}
+            </Btn>
           </>
         )}
-      </TwitterWrapper>
+      </PaddedRecommendedModalWidth>
     </ModalPane>
   );
 }

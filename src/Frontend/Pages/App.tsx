@@ -1,21 +1,20 @@
 import React from 'react';
-
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import LandingPage from './LandingPage';
-import GameLandingPage from './GameLandingPage';
-import dfstyles from '../Styles/dfstyles';
+import { hot } from 'react-hot-loader/root';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
+import { LandingPageBackground } from '../Renderers/LandingPageCanvas';
+import dfstyles from '../Styles/dfstyles';
+import { ConversationTest } from './ConversationTest';
+import { GameLandingPage } from './GameLandingPage';
+import { GifMaker } from './GifMaker';
+import LandingPage from './LandingPage';
+import { PreviewPage } from './PreviewPage';
+import { ShareArtifact } from './ShareArtifact';
 import { SharePlanet } from './SharePlanet';
+import { TestArtifactImages } from './TestArtifactImages';
 import { TxConfirmPopup } from './TxConfirmPopup';
 import UnsubscribePage from './UnsubscribePage';
-import { hot } from 'react-hot-loader/root';
-import { ShareArtifact } from './ShareArtifact';
-import { ConversationTest } from './ConversationTest';
 import { ValhallaPage } from './ValhallaPage';
-import { TestArtifactImages } from './TestArtifactImages';
-import { PreviewPage } from './PreviewPage';
-import { GifMaker } from './GifMaker';
-import { LandingPageBackground } from '../Renderers/LandingPageCanvas';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -25,7 +24,7 @@ function App() {
       <GlobalStyle />
       <Router>
         <Switch>
-          <Route path='/game1' component={GameLandingPage} />
+          <Route path='/play' component={GameLandingPage} />
           <Route path='/' exact component={LandingPage} />
           <Route path='/planet/:locationId' component={SharePlanet} />
           <Route path='/artifact/:artifactId' component={ShareArtifact} />
@@ -50,7 +49,7 @@ body {
   color: ${dfstyles.colors.text};
   width: 100vw;
   min-height: 100vh;
-  background-color: ${dfstyles.colors.backgrounddark};
+  background-color: ${dfstyles.colors.background};
   font-family: 'Inconsolata', monospace;
   font-weight: 300;
 }

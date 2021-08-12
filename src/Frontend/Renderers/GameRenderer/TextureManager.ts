@@ -1,11 +1,11 @@
-import { Biome, ArtifactType, ArtifactId, ArtifactRarity } from '@darkforest_eth/types';
+import { MAX_ARTIFACT_TYPE, MAX_BIOME, MIN_ARTIFACT_TYPE } from '@darkforest_eth/constants';
+import { ArtifactId, ArtifactRarity, ArtifactType, Biome } from '@darkforest_eth/types';
 import {
   isAncient,
   isBasic,
   isRelic,
   RenderedArtifact,
 } from '../../../Backend/GameLogic/ArtifactUtils';
-import { MIN_ARTIFACT_TYPE, MAX_ARTIFACT_TYPE, MAX_BIOME } from '@darkforest_eth/constants';
 
 export const ARTIFACTS_URL = 'public/sprites/artifacts.png';
 export const ARTIFACTS_THUMBS_URL = 'public/sprites/artifactthumbs.png';

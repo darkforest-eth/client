@@ -7,6 +7,7 @@
 - [ARTIFACT_ROW_H](Frontend_Styles_dfstyles.md#artifact_row_h)
 - [SPACE_TYPE_COLORS](Frontend_Styles_dfstyles.md#space_type_colors)
 - [default](Frontend_Styles_dfstyles.md#default)
+- [snips](Frontend_Styles_dfstyles.md#snips)
 
 ## Variables
 
@@ -38,11 +39,16 @@
 | `colors.backgroundlight`       | `string`                     |
 | `colors.backgroundlighter`     | `string`                     |
 | `colors.blueBackground`        | `string`                     |
+| `colors.border`                | `string`                     |
+| `colors.borderDark`            | `string`                     |
+| `colors.borderDarker`          | `string`                     |
 | `colors.dfblue`                | `string`                     |
 | `colors.dfgreen`               | `string`                     |
 | `colors.dfgreendark`           | `string`                     |
 | `colors.dfgreenlight`          | `string`                     |
+| `colors.dfpurple`              | `string`                     |
 | `colors.dfred`                 | `string`                     |
+| `colors.dfwhite`               | `string`                     |
 | `colors.dfyellow`              | `string`                     |
 | `colors.icons`                 | `Object`                     |
 | `colors.icons.blog`            | `string`                     |
@@ -86,3 +92,21 @@
 | `prefabs.noselect`             | `FlattenSimpleInterpolation` |
 | `screenSizeS`                  | `string`                     |
 | `titleFont`                    | `string`                     |
+
+---
+
+### snips
+
+• `Const` **snips**: `Object`
+
+#### Type declaration
+
+| Name                     | Type                         |
+| :----------------------- | :--------------------------- |
+| `absoluteTopLeft`        | `FlattenSimpleInterpolation` |
+| `bigPadding`             | `FlattenSimpleInterpolation` |
+| `defaultBackground`      | `string`                     |
+| `defaultModalWidth`      | `FlattenSimpleInterpolation` |
+| `pane`                   | `string`                     |
+| `roundedBorders`         | `string`                     |
+| `roundedBordersWithEdge` | `FlattenSimpleInterpolation` |

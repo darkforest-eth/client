@@ -1,18 +1,9 @@
-import { formatNumber } from '../../../Backend/Utils/Utils';
 import { Planet, WorldCoords } from '@darkforest_eth/types';
-import Renderer from './Renderer';
 import { engineConsts } from './EngineConsts';
-import { RenderZIndex, RGBVec, TextAlign, TextAnchor } from './EngineTypes';
-import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
+import { RenderZIndex, RGBVec } from './EngineTypes';
+import Renderer from './Renderer';
 
-const {
-  red,
-  white,
-  redA,
-  whiteA,
-  purpleA,
-  range: { dash, energy },
-} = engineConsts.colors;
+const { red, white, redA, whiteA, purpleA } = engineConsts.colors;
 
 export class UIRenderer {
   renderer: Renderer;
@@ -110,50 +101,10 @@ export class UIRenderer {
   }
 
   queueSelectedRangeRing() {
-    const { circleRenderer: cR, gameUIManager, textRenderer: tR } = this.renderer;
-    const selected = gameUIManager.getSelectedPlanet();
-    if (!selected) return;
-
-    const loc = gameUIManager.getLocationOfPlanet(selected.locationId);
-    if (!loc) return;
-    const { x, y } = loc.coords;
-
-    // gets range from percent
-    const drawRangeAtPercent = (pct: number) => {
-      const fac = Math.log2(pct / 5);
-      const range = fac * selected.range;
-      cR.queueCircleWorld({ x, y }, range, [...dash, 255], 1, 1, true);
-      tR.queueTextWorld(`${pct}%`, { x, y: y + range }, [...dash, 255]);
-    };
-
-    drawRangeAtPercent(100);
-    drawRangeAtPercent(50);
-    drawRangeAtPercent(25);
-
-    if (selected.owner === EMPTY_ADDRESS) return;
-
-    const forcesSending = gameUIManager.getForcesSending(selected.locationId); // [0, 100]
-    const totalForces = (forcesSending / 100) * selected.energy;
-
-    const scaled = (forcesSending * selected.energy) / selected.energyCap;
-    let ratio = Math.log2(scaled / 5);
-    ratio = Math.max(ratio, 0);
-
-    const rOrange = ratio * selected.range;
-
-    if (rOrange > 1) {
-      cR.queueCircleWorld({ x, y }, rOrange, [...energy, 255], 1, 1, true);
-      tR.queueTextWorld(
-        `${formatNumber(totalForces)}`,
-        { x, y: y + rOrange },
-        [...energy, 255],
-        0,
-        TextAlign.Center,
-        TextAnchor.Bottom
-      );
-    }
-
-    // so that it draws below the planets
-    cR.flush();
+    const selectedPlanet = this.renderer.gameUIManager.getSelectedPlanet();
+    const hoverPlanet = this.renderer.gameUIManager.getHoveringOverPlanet();
+    selectedPlanet &&
+      (!hoverPlanet || hoverPlanet?.locationId === selectedPlanet.locationId) &&
+      this.renderer.planetRenderManager.queueRangeRings(selectedPlanet);
   }
 }

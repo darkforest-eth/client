@@ -4,7 +4,6 @@
 
 ### Enumerations
 
-- [AutoGasSetting](../enums/Frontend_Utils_SettingsHooks.AutoGasSetting.md)
 - [Setting](../enums/Frontend_Utils_SettingsHooks.Setting.md)
 
 ### Variables
@@ -31,13 +30,13 @@
 
 ### ALL_AUTO_GAS_SETTINGS
 
-• `Const` **ALL_AUTO_GAS_SETTINGS**: [`AutoGasSetting`](../enums/Frontend_Utils_SettingsHooks.AutoGasSetting.md)[]
+• `Const` **ALL_AUTO_GAS_SETTINGS**: `AutoGasSetting`[]
 
 ---
 
 ### settingChanged$
 
-• `Const` **settingChanged$**: [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<[`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)\>
+• `Const` **settingChanged$**: `Monomitter`<[`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)\>
 
 Whenever a setting changes, we publish the setting's name to this event emitter.
 
@@ -84,6 +83,7 @@ several options.
 | `__namedParameters.style?`    | `React.CSSProperties`                                              |
 | `__namedParameters.uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
 | `__namedParameters.values`    | `string`[]                                                         |
+| `__namedParameters.wide?`     | `boolean`                                                          |
 
 #### Returns
 

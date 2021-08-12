@@ -1,17 +1,17 @@
+import { Artifact, Conversation } from '@darkforest_eth/types';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { ModalHook, ModalPane } from '../../Views/ModalPane';
-import { Artifact, Conversation } from '@darkforest_eth/types';
-import dfstyles from '../../Styles/dfstyles';
-import { TerminalHandle, Terminal } from '../../Views/Terminal';
-import { ConversationSuggestions } from '../ArtifactConversation/ConversationSuggestions';
 import { PaidConversationManager } from '../../../Backend/GameLogic/PaidConversationManager';
-import { useUIManager } from '../../Utils/AppHooks';
-import { CurrencyView } from './CurrencyView';
 import { artifactName } from '../../../Backend/Procedural/ArtifactProcgen';
-import { ConversationInfo } from './ConversationInfo';
 import { Spacer } from '../../Components/CoreUI';
 import { Sub } from '../../Components/Text';
+import dfstyles from '../../Styles/dfstyles';
+import { useUIManager } from '../../Utils/AppHooks';
+import { ModalHook, ModalPane } from '../../Views/ModalPane';
+import { Terminal, TerminalHandle } from '../../Views/Terminal';
+import { ConversationSuggestions } from '../ArtifactConversation/ConversationSuggestions';
+import { ConversationInfo } from './ConversationInfo';
+import { CurrencyView } from './CurrencyView';
 
 export function PaidArtifactConversationPane({
   hook,
@@ -71,7 +71,6 @@ export function PaidArtifactConversationPane({
     <ModalPane
       title={title}
       hook={hook}
-      noPadding
       backgroundColor={dfstyles.colors.dfyellow}
       titlebarColor={dfstyles.colors.dfyellow}
       borderColor={'#918d0c'}

@@ -1,14 +1,15 @@
-import * as React from 'react';
-import Editor from 'react-simple-code-editor';
-import { useState } from 'react';
-import { PluginManager } from '../../Backend/GameLogic/PluginManager';
 import * as Prism from 'prismjs';
+import * as React from 'react';
+import { useState } from 'react';
+import Editor from 'react-simple-code-editor';
 import styled from 'styled-components';
+import { PluginManager } from '../../Backend/GameLogic/PluginManager';
+import { PLUGIN_TEMPLATE } from '../../Backend/Plugins/PluginTemplate';
 import { PluginId } from '../../Backend/Plugins/SerializedPlugin';
 import { Btn } from '../Components/Btn';
-import { Spacer } from '../Components/CoreUI';
-import { PLUGIN_TEMPLATE } from '../../Backend/Plugins/PluginTemplate';
+import { Padded, Spacer } from '../Components/CoreUI';
 import { Input } from '../Components/Input';
+import dfstyles from '../Styles/dfstyles';
 require('prismjs/themes/prism-dark.css');
 
 /**
@@ -16,7 +17,8 @@ require('prismjs/themes/prism-dark.css');
  */
 const EditorContainer = styled.div`
   overflow-y: scroll;
-  border: 1px solid white;
+  border: 1px solid ${dfstyles.colors.borderDark};
+  border-radius: ${dfstyles.borderRadius};
   width: 500px;
   height: 500px;
 
@@ -58,9 +60,9 @@ export function PluginEditorPane({
   }
 
   return (
-    <>
-      <Input placeholder='no name' value={name} onChange={onNameInputChange} />
-      <Spacer height={4} />
+    <Padded>
+      <Input wide placeholder='no name' value={name} onChange={onNameInputChange} />
+      <Spacer height={8} />
       <EditorContainer>
         <Editor
           className={'df-editor'}
@@ -74,8 +76,10 @@ export function PluginEditorPane({
           }}
         />
       </EditorContainer>
-      <Spacer height={4} />
-      <Btn onClick={onSaveClick}>save</Btn>
-    </>
+      <Spacer height={8} />
+      <Btn wide onClick={onSaveClick} style={{ height: '3em' }}>
+        Save
+      </Btn>
+    </Padded>
   );
 }

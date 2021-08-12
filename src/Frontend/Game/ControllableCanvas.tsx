@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback, useLayoutEffect } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Renderer from '../Renderers/GameRenderer/Renderer';
 import { useUIManager } from '../Utils/AppHooks';

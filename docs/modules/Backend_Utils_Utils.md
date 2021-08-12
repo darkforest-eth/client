@@ -2,22 +2,14 @@
 
 ## Table of contents
 
-### Type aliases
-
-- [RetryErrorHandler](Backend_Utils_Utils.md#retryerrorhandler)
-
 ### Variables
 
 - [ONE_DAY](Backend_Utils_Utils.md#one_day)
 
 ### Functions
 
-- [aggregateBulkGetter](Backend_Utils_Utils.md#aggregatebulkgetter)
-- [callWithRetry](Backend_Utils_Utils.md#callwithretry)
-- [deferred](Backend_Utils_Utils.md#deferred)
 - [formatNumber](Backend_Utils_Utils.md#formatnumber)
 - [getFormatProp](Backend_Utils_Utils.md#getformatprop)
-- [getGasSettingGwei](Backend_Utils_Utils.md#getgassettinggwei)
 - [getOwnerColor](Backend_Utils_Utils.md#getownercolor)
 - [getPlanetMaxRank](Backend_Utils_Utils.md#getplanetmaxrank)
 - [getPlanetRank](Backend_Utils_Utils.md#getplanetrank)
@@ -30,33 +22,8 @@
 - [hexifyBigIntNestedArray](Backend_Utils_Utils.md#hexifybigintnestedarray)
 - [hslStr](Backend_Utils_Utils.md#hslstr)
 - [isFullRank](Backend_Utils_Utils.md#isfullrank)
-- [neverResolves](Backend_Utils_Utils.md#neverresolves)
-- [rejectAfter](Backend_Utils_Utils.md#rejectafter)
-- [sleep](Backend_Utils_Utils.md#sleep)
-- [timeoutAfter](Backend_Utils_Utils.md#timeoutafter)
 - [titleCase](Backend_Utils_Utils.md#titlecase)
 - [upgradeName](Backend_Utils_Utils.md#upgradename)
-
-## Type aliases
-
-### RetryErrorHandler
-
-Ƭ **RetryErrorHandler**: (`i`: `number`, `e`: `Error`) => `void`
-
-#### Type declaration
-
-▸ (`i`, `e`): `void`
-
-##### Parameters
-
-| Name | Type     |
-| :--- | :------- |
-| `i`  | `number` |
-| `e`  | `Error`  |
-
-##### Returns
-
-`void`
 
 ## Variables
 
@@ -65,74 +32,6 @@
 • `Const` **ONE_DAY**: `number`
 
 ## Functions
-
-### aggregateBulkGetter
-
-▸ `Const` **aggregateBulkGetter**<`T`\>(`logTag`, `total`, `querySize`, `getterFn`, `onProgress?`): `Promise`<`T`[]\>
-
-#### Type parameters
-
-| Name |
-| :--- |
-| `T`  |
-
-#### Parameters
-
-| Name          | Type                                                            |
-| :------------ | :-------------------------------------------------------------- |
-| `logTag`      | `string`                                                        |
-| `total`       | `number`                                                        |
-| `querySize`   | `number`                                                        |
-| `getterFn`    | (`startIdx`: `number`, `endIdx`: `number`) => `Promise`<`T`[]\> |
-| `onProgress?` | (`fractionCompleted`: `number`) => `void`                       |
-
-#### Returns
-
-`Promise`<`T`[]\>
-
----
-
-### callWithRetry
-
-▸ `Const` **callWithRetry**<`T`\>(`fn`, `args?`, `onError?`, `maxRetries?`, `retryInterval?`): `Promise`<`T`\>
-
-#### Type parameters
-
-| Name |
-| :--- |
-| `T`  |
-
-#### Parameters
-
-| Name            | Type                                                            | Default value |
-| :-------------- | :-------------------------------------------------------------- | :------------ |
-| `fn`            | (...`args`: `unknown`[]) => `Promise`<`T`\>                     | `undefined`   |
-| `args`          | `unknown`[]                                                     | `[]`          |
-| `onError?`      | [`RetryErrorHandler`](Backend_Utils_Utils.md#retryerrorhandler) | `undefined`   |
-| `maxRetries`    | `number`                                                        | `10`          |
-| `retryInterval` | `number`                                                        | `1000`        |
-
-#### Returns
-
-`Promise`<`T`\>
-
----
-
-### deferred
-
-▸ **deferred**<`T`\>(): [(`t`: `T`) => `void`, (`t`: `Error`) => `void`, `Promise`<`T`\>]
-
-#### Type parameters
-
-| Name |
-| :--- |
-| `T`  |
-
-#### Returns
-
-[(`t`: `T`) => `void`, (`t`: `Error`) => `void`, `Promise`<`T`\>]
-
----
 
 ### formatNumber
 
@@ -165,23 +64,6 @@
 #### Returns
 
 `string`
-
----
-
-### getGasSettingGwei
-
-▸ **getGasSettingGwei**(`setting`, `gasPrices`): `number` \| `undefined`
-
-#### Parameters
-
-| Name        | Type                                                                        |
-| :---------- | :-------------------------------------------------------------------------- |
-| `setting`   | [`AutoGasSetting`](../enums/Frontend_Utils_SettingsHooks.AutoGasSetting.md) |
-| `gasPrices` | `GasPrices`                                                                 |
-
-#### Returns
-
-`number` \| `undefined`
 
 ---
 
@@ -371,86 +253,6 @@
 #### Returns
 
 `boolean`
-
----
-
-### neverResolves
-
-▸ **neverResolves**(): `Promise`<`void`\>
-
-#### Returns
-
-`Promise`<`void`\>
-
----
-
-### rejectAfter
-
-▸ **rejectAfter**<`T`\>(`ms`, `msg`): `Promise`<`T`\>
-
-#### Type parameters
-
-| Name |
-| :--- |
-| `T`  |
-
-#### Parameters
-
-| Name  | Type     |
-| :---- | :------- |
-| `ms`  | `number` |
-| `msg` | `string` |
-
-#### Returns
-
-`Promise`<`T`\>
-
----
-
-### sleep
-
-▸ **sleep**<`T`\>(`timeout`, `returns?`): `Promise`<`T`\>
-
-#### Type parameters
-
-| Name |
-| :--- |
-| `T`  |
-
-#### Parameters
-
-| Name       | Type     |
-| :--------- | :------- |
-| `timeout`  | `number` |
-| `returns?` | `T`      |
-
-#### Returns
-
-`Promise`<`T`\>
-
----
-
-### timeoutAfter
-
-▸ `Const` **timeoutAfter**<`T`\>(`promise`, `ms`, `timeoutMsg`): `Promise`<`T`\>
-
-#### Type parameters
-
-| Name |
-| :--- |
-| `T`  |
-
-#### Parameters
-
-| Name         | Type            |
-| :----------- | :-------------- |
-| `promise`    | `Promise`<`T`\> |
-| `ms`         | `number`        |
-| `timeoutMsg` | `string`        |
-
-#### Returns
-
-`Promise`<`T`\>
 
 ---
 

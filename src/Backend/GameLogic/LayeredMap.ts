@@ -1,7 +1,7 @@
-import { LocationId, WorldLocation } from '@darkforest_eth/types';
-import { QuadTree, Box, Point } from 'js-quadtree';
-import { QuadTreeConfig } from 'js-quadtree/dist/types';
 import { MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
+import { LocationId, WorldCoords, WorldLocation } from '@darkforest_eth/types';
+import { Box, Circle, Point, QuadTree } from 'js-quadtree';
+import { QuadTreeConfig } from 'js-quadtree/dist/types';
 import { Radii } from './ViewportEntities';
 
 /**
@@ -31,7 +31,7 @@ export class LayeredMap {
 
     for (let i = MIN_PLANET_LEVEL; i <= MAX_PLANET_LEVEL; i++) {
       const config: QuadTreeConfig = {
-        maximumDepth: i <= 3 ? 15 : 10,
+        maximumDepth: 10,
         removeEmptyNodes: true,
       };
 
@@ -50,6 +50,19 @@ export class LayeredMap {
     const newPointData: PlanetPointData = { locationId: location.hash };
     quadTree?.insert(new Point(location.coords.x, location.coords.y, newPointData));
     this.insertedLocations.add(location.hash);
+  }
+
+  /**
+   * Gets all the planets within the given world radius of a world location.
+   */
+  public getPlanetsInCircle(coords: WorldCoords, worldRadius: number): LocationId[] {
+    const results = [];
+    for (const quad of this.perLevelPlanetQuadtrees.values()) {
+      results.push(
+        ...quad.query(new Circle(coords.x, coords.y, worldRadius)).map(this.getPointLocationId)
+      );
+    }
+    return results;
   }
 
   /**
@@ -79,14 +92,15 @@ export class LayeredMap {
       );
 
       const planets =
-        this.perLevelPlanetQuadtrees
-          .get(level)
-          ?.query(bounds)
-          .map((p) => (p.data as PlanetPointData).locationId) || [];
+        this.perLevelPlanetQuadtrees.get(level)?.query(bounds).map(this.getPointLocationId) || [];
 
       result.push(...planets);
     }
 
     return result;
+  }
+
+  private getPointLocationId(point: Point): LocationId {
+    return (point.data as PlanetPointData).locationId;
   }
 }

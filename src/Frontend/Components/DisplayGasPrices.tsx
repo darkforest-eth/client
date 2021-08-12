@@ -1,6 +1,5 @@
-import React from 'react';
 import { GasPrices } from '@darkforest_eth/types';
-import { Underline } from './CoreUI';
+import React from 'react';
 
 export function DisplayGasPrices({ gasPrices }: { gasPrices?: GasPrices }) {
   return (
@@ -9,9 +8,9 @@ export function DisplayGasPrices({ gasPrices }: { gasPrices?: GasPrices }) {
         'unknown'
       ) : (
         <>
-          <Underline>slow</Underline>: {gasPrices.slow + ' '}
-          <Underline>average</Underline>: {gasPrices.average + ' '}
-          <Underline>fast</Underline>: {gasPrices.fast + ' '}
+          slo: {gasPrices.slow + ' '}
+          avg: {gasPrices.average + ' '}
+          fst: {gasPrices.fast + ' '}
         </>
       )}
     </div>

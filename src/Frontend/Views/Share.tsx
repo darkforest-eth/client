@@ -1,9 +1,9 @@
-import React, { ReactNode, useRef, useState, useEffect } from 'react';
+import { EthConnection } from '@darkforest_eth/network';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
-import EthConnection from '../../Backend/Network/EthConnection';
+import { Account, getAccounts } from '../../Backend/Network/AccountManager';
+import { getEthConnection } from '../../Backend/Network/Blockchain';
 import ReaderDataStore from '../../Backend/Storage/ReaderDataStore';
-import { address } from '@darkforest_eth/serde';
-import { EthAddress } from '@darkforest_eth/types';
 import LandingPageCanvas from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
 import { TerminalHandle } from './Terminal';
@@ -32,7 +32,7 @@ const OnTop = styled.div`
 
 const AddressChooserContainer = styled.div`
   width: 500px;
-  background-color: white;
+  background-color: ${dfstyles.colors.text};
   color: black;
   padding: 8px;
   margin: 4px;
@@ -40,7 +40,7 @@ const AddressChooserContainer = styled.div`
 
 const AddressOption = styled.div`
   ${({ selected }: { selected: boolean }) => css`
-    background-color: white;
+    background-color: ${dfstyles.colors.text};
     cursor: pointer;
     display: block;
     margin: 3px;
@@ -68,29 +68,38 @@ export interface ShareProps<T> {
  */
 export function Share<T>(props: ShareProps<T>) {
   const terminalHandle = useRef<TerminalHandle | undefined>();
-  const [ethConnection] = useState(new EthConnection());
-  const knownAddrs = [undefined, ...ethConnection.getKnownAccounts()];
-  const [currentAccount, setCurrentAccount] = useState<EthAddress | undefined>(knownAddrs[0]);
+  const [ethConnection, setEthConnection] = useState<EthConnection | undefined>();
+  const knownAccounts = [undefined, ...getAccounts()];
+  const [currentAccount, setCurrentAccount] = useState<Account | undefined>(knownAccounts[0]);
   const [store, setStore] = useState<ReaderDataStore | undefined>();
   const [state, setState] = useState<T>();
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const selectAccount = (addr: string | undefined) => () => {
-    if (!addr) {
-      setCurrentAccount(undefined);
-    } else {
-      setCurrentAccount(address(addr));
-    }
+  const selectAccount = (idx: number) => () => {
+    setCurrentAccount(knownAccounts[idx]);
   };
 
   useEffect(() => {
-    if (terminalHandle.current && !loading && (!store || store?.getViewer() !== currentAccount)) {
+    getEthConnection()
+      .then((ethConnection) => {
+        setEthConnection(ethConnection);
+      })
+      .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    if (
+      terminalHandle.current &&
+      !loading &&
+      (!store || store?.getViewer() !== currentAccount) &&
+      ethConnection
+    ) {
       store?.destroy();
       setStore(undefined);
       setLoading(true);
 
-      ReaderDataStore.create({ current: undefined }, ethConnection, currentAccount).then(
+      ReaderDataStore.create({ current: undefined }, ethConnection, currentAccount?.address).then(
         async (store) => {
           setStore(store);
 
@@ -112,8 +121,8 @@ export function Share<T>(props: ShareProps<T>) {
       <OnTop>
         <AddressChooserContainer>
           <p>view as...</p>
-          {knownAddrs.map((addr, i) => (
-            <AddressOption onClick={selectAccount(addr)} key={i} selected={addr === currentAccount}>
+          {knownAccounts.map((addr, i) => (
+            <AddressOption onClick={selectAccount(i)} key={i} selected={addr === currentAccount}>
               {addr || 'anonymous'}
             </AddressOption>
           ))}

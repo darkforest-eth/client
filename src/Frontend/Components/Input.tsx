@@ -30,16 +30,17 @@ function InputImpl(
 
 export const DFInput = styled.input`
   ${({ wide }: { wide?: boolean }) => css`
-    transition: background-color 0.2s color 0.2s width 0.2s !important;
     outline: none;
     background: ${dfstyles.colors.background};
     color: ${dfstyles.colors.subtext};
     border-radius: 4px;
-    border: 1px solid ${dfstyles.colors.text};
+    border: 1px solid ${dfstyles.colors.borderDark};
     ${wide ? `width: 100%;` : `width: 21em;`}
-    padding: 2px 6px;
+    padding: 2px 12px;
 
+    &:hover,
     &:focus {
+      border: 1px solid ${dfstyles.colors.border};
       background: ${dfstyles.colors.backgroundlight};
       color: ${dfstyles.colors.text};
     }

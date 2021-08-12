@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import { Biome, LocatablePlanet, PlanetLevel, PlanetType, SpaceType } from '@darkforest_eth/types';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { PlanetPreviewImage } from '../Components/PlanetPreview';
 
 const StyledPreview = styled.div`
@@ -49,7 +49,7 @@ function Preview({ type, biome, level }: { type: PlanetType; biome: Biome; level
   return (
     <div>
       <StyledPreview>
-        <PlanetPreviewImage planet={planet} res={512} />;
+        <PlanetPreviewImage planet={planet} />;
       </StyledPreview>
     </div>
   );

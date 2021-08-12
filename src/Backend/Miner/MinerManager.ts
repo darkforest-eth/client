@@ -1,11 +1,11 @@
-import { Chunk, Rectangle, MinerWorkerMessage, HashConfig } from '../../_types/global/GlobalTypes';
-import Worker from 'worker-loader!./miner.worker';
+import { perlin, PerlinConfig } from '@darkforest_eth/hashing';
 import { EventEmitter } from 'events';
 import _ from 'lodash';
-import { MiningPattern } from './MiningPatterns';
-import { perlin, PerlinConfig } from '@darkforest_eth/hashing';
+import Worker from 'worker-loader!./miner.worker';
 import { ChunkStore } from '../../_types/darkforest/api/ChunkStoreTypes';
+import { Chunk, HashConfig, MinerWorkerMessage, Rectangle } from '../../_types/global/GlobalTypes';
 import { getChunkKey } from './ChunkUtils';
+import { MiningPattern } from './MiningPatterns';
 
 export const enum MinerManagerEvent {
   DiscoveredNewChunk = 'DiscoveredNewChunk',
@@ -185,7 +185,9 @@ class MinerManager extends EventEmitter {
   }
 
   public setCores(nCores: number): void {
+    const wasMining = this.isMining();
     this.stopExplore();
+
     this.workers.map((x) => x.terminate());
     this.workers = [];
 
@@ -194,8 +196,12 @@ class MinerManager extends EventEmitter {
     } else {
       this.cores = nCores;
     }
+
     _.range(this.cores).forEach((i) => this.initWorker(i));
-    this.startExplore();
+
+    if (wasMining) {
+      this.startExplore();
+    }
   }
 
   public startExplore(): void {

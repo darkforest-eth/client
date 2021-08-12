@@ -1,31 +1,30 @@
-import { isLocatable } from '../../_types/global/GlobalTypes';
+import { EMPTY_ADDRESS, MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
+import { seededRandom } from '@darkforest_eth/hashing';
+import {
+  ArtifactId,
+  Biome,
+  EthAddress,
+  LocationId,
+  Planet,
+  UpgradeBranchName,
+} from '@darkforest_eth/types';
 import * as bigInt from 'big-integer';
-import { PlanetCosmeticInfo, RuinsInfo } from '../Utils/UtilsTypes';
+import { HSLVec, RGBAVec, RGBVec } from '../../Frontend/Renderers/GameRenderer/EngineTypes';
+import { HAT_SIZES } from '../../Frontend/Utils/constants';
+import { HatType, hatTypeFromHash } from '../../Frontend/Utils/Hats';
+import { isLocatable } from '../../_types/global/GlobalTypes';
 import { getPlanetRank, titleCase } from '../Utils/Utils';
-import _ from 'lodash';
+import { PlanetCosmeticInfo, RuinsInfo } from '../Utils/UtilsTypes';
 import Noise from './Noise';
 import {
+  blurb2grammar,
+  blurbGrammar,
   planetNameWords,
   planetTagAdj,
   planetTagNoun,
-  blurb2grammar,
-  blurbGrammar,
 } from './ProcgenConsts';
-import {
-  Planet,
-  EthAddress,
-  LocationId,
-  Biome,
-  UpgradeBranchName,
-  ArtifactId,
-} from '@darkforest_eth/types';
-import { seededRandom } from '@darkforest_eth/hashing';
-import { HSLVec, RGBAVec, RGBVec } from '../../Frontend/Renderers/GameRenderer/EngineTypes';
-import { HatType, hatTypeFromHash } from '../../Frontend/Utils/Hats';
 import tracery from './tracery';
 import { baseEngModifiers } from './tracery-modifiers';
-import { EMPTY_ADDRESS, MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
-import { HAT_SIZES } from '../../Frontend/Utils/constants';
 
 export type PixelCoords = {
   x: number;
@@ -52,7 +51,7 @@ export class ProcgenUtils {
     [Biome.ICE]: [198, 78, 77],
     [Biome.WASTELAND]: [0, 0, 18],
     [Biome.LAVA]: [19, 100, 50],
-    [Biome.CORRUPTED]: [280, 100, 54],
+    [Biome.CORRUPTED]: [100, 80, 54],
   } as const;
   private static oceanByBiome: { readonly [Biome: number]: HSLVec } = {
     [Biome.UNKNOWN]: [0, 0, 0],
@@ -65,7 +64,7 @@ export class ProcgenUtils {
     [Biome.ICE]: [198, 90, 85],
     [Biome.WASTELAND]: [0, 98, 42],
     [Biome.LAVA]: [12, 92, 39],
-    [Biome.CORRUPTED]: [308, 90, 63],
+    [Biome.CORRUPTED]: [128, 90, 63],
   } as const;
 
   private static strByBiome = new Map<Biome, string>();

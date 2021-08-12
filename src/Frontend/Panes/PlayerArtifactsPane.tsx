@@ -1,6 +1,6 @@
+import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
 import { Artifact, ArtifactTypeNames } from '@darkforest_eth/types';
-import _ from 'lodash';
-import React, { useState, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { artifactName } from '../../Backend/Procedural/ArtifactProcgen';
@@ -8,10 +8,9 @@ import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
 import { ArtifactRarityLabelAnim } from '../Components/Labels/ArtifactLabels';
 import { Sub } from '../Components/Text';
-import { useUIManager } from '../Utils/AppHooks';
-import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
+import { useMyArtifactsList, useUIManager } from '../Utils/AppHooks';
 import { ArtifactLink } from '../Views/ArtifactLink';
-import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
+import { ModalHandle, ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 import { PlanetLink } from '../Views/PlanetLink';
 import { SortableTable } from '../Views/SortableTable';
 
@@ -48,51 +47,15 @@ function HelpContent() {
   );
 }
 
-export function PlayerArtifactsPane({
-  hook,
-  artifactDetailsHook,
-}: {
-  hook: ModalHook;
-  artifactDetailsHook: ModalHook;
-}) {
+function PlayerArtifactsPaneContent({ modal }: { modal: ModalHandle }) {
   const uiManager = useUIManager();
-  const [visible, setVisible] = hook;
-  const [artifacts, setArtifacts] = useState<Artifact[]>([]);
-  const [_detailsOpen, setDetailsOpen] = artifactDetailsHook;
-
-  // sync artifacts
-  useEffect(() => {
-    const updateArtifacts = () => {
-      if (!visible) return;
-      if (!uiManager) return;
-      const myAddr = uiManager.getAccount();
-      if (!myAddr) return;
-      const newArtifacts = uiManager.getMyArtifacts();
-      setArtifacts(newArtifacts);
-    };
-
-    const intervalId = setInterval(updateArtifacts, 2000);
-    updateArtifacts();
-
-    return () => clearInterval(intervalId);
-  }, [uiManager, visible]);
-
-  useEffect(() => {
-    const uiEmitter = UIEmitter.getInstance();
-    const onSelect = () => {
-      setVisible(true);
-    };
-    uiEmitter.addListener(UIEmitterEvent.SelectArtifact, onSelect);
-    return () => {
-      uiEmitter.removeAllListeners(UIEmitterEvent.SelectArtifact);
-    };
-  }, [setVisible]);
-
+  const myArtifacts = useMyArtifactsList(uiManager);
   const headers = ['Name', 'Location', 'Type', 'Rarity'];
   const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r', 'r'];
+
   const columns = [
     (artifact: Artifact) => (
-      <ArtifactLink artifact={artifact} setDetailsOpen={setDetailsOpen}>
+      <ArtifactLink modal={modal} artifact={artifact}>
         {artifactName(artifact)}
       </ArtifactLink>
     ),
@@ -129,37 +92,40 @@ export function PlayerArtifactsPane({
     (left: Artifact, right: Artifact) => left.rarity - right.rarity,
   ];
 
-  let content = undefined;
-
-  if (artifacts.length === 0) {
-    content = (
-      <CenterBackgroundSubtext width='300px' height='100px'>
+  if (myArtifacts.length === 0) {
+    return (
+      <CenterBackgroundSubtext width={RECOMMENDED_MODAL_WIDTH} height='100px'>
         You Don't Have <br /> Any Artifacts
       </CenterBackgroundSubtext>
     );
-  } else {
-    content = (
-      <ArtifactsBody>
-        <SortableTable
-          rows={artifacts}
-          headers={headers}
-          columns={columns}
-          sortFunctions={sortFunctions}
-          alignments={alignments}
-        />
-      </ArtifactsBody>
-    );
   }
+
+  return (
+    <ArtifactsBody>
+      <SortableTable
+        rows={myArtifacts}
+        headers={headers}
+        columns={columns}
+        sortFunctions={sortFunctions}
+        alignments={alignments}
+      />
+    </ArtifactsBody>
+  );
+}
+
+export function PlayerArtifactsPane({ hook }: { hook: ModalHook }) {
+  const render = useCallback((handle: ModalHandle) => {
+    return <PlayerArtifactsPaneContent modal={handle} />;
+  }, []);
 
   return (
     <ModalPane
       title={'Your Artifacts'}
       hook={hook}
       name={ModalName.YourArtifacts}
-      width='unset'
       helpContent={HelpContent}
     >
-      {content}
+      {render}
     </ModalPane>
   );
 }

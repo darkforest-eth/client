@@ -1,41 +1,24 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
-import styled from 'styled-components';
-import { GasPrices } from '@darkforest_eth/types';
-import { Spacer, Underline } from '../Components/CoreUI';
+import { Diagnostics } from '@darkforest_eth/types';
+import React, { useEffect, useState } from 'react';
+import { Wrapper } from '../../Backend/Utils/Wrapper';
+import { EmSpacer, PaddedRecommendedModalWidth, Separator } from '../Components/CoreUI';
 import { DisplayGasPrices } from '../Components/DisplayGasPrices';
-import { White } from '../Components/Text';
-import dfstyles from '../Styles/dfstyles';
+import { TextPreview } from '../Components/TextPreview';
 import { useUIManager } from '../Utils/AppHooks';
 import { BooleanSetting, Setting } from '../Utils/SettingsHooks';
 import { ModalHook, ModalPane } from '../Views/ModalPane';
+import { SpreadApart } from '../Views/PlanetCardComponents';
 import { TabbedView } from '../Views/TabbedView';
-
-const DiagnosticsContent = styled.div`
-  min-width: 350px;
-`;
-
-export interface Diagnostics {
-  visiblePlanets: number;
-  visibleChunks: number;
-  fps: number;
-  totalPlanets: number;
-  chunkUpdates: number;
-  totalCalls: number;
-  callsInQueue: number;
-  totalTransactions: number;
-  transactionsInQueue: number;
-  totalChunks: number;
-  gasPrices?: GasPrices;
-}
 
 export function DiagnosticsPane({ hook }: { hook: ModalHook }) {
   const uiManager = useUIManager();
-  const [currentDiagnostics, setCurrentDiagnostics] = useState(uiManager.getDiagnostics());
+  const [currentDiagnostics, setCurrentDiagnostics] = useState(
+    new Wrapper(uiManager.getDiagnostics())
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentDiagnostics(uiManager.getDiagnostics());
+      setCurrentDiagnostics(new Wrapper(uiManager.getDiagnostics()));
     }, 250);
 
     return () => clearInterval(interval);
@@ -43,14 +26,14 @@ export function DiagnosticsPane({ hook }: { hook: ModalHook }) {
 
   return (
     <ModalPane hook={hook} title={'Diagnostics'}>
-      <DiagnosticsContent>
+      <PaddedRecommendedModalWidth>
         <DiagnosticsTabs diagnostics={currentDiagnostics} />
-      </DiagnosticsContent>
+      </PaddedRecommendedModalWidth>
     </ModalPane>
   );
 }
 
-function DiagnosticsTabs({ diagnostics }: { diagnostics: Diagnostics }) {
+function DiagnosticsTabs({ diagnostics }: { diagnostics: Wrapper<Diagnostics> }) {
   return (
     <TabbedView
       tabTitles={['rendering', 'networking']}
@@ -66,44 +49,65 @@ function DiagnosticsTabs({ diagnostics }: { diagnostics: Diagnostics }) {
   );
 }
 
-function RenderingTab({ diagnostics }: { diagnostics: Diagnostics }) {
+function RenderingTab({ diagnostics }: { diagnostics: Wrapper<Diagnostics> }) {
   const uiManager = useUIManager();
 
   return (
     <>
-      <DiagnosticsTableStyle>
-        <tbody>
-          <tr>
-            <td>fps</td>
-            <td>{Math.floor(diagnostics.fps)}</td>
-          </tr>
-          <tr>
-            <td>visible chunks</td>
-            <td>{diagnostics.visibleChunks.toLocaleString()}</td>
-          </tr>
-          <tr>
-            <td>total chunks</td>
-            <td>{diagnostics.totalChunks.toLocaleString()}</td>
-          </tr>
-          <tr>
-            <td>visible planets</td>
-            <td>{diagnostics.visiblePlanets.toLocaleString()}</td>
-          </tr>
-          <tr>
-            <td>total planets</td>
-            <td>{diagnostics.totalPlanets.toLocaleString()}</td>
-          </tr>
-          <tr>
-            <td>queued chunk writes</td>
-            <td>{diagnostics.chunkUpdates.toLocaleString()}</td>
-          </tr>
-        </tbody>
-      </DiagnosticsTableStyle>
-      <Spacer height={8} />
-      <Underline>
-        <White>Debug Options</White>
-      </Underline>
-      <Spacer height={8} />
+      <Separator />
+
+      <SpreadApart>
+        <span>fps</span>
+        <span>{Math.floor(diagnostics.value.fps)}</span>
+      </SpreadApart>
+
+      <Separator />
+
+      <SpreadApart>
+        <span>visible chunks</span>
+        <span>{diagnostics.value.visibleChunks.toLocaleString()}</span>
+      </SpreadApart>
+
+      <Separator />
+
+      <SpreadApart>
+        <span>total chunks</span>
+        <span>{diagnostics.value.totalChunks.toLocaleString()}</span>
+      </SpreadApart>
+
+      <Separator />
+
+      <SpreadApart>
+        <span>visible planets</span>
+        <span>{diagnostics.value.visiblePlanets.toLocaleString()}</span>
+      </SpreadApart>
+
+      <Separator />
+
+      <SpreadApart>
+        <span>total planets</span>
+        <span>{diagnostics.value.totalPlanets.toLocaleString()}</span>
+      </SpreadApart>
+
+      <Separator />
+
+      <SpreadApart>
+        <span>queued chunk writes</span>
+        <span>{diagnostics.value.chunkUpdates.toLocaleString()}</span>
+      </SpreadApart>
+
+      <Separator />
+
+      <SpreadApart>
+        <span>viewport</span>
+        <span>
+          <span>{diagnostics.value.width.toLocaleString()}</span>
+          <span> x </span>
+          <span>{diagnostics.value.height.toLocaleString()}</span>
+        </span>
+      </SpreadApart>
+      <Separator />
+      <EmSpacer height={0.5} />
       <BooleanSetting
         uiManager={uiManager}
         setting={Setting.DrawChunkBorders}
@@ -113,55 +117,56 @@ function RenderingTab({ diagnostics }: { diagnostics: Diagnostics }) {
   );
 }
 
-function NetworkingTab({ diagnostics }: { diagnostics: Diagnostics }) {
+function NetworkingTab({ diagnostics }: { diagnostics: Wrapper<Diagnostics> }) {
   return (
-    <DiagnosticsTableStyle>
-      <tbody>
-        <tr>
-          <td>completed calls</td>
-          <td>{diagnostics.totalCalls.toLocaleString()}</td>
-        </tr>
+    <>
+      <Separator />
 
-        <tr>
-          <td>queued calls</td>
-          <td>{diagnostics.callsInQueue.toLocaleString()}</td>
-        </tr>
+      <SpreadApart>
+        <span>rpc url</span>
+        <span>
+          <TextPreview
+            text={diagnostics.value.rpcUrl}
+            unFocusedWidth={'100px'}
+            focusedWidth={'100px'}
+          />
+        </span>
+      </SpreadApart>
+      <Separator />
+      <SpreadApart>
+        <span>completed calls</span>
+        <span>{diagnostics.value.totalCalls.toLocaleString()}</span>
+      </SpreadApart>
 
-        <tr>
-          <td>completed transactions</td>
-          <td>{diagnostics.totalTransactions.toLocaleString()}</td>
-        </tr>
+      <Separator />
 
-        <tr>
-          <td>queued transactions</td>
-          <td>{diagnostics.transactionsInQueue.toLocaleString()}</td>
-        </tr>
+      <SpreadApart>
+        <span>queued calls</span>
+        <span>{diagnostics.value.callsInQueue.toLocaleString()}</span>
+      </SpreadApart>
 
-        <tr>
-          <td>oracle gas prices (gwei)</td>
-          <td>
-            <DisplayGasPrices gasPrices={diagnostics.gasPrices} />
-          </td>
-        </tr>
-      </tbody>
-    </DiagnosticsTableStyle>
+      <Separator />
+
+      <SpreadApart>
+        <span>completed transactions</span>
+        <span>{diagnostics.value.totalTransactions.toLocaleString()}</span>
+      </SpreadApart>
+
+      <Separator />
+
+      <SpreadApart>
+        <span>queued transactions</span>
+        <span>{diagnostics.value.transactionsInQueue.toLocaleString()}</span>
+      </SpreadApart>
+
+      <Separator />
+
+      <SpreadApart>
+        <span>oracle gas prices</span>
+        <span>
+          <DisplayGasPrices gasPrices={diagnostics.value.gasPrices} />
+        </span>
+      </SpreadApart>
+    </>
   );
 }
-
-const DiagnosticsTableStyle = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-
-  td {
-    border: 1px solid ${dfstyles.colors.subbertext};
-    padding: 2px 4px;
-
-    &:first-child {
-      text-align: right;
-    }
-
-    &:last-child {
-      min-width: 100px;
-    }
-  }
-`;

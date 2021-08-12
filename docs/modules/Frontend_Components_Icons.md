@@ -940,7 +940,14 @@
 
 ### SilverGrowthIcon
 
-▸ `Const` **SilverGrowthIcon**(): `Element`
+▸ `Const` **SilverGrowthIcon**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                       | Type     |
+| :------------------------- | :------- |
+| `__namedParameters`        | `Object` |
+| `__namedParameters.color?` | `string` |
 
 #### Returns
 
@@ -950,7 +957,14 @@
 
 ### SilverIcon
 
-▸ `Const` **SilverIcon**(): `Element`
+▸ `Const` **SilverIcon**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                       | Type     |
+| :------------------------- | :------- |
+| `__namedParameters`        | `Object` |
+| `__namedParameters.color?` | `string` |
 
 #### Returns
 

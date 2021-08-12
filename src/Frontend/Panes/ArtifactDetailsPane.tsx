@@ -1,10 +1,10 @@
 import {
-  ArtifactId,
-  ArtifactType,
-  ArtifactRarityNames,
-  Upgrade,
-  EthAddress,
   Artifact,
+  ArtifactId,
+  ArtifactRarityNames,
+  ArtifactType,
+  EthAddress,
+  Upgrade,
 } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React from 'react';
@@ -13,28 +13,22 @@ import { isActivated } from '../../Backend/GameLogic/ArtifactUtils';
 import { artifactName, dateMintedAt } from '../../Backend/Procedural/ArtifactProcgen';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { getUpgradeStat } from '../../Backend/Utils/Utils';
-import { Wrapper } from '../../Backend/Utils/Wrapper';
+import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
 import { StatIdx } from '../../_types/global/GlobalTypes';
 import { ArtifactImage } from '../Components/ArtifactImage';
-import { Spacer } from '../Components/CoreUI';
+import { PaddedRecommendedModalWidth, Spacer } from '../Components/CoreUI';
 import { StatIcon } from '../Components/Icons';
-import { ReadMore } from '../Components/ReadMore';
-import { Green, Sub, Red, White } from '../Components/Text';
-import { TextPreview } from '../Components/TextPreview';
-import { TooltipName } from '../Game/WindowManager';
-import dfstyles from '../Styles/dfstyles';
-import { useUIManager, useSelectedArtifact } from '../Utils/AppHooks';
-import { ModalHook, ModalPane } from '../Views/ModalPane';
-import { TimeUntil } from '../Components/TimeUntil';
-import { TooltipTrigger } from './Tooltip';
-import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
-import { Btn } from '../Components/Btn';
 import { ArtifactRarityLabelAnim, ArtifactTypeText } from '../Components/Labels/ArtifactLabels';
 import { ArtifactBiomeLabelAnim } from '../Components/Labels/BiomeLabels';
-
-const StyledArtifactPane = styled.div`
-  width: 24em;
-`;
+import { ReadMore } from '../Components/ReadMore';
+import { Green, Red, Sub, White } from '../Components/Text';
+import { TextPreview } from '../Components/TextPreview';
+import { TimeUntil } from '../Components/TimeUntil';
+import { TooltipName } from '../Game/WindowManager';
+import dfstyles from '../Styles/dfstyles';
+import { useArtifact, useUIManager } from '../Utils/AppHooks';
+import { ModalHandle } from '../Views/ModalPane';
+import { TooltipTrigger } from './Tooltip';
 
 const StatsContainer = styled.div`
   flex-grow: 1;
@@ -97,9 +91,6 @@ export function UpgradeStatInfo({
 }
 
 const StyledArtifactDetailsBody = styled.div`
-  width: 100%;
-  margin-top: 4px;
-
   & > div:first-child p {
     text-decoration: underline;
   }
@@ -127,7 +118,7 @@ const StyledArtifactDetailsBody = styled.div`
 `;
 
 const ArtifactName = styled.div`
-  color: white;
+  color: ${dfstyles.colors.text};
   font-weight: bold;
 `;
 
@@ -136,7 +127,7 @@ const ArtifactNameSubtitle = styled.div`
   margin-bottom: 8px;
 `;
 
-function HelpContent() {
+export function ArtifactDetailsHelpContent() {
   return (
     <div>
       <p>
@@ -149,15 +140,15 @@ function HelpContent() {
 }
 
 export function ArtifactDetailsBody({
-  artifactWrapper,
+  artifactId,
   contractConstants,
-  openConversationForArtifact,
 }: {
-  artifactWrapper: Wrapper<Artifact | undefined>;
+  artifactId: ArtifactId;
   contractConstants: ContractConstants;
-  openConversationForArtifact: (id: ArtifactId) => void;
+  modal: ModalHandle;
 }) {
   const uiManager = useUIManager();
+  const artifactWrapper = useArtifact(uiManager, artifactId);
   const artifact = artifactWrapper.value;
 
   if (!artifact) {
@@ -193,10 +184,6 @@ export function ArtifactDetailsBody({
     if (artifact.onPlanetId) uiManager?.setSelectedId(artifact.onPlanetId);
   };
 
-  const openConversation = () => {
-    openConversationForArtifact(artifact.id);
-  };
-
   let readyInStr = undefined;
 
   if (artifact.artifactType === ArtifactType.PhotoidCannon && isActivated(artifact)) {
@@ -211,7 +198,7 @@ export function ArtifactDetailsBody({
   }
 
   return (
-    <StyledArtifactPane>
+    <PaddedRecommendedModalWidth>
       <ArtifactName>{artifactName(artifact)}</ArtifactName>
       <ArtifactNameSubtitle>
         <ArtifactRarityLabelAnim artifact={artifact} />{' '}
@@ -275,37 +262,28 @@ export function ArtifactDetailsBody({
           </div>
         )}
         <Spacer height={8} />
-        <Btn wide color={dfstyles.colors.dfyellow} onClick={openConversation}>
-          Talk to {artifactName(artifact)}
-        </Btn>
+        {/* if one wanted to, one could add a 'next artifact' and 'previous artifact' button here */}
       </StyledArtifactDetailsBody>
-    </StyledArtifactPane>
+    </PaddedRecommendedModalWidth>
   );
 }
 
 export function ArtifactDetailsPane({
-  hook,
-  openConversationForArtifact,
+  modal,
+  artifactId,
 }: {
-  hook: ModalHook;
-  openConversationForArtifact: (id: ArtifactId) => void;
+  modal: ModalHandle;
+  artifactId: ArtifactId;
 }) {
   const uiManager = useUIManager();
   const contractConstants = uiManager.getContractConstants();
-  const artifactWrapper = useSelectedArtifact(uiManager);
-  const artifact = artifactWrapper.value;
 
   return (
-    <ModalPane hook={hook} title='Artifact Details' helpContent={HelpContent}>
-      {artifact && (
-        <ArtifactDetailsBody
-          artifactWrapper={artifactWrapper}
-          contractConstants={contractConstants}
-          openConversationForArtifact={openConversationForArtifact}
-        />
-      )}
-      {!artifact && <p>Please select an artifact.</p>}
-    </ModalPane>
+    <ArtifactDetailsBody
+      modal={modal}
+      artifactId={artifactId}
+      contractConstants={contractConstants}
+    />
   );
 }
 

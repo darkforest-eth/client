@@ -23,11 +23,11 @@
 
 #### Type declaration
 
-| Name           | Type              |
-| :------------- | :---------------- |
-| `children`     | `React.ReactNode` |
-| `headerItems?` | `React.ReactNode` |
-| `title`        | `string`          |
+| Name           | Type                                                  |
+| :------------- | :---------------------------------------------------- |
+| `children`     | `React.ReactNode`                                     |
+| `headerItems?` | `React.ReactNode`                                     |
+| `title`        | `string` \| (`small`: `boolean`) => `React.ReactNode` |
 
 ## Variables
 

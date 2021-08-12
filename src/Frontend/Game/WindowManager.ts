@@ -1,5 +1,5 @@
-import { EventEmitter } from 'events';
 import { WorldCoords } from '@darkforest_eth/types';
+import { EventEmitter } from 'events';
 import { GameWindowZIndex } from '../Utils/constants';
 
 // these should be relative to window
@@ -39,7 +39,6 @@ export const enum TooltipName {
   FindArtifact,
   ArtifactStored,
   SelectedSilver,
-  SelectedEnergy,
   Rank,
   Score,
   MiningPause,

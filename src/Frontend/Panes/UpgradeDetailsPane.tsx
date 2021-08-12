@@ -1,21 +1,22 @@
-import { UpgradeBranchName, Planet, PlanetType } from '@darkforest_eth/types';
-import _ from 'lodash';
+import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
+import { LocationId, Planet, PlanetType, UpgradeBranchName } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
 import {
-  isFullRank,
-  getPlanetRank,
   getPlanetMaxRank,
+  getPlanetRank,
+  isFullRank,
   upgradeName,
 } from '../../Backend/Utils/Utils';
-import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
-import { Gold, Red, Sub, Subber } from '../Components/Text';
-import { useUIManager, useSelectedPlanet, useAccount } from '../Utils/AppHooks';
-import { ModalHook, ModalName, ModalPane, RECOMMENDED_WIDTH } from '../Views/ModalPane';
-import { UpgradePreview } from '../Views/UpgradePreview';
 import { Btn } from '../Components/Btn';
+import { CenterBackgroundSubtext, Padded, Spacer } from '../Components/CoreUI';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
+import { Gold, Red, Sub, Subber } from '../Components/Text';
+import { useAccount, usePlanet, useUIManager } from '../Utils/AppHooks';
+import { useEmitterValue } from '../Utils/EmitterHooks';
+import { ModalHandle } from '../Views/ModalPane';
 import { TabbedView } from '../Views/TabbedView';
+import { UpgradePreview } from '../Views/UpgradePreview';
 
 const UpgradeDetailsWrapper = styled.div`
   width: 100%;
@@ -31,7 +32,7 @@ const SectionBuy = styled.div`
   margin-top: ${SECTION_MARGIN};
 `;
 
-function HelpContent() {
+export function UpgradeDetailsPaneHelpContent() {
   return (
     <div>
       <p>
@@ -67,23 +68,30 @@ function SilverRequired({ planet }: { planet: Planet }) {
   );
 }
 
-export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
+export function UpgradeDetailsPane({
+  initialPlanetId,
+  modal: _modal,
+}: {
+  modal: ModalHandle;
+  initialPlanetId: LocationId | undefined;
+}) {
   const uiManager = useUIManager();
-  const selected = useSelectedPlanet(uiManager).value;
+  const planetId = useEmitterValue(uiManager.selectedPlanetId$, initialPlanetId);
+  const planet = usePlanet(uiManager, planetId).value;
   const account = useAccount(uiManager);
-  const planetAtMaxRank = isFullRank(selected);
+  const planetAtMaxRank = isFullRank(planet);
 
   let content = (
-    <CenterBackgroundSubtext width='100%' height='100px'>
+    <CenterBackgroundSubtext width={RECOMMENDED_MODAL_WIDTH} height='100px'>
       Select a Planet <br /> You Own
     </CenterBackgroundSubtext>
   );
 
-  if (selected && account) {
-    if (selected.owner !== account) {
-    } else if (selected.planetType !== PlanetType.PLANET || selected.silverCap === 0) {
+  if (planet && account) {
+    if (planet.owner !== account) {
+    } else if (planet.planetType !== PlanetType.PLANET || planet.silverCap === 0) {
       content = (
-        <CenterBackgroundSubtext width='100%' height='100px'>
+        <CenterBackgroundSubtext width={RECOMMENDED_MODAL_WIDTH} height='100px'>
           This Planet <br /> is not Upgradeable
         </CenterBackgroundSubtext>
       );
@@ -93,22 +101,22 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
           <TabbedView
             tabTitles={['Defense', 'Range', 'Speed']}
             tabContents={(branch: UpgradeBranchName) => {
-              const currentLevel = selected.upgradeState[branch];
-              const branchAtMaxRank = !selected || selected.upgradeState[branch] >= 4;
+              const currentLevel = planet.upgradeState[branch];
+              const branchAtMaxRank = !planet || planet.upgradeState[branch] >= 4;
               const upgrade = branchAtMaxRank
                 ? undefined
                 : uiManager.getUpgrade(branch, currentLevel);
 
-              const totalLevel = selected.upgradeState.reduce((a, b) => a + b);
-              const silverNeeded = Math.floor((totalLevel + 1) * 0.2 * selected.silverCap);
-              const enoughSilver = selected.silver >= silverNeeded;
-              const isPendingUpgrade = selected.unconfirmedUpgrades.length > 0;
+              const totalLevel = planet.upgradeState.reduce((a, b) => a + b);
+              const silverNeeded = Math.floor((totalLevel + 1) * 0.2 * planet.silverCap);
+              const enoughSilver = planet.silver >= silverNeeded;
+              const isPendingUpgrade = planet.unconfirmedUpgrades.length > 0;
               const canUpgrade =
                 enoughSilver && !planetAtMaxRank && !branchAtMaxRank && !isPendingUpgrade;
 
               const doUpgrade = (branch: UpgradeBranchName) => {
                 if (canUpgrade) {
-                  uiManager.upgrade(selected, branch);
+                  uiManager.upgrade(planet, branch);
                 }
               };
 
@@ -117,17 +125,17 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
                   <SectionPreview>
                     <UpgradePreview
                       upgrade={upgrade}
-                      planet={selected}
+                      planet={planet}
                       branchName={branch}
                       cantUpgrade={planetAtMaxRank || branchAtMaxRank}
                     />
                   </SectionPreview>
                   <SectionBuy>
                     <div>
-                      <Sub>Silver Available</Sub>: <span>{selected.silver}</span>
+                      <Sub>Silver Available</Sub>: <span>{planet.silver}</span>
                     </div>
                     <div>
-                      <Sub>Silver Cost:</Sub> <SilverRequired planet={selected} />
+                      <Sub>Silver Cost:</Sub> <SilverRequired planet={planet} />
                     </div>
                     <div>
                       <Spacer height={8} />
@@ -162,15 +170,5 @@ export function UpgradeDetailsPane({ hook }: { hook: ModalHook }) {
     }
   }
 
-  return (
-    <ModalPane
-      hook={hook}
-      title={'Upgrade'}
-      name={ModalName.UpgradeDetails}
-      helpContent={HelpContent}
-      width={RECOMMENDED_WIDTH}
-    >
-      {content}
-    </ModalPane>
-  );
+  return <Padded>{content}</Padded>;
 }

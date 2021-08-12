@@ -8,20 +8,12 @@
 
 ### Variables
 
-- [BLOCK_EXPLORER_URL](Frontend_Utils_constants.md#block_explorer_url)
 - [HAT_SIZES](Frontend_Utils_constants.md#hat_sizes)
 - [LOCATION_ID_UB](Frontend_Utils_constants.md#location_id_ub)
 - [MAX_CHUNK_SIZE](Frontend_Utils_constants.md#max_chunk_size)
 - [MIN_CHUNK_SIZE](Frontend_Utils_constants.md#min_chunk_size)
-- [XDAI_CHAIN_ID](Frontend_Utils_constants.md#xdai_chain_id)
 
 ## Variables
-
-### BLOCK_EXPLORER_URL
-
-• `Const` **BLOCK_EXPLORER_URL**: `"https://blockscout.com/poa/xdai"`
-
----
 
 ### HAT_SIZES
 
@@ -50,9 +42,3 @@ the algorithms implemented in {@link ChunkUtils}.
 ### MIN_CHUNK_SIZE
 
 • `Const` **MIN_CHUNK_SIZE**: `16`
-
----
-
-### XDAI_CHAIN_ID
-
-• `Const` **XDAI_CHAIN_ID**: `100`

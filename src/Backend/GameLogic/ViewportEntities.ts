@@ -1,5 +1,5 @@
-import { LocatablePlanet, LocationId, PlanetLevel, WorldCoords } from '@darkforest_eth/types';
 import { MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
+import { LocatablePlanet, LocationId, PlanetLevel, WorldCoords } from '@darkforest_eth/types';
 import Viewport from '../../Frontend/Game/Viewport';
 import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import { planetLevelToAnimationSpeed, sinusoidalAnimation } from '../Utils/Animation';
@@ -203,11 +203,14 @@ export class ViewportEntities {
   private getVisiblePlanetLevels(viewport: Viewport) {
     const result = [];
 
+    const viewportWidthPx = viewport.worldToCanvasDist(viewport.getViewportWorldWidth());
+    const minPlanetSize = viewportWidthPx > 40_000 ? 3 : 1;
+
     for (let i = 0; i <= MAX_PLANET_LEVEL; i++) {
       const radiusW = this.uiManager.getRadiusOfPlanetLevel(i as PlanetLevel);
       const radiusPx = viewport.worldToCanvasDist(radiusW);
 
-      if (radiusPx >= 1) {
+      if (radiusPx >= minPlanetSize && radiusPx < viewportWidthPx * 3) {
         result.push(i);
       }
     }

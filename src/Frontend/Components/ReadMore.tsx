@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { useCallback } from 'react';
-import styled, { css } from 'styled-components';
-import dfstyles from '../Styles/dfstyles';
-import { Spacer } from './CoreUI';
+import React, { useCallback, useState } from 'react';
+import styled from 'styled-components';
+import { EmSpacer, TextButton } from './CoreUI';
 
 export function ReadMore({
   children,
   height,
+  text,
 }: {
   children: React.ReactChild[] | React.ReactChild;
   height?: string;
+  text?: string;
 }) {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -19,31 +19,17 @@ export function ReadMore({
 
   return (
     <>
-      <ReadMoreContainer collapsed={collapsed} height={height}>
+      <ContentContainer style={{ height: collapsed ? height : 'unset' }}>
         {children}
-      </ReadMoreContainer>
-      <Spacer height={4} />
-      <Toggle onClick={toggle} color={dfstyles.colors.subbertext}>
-        Read {collapsed ? 'More' : 'Less'}
-      </Toggle>
+      </ContentContainer>
+      {!collapsed && <EmSpacer height={0.1} />}
+      <TextButton style={{ fontSize: '80%' }} onClick={toggle}>
+        {text ?? (collapsed ? 'more' : 'less')} info
+      </TextButton>
     </>
   );
 }
 
-const Toggle = styled.span`
-  text-decoration: underline;
-  cursor: pointer;
-  color: ${dfstyles.colors.subtext};
-
-  &:hover {
-    color: white;
-  }
-`;
-
-const ReadMoreContainer = styled.div`
-  ${({ collapsed, height }: { collapsed: boolean; height?: string }) => css`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    ${collapsed && `max-height: ${height === undefined ? `50px` : height};`}
-  `}
+const ContentContainer = styled.div`
+  overflow: hidden;
 `;

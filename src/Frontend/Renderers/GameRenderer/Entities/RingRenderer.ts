@@ -1,11 +1,11 @@
-import { CanvasCoords } from '../../../../Backend/Utils/Coordinates';
 import { Planet, WorldCoords } from '@darkforest_eth/types';
+import { CanvasCoords } from '../../../../Backend/Utils/Coordinates';
 import Viewport from '../../../Game/Viewport';
 import { RGBVec } from '../EngineTypes';
 import EngineUtils from '../EngineUtils';
+import { propsFromIdx, RingProps, RING_PROGRAM_DEFINITION } from '../Programs/RingProgram';
 import { GameGLManager } from '../WebGL/GameGLManager';
 import { GenericRenderer } from '../WebGL/GenericRenderer';
-import { propsFromIdx, RingProps, RING_PROGRAM_DEFINITION } from '../Programs/RingProgram';
 
 export default class RingRenderer extends GenericRenderer<typeof RING_PROGRAM_DEFINITION> {
   viewport: Viewport;

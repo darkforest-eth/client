@@ -13,46 +13,46 @@ import { biomeName } from '../../Backend/GameLogic/ArtifactUtils';
 import { getRandomActionId } from '../../Backend/Utils/Utils';
 import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import {
-  FoundSpace,
-  FoundDeepSpace,
-  FoundSwamp,
-  Quasar,
-  FoundDeadSpace,
-  FoundPirates,
-  FoundSilver,
-  FoundTradingPost,
-  FoundComet,
-  FoundRuins,
-  FoundForest,
-  FoundGrassland,
-  FoundTundra,
-  FoundDesert,
-  FoundWasteland,
-  FoundLava,
-  FoundIce,
-  FoundOcean,
-  FoundCorrupted,
-  PlanetAttacked,
-  PlanetLost,
-  PlanetConquered,
   ArtifactFound,
   ArtifactProspected,
-  TxInitialized,
+  FoundComet,
+  FoundCorrupted,
+  FoundDeadSpace,
+  FoundDeepSpace,
+  FoundDesert,
+  FoundForest,
+  FoundGrassland,
+  FoundIce,
+  FoundLava,
+  FoundOcean,
+  FoundPirates,
+  FoundRuins,
+  FoundSilver,
+  FoundSpace,
+  FoundSwamp,
+  FoundTradingPost,
+  FoundTundra,
+  FoundWasteland,
+  PlanetAttacked,
+  PlanetConquered,
+  PlanetLost,
+  Quasar,
   TxAccepted,
   TxConfirmed,
   TxDeclined,
+  TxInitialized,
 } from '../Components/Icons';
 import {
-  ArtifactTypeText,
-  ArtifactRarityLabelAnim,
   ArtifactBiomeText,
+  ArtifactRarityLabelAnim,
+  ArtifactTypeText,
 } from '../Components/Labels/ArtifactLabels';
 import {
+  ArtifactNameLink,
   CenterChunkLink,
   FAQ04Link,
   PlanetNameLink,
   TxLink,
-  ArtifactNameLink,
 } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 
@@ -382,7 +382,7 @@ class NotificationManager extends EventEmitter {
       <span>
         You found a spacetime rip! Now you can move artifacts and silver in and out
         <br />
-        of the universe. Moving silver through a spacetime rip increases your score! <br />
+        of the universe. <br />
         Click to view <PlanetNameLink planet={planet} />.
       </span>
     );
@@ -423,8 +423,8 @@ class NotificationManager extends EventEmitter {
     this.notify(
       NotificationType.FoundFoundry,
       <span>
-        You have found a planet that can produce an artifact! Finding artifacts increases your
-        score. Also, artifacts can be used to power up your planets and moves! <br />
+        You have found a planet that can produce an artifact! Artifacts can be used to power up your
+        planets and moves! <br />
         Click to view <PlanetNameLink planet={planet} />
       </span>
     );

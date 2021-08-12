@@ -1,17 +1,17 @@
 import { Planet, PlanetType } from '@darkforest_eth/types';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import { Wrapper } from '../../Backend/Utils/Wrapper';
+import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import { CenterBackgroundSubtext } from '../Components/CoreUI';
-import { Input } from '../Components/Input';
-import { LoadingSpinner } from '../Components/LoadingSpinner';
-import { SilverLabelTip, ScoreLabelTip } from '../Components/Labels/KeywordLabels';
-import { Red, Sub, White } from '../Components/Text';
-import { useUIManager } from '../Utils/AppHooks';
 import { SpacedFlexRow } from '../Components/FlexRows';
-import { Hook } from '../../_types/global/GlobalTypes';
+import { Input } from '../Components/Input';
+import { ScoreLabelTip, SilverLabelTip } from '../Components/Labels/KeywordLabels';
+import { LoadingSpinner } from '../Components/LoadingSpinner';
+import { Red, Sub, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { Wrapper } from '../../Backend/Utils/Wrapper';
+import { useUIManager } from '../Utils/AppHooks';
 
 const StyledWithdrawSilver = styled.div`
   display: flex;

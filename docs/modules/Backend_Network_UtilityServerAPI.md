@@ -12,12 +12,14 @@
 
 ### Functions
 
+- [disconnectTwitter](Backend_Network_UtilityServerAPI.md#disconnecttwitter)
 - [getAllTwitters](Backend_Network_UtilityServerAPI.md#getalltwitters)
 - [requestDevFaucet](Backend_Network_UtilityServerAPI.md#requestdevfaucet)
 - [submitInterestedEmail](Backend_Network_UtilityServerAPI.md#submitinterestedemail)
 - [submitPlayerEmail](Backend_Network_UtilityServerAPI.md#submitplayeremail)
 - [submitUnsubscribeEmail](Backend_Network_UtilityServerAPI.md#submitunsubscribeemail)
 - [submitWhitelistKey](Backend_Network_UtilityServerAPI.md#submitwhitelistkey)
+- [tryGetAllTwitters](Backend_Network_UtilityServerAPI.md#trygetalltwitters)
 - [verifyTwitterHandle](Backend_Network_UtilityServerAPI.md#verifytwitterhandle)
 
 ## Variables
@@ -27,6 +29,22 @@
 • `Const` **WEBSERVER_URL**: `string`
 
 ## Functions
+
+### disconnectTwitter
+
+▸ `Const` **disconnectTwitter**(`disconnectMessage`): `Promise`<`boolean`\>
+
+#### Parameters
+
+| Name                | Type                       |
+| :------------------ | :------------------------- |
+| `disconnectMessage` | `SignedMessage`<`Object`\> |
+
+#### Returns
+
+`Promise`<`boolean`\>
+
+---
 
 ### getAllTwitters
 
@@ -120,16 +138,28 @@
 
 ---
 
+### tryGetAllTwitters
+
+▸ `Const` **tryGetAllTwitters**(): `Promise`<[`AddressTwitterMap`](_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
+
+Swallows all errors. Either loads the address to twitter map from the webserver in 5 seconds, or
+returan empty map.
+
+#### Returns
+
+`Promise`<[`AddressTwitterMap`](_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
+
+---
+
 ### verifyTwitterHandle
 
-▸ `Const` **verifyTwitterHandle**(`twitter`, `address`): `Promise`<`boolean`\>
+▸ `Const` **verifyTwitterHandle**(`verifyMessage`): `Promise`<`boolean`\>
 
 #### Parameters
 
-| Name      | Type         |
-| :-------- | :----------- |
-| `twitter` | `string`     |
-| `address` | `EthAddress` |
+| Name            | Type                       |
+| :-------------- | :------------------------- |
+| `verifyMessage` | `SignedMessage`<`Object`\> |
 
 #### Returns
 

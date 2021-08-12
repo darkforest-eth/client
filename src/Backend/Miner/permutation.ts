@@ -1,7 +1,7 @@
-import { Rectangle } from '../../_types/global/GlobalTypes';
 import { fakeHash, perlin, seededRandom } from '@darkforest_eth/hashing';
-import { WorldLocation, WorldCoords } from '@darkforest_eth/types';
 import { locationIdFromBigInt } from '@darkforest_eth/serde';
+import { WorldCoords, WorldLocation } from '@darkforest_eth/types';
+import { Rectangle } from '../../_types/global/GlobalTypes';
 
 type IdxWithRand = {
   idx: number;

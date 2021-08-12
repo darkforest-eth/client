@@ -1,130 +1,77 @@
 import React from 'react';
-import { ModalName, ModalPane, ModalHook } from '../Views/ModalPane';
 import styled from 'styled-components';
-import TutorialManager from '../../Backend/GameLogic/TutorialManager';
+import { EmSpacer, Link, Padded, Section, SectionHeader } from '../Components/CoreUI';
 import { White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { MythicLabel } from '../Components/Labels/MythicLabel';
-import { ScoreLabel } from '../Components/Labels/KeywordLabels';
-import { LegendaryLabel } from '../Components/Labels/LegendaryLabel';
 import { useUIManager } from '../Utils/AppHooks';
+import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 
-const HelpWrapper = styled.div`
-  width: 36em;
-  height: 30em;
+const HelpContent = styled(Padded)`
+  width: 500px;
+  height: 500px;
+  max-height: 500px;
+  max-width: 500px;
   overflow-y: scroll;
-
-  & p,
-  ul {
-    color: ${dfstyles.colors.subtext};
-    margin-top: 0.5em;
-    &.title {
-      color: ${dfstyles.colors.text};
-      text-decoration: underline;
-      font-size: 1.5em;
-    }
-  }
-  & ul {
-    list-style: inside;
-    list-style-position: outside;
-    margin-left: 1em;
-    margin-right: 1em;
-    & > li {
-      margin: 0 1em;
-    }
-  }
-
-  & a {
-    text-decoration: underline;
-    cursor: pointer;
-  }
-`;
-
-const BlueBG = styled.span`
-  background: ${dfstyles.colors.dfblue};
+  text-align: justify;
   color: ${dfstyles.colors.text};
 `;
 
-// TODO: make this pane aware of end time
 export function HelpPane({ hook }: { hook: ModalHook }) {
-  const uiManager = useUIManager();
-
   return (
     <ModalPane hook={hook} title='Help' name={ModalName.Help}>
-      <HelpWrapper>
-        <p>
-          This window gives additional information about the game. When you are done reading, click
-          the <White>X</White> in the upper-right corner to close this window.
-        </p>
-        {/*isOver && (
-          <>
-            <p className='title'>Round 2 Complete</p>
-            <p>
-              Dark Forest v0.6 Round 2 is now complete! Scores are being compiled and winners will
-              be announced shortly. Also, Artifacts will no longer be mintable. Thanks for playing!
-            </p>
-          </>
-        )*/}
-        <p className='title'>Dark Forest v0.6 Round 2 - Inspired Hallowed</p>
-        <p>
-          <a onClick={() => window.open('https://blog.zkga.me')}>Official Info and Announcements</a>
-        </p>
-        <p>
-          <a onClick={() => TutorialManager.getInstance().reset(uiManager.getAccount())}>
-            Reset Tutorial
-          </a>
-        </p>
+      <HelpContent>
+        {useUIManager().isRoundOver() && (
+          <Section>
+            <SectionHeader>Round 3 Complete</SectionHeader>
+            Dark Forest v0.6 Round 3 is now complete! Scores are being compiled and winners will be
+            announced shortly. Also, Artifacts will no longer be mintable. Thanks for playing!
+          </Section>
+        )}
 
-        <p className='title'>Welcome!</p>
-        <p>
-          This window gives additional information about the game. When you are done reading, click
-          the <White>X</White> in the upper-right corner to close this window.
-        </p>
-        <p>
-          You can reopen this window anytime by clicking the question mark icon on the{' '}
-          <White>Menu Bar</White>, in the top left.
-        </p>
-        <p></p>
-        <p className='title'>The Universe</p>
-        <p>
+        <Section>
+          <SectionHeader>Firstly, Some Links:</SectionHeader>
+          <Link to='https://blog.zkga.me'>Official Info and Announcements</Link>
+          <br />
+          <Link to='https://discord.gg/2u2TN6v8r6'>Official Discord Server</Link>
+          <br />
+          <Link to='https://dfwiki.net/'>Community-Run Wiki</Link>
+          <br />
+          <br />
+          Secondly... welcome to
+        </Section>
+
+        <Section>
+          <SectionHeader>Dark Forest v0.6 R3: Grape Extra-Small</SectionHeader>
           Dark Forest is a vast universe, obfuscated by zero-knowledge cryptography. Your{' '}
-          <White>Explorer</White> explores the universe, searching for <White>Planets</White> and
-          other players.
-        </p>
-        <p>
-          All planets produce <White>Energy</White>. You can move energy from planets you own to new
-          planets to conquer them.
-        </p>
-        <p>
+          <White>explorer</White> (bottom left) explores the universe, searching for{' '}
+          <White>Planets</White> and other players.
+          <EmSpacer height={1} />
+          All planets produce <White>Energy</White>. You can click-drag to move energy from planets
+          you own to new planets to conquer them.
+          <EmSpacer height={1} />
           Also scattered through the universe are <White>Asteroid Fields</White>, which produce{' '}
           <White>Silver</White>. Silver can be sent to planets and can be spent on{' '}
-          <White>Upgrades</White>. Withdrawing silver from spacetime rips increases your{' '}
-          <ScoreLabel />.
-        </p>
-        <p>
-          Some planets contain <White>Artifacts</White> - ERC721 tokens that can be traded with
-          other players. Artifacts can be harvested and deposited onto planets, buffing their stats.
-          Harvesting artifacts also increases your <ScoreLabel />
-        </p>
-        <p>
-          If you need help, click "Reset Tutorial" above, or check out the FAQ. You can also hold
-          down <White>CTRL</White> and hover over anything that is highlighted <BlueBG>Blue</BlueBG>{' '}
-          to learn more about it!
-        </p>
-        <p className='title'>Prizes and Scoring</p>
-        <p>
-          A snapshot of scores will be taken on <White>July 3, 2021</White> at 9PM Pacific Time. At
-          that time, the top 63 highest-scoring players will be awarded prizes from a pool 63 prize
-          planets. You can see the current rankings by scrolling down on the landing page of the
-          game.
-        </p>
-        <p>
-          Your score is determined by the total amount of <White>Silver</White> you have withdrawn
-          from the universe, plus additional bonuses for finding artifacts. Artifacts of different
-          rarities are worth different amounts of points: Common are 5k, Rare are 20k, Epic are
-          200k, <LegendaryLabel /> are 3M, and <MythicLabel /> are 20M.
-        </p>
-      </HelpWrapper>
+          <White>Upgrades</White>.
+          <EmSpacer height={1} /> Some planets contain <White>Artifacts</White> - ERC721 tokens that
+          can be traded with other players. Artifacts can be harvested and deposited onto planets,
+          buffing their stats.
+        </Section>
+
+        <Section>
+          <SectionHeader>Prizes and Scoring</SectionHeader>A snapshot of scores will be taken on{' '}
+          <White>August 22, 2021</White> at 9AM Pacific Time. At that time, the top 63
+          highest-scoring players will be awarded prizes from a pool 63 prize planets. You can see
+          the current rankings by scrolling down on the landing page of the game.
+          <EmSpacer height={1} />
+          This round is a race to the center. You can <White>claim</White> any level 3+ planet that
+          you own; there is a 3 hour cooldown on claiming planets. Your score at the end of the
+          round is the distance of your closest claimed planet from the center (0, 0).
+          <EmSpacer height={1} />
+          Note that planets that are destroyed with black domain artifacts do not count towards
+          score, and other players can conquer and claim planets you've already claimed, overwriting
+          your claim!
+        </Section>
+      </HelpContent>
     </ModalPane>
   );
 }

@@ -1,14 +1,14 @@
-import { Dispatch, SetStateAction } from 'react';
 import {
+  EmojiFlagBody,
+  LocatablePlanet,
   LocationId,
   Planet,
-  LocatablePlanet,
+  PlanetMessage,
+  PlanetMessageType,
   WorldCoords,
   WorldLocation,
-  EmojiFlagBody,
-  PlanetMessageType,
-  PlanetMessage,
 } from '@darkforest_eth/types';
+import { Dispatch, SetStateAction } from 'react';
 import GameManager from '../../Backend/GameLogic/GameManager';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 
@@ -97,4 +97,10 @@ export interface RevealCountdownInfo {
   myLastRevealTimestamp?: number; // if undefined, never revealed before
   currentlyRevealing: boolean; // true iff player has an unconfirmedReveal currently being processed
   revealCooldownTime: number; // in seconds
+}
+
+export interface ClaimCountdownInfo {
+  myLastClaimTimestamp?: number; // if undefined, never revealed before
+  currentlyClaiming: boolean; // true iff player has an unconfirmedReveal currently being processed
+  claimCooldownTime: number; // in seconds
 }

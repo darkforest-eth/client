@@ -14,7 +14,7 @@ export const BiomeTextColors = {
   [Biome.ICE]: 'hsl(198, 78%, 77%)',
   [Biome.WASTELAND]: '#000000',
   [Biome.LAVA]: '#FF5100',
-  [Biome.CORRUPTED]: '#bf5bf1',
+  [Biome.CORRUPTED]: '#8DF15B',
 } as const;
 
 export const BiomeBackgroundColors = {
@@ -28,7 +28,7 @@ export const BiomeBackgroundColors = {
   [Biome.ICE]: '#0d212f',
   [Biome.WASTELAND]: '#321b1b',
   [Biome.LAVA]: '#321000',
-  [Biome.CORRUPTED]: '#1e0d26',
+  [Biome.CORRUPTED]: '#15260D',
 } as const;
 
 export const ANCIENT_PURPLE = '#d23191';

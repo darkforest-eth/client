@@ -1,7 +1,7 @@
-import styled, { css } from 'styled-components';
-import dfstyles from '../Styles/dfstyles';
 import React, { Dispatch, SetStateAction, useLayoutEffect } from 'react';
+import styled, { css } from 'styled-components';
 import { InitRenderState } from '../Pages/GameLandingPage';
+import dfstyles from '../Styles/dfstyles';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 
 type LandingWrapperProps = {
@@ -59,7 +59,7 @@ const StyledTerminalWrapper = styled.div<{
   }};
   border-left: ${({ terminalEnabled, initRender }) =>
     terminalEnabled && initRender !== InitRenderState.NONE
-      ? `1px solid ${dfstyles.colors.text}`
+      ? `1px solid ${dfstyles.colors.border}`
       : 'none'};
   height: 100%;
   // overflow: hidden;

@@ -1,8 +1,8 @@
+import { Planet, WorldCoords } from '@darkforest_eth/types';
 import { ProcgenUtils } from '../../../../Backend/Procedural/ProcgenUtils';
 import { CanvasCoords } from '../../../../Backend/Utils/Coordinates';
-import { Planet, WorldCoords } from '@darkforest_eth/types';
 import Viewport from '../../../Game/Viewport';
-import { RGBVec, DrawMode } from '../EngineTypes';
+import { DrawMode, RGBVec } from '../EngineTypes';
 import EngineUtils from '../EngineUtils';
 import { MINE_PROGRAM_DEFINITION } from '../Programs/MineProgram';
 import { GenericRenderer } from '../WebGL/GenericRenderer';

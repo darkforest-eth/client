@@ -1,15 +1,14 @@
-import _ from 'lodash';
-import React, { useCallback, useState } from 'react';
+import { Artifact, LocatablePlanet, PlanetType, Upgrade } from '@darkforest_eth/types';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
+import { isActivated } from '../../../Backend/GameLogic/ArtifactUtils';
+import { Spacer } from '../../Components/CoreUI';
+import { ModalHandle } from '../../Views/ModalPane';
+import { ArtifactActions } from './ArtifactActions';
+import { ArtifactsList } from './ArtifactsList';
 import { Find } from './Find';
 import { Prospect } from './Prospect';
 import { SortBy } from './SortBy';
-import { ArtifactsList } from './ArtifactsList';
-import { ArtifactActions } from './ArtifactActions';
-import { useEffect } from 'react';
-import { isActivated } from '../../../Backend/GameLogic/ArtifactUtils';
-import { Spacer } from '../../Components/CoreUI';
-import { Artifact, ArtifactId, LocatablePlanet, PlanetType, Upgrade } from '@darkforest_eth/types';
 
 function anyArtifactMaybeActive(artifacts: Array<Artifact | undefined>) {
   return !!artifacts.find(
@@ -24,13 +23,13 @@ export function ManageArtifactsPane({
   currentBlockNumber,
   playerAddress,
   roundOver,
-  openArtifactDetails,
   prospect,
   find,
   activate,
   deactivate,
   deposit,
   withdraw,
+  modal,
 }: {
   planet: LocatablePlanet;
   artifactsInInventory: Artifact[];
@@ -38,13 +37,13 @@ export function ManageArtifactsPane({
   currentBlockNumber: number | undefined;
   playerAddress: string;
   roundOver: boolean;
-  openArtifactDetails: (artifactId: ArtifactId) => void;
   prospect: () => void;
   find: () => void;
   activate: (artifact: Artifact) => void;
   deactivate: (artifact: Artifact) => void;
   deposit: (artifact: Artifact) => void;
   withdraw: (artifact: Artifact) => void;
+  modal: ModalHandle;
 }) {
   const isMyTradingPost =
     planet.owner === playerAddress && planet.planetType === PlanetType.TRADING_POST;
@@ -112,14 +111,19 @@ export function ManageArtifactsPane({
 
   return (
     <>
-      {action}
-      {action && <Spacer height={16} />}
+      {action && (
+        <>
+          <Spacer height={8} />
+          {action}
+          <Spacer height={8} />
+        </>
+      )}
       <SortBy sortBy={sortBy} setSortBy={setSortBy} />
       <Spacer height={4} />
       <ArtifactsList
         artifacts={viewingDepositList ? artifactsInInventory : artifactsOnPlanet}
         sortBy={sortBy}
-        openArtifactDetails={openArtifactDetails}
+        modal={modal}
         actions={artifactActions}
       />
       <Spacer height={4} />

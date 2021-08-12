@@ -2,23 +2,26 @@ import React, { useCallback, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { Input } from './Input';
 
-const DEFAULT_UNFOCUSED_WIDTH = 50;
-const DEFAULT_FOCUSED_WIDTH = 150;
+const DEFAULT_UNFOCUSED_WIDTH = '50px';
+const DEFAULT_FOCUSED_WIDTH = '150px';
 
 export function TextPreview({
   text,
-  unFocusedWidthPx,
-  focusedWidthPx,
+  unFocusedWidth,
+  focusedWidth,
+  style,
 }: {
-  text: string;
-  unFocusedWidthPx?: number;
-  focusedWidthPx?: number;
+  text?: string;
+  unFocusedWidth?: string;
+  focusedWidth?: string;
   maxLength?: number;
+  style?: React.CSSProperties;
 }) {
   const [isTextBox, setIsTextbox] = useState(false);
   const [inputRef, setInputRef] = useState<HTMLInputElement | null>(null);
 
-  const onClick = useCallback(() => {
+  const onClick = useCallback((e: React.SyntheticEvent) => {
+    e.stopPropagation();
     setIsTextbox(true);
   }, []);
 
@@ -36,41 +39,50 @@ export function TextPreview({
 
   if (isTextBox) {
     return (
-      <PreviewTextInput
-        width={focusedWidthPx === undefined ? DEFAULT_FOCUSED_WIDTH : focusedWidthPx}
-        value={text}
-        onChange={() => {}}
-        onBlur={onBlur}
-        ref={(element: HTMLInputElement) => setInputRef(element)}
-      />
+      <InputContainer style={style} width={focusedWidth || DEFAULT_FOCUSED_WIDTH}>
+        <PreviewTextInput
+          value={text || ''}
+          onChange={() => {}}
+          onBlur={onBlur}
+          ref={(element: HTMLInputElement) => setInputRef(element)}
+        />
+      </InputContainer>
     );
   }
 
   return (
     <ShortenedText
-      width={unFocusedWidthPx === undefined ? DEFAULT_UNFOCUSED_WIDTH : unFocusedWidthPx}
+      style={style}
+      width={unFocusedWidth || DEFAULT_UNFOCUSED_WIDTH}
       onClick={onClick}
     >
-      {text}
+      {text || ''}
     </ShortenedText>
   );
 }
 
 const ShortenedText = styled.span`
-  ${({ width }: { width: number }) => css`
+  ${({ width }: { width: string }) => css`
     cursor: zoom-in;
-    display: block;
-    width: ${width}px;
+    display: inline-block;
+    width: ${width};
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    vertical-align: bottom;
+  `}
+`;
+
+const InputContainer = styled.div`
+  ${({ width }: { width: string }) => css`
+    display: inline-block;
+    width: ${width};
   `}
 `;
 
 const PreviewTextInput = styled(Input)`
-  ${({ width }: { width: number }) => css`
-    width: ${width}px;
-    padding: 2px 4px;
-    display: block;
-  `}
+  padding: 2px 4px;
+  box-sizing: border-box;
+  display: inline-block;
+  width: 100%;
 `;

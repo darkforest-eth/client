@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from 'react';
-import styled, { keyframes, css } from 'styled-components';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import styled, { css, keyframes } from 'styled-components';
 import WindowManager, { TooltipName, WindowManagerEvent } from '../Game/WindowManager';
-import dfstyles from '../Styles/dfstyles';
-import { useControlDown } from '../Utils/AppHooks';
+import dfstyles, { snips } from '../Styles/dfstyles';
 import { GameWindowZIndex } from '../Utils/constants';
 import { TooltipContent } from './TooltipPanes';
 
@@ -32,43 +31,25 @@ const _animation = css`
 
 // ${(props) => (props.anim ? animation : 'animation: none;')}
 const StyledTooltipTrigger = styled.span<{
-  anim: boolean;
   display?: DisplayType;
 }>`
   border-radius: 2px;
-  transition: background-color 0.2s;
-  background-color: ${(props) => (props.anim ? dfstyles.colors.dfblue : 'none')};
-
   display: ${(props) => props.display || 'inline'};
 `;
 
-export function TooltipTrigger({
-  children,
-  name,
-  needsCtrl,
-  display,
-  style,
-  className,
-}: TooltipProps) {
-  // the model for this is a state machine on the state of {hovering, ctrl -> shouldShow}
-  const ctrl = useControlDown();
-  const shouldShow = useMemo(() => !needsCtrl || (needsCtrl && ctrl), [ctrl, needsCtrl]);
+export function TooltipTrigger({ children, name, display, style, className }: TooltipProps) {
+  const windowManager = WindowManager.getInstance();
   const [hovering, setHovering] = useState<boolean>(false);
 
-  const active = useMemo(() => shouldShow && hovering, [shouldShow, hovering]);
-
-  const windowManager = WindowManager.getInstance();
-
   useEffect(() => {
-    windowManager.setTooltip(active ? name : TooltipName.None);
-  }, [active, windowManager, name]);
+    windowManager.setTooltip(hovering ? name : TooltipName.None);
+  }, [hovering, windowManager, name]);
 
   return (
     <StyledTooltipTrigger
       display={display}
       style={{ ...style }}
       className={className}
-      anim={ctrl}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
@@ -80,15 +61,15 @@ export function TooltipTrigger({
 const StyledTooltip = styled.div<{
   visible: boolean;
 }>`
+  ${snips.defaultModalWidth}
   position: absolute;
-  width: fit-content;
-  height: fit-content;
   min-height: 1em;
   min-width: 5em;
-  border: 1px solid ${dfstyles.colors.subtext};
+  border: 1px solid ${dfstyles.colors.border};
   background: ${dfstyles.colors.background};
   padding: 0.5em;
   border-radius: 3px;
+  text-align: justify;
 
   z-index: ${GameWindowZIndex.Tooltip};
   display: ${(props) => (props.visible ? 'block' : 'none')};

@@ -1,5 +1,5 @@
-import { Rectangle } from '../../_types/global/GlobalTypes';
 import { WorldCoords } from '@darkforest_eth/types';
+import { Rectangle } from '../../_types/global/GlobalTypes';
 
 export const enum MiningPatternType {
   Home,

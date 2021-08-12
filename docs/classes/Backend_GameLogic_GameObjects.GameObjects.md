@@ -16,6 +16,7 @@ Representation of the objects which exist in the world.
 - [arrivals](Backend_GameLogic_GameObjects.GameObjects.md#arrivals)
 - [artifactUpdated$](Backend_GameLogic_GameObjects.GameObjects.md#artifactupdated$)
 - [artifacts](Backend_GameLogic_GameObjects.GameObjects.md#artifacts)
+- [claimedLocations](Backend_GameLogic_GameObjects.GameObjects.md#claimedlocations)
 - [contractConstants](Backend_GameLogic_GameObjects.GameObjects.md#contractconstants)
 - [coordsToLocation](Backend_GameLogic_GameObjects.GameObjects.md#coordstolocation)
 - [isBuyingCredits$](Backend_GameLogic_GameObjects.GameObjects.md#isbuyingcredits$)
@@ -32,6 +33,7 @@ Representation of the objects which exist in the world.
 - [touchedPlanetIds](Backend_GameLogic_GameObjects.GameObjects.md#touchedplanetids)
 - [unconfirmedBuyGPTCredits](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedbuygptcredits)
 - [unconfirmedBuyHats](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedbuyhats)
+- [unconfirmedClaim](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedclaim)
 - [unconfirmedMoves](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedmoves)
 - [unconfirmedPlanetTransfers](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedplanettransfers)
 - [unconfirmedReveal](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedreveal)
@@ -57,6 +59,7 @@ Representation of the objects which exist in the world.
 - [getArtifactsOnPlanetsOwnedBy](Backend_GameLogic_GameObjects.GameObjects.md#getartifactsonplanetsownedby)
 - [getArtifactsOwnedBy](Backend_GameLogic_GameObjects.GameObjects.md#getartifactsownedby)
 - [getBiome](Backend_GameLogic_GameObjects.GameObjects.md#getbiome)
+- [getClaimedLocations](Backend_GameLogic_GameObjects.GameObjects.md#getclaimedlocations)
 - [getEnergyCurveAtPercent](Backend_GameLogic_GameObjects.GameObjects.md#getenergycurveatpercent)
 - [getIsBuyingCreditsEmitter](Backend_GameLogic_GameObjects.GameObjects.md#getisbuyingcreditsemitter)
 - [getLocationOfPlanet](Backend_GameLogic_GameObjects.GameObjects.md#getlocationofplanet)
@@ -69,10 +72,13 @@ Representation of the objects which exist in the world.
 - [getPlanetWithCoords](Backend_GameLogic_GameObjects.GameObjects.md#getplanetwithcoords)
 - [getPlanetWithId](Backend_GameLogic_GameObjects.GameObjects.md#getplanetwithid)
 - [getPlanetWithLocation](Backend_GameLogic_GameObjects.GameObjects.md#getplanetwithlocation)
+- [getPlanetsInWorldCircle](Backend_GameLogic_GameObjects.GameObjects.md#getplanetsinworldcircle)
 - [getPlanetsInWorldRectangle](Backend_GameLogic_GameObjects.GameObjects.md#getplanetsinworldrectangle)
+- [getPlanetsWithIds](Backend_GameLogic_GameObjects.GameObjects.md#getplanetswithids)
 - [getRevealedLocations](Backend_GameLogic_GameObjects.GameObjects.md#getrevealedlocations)
 - [getSilverCurveAtPercent](Backend_GameLogic_GameObjects.GameObjects.md#getsilvercurveatpercent)
 - [getUnconfirmedBuyGPTCredits](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedbuygptcredits)
+- [getUnconfirmedClaim](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedclaim)
 - [getUnconfirmedMoves](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedmoves)
 - [getUnconfirmedReveal](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedreveal)
 - [getUnconfirmedUpgrades](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedupgrades)
@@ -88,6 +94,7 @@ Representation of the objects which exist in the world.
 - [replaceArtifactsFromContractData](Backend_GameLogic_GameObjects.GameObjects.md#replaceartifactsfromcontractdata)
 - [replacePlanetFromContractData](Backend_GameLogic_GameObjects.GameObjects.md#replaceplanetfromcontractdata)
 - [setArtifact](Backend_GameLogic_GameObjects.GameObjects.md#setartifact)
+- [setClaimedLocation](Backend_GameLogic_GameObjects.GameObjects.md#setclaimedlocation)
 - [setPlanet](Backend_GameLogic_GameObjects.GameObjects.md#setplanet)
 - [spaceTypeFromPerlin](Backend_GameLogic_GameObjects.GameObjects.md#spacetypefromperlin)
 - [updatePlanet](Backend_GameLogic_GameObjects.GameObjects.md#updateplanet)
@@ -100,7 +107,7 @@ Representation of the objects which exist in the world.
 
 ### constructor
 
-• **new GameObjects**(`address`, `touchedPlanets`, `allTouchedPlanetIds`, `revealedLocations`, `artifacts`, `allChunks`, `unprocessedArrivals`, `unprocessedPlanetArrivalIds`, `contractConstants`, `worldRadius`)
+• **new GameObjects**(`address`, `touchedPlanets`, `allTouchedPlanetIds`, `revealedLocations`, `claimedLocations`, `artifacts`, `allChunks`, `unprocessedArrivals`, `unprocessedPlanetArrivalIds`, `contractConstants`, `worldRadius`)
 
 #### Parameters
 
@@ -110,6 +117,7 @@ Representation of the objects which exist in the world.
 | `touchedPlanets`              | `Map`<`LocationId`, `Planet`\>                                                                    |
 | `allTouchedPlanetIds`         | `Set`<`LocationId`\>                                                                              |
 | `revealedLocations`           | `Map`<`LocationId`, `RevealedLocation`\>                                                          |
+| `claimedLocations`            | `Map`<`LocationId`, `ClaimedLocation`\>                                                           |
 | `artifacts`                   | `Map`<`ArtifactId`, `Artifact`\>                                                                  |
 | `allChunks`                   | `Iterable`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>                                        |
 | `unprocessedArrivals`         | `Map`<`VoyageId`, `QueuedArrival`\>                                                               |
@@ -141,7 +149,7 @@ cancelled for whatever reason.
 
 ### artifactUpdated$
 
-• `Readonly` **artifactUpdated$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`ArtifactId`\>
+• `Readonly` **artifactUpdated$**: `Monomitter`<`ArtifactId`\>
 
 Event emitter which publishes whenever an artifact has been updated.
 
@@ -154,6 +162,16 @@ Event emitter which publishes whenever an artifact has been updated.
 Cached index of all known artifact data.
 
 **`see`** The same warning applys as the one on [GameObjects.planets](Backend_GameLogic_GameObjects.GameObjects.md#planets)
+
+---
+
+### claimedLocations
+
+• `Private` `Readonly` **claimedLocations**: `Map`<`LocationId`, `ClaimedLocation`\>
+
+Map from location ids to, if that location id has been claimed on-chain, the world coordinates
+of that location id, as well as some extra information regarding the circumstances of the
+revealing of this planet.
 
 ---
 
@@ -179,7 +197,7 @@ information about the world at that location.
 
 ### isBuyingCredits$
 
-• `Readonly` **isBuyingCredits$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`boolean`\>
+• `Readonly` **isBuyingCredits$**: `Monomitter`<`boolean`\>
 
 Event emitter which publishes whenever the player begins and finishes (whether with a success
 or an error) buying gpt credits.
@@ -209,7 +227,7 @@ Cached index of artifacts owned by the player.
 
 ### myArtifactsUpdated$
 
-• `Readonly` **myArtifactsUpdated$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`Map`<`ArtifactId`, `Artifact`\>\>
+• `Readonly` **myArtifactsUpdated$**: `Monomitter`<`Map`<`ArtifactId`, `Artifact`\>\>
 
 Whenever one of the player's artifacts are updated, this event emitter publishes. See
 [GameObjects.myPlanetsUpdated$](Backend_GameLogic_GameObjects.GameObjects.md#myplanetsupdated$) for more info.
@@ -228,7 +246,7 @@ Cached index of planets owned by the player.
 
 ### myPlanetsUpdated$
 
-• `Readonly` **myPlanetsUpdated$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`Map`<`LocationId`, `Planet`\>\>
+• `Readonly` **myPlanetsUpdated$**: `Monomitter`<`Map`<`LocationId`, `Planet`\>\>
 
 Whenever a planet is updated, we publish to this event with a reference to a map from location
 id to planet. We need to rethink this event emitter because it currently publishes every time
@@ -259,7 +277,7 @@ this planet is located, if this client happens to know the coordinates of this p
 
 ### planetUpdated$
 
-• `Readonly` **planetUpdated$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`LocationId`\>
+• `Readonly` **planetUpdated$**: `Monomitter`<`LocationId`\>
 
 Event emitter which publishes whenever a planet is updated.
 
@@ -314,6 +332,12 @@ Set of all planet ids that we know have been interacted-with on-chain.
 ### unconfirmedBuyHats
 
 • `Private` `Readonly` **unconfirmedBuyHats**: `Record`<`string`, `UnconfirmedBuyHat`\>
+
+---
+
+### unconfirmedClaim
+
+• `Private` `Optional` **unconfirmedClaim**: `UnconfirmedClaim`
 
 ---
 
@@ -646,6 +670,16 @@ if the artifact is not on either, then it is the owner of the artifact NFT
 
 ---
 
+### getClaimedLocations
+
+▸ **getClaimedLocations**(): `Map`<`LocationId`, `ClaimedLocation`\>
+
+#### Returns
+
+`Map`<`LocationId`, `ClaimedLocation`\>
+
+---
+
 ### getEnergyCurveAtPercent
 
 ▸ **getEnergyCurveAtPercent**(`planet`, `percent`): `number`
@@ -668,11 +702,11 @@ time may be in the past
 
 ### getIsBuyingCreditsEmitter
 
-▸ **getIsBuyingCreditsEmitter**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`boolean`\>
+▸ **getIsBuyingCreditsEmitter**(): `Monomitter`<`boolean`\>
 
 #### Returns
 
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`boolean`\>
+`Monomitter`<`boolean`\>
 
 ---
 
@@ -772,7 +806,7 @@ time may be in the past
 
 ### getPlanetWithCoords
 
-▸ **getPlanetWithCoords**(`coords`): `undefined` \| `Planet`
+▸ **getPlanetWithCoords**(`coords`): `undefined` \| `LocatablePlanet`
 
 #### Parameters
 
@@ -782,7 +816,7 @@ time may be in the past
 
 #### Returns
 
-`undefined` \| `Planet`
+`undefined` \| `LocatablePlanet`
 
 ---
 
@@ -819,13 +853,33 @@ time may be in the past
 
 ---
 
+### getPlanetsInWorldCircle
+
+▸ **getPlanetsInWorldCircle**(`coords`, `radius`): `LocatablePlanet`[]
+
+Gets all the planets that are within {@code radius} world units from the given coordinate. Fast
+because it uses [LayeredMap](Backend_GameLogic_LayeredMap.LayeredMap.md).
+
+#### Parameters
+
+| Name     | Type          |
+| :------- | :------------ |
+| `coords` | `WorldCoords` |
+| `radius` | `number`      |
+
+#### Returns
+
+`LocatablePlanet`[]
+
+---
+
 ### getPlanetsInWorldRectangle
 
 ▸ **getPlanetsInWorldRectangle**(`worldX`, `worldY`, `worldWidth`, `worldHeight`, `levels`, `planetLevelToRadii`, `updateIfStale?`): `LocatablePlanet`[]
 
-Gets the ids of all the planets that are both within the given bounding box (defined by its bottom
-left coordinate, width, and height) in the world and of a level that was passed in via the
-`planetLevels` parameter.
+Gets the ids of all the planets that are both within the given bounding box (defined by its
+bottom left coordinate, width, and height) in the world and of a level that was passed in via
+the `planetLevels` parameter. Fast because it uses [LayeredMap](Backend_GameLogic_LayeredMap.LayeredMap.md).
 
 #### Parameters
 
@@ -842,6 +896,25 @@ left coordinate, width, and height) in the world and of a level that was passed 
 #### Returns
 
 `LocatablePlanet`[]
+
+---
+
+### getPlanetsWithIds
+
+▸ **getPlanetsWithIds**(`locationIds`, `updateIfStale?`): `Planet`[]
+
+Gets all the planets with the given ids, giltering out the ones that we don't have.
+
+#### Parameters
+
+| Name            | Type           | Default value |
+| :-------------- | :------------- | :------------ |
+| `locationIds`   | `LocationId`[] | `undefined`   |
+| `updateIfStale` | `boolean`      | `true`        |
+
+#### Returns
+
+`Planet`[]
 
 ---
 
@@ -883,6 +956,16 @@ returns undefined
 #### Returns
 
 `undefined` \| `UnconfirmedBuyGPTCredits`
+
+---
+
+### getUnconfirmedClaim
+
+▸ **getUnconfirmedClaim**(): `undefined` \| `UnconfirmedClaim`
+
+#### Returns
+
+`undefined` \| `UnconfirmedClaim`
 
 ---
 
@@ -978,7 +1061,7 @@ with their localstorage wallet. You can think of it as one of the hubs which con
 
 Inside this function, we update the relevant internal game objects to reflect that the user has
 requested a particular action. Additionally, we publish the appropriate events to the relevant
-[Monomitter](../modules/Frontend_Utils_Monomitter.md#monomitter) instances that are stored in this class.
+{@link Monomitter} instances that are stored in this class.
 
 In the case of something like prospecting for an artifact, this allows us to display a spinner
 text which says "Prospecting..."
@@ -1088,7 +1171,7 @@ received some artifact data from the contract. update our stores
 
 ### replacePlanetFromContractData
 
-▸ **replacePlanetFromContractData**(`planet`, `updatedArrivals?`, `updatedArtifactsOnPlanet?`, `revealedLocation?`): `void`
+▸ **replacePlanetFromContractData**(`planet`, `updatedArrivals?`, `updatedArtifactsOnPlanet?`, `revealedLocation?`, `claimerEthAddress?`): `void`
 
 received some planet data from the contract. update our stores
 
@@ -1100,6 +1183,7 @@ received some planet data from the contract. update our stores
 | `updatedArrivals?`          | `QueuedArrival`[]  |
 | `updatedArtifactsOnPlanet?` | `ArtifactId`[]     |
 | `revealedLocation?`         | `RevealedLocation` |
+| `claimerEthAddress?`        | `EthAddress`       |
 
 #### Returns
 
@@ -1120,6 +1204,22 @@ This function also handles managing artifact update messages and indexing the ma
 | Name       | Type       | Description         |
 | :--------- | :--------- | :------------------ |
 | `artifact` | `Artifact` | the artifact to set |
+
+#### Returns
+
+`void`
+
+---
+
+### setClaimedLocation
+
+▸ **setClaimedLocation**(`claimedLocation`): `void`
+
+#### Parameters
+
+| Name              | Type              |
+| :---------------- | :---------------- |
+| `claimedLocation` | `ClaimedLocation` |
 
 #### Returns
 

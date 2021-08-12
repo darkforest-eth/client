@@ -1,5 +1,5 @@
-import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { LocationId } from '@darkforest_eth/types';
+import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 
 export type Hat = {
   topLayer: Array<string>;

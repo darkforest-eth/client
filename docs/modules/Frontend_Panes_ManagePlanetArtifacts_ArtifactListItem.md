@@ -14,12 +14,12 @@
 
 #### Parameters
 
-| Name                                    | Type                      |
-| :-------------------------------------- | :------------------------ |
-| `__namedParameters`                     | `Object`                  |
-| `__namedParameters.artifact`            | `Artifact` \| `undefined` |
-| `__namedParameters.actions`             |                           |
-| `__namedParameters.openArtifactDetails` |                           |
+| Name                         | Type                                                                   |
+| :--------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`          | `Object`                                                               |
+| `__namedParameters.artifact` | `Artifact` \| `undefined`                                              |
+| `__namedParameters.modal`    | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
+| `__namedParameters.actions`  |                                                                        |
 
 #### Returns
 

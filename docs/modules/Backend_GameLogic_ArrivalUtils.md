@@ -13,6 +13,7 @@
 - [blocksLeftToProspectExpiration](Backend_GameLogic_ArrivalUtils.md#blockslefttoprospectexpiration)
 - [enoughEnergyToProspect](Backend_GameLogic_ArrivalUtils.md#enoughenergytoprospect)
 - [getEmojiMessage](Backend_GameLogic_ArrivalUtils.md#getemojimessage)
+- [getRange](Backend_GameLogic_ArrivalUtils.md#getrange)
 - [isFindable](Backend_GameLogic_ArrivalUtils.md#isfindable)
 - [isProspectable](Backend_GameLogic_ArrivalUtils.md#isprospectable)
 - [prospectExpired](Backend_GameLogic_ArrivalUtils.md#prospectexpired)
@@ -106,6 +107,25 @@
 #### Returns
 
 `PlanetMessage`<`EmojiFlagBody`\> \| `undefined`
+
+---
+
+### getRange
+
+▸ **getRange**(`planet`, `percentEnergySending?`): `number`
+
+**`todo`** - planet class
+
+#### Parameters
+
+| Name                   | Type     | Default value |
+| :--------------------- | :------- | :------------ |
+| `planet`               | `Planet` | `undefined`   |
+| `percentEnergySending` | `number` | `100`         |
+
+#### Returns
+
+`number`
 
 ---
 

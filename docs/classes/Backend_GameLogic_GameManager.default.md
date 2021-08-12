@@ -17,11 +17,10 @@
 ### Properties
 
 - [account](Backend_GameLogic_GameManager.default.md#account)
-- [balance](Backend_GameLogic_GameManager.default.md#balance)
-- [balanceInterval](Backend_GameLogic_GameManager.default.md#balanceinterval)
 - [contractConstants](Backend_GameLogic_GameManager.default.md#contractconstants)
 - [contractsAPI](Backend_GameLogic_GameManager.default.md#contractsapi)
 - [diagnostics](Backend_GameLogic_GameManager.default.md#diagnostics)
+- [diagnosticsInterval](Backend_GameLogic_GameManager.default.md#diagnosticsinterval)
 - [endTimeSeconds](Backend_GameLogic_GameManager.default.md#endtimeseconds)
 - [entityStore](Backend_GameLogic_GameManager.default.md#entitystore)
 - [ethConnection](Backend_GameLogic_GameManager.default.md#ethconnection)
@@ -31,13 +30,14 @@
 - [hashRate](Backend_GameLogic_GameManager.default.md#hashrate)
 - [homeLocation](Backend_GameLogic_GameManager.default.md#homelocation)
 - [minerManager](Backend_GameLogic_GameManager.default.md#minermanager)
-- [myBalance$](Backend_GameLogic_GameManager.default.md#mybalance$)
 - [myGPTCredits](Backend_GameLogic_GameManager.default.md#mygptcredits)
 - [myGPTCredits$](Backend_GameLogic_GameManager.default.md#mygptcredits$)
 - [persistentChunkStore](Backend_GameLogic_GameManager.default.md#persistentchunkstore)
 - [planetHashMimc](Backend_GameLogic_GameManager.default.md#planethashmimc)
 - [playerInterval](Backend_GameLogic_GameManager.default.md#playerinterval)
 - [players](Backend_GameLogic_GameManager.default.md#players)
+- [playersUpdated$](Backend_GameLogic_GameManager.default.md#playersupdated$)
+- [scoreboardInterval](Backend_GameLogic_GameManager.default.md#scoreboardinterval)
 - [settingsSubscription](Backend_GameLogic_GameManager.default.md#settingssubscription)
 - [snarkHelper](Backend_GameLogic_GameManager.default.md#snarkhelper)
 - [terminal](Backend_GameLogic_GameManager.default.md#terminal)
@@ -59,11 +59,13 @@
 - [buyGPTCredits](Backend_GameLogic_GameManager.default.md#buygptcredits)
 - [buyHat](Backend_GameLogic_GameManager.default.md#buyhat)
 - [checkGameHasEnded](Backend_GameLogic_GameManager.default.md#checkgamehasended)
+- [claimLocation](Backend_GameLogic_GameManager.default.md#claimlocation)
 - [clearEmoji](Backend_GameLogic_GameManager.default.md#clearemoji)
 - [deactivateArtifact](Backend_GameLogic_GameManager.default.md#deactivateartifact)
 - [depositArtifact](Backend_GameLogic_GameManager.default.md#depositartifact)
 - [destroy](Backend_GameLogic_GameManager.default.md#destroy)
 - [findArtifact](Backend_GameLogic_GameManager.default.md#findartifact)
+- [findRandomHomePlanet](Backend_GameLogic_GameManager.default.md#findrandomhomeplanet)
 - [getAccount](Backend_GameLogic_GameManager.default.md#getaccount)
 - [getActiveArtifact](Backend_GameLogic_GameManager.default.md#getactiveartifact)
 - [getAllOwnedPlanets](Backend_GameLogic_GameManager.default.md#getallownedplanets)
@@ -76,6 +78,7 @@
 - [getArtifactsWithIds](Backend_GameLogic_GameManager.default.md#getartifactswithids)
 - [getChunk](Backend_GameLogic_GameManager.default.md#getchunk)
 - [getChunkStore](Backend_GameLogic_GameManager.default.md#getchunkstore)
+- [getClaimedLocations](Backend_GameLogic_GameManager.default.md#getclaimedlocations)
 - [getConstructors](Backend_GameLogic_GameManager.default.md#getconstructors)
 - [getContractAddress](Backend_GameLogic_GameManager.default.md#getcontractaddress)
 - [getContractConstants](Backend_GameLogic_GameManager.default.md#getcontractconstants)
@@ -105,13 +108,15 @@
 - [getMyArtifactMap](Backend_GameLogic_GameManager.default.md#getmyartifactmap)
 - [getMyArtifacts](Backend_GameLogic_GameManager.default.md#getmyartifacts)
 - [getMyArtifactsUpdated$](Backend_GameLogic_GameManager.default.md#getmyartifactsupdated$)
-- [getMyBalance](Backend_GameLogic_GameManager.default.md#getmybalance)
-- [getMyBalanceEmitter](Backend_GameLogic_GameManager.default.md#getmybalanceemitter)
+- [getMyBalance$](Backend_GameLogic_GameManager.default.md#getmybalance$)
+- [getMyBalanceEth](Backend_GameLogic_GameManager.default.md#getmybalanceeth)
 - [getMyPlanetMap](Backend_GameLogic_GameManager.default.md#getmyplanetmap)
 - [getMyPlanets](Backend_GameLogic_GameManager.default.md#getmyplanets)
 - [getMyPlanetsUpdated$](Backend_GameLogic_GameManager.default.md#getmyplanetsupdated$)
 - [getMyScore](Backend_GameLogic_GameManager.default.md#getmyscore)
 - [getNextBroadcastAvailableTimestamp](Backend_GameLogic_GameManager.default.md#getnextbroadcastavailabletimestamp)
+- [getNextClaimAvailableTimestamp](Backend_GameLogic_GameManager.default.md#getnextclaimavailabletimestamp)
+- [getNextClaimCountdownInfo](Backend_GameLogic_GameManager.default.md#getnextclaimcountdowninfo)
 - [getNextRevealCountdownInfo](Backend_GameLogic_GameManager.default.md#getnextrevealcountdowninfo)
 - [getNotificationsManager](Backend_GameLogic_GameManager.default.md#getnotificationsmanager)
 - [getPerlinThresholds](Backend_GameLogic_GameManager.default.md#getperlinthresholds)
@@ -124,9 +129,10 @@
 - [getPlanetsInRange](Backend_GameLogic_GameManager.default.md#getplanetsinrange)
 - [getPlanetsInWorldRectangle](Backend_GameLogic_GameManager.default.md#getplanetsinworldrectangle)
 - [getPlanetsWithIds](Backend_GameLogic_GameManager.default.md#getplanetswithids)
+- [getPlayer](Backend_GameLogic_GameManager.default.md#getplayer)
+- [getPlayerScore](Backend_GameLogic_GameManager.default.md#getplayerscore)
 - [getPrivateKey](Backend_GameLogic_GameManager.default.md#getprivatekey)
 - [getProcgenUtils](Backend_GameLogic_GameManager.default.md#getprocgenutils)
-- [getRandomHomePlanetCoords](Backend_GameLogic_GameManager.default.md#getrandomhomeplanetcoords)
 - [getRevealedLocations](Backend_GameLogic_GameManager.default.md#getrevealedlocations)
 - [getSignedTwitter](Backend_GameLogic_GameManager.default.md#getsignedtwitter)
 - [getSilverCurveAtPercent](Backend_GameLogic_GameManager.default.md#getsilvercurveatpercent)
@@ -142,7 +148,6 @@
 - [getUnconfirmedWormholeActivations](Backend_GameLogic_GameManager.default.md#getunconfirmedwormholeactivations)
 - [getUniverseTotalEnergy](Backend_GameLogic_GameManager.default.md#getuniversetotalenergy)
 - [getUpgrade](Backend_GameLogic_GameManager.default.md#getupgrade)
-- [getWithdrawnSilverOfPlayer](Backend_GameLogic_GameManager.default.md#getwithdrawnsilverofplayer)
 - [getWorldRadius](Backend_GameLogic_GameManager.default.md#getworldradius)
 - [getWorldSilver](Backend_GameLogic_GameManager.default.md#getworldsilver)
 - [getWormholeFactors](Backend_GameLogic_GameManager.default.md#getwormholefactors)
@@ -168,6 +173,7 @@
 - [onTxSubmit](Backend_GameLogic_GameManager.default.md#ontxsubmit)
 - [prospectPlanet](Backend_GameLogic_GameManager.default.md#prospectplanet)
 - [refreshMyGPTCredits](Backend_GameLogic_GameManager.default.md#refreshmygptcredits)
+- [refreshScoreboard](Backend_GameLogic_GameManager.default.md#refreshscoreboard)
 - [refreshServerPlanetStates](Backend_GameLogic_GameManager.default.md#refreshserverplanetstates)
 - [refreshTwitters](Backend_GameLogic_GameManager.default.md#refreshtwitters)
 - [revealLocation](Backend_GameLogic_GameManager.default.md#reveallocation)
@@ -175,6 +181,7 @@
 - [setMinerCores](Backend_GameLogic_GameManager.default.md#setminercores)
 - [setMiningPattern](Backend_GameLogic_GameManager.default.md#setminingpattern)
 - [setPlanetEmoji](Backend_GameLogic_GameManager.default.md#setplanetemoji)
+- [setPlayerTwitters](Backend_GameLogic_GameManager.default.md#setplayertwitters)
 - [setRadius](Backend_GameLogic_GameManager.default.md#setradius)
 - [setSnarkCacheSize](Backend_GameLogic_GameManager.default.md#setsnarkcachesize)
 - [signMessage](Backend_GameLogic_GameManager.default.md#signmessage)
@@ -185,12 +192,14 @@
 - [startExplore](Backend_GameLogic_GameManager.default.md#startexplore)
 - [stepConversation](Backend_GameLogic_GameManager.default.md#stepconversation)
 - [stopExplore](Backend_GameLogic_GameManager.default.md#stopexplore)
+- [submitDisconnectTwitter](Backend_GameLogic_GameManager.default.md#submitdisconnecttwitter)
 - [submitPlanetMessage](Backend_GameLogic_GameManager.default.md#submitplanetmessage)
+- [submitVerifyTwitter](Backend_GameLogic_GameManager.default.md#submitverifytwitter)
 - [transferOwnership](Backend_GameLogic_GameManager.default.md#transferownership)
 - [updateDiagnostics](Backend_GameLogic_GameManager.default.md#updatediagnostics)
 - [upgrade](Backend_GameLogic_GameManager.default.md#upgrade)
+- [uploadDiagnostics](Backend_GameLogic_GameManager.default.md#uploaddiagnostics)
 - [verifyMessage](Backend_GameLogic_GameManager.default.md#verifymessage)
-- [verifyTwitter](Backend_GameLogic_GameManager.default.md#verifytwitter)
 - [waitForPlanet](Backend_GameLogic_GameManager.default.md#waitforplanet)
 - [withdrawArtifact](Backend_GameLogic_GameManager.default.md#withdrawartifact)
 - [withdrawSilver](Backend_GameLogic_GameManager.default.md#withdrawsilver)
@@ -200,7 +209,7 @@
 
 ### constructor
 
-• `Private` **new default**(`terminal`, `account`, `balance`, `players`, `touchedPlanets`, `allTouchedPlanetIds`, `revealedCoords`, `worldRadius`, `unprocessedArrivals`, `unprocessedPlanetArrivalIds`, `contractsAPI`, `contractConstants`, `persistentChunkStore`, `snarkHelper`, `homeLocation`, `useMockHash`, `artifacts`, `ethConnection`, `gptCreditPriceEther`, `myGPTCredits`)
+• `Private` **new default**(`terminal`, `account`, `players`, `touchedPlanets`, `allTouchedPlanetIds`, `revealedCoords`, `claimedCoords`, `worldRadius`, `unprocessedArrivals`, `unprocessedPlanetArrivalIds`, `contractsAPI`, `contractConstants`, `persistentChunkStore`, `snarkHelper`, `homeLocation`, `useMockHash`, `artifacts`, `ethConnection`, `gptCreditPriceEther`, `myGPTCredits`)
 
 #### Parameters
 
@@ -208,22 +217,22 @@
 | :---------------------------- | :-------------------------------------------------------------------------------------------------------------- |
 | `terminal`                    | `MutableRefObject`<`undefined` \| [`TerminalHandle`](../interfaces/Frontend_Views_Terminal.TerminalHandle.md)\> |
 | `account`                     | `undefined` \| `EthAddress`                                                                                     |
-| `balance`                     | `number`                                                                                                        |
 | `players`                     | `Map`<`string`, `Player`\>                                                                                      |
 | `touchedPlanets`              | `Map`<`LocationId`, `Planet`\>                                                                                  |
 | `allTouchedPlanetIds`         | `Set`<`LocationId`\>                                                                                            |
 | `revealedCoords`              | `Map`<`LocationId`, `RevealedCoords`\>                                                                          |
+| `claimedCoords`               | `Map`<`LocationId`, `ClaimedCoords`\>                                                                           |
 | `worldRadius`                 | `number`                                                                                                        |
 | `unprocessedArrivals`         | `Map`<`VoyageId`, `QueuedArrival`\>                                                                             |
 | `unprocessedPlanetArrivalIds` | `Map`<`LocationId`, `VoyageId`[]\>                                                                              |
-| `contractsAPI`                | [`default`](Backend_GameLogic_ContractsAPI.default.md)                                                          |
+| `contractsAPI`                | [`ContractsAPI`](Backend_GameLogic_ContractsAPI.ContractsAPI.md)                                                |
 | `contractConstants`           | [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)               |
 | `persistentChunkStore`        | [`default`](Backend_Storage_PersistentChunkStore.default.md)                                                    |
 | `snarkHelper`                 | [`default`](Backend_Utils_SnarkArgsHelper.default.md)                                                           |
 | `homeLocation`                | `undefined` \| `WorldLocation`                                                                                  |
 | `useMockHash`                 | `boolean`                                                                                                       |
 | `artifacts`                   | `Map`<`ArtifactId`, `Artifact`\>                                                                                |
-| `ethConnection`               | [`default`](Backend_Network_EthConnection.default.md)                                                           |
+| `ethConnection`               | `EthConnection`                                                                                                 |
 | `gptCreditPriceEther`         | `number`                                                                                                        |
 | `myGPTCredits`                | `number`                                                                                                        |
 
@@ -243,27 +252,6 @@ contract and view it without be able to make any moves.
 
 ---
 
-### balance
-
-• `Private` **balance**: `number`
-
-This is kept relatively up-to-date with the balance of the player's wallet on the latest block
-of whatever blockchain we're connected to.
-
-**`todo`** move this into a new `PlayerState` class.
-
----
-
-### balanceInterval
-
-• `Private` **balanceInterval**: `Timeout`
-
-Handle to an interval that periodically refreshes the player's balance.
-
-**`todo`** move this into a new `PlayerState` class.
-
----
-
 ### contractConstants
 
 • `Private` `Readonly` **contractConstants**: [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)
@@ -277,7 +265,7 @@ correct universe, or the time multiplier, which allows us to tune how quickly vo
 
 ### contractsAPI
 
-• `Private` `Readonly` **contractsAPI**: [`default`](Backend_GameLogic_ContractsAPI.default.md)
+• `Private` `Readonly` **contractsAPI**: [`ContractsAPI`](Backend_GameLogic_ContractsAPI.ContractsAPI.md)
 
 Allows us to make contract calls, and execute transactions. Be careful about how you use this
 guy. You don't want to cause your client to send an excessive amount of traffic to whatever
@@ -289,16 +277,24 @@ points:
 
 - data that needs to be fetched often should be fetched in bulk.
 - rate limit smart contract calls (reads from the blockchain), implemented by
-  [ContractCaller](Backend_GameLogic_ContractCaller.ContractCaller.md) and transactions (writes to the blockchain on behalf of the player),
-  implemented by [TxExecutor](Backend_Network_TxExecutor.TxExecutor.md) via two separately tuned [ThrottledConcurrentQueue](Backend_Network_ThrottledConcurrentQueue.ThrottledConcurrentQueue.md)s.
+  {@link ContractCaller} and transactions (writes to the blockchain on behalf of the player),
+  implemented by {@link TxExecutor} via two separately tuned {@link ThrottledConcurrentQueue}s.
 
 ---
 
 ### diagnostics
 
-• `Private` **diagnostics**: [`Diagnostics`](../interfaces/Frontend_Panes_DiagnosticsPane.Diagnostics.md)
+• `Private` **diagnostics**: `Diagnostics`
 
 Diagnostic information about the game.
+
+---
+
+### diagnosticsInterval
+
+• `Private` **diagnosticsInterval**: `Timeout`
+
+Handle to an interval that periodically uploads diagnostic information from this client.
 
 ---
 
@@ -320,9 +316,9 @@ This variable contains the internal state of objects that live in the game world
 
 ### ethConnection
 
-• `Private` `Readonly` **ethConnection**: [`default`](Backend_Network_EthConnection.default.md)
+• `Private` `Readonly` **ethConnection**: `EthConnection`
 
-An interface to the blockchain that is a little bit lower-level than {@link ContractsAPI}. It
+An interface to the blockchain that is a little bit lower-level than [ContractsAPI](Backend_GameLogic_ContractsAPI.ContractsAPI.md). It
 allows us to do basic operations such as wait for a transaction to complete, check the player's
 address and balance, etc.
 
@@ -341,7 +337,7 @@ Artifact Chat Bots.
 
 ### gptCreditPriceEtherEmitter$
 
-• `Private` **gptCreditPriceEtherEmitter$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
+• `Private` **gptCreditPriceEtherEmitter$**: `Monomitter`<`number`\>
 
 Whenever the price of single GPT credit changes, we emit that event here.
 
@@ -394,16 +390,6 @@ Manages the process of mining new space territory.
 
 ---
 
-### myBalance$
-
-• `Private` **myBalance$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
-
-Any time the balance of the player's address changes, we publish an event here.
-
-**`todo`** move this into a new `PlayerState` class.
-
----
-
 ### myGPTCredits
 
 • `Private` **myGPTCredits**: `number`
@@ -416,7 +402,7 @@ The total amount of GPT credits that belong to the current player.
 
 ### myGPTCredits$
 
-• `Private` **myGPTCredits$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
+• `Private` **myGPTCredits$**: `Monomitter`<`number`\>
 
 Whenever the amount of the GPT credits that this player owns changes, we publish an event here.
 
@@ -484,9 +470,25 @@ and artifacts that do exist in the world.
 
 ---
 
+### playersUpdated$
+
+• `Readonly` **playersUpdated$**: `Monomitter`<`void`\>
+
+Whenever we refresh the players twitter accounts or scores, we publish an event here.
+
+---
+
+### scoreboardInterval
+
+• `Private` **scoreboardInterval**: `Timeout`
+
+Handle to an interval that periodically refreshes the scoreboard from our webserver.
+
+---
+
 ### settingsSubscription
 
-• `Private` **settingsSubscription**: `undefined` \| [`Subscription`](../modules/Frontend_Utils_Monomitter.md#subscription)
+• `Private` **settingsSubscription**: `undefined` \| `Subscription`
 
 Subscription to act on setting changes
 
@@ -702,6 +704,22 @@ look your best. Just like in the real world, more money means more hat.
 
 ---
 
+### claimLocation
+
+▸ **claimLocation**(`planetId`): [`default`](Backend_GameLogic_GameManager.default.md)
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `planetId` | `LocationId` |
+
+#### Returns
+
+[`default`](Backend_GameLogic_GameManager.default.md)
+
+---
+
 ### clearEmoji
 
 ▸ **clearEmoji**(`locationId`): `Promise`<`void`\>
@@ -786,6 +804,16 @@ Calls the contract to find an artifact on the given planet.
 #### Returns
 
 [`default`](Backend_GameLogic_GameManager.default.md)
+
+---
+
+### findRandomHomePlanet
+
+▸ `Private` **findRandomHomePlanet**(): `Promise`<`LocatablePlanet`\>
+
+#### Returns
+
+`Promise`<`LocatablePlanet`\>
 
 ---
 
@@ -884,11 +912,11 @@ Return a reference to the artifact map
 
 ### getArtifactUpdated$
 
-▸ **getArtifactUpdated$**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`ArtifactId`\>
+▸ **getArtifactUpdated$**(): `Monomitter`<`ArtifactId`\>
 
 #### Returns
 
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`ArtifactId`\>
+`Monomitter`<`ArtifactId`\>
 
 ---
 
@@ -952,6 +980,18 @@ represented by `undefined`.
 #### Returns
 
 [`default`](Backend_Storage_PersistentChunkStore.default.md)
+
+---
+
+### getClaimedLocations
+
+▸ **getClaimedLocations**(): `Map`<`LocationId`, `ClaimedLocation`\>
+
+Gets a map of all location IDs which have been claimed.
+
+#### Returns
+
+`Map`<`LocationId`, `ClaimedLocation`\>
 
 ---
 
@@ -1029,13 +1069,13 @@ of hashing.
 
 ### getDiagnostics
 
-▸ **getDiagnostics**(): [`Diagnostics`](../interfaces/Frontend_Panes_DiagnosticsPane.Diagnostics.md)
+▸ **getDiagnostics**(): `Diagnostics`
 
 Gets some diagnostic information about the game. Returns a copy, you can't modify it.
 
 #### Returns
 
-[`Diagnostics`](../interfaces/Frontend_Panes_DiagnosticsPane.Diagnostics.md)
+`Diagnostics`
 
 ---
 
@@ -1044,7 +1084,7 @@ Gets some diagnostic information about the game. Returns a copy, you can't modif
 ▸ **getDist**(`fromId`, `toId`): `number`
 
 Gets the distance between two planets. Throws an exception if you don't
-know the location of either planet.
+know the location of either planet. Takes into account wormholes.
 
 #### Parameters
 
@@ -1175,11 +1215,11 @@ Gets the total amount of energy that lives on planets that the given player owns
 
 ### getEthConnection
 
-▸ **getEthConnection**(): [`default`](Backend_Network_EthConnection.default.md)
+▸ **getEthConnection**(): `EthConnection`
 
 #### Returns
 
-[`default`](Backend_Network_EthConnection.default.md)
+`EthConnection`
 
 ---
 
@@ -1211,21 +1251,21 @@ voyages, planets, artifacts, and active wormholes,
 
 ### getGptCreditBalanceEmitter
 
-▸ **getGptCreditBalanceEmitter**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
+▸ **getGptCreditBalanceEmitter**(): `Monomitter`<`number`\>
 
 #### Returns
 
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
+`Monomitter`<`number`\>
 
 ---
 
 ### getGptCreditPriceEmitter
 
-▸ **getGptCreditPriceEmitter**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
+▸ **getGptCreditPriceEmitter**(): `Monomitter`<`number`\>
 
 #### Returns
 
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
+`Monomitter`<`number`\>
 
 ---
 
@@ -1279,11 +1319,11 @@ Gets the hash of the location of your home planet.
 
 ### getIsBuyingCreditsEmitter
 
-▸ **getIsBuyingCreditsEmitter**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`boolean`\>
+▸ **getIsBuyingCreditsEmitter**(): `Monomitter`<`boolean`\>
 
 #### Returns
 
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`boolean`\>
+`Monomitter`<`boolean`\>
 
 ---
 
@@ -1365,33 +1405,35 @@ gets both deposited artifacts that are on planets i own as well as artifacts i o
 
 ### getMyArtifactsUpdated$
 
-▸ **getMyArtifactsUpdated$**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`Map`<`ArtifactId`, `Artifact`\>\>
+▸ **getMyArtifactsUpdated$**(): `Monomitter`<`Map`<`ArtifactId`, `Artifact`\>\>
 
 #### Returns
 
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`Map`<`ArtifactId`, `Artifact`\>\>
+`Monomitter`<`Map`<`ArtifactId`, `Artifact`\>\>
 
 ---
 
-### getMyBalance
+### getMyBalance$
 
-▸ **getMyBalance**(): `number`
+▸ **getMyBalance$**(): `Monomitter`<`BigNumber`\>
+
+Returns the monomitter which publishes events whenever the player's balance changes.
+
+#### Returns
+
+`Monomitter`<`BigNumber`\>
+
+---
+
+### getMyBalanceEth
+
+▸ **getMyBalanceEth**(): `number`
 
 Gets the balance of the account
 
 #### Returns
 
 `number`
-
----
-
-### getMyBalanceEmitter
-
-▸ **getMyBalanceEmitter**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
-
-#### Returns
-
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`number`\>
 
 ---
 
@@ -1421,23 +1463,23 @@ Gets a list of the planets that the player logged into this `GameManager` owns.
 
 ### getMyPlanetsUpdated$
 
-▸ **getMyPlanetsUpdated$**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`Map`<`LocationId`, `Planet`\>\>
+▸ **getMyPlanetsUpdated$**(): `Monomitter`<`Map`<`LocationId`, `Planet`\>\>
 
 #### Returns
 
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`Map`<`LocationId`, `Planet`\>\>
+`Monomitter`<`Map`<`LocationId`, `Planet`\>\>
 
 ---
 
 ### getMyScore
 
-▸ **getMyScore**(): `number`
+▸ **getMyScore**(): `undefined` \| `number`
 
 Get the score of the currently logged-in account.
 
 #### Returns
 
-`number`
+`undefined` \| `number`
 
 ---
 
@@ -1450,6 +1492,30 @@ Gets the timestamp (ms) of the next time that we can broadcast the coordinates o
 #### Returns
 
 `number`
+
+---
+
+### getNextClaimAvailableTimestamp
+
+▸ **getNextClaimAvailableTimestamp**(): `number`
+
+Gets the timestamp (ms) of the next time that we can claim a planet.
+
+#### Returns
+
+`number`
+
+---
+
+### getNextClaimCountdownInfo
+
+▸ **getNextClaimCountdownInfo**(): [`ClaimCountdownInfo`](../interfaces/_types_global_GlobalTypes.ClaimCountdownInfo.md)
+
+Returns info about the next time you can claim a Planet
+
+#### Returns
+
+[`ClaimCountdownInfo`](../interfaces/_types_global_GlobalTypes.ClaimCountdownInfo.md)
 
 ---
 
@@ -1535,17 +1601,17 @@ Gets the rarity of planets in the universe
 
 ### getPlanetUpdated$
 
-▸ **getPlanetUpdated$**(): [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`LocationId`\>
+▸ **getPlanetUpdated$**(): `Monomitter`<`LocationId`\>
 
 #### Returns
 
-[`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<`LocationId`\>
+`Monomitter`<`LocationId`\>
 
 ---
 
 ### getPlanetWithCoords
 
-▸ **getPlanetWithCoords**(`coords`): `undefined` \| `Planet`
+▸ **getPlanetWithCoords**(`coords`): `undefined` \| `LocatablePlanet`
 
 Gets the planet that is located at the given coordinates. Returns undefined if not a valid
 location or if no planet exists at location. If the planet needs to be updated (because
@@ -1559,7 +1625,7 @@ some time has passed since we last updated the planet), then updates that planet
 
 #### Returns
 
-`undefined` \| `Planet`
+`undefined` \| `LocatablePlanet`
 
 ---
 
@@ -1588,7 +1654,7 @@ passed since we last updated the planet), then updates that planet first.
 ▸ **getPlanetsInRange**(`planetId`, `sendingPercent`): `Planet`[]
 
 Gets all the planets that you can reach with at least 1 energy from
-the given planet.
+the given planet. Does not take into account wormholes.
 
 #### Parameters
 
@@ -1648,15 +1714,50 @@ doesn't exist, no entry for that planet will be returned in the result.
 
 ---
 
+### getPlayer
+
+▸ **getPlayer**(`address?`): `undefined` \| `Player`
+
+Gets either the given player, or if no address was provided, gets the player that is logged
+this client.
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `address?` | `EthAddress` |
+
+#### Returns
+
+`undefined` \| `Player`
+
+---
+
+### getPlayerScore
+
+▸ **getPlayerScore**(`addr`): `undefined` \| `number`
+
+#### Parameters
+
+| Name   | Type         |
+| :----- | :----------- |
+| `addr` | `EthAddress` |
+
+#### Returns
+
+`undefined` \| `number`
+
+---
+
 ### getPrivateKey
 
-▸ **getPrivateKey**(): `string`
+▸ **getPrivateKey**(): `undefined` \| `string`
 
 Gets the private key of the burner wallet used by this account.
 
 #### Returns
 
-`string`
+`undefined` \| `string`
 
 ---
 
@@ -1672,21 +1773,11 @@ typeof [`ProcgenUtils`](Backend_Procedural_ProcgenUtils.ProcgenUtils.md)
 
 ---
 
-### getRandomHomePlanetCoords
-
-▸ `Private` **getRandomHomePlanetCoords**(): `Promise`<`WorldLocation`\>
-
-#### Returns
-
-`Promise`<`WorldLocation`\>
-
----
-
 ### getRevealedLocations
 
 ▸ **getRevealedLocations**(): `Map`<`LocationId`, `RevealedLocation`\>
 
-Gets a map of all location IDs whose coords have been publicly revealed
+Gets a map of all location IDs whose coords have been publically revealed
 
 #### Returns
 
@@ -1917,22 +2008,6 @@ upgrade branch (defense, range, speed) and level of upgrade.
 
 ---
 
-### getWithdrawnSilverOfPlayer
-
-▸ **getWithdrawnSilverOfPlayer**(`addr`): `number`
-
-#### Parameters
-
-| Name   | Type         |
-| :----- | :----------- |
-| `addr` | `EthAddress` |
-
-#### Returns
-
-`number`
-
----
-
 ### getWorldRadius
 
 ▸ **getWorldRadius**(): `number`
@@ -2084,13 +2159,14 @@ Whether or not the given rectangle has been mined.
 
 ### initMiningManager
 
-▸ `Private` **initMiningManager**(`homeCoords`): `void`
+▸ `Private` **initMiningManager**(`homeCoords`, `cores?`): `void`
 
 #### Parameters
 
 | Name         | Type          |
 | :----------- | :------------ |
 | `homeCoords` | `WorldCoords` |
+| `cores?`     | `number`      |
 
 #### Returns
 
@@ -2160,11 +2236,20 @@ Attempts to join the game. Should not be called once you've already joined.
 
 ### loadContract
 
-▸ **loadContract**(`contractAddress`, `contractABI`): `Promise`<`Contract`\>
+▸ **loadContract**<`T`\>(`contractAddress`, `contractABI`): `Promise`<`T`\>
 
 Returns an instance of a `Contract` from the ethersjs library. This is the library we use to
 connect to the blockchain. For documentation about how `Contract` works, see:
 https://docs.ethers.io/v5/api/contract/contract/
+
+Also, registers your contract in the system to make calls against it and to reload it when
+necessary (such as the RPC endpoint changing).
+
+#### Type parameters
+
+| Name | Type                     |
+| :--- | :----------------------- |
+| `T`  | extends `Contract`<`T`\> |
 
 #### Parameters
 
@@ -2175,7 +2260,7 @@ https://docs.ethers.io/v5/api/contract/contract/
 
 #### Returns
 
-`Promise`<`Contract`\>
+`Promise`<`T`\>
 
 ---
 
@@ -2326,6 +2411,16 @@ the given planet to the given planet.
 
 ---
 
+### refreshScoreboard
+
+▸ `Private` **refreshScoreboard**(): `Promise`<`void`\>
+
+#### Returns
+
+`Promise`<`void`\>
+
+---
+
 ### refreshServerPlanetStates
 
 ▸ **refreshServerPlanetStates**(`planetIds`): `Promise`<`void`\>
@@ -2453,6 +2548,22 @@ planet was signed by the owner.
 #### Returns
 
 `Promise`<`void`\>
+
+---
+
+### setPlayerTwitters
+
+▸ `Private` **setPlayerTwitters**(`twitters`): `void`
+
+#### Parameters
+
+| Name       | Type                                                                                               |
+| :--------- | :------------------------------------------------------------------------------------------------- |
+| `twitters` | [`AddressTwitterMap`](../modules/_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap) |
+
+#### Returns
+
+`void`
 
 ---
 
@@ -2630,6 +2741,22 @@ Stops the miner.
 
 ---
 
+### submitDisconnectTwitter
+
+▸ **submitDisconnectTwitter**(`twitter`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name      | Type     |
+| :-------- | :------- |
+| `twitter` | `string` |
+
+#### Returns
+
+`Promise`<`void`\>
+
+---
+
 ### submitPlanetMessage
 
 ▸ `Private` **submitPlanetMessage**(`locationId`, `type`, `body`): `Promise`<`void`\>
@@ -2649,6 +2776,25 @@ just one type of message. Their implementation leaves the door open to more off-
 #### Returns
 
 `Promise`<`void`\>
+
+---
+
+### submitVerifyTwitter
+
+▸ **submitVerifyTwitter**(`twitter`): `Promise`<`boolean`\>
+
+Once you have posted the verification tweet - complete the twitter-account-linking
+process by telling the Dark Forest webserver to look at that tweet.
+
+#### Parameters
+
+| Name      | Type     |
+| :-------- | :------- |
+| `twitter` | `string` |
+
+#### Returns
+
+`Promise`<`boolean`\>
 
 ---
 
@@ -2680,9 +2826,9 @@ convenient manner.
 
 #### Parameters
 
-| Name       | Type                                                                                          |
-| :--------- | :-------------------------------------------------------------------------------------------- |
-| `updateFn` | (`d`: [`Diagnostics`](../interfaces/Frontend_Panes_DiagnosticsPane.Diagnostics.md)) => `void` |
+| Name       | Type                           |
+| :--------- | :----------------------------- |
+| `updateFn` | (`d`: `Diagnostics`) => `void` |
 
 #### Returns
 
@@ -2712,6 +2858,16 @@ the upgrade.
 
 ---
 
+### uploadDiagnostics
+
+▸ `Private` **uploadDiagnostics**(): `Promise`<`void`\>
+
+#### Returns
+
+`Promise`<`void`\>
+
+---
+
 ### verifyMessage
 
 ▸ `Private` **verifyMessage**(`message`): `Promise`<`boolean`\>
@@ -2724,25 +2880,6 @@ it claims it was signed by.
 | Name      | Type                        |
 | :-------- | :-------------------------- |
 | `message` | `SignedMessage`<`unknown`\> |
-
-#### Returns
-
-`Promise`<`boolean`\>
-
----
-
-### verifyTwitter
-
-▸ **verifyTwitter**(`twitter`): `Promise`<`boolean`\>
-
-Once you have posted the verificatoin tweet - complete the twitter-account-linking
-process by telling the Dark Forest webserver to look at that tweet.
-
-#### Parameters
-
-| Name      | Type     |
-| :-------- | :------- |
-| `twitter` | `string` |
 
 #### Returns
 
@@ -2828,7 +2965,7 @@ Withdraws the artifact that is locked up on the given planet.
 
 | Name            | Type                                                                                                            |
 | :-------------- | :-------------------------------------------------------------------------------------------------------------- |
-| `ethConnection` | [`default`](Backend_Network_EthConnection.default.md)                                                           |
+| `ethConnection` | `EthConnection`                                                                                                 |
 | `terminal`      | `MutableRefObject`<`undefined` \| [`TerminalHandle`](../interfaces/Frontend_Views_Terminal.TerminalHandle.md)\> |
 
 #### Returns

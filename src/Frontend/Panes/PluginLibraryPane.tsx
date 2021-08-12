@@ -1,27 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ReactSortable } from 'react-sortablejs';
+import { v4 as uuidv4 } from 'uuid';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { PluginId, SerializedPlugin } from '../../Backend/Plugins/SerializedPlugin';
 import { Btn } from '../Components/Btn';
-import { MaxWidth, Spacer } from '../Components/CoreUI';
+import { PaddedRecommendedModalWidth, Spacer } from '../Components/CoreUI';
 import { RemoteModal } from '../Components/RemoteModal';
 import dfstyles from '../Styles/dfstyles';
 import { useEmitterValue } from '../Utils/EmitterHooks';
+import { getBooleanSetting, setSetting, Setting } from '../Utils/SettingsHooks';
+import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 import { OwnedPluginView } from '../Views/OwnedPluginView';
-import { ModalHook, ModalPane, ModalName } from '../Views/ModalPane';
 import { PluginEditorPane } from './PluginEditorPane';
-import { Setting, getBooleanSetting, setSetting } from '../Utils/SettingsHooks';
-import { v4 as uuidv4 } from 'uuid';
 
 function HelpContent() {
   return (
     <div>
       <p>
         Plugins are bits of code that can be written by anyone, and allow the writer to program the
-        game. Plugins range from cosmetic (try the rage cage plugin) to functional (imagine a
-        wage-war artifact).
+        game. Plugins range from cosmetic (try the rage cage plugin) to functional (imagine a plugin
+        that fights your wars for you).
       </p>
       <Spacer height={8} />
       <p>
@@ -178,7 +178,7 @@ export function PluginLibraryPane({
         title={'WARNING'}
         hook={[warningIsOpen, setWarningIsOpen]}
       >
-        <MaxWidth width='400px'>
+        <PaddedRecommendedModalWidth>
           <p>
             Dark Forest supports plugins, which allow you to write JavaScript code that can interact
             with the game. Plugins are powerful and can enhance your gameplay experience, but they
@@ -198,7 +198,7 @@ export function PluginLibraryPane({
           >
             Click {clicksUntilHasPlugins} times for Plugins
           </Btn>
-        </MaxWidth>
+        </PaddedRecommendedModalWidth>
       </RemoteModal>
       <RemoteModal
         container={modalsContainer}
@@ -219,11 +219,12 @@ export function PluginLibraryPane({
         title='Plugin Library'
         name={ModalName.Plugins}
         helpContent={HelpContent}
-        width='350px'
       >
-        {renderPluginsList()}
-        <Spacer height={8} />
-        <Btn onClick={addPluginClicked}>Add Plugin</Btn>
+        <PaddedRecommendedModalWidth>
+          {renderPluginsList()}
+          <Spacer height={8} />
+          <Btn onClick={addPluginClicked}>Add Plugin</Btn>
+        </PaddedRecommendedModalWidth>
       </ModalPane>
     </>
   );

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TutorialManager, {
-  TutorialState,
   TutorialManagerEvent,
+  TutorialState,
 } from '../../Backend/GameLogic/TutorialManager';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import { Underline } from '../Components/CoreUI';
-import { TargetIcon, PauseIcon } from '../Components/Icons';
+import { PauseIcon, TargetIcon } from '../Components/Icons';
 import { White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
@@ -167,10 +167,10 @@ const StyledTutorialPane = styled.div<{ visible: boolean }>`
   left: 0;
 
   background: ${dfstyles.colors.backgroundlighter};
-  color: #e6c3b8;
+  color: ${dfstyles.colors.text};
   padding: 8px;
-  border-bottom: 1px solid ${dfstyles.colors.text};
-  border-right: 1px solid ${dfstyles.colors.text};
+  border-bottom: 1px solid ${dfstyles.colors.border};
+  border-right: 1px solid ${dfstyles.colors.border};
 
   width: 24em;
   height: fit-content;

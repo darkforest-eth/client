@@ -1,14 +1,16 @@
+import { Planet, Upgrade, UpgradeBranchName } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
-import { Upgrade, Planet, UpgradeBranchName } from '@darkforest_eth/types';
+import { getPlanetMaxRank, getPlanetRank, upgradeName } from '../../Backend/Utils/Utils';
 import { RightarrowIcon } from '../Components/Icons';
-import { Red, Green, Sub } from '../Components/Text';
+import { Green, Red, Sub } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { getPlanetRank, getPlanetMaxRank, upgradeName } from '../../Backend/Utils/Utils';
 
 const StyledUpgradePreview = styled.div`
   min-width: 15em;
   width: 100%;
+  border-radius: 3px;
+  border: 1px solid ${dfstyles.colors.borderDark};
 `;
 
 const StatRow = styled.div`
@@ -16,7 +18,8 @@ const StatRow = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 2px 4px;
+  padding-left: 4px;
+  padding-right: 4px;
 
   & > span {
     margin-left: 0.2em;
@@ -47,7 +50,7 @@ const StatRow = styled.div`
   }
 
   &.upgrade-willupdate {
-    background: ${dfstyles.colors.backgroundlight};
+    background: ${dfstyles.colors.backgroundlighter};
   }
 `;
 

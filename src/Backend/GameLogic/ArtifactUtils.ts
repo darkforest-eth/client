@@ -1,14 +1,14 @@
 import {
-  Biome,
-  BiomeNames,
+  Artifact,
+  ArtifactId,
   ArtifactRarity,
   ArtifactRarityNames,
-  Planet,
-  PlanetLevel,
-  Artifact,
   ArtifactType,
   ArtifactTypeNames,
-  ArtifactId,
+  Biome,
+  BiomeNames,
+  Planet,
+  PlanetLevel,
 } from '@darkforest_eth/types';
 import { ProcgenUtils } from '../Procedural/ProcgenUtils';
 

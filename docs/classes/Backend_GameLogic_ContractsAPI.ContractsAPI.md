@@ -1,94 +1,102 @@
-# Class: default
+# Class: ContractsAPI
 
-[Backend/GameLogic/ContractsAPI](../modules/Backend_GameLogic_ContractsAPI.md).default
+[Backend/GameLogic/ContractsAPI](../modules/Backend_GameLogic_ContractsAPI.md).ContractsAPI
 
-Roughly contains methods that map 1:1 with functions that live
-in the contract.
+Roughly contains methods that map 1:1 with functions that live in the contract. Responsible for
+reading and writing to and from the blockchain.
+
+**`todo`** don't inherit from {@link EventEmitter}. instead use {@link Monomitter}
 
 ## Hierarchy
 
 - `EventEmitter`
 
-  ↳ **`default`**
+  ↳ **`ContractsAPI`**
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](Backend_GameLogic_ContractsAPI.default.md#constructor)
+- [constructor](Backend_GameLogic_ContractsAPI.ContractsAPI.md#constructor)
 
 ### Properties
 
-- [contractCaller](Backend_GameLogic_ContractsAPI.default.md#contractcaller)
-- [coreContract](Backend_GameLogic_ContractsAPI.default.md#corecontract)
-- [diagnosticsUpdater](Backend_GameLogic_ContractsAPI.default.md#diagnosticsupdater)
-- [ethConnection](Backend_GameLogic_ContractsAPI.default.md#ethconnection)
-- [gettersContract](Backend_GameLogic_ContractsAPI.default.md#getterscontract)
-- [gptCreditContract](Backend_GameLogic_ContractsAPI.default.md#gptcreditcontract)
-- [txRequestExecutor](Backend_GameLogic_ContractsAPI.default.md#txrequestexecutor)
+- [contractCaller](Backend_GameLogic_ContractsAPI.ContractsAPI.md#contractcaller)
+- [ethConnection](Backend_GameLogic_ContractsAPI.ContractsAPI.md#ethconnection)
+- [txExecutor](Backend_GameLogic_ContractsAPI.ContractsAPI.md#txexecutor)
+- [MIN_BALANCE](Backend_GameLogic_ContractsAPI.ContractsAPI.md#min_balance)
+
+### Accessors
+
+- [coreContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#corecontract)
+- [gettersContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getterscontract)
+- [gptCreditContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#gptcreditcontract)
+- [scoreContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#scorecontract)
+- [whitelistContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#whitelistcontract)
 
 ### Methods
 
-- [activateArtifact](Backend_GameLogic_ContractsAPI.default.md#activateartifact)
-- [bulkGetArtifacts](Backend_GameLogic_ContractsAPI.default.md#bulkgetartifacts)
-- [bulkGetArtifactsOnPlanets](Backend_GameLogic_ContractsAPI.default.md#bulkgetartifactsonplanets)
-- [bulkGetPlanets](Backend_GameLogic_ContractsAPI.default.md#bulkgetplanets)
-- [buyGPTCredits](Backend_GameLogic_ContractsAPI.default.md#buygptcredits)
-- [buyHat](Backend_GameLogic_ContractsAPI.default.md#buyhat)
-- [deactivateArtifact](Backend_GameLogic_ContractsAPI.default.md#deactivateartifact)
-- [depositArtifact](Backend_GameLogic_ContractsAPI.default.md#depositartifact)
-- [destroy](Backend_GameLogic_ContractsAPI.default.md#destroy)
-- [findArtifact](Backend_GameLogic_ContractsAPI.default.md#findartifact)
-- [getAccount](Backend_GameLogic_ContractsAPI.default.md#getaccount)
-- [getAllArrivals](Backend_GameLogic_ContractsAPI.default.md#getallarrivals)
-- [getArrival](Backend_GameLogic_ContractsAPI.default.md#getarrival)
-- [getArrivalsForPlanet](Backend_GameLogic_ContractsAPI.default.md#getarrivalsforplanet)
-- [getArtifactById](Backend_GameLogic_ContractsAPI.default.md#getartifactbyid)
-- [getBalance](Backend_GameLogic_ContractsAPI.default.md#getbalance)
-- [getConstants](Backend_GameLogic_ContractsAPI.default.md#getconstants)
-- [getContractAddress](Backend_GameLogic_ContractsAPI.default.md#getcontractaddress)
-- [getContractBalance](Backend_GameLogic_ContractsAPI.default.md#getcontractbalance)
-- [getGPTCreditBalance](Backend_GameLogic_ContractsAPI.default.md#getgptcreditbalance)
-- [getGPTCreditPriceEther](Backend_GameLogic_ContractsAPI.default.md#getgptcreditpriceether)
-- [getPlanetById](Backend_GameLogic_ContractsAPI.default.md#getplanetbyid)
-- [getPlayerArtifacts](Backend_GameLogic_ContractsAPI.default.md#getplayerartifacts)
-- [getPlayerById](Backend_GameLogic_ContractsAPI.default.md#getplayerbyid)
-- [getPlayers](Backend_GameLogic_ContractsAPI.default.md#getplayers)
-- [getRevealedCoordsByIdIfExists](Backend_GameLogic_ContractsAPI.default.md#getrevealedcoordsbyidifexists)
-- [getRevealedPlanetsCoords](Backend_GameLogic_ContractsAPI.default.md#getrevealedplanetscoords)
-- [getTokenMintEndTimestamp](Backend_GameLogic_ContractsAPI.default.md#gettokenmintendtimestamp)
-- [getTouchedPlanetIds](Backend_GameLogic_ContractsAPI.default.md#gettouchedplanetids)
-- [getWorldRadius](Backend_GameLogic_ContractsAPI.default.md#getworldradius)
-- [initializePlayer](Backend_GameLogic_ContractsAPI.default.md#initializeplayer)
-- [makeCall](Backend_GameLogic_ContractsAPI.default.md#makecall)
-- [move](Backend_GameLogic_ContractsAPI.default.md#move)
-- [prospectPlanet](Backend_GameLogic_ContractsAPI.default.md#prospectplanet)
-- [removeEventListeners](Backend_GameLogic_ContractsAPI.default.md#removeeventlisteners)
-- [reveal](Backend_GameLogic_ContractsAPI.default.md#reveal)
-- [setDiagnosticUpdater](Backend_GameLogic_ContractsAPI.default.md#setdiagnosticupdater)
-- [setupEventListeners](Backend_GameLogic_ContractsAPI.default.md#setupeventlisteners)
-- [transferOwnership](Backend_GameLogic_ContractsAPI.default.md#transferownership)
-- [upgradePlanet](Backend_GameLogic_ContractsAPI.default.md#upgradeplanet)
-- [waitFor](Backend_GameLogic_ContractsAPI.default.md#waitfor)
-- [withdrawArtifact](Backend_GameLogic_ContractsAPI.default.md#withdrawartifact)
-- [withdrawSilver](Backend_GameLogic_ContractsAPI.default.md#withdrawsilver)
-- [create](Backend_GameLogic_ContractsAPI.default.md#create)
+- [activateArtifact](Backend_GameLogic_ContractsAPI.ContractsAPI.md#activateartifact)
+- [afterTransaction](Backend_GameLogic_ContractsAPI.ContractsAPI.md#aftertransaction)
+- [beforeTransaction](Backend_GameLogic_ContractsAPI.ContractsAPI.md#beforetransaction)
+- [bulkGetArtifacts](Backend_GameLogic_ContractsAPI.ContractsAPI.md#bulkgetartifacts)
+- [bulkGetArtifactsOnPlanets](Backend_GameLogic_ContractsAPI.ContractsAPI.md#bulkgetartifactsonplanets)
+- [bulkGetPlanets](Backend_GameLogic_ContractsAPI.ContractsAPI.md#bulkgetplanets)
+- [buyGPTCredits](Backend_GameLogic_ContractsAPI.ContractsAPI.md#buygptcredits)
+- [buyHat](Backend_GameLogic_ContractsAPI.ContractsAPI.md#buyhat)
+- [claim](Backend_GameLogic_ContractsAPI.ContractsAPI.md#claim)
+- [deactivateArtifact](Backend_GameLogic_ContractsAPI.ContractsAPI.md#deactivateartifact)
+- [depositArtifact](Backend_GameLogic_ContractsAPI.ContractsAPI.md#depositartifact)
+- [destroy](Backend_GameLogic_ContractsAPI.ContractsAPI.md#destroy)
+- [findArtifact](Backend_GameLogic_ContractsAPI.ContractsAPI.md#findartifact)
+- [getAccount](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getaccount)
+- [getAllArrivals](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getallarrivals)
+- [getArrival](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getarrival)
+- [getArrivalsForPlanet](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getarrivalsforplanet)
+- [getArtifactById](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getartifactbyid)
+- [getBalance](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getbalance)
+- [getClaimedCoordsByIdIfExists](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getclaimedcoordsbyidifexists)
+- [getClaimedPlanetsCoords](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getclaimedplanetscoords)
+- [getConstants](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getconstants)
+- [getContractAddress](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getcontractaddress)
+- [getContractBalance](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getcontractbalance)
+- [getGPTCreditBalance](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgptcreditbalance)
+- [getGPTCreditPriceEther](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgptcreditpriceether)
+- [getPlanetById](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getplanetbyid)
+- [getPlayerArtifacts](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getplayerartifacts)
+- [getPlayerById](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getplayerbyid)
+- [getPlayers](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getplayers)
+- [getRevealedCoordsByIdIfExists](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getrevealedcoordsbyidifexists)
+- [getRevealedPlanetsCoords](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getrevealedplanetscoords)
+- [getTokenMintEndTimestamp](Backend_GameLogic_ContractsAPI.ContractsAPI.md#gettokenmintendtimestamp)
+- [getTouchedPlanetIds](Backend_GameLogic_ContractsAPI.ContractsAPI.md#gettouchedplanetids)
+- [getWorldRadius](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getworldradius)
+- [hasAccount](Backend_GameLogic_ContractsAPI.ContractsAPI.md#hasaccount)
+- [initializePlayer](Backend_GameLogic_ContractsAPI.ContractsAPI.md#initializeplayer)
+- [makeCall](Backend_GameLogic_ContractsAPI.ContractsAPI.md#makecall)
+- [move](Backend_GameLogic_ContractsAPI.ContractsAPI.md#move)
+- [prospectPlanet](Backend_GameLogic_ContractsAPI.ContractsAPI.md#prospectplanet)
+- [removeEventListeners](Backend_GameLogic_ContractsAPI.ContractsAPI.md#removeeventlisteners)
+- [reveal](Backend_GameLogic_ContractsAPI.ContractsAPI.md#reveal)
+- [setDiagnosticUpdater](Backend_GameLogic_ContractsAPI.ContractsAPI.md#setdiagnosticupdater)
+- [setupEventListeners](Backend_GameLogic_ContractsAPI.ContractsAPI.md#setupeventlisteners)
+- [transferOwnership](Backend_GameLogic_ContractsAPI.ContractsAPI.md#transferownership)
+- [upgradePlanet](Backend_GameLogic_ContractsAPI.ContractsAPI.md#upgradeplanet)
+- [waitFor](Backend_GameLogic_ContractsAPI.ContractsAPI.md#waitfor)
+- [withdrawArtifact](Backend_GameLogic_ContractsAPI.ContractsAPI.md#withdrawartifact)
+- [withdrawSilver](Backend_GameLogic_ContractsAPI.ContractsAPI.md#withdrawsilver)
 
 ## Constructors
 
 ### constructor
 
-• `Private` **new default**(`ethConnection`, `coreContract`, `gettersContract`, `gptCreditContract`, `nonce`)
+• **new ContractsAPI**(`ethConnection`)
 
 #### Parameters
 
-| Name                | Type                                                  |
-| :------------------ | :---------------------------------------------------- |
-| `ethConnection`     | [`default`](Backend_Network_EthConnection.default.md) |
-| `coreContract`      | `DarkForestCore`                                      |
-| `gettersContract`   | `DarkForestGetters`                                   |
-| `gptCreditContract` | `DarkForestGPTCredit`                                 |
-| `nonce`             | `number`                                              |
+| Name            | Type            |
+| :-------------- | :-------------- |
+| `ethConnection` | `EthConnection` |
 
 #### Overrides
 
@@ -98,43 +106,84 @@ EventEmitter.constructor
 
 ### contractCaller
 
-• `Private` `Readonly` **contractCaller**: [`ContractCaller`](Backend_GameLogic_ContractCaller.ContractCaller.md)
+• `Private` `Readonly` **contractCaller**: `ContractCaller`
 
----
-
-### coreContract
-
-• `Private` **coreContract**: `DarkForestCore`
-
----
-
-### diagnosticsUpdater
-
-• `Private` `Optional` **diagnosticsUpdater**: [`DiagnosticUpdater`](../interfaces/Backend_Interfaces_DiagnosticUpdater.DiagnosticUpdater.md)
+Instrumented {@link ThrottledConcurrentQueue} for blockchain reads.
 
 ---
 
 ### ethConnection
 
-• `Private` **ethConnection**: [`default`](Backend_Network_EthConnection.default.md)
+• `Private` **ethConnection**: `EthConnection`
+
+Our connection to the blockchain. In charge of low level networking, and also of the burner
+wallet.
+
+---
+
+### txExecutor
+
+• `Private` `Readonly` **txExecutor**: `undefined` \| `TxExecutor`
+
+Instrumented {@link ThrottledConcurrentQueue} for blockchain writes.
+
+---
+
+### MIN_BALANCE
+
+▪ `Static` `Private` `Readonly` **MIN_BALANCE**: `BigNumber`
+
+Don't allow users to submit txs if balance falls below this amount/
+
+## Accessors
+
+### coreContract
+
+• `get` **coreContract**(): `DarkForestCore`
+
+#### Returns
+
+`DarkForestCore`
 
 ---
 
 ### gettersContract
 
-• `Private` **gettersContract**: `DarkForestGetters`
+• `get` **gettersContract**(): `DarkForestGetters`
+
+#### Returns
+
+`DarkForestGetters`
 
 ---
 
 ### gptCreditContract
 
-• `Private` **gptCreditContract**: `DarkForestGPTCredit`
+• `get` **gptCreditContract**(): `DarkForestGPTCredit`
+
+#### Returns
+
+`DarkForestGPTCredit`
 
 ---
 
-### txRequestExecutor
+### scoreContract
 
-• `Private` `Readonly` **txRequestExecutor**: `undefined` \| [`TxExecutor`](Backend_Network_TxExecutor.TxExecutor.md)
+• `get` **scoreContract**(): `DarkForestScoringRound3`
+
+#### Returns
+
+`DarkForestScoringRound3`
+
+---
+
+### whitelistContract
+
+• `get` **whitelistContract**(): `Whitelist`
+
+#### Returns
+
+`Whitelist`
 
 ## Methods
 
@@ -151,6 +200,43 @@ EventEmitter.constructor
 #### Returns
 
 `Promise`<`TransactionReceipt`\>
+
+---
+
+### afterTransaction
+
+▸ `Private` **afterTransaction**(`_txRequest`, `txDiagnosticInfo`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name               | Type                |
+| :----------------- | :------------------ |
+| `_txRequest`       | `QueuedTransaction` |
+| `txDiagnosticInfo` | `unknown`           |
+
+#### Returns
+
+`Promise`<`void`\>
+
+---
+
+### beforeTransaction
+
+▸ `Private` **beforeTransaction**(`txRequest`): `Promise`<`void`\>
+
+This function is called by {@link TxExecutor} before each transaction. It gives the client an
+opportunity to prevent a transaction from going through based on business logic or user
+interaction. To prevent the queued transaction from being submitted, throw an Error.
+
+#### Parameters
+
+| Name        | Type                |
+| :---------- | :------------------ |
+| `txRequest` | `QueuedTransaction` |
+
+#### Returns
+
+`Promise`<`void`\>
 
 ---
 
@@ -241,6 +327,23 @@ EventEmitter.constructor
 
 ---
 
+### claim
+
+▸ **claim**(`args`, `action`): `Promise`<`TransactionReceipt`\>
+
+#### Parameters
+
+| Name     | Type                                                                           |
+| :------- | :----------------------------------------------------------------------------- |
+| `args`   | [`ClaimArgs`](../modules/_types_darkforest_api_ContractsAPITypes.md#claimargs) |
+| `action` | `UnconfirmedClaim`                                                             |
+
+#### Returns
+
+`Promise`<`TransactionReceipt`\>
+
+---
+
 ### deactivateArtifact
 
 ▸ **deactivateArtifact**(`action`): `Promise`<`TransactionReceipt`\>
@@ -303,11 +406,11 @@ EventEmitter.constructor
 
 ### getAccount
 
-▸ **getAccount**(): `EthAddress`
+▸ **getAccount**(): `undefined` \| `EthAddress`
 
 #### Returns
 
-`EthAddress`
+`undefined` \| `EthAddress`
 
 ---
 
@@ -378,11 +481,45 @@ EventEmitter.constructor
 
 ### getBalance
 
-▸ **getBalance**(): `Promise`<`number`\>
+▸ **getBalance**(): `Promise`<`BigNumber`\>
 
 #### Returns
 
-`Promise`<`number`\>
+`Promise`<`BigNumber`\>
+
+---
+
+### getClaimedCoordsByIdIfExists
+
+▸ **getClaimedCoordsByIdIfExists**(`planetId`): `Promise`<`undefined` \| `ClaimedCoords`\>
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `planetId` | `LocationId` |
+
+#### Returns
+
+`Promise`<`undefined` \| `ClaimedCoords`\>
+
+---
+
+### getClaimedPlanetsCoords
+
+▸ **getClaimedPlanetsCoords**(`startingAt`, `onProgressIds?`, `onProgressCoords?`): `Promise`<`ClaimedCoords`[]\>
+
+#### Parameters
+
+| Name                | Type                                      |
+| :------------------ | :---------------------------------------- |
+| `startingAt`        | `number`                                  |
+| `onProgressIds?`    | (`fractionCompleted`: `number`) => `void` |
+| `onProgressCoords?` | (`fractionCompleted`: `number`) => `void` |
+
+#### Returns
+
+`Promise`<`ClaimedCoords`[]\>
 
 ---
 
@@ -422,9 +559,9 @@ EventEmitter.constructor
 
 #### Parameters
 
-| Name      | Type         |
-| :-------- | :----------- |
-| `address` | `EthAddress` |
+| Name      | Type                        |
+| :-------- | :-------------------------- |
+| `address` | `undefined` \| `EthAddress` |
 
 #### Returns
 
@@ -460,13 +597,13 @@ EventEmitter.constructor
 
 ### getPlayerArtifacts
 
-▸ **getPlayerArtifacts**(`playerId`, `onProgress?`): `Promise`<`Artifact`[]\>
+▸ **getPlayerArtifacts**(`playerId?`, `onProgress?`): `Promise`<`Artifact`[]\>
 
 #### Parameters
 
 | Name          | Type                            |
 | :------------ | :------------------------------ |
-| `playerId`    | `EthAddress`                    |
+| `playerId?`   | `EthAddress`                    |
 | `onProgress?` | (`percent`: `number`) => `void` |
 
 #### Returns
@@ -575,6 +712,16 @@ EventEmitter.constructor
 #### Returns
 
 `Promise`<`number`\>
+
+---
+
+### hasAccount
+
+▸ **hasAccount**(): `boolean`
+
+#### Returns
+
+`boolean`
 
 ---
 
@@ -688,9 +835,9 @@ EventEmitter.constructor
 
 #### Parameters
 
-| Name                 | Type                                                                                           |
-| :------------------- | :--------------------------------------------------------------------------------------------- |
-| `diagnosticUpdater?` | [`DiagnosticUpdater`](../interfaces/Backend_Interfaces_DiagnosticUpdater.DiagnosticUpdater.md) |
+| Name                 | Type                |
+| :------------------- | :------------------ |
+| `diagnosticUpdater?` | `DiagnosticUpdater` |
 
 #### Returns
 
@@ -700,11 +847,11 @@ EventEmitter.constructor
 
 ### setupEventListeners
 
-▸ **setupEventListeners**(): `void`
+▸ **setupEventListeners**(): `Promise`<`void`\>
 
 #### Returns
 
-`void`
+`Promise`<`void`\>
 
 ---
 
@@ -792,19 +939,3 @@ Given an unconfirmed (but submitted) transaction, emits the appropriate
 #### Returns
 
 `Promise`<`TransactionReceipt`\>
-
----
-
-### create
-
-▸ `Static` **create**(`ethConnection`): `Promise`<[`default`](Backend_GameLogic_ContractsAPI.default.md)\>
-
-#### Parameters
-
-| Name            | Type                                                  |
-| :-------------- | :---------------------------------------------------- |
-| `ethConnection` | [`default`](Backend_Network_EthConnection.default.md) |
-
-#### Returns
-
-`Promise`<[`default`](Backend_GameLogic_ContractsAPI.default.md)\>

@@ -1,6 +1,6 @@
-import { UniformType, AttribType } from '../EngineTypes';
-import { glsl } from '../EngineUtils';
 import { MAX_PERLIN_VALUE } from '@darkforest_eth/hashing';
+import { AttribType, UniformType } from '../EngineTypes';
+import { glsl } from '../EngineUtils';
 import { ShaderMixins } from '../WebGL/ShaderMixins';
 
 const a = {
@@ -222,7 +222,7 @@ export const PERLIN_PROGRAM_DEFINITION = {
       vec4 c0 = vec4(0.000, 0.080, 0.320, 1.0);
       vec4 c1 = vec4(0.000, 0.021, 0.170, 1.0);
       vec4 c2 = vec4(0.008, 0.000, 0.024, 1.0);
-      vec4 c3 = vec4(0.147, 0.000, 0.141, 1.0);
+      vec4 c3 = vec4(0.000, 0.141, 0.000, 1.0);
 
 
       float t1 = ${u.thresholds}.x;

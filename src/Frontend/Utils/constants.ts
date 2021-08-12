@@ -1,5 +1,8 @@
 import * as bigInt from 'big-integer';
 
+// To developer, increase this number to 256. This, in combination with setting `DISABLE_ZK_CHECKS`
+// in darkforest.toml, will make you mine the map at ULTRA SPEED!
+// To code reviewer, make sure this does not change in a PR to develop!
 const MIN_CHUNK_SIZE = 16;
 
 /**
@@ -16,11 +19,6 @@ const LOCATION_ID_UB = bigInt(
 );
 
 export { MIN_CHUNK_SIZE, MAX_CHUNK_SIZE, LOCATION_ID_UB };
-
-// no slash at end plz
-export const BLOCK_EXPLORER_URL = 'https://blockscout.com/poa/xdai';
-
-export const XDAI_CHAIN_ID = 100;
 
 export const HAT_SIZES = [
   'None',

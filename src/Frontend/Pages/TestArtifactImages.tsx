@@ -1,7 +1,6 @@
-import { EMPTY_LOCATION_ID } from '@darkforest_eth/constants';
-import { ArtifactType, Biome, ArtifactRarity } from '@darkforest_eth/types';
-import React from 'react';
-import { useEffect } from 'react';
+import { EMPTY_ARTIFACT_ID } from '@darkforest_eth/constants';
+import { ArtifactRarity, ArtifactType, Biome } from '@darkforest_eth/types';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import {
   ArtifactFileColor,
@@ -60,7 +59,7 @@ function ArtifactPreviewer({
               artifactType: type,
               planetBiome: biome,
               rarity,
-              id: EMPTY_LOCATION_ID,
+              id: EMPTY_ARTIFACT_ID,
             },
             ArtifactFileColor.BLUE,
             { forceAncient: ancient === true, skipCaching: true }

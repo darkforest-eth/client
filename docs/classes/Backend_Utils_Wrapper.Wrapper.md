@@ -22,6 +22,10 @@ just wrap it in a new {@code Wrapper}, which will force a rerender.
 
 - [value](Backend_Utils_Wrapper.Wrapper.md#value)
 
+### Methods
+
+- [or](Backend_Utils_Wrapper.Wrapper.md#or)
+
 ## Constructors
 
 ### constructor
@@ -45,3 +49,19 @@ just wrap it in a new {@code Wrapper}, which will force a rerender.
 ### value
 
 • `Readonly` **value**: `T`
+
+## Methods
+
+### or
+
+▸ **or**(`wrapper`): [`Wrapper`](Backend_Utils_Wrapper.Wrapper.md)<`T`\>
+
+#### Parameters
+
+| Name      | Type                                                |
+| :-------- | :-------------------------------------------------- |
+| `wrapper` | [`Wrapper`](Backend_Utils_Wrapper.Wrapper.md)<`T`\> |
+
+#### Returns
+
+[`Wrapper`](Backend_Utils_Wrapper.Wrapper.md)<`T`\>

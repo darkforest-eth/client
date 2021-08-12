@@ -1,45 +1,43 @@
+import { EMPTY_ADDRESS, MAX_PLANET_LEVEL } from '@darkforest_eth/constants';
+import { bonusFromHex } from '@darkforest_eth/hexgen';
+import { Planet, PlanetType } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
-import { isLocatable, StatIdx } from '../../../_types/global/GlobalTypes';
-import dfstyles from '../../Styles/dfstyles';
-import { PlanetType, Planet } from '@darkforest_eth/types';
 import { ProcgenUtils } from '../../../Backend/Procedural/ProcgenUtils';
 import { getPlanetRank } from '../../../Backend/Utils/Utils';
+import { isLocatable, StatIdx } from '../../../_types/global/GlobalTypes';
 import {
-  PiratesIcon,
-  MaxLevelIcon,
-  SilverProdIcon,
-  EnergyIcon,
-  EnergyGrowthIcon,
-  RangeIcon,
-  SpeedIcon,
-  DefenseIcon,
-  RankIcon,
   ArtifactIcon,
+  DefenseIcon,
+  EnergyGrowthIcon,
+  EnergyIcon,
+  MaxLevelIcon,
+  PiratesIcon,
+  RangeIcon,
+  RankIcon,
+  SilverProdIcon,
+  SpeedIcon,
 } from '../../Components/Icons';
 import { TooltipName } from '../../Game/WindowManager';
 import { TooltipTrigger } from '../../Panes/Tooltip';
-import { EMPTY_ADDRESS, MAX_PLANET_LEVEL } from '@darkforest_eth/constants';
-import { bonusFromHex } from '@darkforest_eth/hexgen';
+import dfstyles from '../../Styles/dfstyles';
 
 const StyledPlanetIcons = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
+  flex-direction: row;
   flex-wrap: wrap-reverse;
-  padding: 0.1em;
+  align-items: center;
+  justify-content: center;
 
   & > span {
-    font-size: 8pt;
+    font-size: 0.9em;
     width: 1.5em;
     height: 1.5em;
-    border: 1px solid ${dfstyles.colors.text};
     background: ${dfstyles.colors.backgroundlighter};
     border-radius: 2px;
     margin: 0.1em;
+    margin-right: 0.25em;
+    cursor: help;
 
     &,
     & > span {

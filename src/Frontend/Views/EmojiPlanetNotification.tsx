@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import { Planet } from '@darkforest_eth/types';
-import { Btn } from '../Components/Btn';
-import { Sub } from '../Components/Text';
-import { Wrapper } from '../../Backend/Utils/Wrapper';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { getEmojiMessage } from '../../Backend/GameLogic/ArrivalUtils';
+import { Wrapper } from '../../Backend/Utils/Wrapper';
+import { Btn } from '../Components/Btn';
 import { SpacedFlexRow } from '../Components/FlexRows';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
+import { Sub } from '../Components/Text';
 import { useUIManager } from '../Utils/AppHooks';
 import { EmojiPicker } from './EmojiPicker';
 
@@ -25,7 +25,7 @@ export function EmojiPlanetNotification({ wrapper }: { wrapper: Wrapper<Planet |
   if (wrapper.value?.needsServerRefresh) {
     content = (
       <SpacedFlexRow>
-        <Sub>off-chain data</Sub>
+        <Sub>Off-Chain Data</Sub>
         <Sub>
           <LoadingSpinner initialText={'Loading...'} />
         </Sub>
@@ -53,7 +53,7 @@ export function EmojiPlanetNotification({ wrapper }: { wrapper: Wrapper<Planet |
     content = (
       <>
         <SpacedFlexRow>
-          <Sub>set planet emoji</Sub>
+          <Sub>Set Planet Emoji:</Sub>
 
           <PostEmojiActionsContainer>
             <EmojiPicker emoji={chosenEmoji} setEmoji={setChosenEmoji} />

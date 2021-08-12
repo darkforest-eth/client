@@ -1,19 +1,15 @@
-import { Rectangle } from '../../global/GlobalTypes';
-import { LocationId } from '@darkforest_eth/types';
+import type { Abstract, LocationId } from '@darkforest_eth/types';
+import type { Rectangle } from '../../global/GlobalTypes';
 
 /**
  * one of "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
  */
-export type BucketId = string & {
-  __value__: never;
-};
+export type BucketId = Abstract<string, 'BucketId'>;
 
 /**
  * Don't worry about the values here. Never base code off the values here. PLEASE.
  */
-export type ChunkId = string & {
-  __value__: never;
-};
+export type ChunkId = Abstract<string, 'ChunkId'>;
 
 /**
  * Chunks represent map data in some rectangle. This type represents a chunk when it is at rest in

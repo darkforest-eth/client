@@ -1,4 +1,4 @@
-import { ConversationArtifact, Conversation, EthAddress, ArtifactId } from '@darkforest_eth/types';
+import { ArtifactId, Conversation, ConversationArtifact, EthAddress } from '@darkforest_eth/types';
 
 const CONVERSATION_API_HOST = process.env.CONVERSATION_API_HOST as string;
 

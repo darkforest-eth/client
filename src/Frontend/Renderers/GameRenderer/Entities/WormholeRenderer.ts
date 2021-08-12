@@ -1,7 +1,7 @@
 import type { LocationId } from '@darkforest_eth/types';
-import Renderer from '../Renderer';
 import { engineConsts } from '../EngineConsts';
 import { RenderZIndex } from '../EngineTypes';
+import Renderer from '../Renderer';
 
 const { purpleA } = engineConsts.colors;
 

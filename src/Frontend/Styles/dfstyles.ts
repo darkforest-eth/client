@@ -1,4 +1,6 @@
+import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
 import { SpaceType } from '@darkforest_eth/types';
+import color from 'color';
 import { css } from 'styled-components';
 
 export const ARTIFACT_ROW_H = 48;
@@ -7,29 +9,61 @@ export const SPACE_TYPE_COLORS = {
   [SpaceType.NEBULA]: 'rgb(0, 20.4, 81.6)',
   [SpaceType.SPACE]: 'rgb(0, 5.4, 43.35)',
   [SpaceType.DEEP_SPACE]: 'rgb(2.04, 0, 6.12)',
-  [SpaceType.DEAD_SPACE]: 'rgb(37.485, 0, 36)',
+  [SpaceType.DEAD_SPACE]: 'rgb(0, 37, 1)',
 } as const;
+
+const text = color('#bbb').hex();
+const subtext = color(text).darken(0.3).hex();
+const subbertext = color(text).darken(0.5).hex();
+const subbesttext = color(text).darken(0.8).hex();
+
+const background = '#151515';
+const backgrounddark = '#252525';
+const backgroundlight = color(background).lighten(0.5).hex();
+const backgroundlighter = color(backgroundlight).lighten(0.3).hex();
+
+const border = '#777';
+const borderDark = color(border).darken(0.2).hex();
+const borderDarker = color(borderDark).darken(0.2).hex();
+
+const blueBackground = '#0a0a23';
+
+const dfblue = '#00ADE1';
+const dfgreen = '#00DC82';
+const dfgreendark = color(dfgreen).darken(0.7).hex();
+const dfgreenlight = color(dfgreen).lighten(0.1).hex();
+const dfred = '#FF6492';
+const dfyellow = '#e8e228';
+const dfpurple = '#9189d9';
+const dfwhite = '#ffffff';
 
 const dfstyles = {
   colors: {
-    text: '#ffffff',
-    subtext: '#a0a0a0',
-    subbertext: '#565656',
-    subbesttext: '#383838',
-    blueBackground: '#0a0a23',
-    background: '#080808',
-    backgrounddark: '#080808',
-    backgroundlight: '#282834',
-    backgroundlighter: '#4a4a5a',
-    dfblue: '#00ADE1',
+    text,
+    subtext,
+    subbertext,
+    subbesttext,
+    blueBackground,
+    background,
+    backgrounddark,
+    backgroundlight,
+    backgroundlighter,
+    dfblue,
 
-    dfgreen: '#00DC82',
-    dfgreendark: '#025230',
-    dfgreenlight: '#89facc',
-    dfred: '#FF6492',
-    dfyellow: '#e8e228',
+    border,
+    borderDark,
+    borderDarker,
+
+    dfgreen,
+    dfgreendark,
+    dfgreenlight,
+    dfred,
+    dfyellow,
+    dfpurple,
+    dfwhite,
 
     artifactBackground: 'rgb(21, 17, 71)',
+
     icons: {
       twitter: '#1DA1F2',
       github: '#8e65db',
@@ -91,6 +125,28 @@ const dfstyles = {
       user-select: none;
     `,
   },
+};
+
+export const snips = {
+  bigPadding: css`
+    padding: 2px 12px;
+  `,
+  defaultModalWidth: css`
+    width: ${RECOMMENDED_MODAL_WIDTH};
+    max-width: ${RECOMMENDED_MODAL_WIDTH};
+  `,
+  defaultBackground: `background: ${dfstyles.colors.background};`,
+  roundedBorders: `border-radius:${dfstyles.borderRadius};`,
+  roundedBordersWithEdge: css`
+    border-radius: 3px;
+    border: 1px solid ${dfstyles.colors.borderDark};
+  `,
+  absoluteTopLeft: css`
+    position: absolute;
+    top: 0;
+    left: 0;
+  `,
+  pane: ``,
 };
 
 export default dfstyles;

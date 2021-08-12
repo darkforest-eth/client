@@ -1,20 +1,21 @@
+import { Artifact, Upgrade } from '@darkforest_eth/types';
 import _ from 'lodash';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Artifact, ArtifactId, Upgrade } from '@darkforest_eth/types';
 import { isActivated } from '../../../Backend/GameLogic/ArtifactUtils';
 import { CenterBackgroundSubtext } from '../../Components/CoreUI';
+import { ModalHandle } from '../../Views/ModalPane';
 import { ArtifactListItem } from './ArtifactListItem';
 
 export function ArtifactsList({
   artifacts,
   sortBy,
-  openArtifactDetails,
+  modal,
   actions,
 }: {
   artifacts: Array<Artifact | undefined>;
   sortBy: keyof Upgrade | undefined;
-  openArtifactDetails: (artifactId: ArtifactId) => void;
+  modal: ModalHandle;
   actions: (artifact: Artifact) => React.ReactElement | undefined;
 }) {
   const [sortedArtifacts, setSortedArtifacts] = useState([...artifacts]);
@@ -36,16 +37,12 @@ export function ArtifactsList({
     <ArtifactsListContainer>
       {sortedArtifacts.length === 0 && (
         <CenterBackgroundSubtext width='100%' height='100%'>
-          No Artifacts
+          No Artifacts <br />
+          On This Planet
         </CenterBackgroundSubtext>
       )}
       {sortedArtifacts.map((a, i) => (
-        <ArtifactListItem
-          key={a?.id + '' + i}
-          artifact={a}
-          actions={actions}
-          openArtifactDetails={openArtifactDetails}
-        />
+        <ArtifactListItem key={a?.id || i} artifact={a} actions={actions} modal={modal} />
       ))}
     </ArtifactsListContainer>
   );

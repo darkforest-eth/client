@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useImperativeHandle } from 'react';
+import React, { useImperativeHandle, useState } from 'react';
 import styled from 'styled-components';
 import dfstyles from '../Styles/dfstyles';
 import { Sub } from './Text';
@@ -42,12 +41,16 @@ export function TextLoadingBarImpl(
 
   return (
     <span>
-      [<Sub>{progressText}</Sub>] {percentText}% <LoadingTitle>{prettyEntityName}</LoadingTitle>
+      [<Sub>{progressText}</Sub>]{' '}
+      <span style={{ fontWeight: percentText === '100' ? 'bold' : undefined }}>
+        {percentText}%{' '}
+      </span>
+      <LoadingTitle>{prettyEntityName}</LoadingTitle>
     </span>
   );
 }
 
 const LoadingTitle = styled.div`
   display: inline-block;
-  color: ${dfstyles.colors.subtext};
+  color: ${dfstyles.colors.text};
 `;

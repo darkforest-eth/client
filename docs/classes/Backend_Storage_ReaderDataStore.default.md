@@ -45,7 +45,7 @@ particular user.
 | `viewer`               | `undefined` \| `EthAddress`                                                                        |
 | `addressTwitterMap`    | [`AddressTwitterMap`](../modules/_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap) |
 | `contractConstants`    | [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)  |
-| `contractsAPI`         | [`default`](Backend_GameLogic_ContractsAPI.default.md)                                             |
+| `contractsAPI`         | [`ContractsAPI`](Backend_GameLogic_ContractsAPI.ContractsAPI.md)                                   |
 | `persistentChunkStore` | `undefined` \| [`default`](Backend_Storage_PersistentChunkStore.default.md)                        |
 
 ## Properties
@@ -64,7 +64,7 @@ particular user.
 
 ### contractsAPI
 
-• `Private` `Readonly` **contractsAPI**: [`default`](Backend_GameLogic_ContractsAPI.default.md)
+• `Private` `Readonly` **contractsAPI**: [`ContractsAPI`](Backend_GameLogic_ContractsAPI.ContractsAPI.md)
 
 ---
 
@@ -205,7 +205,7 @@ particular user.
 | Name            | Type                                                                                                            |
 | :-------------- | :-------------------------------------------------------------------------------------------------------------- |
 | `terminal`      | `MutableRefObject`<`undefined` \| [`TerminalHandle`](../interfaces/Frontend_Views_Terminal.TerminalHandle.md)\> |
-| `ethConnection` | [`default`](Backend_Network_EthConnection.default.md)                                                           |
+| `ethConnection` | `EthConnection`                                                                                                 |
 | `viewer`        | `undefined` \| `EthAddress`                                                                                     |
 
 #### Returns

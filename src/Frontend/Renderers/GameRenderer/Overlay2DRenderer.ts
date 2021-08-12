@@ -1,12 +1,12 @@
+import { Artifact, EmojiFlagBody, PlanetMessage, WorldCoords } from '@darkforest_eth/types';
+import { PlanetRenderInfo } from '../../../Backend/GameLogic/ViewportEntities';
 import { CanvasCoords } from '../../../Backend/Utils/Coordinates';
+import { Chunk, isEmojiFlagMessage } from '../../../_types/global/GlobalTypes';
 import Viewport from '../../Game/Viewport';
-import { HatType, hatFromType } from '../../Utils/Hats';
-import Renderer from './Renderer';
+import { hatFromType, HatType } from '../../Utils/Hats';
 import { engineConsts } from './EngineConsts';
 import { TextAlign } from './EngineTypes';
-import { Artifact, EmojiFlagBody, PlanetMessage, WorldCoords } from '@darkforest_eth/types';
-import { Chunk, isEmojiFlagMessage } from '../../../_types/global/GlobalTypes';
-import { PlanetRenderInfo } from '../../../Backend/GameLogic/ViewportEntities';
+import Renderer from './Renderer';
 
 /*
    this is mostly migration code from the old renderer; it holds all of the old renderer primitives,
@@ -84,6 +84,7 @@ export default class Overlay2DRenderer {
     height: number, // height of hat
     radius: number, // radius of planet
     rotation: number, // rotation of planet / hat (no-op right now)
+    hoveringPlanet: boolean, // whether or not the user is hovering over the given planet
     fill1: string | CanvasPattern = 'white', // hat fill color for bottom layer
     fill2: string | CanvasPattern = 'red', // hat fill color for top layer
     hoverCoords: WorldCoords | null = null
@@ -113,11 +114,12 @@ export default class Overlay2DRenderer {
     };
 
     const hovering =
-      hoverCoords &&
-      hoverCoords.x > hatTopLeft.x &&
-      hoverCoords.x < hatTopLeft.x + width &&
-      hoverCoords.y > hatTopLeft.y &&
-      hoverCoords.y < hatTopLeft.y + height;
+      (hoverCoords &&
+        hoverCoords.x > hatTopLeft.x &&
+        hoverCoords.x < hatTopLeft.x + width &&
+        hoverCoords.y > hatTopLeft.y &&
+        hoverCoords.y < hatTopLeft.y + height) ||
+      hoveringPlanet;
 
     // now draw the hat
 

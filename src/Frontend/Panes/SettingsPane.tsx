@@ -1,22 +1,17 @@
-import React, { useState, useEffect, FormEvent } from 'react';
-import { ChangeEvent } from 'react';
+import { EthConnection } from '@darkforest_eth/network';
+import { AutoGasSetting } from '@darkforest_eth/types';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import EthConnection from '../../Backend/Network/EthConnection';
+import TutorialManager from '../../Backend/GameLogic/TutorialManager';
 import { Chunk } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
-import { Spacer, Underline } from '../Components/CoreUI';
+import { Padded, Section, SectionHeader, Spacer } from '../Components/CoreUI';
 import { Input } from '../Components/Input';
-import { Red, Green, Link } from '../Components/Text';
+import { Green, Red } from '../Components/Text';
 import Viewport, { getDefaultScroll } from '../Game/Viewport';
-import dfstyles from '../Styles/dfstyles';
-import { useUIManager, useAccount } from '../Utils/AppHooks';
+import { useAccount, useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';
-import {
-  BooleanSetting,
-  Setting,
-  MultiSelectSetting,
-  AutoGasSetting,
-} from '../Utils/SettingsHooks';
+import { BooleanSetting, MultiSelectSetting, Setting } from '../Utils/SettingsHooks';
 import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 
 const SCROLL_MIN = 0.0001 * 10000;
@@ -25,13 +20,13 @@ const DEFAULT_SCROLL = Math.round(10000 * (getDefaultScroll() - 1));
 
 const Range = styled.input``;
 
-const StyledSettingsPane = styled.div`
-  width: 32em;
-  height: 30em;
+const SettingsContent = styled(Padded)`
+  width: 500px;
+  height: 500px;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  color: ${dfstyles.colors.subtext};
+  text-align: justify;
 `;
 
 const Row = styled.div`
@@ -40,35 +35,15 @@ const Row = styled.div`
 
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
 
   & > span:first-child {
     flex-grow: 1;
   }
 `;
 
-const Section = styled.div`
-  padding: 1em 0;
-  border-bottom: 1px solid ${dfstyles.colors.subtext};
-
-  &:first-child {
-    margin-top: -8px;
-  }
-
-  &:last-child {
-    border-bottom: none;
-  }
-`;
-
-const SectionHeader = styled.div`
-  color: white;
-  margin-bottom: 8px;
-  font-weight: bold;
-`;
-
 const ScrollSpeedInput = styled(Input)`
   padding: 2px 2px;
-  width: 4em;
+  width: 8em;
   height: min-content;
 `;
 
@@ -83,16 +58,18 @@ export function SettingsPane({
 }) {
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
-  const gasPrices = useEmitterValue(ethConnection.gasPrices$, ethConnection.getGasPrices());
+  const gasPrices = useEmitterValue(ethConnection.gasPrices$, ethConnection.getAutoGasPrices());
 
-  const [rpcURLText, setRpcURLText] = useState<string>(ethConnection.getRpcEndpoint());
-  const [rpcURL, setRpcURL] = useState<string>(ethConnection.getRpcEndpoint());
+  const [rpcUrl, setRpcURL] = useState<string>(ethConnection.getRpcEndpoint());
   const onChangeRpc = () => {
-    ethConnection.setRpcEndpoint(rpcURLText).then(() => {
-      const newEndpoint = ethConnection.getRpcEndpoint();
-      setRpcURLText(newEndpoint);
-      setRpcURL(newEndpoint);
-    });
+    ethConnection
+      .setRpcUrl(rpcUrl)
+      .then(() => {
+        localStorage.setItem('XDAI_RPC_ENDPOINT_v5', rpcUrl);
+      })
+      .catch(() => {
+        setRpcURL(ethConnection.getRpcEndpoint());
+      });
   };
 
   const [balance, setBalance] = useState<number>(0);
@@ -206,7 +183,7 @@ export function SettingsPane({
 
   return (
     <ModalPane hook={hook} title={'Settings'} name={ModalName.Hats}>
-      <StyledSettingsPane>
+      <SettingsContent>
         <Section>
           <SectionHeader>Burner Wallet Info</SectionHeader>
           <Row>
@@ -220,46 +197,14 @@ export function SettingsPane({
         </Section>
 
         <Section>
-          <SectionHeader>Burner Wallet Info (Private)</SectionHeader>
-          Your <Underline>secret key</Underline>, together with your{' '}
-          <Underline>home planet's coordinates</Underline>, grant you access to your Dark Forest
-          account on different browsers. You should save this info somewhere on your computer.
-          <Spacer height={8} />
-          <em>
-            <Red>WARNING:</Red> Never ever send this to anyone!
-          </em>
-          <Spacer height={8} />
-          <Row>
-            <Btn onClick={doPrivateClick}>Click {clicks} times to view info</Btn>
-          </Row>
-        </Section>
-
-        <Section>
-          <SectionHeader>Auto Confirm Transactions</SectionHeader>
-          <Spacer height={8} />
-          Whether or not to auto-confirm all transactions, except purchases. This will allow you to
-          make moves, spend silver on upgrades, etc. without requiring you to confirm each
-          transaction. However, the client WILL ask for confirmation before purchasing GPT credits
-          or buying hats.
-          <Spacer height={8} />
-          <BooleanSetting
-            uiManager={uiManager}
-            setting={Setting.AutoApproveNonPurchaseTransactions}
-            settingDescription={'toggle auto confirm non-purchase transactions'}
-          />
-          <Spacer width={8} />
-        </Section>
-
-        <Section>
           <SectionHeader>Gas Price</SectionHeader>
           Your gas price setting determines the price you pay for each transaction. A higher gas
           price means your transactions will be prioritized by the blockchain, making them confirm
-          faster. We recommend using the <Underline>auto average</Underline> setting. All auto
-          settings prices are pulled from{' '}
-          <Link href='https://blockscout.com/xdai/mainnet/api/v1/gas-price-oracle'>an oracle</Link>{' '}
-          and are capped at 15 gwei.
-          <Spacer height={8} />
+          faster. We recommend using the auto average setting. All auto settings prices are pulled
+          from an oracle and are capped at 15 gwei.
+          <Spacer height={16} />
           <MultiSelectSetting
+            wide
             uiManager={uiManager}
             setting={Setting.GasFeeGwei}
             values={[
@@ -284,30 +229,50 @@ export function SettingsPane({
               `average auto (~${gasPrices.average} gwei)`,
               `fast auto (~${gasPrices.fast} gwei)`,
             ]}
-            style={{
-              width: '250px',
-            }}
+          />
+        </Section>
+
+        <Section>
+          <SectionHeader>Burner Wallet Info (Private)</SectionHeader>
+          Your secret key, together with your home planet's coordinates, grant you access to your
+          Dark Forest account on different browsers. You should save this info somewhere on your
+          computer.
+          <Spacer height={16} />
+          <Red>WARNING:</Red> Never ever send this to anyone!
+          <Spacer height={8} />
+          <Btn wide onClick={doPrivateClick}>
+            Click {clicks} times to view info
+          </Btn>
+        </Section>
+
+        <Section>
+          <SectionHeader>Auto Confirm Transactions</SectionHeader>
+          Whether or not to auto-confirm all transactions, except purchases. This will allow you to
+          make moves, spend silver on upgrades, etc. without requiring you to confirm each
+          transaction. However, the client WILL ask for confirmation before sending transactions
+          that spend wallet funds.
+          <Spacer height={16} />
+          <BooleanSetting
+            uiManager={uiManager}
+            setting={Setting.AutoApproveNonPurchaseTransactions}
+            settingDescription={'auto confirm non-purchase transactions'}
           />
         </Section>
 
         <Section>
           <SectionHeader>Import and Export Map Data</SectionHeader>
-          <em>
-            <Red>WARNING:</Red> Maps from others could be altered and are not guaranteed to be
-            correct!
-          </em>
-          <Spacer height={8} />
-
+          <Red>WARNING:</Red> Maps from others could be altered and are not guaranteed to be
+          correct!
+          <Spacer height={16} />
           <Input
             wide
             value={importMapByTextBoxValue}
             placeholder={'Paste map contents here'}
-            onInput={(e: ChangeEvent<HTMLInputElement>) =>
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setImportMapByTextBoxValue(e.target.value)
             }
           />
           <Spacer height={8} />
-
           <Btn
             wide
             onClick={onImportMapFromTextBox}
@@ -316,29 +281,28 @@ export function SettingsPane({
             Import Map From Above
           </Btn>
           <Spacer height={8} />
-
           <Btn wide onClick={onExportMap}>
             Copy Map to Clipboard
           </Btn>
           <Spacer height={8} />
-
           <Btn wide onClick={onImportMap}>
             Import Map from Clipboard
           </Btn>
           <Spacer height={8} />
-
           <Green>{success}</Green>
           <Red>{failure}</Red>
         </Section>
 
         <Section>
           <SectionHeader>Change RPC Endpoint</SectionHeader>
-          Current RPC Endpoint: {rpcURL}
           <Spacer height={8} />
-          <Row>
-            <Input value={rpcURLText} onChange={(e) => setRpcURLText(e.target.value)} />
-            <Btn onClick={onChangeRpc}>Change RPC URL</Btn>
-          </Row>
+          Current RPC Endpoint: {rpcUrl}
+          <Spacer height={8} />
+          <Input wide value={rpcUrl} onChange={(e) => setRpcURL(e.target.value)} />
+          <Spacer height={8} />
+          <Btn wide onClick={onChangeRpc}>
+            Change RPC URL
+          </Btn>
         </Section>
 
         <Section>
@@ -350,7 +314,7 @@ export function SettingsPane({
           <BooleanSetting
             uiManager={uiManager}
             setting={Setting.OptOutMetrics}
-            settingDescription='toggle metrics opt out'
+            settingDescription='metrics opt out'
           />
         </Section>
 
@@ -358,11 +322,11 @@ export function SettingsPane({
           <SectionHeader>Performance</SectionHeader>
           Some performance settings. These will definitely be changed as we zero in on the
           performance bottlenecks in this game.
-          <Spacer height={8} />
+          <Spacer height={16} />
           <BooleanSetting
             uiManager={uiManager}
             setting={Setting.HighPerformanceRendering}
-            settingDescription='toggle performance mode'
+            settingDescription='performance mode'
           />
         </Section>
 
@@ -372,26 +336,54 @@ export function SettingsPane({
           <BooleanSetting
             uiManager={uiManager}
             setting={Setting.MoveNotifications}
-            settingDescription='toggle move notifications'
+            settingDescription='move notifications'
           />
         </Section>
+
         <Section>
           <SectionHeader>Scroll speed</SectionHeader>
           <Spacer height={8} />
-          <Row>
-            Scroll speed
+          <ScrollContainer>
             <Range
               type='range'
               value={clipScroll(scrollSpeed)}
               min={SCROLL_MIN}
               max={SCROLL_MAX}
               step={SCROLL_MIN / 10}
-              onInput={onScrollChange}
+              onChange={onScrollChange}
             />
-            <ScrollSpeedInput value={scrollSpeed} onInput={onScrollChange} />
-          </Row>
+            <Spacer width={16} />
+            <ScrollSpeedInput value={scrollSpeed} onChange={onScrollChange} />
+          </ScrollContainer>
         </Section>
-      </StyledSettingsPane>
+
+        <Section>
+          <SectionHeader>Reset Tutorial</SectionHeader>
+          <Spacer height={8} />
+          <Btn wide onClick={() => TutorialManager.getInstance().reset(uiManager.getAccount())}>
+            Reset Tutorial
+          </Btn>
+        </Section>
+
+        <Section>
+          <SectionHeader>Disable Default Shortcuts</SectionHeader>
+          If you'd like to use custom shortcuts via a plugin, you can disable the default shortcuts
+          here.
+          <Spacer height={8} />
+          <BooleanSetting
+            uiManager={uiManager}
+            setting={Setting.DisableDefaultShortcuts}
+            settingDescription='toggle disable default shortcuts'
+          />
+        </Section>
+      </SettingsContent>
     </ModalPane>
   );
 }
+
+const ScrollContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+`;

@@ -12,6 +12,7 @@
 
 ### Interfaces
 
+- [ClaimCountdownInfo](../interfaces/_types_global_GlobalTypes.ClaimCountdownInfo.md)
 - [MinerWorkerMessage](../interfaces/_types_global_GlobalTypes.MinerWorkerMessage.md)
 - [Rectangle](../interfaces/_types_global_GlobalTypes.Rectangle.md)
 - [RevealCountdownInfo](../interfaces/_types_global_GlobalTypes.RevealCountdownInfo.md)

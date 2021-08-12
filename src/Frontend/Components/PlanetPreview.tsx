@@ -1,7 +1,7 @@
 import { EMPTY_LOCATION_ID } from '@darkforest_eth/constants';
 import { Planet, PlanetType } from '@darkforest_eth/types';
 import autoBind from 'auto-bind';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MineRenderer } from '../Renderers/GameRenderer/Entities/MineRenderer';
 import PlanetRenderer from '../Renderers/GameRenderer/Entities/PlanetRenderer';
@@ -9,14 +9,12 @@ import { QuasarRenderer } from '../Renderers/GameRenderer/Entities/QuasarRendere
 import { RuinsRenderer } from '../Renderers/GameRenderer/Entities/RuinsRenderer';
 import { SpacetimeRipRenderer } from '../Renderers/GameRenderer/Entities/SpacetimeRipRenderer';
 import { WebGLManager } from '../Renderers/GameRenderer/WebGL/WebGLManager';
-import { SPACE_TYPE_COLORS } from '../Styles/dfstyles';
 
 const PlanetPreviewWrapper = styled.div<{ size: string; color: string }>`
   ${({ size, color }) => `
   position: relative;
 
   width: ${size};
-  height: ${size};
 
   background: ${color};
 
@@ -139,44 +137,65 @@ class PlanetPreviewRenderer extends WebGLManager {
   }
 }
 
-export function PlanetPreviewImage({ planet, res }: { planet: Planet | undefined; res: number }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+interface PlanetPreviewContext {
+  canvas: HTMLCanvasElement;
+  renderer: PlanetPreviewRenderer;
+}
 
-  const [renderer, setRenderer] = useState<PlanetPreviewRenderer | undefined>(undefined);
+const cachedWebGlContexts: PlanetPreviewContext[] = [];
+
+function getContext() {
+  if (cachedWebGlContexts.length !== 0) {
+    return cachedWebGlContexts.pop();
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.height = 100;
+  canvas.width = 100;
+  const renderer = new PlanetPreviewRenderer(canvas);
+
+  return { canvas, renderer };
+}
+
+export function PlanetPreviewImage({ planet }: { planet: Planet | undefined }) {
+  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>();
+  const [context, setContext] = useState<PlanetPreviewContext | undefined>();
 
   // sync ref to renderer
   useEffect(() => {
-    if (!canvasRef.current) return;
+    if (!containerRef) return;
 
-    const newRenderer = new PlanetPreviewRenderer(canvasRef.current);
-    setRenderer(newRenderer);
+    if (!context) {
+      setContext(getContext());
+      return;
+    }
+    if (containerRef.contains(context.canvas)) {
+      return;
+    }
 
-    return () => newRenderer.destroy();
-  }, [canvasRef]);
+    containerRef.appendChild(context.canvas);
+
+    return () => {
+      if (containerRef.contains(context.canvas)) {
+        containerRef.removeChild(context.canvas);
+        cachedWebGlContexts.push(context);
+        setContext(undefined);
+      }
+    };
+  }, [context, containerRef]);
 
   // sync planet to renderer
   useEffect(() => {
-    renderer?.setPlanet(planet);
-  }, [planet, renderer]);
+    context?.renderer?.setPlanet(planet);
+  }, [planet, context]);
 
-  return <canvas ref={canvasRef} width={res} height={res}></canvas>;
+  return <div ref={setContainerRef}></div>;
 }
 
-export function PlanetPreview({
-  planet,
-  size,
-  res,
-}: {
-  planet: Planet | undefined;
-  size: string;
-  res: number;
-}) {
+export function PlanetPreview({ planet, size }: { planet: Planet | undefined; size: string }) {
   return (
-    <PlanetPreviewWrapper
-      size={size}
-      color={planet ? SPACE_TYPE_COLORS[planet.spaceType] : 'rgba(0,0,0,0)'}
-    >
-      <PlanetPreviewImage planet={planet} res={res} />
+    <PlanetPreviewWrapper size={size} color={'rgba(0,0,0,0)'}>
+      <PlanetPreviewImage planet={planet} />
     </PlanetPreviewWrapper>
   );
 }

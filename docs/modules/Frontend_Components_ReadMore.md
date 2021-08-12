@@ -19,6 +19,7 @@
 | `__namedParameters`          | `Object`                                   |
 | `__namedParameters.children` | `React.ReactChild`[] \| `React.ReactChild` |
 | `__namedParameters.height?`  | `string`                                   |
+| `__namedParameters.text?`    | `string`                                   |
 
 #### Returns
 

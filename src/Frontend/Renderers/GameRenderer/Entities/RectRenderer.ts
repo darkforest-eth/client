@@ -1,12 +1,12 @@
+import { WorldCoords } from '@darkforest_eth/types';
 import { CanvasCoords } from '../../../../Backend/Utils/Coordinates';
+import { Chunk } from '../../../../_types/global/GlobalTypes';
 import Viewport from '../../../Game/Viewport';
-import { RGBVec, RenderZIndex } from '../EngineTypes';
+import { RenderZIndex, RGBVec } from '../EngineTypes';
 import EngineUtils from '../EngineUtils';
 import { RECT_PROGRAM_DEFINITION } from '../Programs/RectProgram';
 import { GameGLManager } from '../WebGL/GameGLManager';
 import { GenericRenderer } from '../WebGL/GenericRenderer';
-import { WorldCoords } from '@darkforest_eth/types';
-import { Chunk } from '../../../../_types/global/GlobalTypes';
 
 export default class RectRenderer extends GenericRenderer<typeof RECT_PROGRAM_DEFINITION> {
   quad3Buffer: number[];

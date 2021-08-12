@@ -1,5 +1,6 @@
+import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
 import { Planet, PlanetType } from '@darkforest_eth/types';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
   blocksLeftToProspectExpiration,
@@ -7,10 +8,10 @@ import {
   isProspectable,
 } from '../../Backend/GameLogic/ArrivalUtils';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
-import { getPlanetRank, formatNumber } from '../../Backend/Utils/Utils';
-import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
+import { formatNumber, getPlanetRank } from '../../Backend/Utils/Utils';
+import { CenterBackgroundSubtext, Padded, Spacer } from '../Components/CoreUI';
 import { ArtifactIcon, SilverGrowthIcon, SilverIcon, WithdrawIcon } from '../Components/Icons';
-import { Sub, Green } from '../Components/Text';
+import { Green, Sub } from '../Components/Text';
 import { engineConsts } from '../Renderers/GameRenderer/EngineConsts';
 import { RGBVec } from '../Renderers/GameRenderer/EngineTypes';
 import { useUIManager } from '../Utils/AppHooks';
@@ -264,7 +265,7 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
 
   if (planets.length === 0) {
     content = (
-      <CenterBackgroundSubtext width='300px' height='100px'>
+      <CenterBackgroundSubtext width={RECOMMENDED_MODAL_WIDTH} height='100px'>
         Loading Your Home Planet...
       </CenterBackgroundSubtext>
     );
@@ -290,7 +291,7 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
       width='unset'
       helpContent={HelpContent}
     >
-      {content}
+      <Padded>{content}</Padded>
     </ModalPane>
   );
 }

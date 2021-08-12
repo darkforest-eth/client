@@ -6,11 +6,13 @@
 
 ### Properties
 
+- [allClaimedCoords](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#allclaimedcoords)
 - [allRevealedCoords](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#allrevealedcoords)
 - [allTouchedPlanetIds](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#alltouchedplanetids)
 - [arrivals](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#arrivals)
 - [artifactsOnVoyages](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#artifactsonvoyages)
 - [balance](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#balance)
+- [claimedCoordsMap](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#claimedcoordsmap)
 - [contractConstants](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#contractconstants)
 - [gptCreditPriceEther](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#gptcreditpriceether)
 - [heldArtifacts](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#heldartifacts)
@@ -22,9 +24,16 @@
 - [players](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#players)
 - [revealedCoordsMap](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#revealedcoordsmap)
 - [touchedAndLocatedPlanets](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#touchedandlocatedplanets)
+- [twitters](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#twitters)
 - [worldRadius](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#worldradius)
 
 ## Properties
+
+### allClaimedCoords
+
+• **allClaimedCoords**: `ClaimedCoords`[]
+
+---
 
 ### allRevealedCoords
 
@@ -53,6 +62,12 @@
 ### balance
 
 • **balance**: `number`
+
+---
+
+### claimedCoordsMap
+
+• **claimedCoordsMap**: `Map`<`LocationId`, `ClaimedCoords`\>
 
 ---
 
@@ -119,6 +134,12 @@
 ### touchedAndLocatedPlanets
 
 • **touchedAndLocatedPlanets**: `Map`<`LocationId`, `Planet`\>
+
+---
+
+### twitters
+
+• **twitters**: [`AddressTwitterMap`](../modules/_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)
 
 ---
 

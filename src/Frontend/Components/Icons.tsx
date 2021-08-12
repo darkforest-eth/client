@@ -1,10 +1,10 @@
 // should be able to be treated as a text element
+import { Planet, UpgradeBranchName } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
-import { UpgradeBranchName, Planet } from '@darkforest_eth/types';
-import dfstyles from '../Styles/dfstyles';
-import { StatIdx } from '../../_types/global/GlobalTypes';
 import { getPlanetRank, isFullRank } from '../../Backend/Utils/Utils';
+import { StatIdx } from '../../_types/global/GlobalTypes';
+import dfstyles from '../Styles/dfstyles';
 
 const SVGWrapper = styled.span`
   width: 1em;
@@ -52,7 +52,7 @@ const DefaultSVG = ({
   );
 };
 
-const SilverGrowthSVG = () => (
+const SilverGrowthSVG = ({ color }: { color?: string }) => (
   <svg
     version='1.1'
     id='Layer_1'
@@ -63,6 +63,7 @@ const SilverGrowthSVG = () => (
     // style="enable-background:new 0 0 512 512;"
   >
     <path
+      style={{ fill: color || dfstyles.colors.text }}
       d='M-0.5,166.3v305.1h512V166.3H-0.5z M95.8,441.7h-64v-64h32v32h32V441.7z M95.8,226.6h-32v32h-32v-64h64V226.6z M237.2,371.3
 	c8.3,0,15,6.7,15,15s-6.7,15-15,15H120c-5.9,0-11.2-3.4-13.6-8.7c-2.4-5.3-1.6-11.6,2.2-16l96-112.3H120c-8.3,0-15-6.7-15-15
 	s6.7-15,15-15h117.2c5.9,0,11.2,3.4,13.6,8.7c2.4,5.3,1.6,11.6-2.2,16l-96,112.3H237.2z M400.7,397.8c-2.8,2.4-6.3,3.6-9.7,3.6
@@ -74,7 +75,7 @@ const SilverGrowthSVG = () => (
   </svg>
 );
 
-const SilverSVG = () => (
+const SilverSVG = ({ color }: { color?: string }) => (
   <svg
     version='1.1'
     id='Layer_1'
@@ -85,6 +86,7 @@ const SilverSVG = () => (
   >
     <g id='icomoon-ignore'></g>
     <path
+      style={{ fill: color || dfstyles.colors.text }}
       d='M-1,102.9v305.1h512V102.9H-1z M95.3,378.4h-64v-64h32v32h32V378.4z M95.3,163.3h-32v32h-32v-64h64V163.3z M236.7,308
 	c8.3,0,15,6.7,15,15s-6.7,15-15,15H119.5c-5.9,0-11.2-3.4-13.6-8.7c-2.4-5.3-1.6-11.6,2.2-16l96-112.3h-84.6c-8.3,0-15-6.7-15-15
 	s6.7-15,15-15h117.2c5.9,0,11.2,3.4,13.6,8.7c2.4,5.3,1.6,11.6-2.2,16l-96,112.3H236.7z M400.2,334.4c-2.8,2.4-6.3,3.6-9.7,3.6
@@ -96,25 +98,28 @@ const SilverSVG = () => (
   </svg>
 );
 
-export const SilverIcon = () => (
+export const SilverIcon = ({ color }: { color?: string }) => (
   <SVGWrapper>
-    <SilverSVG />
+    <SilverSVG color={color} />
   </SVGWrapper>
 );
 
-export const SilverGrowthIcon = () => (
+export const SilverGrowthIcon = ({ color }: { color?: string }) => (
   <SVGWrapper>
-    <SilverGrowthSVG />
+    <SilverGrowthSVG color={color} />
   </SVGWrapper>
 );
 
 const EnergyGrowthSVG = ({ color }: { color?: string }) => (
   <DefaultSVG>
     <path
-      style={{ fill: color || 'white' }}
+      style={{ fill: color || dfstyles.colors.text }}
       d='M251.6,164.4L416,0l-75,210H234.8L251.6,164.4z M407.4,224L284.2,343.4L224,512l288-288H407.4z'
     />
-    <path style={{ fill: color || 'white' }} d='M288,0L0,288h176L96,512l288-288H208L288,0z' />
+    <path
+      style={{ fill: color || dfstyles.colors.text }}
+      d='M288,0L0,288h176L96,512l288-288H208L288,0z'
+    />
   </DefaultSVG>
 );
 
@@ -126,7 +131,10 @@ export const EnergyGrowthIcon = ({ color }: { color?: string }) => (
 
 const EnergySVG = ({ color }: { color?: string }) => (
   <DefaultSVG>
-    <path style={{ fill: color || 'white' }} d='M352 0l-288 288h176l-80 224 288-288h-176z'></path>
+    <path
+      style={{ fill: color || dfstyles.colors.text }}
+      d='M352 0l-288 288h176l-80 224 288-288h-176z'
+    ></path>
   </DefaultSVG>
 );
 
@@ -139,7 +147,7 @@ export const EnergyIcon = ({ color }: { color?: string }) => (
 const RangeSVG = ({ color }: { color?: string }) => (
   <DefaultSVG>
     <path
-      style={{ fill: color || 'white' }}
+      style={{ fill: color || dfstyles.colors.text }}
       d='M118.627 438.627l265.373-265.372v114.745c0 17.673 14.327 32 32 32s32-14.327 32-32v-192c0-12.942-7.797-24.611-19.754-29.563-3.962-1.642-8.121-2.42-12.246-2.419v-0.018h-192c-17.673 0-32 14.327-32 32 0 17.674 14.327 32 32 32h114.745l-265.372 265.373c-6.249 6.248-9.373 14.438-9.373 22.627s3.124 16.379 9.373 22.627c12.496 12.497 32.758 12.497 45.254 0z'
     ></path>
   </DefaultSVG>
@@ -451,7 +459,7 @@ const SpeedSVG = ({ color }: { color?: string }) => {
   return (
     <DefaultSVG>
       <path
-        style={{ fill: color || 'white' }}
+        style={{ fill: color || dfstyles.colors.text }}
         d='M256 432v-160l-160 160v-352l160 160v-160l176 176z'
       ></path>
     </DefaultSVG>
@@ -470,11 +478,11 @@ const DefenseSVG = ({ color }: { color?: string }) => {
   return (
     <DefaultSVG>
       <path
-        style={{ fill: color || 'white' }}
+        style={{ fill: color || dfstyles.colors.text }}
         d='M256.002 52.45l143.999 78.545-0.001 109.005c0 30.499-3.754 57.092-11.477 81.299-7.434 23.303-18.396 43.816-33.511 62.711-22.371 27.964-53.256 51.74-99.011 76.004-45.753-24.263-76.644-48.042-99.013-76.004-15.116-18.896-26.078-39.408-33.512-62.711-7.722-24.207-11.476-50.8-11.476-81.299v-109.004l144.002-78.546zM256.003 0c-2.637 0-5.274 0.651-7.663 1.954l-176.002 96c-5.14 2.803-8.338 8.191-8.338 14.046v128c0 70.394 18.156 127.308 55.506 173.995 29.182 36.478 69.072 66.183 129.34 96.315 2.252 1.126 4.704 1.689 7.155 1.689s4.903-0.563 7.155-1.689c60.267-30.134 100.155-59.839 129.337-96.315 37.351-46.687 55.507-103.601 55.507-173.995l0.001-128c0-5.855-3.198-11.243-8.338-14.046l-175.999-96c-2.387-1.303-5.024-1.954-7.661-1.954v0z'
       ></path>
       <path
-        style={{ fill: color || 'white' }}
+        style={{ fill: color || dfstyles.colors.text }}
         d='M160 159.491v80.509c0 25.472 3.011 47.293 9.206 66.711 5.618 17.608 13.882 33.085 25.265 47.313 14.589 18.237 34.038 34.408 61.531 50.927 27.492-16.518 46.939-32.688 61.53-50.927 11.382-14.228 19.646-29.704 25.263-47.313 6.194-19.418 9.205-41.239 9.205-66.711l0.001-80.51-95.999-52.363-96.002 52.364z'
       ></path>
     </DefaultSVG>
@@ -572,7 +580,7 @@ export const PluginIcon = () => (
 const DepositSVG = ({ color }: { color?: string }) => (
   <DefaultSVG>
     <path
-      style={{ fill: color || 'white' }}
+      style={{ fill: color || dfstyles.colors.text }}
       d='M416 32h-320l-96 96v336c0 8.837 7.163 16 16 16h480c8.836 0 16-7.163 16-16v-336l-96-96zM256 416l-160-128h96v-96h128v96h96l-160 128zM77.255 96l32-32h293.489l32 32h-357.489z'
     ></path>
   </DefaultSVG>
@@ -588,7 +596,7 @@ export const DepositIcon = ({ color }: { color?: string }) => (
 const QuestionCircle = ({ color }: { color?: string }) => (
   <DefaultSVG width={512} height={512}>
     <path
-      style={{ fill: color || 'white' }}
+      style={{ fill: color || dfstyles.colors.text }}
       d='M256 48C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48zm-4.3 304c-11.8 0-21.4-9-21.4-20.6 0-11.5 9.6-20.6 21.4-20.6 11.9 0 21.5 9 21.5 20.6 0 11.6-9.5 20.6-21.5 20.6zm40.2-96.9c-17.4 10.1-23.3 17.5-23.3 30.3v7.9h-34.7l-.3-8.6c-1.7-20.6 5.5-33.4 23.6-44 16.9-10.1 24-16.5 24-28.9s-12-21.5-26.9-21.5c-15.1 0-26 9.8-26.8 24.6H192c.7-32.2 24.5-55 64.7-55 37.5 0 63.3 20.8 63.3 50.7 0 19.9-9.6 33.6-28.1 44.5z'
     ></path>
   </DefaultSVG>
@@ -604,7 +612,7 @@ export const QuestionCircleIcon = ({ color }: { color?: string }) => (
 const CloseCircle = ({ color }: { color?: string }) => (
   <DefaultSVG width={512} height={512}>
     <path
-      style={{ fill: color || 'white' }}
+      style={{ fill: color || dfstyles.colors.text }}
       d='M256 48C140.559 48 48 140.559 48 256c0 115.436 92.559 208 208 208 115.435 0 208-92.564 208-208 0-115.441-92.564-208-208-208zm104.002 282.881l-29.12 29.117L256 285.117l-74.881 74.881-29.121-29.117L226.881 256l-74.883-74.881 29.121-29.116L256 226.881l74.881-74.878 29.12 29.116L285.119 256l74.883 74.881z'
     ></path>
   </DefaultSVG>
@@ -620,7 +628,7 @@ export const CloseCircleIcon = ({ color }: { color?: string }) => (
 const MaximizeCircle = ({ color }: { color?: string }) => (
   <DefaultSVG width={512} height={512}>
     <path
-      style={{ fill: color || 'white' }}
+      style={{ fill: color || dfstyles.colors.text }}
       d='M256 48C141.125 48 48 141.125 48 256s93.125 208 208 208 208-93.125 208-208S370.875 48 256 48zm107 229h-86v86h-42v-86h-86v-42h86v-86h42v86h86v42z'
     ></path>
   </DefaultSVG>
@@ -636,7 +644,7 @@ export const MaximizeCircleIcon = ({ color }: { color?: string }) => (
 const MinimizeCircle = ({ color }: { color?: string }) => (
   <DefaultSVG width={512} height={512}>
     <path
-      style={{ fill: color || 'white' }}
+      style={{ fill: color || dfstyles.colors.text }}
       d='M256 48C141.125 48 48 141.125 48 256s93.125 208 208 208 208-93.125 208-208S370.875 48 256 48zm107 229H149v-42h214v42z'
     ></path>
   </DefaultSVG>
@@ -668,7 +676,7 @@ export const WithdrawIcon = ({ color }: { color?: string }) => (
 const ActivateSVG = ({ color }: { color?: string }) => (
   <DefaultSVG>
     <path
-      style={{ fill: color || 'white' }}
+      style={{ fill: color || dfstyles.colors.text }}
       d='M376.2 224H268l52.4-186.9c.9-4.5-4.6-7.1-7.2-3.4L129.5 274.6c-3.8 5.6-.2 13.4 6.3 13.4H244l-52.4 186.9c-.9 4.5 4.6 7.1 7.2 3.4l183.7-240.8c3.7-5.7.2-13.5-6.3-13.5z'
     ></path>
   </DefaultSVG>
@@ -684,7 +692,7 @@ export const ActivateIcon = ({ color }: { color?: string }) => (
 const DeactivateSVG = ({ color }: { color?: string }) => (
   <DefaultSVG>
     <path
-      style={{ fill: color || 'white' }}
+      style={{ fill: color || dfstyles.colors.text }}
       d='M382.1 442.7L154.5 55c-4-6.7-12.7-9-19.5-5.1-6.8 3.9-9.1 12.6-5.1 19.3L357.5 457c2.6 4.5 7.4 7 12.3 7 2.4 0 4.9-.6 7.2-1.9 6.7-4 9-12.6 5.1-19.4zM324.6 313.3l57.9-75.8c3.8-5.6.2-13.4-6.3-13.4h-104l52.4 89.2zM320.4 37.1c.9-4.5-4.6-7.1-7.2-3.4L227 146.9l42.4 72.3 51-182.1zM187.4 198.7l-57.9 75.8c-3.8 5.6-.2 13.4 6.3 13.4h103.9l-52.3-89.2zM191.6 474.9c-.9 4.5 4.6 7.1 7.2 3.4L285 365.1l-42.4-72.3-51 182.1z'
     ></path>
   </DefaultSVG>

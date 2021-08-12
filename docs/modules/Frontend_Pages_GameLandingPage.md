@@ -8,13 +8,13 @@
 
 ### Functions
 
-- [default](Frontend_Pages_GameLandingPage.md#default)
+- [GameLandingPage](Frontend_Pages_GameLandingPage.md#gamelandingpage)
 
 ## Functions
 
-### default
+### GameLandingPage
 
-▸ **default**(): `Element`
+▸ **GameLandingPage**(): `Element`
 
 #### Returns
 

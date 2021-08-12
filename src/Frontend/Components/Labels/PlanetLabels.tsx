@@ -1,14 +1,17 @@
-import React, { useMemo } from 'react';
-import { Planet, PlanetType, PlanetTypeNames } from '@darkforest_eth/types';
-import { formatNumber, getPlanetRank } from '../../../Backend/Utils/Utils';
-import { Colored, Sub, White } from '../Text';
-import { ProcgenUtils } from '../../../Backend/Procedural/ProcgenUtils';
-import { SpacetimeRipLabel } from './SpacetimeRipLabel';
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
-import { useAccount, useUIManager } from '../../Utils/AppHooks';
-import { TextPreview } from '../TextPreview';
+import { Planet, PlanetType, PlanetTypeNames } from '@darkforest_eth/types';
+import React from 'react';
+import styled from 'styled-components';
+import { ProcgenUtils } from '../../../Backend/Procedural/ProcgenUtils';
+import { formatNumber, getPlanetRank } from '../../../Backend/Utils/Utils';
 import dfstyles from '../../Styles/dfstyles';
+import { useAccount, usePlayer, useUIManager } from '../../Utils/AppHooks';
+import { EmSpacer } from '../CoreUI';
+import { Colored, Sub, Subber, White } from '../Text';
+import { TextPreview } from '../TextPreview';
 import { OptionalPlanetBiomeLabelAnim } from './BiomeLabels';
+import { TwitterLink } from './Labels';
+import { SpacetimeRipLabel } from './SpacetimeRipLabel';
 
 /* note that we generally prefer `Planet | undefined` over `Planet` because it
    makes it easier to pass in selected / hovering planet from the emitters      */
@@ -18,11 +21,13 @@ import { OptionalPlanetBiomeLabelAnim } from './BiomeLabels';
 export function StatText({
   planet,
   getStat,
+  style,
 }: {
   planet: Planet | undefined;
   getStat: (p: Planet) => number;
+  style?: React.CSSProperties;
 }) {
-  return <>{planet ? formatNumber(getStat(planet), 2) : 'n/a'}</>;
+  return <span style={style}>{planet ? formatNumber(getStat(planet), 2) : 'n/a'}</span>;
 }
 
 const getSilver = (p: Planet) => p.silver;
@@ -48,7 +53,7 @@ export const EnergyCapText = ({ planet }: { planet: Planet | undefined }) => (
 export function PlanetEnergyLabel({ planet }: { planet: Planet | undefined }) {
   return (
     <span>
-      <EnergyText planet={planet} /> <Sub>/</Sub> <EnergyCapText planet={planet} />
+      <EnergyText planet={planet} /> <Subber>/</Subber> <EnergyCapText planet={planet} />
     </span>
   );
 }
@@ -56,7 +61,7 @@ export function PlanetEnergyLabel({ planet }: { planet: Planet | undefined }) {
 export function PlanetSilverLabel({ planet }: { planet: Planet | undefined }) {
   return (
     <span>
-      <SilverText planet={planet} /> <Sub>/</Sub> <SilverCapText planet={planet} />
+      <SilverText planet={planet} /> <Subber>/</Subber> <SilverCapText planet={planet} />
     </span>
   );
 }
@@ -116,9 +121,9 @@ export const LevelRankTextEm = ({
 }) =>
   planet ? (
     <Sub>
-      Level <White>{planet.planetLevel}</White>
+      lvl <White>{planet.planetLevel}</White>
       {delim || ', '}
-      Rank <White>{getPlanetRank(planet)}</White>
+      rank <White>{getPlanetRank(planet)}</White>
     </Sub>
   ) : (
     <></>
@@ -139,43 +144,79 @@ export const PlanetBiomeTypeLabelAnim = ({ planet }: { planet: Planet | undefine
   <>
     {planet?.planetType !== PlanetType.TRADING_POST && (
       <>
-        <OptionalPlanetBiomeLabelAnim planet={planet} />{' '}
+        <OptionalPlanetBiomeLabelAnim planet={planet} />
+        <EmSpacer width={0.5} />
       </>
     )}
     <PlanetTypeLabelAnim planet={planet} />
   </>
 );
 
+const LevelLabelContainer = styled.div`
+  border-radius: 3px;
+  background-color: ${dfstyles.colors.backgroundlight};
+  padding: 2px 8px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const PlanetLevel = ({ planet }: { planet: Planet | undefined }) => {
+  if (!planet) return <></>;
+  return (
+    <LevelLabelContainer>
+      <Sub>{'Level'}</Sub>
+      <EmSpacer width={0.5} />
+      {planet.planetLevel}
+    </LevelLabelContainer>
+  );
+};
+
+export const PlanetRank = ({ planet }: { planet: Planet | undefined }) => {
+  if (!planet) return <></>;
+  return (
+    <LevelLabelContainer>
+      <Sub>{'Rank'}</Sub>
+      <EmSpacer width={0.5} />
+      {getPlanetRank(planet)}
+    </LevelLabelContainer>
+  );
+};
+
+/**
+ * Either 'yours' in green text,
+ */
 export function PlanetOwnerLabel({
   planet,
-  showYours,
-  color,
+  abbreviateOwnAddress,
+  colorWithOwnerColor,
 }: {
   planet: Planet | undefined;
-  showYours?: boolean;
-  color?: boolean;
+  abbreviateOwnAddress?: boolean;
+  colorWithOwnerColor?: boolean;
 }) {
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
-  const twitter = useMemo(() => planet && uiManager.getTwitter(planet.owner), [uiManager, planet]);
+  const owner = usePlayer(uiManager, planet?.owner);
 
-  let c = dfstyles.colors.subtext;
+  const defaultColor = dfstyles.colors.subtext;
 
-  let content;
-  if (!planet) content = '';
-  else {
-    if (planet.owner === EMPTY_ADDRESS) content = 'Unclaimed';
-    else if (showYours && planet.owner === account) {
-      content = 'yours!';
-      c = dfstyles.colors.dfgreen;
-    } else {
-      // has an owner, and it's not you (or we don't care if it is)
-      if (twitter) content = '@' + twitter;
-      else content = <TextPreview text={planet.owner} />;
+  if (!planet) return <>/</>;
 
-      c = ProcgenUtils.getPlayerColor(planet.owner);
-    }
+  if (planet.owner === EMPTY_ADDRESS) return <Sub>Unclaimed</Sub>;
+
+  if (abbreviateOwnAddress && planet.owner === account) {
+    return <Colored color={dfstyles.colors.dfgreen}>yours!</Colored>;
   }
 
-  return color ? <Colored color={c}>{content}</Colored> : <>{content}</>;
+  const color = colorWithOwnerColor ? defaultColor : ProcgenUtils.getPlayerColor(planet.owner);
+  if (planet.owner && owner.value?.twitter) {
+    return <TwitterLink color={color} twitter={owner.value.twitter} />;
+  }
+
+  return (
+    <Colored color={color}>
+      <TextPreview text={planet.owner} />
+    </Colored>
+  );
 }

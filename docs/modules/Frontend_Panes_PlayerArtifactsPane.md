@@ -14,11 +14,10 @@
 
 #### Parameters
 
-| Name                                    | Type                                                 |
-| :-------------------------------------- | :--------------------------------------------------- |
-| `__namedParameters`                     | `Object`                                             |
-| `__namedParameters.artifactDetailsHook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
-| `__namedParameters.hook`                | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                     | Type                                                 |
+| :----------------------- | :--------------------------------------------------- |
+| `__namedParameters`      | `Object`                                             |
+| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 
 #### Returns
 

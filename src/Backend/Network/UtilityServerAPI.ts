@@ -1,6 +1,7 @@
+import { EthAddress, SignedMessage } from '@darkforest_eth/types';
 import * as EmailValidator from 'email-validator';
+import timeout from 'p-timeout';
 import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
-import { EthAddress } from '@darkforest_eth/types';
 
 export const WEBSERVER_URL = process.env.WEBSERVER_URL as string;
 
@@ -105,6 +106,17 @@ export const requestDevFaucet = async (address: EthAddress): Promise<boolean> =>
   }
 };
 
+/**
+ * Swallows all errors. Either loads the address to twitter map from the webserver in 5 seconds, or
+ * returan empty map.
+ */
+export const tryGetAllTwitters = async (): Promise<AddressTwitterMap> => {
+  try {
+    return await timeout(getAllTwitters(), 1000 * 5, "couldn't get twitter map");
+  } catch (e) {}
+  return {};
+};
+
 export const getAllTwitters = async (): Promise<AddressTwitterMap> => {
   try {
     const twitterMap: AddressTwitterMap = await fetch(`${WEBSERVER_URL}/twitter/all-twitters`).then(
@@ -112,31 +124,48 @@ export const getAllTwitters = async (): Promise<AddressTwitterMap> => {
     );
     return twitterMap;
   } catch (e) {
-    console.log('Error getting twitter handles.');
-    console.error(e);
     return {};
   }
 };
 
 export const verifyTwitterHandle = async (
-  twitter: string,
-  address: EthAddress
+  verifyMessage: SignedMessage<{ twitter: string }>
 ): Promise<boolean> => {
   try {
-    const { success } = await fetch(`${WEBSERVER_URL}/twitter/verify-twitter`, {
+    const res = await fetch(`${WEBSERVER_URL}/twitter/verify-twitter`, {
       method: 'POST',
       body: JSON.stringify({
-        twitter,
-        address,
+        verifyMessage,
       }),
       headers: {
         'Content-Type': 'application/json',
       },
     }).then((x) => x.json());
 
-    return success;
+    return res.success;
   } catch (e) {
     console.error(`error when verifying twitter handle: ${e}`);
+    return false;
+  }
+};
+
+export const disconnectTwitter = async (
+  disconnectMessage: SignedMessage<{ twitter: string }>
+): Promise<boolean> => {
+  try {
+    const res = await fetch(`${WEBSERVER_URL}/twitter/disconnect`, {
+      method: 'POST',
+      body: JSON.stringify({
+        disconnectMessage,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((x) => x.json());
+
+    return res.success;
+  } catch (e) {
+    console.error(`error when disconnecting twitter handle: ${e}`);
     return false;
   }
 };

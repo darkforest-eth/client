@@ -30,7 +30,6 @@
 - [RangeTooltipPane](Frontend_Panes_TooltipPanes.md#rangetooltippane)
 - [RankTooltipPane](Frontend_Panes_TooltipPanes.md#ranktooltippane)
 - [ScoreTooltipPane](Frontend_Panes_TooltipPanes.md#scoretooltippane)
-- [SelectedEnergyTooltipPane](Frontend_Panes_TooltipPanes.md#selectedenergytooltippane)
 - [SelectedSilverTooltipPane](Frontend_Panes_TooltipPanes.md#selectedsilvertooltippane)
 - [SilverCapTooltipPane](Frontend_Panes_TooltipPanes.md#silvercaptooltippane)
 - [SilverGrowthTooltipPane](Frontend_Panes_TooltipPanes.md#silvergrowthtooltippane)
@@ -297,16 +296,6 @@
 ### ScoreTooltipPane
 
 ▸ **ScoreTooltipPane**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### SelectedEnergyTooltipPane
-
-▸ **SelectedEnergyTooltipPane**(): `Element`
 
 #### Returns
 

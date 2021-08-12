@@ -42,7 +42,7 @@ const TabButton = styled.div<{ active: boolean }>`
   ${({ active }: { active: boolean }) => css`
     color: ${dfstyles.colors.subtext};
     text-decoration: underline;
-    border-radius: 2px;
+    border-radius: 3px;
     padding: 4px 8px;
     margin-right: 4px;
     margin-left: 4px;
@@ -61,11 +61,11 @@ const TabButton = styled.div<{ active: boolean }>`
 
     &:hover {
       color: ${dfstyles.colors.text};
-      background-color: ${dfstyles.colors.backgroundlight};
+      background-color: ${dfstyles.colors.backgroundlighter};
 
       ${active &&
       css`
-        color: ${dfstyles.colors.dfgreenlight};
+        color: ${dfstyles.colors.text};
         background-color: ${dfstyles.colors.dfgreendark};
       `}
     }
@@ -73,7 +73,7 @@ const TabButton = styled.div<{ active: boolean }>`
     ${active &&
     css`
       cursor: default;
-      color: ${dfstyles.colors.dfgreenlight};
+      color: ${dfstyles.colors.text};
       background-color: ${dfstyles.colors.dfgreendark};
     `}
   `}

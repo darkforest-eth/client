@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import { SettingsIcon } from '../Components/Icons';
 import { Green, Red, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { useUIManager, useAccount } from '../Utils/AppHooks';
+import { useAccount, useUIManager } from '../Utils/AppHooks';
 import { ModalName, ModalPane } from '../Views/ModalPane';
 
 const StyledOnboardingContent = styled.div`
   width: 36em;
   height: 32em;
   position: relative;
+  padding: 16px;
 
   .btn {
     position: absolute;
@@ -48,6 +49,7 @@ const enum OnboardState {
   Money,
   Storage,
   Keys,
+  Help,
   Finished,
 }
 
@@ -166,6 +168,23 @@ function OnboardKeys({ advance }: { advance: () => void }) {
   );
 }
 
+function OnboardHelp({ advance }: { advance: () => void }) {
+  return (
+    <StyledOnboardingContent>
+      <p>
+        For an overview of how to play, rules, and scoring, click the question mark icon on the left
+        to open the <White>Help Pane</White>.
+      </p>
+      <div>
+        <span></span>
+        <Btn onClick={advance} className='btn'>
+          Proceed
+        </Btn>
+      </div>
+    </StyledOnboardingContent>
+  );
+}
+
 function OnboardFinished({ advance }: { advance: () => void }) {
   return (
     <StyledOnboardingContent>
@@ -207,6 +226,7 @@ export default function OnboardingPane({ newPlayerHook }: { newPlayerHook: Hook<
       {onboardState === OnboardState.Money && <OnboardMoney advance={advance} />}
       {onboardState === OnboardState.Storage && <OnboardStorage advance={advance} />}
       {onboardState === OnboardState.Keys && <OnboardKeys advance={advance} />}
+      {onboardState === OnboardState.Help && <OnboardHelp advance={advance} />}
       {onboardState === OnboardState.Finished && <OnboardFinished advance={advance} />}
     </ModalPane>
   );

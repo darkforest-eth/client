@@ -6,13 +6,15 @@
 
 - [ModalName](../enums/Frontend_Views_ModalPane.ModalName.md)
 
+### Interfaces
+
+- [ModalFrame](../interfaces/Frontend_Views_ModalPane.ModalFrame.md)
+- [ModalHandle](../interfaces/Frontend_Views_ModalPane.ModalHandle.md)
+
 ### Type aliases
 
 - [ModalHook](Frontend_Views_ModalPane.md#modalhook)
-
-### Variables
-
-- [RECOMMENDED_WIDTH](Frontend_Views_ModalPane.md#recommended_width)
+- [ModalProps](Frontend_Views_ModalPane.md#modalprops)
 
 ### Functions
 
@@ -24,11 +26,11 @@
 
 Ƭ **ModalHook**: [`Hook`](_types_global_GlobalTypes.md#hook)<`boolean`\>
 
-## Variables
+---
 
-### RECOMMENDED_WIDTH
+### ModalProps
 
-• `Const` **RECOMMENDED_WIDTH**: `"450px"`
+Ƭ **ModalProps**: [`PaneProps`](Frontend_Components_GameWindowComponents.md#paneprops) & { `backgroundColor?`: `string` ; `borderColor?`: `string` ; `hideClose?`: `boolean` ; `hook`: [`Hook`](_types_global_GlobalTypes.md#hook)<`boolean`\> ; `initialPosition?`: { `x`: `number` ; `y`: `number` } ; `name?`: [`ModalName`](../enums/Frontend_Views_ModalPane.ModalName.md) ; `noPadding?`: `boolean` ; `style?`: `React.CSSProperties` ; `title`: `string` \| `React.ReactNode` ; `titlebarColor?`: `string` ; `width?`: `string` ; `helpContent?`: () => `ReactNode` }
 
 ## Functions
 
@@ -38,9 +40,9 @@
 
 #### Parameters
 
-| Name                | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| :------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `__namedParameters` | [`PaneProps`](Frontend_Components_GameWindowComponents.md#paneprops) & { `backgroundColor?`: `string` ; `borderColor?`: `string` ; `hideClose?`: `boolean` ; `hook`: [`Hook`](_types_global_GlobalTypes.md#hook)<`boolean`\> ; `name?`: [`ModalName`](../enums/Frontend_Views_ModalPane.ModalName.md) ; `noPadding?`: `boolean` ; `style?`: `React.CSSProperties` ; `titlebarColor?`: `string` ; `width?`: `string` ; `helpContent?`: () => `ReactNode` } |
+| Name                | Type                                                   |
+| :------------------ | :----------------------------------------------------- |
+| `__namedParameters` | [`ModalProps`](Frontend_Views_ModalPane.md#modalprops) |
 
 #### Returns
 

@@ -98,7 +98,7 @@ is added into `pluginInstances`, and that once a plugin is unloaded, its
 
 ### plugins$
 
-• **plugins$**: [`Monomitter`](../modules/Frontend_Utils_Monomitter.md#monomitter)<[`SerializedPlugin`](../interfaces/Backend_Plugins_SerializedPlugin.SerializedPlugin.md)[]\>
+• **plugins$**: `Monomitter`<[`SerializedPlugin`](../interfaces/Backend_Plugins_SerializedPlugin.SerializedPlugin.md)[]\>
 
 Event emitter that publishes whenever the set of plugins changes.
 

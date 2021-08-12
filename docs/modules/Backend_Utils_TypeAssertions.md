@@ -7,6 +7,7 @@
 - [isUnconfirmedActivateArtifact](Backend_Utils_TypeAssertions.md#isunconfirmedactivateartifact)
 - [isUnconfirmedBuyGPTCredits](Backend_Utils_TypeAssertions.md#isunconfirmedbuygptcredits)
 - [isUnconfirmedBuyHat](Backend_Utils_TypeAssertions.md#isunconfirmedbuyhat)
+- [isUnconfirmedClaim](Backend_Utils_TypeAssertions.md#isunconfirmedclaim)
 - [isUnconfirmedDeactivateArtifact](Backend_Utils_TypeAssertions.md#isunconfirmeddeactivateartifact)
 - [isUnconfirmedDepositArtifact](Backend_Utils_TypeAssertions.md#isunconfirmeddepositartifact)
 - [isUnconfirmedFindArtifact](Backend_Utils_TypeAssertions.md#isunconfirmedfindartifact)
@@ -66,6 +67,22 @@ txIntent is UnconfirmedBuyGPTCredits
 #### Returns
 
 txIntent is UnconfirmedBuyHat
+
+---
+
+### isUnconfirmedClaim
+
+▸ **isUnconfirmedClaim**(`txIntent`): txIntent is UnconfirmedClaim
+
+#### Parameters
+
+| Name       | Type       |
+| :--------- | :--------- |
+| `txIntent` | `TxIntent` |
+
+#### Returns
+
+txIntent is UnconfirmedClaim
 
 ---
 

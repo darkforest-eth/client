@@ -10,6 +10,7 @@ per instance of the dark forest contract that it's connected to.
 ### Enumeration members
 
 - [AutoApproveNonPurchaseTransactions](Frontend_Utils_SettingsHooks.Setting.md#autoapprovenonpurchasetransactions)
+- [DisableDefaultShortcuts](Frontend_Utils_SettingsHooks.Setting.md#disabledefaultshortcuts)
 - [DrawChunkBorders](Frontend_Utils_SettingsHooks.Setting.md#drawchunkborders)
 - [FoundArtifact](Frontend_Utils_SettingsHooks.Setting.md#foundartifact)
 - [FoundComet](Frontend_Utils_SettingsHooks.Setting.md#foundcomet)
@@ -22,6 +23,7 @@ per instance of the dark forest contract that it's connected to.
 - [GasFeeGwei](Frontend_Utils_SettingsHooks.Setting.md#gasfeegwei)
 - [HasAcceptedPluginRisk](Frontend_Utils_SettingsHooks.Setting.md#hasacceptedpluginrisk)
 - [HighPerformanceRendering](Frontend_Utils_SettingsHooks.Setting.md#highperformancerendering)
+- [IsMining](Frontend_Utils_SettingsHooks.Setting.md#ismining)
 - [MiningCores](Frontend_Utils_SettingsHooks.Setting.md#miningcores)
 - [MoveNotifications](Frontend_Utils_SettingsHooks.Setting.md#movenotifications)
 - [NewPlayer](Frontend_Utils_SettingsHooks.Setting.md#newplayer)
@@ -35,6 +37,12 @@ per instance of the dark forest contract that it's connected to.
 ### AutoApproveNonPurchaseTransactions
 
 • **AutoApproveNonPurchaseTransactions** = `"AutoApproveNonPurchaseTransactions"`
+
+---
+
+### DisableDefaultShortcuts
+
+• **DisableDefaultShortcuts** = `"DisableDefaultShortcuts"`
 
 ---
 
@@ -107,6 +115,12 @@ per instance of the dark forest contract that it's connected to.
 ### HighPerformanceRendering
 
 • **HighPerformanceRendering** = `"HighPerformanceRendering"`
+
+---
+
+### IsMining
+
+• **IsMining** = `"IsMining"`
 
 ---
 

@@ -21,7 +21,7 @@
 
 ### generateDiffEmitter
 
-▸ **generateDiffEmitter**<`Obj`\>(`emitter`): [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<[`Diff`](../interfaces/Frontend_Utils_EmitterUtils.Diff.md)<`Obj`\> \| `undefined`\>
+▸ **generateDiffEmitter**<`Obj`\>(`emitter`): `Monomitter`<[`Diff`](../interfaces/Frontend_Utils_EmitterUtils.Diff.md)<`Obj`\> \| `undefined`\>
 
 Wraps an existing emitter and emits an event with the current and previous values
 
@@ -33,13 +33,13 @@ Wraps an existing emitter and emits an event with the current and previous value
 
 #### Parameters
 
-| Name      | Type                                                                           | Description                        |
-| :-------- | :----------------------------------------------------------------------------- | :--------------------------------- |
-| `emitter` | [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`Obj` \| `undefined`\> | an emitter announcing game objects |
+| Name      | Type                                | Description                        |
+| :-------- | :---------------------------------- | :--------------------------------- |
+| `emitter` | `Monomitter`<`Obj` \| `undefined`\> | an emitter announcing game objects |
 
 #### Returns
 
-[`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<[`Diff`](../interfaces/Frontend_Utils_EmitterUtils.Diff.md)<`Obj`\> \| `undefined`\>
+`Monomitter`<[`Diff`](../interfaces/Frontend_Utils_EmitterUtils.Diff.md)<`Obj`\> \| `undefined`\>
 
 ---
 
@@ -77,7 +77,7 @@ Wraps an existing emitter and emits an event with the current and previous value
 
 ### getDisposableEmitter
 
-▸ **getDisposableEmitter**<`Obj`, `Id`\>(`objMap`, `objId`, `objUpdated$`): [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`Obj` \| `undefined`\>
+▸ **getDisposableEmitter**<`Obj`, `Id`\>(`objMap`, `objId`, `objUpdated$`): `Monomitter`<`Obj` \| `undefined`\>
 
 Create a monomitter to emit objects with a given id from a cached map of ids to objects. Not intended for re-use
 
@@ -90,21 +90,21 @@ Create a monomitter to emit objects with a given id from a cached map of ids to 
 
 #### Parameters
 
-| Name          | Type                                                           | Description                                             |
-| :------------ | :------------------------------------------------------------- | :------------------------------------------------------ |
-| `objMap`      | `Map`<`Id`, `Obj`\>                                            | the cached map of `<Id, Obj>`                           |
-| `objId`       | `Id`                                                           | the object id to select                                 |
-| `objUpdated$` | [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`Id`\> | emitter which indicates when an object has been updated |
+| Name          | Type                | Description                                             |
+| :------------ | :------------------ | :------------------------------------------------------ |
+| `objMap`      | `Map`<`Id`, `Obj`\> | the cached map of `<Id, Obj>`                           |
+| `objId`       | `Id`                | the object id to select                                 |
+| `objUpdated$` | `Monomitter`<`Id`\> | emitter which indicates when an object has been updated |
 
 #### Returns
 
-[`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`Obj` \| `undefined`\>
+`Monomitter`<`Obj` \| `undefined`\>
 
 ---
 
 ### getObjectWithIdFromMap
 
-▸ **getObjectWithIdFromMap**<`Obj`, `Id`\>(`objMap`, `objId$`, `objUpdated$`): [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`Obj` \| `undefined`\>
+▸ **getObjectWithIdFromMap**<`Obj`, `Id`\>(`objMap`, `objId$`, `objUpdated$`): `Monomitter`<`Obj` \| `undefined`\>
 
 Create a monomitter to emit objects with a given id from a cached map of ids to objects.
 
@@ -117,15 +117,15 @@ Create a monomitter to emit objects with a given id from a cached map of ids to 
 
 #### Parameters
 
-| Name          | Type                                                                          | Description                                             |
-| :------------ | :---------------------------------------------------------------------------- | :------------------------------------------------------ |
-| `objMap`      | `Map`<`Id`, `Obj`\>                                                           | the cached map of `<Id, Obj>`                           |
-| `objId$`      | [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`Id` \| `undefined`\> | the object id to select                                 |
-| `objUpdated$` | [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`Id`\>                | emitter which indicates when an object has been updated |
+| Name          | Type                               | Description                                             |
+| :------------ | :--------------------------------- | :------------------------------------------------------ |
+| `objMap`      | `Map`<`Id`, `Obj`\>                | the cached map of `<Id, Obj>`                           |
+| `objId$`      | `Monomitter`<`Id` \| `undefined`\> | the object id to select                                 |
+| `objUpdated$` | `Monomitter`<`Id`\>                | emitter which indicates when an object has been updated |
 
 #### Returns
 
-[`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`Obj` \| `undefined`\>
+`Monomitter`<`Obj` \| `undefined`\>
 
 ---
 
@@ -178,16 +178,16 @@ of our owned objects, and also emits a message that the object was updated.
 
 #### Parameters
 
-| Name                | Type                                                                          | Description                                     |
-| :------------------ | :---------------------------------------------------------------------------- | :---------------------------------------------- |
-| `objectMap`         | `Map`<`Id`, `Obj`\>                                                           | map that caches known objects                   |
-| `myObjectMap`       | `Map`<`Id`, `Obj`\>                                                           | map that caches known objects owned by the user |
-| `address`           | `EthAddress` \| `undefined`                                                   | the user's account address                      |
-| `objUpdated$`       | [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`Id`\>                | emitter for announcing object updates           |
-| `myObjListUpdated$` | [`Monomitter`](Frontend_Utils_Monomitter.md#monomitter)<`Map`<`Id`, `Obj`\>\> | -                                               |
-| `getId`             | (`o`: `Obj`) => `Id`                                                          | -                                               |
-| `getOwner`          | (`o`: `Obj`) => `EthAddress`                                                  | -                                               |
-| `obj`               | `Obj`                                                                         | the object we want to cache                     |
+| Name                | Type                               | Description                                     |
+| :------------------ | :--------------------------------- | :---------------------------------------------- |
+| `objectMap`         | `Map`<`Id`, `Obj`\>                | map that caches known objects                   |
+| `myObjectMap`       | `Map`<`Id`, `Obj`\>                | map that caches known objects owned by the user |
+| `address`           | `EthAddress` \| `undefined`        | the user's account address                      |
+| `objUpdated$`       | `Monomitter`<`Id`\>                | emitter for announcing object updates           |
+| `myObjListUpdated$` | `Monomitter`<`Map`<`Id`, `Obj`\>\> | -                                               |
+| `getId`             | (`o`: `Obj`) => `Id`               | -                                               |
+| `getOwner`          | (`o`: `Obj`) => `EthAddress`       | -                                               |
+| `obj`               | `Obj`                              | the object we want to cache                     |
 
 #### Returns
 

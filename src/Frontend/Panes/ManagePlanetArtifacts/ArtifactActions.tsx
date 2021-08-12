@@ -1,10 +1,10 @@
+import { Artifact, ArtifactRarityNames, ArtifactType } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
 import { artifactAvailableTimestamp, isActivated } from '../../../Backend/GameLogic/ArtifactUtils';
-import { Artifact, ArtifactType, ArtifactRarityNames } from '@darkforest_eth/types';
 import { HoverableTooltip } from '../../Components/CoreUI';
 import { Hoverable, TOOLTIP_SLOW } from '../../Components/Hoverable';
-import { DepositIcon, DeactivateIcon, WithdrawIcon, ActivateIcon } from '../../Components/Icons';
+import { ActivateIcon, DeactivateIcon, DepositIcon, WithdrawIcon } from '../../Components/Icons';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Smaller, Sub } from '../../Components/Text';
 import { TimeUntil } from '../../Components/TimeUntil';
@@ -148,7 +148,14 @@ export function ArtifactActions({
           hoverDelay={TOOLTIP_SLOW}
           hoverContents={() => <HoverableTooltip>{a.tooltip}</HoverableTooltip>}
         >
-          <ArtifactActionIconContainer onClick={a.action}>{a.icon}</ArtifactActionIconContainer>
+          <ArtifactActionIconContainer
+            onClick={(e) => {
+              a.action();
+              e.stopPropagation();
+            }}
+          >
+            {a.icon}
+          </ArtifactActionIconContainer>
         </Hoverable>
       ))}
     </ActionsContainer>

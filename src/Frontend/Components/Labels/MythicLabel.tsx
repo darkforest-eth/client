@@ -24,16 +24,20 @@ const Anim = styled.span`
   color: ${RarityColors[ArtifactRarity.Mythic]};
 `;
 
-function MythicLabelRaw() {
+export function MythicLabelText({ text }: { text: string }) {
   return (
     <Anim>
-      {ArtifactRarityNames[ArtifactRarity.Mythic].split('').map((c, i) => (
+      {text.split('').map((c, i) => (
         <AnimDelay i={i} key={i}>
           {c === ' ' ? <>&nbsp;</> : c}
         </AnimDelay>
       ))}
     </Anim>
   );
+}
+
+function MythicLabelRaw() {
+  return <MythicLabelText text={ArtifactRarityNames[ArtifactRarity.Mythic]} />;
 }
 
 export const MythicLabel = React.memo(MythicLabelRaw);

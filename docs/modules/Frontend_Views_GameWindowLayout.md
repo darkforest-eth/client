@@ -10,7 +10,15 @@
 
 ### GameWindowLayout
 
-▸ **GameWindowLayout**(): `Element`
+▸ **GameWindowLayout**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                                   | Type      |
+| :------------------------------------- | :-------- |
+| `__namedParameters`                    | `Object`  |
+| `__namedParameters.terminalVisible`    | `boolean` |
+| `__namedParameters.setTerminalVisible` |           |
 
 #### Returns
 

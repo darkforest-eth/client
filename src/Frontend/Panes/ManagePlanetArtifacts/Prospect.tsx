@@ -1,10 +1,10 @@
-import React from 'react';
 import { Planet } from '@darkforest_eth/types';
+import React from 'react';
+import { enoughEnergyToProspect } from '../../../Backend/GameLogic/ArrivalUtils';
 import { Btn } from '../../Components/Btn';
 import { Spacer } from '../../Components/CoreUI';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Red, Sub } from '../../Components/Text';
-import { enoughEnergyToProspect } from '../../../Backend/GameLogic/ArrivalUtils';
 
 export function Prospect({
   prospect,
@@ -40,7 +40,15 @@ export function Prospect({
     <>
       {button}
       <Spacer height={8} />
-      {roundOver && <Red>Round 2 is over, and you can no longer mint artifacts!</Red>}
+
+      {roundOver && (
+        <>
+          <Spacer height={8} />{' '}
+          <Red>This Dark Forest round is over! you can no longer mint artifacts!</Red>
+          <Spacer height={8} />{' '}
+        </>
+      )}
+
       <Sub>
         Before you can find an artifact on a planet, you must prospect it. Prospecting determines
         what artifact you will find!{' '}

@@ -1,4 +1,4 @@
-import { UniformType, AttribType } from '../EngineTypes';
+import { AttribType, UniformType } from '../EngineTypes';
 import { glsl } from '../EngineUtils';
 
 const a = {

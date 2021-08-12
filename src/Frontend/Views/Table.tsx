@@ -1,9 +1,11 @@
 import React, { CSSProperties } from 'react';
 import styled from 'styled-components';
+import dfstyles from '../Styles/dfstyles';
 
 const TableElement = styled.table`
   overflow-y: scroll;
   scrollbar-width: initial;
+  border-radius: ${dfstyles.borderRadius};
 `;
 
 const ScrollableBody = styled.tbody`

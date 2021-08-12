@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { format as formatTime } from 'timeago.js';
-import styled from 'styled-components';
 import { EthAddress, Planet } from '@darkforest_eth/types';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { format as formatTime } from 'timeago.js';
 import { Sub } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
 import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
-import { PlanetThumb } from './PlanetDexPane';
 import { PlanetLink } from '../Views/PlanetLink';
+import { PlanetThumb } from './PlanetDexPane';
 
 const LeaderboardWrapper = styled.div`
   width: 42em;

@@ -1,12 +1,12 @@
+import { WorldCoords } from '@darkforest_eth/types';
 import { CanvasCoords } from '../../../../Backend/Utils/Coordinates';
 import Viewport from '../../../Game/Viewport';
-import { CIRCLE_PROGRAM_DEFINITION } from '../Programs/CircleProgram';
 import { engineConsts } from '../EngineConsts';
-import { GameGLManager } from '../WebGL/GameGLManager';
-import { GenericRenderer } from '../WebGL/GenericRenderer';
 import { RGBAVec } from '../EngineTypes';
 import EngineUtils from '../EngineUtils';
-import { WorldCoords } from '@darkforest_eth/types';
+import { CIRCLE_PROGRAM_DEFINITION } from '../Programs/CircleProgram';
+import { GameGLManager } from '../WebGL/GameGLManager';
+import { GenericRenderer } from '../WebGL/GenericRenderer';
 
 export default class CircleRenderer extends GenericRenderer<typeof CIRCLE_PROGRAM_DEFINITION> {
   quadBuffer: number[];

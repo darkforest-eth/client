@@ -1,18 +1,16 @@
-import type { Chunk, MinerWorkerMessage } from '../src/_types/global/GlobalTypes';
-import type WebpackWorker from 'worker-loader!*';
-import type MinerManager from '../src/Backend/Miner/MinerManager';
 import type { WorldCoords } from '@darkforest_eth/types';
-
+//@ts-ignore
+import { locationIdFromDecStr } from 'https://cdn.skypack.dev/@darkforest_eth/serde';
 import {
   html,
   render,
-  useState,
   useEffect,
-  useLayoutEffect,
+  useState,
   //@ts-ignore
 } from 'https://unpkg.com/htm/preact/standalone.module.js';
-//@ts-ignore
-import { locationIdFromDecStr } from 'https://cdn.skypack.dev/@darkforest_eth/serde';
+import type WebpackWorker from 'worker-loader!*';
+import type MinerManager from '../src/Backend/Miner/MinerManager';
+import type { Chunk, MinerWorkerMessage } from '../src/_types/global/GlobalTypes';
 
 type ExtendedMinerManager = MinerManager & {
   url: string;
@@ -147,8 +145,7 @@ function MinerUI({
 }) {
   const [hashRate, setHashRate] = useState(0);
 
-  // No idea why useEffect doesn't run
-  useLayoutEffect(() => {
+  useEffect(() => {
     const calcHash = (chunk: Chunk, miningTimeMillis: number) => {
       df.addNewChunk(chunk);
       const hashRate = chunk.chunkFootprint.sideLength ** 2 / (miningTimeMillis / 1000);
