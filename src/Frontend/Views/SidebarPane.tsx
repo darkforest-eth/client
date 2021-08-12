@@ -23,13 +23,13 @@ export function SidebarPane({
   helpHook,
   pluginsHook,
   yourArtifactsHook,
-  // planetdexHook,
+  planetdexHook,
 }: {
   settingsHook: ModalHook;
   helpHook: ModalHook;
   pluginsHook: ModalHook;
   yourArtifactsHook: ModalHook;
-  // planetdexHook: ModalHook;
+  planetdexHook: ModalHook;
 }) {
   const [sidebarHovered, setSidebarHovered] = useState<boolean>(false);
 
@@ -83,7 +83,7 @@ export function SidebarPane({
           text={sidebarHovered ? 'Your Artifacts' : undefined}
           shortcutKey={sidebarHovered ? TOGGLE_YOUR_ARTIFACTS_PANE : undefined}
         />
-        {/* <EmSpacer height={0.5} />
+        <EmSpacer height={0.5} />
         <ModalPlanetDexIcon
           hook={planetdexHook}
           style={{
@@ -93,7 +93,7 @@ export function SidebarPane({
           }}
           text={sidebarHovered ? 'Your Planets' : undefined}
           shortcutKey={sidebarHovered ? TOGGLE_YOUR_PLANETS_DEX_PANE : undefined}
-        /> */}
+        />
       </BorderlessPane>
     </WindowTogglesPaneContainer>
   );
