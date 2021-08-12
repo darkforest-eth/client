@@ -434,7 +434,8 @@ class NotificationManager extends EventEmitter {
       NotificationType.ArtifactProspected,
       <span>
         You prospected a Foundry! <br />
-        What artifacts are waiting to be found on? Click to view <PlanetNameLink planet={planet} />
+        What artifacts are waiting to be found on it? Click to view{' '}
+        <PlanetNameLink planet={planet} />
       </span>
     );
   }

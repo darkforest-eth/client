@@ -141,9 +141,7 @@ export default function LandingPage() {
                   <td>
                     08/22/<HideSmall>20</HideSmall>21
                   </td>
-                  <td>
-                    <Link to='https://twitter.com/ghst_gg'>@ghst_gg</Link>
-                  </td>
+                  <td>t.b.d</td>
                 </TRow>
               </tbody>
             </table>

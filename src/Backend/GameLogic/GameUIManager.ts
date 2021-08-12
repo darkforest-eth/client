@@ -388,6 +388,7 @@ class GameUIManager extends EventEmitter {
   public revealLocation(locationId: LocationId) {
     this.gameManager.revealLocation(locationId);
   }
+
   public claimLocation(locationId: LocationId) {
     this.gameManager.claimLocation(locationId);
   }

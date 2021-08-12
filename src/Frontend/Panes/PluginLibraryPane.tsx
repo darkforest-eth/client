@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { PluginId, SerializedPlugin } from '../../Backend/Plugins/SerializedPlugin';
 import { Btn } from '../Components/Btn';
-import { PaddedRecommendedModalWidth, Spacer } from '../Components/CoreUI';
+import { Link, PaddedRecommendedModalWidth, Spacer } from '../Components/CoreUI';
 import { RemoteModal } from '../Components/RemoteModal';
 import dfstyles from '../Styles/dfstyles';
 import { useEmitterValue } from '../Utils/EmitterHooks';
@@ -26,7 +26,7 @@ function HelpContent() {
       <Spacer height={8} />
       <p>
         Dark Forest maintains a repository to which community members can submit their own plugins.
-        You can find it <a href='https://plugins.zkga.me/'>here</a>.
+        You can find it <Link to='https://plugins.zkga.me/'>here</Link>.
       </p>
       <Spacer height={8} />
       <p>Try editing one of the default plugins to see how it works!</p>

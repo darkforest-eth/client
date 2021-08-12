@@ -363,7 +363,7 @@ export class ContractsAPI extends EventEmitter {
     );
     scoreContract.on(
       ContractEvent.LocationClaimed,
-      async (revealerAddr: string, location: EthersBN, _: Event) => {
+      async (revealerAddr: string, _previousClaimer: string, location: EthersBN, _: Event) => {
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
         this.emit(
           ContractsAPIEvent.PlanetClaimed,
@@ -376,7 +376,7 @@ export class ContractsAPI extends EventEmitter {
   }
 
   public removeEventListeners(): void {
-    const { coreContract, gptCreditContract } = this;
+    const { coreContract, gptCreditContract, scoreContract } = this;
 
     coreContract.removeAllListeners(ContractEvent.PlayerInitialized);
     coreContract.removeAllListeners(ContractEvent.ArrivalQueued);
@@ -391,6 +391,7 @@ export class ContractsAPI extends EventEmitter {
     coreContract.removeAllListeners(ContractEvent.LocationRevealed);
     coreContract.removeAllListeners(ContractEvent.PlanetSilverWithdrawn);
     gptCreditContract.removeAllListeners(ContractEvent.ChangedGPTCreditPrice);
+    scoreContract.removeAllListeners(ContractEvent.LocationClaimed);
   }
 
   public getContractAddress(): EthAddress {
@@ -843,6 +844,20 @@ export class ContractsAPI extends EventEmitter {
     return gptCreditsBalance.toNumber();
   }
 
+  async getScoreV3(address: EthAddress | undefined): Promise<number | undefined> {
+    if (address === undefined) return undefined;
+
+    const score = await this.makeCall<EthersBN>(this.scoreContract.getScore, [address]);
+
+    if (
+      score.eq(EthersBN.from('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'))
+    ) {
+      return undefined;
+    }
+
+    return score.toNumber();
+  }
+
   async getConstants(): Promise<ContractConstants> {
     const {
       DISABLE_ZK_CHECKS,
@@ -979,10 +994,12 @@ export class ContractsAPI extends EventEmitter {
     const lastClaimedTimestamp = await this.makeCall(this.scoreContract.getLastClaimTimestamp, [
       playerId,
     ]);
+    const scoreFromBlockchain = await this.getScoreV3(playerId);
     if (!rawPlayer.isInitialized) return undefined;
 
     const player = decodePlayer(rawPlayer);
     player.lastClaimTimestamp = lastClaimedTimestamp.toNumber();
+    player.score = scoreFromBlockchain;
     return player;
   }
 

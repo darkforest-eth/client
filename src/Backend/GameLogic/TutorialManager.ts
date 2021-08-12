@@ -19,6 +19,7 @@ export const enum TutorialState {
   MinerPause,
   Terminal,
   HowToGetScore,
+  ScoringDetails,
   Valhalla,
 
   AlmostCompleted,

@@ -490,10 +490,14 @@ class GameManager extends EventEmitter {
   private async refreshScoreboard() {
     try {
       const leaderboard = await loadLeaderboard();
+
       for (const entry of leaderboard.entries) {
         const player = this.players.get(entry.ethAddress);
         if (player) {
-          player.score = entry.score;
+          // current player's score is updated via `this.playerInterval`
+          if (player.address !== this.account) {
+            player.score = entry.score;
+          }
         }
       }
 
@@ -518,6 +522,7 @@ class GameManager extends EventEmitter {
     this.persistentChunkStore.destroy();
     clearInterval(this.playerInterval);
     clearInterval(this.diagnosticsInterval);
+    clearInterval(this.scoreboardInterval);
     this.settingsSubscription?.unsubscribe();
   }
 
@@ -804,21 +809,17 @@ class GameManager extends EventEmitter {
   }
 
   private async hardRefreshPlayer(address: EthAddress): Promise<void> {
-    const player = await this.contractsAPI.getPlayerById(address);
+    const playerFromBlockchain = await this.contractsAPI.getPlayerById(address);
+    if (!playerFromBlockchain) return;
 
-    if (!player) {
-      return;
+    const localPlayer = this.getPlayer(address);
+
+    if (localPlayer?.twitter) {
+      playerFromBlockchain.twitter = localPlayer.twitter;
     }
 
-    const existingPlayerTwitter = this.players.get(address)?.twitter;
-    const existingPlayerScore = this.players.get(address)?.score;
-
-    if (existingPlayerTwitter) {
-      player.twitter = existingPlayerTwitter;
-      player.score = existingPlayerScore;
-    }
-
-    this.players.set(address, player);
+    this.players.set(address, playerFromBlockchain);
+    this.playersUpdated$.publish();
   }
 
   // Dirty hack for only refreshing properties on a planet and nothing else
