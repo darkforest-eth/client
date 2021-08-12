@@ -11,7 +11,7 @@ export function prospectAndFind()
   if (df.isRoundOver()) return
 
   getMyPlanets()
-    .filter(p => isFindable(p))
+    .filter(isFindable)
     .sort((a, b) => blocksLeft(a) - blocksLeft(b))
     .map(p => {
       df.findArtifact(p.locationId)
@@ -21,5 +21,8 @@ export function prospectAndFind()
     .filter(isProspectable)
     .filter(enoughEnergyToProspect)
     .slice(0, 10) // don't prospect too many at the same time
-    .map(p => df.prospectPlanet(p.locationId))
+    .map(async (p) => {
+      await df.prospectPlanet(p.locationId)
+      df.findArtifact(p.locationId)
+    })
 }
