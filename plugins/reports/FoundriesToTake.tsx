@@ -74,7 +74,7 @@ export class FoundriesToTake extends Component
     const rows = Array.from(df.getAllPlanets())
       .filter(p => p.location)
       .filter(isUnowned)
-      .filter(p => p.planetLevel >= 2)
+      .filter(p => p.planetLevel >= 3)
       .filter(canHaveArtifact)
       .filter(isReachable)
       .sort((a, b) => b.planetLevel - a.planetLevel)

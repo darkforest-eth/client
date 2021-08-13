@@ -8,6 +8,7 @@ import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 
 import { capturePlanets, closestToCenter, directionToCenter, lowestEnergy } from '../strategies/Crawl'
+import { distributeEnergy } from '../strategies/DistributeEnergy'
 import { buttonGridStyle, energy, getMyPlanets, getPlanetTypeAcronym, hasPendingMove, isAsteroid, isFoundry, planetName, PlanetTypes, PrimeMinutes } from '../utils'
 const pauseable = require('pauseable')
 
@@ -28,13 +29,26 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
   })
 }
 
+function onDistributeClick(selectedPlanet: Planet|null = null) {
+  console.log('Distribute')
+
+  distributeEnergy({
+    fromId: selectedPlanet?.locationId,
+    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.THREE,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+  })
+}
+
 export class PlanetsWithEnergy extends Component
 {
   interval: any
 
   constructor() {
     super()
-    this.interval = pauseable.setInterval(PrimeMinutes.FIVE, onCrawlClick)
+    this.interval = pauseable.setInterval(PrimeMinutes.FIVE, () => {
+      onCrawlClick()
+      onDistributeClick()
+    })
     // this.interval.pause()
   }
 
@@ -63,6 +77,9 @@ export class PlanetsWithEnergy extends Component
     <div style={buttonGridStyle}>
       <button onClick={() => onCrawlClick(ui.getSelectedPlanet())}>
         Crawl
+      </button>
+      <button onClick={() => onDistributeClick(ui.getSelectedPlanet())}>
+        Distribute
       </button>
     </div>
     <Table

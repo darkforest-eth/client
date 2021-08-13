@@ -48,6 +48,7 @@ export function distributeSilver(config: config)
       .filter(p => p.planetType === config.toPlanetType)
       .filter(p => getPlanetRank(p) < getPlanetMaxRank(p))
       .filter(p => getSilverRequiredForNextUpgrade(p) <  from.silver)
+      .filter(p => p.planetLevel >= from.planetLevel - 1) // L4 to L3 etc..
       .filter(p => p.silverCap !== p.silver)
 
     const moves = to.map(to => {
@@ -57,6 +58,8 @@ export function distributeSilver(config: config)
       return {
         from,
         to,
+        fromName: planetName(from),
+        toName: planetName(to),
         energy,
         silver
       }

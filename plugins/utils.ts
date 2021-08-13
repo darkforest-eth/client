@@ -95,7 +95,7 @@ export function hasPendingMove(p: Planet) {
 }
 
 export function energy(p: Planet) {
-  return Math.floor(p.energy / p.energyCap * 100);
+  return Math.floor(availableEnergy(p) / p.energyCap * 100);
 }
 
 /**
