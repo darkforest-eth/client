@@ -8,7 +8,7 @@ import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 
 import { capturePlanets, highestLevel, lowestEnergy } from '../strategies/Crawl'
-import { buttonGridStyle, canHaveArtifact, isReachable, isUnowned, PlanetTypes } from '../utils'
+import { buttonGridStyle, canHaveArtifact, energy, getEnergyNeeded, getMyPlanets, isReachable, isUnowned, planetName, PlanetTypes, PrimeMinutes } from '../utils'
 
 const pauseable = require('pauseable')
 
@@ -18,9 +18,9 @@ declare const ui: GameUIManager
 function onCrawlClick(selectedPlanet: Planet|null = null) {
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
     fromMinEnergyLeftPercent: 37.5,
-    toMinLevel: PlanetLevel.THREE,
+    toMinLevel: PlanetLevel.TWO,
     toPlanetTypes: [PlanetTypes.FOUNDRY],
     toTargetEnergy: 95.5,
     sortFunction: highestLevel,
@@ -37,14 +37,33 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
   // })
 }
 
+/**
+ * From furtherst:
+ *
+ * - Could reach with 100% energy
+ * - Could reach with current energy
+ * - Could take over with current energy <--
+ * - Could take over and prospect with current energy
+ */
+export function isReachable(p: Planet) {
+  return getMyPlanets().some(myPlanet => {
+    const energyNeeded = getEnergyNeeded(myPlanet, p, 40)
+    const reachable = energyNeeded < myPlanet.energy
+
+    reachable && console.log(`${planetName(p)} reachable by ${planetName(myPlanet,)} with ${energyNeeded}% energy`)
+
+    return reachable
+  })
+}
+
 export class FoundriesToTake extends Component
 {
   interval: any
 
   constructor() {
     super()
-    this.interval = pauseable.setInterval(4 * 60 * 1000, onCrawlClick)
-    this.interval.pause()
+    this.interval = pauseable.setInterval(PrimeMinutes.ELEVEN, onCrawlClick)
+    // this.interval.pause()
   }
 
   render()

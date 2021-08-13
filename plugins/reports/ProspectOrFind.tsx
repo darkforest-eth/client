@@ -7,7 +7,7 @@ import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 
-import { blocksLeft, buttonGridStyle, enoughEnergyToProspect, getMyPlanets, isFindable, isProspectable } from '../utils'
+import { blocksLeft, buttonGridStyle, enoughEnergyToProspect, getMyPlanets, isFindable, isProspectable, PrimeMinutes } from '../utils'
 import { prospectAndFind } from 'plugins/strategies/ProspectAndFind'
 
 const pauseable = require('pauseable')
@@ -28,8 +28,8 @@ function onProspectAndFindClick() {
 
   constructor() {
     super()
-    this.interval = pauseable.setInterval(3 * 60 * 1000, onProspectAndFindClick)
-    this.interval.pause()
+    this.interval = pauseable.setInterval(PrimeMinutes.TWO, onProspectAndFindClick)
+    // this.interval.pause()
   }
 
    render()

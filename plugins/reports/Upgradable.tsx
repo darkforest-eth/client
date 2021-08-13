@@ -7,7 +7,7 @@ import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 import { upgrade } from '../strategies/Upgrade'
-import { buttonGridStyle, canPlanetUpgrade, getMyPlanets, getPlanetRank } from '../utils'
+import { buttonGridStyle, canPlanetUpgrade, getMyPlanets, getPlanetRank, PrimeMinutes } from '../utils'
 
 const pauseable = require('pauseable')
 
@@ -26,8 +26,8 @@ export class Upgradable extends Component
 
   constructor() {
     super()
-    this.interval = pauseable.setInterval(2 * 60 * 1000, onUpgradeClick)
-    this.interval.pause()
+    this.interval = pauseable.setInterval(PrimeMinutes.THREE, onUpgradeClick)
+    // this.interval.pause()
   }
 
   render()

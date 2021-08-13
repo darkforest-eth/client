@@ -1,7 +1,7 @@
 import GameManager from '@df/GameManager'
 import GameUIManager from '@df/GameUIManager'
 import { LocatablePlanet, LocationId, Planet, PlanetLevel, PlanetType, WorldCoords } from "@darkforest_eth/types";
-import { center, getEnergyNeeded, getMyPlanets, hasIncomingMove, isUnowned, Move, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove, distToCenter } from 'plugins/utils';
+import { center, getEnergyNeeded, getMyPlanets, hasIncomingMove, isUnowned, Move, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove, distToCenter, isFoundry } from 'plugins/utils';
 import { moveSyntheticComments } from 'typescript';
 import { isLocatable } from 'src/_types/global/GlobalTypes';
 // import { isUnowned } from 'utils/utils';

@@ -11,7 +11,7 @@ import { distributeSilver } from '../strategies/DistributeSilver'
 import { withdrawSilver } from '../strategies/WithdrawSilver'
 
 import { capturePlanets } from '../strategies/Crawl'
-import { availableSilver, buttonGridStyle, energy, getMyPlanets, hasPendingMove, isAsteroid, PlanetTypes, SelectedPlanetProp } from '../utils'
+import { availableSilver, buttonGridStyle, energy, getMyPlanets, hasPendingMove, isAsteroid, PlanetTypes, PrimeMinutes, SelectedPlanetProp } from '../utils'
 
 const pauseable = require('pauseable')
 
@@ -21,10 +21,10 @@ declare const ui: GameUIManager
 function onDistributeClick(selectedPlanet: Planet|null = null) {
   distributeSilver({
     fromId: selectedPlanet?.locationId,
-    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.TWO,
     fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
     fromPlanetType: selectedPlanet?.planetType || PlanetTypes.ASTEROID,
-    toMinLevel: PlanetLevel.FOUR,
+    toMinLevel: PlanetLevel.THREE,
     toPlanetType: PlanetTypes.PLANET,
   })
 
@@ -50,11 +50,11 @@ export class FullSilver extends Component
 
   constructor() {
     super()
-    this.interval = pauseable.setInterval(5 * 60 * 1000, () => {
+    this.interval = pauseable.setInterval(PrimeMinutes.SEVEN, () => {
       onDistributeClick()
       onWithdrawClick()
     })
-    this.interval.pause()
+    // this.interval.pause()
   }
 
   render()
@@ -63,7 +63,7 @@ export class FullSilver extends Component
     const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
     const rows = getMyPlanets()
-      .filter(p => p.planetLevel >= 4)
+      .filter(p => p.planetLevel >= 2)
       .filter(p => p.planetType === PlanetTypes.ASTEROID)
       .filter(p => availableSilver(p) == p.silverCap)
       .sort((a, b) => b.silverCap - a.silverCap)

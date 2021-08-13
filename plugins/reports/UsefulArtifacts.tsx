@@ -1,5 +1,5 @@
 import { Component, h } from 'preact'
-import { Artifact, artifactNameFromArtifact, Planet } from '@darkforest_eth/types'
+import { Artifact, artifactNameFromArtifact, Planet, PlanetLevel } from '@darkforest_eth/types'
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { PlanetLink } from '../components/PlanetLink'
@@ -12,7 +12,7 @@ import { withdrawArtifacts } from '../strategies/WithdrawArtifacts'
 import { activateArtifacts } from '../strategies/ActivateArtifacts'
 import { ManageInterval } from '../Components/ManageInterval'
 
-import { ArtifactRarities, artifactStatTypes, artifactTacticalTypes, ArtifactTypes, buttonGridStyle, canBeActivated, getAllArtifacts, isActivated, PlanetTypes } from '../utils'
+import { ArtifactRarities, artifactStatTypes, artifactTacticalTypes, ArtifactTypes, buttonGridStyle, canBeActivated, getAllArtifacts, isActivated, PlanetTypes, PrimeMinutes } from '../utils'
 
 const pauseable = require('pauseable')
 
@@ -21,6 +21,7 @@ declare const ui: GameUIManager
 
 function onDistributeClick(selectedPlanet: Planet|null = null) {
   const rarities = [
+    // ArtifactRarities.Common,
     ArtifactRarities.Rare,
     ArtifactRarities.Epic,
     ArtifactRarities.Legendary,
@@ -30,9 +31,9 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
   distributeArtifacts({
     fromId: selectedPlanet?.locationId,
     types: artifactStatTypes,
-    rarities,
+    rarities: [ArtifactRarities.Commmon, ...rarities],
     toPlanetType: PlanetTypes.PLANET,
-    toMinLevel: 4,
+    toMinLevel: PlanetLevel.FOUR,
   })
 
   for (const level of rarities) {
@@ -66,12 +67,12 @@ export class UsefulArtifacts extends Component
 
   constructor() {
     super()
-    this.interval = pauseable.setInterval(6 * 60 * 1000, () => {
+    this.interval = pauseable.setInterval(PrimeMinutes.THIRTEEN, () => {
       onDistributeClick()
       onWithdrawClick()
       onActivateClick()
     })
-    this.interval.pause()
+    // this.interval.pause()
   }
 
   render()
@@ -81,7 +82,7 @@ export class UsefulArtifacts extends Component
 
     const rows = getAllArtifacts()
       .filter(a => a && ! isActivated(a))
-      .filter(a => a && a.rarity > ArtifactRarities.Common)
+      // .filter(a => a && a.rarity > ArtifactRarities.Common)
       .filter(a => [ArtifactTypes.Wormhole, ArtifactTypes.BloomFilter].includes(a.artifactType))
       .filter(canBeActivated)
       .sort((a, b) => b!.rarity - a!.rarity)

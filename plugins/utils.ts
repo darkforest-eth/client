@@ -24,6 +24,17 @@ export const ArtifactTypes: { [ key:string]: ArtifactType } = {
   MAX: 9
 }
 
+const MINUTES = 1000 * 60
+
+export const PrimeMinutes = {
+  TWO: 2 * MINUTES,
+  THREE: 3 * MINUTES,
+  FIVE: 5 * MINUTES,
+  SEVEN: 7 * MINUTES,
+  ELEVEN: 11 * MINUTES,
+  THIRTEEN: 13 * MINUTES,
+}
+
 export const artifactStatTypes = [
   ArtifactTypes.Monolith,
   ArtifactTypes.Colossus,
@@ -56,6 +67,10 @@ export function isArtifact(pet: Planet | Artifact): pet is Artifact {
 
 export function isAsteroid(p: Planet) {
   return p.planetType === PlanetTypes.ASTEROID
+}
+
+export function isFoundry(p: Planet) {
+  return p.planetType === PlanetTypes.FOUNDRY
 }
 
 export function hasPendingMove(p: Planet) {
@@ -257,17 +272,6 @@ export function getPlanetRankForBranch(planet: Planet, branch: UpgradeBranchName
 export function canPlanetUpgrade(planet: Planet) {
   // @ts-ignore
   return df.entityStore.constructor.planetCanUpgrade(planet)
-}
-
-export function isReachable(p: Planet) {
-  return getMyPlanets().some(myPlanet => {
-    const dist = df.getDist(p.locationId, myPlanet.locationId)
-    const reachable = dist < df.getMaxMoveDist(myPlanet.locationId, 100)
-
-    reachable && console.log(`${planetName(p)} reachable by ${planetName(myPlanet,)} with 100% energy`)
-
-    return reachable
-  })
 }
 
 export function isActivated(a: Artifact) {
