@@ -21,7 +21,7 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
     fromId: selectedPlanet?.locationId,
     fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
     fromMinEnergyLeftPercent: 37.5,
-    toPlanetTypes: [PlanetTypes.PLANET, PlanetTypes.ASTEROID],
+    toPlanetTypes: [PlanetTypes.PLANET, PlanetTypes.ASTEROID, PlanetTypes.RIP],
     toMinLevel: PlanetLevel.FOUR,
     toTargetEnergy: 15,
     sortFunction: directionToCenter,

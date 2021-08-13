@@ -41,7 +41,7 @@ function centerPlanet(id) {
 
 function planetShort(locationId) {
   const planet = df.getPlanetWithId(locationId)
-  return `P${getPlanetTypeAcronym(planet)}L${planet?.planetLevel} ${planetName(planet)}`
+  return `${getPlanetTypeAcronym(planet)}L${planet?.planetLevel} ${planetName(planet)}`
 }
 
 function Attack({ action, onDelete }) {
