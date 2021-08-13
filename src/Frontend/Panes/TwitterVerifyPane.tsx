@@ -127,8 +127,8 @@ export function TwitterVerifyPane({ hook }: { hook: ModalHook }) {
 
         {user.value !== undefined && user.value.twitter && (
           <>
-            You are connected, <TwitterLink twitter={user.value.twitter} />. You can disconnect it
-            anytime by clicking the button below.
+            You are connected, <TwitterLink twitter={user.value.twitter} />. You can disconnect from
+            twitter anytime by clicking the button below.
             <Spacer height={16} />
             <Btn wide disabled={disconnecting} onClick={onDisconnectClick}>
               {verifying ? (

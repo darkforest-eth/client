@@ -356,7 +356,7 @@ function ArtifactDescription({ artifact }: { artifact: Artifact }) {
   }
 
   if (content) {
-    return <ReadMore>{content}</ReadMore>;
+    return <ReadMore height={'1em'}>{content}</ReadMore>;
   }
 
   return null;

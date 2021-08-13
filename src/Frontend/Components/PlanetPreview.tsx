@@ -137,6 +137,11 @@ class PlanetPreviewRenderer extends WebGLManager {
   }
 }
 
+/**
+ * The amount of instances of this is equal to the max amount of planet previews we have ever
+ * displayed this session. We keep a pool of them because there's no clean way to clean up a webgl
+ * context. If we didn't keep a pool, we would leak every time we rerenred a planet preview.
+ */
 interface PlanetPreviewContext {
   canvas: HTMLCanvasElement;
   renderer: PlanetPreviewRenderer;

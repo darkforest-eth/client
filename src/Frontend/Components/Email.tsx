@@ -98,6 +98,7 @@ export const EmailCTA = ({ mode }: { mode: EmailCTAMode }) => {
         <p
           style={{
             marginRight: '14pt',
+            color: dfstyles.colors.text,
           }}
         >
           {mode === EmailCTAMode.SUBSCRIBE ? 'info' : 'unsubscribe'}:

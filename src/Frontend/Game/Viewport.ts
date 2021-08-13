@@ -287,6 +287,8 @@ class Viewport {
   }
 
   centerCoords(coords: WorldCoords): void {
+    if (typeof coords.x !== 'number' || typeof coords.y !== 'number')
+      throw new Error('please pass in an object that looks like {x: 0, y: 0}');
     this.centerWorldCoords = { ...coords };
   }
 

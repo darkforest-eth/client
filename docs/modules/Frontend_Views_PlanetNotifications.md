@@ -8,10 +8,46 @@
 
 ### Functions
 
+- [DistanceFromCenterRow](Frontend_Views_PlanetNotifications.md#distancefromcenterrow)
+- [PlanetClaimedRow](Frontend_Views_PlanetNotifications.md#planetclaimedrow)
 - [PlanetNotifications](Frontend_Views_PlanetNotifications.md#planetnotifications)
 - [getNotifsForPlanet](Frontend_Views_PlanetNotifications.md#getnotifsforplanet)
 
 ## Functions
+
+### DistanceFromCenterRow
+
+▸ `Const` **DistanceFromCenterRow**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                       | Type                                                                               |
+| :------------------------- | :--------------------------------------------------------------------------------- |
+| `__namedParameters`        | `Object`                                                                           |
+| `__namedParameters.planet` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\> |
+
+#### Returns
+
+`Element`
+
+---
+
+### PlanetClaimedRow
+
+▸ `Const` **PlanetClaimedRow**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                       | Type                                                                               |
+| :------------------------- | :--------------------------------------------------------------------------------- |
+| `__namedParameters`        | `Object`                                                                           |
+| `__namedParameters.planet` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\> |
+
+#### Returns
+
+`Element`
+
+---
 
 ### PlanetNotifications
 
@@ -33,14 +69,15 @@
 
 ### getNotifsForPlanet
 
-▸ **getNotifsForPlanet**(`planet`, `currentBlockNumber`): [`PlanetNotifType`](../enums/Frontend_Views_PlanetNotifications.PlanetNotifType.md)[]
+▸ **getNotifsForPlanet**(`planet`, `account`, `currentBlockNumber`): [`PlanetNotifType`](../enums/Frontend_Views_PlanetNotifications.PlanetNotifType.md)[]
 
 #### Parameters
 
-| Name                 | Type                    |
-| :------------------- | :---------------------- |
-| `planet`             | `Planet` \| `undefined` |
-| `currentBlockNumber` | `number` \| `undefined` |
+| Name                 | Type                        |
+| :------------------- | :-------------------------- |
+| `planet`             | `Planet` \| `undefined`     |
+| `account`            | `EthAddress` \| `undefined` |
+| `currentBlockNumber` | `number` \| `undefined`     |
 
 #### Returns
 

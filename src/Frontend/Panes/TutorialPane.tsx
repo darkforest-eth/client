@@ -109,18 +109,36 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
     );
   } else if (tutorialState === TutorialState.HowToGetScore) {
     return (
-      <div>
-        To increase your score, <Underline>withdraw</Underline> silver from the universe.
+      <div className='tutzoom'>
+        <White>It's a race to the center.</White> <br />
         <br />
+        Your score at the end of the round is the distance of your closest <White>
+          claimed
+        </White>{' '}
+        planet from the center (0, 0). You can <White>claim</White> any level 3+ planet that you
+        own.
         <br />
-        You can withdraw silver from the universe by sending silver to a{' '}
-        <Underline>Spacetime Rip</Underline> that you own, and then withdrawing from it using its
-        context menu. Remember, you can only withdraw silver from{' '}
-        <Underline>Spacetime Rips</Underline>.
         <div>
           <Btn
             className='btn'
             onClick={() => tutorialManager.acceptInput(TutorialState.HowToGetScore)}
+          >
+            Next
+          </Btn>
+        </div>
+      </div>
+    );
+  } else if (tutorialState === TutorialState.ScoringDetails) {
+    return (
+      <div className='tutzoom'>
+        You can steal an opponent's <White>claim</White> by capturing & <White>claiming</White> the
+        planet for yourself. <br />
+        <br />
+        Destroyed planets do not count towards your score!
+        <div>
+          <Btn
+            className='btn'
+            onClick={() => tutorialManager.acceptInput(TutorialState.ScoringDetails)}
           >
             Next
           </Btn>
@@ -134,7 +152,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         <Underline>Valhalla</Underline> universe.
         <br />
         <br />
-        To win, have the highest score (^:
+        To win, have the lowest score (^:
         <div>
           <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.Valhalla)}>
             Next

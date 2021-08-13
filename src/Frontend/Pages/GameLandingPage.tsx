@@ -195,9 +195,9 @@ export function GameLandingPage() {
       terminal.current?.print('    v0.6 r2    ', TerminalTextStyle.Text);
       terminal.current?.print('06/28/2021        ', TerminalTextStyle.Text);
       terminal.current?.printLink(
-        '@ghst_gg',
+        '@orden_gg',
         () => {
-          window.open('https://twitter.com/ghst_gg');
+          window.open('https://twitter.com/orden_gg');
         },
         TerminalTextStyle.Text
       );
@@ -325,7 +325,7 @@ export function GameLandingPage() {
 
         addAccount(newSKey);
 
-        ethConnection?.setAccount(newAddr);
+        ethConnection?.setAccount(newSKey);
         terminal.current?.println(`Imported account with address ${newAddr}.`);
         setStep(TerminalPromptStep.ACCOUNT_SET);
       } catch (e) {

@@ -210,7 +210,7 @@ export class ViewportEntities {
       const radiusW = this.uiManager.getRadiusOfPlanetLevel(i as PlanetLevel);
       const radiusPx = viewport.worldToCanvasDist(radiusW);
 
-      if (radiusPx >= minPlanetSize && radiusPx < viewportWidthPx * 3) {
+      if (radiusPx >= minPlanetSize) {
         result.push(i);
       }
     }

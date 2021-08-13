@@ -1005,11 +1005,12 @@ Returns constructors of classes that may be useful for developing plugins.
 
 `Object`
 
-| Name                 | Type                                                                              |
-| :------------------- | :-------------------------------------------------------------------------------- |
-| `MinerManager`       | typeof [`default`](Backend_Miner_MinerManager.default.md)                         |
-| `SpiralPattern`      | typeof [`SpiralPattern`](Backend_Miner_MiningPatterns.SpiralPattern.md)           |
-| `SwissCheesePattern` | typeof [`SwissCheesePattern`](Backend_Miner_MiningPatterns.SwissCheesePattern.md) |
+| Name                   | Type                                                                                  |
+| :--------------------- | :------------------------------------------------------------------------------------ |
+| `MinerManager`         | typeof [`default`](Backend_Miner_MinerManager.default.md)                             |
+| `SpiralPattern`        | typeof [`SpiralPattern`](Backend_Miner_MiningPatterns.SpiralPattern.md)               |
+| `SwissCheesePattern`   | typeof [`SwissCheesePattern`](Backend_Miner_MiningPatterns.SwissCheesePattern.md)     |
+| `TowardsCenterPattern` | typeof [`TowardsCenterPattern`](Backend_Miner_MiningPatterns.TowardsCenterPattern.md) |
 
 ---
 

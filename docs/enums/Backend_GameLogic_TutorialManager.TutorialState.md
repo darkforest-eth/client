@@ -14,6 +14,7 @@
 - [MinerMove](Backend_GameLogic_TutorialManager.TutorialState.md#minermove)
 - [MinerPause](Backend_GameLogic_TutorialManager.TutorialState.md#minerpause)
 - [None](Backend_GameLogic_TutorialManager.TutorialState.md#none)
+- [ScoringDetails](Backend_GameLogic_TutorialManager.TutorialState.md#scoringdetails)
 - [SendFleet](Backend_GameLogic_TutorialManager.TutorialState.md#sendfleet)
 - [Terminal](Backend_GameLogic_TutorialManager.TutorialState.md#terminal)
 - [Valhalla](Backend_GameLogic_TutorialManager.TutorialState.md#valhalla)
@@ -23,13 +24,13 @@
 
 ### AlmostCompleted
 
-• **AlmostCompleted** = `10`
+• **AlmostCompleted** = `11`
 
 ---
 
 ### Completed
 
-• **Completed** = `11`
+• **Completed** = `12`
 
 ---
 
@@ -69,6 +70,12 @@
 
 ---
 
+### ScoringDetails
+
+• **ScoringDetails** = `9`
+
+---
+
 ### SendFleet
 
 • **SendFleet** = `2`
@@ -83,7 +90,7 @@
 
 ### Valhalla
 
-• **Valhalla** = `9`
+• **Valhalla** = `10`
 
 ---
 

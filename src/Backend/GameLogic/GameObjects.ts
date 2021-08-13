@@ -48,6 +48,7 @@ import {
   isUnconfirmedActivateArtifact,
   isUnconfirmedBuyGPTCredits,
   isUnconfirmedBuyHat,
+  isUnconfirmedClaim,
   isUnconfirmedDeactivateArtifact,
   isUnconfirmedDepositArtifact,
   isUnconfirmedFindArtifact,
@@ -341,6 +342,12 @@ export class GameObjects {
     this.unconfirmedUpgrades = {};
     this.unconfirmedBuyHats = {};
     this.unconfirmedPlanetTransfers = {};
+
+    for (const [_locId, claimedLoc] of claimedLocations) {
+      this.updatePlanet(claimedLoc.hash, (p) => {
+        p.claimer = claimedLoc.revealer;
+      });
+    }
 
     // TODO: do this better...
     // set interval to update all planets every 120s
@@ -716,7 +723,14 @@ export class GameObjects {
     const notifManager = NotificationManager.getInstance();
     notifManager.txInit(txIntent);
 
-    if (isUnconfirmedReveal(txIntent)) {
+    if (isUnconfirmedClaim(txIntent)) {
+      this.unconfirmedClaim = txIntent;
+      const planet = this.getPlanetWithId(txIntent.locationId);
+      if (planet) {
+        planet.unconfirmedClaim = txIntent;
+        this.setPlanet(planet);
+      }
+    } else if (isUnconfirmedReveal(txIntent)) {
       const planet = this.getPlanetWithId(txIntent.locationId);
       if (planet) {
         planet.unconfirmedReveal = txIntent;
@@ -840,7 +854,14 @@ export class GameObjects {
    * @todo Make this less tedious.
    */
   public clearUnconfirmedTxIntent(txIntent: TxIntent) {
-    if (isUnconfirmedReveal(txIntent)) {
+    if (isUnconfirmedClaim(txIntent)) {
+      this.unconfirmedClaim = undefined;
+      const planet = this.getPlanetWithId(txIntent.locationId);
+      if (planet) {
+        planet.unconfirmedClaim = undefined;
+        this.setPlanet(planet);
+      }
+    } else if (isUnconfirmedReveal(txIntent)) {
       const planet = this.getPlanetWithId(txIntent.locationId);
 
       if (planet) {

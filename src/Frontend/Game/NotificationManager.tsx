@@ -338,8 +338,8 @@ class NotificationManager extends EventEmitter {
     this.notify(
       NotificationType.FoundDeepSpace,
       <span>
-        Congrats! You found deep space! Deep space has the rarest <br />
-        planets, but planets all have lowered defense!{' '}
+        Congrats! You found deep space! Deep space has more rare <br />
+        planets, but all planets in deep space have lowered defense!{' '}
         <CenterChunkLink chunk={chunk}>Click to view</CenterChunkLink>.
       </span>
     );
@@ -380,10 +380,8 @@ class NotificationManager extends EventEmitter {
     this.notify(
       NotificationType.FoundTradingPost,
       <span>
-        You found a spacetime rip! Now you can move artifacts and silver in and out
-        <br />
-        of the universe. <br />
-        Click to view <PlanetNameLink planet={planet} />.
+        You found a spacetime rip! Now you can move artifacts in and out of the universe. Click to
+        view <PlanetNameLink planet={planet} />.
       </span>
     );
   }
@@ -434,7 +432,8 @@ class NotificationManager extends EventEmitter {
       NotificationType.ArtifactProspected,
       <span>
         You prospected a Foundry! <br />
-        What artifacts are waiting to be found on? Click to view <PlanetNameLink planet={planet} />
+        What artifacts are waiting to be found on it? Click to view{' '}
+        <PlanetNameLink planet={planet} />
       </span>
     );
   }

@@ -19,15 +19,22 @@ type ExtendedMinerManager = MinerManager & {
   patternType: string;
 };
 
-const { MinerManager: Miner, SwissCheesePattern, SpiralPattern } = df.getConstructors();
+const {
+  MinerManager: Miner,
+  SwissCheesePattern,
+  SpiralPattern,
+  TowardsCenterPattern,
+} = df.getConstructors();
 
 const NEW_CHUNK = 'DiscoveredNewChunk';
 
 function getPattern(coords: WorldCoords, patternType: string, chunkSize: number) {
   if (patternType === 'swiss') {
     return new SwissCheesePattern(coords, chunkSize);
-  } else {
+  } else if (patternType === 'spiral') {
     return new SpiralPattern(coords, chunkSize);
+  } else {
+    return new TowardsCenterPattern(coords, chunkSize);
   }
 }
 
@@ -295,6 +302,7 @@ function App({
         <select style=${select} value=${patternType} onChange=${changePattern}>
           <option value="spiral">Spiral</option>
           <option value="swiss">Swiss</option>
+          <option value="towardsCenter">TowardsCenter</option>
         </select>
         <button style=${button} onClick=${add}>Explore!</button>
       </div>

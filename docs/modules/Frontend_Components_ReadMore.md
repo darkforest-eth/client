@@ -14,12 +14,12 @@
 
 #### Parameters
 
-| Name                         | Type                                       |
-| :--------------------------- | :----------------------------------------- |
-| `__namedParameters`          | `Object`                                   |
-| `__namedParameters.children` | `React.ReactChild`[] \| `React.ReactChild` |
-| `__namedParameters.height?`  | `string`                                   |
-| `__namedParameters.text?`    | `string`                                   |
+| Name                         | Type                                     |
+| :--------------------------- | :--------------------------------------- |
+| `__namedParameters`          | `Object`                                 |
+| `__namedParameters.children` | `React.ReactNode`[] \| `React.ReactNode` |
+| `__namedParameters.height?`  | `string`                                 |
+| `__namedParameters.text?`    | `string`                                 |
 
 #### Returns
 

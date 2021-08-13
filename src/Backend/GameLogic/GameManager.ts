@@ -93,7 +93,12 @@ import {
   Wormhole,
 } from '../../_types/global/GlobalTypes';
 import MinerManager, { HomePlanetMinerChunkStore, MinerManagerEvent } from '../Miner/MinerManager';
-import { MiningPattern, SpiralPattern, SwissCheesePattern } from '../Miner/MiningPatterns';
+import {
+  MiningPattern,
+  SpiralPattern,
+  SwissCheesePattern,
+  TowardsCenterPattern,
+} from '../Miner/MiningPatterns';
 import { getConversation, startConversation, stepConversation } from '../Network/ConversationAPI';
 import { eventLogger, EventType } from '../Network/EventLogger';
 import { loadLeaderboard } from '../Network/LeaderboardApi';
@@ -490,10 +495,14 @@ class GameManager extends EventEmitter {
   private async refreshScoreboard() {
     try {
       const leaderboard = await loadLeaderboard();
+
       for (const entry of leaderboard.entries) {
         const player = this.players.get(entry.ethAddress);
         if (player) {
-          player.score = entry.score;
+          // current player's score is updated via `this.playerInterval`
+          if (player.address !== this.account) {
+            player.score = entry.score;
+          }
         }
       }
 
@@ -518,6 +527,7 @@ class GameManager extends EventEmitter {
     this.persistentChunkStore.destroy();
     clearInterval(this.playerInterval);
     clearInterval(this.diagnosticsInterval);
+    clearInterval(this.scoreboardInterval);
     this.settingsSubscription?.unsubscribe();
   }
 
@@ -680,10 +690,6 @@ class GameManager extends EventEmitter {
           }
         }
       )
-      .on(ContractsAPIEvent.PlanetClaimed, async (planetId: LocationId, _address: EthAddress) => {
-        await gameManager.hardRefreshPlanet(planetId);
-        gameManager.emit(GameManagerEvent.PlanetUpdate);
-      })
       .on(
         ContractsAPIEvent.LocationRevealed,
         async (planetId: LocationId, _revealer: EthAddress) => {
@@ -804,21 +810,17 @@ class GameManager extends EventEmitter {
   }
 
   private async hardRefreshPlayer(address: EthAddress): Promise<void> {
-    const player = await this.contractsAPI.getPlayerById(address);
+    const playerFromBlockchain = await this.contractsAPI.getPlayerById(address);
+    if (!playerFromBlockchain) return;
 
-    if (!player) {
-      return;
+    const localPlayer = this.getPlayer(address);
+
+    if (localPlayer?.twitter) {
+      playerFromBlockchain.twitter = localPlayer.twitter;
     }
 
-    const existingPlayerTwitter = this.players.get(address)?.twitter;
-    const existingPlayerScore = this.players.get(address)?.score;
-
-    if (existingPlayerTwitter) {
-      player.twitter = existingPlayerTwitter;
-      player.score = existingPlayerScore;
-    }
-
-    this.players.set(address, player);
+    this.players.set(address, playerFromBlockchain);
+    this.playersUpdated$.publish();
   }
 
   // Dirty hack for only refreshing properties on a planet and nothing else
@@ -874,7 +876,6 @@ class GameManager extends EventEmitter {
     const allVoyages = await this.contractsAPI.getAllArrivals(planetIds);
     const planetsToUpdateMap = await this.contractsAPI.bulkGetPlanets(planetIds);
     const artifactsOnPlanets = await this.contractsAPI.bulkGetArtifactsOnPlanets(planetIds);
-
     planetsToUpdateMap.forEach((planet, locId) => {
       if (planetsToUpdateMap.has(locId)) {
         planetVoyageMap.set(locId, []);
@@ -1653,6 +1654,10 @@ class GameManager extends EventEmitter {
 
     if (planet.owner !== this.account) {
       throw new Error("you can't claim a planet you down't own");
+    }
+
+    if (planet.claimer === this.account) {
+      throw new Error("you've already claimed this planet");
     }
 
     if (!isLocatable(planet)) {
@@ -3108,6 +3113,7 @@ class GameManager extends EventEmitter {
       MinerManager,
       SpiralPattern,
       SwissCheesePattern,
+      TowardsCenterPattern,
     };
   }
 

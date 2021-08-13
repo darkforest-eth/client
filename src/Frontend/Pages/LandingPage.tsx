@@ -1,9 +1,10 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { Btn } from '../Components/Btn';
 import { EmSpacer, Link, Spacer } from '../Components/CoreUI';
 import { EmailCTA, EmailCTAMode } from '../Components/Email';
-import { HideSmall, Sub } from '../Components/Text';
+import { HideSmall, Sub, Text, White } from '../Components/Text';
 import LandingPageCanvas from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
 import { LandingPageRoundArt } from '../Views/LandingPageRoundArt';
@@ -37,26 +38,32 @@ export default function LandingPage() {
         <MainContentContainer>
           <Header>
             <LandingPageRoundArt />
-            <EmSpacer height={5} />
+            <EmSpacer height={1.5} />
 
             <p>
-              <Sub>zkSNARK space warfare</Sub>
+              <White>Dark Forest</White>
+              <br />
+              <Text>zkSNARK space warfare</Text>
+              <br />
+              <Text>Round 3: Grape Extra-Small - Race to the Center</Text>
             </p>
 
             <Spacer height={16} />
 
-            <CTA
+            <Btn
+              style={{ borderRadius: '8px', padding: '4px 8px' }}
+              color={dfstyles.colors.dfgreen}
               onClick={() => {
                 history.push('/play');
               }}
             >
               Enter
-            </CTA>
+            </Btn>
           </Header>
 
-          <Spacer height={128} />
+          <EmSpacer height={3} />
 
-          <div>
+          <div style={{ color: dfstyles.colors.text }}>
             <HallOfFameTitle>Space Masters</HallOfFameTitle>
             <Spacer height={8} />
             <table>
@@ -141,9 +148,7 @@ export default function LandingPage() {
                   <td>
                     08/22/<HideSmall>20</HideSmall>21
                   </td>
-                  <td>
-                    <Link to='https://twitter.com/ghst_gg'>@ghst_gg</Link>
-                  </td>
+                  <td>t.b.d</td>
                 </TRow>
               </tbody>
             </table>
@@ -278,19 +283,6 @@ const IconLinks = styled.span`
         color: ${dfstyles.colors.icons.email};
       }
     }
-  }
-`;
-
-const CTA = styled.div`
-  display: inline-block;
-  font-size: ${dfstyles.fontH2};
-  border-bottom: 1px solid ${dfstyles.colors.text};
-  line-height: 1em;
-  cursor: pointer;
-  transition: color 0.2s, border-bottom 0.2s;
-  &:hover {
-    color: ${dfstyles.colors.dfgreen};
-    border-bottom: 1px solid ${dfstyles.colors.dfgreen};
   }
 `;
 

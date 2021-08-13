@@ -13,6 +13,7 @@
 - [Spiral](Backend_Miner_MiningPatterns.MiningPatternType.md#spiral)
 - [SwissCheese](Backend_Miner_MiningPatterns.MiningPatternType.md#swisscheese)
 - [Target](Backend_Miner_MiningPatterns.MiningPatternType.md#target)
+- [TowardsCenter](Backend_Miner_MiningPatterns.MiningPatternType.md#towardscenter)
 
 ## Enumeration members
 
@@ -55,3 +56,9 @@
 ### Target
 
 • **Target** = `1`
+
+---
+
+### TowardsCenter
+
+• **TowardsCenter** = `7`

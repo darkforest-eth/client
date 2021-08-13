@@ -56,8 +56,8 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: ModalHook }) 
     <TopBarContainer>
       <AlignCenterHorizontally style={{ width: '100%', justifyContent: 'space-between' }}>
         <EmSpacer width={1} />
-        <AccountLabel />
-        <EmSpacer width={0.5} />
+        <AccountLabel includeAddressIfHasTwitter={true} />
+        <EmSpacer width={1} />
         <ModalTwitterVerifyIcon
           small
           hook={twitterVerifyHook}
