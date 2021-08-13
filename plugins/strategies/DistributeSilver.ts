@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { availableSilver, getIncomingMoves, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, getPlanetMaxRank, getPlanetRank, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { availableSilver, getIncomingMoves, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, getPlanetMaxRank, getPlanetRank, getSilverRequiredForNextUpgrade, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -36,17 +36,18 @@ export function distributeSilver(config: config)
   const from = getMyPlanets()
     .filter(p => p.planetLevel >= config.fromMinLevel)
     .filter(p => p.planetLevel <= config.fromMaxLevel)
-    .filter(p => p.planetType === config.fromPlanetType)
-    .filter(p => p.planetType === PlanetTypes.QUASAR || p.silver / p.silverCap > 0.95)
+    .filter(p => p.planetType !== PlanetTypes.PLANET)
+    .filter(p => p.silver > 0)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
   console.log('Sending silver from', from)
 
   const movesToMake: Move[] = from.flatMap(from => {
-    const to = getMyPlanetsInRange(from)
+    const to = getMyPlanetsInRange(from) // this is missing planets not sure why
       .filter(p => p.planetLevel >= config.toMinLevel)
       .filter(p => p.planetType === config.toPlanetType)
       .filter(p => getPlanetRank(p) < getPlanetMaxRank(p))
+      .filter(p => getSilverRequiredForNextUpgrade(p) <  from.silver)
       .filter(p => p.silverCap !== p.silver)
 
     const moves = to.map(to => {
@@ -71,13 +72,15 @@ export function distributeSilver(config: config)
   console.log('Sending silver to ', movesToMake)
 
   // Move max 100 at a time
-  const moves = movesToMake.slice(0, 100).map(move => {
+  let count = 0
+  const moves = movesToMake.map(move => {
     const silver = Math.floor(maxSilverToSend(move.from, move.to))
 
     if (
       planetWillHaveMinEnergyAfterMove(move, 1)
       && silver > 0
       && planetCanAcceptMove(move.to)
+      && count++ < 100
     ) {
       console.log(`SENDING ${move.silver} silver to ${planetName(move.to)} (ui.centerLocationId('${move.to.locationId}')) FROM ${planetName(move.from)} (ui.centerLocationId('${move.from.locationId}')) WITH ${move.energy}`)
       return df.move(move.from.locationId, move.to.locationId, move.energy, silver);

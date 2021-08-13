@@ -41,7 +41,7 @@ export class PlanetsWithEnergy extends Component
   render()
   {
     console.log('PlanetsWithEnergy')
-    const headers = ['Planet Name', 'Level', 'Energy'];
+    const headers = ['Planet Name', 'Energy'];
     const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
     const rows = getMyPlanets()
@@ -53,8 +53,7 @@ export class PlanetsWithEnergy extends Component
       .sort((a, b) => b.planetLevel - a.planetLevel || energy(b) - energy(a))
 
     const columns = [
-      (planet: Planet) => <PlanetLink planet={planet}>P{getPlanetTypeAcronym(planet)} {planetName(planet)}</PlanetLink>,
-      (planet: Planet) => <Sub>{planet.planetLevel}</Sub>,
+      (planet: Planet) => <PlanetLink planet={planet}>{getPlanetTypeAcronym(planet)}L{planet.planetLevel} {planetName(planet)}</PlanetLink>,
       (planet: Planet) => <Sub>{energy(planet)}%</Sub>,
     ]
 

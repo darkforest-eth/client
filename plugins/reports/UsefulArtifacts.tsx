@@ -6,7 +6,6 @@ import { PlanetLink } from '../components/PlanetLink'
 import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 
-import { distributeSilver } from '../strategies/DistributeSilver'
 import { distributeArtifacts } from '../strategies/DistributeArtifacts'
 import { withdrawArtifacts } from '../strategies/WithdrawArtifacts'
 import { activateArtifacts } from '../strategies/ActivateArtifacts'

@@ -6,11 +6,6 @@ import { PlanetLink } from '../components/PlanetLink'
 import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 
-import { distributeSilver } from '../strategies/DistributeSilver'
-import { withdrawSilver } from '../strategies/WithdrawSilver'
-import { upgrade } from '../strategies/Upgrade'
-
-import { capturePlanets } from '../strategies/Crawl'
 import { ArtifactRarities, ArtifactTypes, canBeActivated, getAllArtifacts, getPlanetRank, getPlanetTypeAcronym, hasPendingMove, isActivated, isAsteroid, isFindable, isProspectable, isReachable, isUnowned, planetName, PlanetTypes, SelectedPlanetProp } from '../utils'
 import { addHours, formatDistanceToNow, fromUnixTime, isAfter } from 'date-fns'
 

@@ -237,6 +237,18 @@ export function getPlanetMaxRank(planet: Planet) {
   else return 5;
 }
 
+export function getSilverRequiredForNextUpgrade(planet: Planet) {
+  const maxRank = getPlanetMaxRank(planet)
+  const currentRank = getPlanetRank(planet)
+
+  const silverPerRank = []
+  for (let i = 0; i < maxRank; i++) {
+    silverPerRank[i] = Math.floor((i + 1) * 0.2 * planet.silverCap)
+  }
+
+  return silverPerRank[currentRank + 1]
+}
+
 export function availableEnergy(planet: Planet) {
   return planet.energy - getPendingEnergy(planet)
 }
