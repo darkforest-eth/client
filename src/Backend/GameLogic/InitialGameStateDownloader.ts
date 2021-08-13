@@ -114,7 +114,7 @@ export class InitialGameStateDownloader {
       revealedPlanetsCoordsLoadingBar
     );
     const loadedClaimedCoords = contractsAPI.getClaimedPlanetsCoords(
-      storedClaimedCoords.length,
+      0,
       claimedPlanetsLoadingBar,
       claimedPlanetsCoordsLoadingBar
     );

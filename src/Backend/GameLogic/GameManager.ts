@@ -93,7 +93,12 @@ import {
   Wormhole,
 } from '../../_types/global/GlobalTypes';
 import MinerManager, { HomePlanetMinerChunkStore, MinerManagerEvent } from '../Miner/MinerManager';
-import { MiningPattern, SpiralPattern, SwissCheesePattern } from '../Miner/MiningPatterns';
+import {
+  MiningPattern,
+  SpiralPattern,
+  SwissCheesePattern,
+  TowardsCenterPattern,
+} from '../Miner/MiningPatterns';
 import { getConversation, startConversation, stepConversation } from '../Network/ConversationAPI';
 import { eventLogger, EventType } from '../Network/EventLogger';
 import { loadLeaderboard } from '../Network/LeaderboardApi';
@@ -685,10 +690,6 @@ class GameManager extends EventEmitter {
           }
         }
       )
-      .on(ContractsAPIEvent.PlanetClaimed, async (planetId: LocationId, _address: EthAddress) => {
-        await gameManager.hardRefreshPlanet(planetId);
-        gameManager.emit(GameManagerEvent.PlanetUpdate);
-      })
       .on(
         ContractsAPIEvent.LocationRevealed,
         async (planetId: LocationId, _revealer: EthAddress) => {
@@ -875,7 +876,6 @@ class GameManager extends EventEmitter {
     const allVoyages = await this.contractsAPI.getAllArrivals(planetIds);
     const planetsToUpdateMap = await this.contractsAPI.bulkGetPlanets(planetIds);
     const artifactsOnPlanets = await this.contractsAPI.bulkGetArtifactsOnPlanets(planetIds);
-
     planetsToUpdateMap.forEach((planet, locId) => {
       if (planetsToUpdateMap.has(locId)) {
         planetVoyageMap.set(locId, []);
@@ -1654,6 +1654,10 @@ class GameManager extends EventEmitter {
 
     if (planet.owner !== this.account) {
       throw new Error("you can't claim a planet you down't own");
+    }
+
+    if (planet.claimer === this.account) {
+      throw new Error("you've already claimed this planet");
     }
 
     if (!isLocatable(planet)) {
@@ -3109,6 +3113,7 @@ class GameManager extends EventEmitter {
       MinerManager,
       SpiralPattern,
       SwissCheesePattern,
+      TowardsCenterPattern,
     };
   }
 

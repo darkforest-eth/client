@@ -1,5 +1,7 @@
 import { EthAddress } from '@darkforest_eth/types';
+import colorFn from 'color';
 import React from 'react';
+import { ProcgenUtils } from '../../../Backend/Procedural/ProcgenUtils';
 import { usePlayer, useUIManager } from '../../Utils/AppHooks';
 import { Link } from '../CoreUI';
 import { Sub } from '../Text';
@@ -16,29 +18,29 @@ export function AccountLabel({
   const player = usePlayer(uiManager, ethAddress);
 
   if (player.value !== undefined && player.value.twitter !== undefined) {
+    const color = colorFn(ProcgenUtils.getPlayerColor(player.value.address)).darken(0.5).hex();
     return (
-      <>
-        <TwitterLink twitter={player.value.twitter} />
+      <span>
+        <TwitterLink twitter={player.value.twitter} color={color} />
         {includeAddressIfHasTwitter && (
           <Sub>
-            (
+            {' '}
             <TextPreview
               text={ethAddress || uiManager.getAccount() || '<no account>'}
-              unFocusedWidth={'100px'}
-              focusedWidth={'100px'}
+              unFocusedWidth={'50px'}
+              focusedWidth={'50px'}
             />
-            )
           </Sub>
         )}
-      </>
+      </span>
     );
   }
 
   return (
     <TextPreview
       text={ethAddress || uiManager.getAccount() || '<no account>'}
-      unFocusedWidth={'350px'}
-      focusedWidth={'350px'}
+      unFocusedWidth={'150px'}
+      focusedWidth={'150px'}
     />
   );
 }

@@ -343,6 +343,12 @@ export class GameObjects {
     this.unconfirmedBuyHats = {};
     this.unconfirmedPlanetTransfers = {};
 
+    for (const [_locId, claimedLoc] of claimedLocations) {
+      this.updatePlanet(claimedLoc.hash, (p) => {
+        p.claimer = claimedLoc.revealer;
+      });
+    }
+
     // TODO: do this better...
     // set interval to update all planets every 120s
     setInterval(() => {

@@ -9,14 +9,15 @@
 - [CanAddEmoji](Frontend_Views_PlanetNotifications.PlanetNotifType.md#canaddemoji)
 - [CanFindArtifact](Frontend_Views_PlanetNotifications.PlanetNotifType.md#canfindartifact)
 - [CanProspect](Frontend_Views_PlanetNotifications.PlanetNotifType.md#canprospect)
-- [MaxSilver](Frontend_Views_PlanetNotifications.PlanetNotifType.md#maxsilver)
+- [Claimed](Frontend_Views_PlanetNotifications.PlanetNotifType.md#claimed)
+- [DistanceFromCenter](Frontend_Views_PlanetNotifications.PlanetNotifType.md#distancefromcenter)
 - [PlanetCanUpgrade](Frontend_Views_PlanetNotifications.PlanetNotifType.md#planetcanupgrade)
 
 ## Enumeration members
 
 ### CanAddEmoji
 
-• **CanAddEmoji** = `4`
+• **CanAddEmoji** = `5`
 
 ---
 
@@ -32,9 +33,15 @@
 
 ---
 
-### MaxSilver
+### Claimed
 
-• **MaxSilver** = `3`
+• **Claimed** = `3`
+
+---
+
+### DistanceFromCenter
+
+• **DistanceFromCenter** = `4`
 
 ---
 

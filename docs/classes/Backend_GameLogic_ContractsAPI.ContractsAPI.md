@@ -683,6 +683,9 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 
 ▸ **getScoreV3**(`address`): `Promise`<`undefined` \| `number`\>
 
+If this player has a claimed planet, their score is the distance between the claimed planet and
+the center. If this player does not have a claimed planet, then the score is undefined.
+
 #### Parameters
 
 | Name      | Type                        |

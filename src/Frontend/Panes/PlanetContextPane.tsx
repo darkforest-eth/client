@@ -1,5 +1,5 @@
 import { Planet } from '@darkforest_eth/types';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { Padded, Spacer, VerticalSplit } from '../Components/CoreUI';
@@ -30,12 +30,15 @@ function PlanetContextPaneContent({
   const account = useAccount(uiManager);
   const currentBlockNumber = useEmitterValue(uiManager.getEthConnection().blockNumber$, undefined);
   const notifs = useMemo(
-    () => getNotifsForPlanet(planet.value, currentBlockNumber),
-    [planet, currentBlockNumber]
+    () => getNotifsForPlanet(planet.value, account, currentBlockNumber),
+    [planet, account, currentBlockNumber]
   );
-
   const owned = planet.value?.owner === account;
   // const isPost = planet.value?.planetType === PlanetType.TRADING_POST;
+
+  useEffect(() => {
+    if (!planet.value) modal.popAll();
+  }, [planet.value, modal]);
 
   return (
     <Padded style={{ width: '350px' }}>
@@ -81,7 +84,7 @@ function PlanetContextPaneContent({
           </Padded>,
         ]}
       </VerticalSplit>
-      {owned && notifs.length > 0 && <PlanetNotifications planet={planet} notifs={notifs} />}
+      {notifs.length > 0 && <PlanetNotifications planet={planet} notifs={notifs} />}
     </Padded>
   );
 }

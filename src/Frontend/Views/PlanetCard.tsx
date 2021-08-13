@@ -14,6 +14,7 @@ import {
   SilverIcon,
   SpeedIcon,
 } from '../Components/Icons';
+import { AccountLabel } from '../Components/Labels/Labels';
 import {
   DefenseText,
   EnergyGrowthText,
@@ -28,7 +29,7 @@ import {
 } from '../Components/Labels/PlanetLabels';
 import { PlanetPreview } from '../Components/PlanetPreview';
 import { ReadMore } from '../Components/ReadMore';
-import { Sub } from '../Components/Text';
+import { Smaller, Sub } from '../Components/Text';
 import { TextPreview } from '../Components/TextPreview';
 import { TooltipName } from '../Game/WindowManager';
 import { PlanetIcons } from '../Renderers/PlanetscapeRenderer/PlanetIcons';
@@ -42,6 +43,7 @@ import {
   TimesTwo,
   TitleBar,
 } from './PlanetCardComponents';
+import { DistanceFromCenterRow, PlanetClaimedRow } from './PlanetNotifications';
 
 export function PlanetCardTitle({
   planet,
@@ -306,6 +308,13 @@ export function PlanetCard({
           </ElevatedContainer>
         </FullWidth>
 
+        {standalone && (
+          <Smaller>
+            <PlanetClaimedRow planet={new Wrapper(planet)} />
+            <DistanceFromCenterRow planet={new Wrapper(planet)} />
+          </Smaller>
+        )}
+
         {!standalone && (
           <ReadMore height={'0'}>
             <SpreadApart>
@@ -330,12 +339,9 @@ export function PlanetCard({
 
             <SpreadApart>
               <Sub>owner address</Sub>
-              <TextPreview
-                style={{ color: dfstyles.colors.subtext }}
-                text={planet?.owner}
-                focusedWidth={`150px`}
-                unFocusedWidth={`150px`}
-              />
+              <Sub>
+                <AccountLabel ethAddress={planet.owner} includeAddressIfHasTwitter={true} />
+              </Sub>
             </SpreadApart>
           </ReadMore>
         )}

@@ -1,7 +1,6 @@
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
 import { Planet, PlanetType, PlanetTypeNames } from '@darkforest_eth/types';
 import React from 'react';
-import styled from 'styled-components';
 import { ProcgenUtils } from '../../../Backend/Procedural/ProcgenUtils';
 import { formatNumber, getPlanetRank } from '../../../Backend/Utils/Utils';
 import dfstyles from '../../Styles/dfstyles';
@@ -152,34 +151,23 @@ export const PlanetBiomeTypeLabelAnim = ({ planet }: { planet: Planet | undefine
   </>
 );
 
-const LevelLabelContainer = styled.div`
-  border-radius: 3px;
-  background-color: ${dfstyles.colors.backgroundlight};
-  padding: 2px 8px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 export const PlanetLevel = ({ planet }: { planet: Planet | undefined }) => {
   if (!planet) return <></>;
   return (
-    <LevelLabelContainer>
-      <Sub>{'Level'}</Sub>
-      <EmSpacer width={0.5} />
+    <>
+      <Sub>{'Level '}</Sub>
       {planet.planetLevel}
-    </LevelLabelContainer>
+    </>
   );
 };
 
 export const PlanetRank = ({ planet }: { planet: Planet | undefined }) => {
   if (!planet) return <></>;
   return (
-    <LevelLabelContainer>
-      <Sub>{'Rank'}</Sub>
-      <EmSpacer width={0.5} />
+    <>
+      <Sub>{'Rank '}</Sub>
       {getPlanetRank(planet)}
-    </LevelLabelContainer>
+    </>
   );
 };
 

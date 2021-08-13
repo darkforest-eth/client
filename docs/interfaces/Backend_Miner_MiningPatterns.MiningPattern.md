@@ -6,6 +6,7 @@
 
 - [`SpiralPattern`](../classes/Backend_Miner_MiningPatterns.SpiralPattern.md)
 - [`SwissCheesePattern`](../classes/Backend_Miner_MiningPatterns.SwissCheesePattern.md)
+- [`TowardsCenterPattern`](../classes/Backend_Miner_MiningPatterns.TowardsCenterPattern.md)
 
 ## Table of contents
 

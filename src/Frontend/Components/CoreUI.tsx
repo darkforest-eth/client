@@ -270,6 +270,7 @@ export const Truncate = styled.div`
  */
 export const PluginElements = styled.div`
   color: ${dfstyles.colors.text};
+  padding: 8px;
   width: 400px;
   min-height: 100px;
   max-height: 600px;

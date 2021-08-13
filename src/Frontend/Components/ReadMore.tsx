@@ -7,7 +7,7 @@ export function ReadMore({
   height,
   text,
 }: {
-  children: React.ReactChild[] | React.ReactChild;
+  children: React.ReactNode[] | React.ReactNode;
   height?: string;
   text?: string;
 }) {
@@ -23,7 +23,15 @@ export function ReadMore({
         {children}
       </ContentContainer>
       {!collapsed && <EmSpacer height={0.1} />}
-      <TextButton style={{ fontSize: '80%' }} onClick={toggle}>
+      <TextButton
+        style={{
+          fontSize: '80%',
+          display: 'block',
+          textAlign: 'right',
+          marginTop: collapsed ? '-0.6em' : undefined,
+        }}
+        onClick={toggle}
+      >
         {text ?? (collapsed ? 'more' : 'less')} info
       </TextButton>
     </>

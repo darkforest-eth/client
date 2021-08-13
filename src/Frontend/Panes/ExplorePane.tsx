@@ -2,8 +2,13 @@ import { WorldCoords } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
-import { SpiralPattern } from '../../Backend/Miner/MiningPatterns';
-import { EmSpacer, ShortcutButton } from '../Components/CoreUI';
+import {
+  MiningPatternType,
+  SpiralPattern,
+  SwissCheesePattern,
+  TowardsCenterPattern,
+} from '../../Backend/Miner/MiningPatterns';
+import { EmSpacer, SelectFrom, ShortcutButton } from '../Components/CoreUI';
 import { PauseIcon, PlayIcon, TargetIcon } from '../Components/Icons';
 import { Coords, Sub } from '../Components/Text';
 import WindowManager, { CursorState, TooltipName, WindowManagerEvent } from '../Game/WindowManager';
@@ -45,6 +50,19 @@ function Cores() {
   );
 }
 
+const Pattern = {
+  [MiningPatternType.Spiral.toString()]: SpiralPattern,
+  [MiningPatternType.SwissCheese.toString()]: SwissCheesePattern,
+  [MiningPatternType.TowardsCenter.toString()]: TowardsCenterPattern,
+};
+
+const miningSelectValues = [
+  MiningPatternType.TowardsCenter.toString(),
+  MiningPatternType.Spiral.toString(),
+  MiningPatternType.SwissCheese.toString(),
+];
+const miningSelectLabels = ['TowardsCenter', 'Spiral', 'SwissCheese'];
+
 function HashesPerSec() {
   const uiManager = useUIManager();
 
@@ -83,56 +101,53 @@ export function ExplorePane() {
   const uiManager = useUIManager();
   const windowManager = WindowManager.getInstance();
   const uiEmitter = UIEmitter.getInstance();
-  const [pattern, setPattern] = useState<SpiralPattern | undefined>(undefined);
+  const [pattern, setPattern] = useState<string>(MiningPatternType.TowardsCenter.toString());
   const [mining] = useBooleanSetting(uiManager, Setting.IsMining);
   const [targetting, setTargetting] = useState(false);
-
-  useEffect(() => {
-    if (!uiManager) return;
-    setPattern(uiManager.getMiningPattern() as SpiralPattern | undefined);
-  }, [uiManager]);
+  const [coords, setCoords] = useState<WorldCoords>(uiManager.getHomeCoords());
 
   useEffect(() => {
     const doMouseDown = (worldCoords: WorldCoords) => {
       if (windowManager.getCursorState() === CursorState.TargetingExplorer) {
-        windowManager.acceptInputForTarget(worldCoords);
+        windowManager.acceptInputForTarget({
+          x: Math.floor(worldCoords.x),
+          y: Math.floor(worldCoords.y),
+        });
       }
     };
 
-    const updatePattern = (worldCoords: WorldCoords) => {
-      const newpattern = new SpiralPattern(worldCoords, MIN_CHUNK_SIZE);
+    const updateCoords = (worldCoords: WorldCoords) => {
+      const PatternCtor = Pattern[pattern];
+      const newpattern = new PatternCtor(worldCoords, MIN_CHUNK_SIZE);
       uiManager?.setMiningPattern(newpattern);
-      setPattern(newpattern);
+      setCoords(worldCoords);
 
       const tutorialManager = TutorialManager.getInstance();
       tutorialManager.acceptInput(TutorialState.MinerMove);
     };
-
     const cursorStateChanged = (state: CursorState) => {
       setTargetting(state === CursorState.TargetingExplorer);
     };
 
     uiEmitter.on(UIEmitterEvent.WorldMouseDown, doMouseDown);
-    windowManager.on(WindowManagerEvent.MiningCoordsUpdate, updatePattern);
+    windowManager.on(WindowManagerEvent.MiningCoordsUpdate, updateCoords);
     uiEmitter.on(WindowManagerEvent.StateChanged, cursorStateChanged);
     return () => {
       uiEmitter.removeListener(UIEmitterEvent.WorldMouseDown, doMouseDown);
-      windowManager.removeListener(WindowManagerEvent.MiningCoordsUpdate, updatePattern);
+      windowManager.removeListener(WindowManagerEvent.MiningCoordsUpdate, updateCoords);
       uiEmitter.removeListener(WindowManagerEvent.StateChanged, cursorStateChanged);
     };
-  }, [uiEmitter, windowManager, uiManager]);
+  }, [uiEmitter, windowManager, uiManager, pattern]);
+
+  const updatePattern = (pattern: string) => {
+    setPattern(pattern);
+    const PatternCtor = Pattern[pattern];
+    const newpattern = new PatternCtor(coords, MIN_CHUNK_SIZE);
+    uiManager.setMiningPattern(newpattern);
+  };
 
   const doTarget = (_e: React.MouseEvent) => {
     uiManager.toggleTargettingExplorer();
-  };
-
-  const getCorner = (pattern: SpiralPattern): WorldCoords => ({
-    x: pattern.fromChunk.bottomLeft.x,
-    y: pattern.fromChunk.bottomLeft.y,
-  });
-
-  const getCoords = (): WorldCoords => {
-    return pattern ? getCorner(pattern) : { x: 0, y: 0 };
   };
 
   return (
@@ -163,9 +178,18 @@ export function ExplorePane() {
         <>
           <EmSpacer width={0.5} />
           <Cores />
+          <EmSpacer width={0.5} />
+          {/* TODO: Make this a Settings thing */}
+          <SelectFrom
+            style={{ width: '10em' }}
+            values={miningSelectValues}
+            labels={miningSelectLabels}
+            value={pattern}
+            setValue={updatePattern}
+          />
           <EmSpacer width={1} />
           <Sub>
-            <Coords coords={getCoords()} />
+            <Coords coords={coords} />
           </Sub>
           <EmSpacer width={0.5} />
           <HashesPerSec />

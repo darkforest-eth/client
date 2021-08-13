@@ -94,7 +94,7 @@ export function ClaimPlanetPane({
       <>
         Your current closest planet is{' '}
         <MythicLabelText text={currentPlayerScore.toLocaleString()} /> away from the center. This
-        planet is {isCloserThanPlayersCurrentClosest ? 'closer' : 'further'} away from the center
+        planet is {isCloserThanPlayersCurrentClosest ? 'closer to' : 'further away from'} the center
         than your closet planet.
         {isCloserThanPlayersCurrentClosest && ' Claim it to move up on the leaderboard!'}
         <EmSpacer height={1} />
