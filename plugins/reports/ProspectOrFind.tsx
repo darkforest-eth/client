@@ -7,7 +7,7 @@ import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 
-import { blocksLeft, buttonGridStyle, enoughEnergyToProspect, getMyPlanets, isFindable, isProspectable, PrimeMinutes } from '../utils'
+import { blocksLeft, buttonGridStyle, enoughEnergyToProspect, getMyPlanets, isFindable, isProspectable, planetName, PrimeMinutes } from '../utils'
 import { prospectAndFind } from 'plugins/strategies/ProspectAndFind'
 
 const pauseable = require('pauseable')
@@ -43,7 +43,7 @@ function onProspectAndFindClick() {
       .sort((a, b) => b.planetLevel - a.planetLevel)
 
     const columns = [
-      (planet: Planet) => <PlanetLink planet={planet}>{df.getProcgenUtils().getPlanetName(planet)}</PlanetLink>,
+      (planet: Planet) => <PlanetLink planet={planet}>{planetName(planet)}</PlanetLink>,
       (planet: Planet) => <Sub>{planet.planetLevel}</Sub>,
       (planet: Planet) => <Sub>{planet.prospectedBlockNumber ? blocksLeft(planet) : '-'}</Sub>,
     ];

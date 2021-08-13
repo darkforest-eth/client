@@ -8,7 +8,7 @@ import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 
 import { capturePlanets, closestToCenter, directionToCenter, lowestEnergy } from '../strategies/Crawl'
-import { buttonGridStyle, energy, getMyPlanets, hasPendingMove, isAsteroid, isFoundry, PlanetTypes, PrimeMinutes } from '../utils'
+import { buttonGridStyle, energy, getMyPlanets, getPlanetTypeAcronym, hasPendingMove, isAsteroid, isFoundry, planetName, PlanetTypes, PrimeMinutes } from '../utils'
 const pauseable = require('pauseable')
 
 declare const df: GameManager
@@ -22,7 +22,7 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
     fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetTypes: [PlanetTypes.PLANET, PlanetTypes.ASTEROID],
-    toMinLevel: PlanetLevel.THREE,
+    toMinLevel: PlanetLevel.FOUR,
     toTargetEnergy: 15,
     sortFunction: directionToCenter,
   })
@@ -50,10 +50,10 @@ export class PlanetsWithEnergy extends Component
       .filter(p => ! hasPendingMove(p))
       .filter(p => energy(p) > 75)
       // .sort((a, b) => energy(b) - energy(a))
-      .sort((a, b) => b.planetLevel - a.planetLevel)
+      .sort((a, b) => b.planetLevel - a.planetLevel || energy(b) - energy(a))
 
     const columns = [
-      (planet: Planet) => <PlanetLink planet={planet}>{df.getProcgenUtils().getPlanetName(planet)}</PlanetLink>,
+      (planet: Planet) => <PlanetLink planet={planet}>P{getPlanetTypeAcronym(planet)} {planetName(planet)}</PlanetLink>,
       (planet: Planet) => <Sub>{planet.planetLevel}</Sub>,
       (planet: Planet) => <Sub>{energy(planet)}%</Sub>,
     ]

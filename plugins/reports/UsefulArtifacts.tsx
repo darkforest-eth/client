@@ -12,7 +12,7 @@ import { withdrawArtifacts } from '../strategies/WithdrawArtifacts'
 import { activateArtifacts } from '../strategies/ActivateArtifacts'
 import { ManageInterval } from '../Components/ManageInterval'
 
-import { ArtifactRarities, artifactStatTypes, artifactTacticalTypes, ArtifactTypes, buttonGridStyle, canBeActivated, getAllArtifacts, isActivated, PlanetTypes, PrimeMinutes } from '../utils'
+import { ArtifactRarities, artifactStatTypes, artifactTacticalTypes, ArtifactTypes, buttonGridStyle, canBeActivated, getAllArtifacts, getPlanetTypeAcronym, isActivated, planetName, PlanetTypes, PrimeMinutes } from '../utils'
 
 const pauseable = require('pauseable')
 
@@ -95,7 +95,7 @@ export class UsefulArtifacts extends Component
 
         if (! planet) return <Sub>inventory</Sub>
 
-        return <PlanetLink planet={planet}>{df.getProcgenUtils().getPlanetName(planet)}</PlanetLink>
+        return <PlanetLink planet={planet}>P{getPlanetTypeAcronym(planet)} {planetName(planet)}</PlanetLink>
       },
       (a: Artifact) => <Sub>{Object.keys(ArtifactRarities)[a.rarity]}</Sub>,
       (a: Artifact) => {

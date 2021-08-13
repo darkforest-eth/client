@@ -61,6 +61,23 @@ export const ArtifactRarities: { [ key:string]: ArtifactRarity } = {
   MAX: 5
 }
 
+export function getPlanetTypeAcronym(planet: Planet): string {
+  switch (planet.planetType) {
+    case PlanetTypes.PLANET:
+      return "P"
+    case PlanetTypes.ASTEROID:
+      return "A"
+    case PlanetTypes.FOUNDRY:
+      return "F"
+    case PlanetTypes.RIP:
+      return "R"
+    case PlanetTypes.QUASAR:
+      return "Q"
+    default:
+      return "?"
+  }
+}
+
 export function isArtifact(pet: Planet | Artifact): pet is Artifact {
   return (pet as Artifact).artifactType !== undefined;
 }

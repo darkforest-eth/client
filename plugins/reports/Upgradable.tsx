@@ -7,7 +7,7 @@ import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 import { upgrade } from '../strategies/Upgrade'
-import { buttonGridStyle, canPlanetUpgrade, getMyPlanets, getPlanetRank, PrimeMinutes } from '../utils'
+import { buttonGridStyle, canPlanetUpgrade, getMyPlanets, getPlanetRank, planetName, PrimeMinutes } from '../utils'
 
 const pauseable = require('pauseable')
 
@@ -41,7 +41,7 @@ export class Upgradable extends Component
      .sort((a, b) => b.planetLevel - a.planetLevel)
 
    const columns = [
-     (planet: Planet) => <PlanetLink planet={planet}>{df.getProcgenUtils().getPlanetName(planet)}</PlanetLink>,
+     (planet: Planet) => <PlanetLink planet={planet}>{planetName(planet)}</PlanetLink>,
      (planet: Planet) => <Sub>{planet.planetLevel}</Sub>,
      (planet: Planet) => <Sub>{getPlanetRank(planet)}</Sub>,
    ];

@@ -11,7 +11,7 @@ import { Manager } from "https://plugins.zkga.me/utils/RepeatAttackCore.js";
 import figures from 'https://cdn.skypack.dev/figures';
 import { html, render, useState, useLayoutEffect } from
   "https://unpkg.com/htm/preact/standalone.module.js";
-import { planetName } from "./utils";
+import { getPlanetTypeAcronym, planetName } from "./utils";
 
 
 let Spacing = {
@@ -41,7 +41,7 @@ function centerPlanet(id) {
 
 function planetShort(locationId) {
   const planet = df.getPlanetWithId(locationId)
-  return `L${planet?.planetLevel} ${planetName(planet)}`
+  return `P${getPlanetTypeAcronym(planet)}L${planet?.planetLevel} ${planetName(planet)}`
 }
 
 function Attack({ action, onDelete }) {

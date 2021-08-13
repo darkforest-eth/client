@@ -11,7 +11,7 @@ import { withdrawSilver } from '../strategies/WithdrawSilver'
 import { upgrade } from '../strategies/Upgrade'
 
 import { capturePlanets } from '../strategies/Crawl'
-import { ArtifactRarities, ArtifactTypes, canBeActivated, getAllArtifacts, getPlanetRank, hasPendingMove, isActivated, isAsteroid, isFindable, isProspectable, isReachable, isUnowned, PlanetTypes, SelectedPlanetProp } from '../utils'
+import { ArtifactRarities, ArtifactTypes, canBeActivated, getAllArtifacts, getPlanetRank, getPlanetTypeAcronym, hasPendingMove, isActivated, isAsteroid, isFindable, isProspectable, isReachable, isUnowned, planetName, PlanetTypes, SelectedPlanetProp } from '../utils'
 import { addHours, formatDistanceToNow, fromUnixTime, isAfter } from 'date-fns'
 
 declare const df: GameManager
@@ -34,7 +34,7 @@ export function Cannons(props: SelectedPlanetProp)
 
       if (! planet) return <Sub>inventory</Sub>
 
-      return <PlanetLink planet={planet}>{df.getProcgenUtils().getPlanetName(planet)}</PlanetLink>
+      return <PlanetLink planet={planet}>P{getPlanetTypeAcronym(planet)} {planetName(planet)}</PlanetLink>
     },
     (a: Artifact) => <Sub>{Object.keys(ArtifactRarities)[a.rarity]}</Sub>,
     (a: Artifact) => {

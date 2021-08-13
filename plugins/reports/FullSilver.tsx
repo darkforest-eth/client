@@ -11,7 +11,7 @@ import { distributeSilver } from '../strategies/DistributeSilver'
 import { withdrawSilver } from '../strategies/WithdrawSilver'
 
 import { capturePlanets } from '../strategies/Crawl'
-import { availableSilver, buttonGridStyle, energy, getMyPlanets, hasPendingMove, isAsteroid, PlanetTypes, PrimeMinutes, SelectedPlanetProp } from '../utils'
+import { availableSilver, buttonGridStyle, energy, getMyPlanets, hasPendingMove, isAsteroid, planetName, PlanetTypes, PrimeMinutes, SelectedPlanetProp } from '../utils'
 
 const pauseable = require('pauseable')
 
@@ -69,7 +69,7 @@ export class FullSilver extends Component
       .sort((a, b) => b.silverCap - a.silverCap)
 
     const columns = [
-      (planet: Planet) => <PlanetLink planet={planet}>{df.getProcgenUtils().getPlanetName(planet)}</PlanetLink>,
+      (planet: Planet) => <PlanetLink planet={planet}>{planetName(planet)}</PlanetLink>,
       (planet: Planet) => <Sub>{planet.planetLevel}</Sub>,
       (planet: Planet) => <Sub>{planet.silverCap / 1000}K</Sub>,
     ];

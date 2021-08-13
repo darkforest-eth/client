@@ -80,7 +80,7 @@ export class FoundriesToTake extends Component
       .sort((a, b) => b.planetLevel - a.planetLevel)
 
     const columns = [
-      (planet: Planet) => <PlanetLink planet={planet}>{df.getProcgenUtils().getPlanetName(planet)}</PlanetLink>,
+      (planet: Planet) => <PlanetLink planet={planet}>{planetName(planet)}</PlanetLink>,
       (planet: Planet) => <Sub>{planet.planetLevel}</Sub>,
     ];
 
