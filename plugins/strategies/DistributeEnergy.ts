@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { availableSilver, energy, getIncomingMoves, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, getPlanetMaxRank, getPlanetRank, getSilverRequiredForNextUpgrade, isMine, isUnowned, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { availableSilver, energy, getIncomingMoves, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, getPlanetMaxRank, getPlanetRank, getSilverRequiredForNextUpgrade, isFoundry, isMine, isUnowned, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -33,7 +33,7 @@ export function distributeEnergy(config: config)
   const from = getMyPlanets()
     .filter(p => p.planetLevel >= config.fromMinLevel)
     .filter(p => p.planetLevel <= config.fromMaxLevel)
-    .filter(p => p.planetType === PlanetTypes.PLANET)
+    .filter(p => ! isFoundry(p))
     .filter(p => energy(p) > 75)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
@@ -45,8 +45,13 @@ export function distributeEnergy(config: config)
     const energy = Math.floor(0.5 * from.energy)
 
     const to = df.getPlanetsInRange(from.locationId, energy / from.energyCap * 100)
-      .filter(p => p.planetLevel > from.planetLevel)
-      .filter(p => isMine(p) || isUnowned(p))
+      .filter(p => {
+        const mineAndBigger = isMine(p) && p.planetLevel > from.planetLevel
+        const unownedAndSame = isUnowned(p) && p.planetLevel >= from.planetLevel
+
+        return mineAndBigger || unownedAndSame
+      })
+      .filter(p => p.planetType !== PlanetTypes.QUASAR)
       .sort((a, b) => getMinimumEnergyNeeded(from, a) - getMinimumEnergyNeeded(from, b))
 
     if (to.length < 1) return null

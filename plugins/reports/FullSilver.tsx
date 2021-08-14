@@ -21,8 +21,8 @@ declare const ui: GameUIManager
 function onDistributeClick(selectedPlanet: Planet|null = null) {
   distributeSilver({
     fromId: selectedPlanet?.locationId,
-    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.TWO,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
+    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.THREE,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
     fromPlanetType: selectedPlanet?.planetType || PlanetTypes.ASTEROID,
     toMinLevel: PlanetLevel.THREE,
     toPlanetType: PlanetTypes.PLANET,
@@ -63,7 +63,7 @@ export class FullSilver extends Component
     const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
     const rows = getMyPlanets()
-      .filter(p => p.planetLevel >= 2)
+      .filter(p => p.planetLevel >= PlanetLevel.THREE)
       .filter(p => p.planetType === PlanetTypes.ASTEROID)
       .filter(p => availableSilver(p) == p.silverCap)
       .sort((a, b) => b.silverCap - a.silverCap)
