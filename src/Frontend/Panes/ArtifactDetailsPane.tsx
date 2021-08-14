@@ -298,8 +298,8 @@ function ArtifactDescription({ artifact }: { artifact: Artifact }) {
 
   const wormholeShrinkLevels = [0, 2, 4, 8, 16, 32];
   const rarityName = ArtifactRarityNames[artifact.rarity];
-  const photoidRanges = [0, 2, 4, 6, 8, 10];
-  const photoidSpeeds = [0, 10, 20, 30, 40, 50];
+  const photoidRanges = [0, 2, 2, 2, 2, 2];
+  const photoidSpeeds = [0, 5, 10, 15, 20, 25];
 
   switch (artifact.artifactType) {
     case ArtifactType.BlackDomain:
@@ -338,9 +338,9 @@ function ArtifactDescription({ artifact }: { artifact: Artifact }) {
           Ahh, the Photoid Canon. Activate it, wait four hours. Because this one is{' '}
           <White>{rarityName}</White>, the next move you send will be able to go{' '}
           <White>{photoidRanges[artifact.rarity]}</White>x further and{' '}
-          <White>{photoidSpeeds[artifact.rarity]}</White>x faster. During the 24 hour waiting
-          period, your planet's defense is temporarily decreased. This artifact is consumed once the
-          canon is fired.
+          <White>{photoidSpeeds[artifact.rarity]}</White>x faster. During the 4 hour waiting period,
+          your planet's defense is temporarily decreased. This artifact is consumed once the canon
+          is fired.
         </Sub>
       );
       break;

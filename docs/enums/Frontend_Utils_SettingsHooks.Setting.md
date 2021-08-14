@@ -12,6 +12,7 @@ per instance of the dark forest contract that it's connected to.
 - [AutoApproveNonPurchaseTransactions](Frontend_Utils_SettingsHooks.Setting.md#autoapprovenonpurchasetransactions)
 - [DisableDefaultShortcuts](Frontend_Utils_SettingsHooks.Setting.md#disabledefaultshortcuts)
 - [DrawChunkBorders](Frontend_Utils_SettingsHooks.Setting.md#drawchunkborders)
+- [ExperimentalFeatures](Frontend_Utils_SettingsHooks.Setting.md#experimentalfeatures)
 - [FoundArtifact](Frontend_Utils_SettingsHooks.Setting.md#foundartifact)
 - [FoundComet](Frontend_Utils_SettingsHooks.Setting.md#foundcomet)
 - [FoundDeepSpace](Frontend_Utils_SettingsHooks.Setting.md#founddeepspace)
@@ -49,6 +50,12 @@ per instance of the dark forest contract that it's connected to.
 ### DrawChunkBorders
 
 • **DrawChunkBorders** = `"DrawChunkBorders"`
+
+---
+
+### ExperimentalFeatures
+
+• **ExperimentalFeatures** = `"ExperimentalFeatures"`
 
 ---
 
