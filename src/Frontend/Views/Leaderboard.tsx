@@ -51,7 +51,7 @@ function playerToEntry(playerStr: string, color: string) {
 }
 
 function getRankColor([rank, score]: [number, number | undefined]) {
-  if (!score) {
+  if (score === undefined || score === null) {
     return dfstyles.colors.subtext;
   }
 
@@ -96,7 +96,7 @@ function LeaderboardTable({ rows }: { rows: Array<[string, number | undefined]> 
         columns={[
           (row: [string, number], i) => (
             <Cell style={{ color: getRankColor([i, row[1]]) }}>
-              {row[1] === 0 ? 'unranked' : i + 1 + '.'}
+              {row[1] === undefined || row[1] === null ? 'unranked' : i + 1 + '.'}
             </Cell>
           ),
           (row: [string, number | undefined], i) => {
