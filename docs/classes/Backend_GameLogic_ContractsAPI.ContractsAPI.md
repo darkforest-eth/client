@@ -190,7 +190,7 @@ Don't allow users to submit txs if balance falls below this amount/
 
 ### activateArtifact
 
-▸ **activateArtifact**(`action`): `Promise`<`TransactionReceipt`\>
+▸ **activateArtifact**(`action`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -200,7 +200,7 @@ Don't allow users to submit txs if balance falls below this amount/
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
@@ -295,7 +295,7 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 
 ### buyGPTCredits
 
-▸ **buyGPTCredits**(`amount`, `actionId`): `Promise`<`TransactionReceipt`\>
+▸ **buyGPTCredits**(`amount`, `actionId`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -306,13 +306,13 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
 ### buyHat
 
-▸ **buyHat**(`planetIdDecStr`, `currentHatLevel`, `actionId`): `Promise`<`TransactionReceipt`\>
+▸ **buyHat**(`planetIdDecStr`, `currentHatLevel`, `actionId`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -324,13 +324,13 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
 ### claim
 
-▸ **claim**(`args`, `action`): `Promise`<`TransactionReceipt`\>
+▸ **claim**(`args`, `action`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -341,13 +341,13 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
 ### deactivateArtifact
 
-▸ **deactivateArtifact**(`action`): `Promise`<`TransactionReceipt`\>
+▸ **deactivateArtifact**(`action`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -357,13 +357,13 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
 ### depositArtifact
 
-▸ **depositArtifact**(`action`): `Promise`<`TransactionReceipt`\>
+▸ **depositArtifact**(`action`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -373,7 +373,7 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
@@ -389,7 +389,7 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 
 ### findArtifact
 
-▸ **findArtifact**(`location`, `biomeSnarkArgs`, `actionId`): `Promise`<`TransactionReceipt`\>
+▸ **findArtifact**(`location`, `biomeSnarkArgs`, `actionId`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -401,7 +401,7 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
@@ -747,7 +747,7 @@ the center. If this player does not have a claimed planet, then the score is und
 
 ### initializePlayer
 
-▸ **initializePlayer**(`args`, `action`): `Promise`<`TransactionReceipt`\>
+▸ **initializePlayer**(`args`, `action`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -758,7 +758,7 @@ the center. If this player does not have a claimed planet, then the score is und
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
@@ -787,7 +787,7 @@ the center. If this player does not have a claimed planet, then the score is und
 
 ### move
 
-▸ **move**(`actionId`, `snarkArgs`, `shipsMoved`, `silverMoved`, `artifactMoved?`): `Promise`<`TransactionReceipt`\>
+▸ **move**(`actionId`, `snarkArgs`, `shipsMoved`, `silverMoved`, `artifactMoved?`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -801,13 +801,13 @@ the center. If this player does not have a claimed planet, then the score is und
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
 ### prospectPlanet
 
-▸ **prospectPlanet**(`planetId`, `actionId`): `Promise`<`TransactionReceipt`\>
+▸ **prospectPlanet**(`planetId`, `actionId`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -818,7 +818,7 @@ the center. If this player does not have a claimed planet, then the score is und
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
@@ -834,7 +834,7 @@ the center. If this player does not have a claimed planet, then the score is und
 
 ### reveal
 
-▸ **reveal**(`args`, `action`): `Promise`<`TransactionReceipt`\>
+▸ **reveal**(`args`, `action`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -845,7 +845,7 @@ the center. If this player does not have a claimed planet, then the score is und
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
@@ -877,7 +877,7 @@ the center. If this player does not have a claimed planet, then the score is und
 
 ### transferOwnership
 
-▸ **transferOwnership**(`planetId`, `newOwner`, `actionId`): `Promise`<`TransactionReceipt`\>
+▸ **transferOwnership**(`planetId`, `newOwner`, `actionId`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -889,13 +889,13 @@ the center. If this player does not have a claimed planet, then the score is und
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
 ### upgradePlanet
 
-▸ **upgradePlanet**(`args`, `actionId`): `Promise`<`TransactionReceipt`\>
+▸ **upgradePlanet**(`args`, `actionId`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -906,13 +906,13 @@ the center. If this player does not have a claimed planet, then the score is und
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
 ### waitFor
 
-▸ **waitFor**(`submitted`, `receiptPromise`): `Promise`<`TransactionReceipt`\>
+▸ **waitFor**(`submitted`, `receiptPromise`): `Promise`<`void` \| `TransactionReceipt`\>
 
 Given an unconfirmed (but submitted) transaction, emits the appropriate
 [ContractsAPIEvent](../enums/_types_darkforest_api_ContractsAPITypes.ContractsAPIEvent.md).
@@ -926,13 +926,13 @@ Given an unconfirmed (but submitted) transaction, emits the appropriate
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
 ### withdrawArtifact
 
-▸ **withdrawArtifact**(`action`): `Promise`<`TransactionReceipt`\>
+▸ **withdrawArtifact**(`action`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -942,13 +942,13 @@ Given an unconfirmed (but submitted) transaction, emits the appropriate
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
 
 ---
 
 ### withdrawSilver
 
-▸ **withdrawSilver**(`action`): `Promise`<`TransactionReceipt`\>
+▸ **withdrawSilver**(`action`): `Promise`<`void` \| `TransactionReceipt`\>
 
 #### Parameters
 
@@ -958,4 +958,4 @@ Given an unconfirmed (but submitted) transaction, emits the appropriate
 
 #### Returns
 
-`Promise`<`TransactionReceipt`\>
+`Promise`<`void` \| `TransactionReceipt`\>
