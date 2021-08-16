@@ -51,14 +51,6 @@ export function lowestEnergy(a: MoveWithData, b: MoveWithData) {
   return a.energy - b.energy
 }
 
-
-
-// Make moves closest to the center first -
-// this will make least moves before running out
-export function closestToCenter(a: MoveWithData, b: MoveWithData) {
-  return distToCenter(a.to.location.coords) - distToCenter(b.to.location.coords)
-}
-
 /**
  * Returns -180 to 180
  */

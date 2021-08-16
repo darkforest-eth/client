@@ -7,7 +7,7 @@ import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 import { ManageInterval } from '../Components/ManageInterval'
 
-import { blocksLeft, buttonGridStyle, enoughEnergyToProspect, getMyPlanets, isFindable, isProspectable, planetName, PrimeMinutes } from '../utils'
+import { blocksLeft, buttonGridStyle, enoughEnergyToProspect, getMyPlanets, hasBeenFound, isFindable, isFoundry, isProspectable, planetName, PrimeMinutes, prospectExpired } from '../utils'
 import { prospectAndFind } from 'plugins/strategies/ProspectAndFind'
 
 const pauseable = require('pauseable')
@@ -37,8 +37,13 @@ function onProspectAndFindClick() {
     const headers = ['Planet Name', 'Level', 'Blocks Left'];
     const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
+    // const expired = getMyPlanets()
+    //   .filter(isFoundry)
+    //   .filter(prospectExpired)
+
+    // console.log({ expired })
+
     const rows = getMyPlanets()
-      .filter(enoughEnergyToProspect)
       .filter(p => isProspectable(p) || isFindable(p))
       .sort((a, b) => b.planetLevel - a.planetLevel)
 

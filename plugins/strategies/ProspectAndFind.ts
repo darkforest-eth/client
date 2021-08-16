@@ -19,7 +19,6 @@ export function prospectAndFind()
 
   getMyPlanets()
     .filter(isProspectable)
-    .filter(enoughEnergyToProspect)
     .slice(0, 10) // don't prospect too many at the same time
     .map(async (p) => {
       await df.prospectPlanet(p.locationId)

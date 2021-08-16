@@ -20,7 +20,7 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FIVE,
     fromMinEnergyLeftPercent: 37.5,
     toMinLevel: PlanetLevel.TWO,
     toPlanetTypes: [PlanetTypes.FOUNDRY],
@@ -30,7 +30,7 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FIVE,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetTypes: [PlanetTypes.PLANET, PlanetTypes.ASTEROID, PlanetTypes.RIP],
     toMinLevel: PlanetLevel.FOUR,
@@ -55,7 +55,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
   distributeEnergy({
     fromId: selectedPlanet?.locationId,
     fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FIVE,
   })
 }
 
@@ -65,7 +65,7 @@ export class PlanetsWithEnergy extends Component
 
   constructor() {
     super()
-    this.interval = pauseable.setInterval(PrimeMinutes.FIVE, () => {
+    this.interval = pauseable.setInterval(PrimeMinutes.SEVEN, () => {
       onCrawlClick()
       onDistributeClick()
     })
@@ -79,7 +79,7 @@ export class PlanetsWithEnergy extends Component
     const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
     const rows = getMyPlanets()
-      .filter(p => p.planetLevel >= 4)
+      .filter(p => p.planetLevel >= 5)
       .filter(p => ! isFoundry(p))
       .filter(p => ! hasPendingMove(p))
       .filter(p => energy(p) > 75)

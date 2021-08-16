@@ -59,6 +59,8 @@ export function distributeArtifacts(config: config)
   // Make the moves with the rarest artifacts first
   movesToMake.sort((a, b) => b.artifact!.rarity - a.artifact!.rarity || a.energy - b.energy)
 
+  console.log({ movesToMake })
+
   // Max 100 at a time
   const moves = movesToMake.slice(0, 100).map(move => {
     if (

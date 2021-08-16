@@ -86,10 +86,6 @@ export function isAsteroid(p: Planet) {
   return p.planetType === PlanetTypes.ASTEROID
 }
 
-export function isFoundry(p: Planet) {
-  return p.planetType === PlanetTypes.FOUNDRY
-}
-
 export function hasPendingMove(p: Planet) {
   return p.unconfirmedDepartures.length > 0
 }
@@ -253,6 +249,10 @@ export function getSilverRequiredForNextUpgrade(planet: Planet) {
   return silverPerRank[currentRank]
 }
 
+export function closestToCenter(a: LocatablePlanet, b: LocatablePlanet) {
+  return distToCenter(a.location.coords) - distToCenter(b.location.coords)
+}
+
 export function availableEnergy(planet: Planet) {
   return planet.energy - getPendingEnergy(planet)
 }
@@ -261,41 +261,78 @@ export function availableSilver(planet: Planet) {
   return planet.silver - getPendingSilver(planet)
 }
 
-export function isFindable(planet: Planet) {
-  return (
-    df.isPlanetMineable(planet) &&
-    planet.prospectedBlockNumber !== undefined &&
-    !planet.hasTriedFindingArtifact &&
-    !planet.unconfirmedFindArtifact &&
-    !prospectExpired(planet.prospectedBlockNumber)
-  );
-}
+/**
+ * Variables of a foundry
+ *
+ * Mine
+ * Energy
+ * Prospected
+ * Found
+ *
+ * Queries:
+ *
+ * Potential = !Prospected
+ * Prospectable = !Prospected & Energy
+ * Expired = Prospected & !Found & Blocks Since < 255
+ * Findable = Prospected & !Found & !Expired
+ *
+ * Send Energy To = Mine & !Prospected && !Energy
+ * Send Energy From = Mine & Found
+ */
 
-export function isProspectable(planet: Planet) {
-  return df.isPlanetMineable(planet) && planet.prospectedBlockNumber === undefined && !planet.unconfirmedProspectPlanet;
+export function isFoundry(p: Planet) {
+  return p.planetType === PlanetTypes.FOUNDRY
 }
 
 export function enoughEnergyToProspect(p: Planet) {
   return energy(p) >= 95.5;
 }
 
-export function blocksLeftToProspectExpiration(prospectedBlockNumber: number | undefined) {
+export function hasBeenProspected(p: Planet) {
+  return p.prospectedBlockNumber || p.unconfirmedProspectPlanet
+}
+
+export function hasBeenFound(p: Planet) {
+  return p.hasTriedFindingArtifact || p.unconfirmedFindArtifact
+}
+
+export function isProspectable(planet: Planet) {
+  return (
+    isFoundry(planet)
+    && ! hasBeenProspected(planet)
+    && enoughEnergyToProspect(planet)
+  )
+}
+
+export function blocksLeftToProspectExpiration(prospectedBlockNumber: number) {
   // @ts-ignore
   const currentBlockNumber = df.contractsAPI.ethConnection.blockNumber
 
-  return (prospectedBlockNumber || 0) + 255 - currentBlockNumber;
+  return prospectedBlockNumber + 255 - currentBlockNumber;
 }
 
-export function prospectExpired(prospectedBlockNumber: number) {
-  return blocksLeftToProspectExpiration(prospectedBlockNumber) <= 0;
-}
+export function prospectExpired(planet: Planet) {
+  if (! planet.prospectedBlockNumber) return false
+  if (planet.hasTriedFindingArtifact) return false
 
-export function canHaveArtifact(planet: Planet) {
-  return df.isPlanetMineable(planet) && !planet.hasTriedFindingArtifact
+  return blocksLeft(planet) <= 0;
 }
 
 export function blocksLeft(p: Planet) {
-  return blocksLeftToProspectExpiration(p.prospectedBlockNumber)
+  return blocksLeftToProspectExpiration(p.prospectedBlockNumber!)
+}
+
+export function isFindable(planet: Planet) {
+  return (
+    isFoundry(planet)
+    && hasBeenProspected(planet)
+    && !hasBeenFound(planet)
+    && !prospectExpired(planet)
+  );
+}
+
+export function canHaveArtifact(planet: Planet) {
+  return isFoundry(planet) && ! hasBeenFound(planet) && ! prospectExpired(planet)
 }
 
 export function getPlanetRankForBranch(planet: Planet, branch: UpgradeBranchName) {

@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { availableSilver, energy, getIncomingMoves, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, getPlanetMaxRank, getPlanetRank, getSilverRequiredForNextUpgrade, isAsteroid, isFoundry, isMine, isUnowned, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { availableSilver, energy, enoughEnergyToProspect, getIncomingMoves, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, getPlanetMaxRank, getPlanetRank, getSilverRequiredForNextUpgrade, hasBeenProspected, isAsteroid, isFoundry, isFoundry, isMine, isUnowned, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -16,7 +16,12 @@ export function distributeEnergy(config: config)
   const from = getMyPlanets()
     .filter(p => p.planetLevel >= config.fromMinLevel)
     .filter(p => p.planetLevel <= config.fromMaxLevel)
-    .filter(p => [PlanetTypes.PLANET, PlanetTypes.RIP].includes(p.planetType))
+    .filter(p => {
+      const planetOrRip = [PlanetTypes.PLANET, PlanetTypes.RIP].includes(p.planetType)
+      const usedFoundry = isFoundry(p) && hasBeenProspected(p)
+
+      return planetOrRip || usedFoundry
+    })
     .filter(p => energy(p) > 75)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
@@ -29,11 +34,14 @@ export function distributeEnergy(config: config)
 
     const to = df.getPlanetsInRange(from.locationId, energy / from.energyCap * 100)
       .filter(p => {
-        const mineAndBigger = isMine(p) && p.planetLevel > from.planetLevel
-        const unownedAndSame = isUnowned(p) && p.planetLevel >= from.planetLevel
-        return mineAndBigger || unownedAndSame
+        const isBigger = p.planetLevel > from.planetLevel
+        const isPlanet = p.planetType === PlanetTypes.PLANET
+        const isFoundryWantingEnergy = isFoundry(p) && ! hasBeenProspected(p) && ! enoughEnergyToProspect(p)
+        const mineBiggerPlanet = isMine(p) && isBigger && (isPlanet || isFoundryWantingEnergy)
+
+        const unownedAndWant = isUnowned(p) && p.planetLevel >= from.planetLevel && p.planetType !== PlanetTypes.QUASAR
+        return mineBiggerPlanet || unownedAndWant
       })
-      .filter(p => p.planetType === PlanetTypes.PLANET)
       .sort((a, b) => getMinimumEnergyNeeded(from, a) - getMinimumEnergyNeeded(from, b))
 
     if (to.length < 1) return null

@@ -1,9 +1,22 @@
 // Voyage Time
 //
 // View estimated time for a voyage.
+import GameUIManager from '@df/GameUIManager'
+import { isLocatable } from 'src/_types/global/GlobalTypes';
+import { availableEnergy, isMine } from './utils';
+
+declare const ui: GameUIManager
 
 let oneMinute = 60;
 let oneHour = 60 * oneMinute;
+
+function modelEnergyGrowth(energy, energyGrowth, energyCap, duration = 10) {
+  const denom =
+    Math.exp((-4 * energyGrowth * duration) / energyCap) *
+    (energyCap / energy - 1) +
+    1;
+  return energyCap / denom;
+}
 
 class VoyageTime {
   constructor() {
@@ -13,6 +26,9 @@ class VoyageTime {
     this.estimatedTimeSeconds = document.createElement('div');
     this.estimatedTimeSeconds.innerText = '';
     this.estimatedTimeSeconds.style.textAlign = 'center';
+    this.energyArriving = document.createElement('div');
+    this.energyArriving.innerText = '?????';
+    this.energyArriving.style.textAlign = 'center';
   }
 
   calcVoyageTime = () => {
@@ -46,10 +62,45 @@ class VoyageTime {
     }
   }
 
+  calcEnergyArriving = () => {
+    const from = ui.getMouseDownPlanet()
+    const to = ui.getHoveringOverPlanet()
+    if (!from || !to || ! isLocatable(from!) || ! isLocatable(to!) || from === to) {
+      this.energyArriving.innerText = '????'
+      return
+    }
+
+    const time = Math.ceil(df.getTimeForMove(from.locationId, to.locationId))
+    const energy = (ui.getForcesSending(from.locationId) / 100) * availableEnergy(from);
+    const distance = ui.getDistCoords(from.location.coords, to.location.coords)
+
+    const energyArriving = ui.getEnergyArrivingForMove(
+      from.locationId,
+      to.locationId,
+      distance,
+      energy
+    )
+
+    const energyOnPlanet = isMine(to)
+      ? modelEnergyGrowth(to.energy, to.energyGrowth, to.energyCap, time)
+      : -to.energy // @todo s curve time
+
+    const energyAttack = ! isMine(to)
+      ? Math.min(energyArriving / (to.defense / 100), to.energy)
+      : 0
+
+    const energyAfterAttack = energyArriving - energyAttack
+    const energyOnPlanetAfterAttack = energyOnPlanet + energyAttack + energyAfterAttack
+    const energyPercent = energyOnPlanetAfterAttack / to.energyCap * 100;
+
+    this.energyArriving.innerText = `${Math.round(energyOnPlanetAfterAttack)} ${Math.round(energyPercent)}%`
+  }
+
   render(container) {
     container.parentElement.style.minHeight = 'unset';
     container.style.width = '200px';
     container.style.minHeight = 'unset';
+    window.addEventListener('mousemove', this.calcEnergyArriving);
     window.addEventListener('mousemove', this.calcVoyageTime);
 
     let label = document.createElement('div');
@@ -59,12 +110,21 @@ class VoyageTime {
     container.appendChild(label);
     container.appendChild(this.estimatedTime);
     container.appendChild(this.estimatedTimeSeconds);
+
+    let label2 = document.createElement('div');
+    label2.innerText = 'Energy after:'
+    label2.style.textAlign = 'center';
+
+    container.appendChild(label2);
+    container.appendChild(this.energyArriving);
   }
 
   destroy() {
     window.removeEventListener('mousemove', this.calcVoyageTime);
+    window.removeEventListener('mousemove', this.calcEnergyArriving);
     delete this.estimatedTime
     delete this.estimatedTimeSeconds
+    delete this.energyArriving
   }
 }
 

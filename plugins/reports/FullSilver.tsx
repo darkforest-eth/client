@@ -50,7 +50,7 @@ export class FullSilver extends Component
 
   constructor() {
     super()
-    this.interval = pauseable.setInterval(PrimeMinutes.SEVEN, () => {
+    this.interval = pauseable.setInterval(PrimeMinutes.FIVE, () => {
       onDistributeClick()
       onWithdrawClick()
     })
@@ -63,7 +63,7 @@ export class FullSilver extends Component
     const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
     const rows = getMyPlanets()
-      .filter(p => p.planetLevel >= PlanetLevel.FOUR)
+      .filter(p => p.planetLevel >= 5)
       .filter(p => p.planetType === PlanetTypes.ASTEROID)
       .filter(p => availableSilver(p) == p.silverCap)
       .sort((a, b) => b.silverCap - a.silverCap)

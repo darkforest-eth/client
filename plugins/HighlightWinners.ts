@@ -35,8 +35,7 @@ import { withdrawArtifacts } from './strategies/WithdrawArtifacts'
 import { prospectAndFind } from './strategies/ProspectAndFind'
 import { addHours, formatDistanceToNow, fromUnixTime, isAfter, isBefore, subHours } from 'date-fns'
 import { isLocatable } from 'src/_types/global/GlobalTypes'
-import { closestToCenter } from './strategies/Crawl'
-import { distToCenter, isUnowned, PlanetTypes } from './utils'
+import { canHaveArtifact, closestToCenter, distToCenter, isUnowned, PlanetTypes } from './utils'
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants'
 
 declare const df: GameManager
@@ -44,30 +43,14 @@ declare const ui: GameUIManager
 
 const html = htm.bind(h)
 
-let eligiblePlanets: LocatablePlanet[] = []
-let extraPlanets: LocatablePlanet[] = []
-let rips: LocatablePlanet[] = []
-let foundries: LocatablePlanet[] = []
+const MAX_WINNERS = 63
 
-export function closestToCenter(a: LocatablePlanet, b: LocatablePlanet) {
-  return distToCenter(a.location.coords) - distToCenter(b.location.coords)
+export function getWinnerPlanets(all: LocatablePlanet[]) {
+  return all.slice(0, MAX_WINNERS)
 }
 
-function App() {
-  console.log('Running Highlight Winners')
-
-  const MAX_WINNERS = 63
-
-  const closestPlanets = Array.from(df.getAllPlanets())
-    .filter(isLocatable)
-    .filter(p => p.planetLevel >= PlanetLevel.THREE)
-    .sort(closestToCenter)
-
-  eligiblePlanets = closestPlanets.slice(0, MAX_WINNERS)
-
-  console.log(eligiblePlanets)
-
-  const winners = eligiblePlanets
+export function getExtraPlanets(winnerPlanets: LocatablePlanet[], all: LocatablePlanet[]) {
+  const winners = winnerPlanets
     .map(p => p.owner)
     .filter(a => a !== EMPTY_ADDRESS)
 
@@ -75,20 +58,21 @@ function App() {
 
   const extraPlanetCount = winners.length - uniqueWinners.length
 
-  console.log(MAX_WINNERS + 1 + extraPlanetCount)
+  return all.slice(MAX_WINNERS + 1, MAX_WINNERS + 1 + extraPlanetCount)
+}
 
-  extraPlanets = closestPlanets.slice(MAX_WINNERS + 1, MAX_WINNERS + 1 + extraPlanetCount)
-
-  const allPlanets = Array.from(df.getAllPlanets()).filter(isLocatable)
-
-  rips = allPlanets
+export function getRips(all: LocatablePlanet[]) {
+  return all
     .filter(p => p.planetLevel >= PlanetLevel.THREE)
     .filter(p => p.planetType === PlanetTypes.RIP)
+}
 
-  foundries = allPlanets
-    .filter(p => p.planetLevel >= PlanetLevel.FOUR)
-    .filter(isUnowned)
-    .filter(p => p.planetType === PlanetTypes.FOUNDRY)
+export function getFoundries(all: LocatablePlanet[]) {
+  return all.filter(canHaveArtifact)
+}
+
+function App() {
+  console.log('Running Highlight Winners')
 
   return html`
     <div>
@@ -97,13 +81,13 @@ function App() {
   `;
 }
 
-function circlePlanet(ctx, planet: LocatablePlanet, color: string)
+function circlePlanet(ctx: CanvasRenderingContext2D, planet: LocatablePlanet, color: string)
 {
   const viewport = ui.getViewport();
 
   ctx.strokeStyle = color;
-  ctx.lineWidth = 1.5;
-  ctx.strokeStyle = "dashed";
+  ctx.lineWidth = 4;
+  // ctx.setLineDash([5, 15])
   ctx.beginPath();
   ctx.arc(
     viewport.worldToCanvasX(planet.location.coords.x),
@@ -119,16 +103,30 @@ function circlePlanet(ctx, planet: LocatablePlanet, color: string)
 class HighlightWinners implements DFPlugin {
 
   container: HTMLDivElement
-  loop: NodeJS.Timeout
+  winnerPlanets: LocatablePlanet[] = []
+  extraPlanets: LocatablePlanet[] = []
+  rips: LocatablePlanet[] = []
+  foundries: LocatablePlanet[] = []
 
-  constructor() {}
+  constructor() {
+    const all = Array.from(df.getAllPlanets())
+      .filter(isLocatable)
+      .filter(p => p.planetLevel >= PlanetLevel.THREE)
+      .filter(p => ! p.destroyed)
+      .sort(closestToCenter)
+
+    this.winnerPlanets = getWinnerPlanets(all)
+    this.extraPlanets = getExtraPlanets(this.winnerPlanets, all)
+    this.rips = getRips(all)
+    this.foundries = getFoundries(all)
+  }
 
   draw(ctx) {
     ctx.save();
-    eligiblePlanets.map(p => circlePlanet(ctx, p, 'red'))
-    extraPlanets.map(p => circlePlanet(ctx, p, 'blue'))
-    rips.map(p => circlePlanet(ctx, p, 'green'))
-    foundries.map(p => circlePlanet(ctx, p, 'yellow'))
+    this.winnerPlanets.map(p => circlePlanet(ctx, p, 'green'))
+    this.extraPlanets.map(p => circlePlanet(ctx, p, 'blue'))
+    this.rips.map(p => circlePlanet(ctx, p, 'red'))
+    this.foundries.map(p => circlePlanet(ctx, p, 'yellow'))
     ctx.restore();
   }
 
