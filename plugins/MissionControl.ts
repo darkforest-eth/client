@@ -16,7 +16,7 @@ import { useState, useLayoutEffect } from 'preact/hooks'
 import GameManager from '@df/GameManager'
 import GameUIManager from '@df/GameUIManager'
 
-import { Table } from './Components/Table';
+import { Table } from './components/Table';
 import { Header, Sub, Title } from './components/Text'
 import { PlanetLink } from './components/PlanetLink'
 import { PlanetsWithEnergy } from './reports/PlanetsWithEnergy'
@@ -62,10 +62,6 @@ function App() {
       <br />
       <hr />
       <br />
-      <${FoundriesToTake} />
-      <br />
-      <hr />
-      <br />
       <${Cannons} />
       <br />
       <hr />
@@ -91,7 +87,7 @@ class MissionControl implements DFPlugin {
       render(html`<${App} />`, container)
       this.loop = setInterval(
         () => render(html`<${App} />`, container),
-        1000 * 60 * 10 // 10 minutes
+        1000 * 60 * 1 // 1 minutes
       )
   }
 

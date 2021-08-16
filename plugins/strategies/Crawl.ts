@@ -108,7 +108,7 @@ export function capturePlanets(config: config)
   const from = getMyPlanets()
     .filter(isLocatable)
     .filter(p => p.planetLevel <= config.fromMaxLevel)
-    .filter(p => p.planetType === PlanetTypes.PLANET)
+    .filter(p => [PlanetTypes.PLANET, PlanetTypes.RIP].includes(p.planetType))
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
   // Calculate moves required to take and use the first one

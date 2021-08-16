@@ -47,7 +47,12 @@ export function distributeSilver(config: config)
       .filter(p => p.planetLevel >= config.toMinLevel)
       .filter(p => p.planetType === config.toPlanetType)
       .filter(p => getPlanetRank(p) < getPlanetMaxRank(p))
-      .filter(p => getSilverRequiredForNextUpgrade(p) <  from.silver)
+      .filter(p => {
+        console.log(`Silver required for ${planetName(p)}: ${getSilverRequiredForNextUpgrade(p)})`)
+        const hasSilverForUpgrade = getSilverRequiredForNextUpgrade(p) - availableSilver(p) <  from.silver
+        const fullSilver = from.silver === from.silverCap
+        return hasSilverForUpgrade || fullSilver
+      })
       .filter(p => p.planetLevel >= from.planetLevel - 1) // L4 to L3 etc..
       .filter(p => p.silverCap !== p.silver)
 

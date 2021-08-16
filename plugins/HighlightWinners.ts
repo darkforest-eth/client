@@ -36,7 +36,7 @@ import { prospectAndFind } from './strategies/ProspectAndFind'
 import { addHours, formatDistanceToNow, fromUnixTime, isAfter, isBefore, subHours } from 'date-fns'
 import { isLocatable } from 'src/_types/global/GlobalTypes'
 import { closestToCenter } from './strategies/Crawl'
-import { distToCenter } from './utils'
+import { distToCenter, isUnowned, PlanetTypes } from './utils'
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants'
 
 declare const df: GameManager
@@ -46,6 +46,8 @@ const html = htm.bind(h)
 
 let eligiblePlanets: LocatablePlanet[] = []
 let extraPlanets: LocatablePlanet[] = []
+let rips: LocatablePlanet[] = []
+let foundries: LocatablePlanet[] = []
 
 export function closestToCenter(a: LocatablePlanet, b: LocatablePlanet) {
   return distToCenter(a.location.coords) - distToCenter(b.location.coords)
@@ -76,6 +78,17 @@ function App() {
   console.log(MAX_WINNERS + 1 + extraPlanetCount)
 
   extraPlanets = closestPlanets.slice(MAX_WINNERS + 1, MAX_WINNERS + 1 + extraPlanetCount)
+
+  const allPlanets = Array.from(df.getAllPlanets()).filter(isLocatable)
+
+  rips = allPlanets
+    .filter(p => p.planetLevel >= PlanetLevel.THREE)
+    .filter(p => p.planetType === PlanetTypes.RIP)
+
+  foundries = allPlanets
+    .filter(p => p.planetLevel >= PlanetLevel.FOUR)
+    .filter(isUnowned)
+    .filter(p => p.planetType === PlanetTypes.FOUNDRY)
 
   return html`
     <div>
@@ -114,6 +127,8 @@ class HighlightWinners implements DFPlugin {
     ctx.save();
     eligiblePlanets.map(p => circlePlanet(ctx, p, 'red'))
     extraPlanets.map(p => circlePlanet(ctx, p, 'blue'))
+    rips.map(p => circlePlanet(ctx, p, 'green'))
+    foundries.map(p => circlePlanet(ctx, p, 'yellow'))
     ctx.restore();
   }
 

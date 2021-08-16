@@ -81,7 +81,7 @@ export class UsefulArtifacts extends Component
 
     const rows = getAllArtifacts()
       .filter(a => a && ! isActivated(a))
-      // .filter(a => a && a.rarity > ArtifactRarities.Common)
+      .filter(a => a && a.rarity > ArtifactRarities.Common)
       .filter(a => [ArtifactTypes.Wormhole, ArtifactTypes.BloomFilter].includes(a.artifactType))
       .filter(canBeActivated)
       .sort((a, b) => b!.rarity - a!.rarity)

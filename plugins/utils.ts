@@ -204,7 +204,11 @@ export function planetCanAcceptMove(planet: Planet, maxArtifactCount: number = M
 
   const artifactCount = planet.heldArtifactIds.length + incomingWithArtifacts.length
 
-  return moveCount <= MAX_MOVE_COUNT && artifactCount <= maxArtifactCount
+  const canAcceptMove = moveCount <= MAX_MOVE_COUNT && artifactCount <= maxArtifactCount
+
+  if (! canAcceptMove) console.log(`Skipping ${planetName(planet)}: M${moveCount} A${artifactCount} <= ${maxArtifactCount}`)
+
+  return canAcceptMove
 }
 
 export function getEnergyNeeded(from: Planet, to: Planet, targetEnergy: number) {
@@ -246,7 +250,7 @@ export function getSilverRequiredForNextUpgrade(planet: Planet) {
     silverPerRank[i] = Math.floor((i + 1) * 0.2 * planet.silverCap)
   }
 
-  return silverPerRank[currentRank + 1]
+  return silverPerRank[currentRank]
 }
 
 export function availableEnergy(planet: Planet) {

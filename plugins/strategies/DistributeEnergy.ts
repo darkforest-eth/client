@@ -1,27 +1,10 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { availableSilver, energy, getIncomingMoves, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, getPlanetMaxRank, getPlanetRank, getSilverRequiredForNextUpgrade, isFoundry, isMine, isUnowned, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { availableSilver, energy, getIncomingMoves, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, getPlanetMaxRank, getPlanetRank, getSilverRequiredForNextUpgrade, isAsteroid, isFoundry, isMine, isUnowned, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
-
-function getPlanetIncomingSilver(planet: Planet) {
-  // @ts-ignore
-  const future = getIncomingMoves(planet).reduce((total, m) => total + (m.silver || m.silverMoved), 0)
-
-  return future
-}
-
-function maxSilverToSend(from: Planet, to: Planet)
-{
-  const potential = Math.ceil(to.silverCap - to.silver - getPlanetIncomingSilver(to))
-  const available = availableSilver(from)
-
-  const silver = Math.min(potential, available)
-
-  return silver
-}
 
 interface config {
   fromId?: LocationId,
@@ -33,7 +16,7 @@ export function distributeEnergy(config: config)
   const from = getMyPlanets()
     .filter(p => p.planetLevel >= config.fromMinLevel)
     .filter(p => p.planetLevel <= config.fromMaxLevel)
-    .filter(p => ! isFoundry(p))
+    .filter(p => [PlanetTypes.PLANET, PlanetTypes.RIP].includes(p.planetType))
     .filter(p => energy(p) > 75)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
@@ -48,10 +31,9 @@ export function distributeEnergy(config: config)
       .filter(p => {
         const mineAndBigger = isMine(p) && p.planetLevel > from.planetLevel
         const unownedAndSame = isUnowned(p) && p.planetLevel >= from.planetLevel
-
         return mineAndBigger || unownedAndSame
       })
-      .filter(p => p.planetType !== PlanetTypes.QUASAR)
+      .filter(p => p.planetType === PlanetTypes.PLANET)
       .sort((a, b) => getMinimumEnergyNeeded(from, a) - getMinimumEnergyNeeded(from, b))
 
     if (to.length < 1) return null
@@ -66,12 +48,12 @@ export function distributeEnergy(config: config)
   })
 
   // Make the moves with the MOST energy first.
-  movesToMake.filter(m => m).sort((a, b) => b.energy - a.energy)
+  const movesToMake2 = movesToMake.filter(m => m).sort((a, b) => b.energy - a.energy)
 
-  console.log('Sending energy to ', movesToMake)
+  console.log('Sending energy to ', movesToMake2)
 
   // Move max 100 at a time
-  const moves = movesToMake.slice(0, 100).map(move => {
+  const moves = movesToMake2.slice(0, 100).map(move => {
     if (planetCanAcceptMove(move.to)
     ) {
       console.log(`SENDING ${move.energy} energy to ${planetName(move.to)} (ui.centerLocationId('${move.to.locationId}')) FROM ${planetName(move.from)} (ui.centerLocationId('${move.from.locationId}'))`)

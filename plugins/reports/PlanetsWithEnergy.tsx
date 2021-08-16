@@ -4,10 +4,10 @@ import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { PlanetLink } from '../components/PlanetLink'
 import { Header, Sub, Title } from '../components/Text'
-import { Table } from '../Components/Table';
-import { ManageInterval } from '../Components/ManageInterval'
+import { Table } from '../components/Table';
+import { ManageInterval } from '../components/ManageInterval'
 
-import { capturePlanets, closestToCenter, directionToCenter, lowestEnergy } from '../strategies/Crawl'
+import { capturePlanets, closestToCenter, directionToCenter, highestLevel, lowestEnergy } from '../strategies/Crawl'
 import { distributeEnergy } from '../strategies/DistributeEnergy'
 import { buttonGridStyle, energy, getMyPlanets, getPlanetTypeAcronym, hasPendingMove, isAsteroid, isFoundry, planetName, PlanetTypes, PrimeMinutes } from '../utils'
 const pauseable = require('pauseable')
@@ -22,11 +22,31 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
     fromId: selectedPlanet?.locationId,
     fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
     fromMinEnergyLeftPercent: 37.5,
+    toMinLevel: PlanetLevel.TWO,
+    toPlanetTypes: [PlanetTypes.FOUNDRY],
+    toTargetEnergy: 15,
+    sortFunction: highestLevel,
+  })
+
+  capturePlanets({
+    fromId: selectedPlanet?.locationId,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
+    fromMinEnergyLeftPercent: 37.5,
     toPlanetTypes: [PlanetTypes.PLANET, PlanetTypes.ASTEROID, PlanetTypes.RIP],
     toMinLevel: PlanetLevel.FOUR,
     toTargetEnergy: 15,
     sortFunction: directionToCenter,
   })
+
+  // capturePlanets({
+  //   fromId: selectedPlanet?.locationId,
+  //   fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
+  //   fromMinEnergyLeftPercent: 37.5,
+  //   toPlanetType: PlanetTypes.RIP,
+  //   toMinLevel: PlanetLevel.THREE,
+  //   toTargetEnergy: 15,
+  //   sortFunction: lowestEnergy,
+  // })
 }
 
 function onDistributeClick(selectedPlanet: Planet|null = null) {
@@ -34,8 +54,8 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
 
   distributeEnergy({
     fromId: selectedPlanet?.locationId,
-    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.THREE,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
   })
 }
 
@@ -59,7 +79,7 @@ export class PlanetsWithEnergy extends Component
     const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r'];
 
     const rows = getMyPlanets()
-      .filter(p => p.planetLevel >= 3)
+      .filter(p => p.planetLevel >= 4)
       .filter(p => ! isFoundry(p))
       .filter(p => ! hasPendingMove(p))
       .filter(p => energy(p) > 75)
