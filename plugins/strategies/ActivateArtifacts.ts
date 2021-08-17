@@ -14,7 +14,7 @@ function hasActiveArtifact(p: Planet) {
 
 interface config {
   fromId?: LocationId,
-  level: PlanetLevel,
+  minLevel: PlanetLevel,
   planetType: PlanetType,
 }
 export function activateArtifacts(config: config)
@@ -23,7 +23,7 @@ export function activateArtifacts(config: config)
     .filter(p => p.planetType === config.planetType)
     .filter(p => ! p.unconfirmedActivateArtifact)
     .filter(p => p.heldArtifactIds.length > 0)
-    .filter(p => p.planetLevel === config.level)
+    .filter(p => p.planetLevel >= config.minLevel)
     .filter(p => ! hasActiveArtifact(p))
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
@@ -32,7 +32,7 @@ export function activateArtifacts(config: config)
       return a
         && !isActivated(a)
         && canBeActivated(a)
-        && artifactStatTypes.includes(a.artifactType)
+        && a.artifactType === ArtifactTypes.Wormhole
     })
 
     artifact && df.activateArtifact(from.locationId, artifact.id, undefined)

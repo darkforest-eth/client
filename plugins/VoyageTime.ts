@@ -83,15 +83,24 @@ class VoyageTime {
 
     const energyOnPlanet = isMine(to)
       ? modelEnergyGrowth(to.energy, to.energyGrowth, to.energyCap, time)
-      : -to.energy // @todo s curve time
-
-    const energyAttack = ! isMine(to)
-      ? Math.min(energyArriving / (to.defense / 100), to.energy)
       : 0
 
-    const energyAfterAttack = energyArriving - energyAttack
-    const energyOnPlanetAfterAttack = energyOnPlanet + energyAttack + energyAfterAttack
+    const energyCost = ! isMine(to)
+      ? to.energy * (to.defense / 100)
+      : 0
+
+    const energyAfterAttack =  Math.max(energyArriving - energyCost, 0)
+    const energyOnPlanetAfterAttack = energyOnPlanet + energyAfterAttack
     const energyPercent = energyOnPlanetAfterAttack / to.energyCap * 100;
+
+    console.log({
+      energyOnPlanet,
+      energyArriving,
+      energyCost,
+      energyAfterAttack,
+      energyOnPlanetAfterAttack,
+      energyPercent,
+    })
 
     this.energyArriving.innerText = `${Math.round(energyOnPlanetAfterAttack)} ${Math.round(energyPercent)}%`
   }

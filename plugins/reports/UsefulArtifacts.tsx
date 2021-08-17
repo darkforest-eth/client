@@ -55,7 +55,7 @@ function onWithdrawClick(selectedPlanet: Planet|null = null) {
 function onActivateClick(selectedPlanet: Planet|null = null) {
   activateArtifacts({
     fromId: selectedPlanet?.locationId,
-    level: 4,
+    minLevel: PlanetLevel.FOUR,
     planetType: PlanetTypes.PLANET,
   })
 }

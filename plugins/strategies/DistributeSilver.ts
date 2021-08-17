@@ -53,7 +53,7 @@ export function distributeSilver(config: config)
         const fullSilver = from.silver === from.silverCap
         return hasSilverForUpgrade || fullSilver
       })
-      .filter(p => p.planetLevel >= from.planetLevel - 1) // L4 to L3 etc..
+      // .filter(p => p.planetLevel >= from.planetLevel - 1) // L4 to L3 etc..
       .filter(p => p.silverCap !== p.silver)
 
     const moves = to.map(to => {
