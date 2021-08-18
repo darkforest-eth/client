@@ -46,17 +46,20 @@ export function distributeEnergy(config: config)
 
     if (to.length < 1) return null
 
+    const dist = df.getDist(from.locationId, to[0].locationId)
+
     return {
       from,
       to: to[0],
       fromName: planetName(from),
       toName: planetName(to[0]),
       energy,
+      energyArriving: df.getEnergyArrivingForMove(from.locationId, to[0].locationId, dist, energy)
     }
   })
 
   // Make the moves with the MOST energy first.
-  const movesToMake2 = movesToMake.filter(m => m).sort((a, b) => b.energy - a.energy)
+  const movesToMake2 = movesToMake.filter(m => m).sort((a, b) => b.energyArriving - a.energyArriving)
 
   console.log('Sending energy to ', movesToMake2)
 

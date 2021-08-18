@@ -65,7 +65,9 @@ export class PlanetsWithEnergy extends Component
 
   constructor() {
     super()
-    this.interval = pauseable.setInterval(PrimeMinutes.SEVEN, () => {
+    // takes 80 minutes for a l4 r5 planet to go from 37.5% to 50%
+    // let's do this twice then the closest 10 planets should be sending energy
+    this.interval = pauseable.setInterval(PrimeMinutes.NINETEEN, () => {
       onCrawlClick()
       onDistributeClick()
     })

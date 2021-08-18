@@ -33,6 +33,8 @@ export const PrimeMinutes = {
   SEVEN: 7 * MINUTES,
   ELEVEN: 11 * MINUTES,
   THIRTEEN: 13 * MINUTES,
+  NINETEEN: 19 * MINUTES,
+  FOURTY_ONE: 41 * MINUTES,
 }
 
 export const artifactStatTypes = [
