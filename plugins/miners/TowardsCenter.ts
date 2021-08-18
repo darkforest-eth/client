@@ -8,7 +8,7 @@ export class CustomTowardsCenterPattern {
       sideLength: chunkSize,
     };
     this.chunkSideLength = chunkSize;
-    this.rowRadius = 30; // In chunks
+    this.rowRadius = 50; // In chunks
     this.yDominant = (Math.abs(bottomLeftY) > Math.abs(bottomLeftX))
     this.slopeToCenter = bottomLeftX === 0 ? 1 : bottomLeftY / bottomLeftX // i.e. deltaY / deltaX
   }

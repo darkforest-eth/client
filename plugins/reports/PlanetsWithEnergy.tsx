@@ -55,7 +55,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
   distributeEnergy({
     fromId: selectedPlanet?.locationId,
     fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FIVE,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
   })
 }
 
