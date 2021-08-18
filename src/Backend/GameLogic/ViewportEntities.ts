@@ -26,7 +26,6 @@ export class ViewportEntities {
 
   private cachedExploredChunks: Set<Chunk> = new Set();
   private cachedPlanets: Map<LocationId, PlanetRenderInfo> = new Map();
-  private cachedPlanetsAsList: PlanetRenderInfo[] = [];
 
   public constructor(gameManager: GameManager, gameUIManager: GameUIManager) {
     this.gameManager = gameManager;
@@ -43,10 +42,10 @@ export class ViewportEntities {
   public getPlanetsAndChunks() {
     this.updateLocationsAndChunks();
 
-    this.cachedPlanetsAsList.forEach((p) => {
+    for (const p of this.cachedPlanets.values()) {
       p.planet.emojiBobAnimation?.update();
       p.planet.emojiZoopAnimation?.update();
-    });
+    }
 
     return {
       chunks: this.cachedExploredChunks,
@@ -86,11 +85,14 @@ export class ViewportEntities {
   }
 
   private async loadPlanetMessages() {
-    const planetIds = this.cachedPlanetsAsList
+    const planetIds = [];
+    for (const p of this.cachedPlanets.values()) {
       // by definition, only planets that are owned can have planet messages on them, so they must
       // also be 'in the contract'
-      .filter((p) => p.planet.isInContract)
-      .map((p) => p.planet.locationId);
+      if (p.planet.isInContract) {
+        planetIds.push(p.planet.locationId);
+      }
+    }
 
     this.gameManager.refreshServerPlanetStates(planetIds);
   }
@@ -145,8 +147,6 @@ export class ViewportEntities {
         planet.planet.emojiBobAnimation = undefined;
       }
     }
-
-    this.cachedPlanetsAsList = Array.from(this.cachedPlanets.values());
   }
 
   /**
@@ -162,7 +162,7 @@ export class ViewportEntities {
     const radii = this.getPlanetRadii(Viewport.getInstance());
     let bestPlanet: LocatablePlanet | undefined;
 
-    for (const planetInfo of this.cachedPlanetsAsList) {
+    for (const planetInfo of this.cachedPlanets.values()) {
       const planet = planetInfo.planet;
       const distThreshold = radii.get(planet.planetLevel)?.radiusWorld as number;
 

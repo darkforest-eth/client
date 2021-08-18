@@ -10,6 +10,7 @@ export const enum MiningPatternType {
   ETH,
   SwissCheese,
   TowardsCenter,
+  TowardsCenterV2,
 }
 
 export interface MiningPattern {
@@ -247,5 +248,78 @@ export class TowardsCenterPattern implements MiningPattern {
       bottomLeft: nextBottomLeft,
       sideLength: this.chunkSideLength,
     };
+  }
+}
+
+export class TowardsCenterPatternV2 implements MiningPattern {
+  type: MiningPatternType = MiningPatternType.TowardsCenterV2;
+  fromChunk: Rectangle;
+  chunkSideLength: number;
+  private rowRadius: number;
+  private yDominant: boolean;
+  private slopeToCenter: number;
+
+  constructor(center: WorldCoords, chunkSize: number) {
+    const bottomLeftX = Math.floor(center.x / chunkSize) * chunkSize;
+    const bottomLeftY = Math.floor(center.y / chunkSize) * chunkSize;
+    const bottomLeft = { x: bottomLeftX, y: bottomLeftY };
+    this.fromChunk = {
+      bottomLeft,
+      sideLength: chunkSize,
+    };
+    this.chunkSideLength = chunkSize;
+    this.rowRadius = 5; // In chunks
+    this.yDominant = Math.abs(bottomLeftY) > Math.abs(bottomLeftX);
+    this.slopeToCenter = bottomLeftX === 0 ? 1 : bottomLeftY / bottomLeftX; // i.e. deltaY / deltaX
+  }
+
+  toChunk(coord: number): number {
+    return Math.floor(coord / this.chunkSideLength) * this.chunkSideLength;
+  }
+
+  nextChunk(chunk: Rectangle): Rectangle {
+    const homeX = this.fromChunk.bottomLeft.x;
+    const homeY = this.fromChunk.bottomLeft.y;
+    const currX = chunk.bottomLeft.x;
+    const currY = chunk.bottomLeft.y;
+
+    if (this.yDominant) {
+      const centerOfRowX = Math.floor(homeX + (currY - homeY) / this.slopeToCenter);
+      if (currX < centerOfRowX + this.chunkSideLength * (this.rowRadius - 1)) {
+        return {
+          bottomLeft: { x: currX + this.chunkSideLength, y: currY },
+          sideLength: this.chunkSideLength,
+        };
+      } else {
+        const nextCenterOfRowX = Math.floor(
+          centerOfRowX + this.chunkSideLength / this.slopeToCenter
+        );
+        return {
+          bottomLeft: {
+            x: this.toChunk(nextCenterOfRowX - (this.rowRadius - 1) * this.chunkSideLength),
+            y: currY < 0 ? currY + this.chunkSideLength : currY - this.chunkSideLength,
+          },
+          sideLength: this.chunkSideLength,
+        };
+      }
+    }
+
+    // We are now in the X dominant case
+    const centerOfRowY = Math.floor(homeY + (currX - homeX) * this.slopeToCenter);
+    if (currY < centerOfRowY + this.chunkSideLength * (this.rowRadius - 1)) {
+      return {
+        bottomLeft: { x: currX, y: currY + this.chunkSideLength },
+        sideLength: this.chunkSideLength,
+      };
+    } else {
+      const nextCenterOfRowY = Math.floor(centerOfRowY + this.chunkSideLength * this.slopeToCenter);
+      return {
+        bottomLeft: {
+          x: currX < 0 ? currX + this.chunkSideLength : currX - this.chunkSideLength,
+          y: this.toChunk(nextCenterOfRowY - (this.rowRadius - 1) * this.chunkSideLength),
+        },
+        sideLength: this.chunkSideLength,
+      };
+    }
   }
 }

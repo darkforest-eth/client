@@ -97,10 +97,17 @@ export function ManagePlanetArtifactsPane({
 
   let content;
 
+  const inventoryArtifacts = [];
+  for (const a of myArtifacts.value.values()) {
+    if (!a.onPlanetId) {
+      inventoryArtifacts.push(a);
+    }
+  }
+
   if (planet && myArtifacts.value && isLocatable(planet) && account) {
     content = (
       <ManageArtifactsPane
-        artifactsInInventory={Array.from(myArtifacts.value.values())}
+        artifactsInInventory={inventoryArtifacts}
         artifactsOnPlanet={onPlanet}
         planet={planet}
         currentBlockNumber={currentBlockNumber}

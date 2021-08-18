@@ -14,6 +14,7 @@
 - [SwissCheese](Backend_Miner_MiningPatterns.MiningPatternType.md#swisscheese)
 - [Target](Backend_Miner_MiningPatterns.MiningPatternType.md#target)
 - [TowardsCenter](Backend_Miner_MiningPatterns.MiningPatternType.md#towardscenter)
+- [TowardsCenterV2](Backend_Miner_MiningPatterns.MiningPatternType.md#towardscenterv2)
 
 ## Enumeration members
 
@@ -62,3 +63,9 @@
 ### TowardsCenter
 
 • **TowardsCenter** = `7`
+
+---
+
+### TowardsCenterV2
+
+• **TowardsCenterV2** = `8`

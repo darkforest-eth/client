@@ -7,6 +7,7 @@ import {
   SpiralPattern,
   SwissCheesePattern,
   TowardsCenterPattern,
+  TowardsCenterPatternV2,
 } from '../../Backend/Miner/MiningPatterns';
 import { EmSpacer, SelectFrom, ShortcutButton } from '../Components/CoreUI';
 import { PauseIcon, PlayIcon, TargetIcon } from '../Components/Icons';
@@ -54,14 +55,16 @@ const Pattern = {
   [MiningPatternType.Spiral.toString()]: SpiralPattern,
   [MiningPatternType.SwissCheese.toString()]: SwissCheesePattern,
   [MiningPatternType.TowardsCenter.toString()]: TowardsCenterPattern,
+  [MiningPatternType.TowardsCenterV2.toString()]: TowardsCenterPatternV2,
 };
 
 const miningSelectValues = [
+  MiningPatternType.TowardsCenterV2.toString(),
   MiningPatternType.TowardsCenter.toString(),
   MiningPatternType.Spiral.toString(),
   MiningPatternType.SwissCheese.toString(),
 ];
-const miningSelectLabels = ['TowardsCenter', 'Spiral', 'SwissCheese'];
+const miningSelectLabels = ['TowardsCenterV2', 'TowardsCenter', 'Spiral', 'SwissCheese'];
 
 function HashesPerSec() {
   const uiManager = useUIManager();
@@ -101,7 +104,7 @@ export function ExplorePane() {
   const uiManager = useUIManager();
   const windowManager = WindowManager.getInstance();
   const uiEmitter = UIEmitter.getInstance();
-  const [pattern, setPattern] = useState<string>(MiningPatternType.TowardsCenter.toString());
+  const [pattern, setPattern] = useState<string>(MiningPatternType.TowardsCenterV2.toString());
   const [mining] = useBooleanSetting(uiManager, Setting.IsMining);
   const [targetting, setTargetting] = useState(false);
   const [coords, setCoords] = useState<WorldCoords>(uiManager.getHomeCoords());

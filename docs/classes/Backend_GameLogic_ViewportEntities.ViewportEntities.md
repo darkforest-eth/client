@@ -15,7 +15,6 @@ visible planet to the mouse.
 
 - [cachedExploredChunks](Backend_GameLogic_ViewportEntities.ViewportEntities.md#cachedexploredchunks)
 - [cachedPlanets](Backend_GameLogic_ViewportEntities.ViewportEntities.md#cachedplanets)
-- [cachedPlanetsAsList](Backend_GameLogic_ViewportEntities.ViewportEntities.md#cachedplanetsaslist)
 - [gameManager](Backend_GameLogic_ViewportEntities.ViewportEntities.md#gamemanager)
 - [uiManager](Backend_GameLogic_ViewportEntities.ViewportEntities.md#uimanager)
 
@@ -56,12 +55,6 @@ visible planet to the mouse.
 ### cachedPlanets
 
 • `Private` **cachedPlanets**: `Map`<`LocationId`, [`PlanetRenderInfo`](../interfaces/Backend_GameLogic_ViewportEntities.PlanetRenderInfo.md)\>
-
----
-
-### cachedPlanetsAsList
-
-• `Private` **cachedPlanetsAsList**: [`PlanetRenderInfo`](../interfaces/Backend_GameLogic_ViewportEntities.PlanetRenderInfo.md)[] = `[]`
 
 ---
 

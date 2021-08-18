@@ -62,6 +62,7 @@ reading and writing to and from the blockchain.
 - [getContractBalance](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getcontractbalance)
 - [getGPTCreditBalance](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgptcreditbalance)
 - [getGPTCreditPriceEther](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgptcreditpriceether)
+- [getGasFeeForTransaction](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgasfeefortransaction)
 - [getPlanetById](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getplanetbyid)
 - [getPlayerArtifacts](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getplayerartifacts)
 - [getPlayerById](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getplayerbyid)
@@ -577,6 +578,26 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 #### Returns
 
 `Promise`<`number`\>
+
+---
+
+### getGasFeeForTransaction
+
+▸ `Private` **getGasFeeForTransaction**(`tx`): `string`
+
+We pass this function into {@link TxExecutor} to calculate what gas fee we should use for the
+given transaction. The result is either a number, measured in gwei, represented as a string, or
+a string representing that we want to use an auto gas setting.
+
+#### Parameters
+
+| Name | Type                |
+| :--- | :------------------ |
+| `tx` | `QueuedTransaction` |
+
+#### Returns
+
+`string`
 
 ---
 

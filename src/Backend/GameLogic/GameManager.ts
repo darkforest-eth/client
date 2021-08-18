@@ -98,6 +98,7 @@ import {
   SpiralPattern,
   SwissCheesePattern,
   TowardsCenterPattern,
+  TowardsCenterPatternV2,
 } from '../Miner/MiningPatterns';
 import { getConversation, startConversation, stepConversation } from '../Network/ConversationAPI';
 import { eventLogger, EventType } from '../Network/EventLogger';
@@ -2952,10 +2953,20 @@ class GameManager extends EventEmitter {
     if (!planet) throw new Error('planet unknown');
     if (!isLocatable(planet)) throw new Error('planet location unknown');
 
-    return this.getGameObjects().getPlanetsInWorldCircle(
-      planet.location.coords,
-      getRange(planet, sendingPercent)
-    );
+    // Performance improvements originally suggested by [@modokon](https://github.com/modukon)
+    // at https://github.com/darkforest-eth/client/issues/15
+    // Improved by using `planetMap` by [@phated](https://github.com/phated)
+    const result = [];
+    const range = getRange(planet, sendingPercent);
+    for (const p of this.getPlanetMap().values()) {
+      if (isLocatable(p)) {
+        if (this.getDistCoords(planet.location.coords, p.location.coords) < range) {
+          result.push(p);
+        }
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -3114,6 +3125,7 @@ class GameManager extends EventEmitter {
       SpiralPattern,
       SwissCheesePattern,
       TowardsCenterPattern,
+      TowardsCenterPatternV2,
     };
   }
 

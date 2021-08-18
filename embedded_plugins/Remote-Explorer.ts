@@ -24,6 +24,7 @@ const {
   SwissCheesePattern,
   SpiralPattern,
   TowardsCenterPattern,
+  TowardsCenterPatternV2,
 } = df.getConstructors();
 
 const NEW_CHUNK = 'DiscoveredNewChunk';
@@ -33,8 +34,10 @@ function getPattern(coords: WorldCoords, patternType: string, chunkSize: number)
     return new SwissCheesePattern(coords, chunkSize);
   } else if (patternType === 'spiral') {
     return new SpiralPattern(coords, chunkSize);
-  } else {
+  } else if (patternType === 'towardsCenter') {
     return new TowardsCenterPattern(coords, chunkSize);
+  } else {
+    return new TowardsCenterPatternV2(coords, chunkSize);
   }
 }
 
@@ -303,6 +306,7 @@ function App({
           <option value="spiral">Spiral</option>
           <option value="swiss">Swiss</option>
           <option value="towardsCenter">TowardsCenter</option>
+          <option value="towardsCenterV2">TowardsCenterV2</option>
         </select>
         <button style=${button} onClick=${add}>Explore!</button>
       </div>

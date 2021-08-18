@@ -47,6 +47,7 @@ import type {
 import {
   Artifact,
   ArtifactId,
+  AutoGasSetting,
   ClaimedCoords,
   ContractMethodName,
   DiagnosticUpdater,
@@ -167,12 +168,28 @@ export class ContractsAPI extends EventEmitter {
     this.ethConnection = ethConnection;
     this.txExecutor = new TxExecutor(
       ethConnection,
-      () => getSetting(this.ethConnection.getAddress(), Setting.GasFeeGwei),
+      this.getGasFeeForTransaction.bind(this),
       this.beforeTransaction.bind(this),
       this.afterTransaction.bind(this)
     );
 
     this.setupEventListeners();
+  }
+
+  /**
+   * We pass this function into {@link TxExecutor} to calculate what gas fee we should use for the
+   * given transaction. The result is either a number, measured in gwei, represented as a string, or
+   * a string representing that we want to use an auto gas setting.
+   */
+  private getGasFeeForTransaction(tx: QueuedTransaction): AutoGasSetting | string {
+    if (
+      tx.methodName === ContractMethodName.INIT &&
+      tx.contract.address === this.coreContract.address
+    ) {
+      return '10';
+    }
+
+    return getSetting(this.ethConnection.getAddress(), Setting.GasFeeGwei);
   }
 
   /**

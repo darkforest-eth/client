@@ -192,6 +192,7 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
   // refresh planets every 10 seconds
   useEffect(() => {
     if (!uiManager) return;
+    if (!visible) return;
 
     const refreshPlanets = () => {
       if (!uiManager) return;
@@ -208,7 +209,7 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
     return () => {
       clearInterval(intervalId);
     };
-  }, [uiManager]);
+  }, [visible, uiManager]);
 
   const headers = ['', 'Planet Name', 'Level', 'Energy', 'Silver', 'Artifacts', 'Prospect', 'Find'];
   const alignments: Array<'r' | 'c' | 'l'> = ['r', 'l', 'r', 'r', 'r', 'r', 'r', 'r'];
