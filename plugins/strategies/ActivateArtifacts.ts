@@ -29,7 +29,7 @@ export function activateArtifacts(config: config)
 
   console.log('Activating from', from)
 
-  const typesToActivate = [ArtifactTypes.PhotoidCannon, ...artifactStatTypes]
+  const typesToActivate = [ArtifactTypes.PhotoidCannon, ArtifactTypes.BloomFilter, ...artifactStatTypes]
 
   return from.map(from => {
     const artifact = df.getArtifactsWithIds(from.heldArtifactIds).find(a => {
