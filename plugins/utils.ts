@@ -55,10 +55,10 @@ export const artifactTacticalTypes = [
 export const ArtifactRarities: { [ key:string]: ArtifactRarity } = {
   Unknown: 0,
   Common: 1,
-  Rare: 2,
-  Epic: 3,
-  Legendary: 4,
-  Mythic: 5,
+  Rare: 2, // 3, 4
+  Epic: 3, // 5, 6
+  Legendary: 4, // 7, 8
+  Mythic: 5, // 9
   MIN: 1,
   MAX: 5
 }
