@@ -58,6 +58,18 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
     toPlanetType: PlanetTypes.PLANET,
     toMinLevel: 5,
   })
+
+  // Bloom filters to Quasars
+  for (const level of rarities) {
+    distributeArtifacts({
+      fromId: selectedPlanet?.locationId,
+      fromPlanetType: PlanetTypes.FOUNDRY,
+      types: artifactTacticalTypes,
+      rarities: [level],
+      toPlanetType: PlanetTypes.RIP,
+      toMinLevel: level + (level - 1), // Rare to 3+, Epic to 5+ etc..
+    })
+  }
 }
 
 // function onWithdrawClick(selectedPlanet: Planet|null = null) {
@@ -70,7 +82,7 @@ function onActivateClick(selectedPlanet: Planet|null = null) {
   activateArtifacts({
     fromId: selectedPlanet?.locationId,
     minLevel: PlanetLevel.FOUR,
-    planetType: PlanetTypes.PLANET,
+    planetTypes: [PlanetTypes.PLANET, PlanetTypes.QUASAR],
   })
 }
 

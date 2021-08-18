@@ -15,12 +15,12 @@ function hasActiveArtifact(p: Planet) {
 interface config {
   fromId?: LocationId,
   minLevel: PlanetLevel,
-  planetType: PlanetType,
+  planetTypes: PlanetType[],
 }
 export function activateArtifacts(config: config)
 {
   const from = getMyPlanets()
-    .filter(p => p.planetType === config.planetType)
+    .filter(p => config.planetTypes.includes(p.planetType))
     .filter(p => ! p.unconfirmedActivateArtifact)
     .filter(p => p.heldArtifactIds.length > 0)
     .filter(p => p.planetLevel >= config.minLevel)
