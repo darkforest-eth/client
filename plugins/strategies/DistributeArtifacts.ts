@@ -22,6 +22,7 @@ interface config {
   types: ArtifactType[]
   rarities: ArtifactRarity[],
   toMinLevel: PlanetLevel,
+  toMaxLevel: PlanetLevel,
   toPlanetType: PlanetType,
 }
 export function distributeArtifacts(config: config)
@@ -39,6 +40,7 @@ export function distributeArtifacts(config: config)
   const movesToMake: Move[] = from.flatMap(from => {
     const to = getMyPlanetsInRange(from)
       .filter(p => p.planetLevel >= config.toMinLevel)
+      .filter(p => p.planetLevel <= config.toMaxLevel)
       .filter(p => p.planetType === config.toPlanetType)
       .filter(p => planetCanAcceptMove(p, maxArtifacts))
 

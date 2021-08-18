@@ -35,6 +35,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
     rarities: [ArtifactRarities.Commmon, ...rarities],
     toPlanetType: PlanetTypes.PLANET,
     toMinLevel: PlanetLevel.FOUR,
+    toMaxLevel: PlanetLevel.FOUR,
   })
 
   // Good artifacts from foundries to rips
@@ -46,6 +47,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
       rarities: [level],
       toPlanetType: PlanetTypes.RIP,
       toMinLevel: level + 1,
+      toMaxLevel: PlanetLevel.NINE,
     })
   }
 
@@ -56,7 +58,8 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
     types: artifactTacticalTypes,
     rarities,
     toPlanetType: PlanetTypes.PLANET,
-    toMinLevel: 5,
+    toMinLevel: PlanetLevel.FIVE,
+    toMaxLevel: PlanetLevel.NINE,
   })
 
   // Bloom filters to Quasars
@@ -68,6 +71,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
       rarities: [level],
       toPlanetType: PlanetTypes.RIP,
       toMinLevel: level + (level - 1), // Rare to 3+, Epic to 5+ etc..
+      toMaxLevel: PlanetLevel.NINE,
     })
   }
 }
@@ -110,7 +114,7 @@ export class UsefulArtifacts extends Component
       .filter(a => a && a.rarity > ArtifactRarities.Common)
       .filter(a => [ArtifactTypes.Wormhole, ArtifactTypes.BloomFilter].includes(a.artifactType))
       .filter(canBeActivated)
-      .sort((a, b) => b!.rarity - a!.rarity)
+      .sort((a, b) => b.artifactType - a.artifactType || b.rarity - a.rarity)
 
     const columns = [
       (a: Artifact) => <Sub>{artifactNameFromArtifact(a)}</Sub>,
