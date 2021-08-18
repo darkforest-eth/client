@@ -143,4 +143,8 @@ export class UsefulArtifacts extends Component
       />
     </div>
   }
+
+  componentWillUnmount() {
+    this.interval.clear()
+  }
 }
