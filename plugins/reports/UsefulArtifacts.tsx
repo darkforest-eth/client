@@ -36,6 +36,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
     toPlanetType: PlanetTypes.PLANET,
     toMinLevel: PlanetLevel.FOUR,
     toMaxLevel: PlanetLevel.FOUR,
+    ifEmpty: true,
   })
 
   // Good artifacts from foundries to rips
@@ -48,6 +49,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
       toPlanetType: PlanetTypes.RIP,
       toMinLevel: level + 1,
       toMaxLevel: PlanetLevel.NINE,
+      ifEmpty: false,
     })
   }
 
@@ -60,6 +62,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
     toPlanetType: PlanetTypes.PLANET,
     toMinLevel: PlanetLevel.FIVE,
     toMaxLevel: PlanetLevel.NINE,
+    ifEmpty: false,
   })
 
   // Bloom filters to Quasars
@@ -72,6 +75,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
       toPlanetType: PlanetTypes.RIP,
       toMinLevel: level + (level - 1), // Rare to 3+, Epic to 5+ etc..
       toMaxLevel: PlanetLevel.NINE,
+      ifEmpty: false,
     })
   }
 }

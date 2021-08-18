@@ -24,6 +24,7 @@ interface config {
   toMinLevel: PlanetLevel,
   toMaxLevel: PlanetLevel,
   toPlanetType: PlanetType,
+  ifEmpty: boolean
 }
 export function distributeArtifacts(config: config)
 {
@@ -35,7 +36,7 @@ export function distributeArtifacts(config: config)
   console.log(`Distributing artifacts from ${from.length} planets with `, config)
 
   // current max artifacts on the planet (before the move)
-  const maxArtifacts = config.toPlanetType === PlanetType.PLANET ? 0 : 5
+  const maxArtifacts = config.ifEmpty ? 0 : 5
 
   const movesToMake: Move[] = from.flatMap(from => {
     const to = getMyPlanetsInRange(from)
