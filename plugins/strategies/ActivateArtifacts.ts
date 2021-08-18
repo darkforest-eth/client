@@ -27,12 +27,16 @@ export function activateArtifacts(config: config)
     .filter(p => ! hasActiveArtifact(p))
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
+  console.log('Activating from', from)
+
+  const typesToActivate = [ArtifactTypes.PhotoidCannon, ...artifactStatTypes]
+
   return from.map(from => {
     const artifact = df.getArtifactsWithIds(from.heldArtifactIds).find(a => {
       return a
         && !isActivated(a)
         && canBeActivated(a)
-        && a.artifactType === ArtifactTypes.Wormhole
+        && typesToActivate.includes(a.artifactType)
     })
 
     artifact && df.activateArtifact(from.locationId, artifact.id, undefined)

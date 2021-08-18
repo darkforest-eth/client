@@ -7,7 +7,7 @@ import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 
 import { distributeArtifacts } from '../strategies/DistributeArtifacts'
-import { withdrawArtifacts } from '../strategies/WithdrawArtifacts'
+// import { withdrawArtifacts } from '../strategies/WithdrawArtifacts'
 import { activateArtifacts } from '../strategies/ActivateArtifacts'
 import { ManageInterval } from '../Components/ManageInterval'
 
@@ -27,30 +27,44 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
     ArtifactRarities.Mythic,
   ]
 
+  // Shit artifacts from foundries to planets
   distributeArtifacts({
     fromId: selectedPlanet?.locationId,
+    fromPlanetType: PlanetTypes.FOUNDRY,
     types: artifactStatTypes,
     rarities: [ArtifactRarities.Commmon, ...rarities],
     toPlanetType: PlanetTypes.PLANET,
     toMinLevel: PlanetLevel.FOUR,
   })
 
+  // Good artifacts from foundries to rips
   for (const level of rarities) {
     distributeArtifacts({
       fromId: selectedPlanet?.locationId,
+      fromPlanetType: PlanetTypes.FOUNDRY,
       types: artifactTacticalTypes,
       rarities: [level],
       toPlanetType: PlanetTypes.RIP,
       toMinLevel: level + 1,
     })
   }
-}
 
-function onWithdrawClick(selectedPlanet: Planet|null = null) {
-  withdrawArtifacts({
-    fromId: selectedPlanet?.locationId
+  // Good artifacts from rips to l5+ planets
+  distributeArtifacts({
+    fromId: selectedPlanet?.locationId,
+    fromPlanetType: PlanetTypes.RIP,
+    types: artifactTacticalTypes,
+    rarities,
+    toPlanetType: PlanetTypes.PLANET,
+    toMinLevel: 5,
   })
 }
+
+// function onWithdrawClick(selectedPlanet: Planet|null = null) {
+//   withdrawArtifacts({
+//     fromId: selectedPlanet?.locationId
+//   })
+// }
 
 function onActivateClick(selectedPlanet: Planet|null = null) {
   activateArtifacts({
@@ -68,7 +82,7 @@ export class UsefulArtifacts extends Component
     super()
     this.interval = pauseable.setInterval(PrimeMinutes.THIRTEEN, () => {
       onDistributeClick()
-      onWithdrawClick()
+      // onWithdrawClick()
       onActivateClick()
     })
     // this.interval.pause()
@@ -118,7 +132,7 @@ export class UsefulArtifacts extends Component
       <ManageInterval interval={this.interval} />
       <div style={buttonGridStyle}>
         <button onClick={() => onDistributeClick(ui.getSelectedPlanet())}>Distribute</button>
-        <button onClick={() => onWithdrawClick(ui.getSelectedPlanet())}>Withdraw</button>
+        {/* <button onClick={() => onWithdrawClick(ui.getSelectedPlanet())}>Withdraw</button> */}
         <button onClick={() => onActivateClick(ui.getSelectedPlanet())}>Activate</button>
       </div>
       <Table

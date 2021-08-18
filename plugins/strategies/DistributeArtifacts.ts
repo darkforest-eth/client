@@ -18,6 +18,7 @@ function findArtifact(p: Planet, rarities: ArtifactRarity[], types: ArtifactType
 
 interface config {
   fromId?: LocationId,
+  fromPlanetType: PlanetType,
   types: ArtifactType[]
   rarities: ArtifactRarity[],
   toMinLevel: PlanetLevel,
@@ -26,7 +27,7 @@ interface config {
 export function distributeArtifacts(config: config)
 {
   const from = getMyPlanets()
-    .filter(p => p.planetType === PlanetTypes.FOUNDRY)
+    .filter(p => p.planetType === config.fromPlanetType)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
     .filter(p => findArtifact(p, config.rarities, config.types))
 
