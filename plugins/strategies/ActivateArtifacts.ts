@@ -1,6 +1,6 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
-import { LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types'
+import { ArtifactType, LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types'
 import { artifactStatTypes, ArtifactTypes, canBeActivated, getMyPlanets, isActivated } from '../utils'
 
 declare const df: GameManager
@@ -15,6 +15,7 @@ function hasActiveArtifact(p: Planet) {
 interface config {
   fromId?: LocationId,
   minLevel: PlanetLevel,
+  artifactTypes: ArtifactType[],
   planetTypes: PlanetType[],
 }
 export function activateArtifacts(config: config)
@@ -29,14 +30,12 @@ export function activateArtifacts(config: config)
 
   console.log('Activating from', from)
 
-  const typesToActivate = [ArtifactTypes.PhotoidCannon, ArtifactTypes.BloomFilter, ...artifactStatTypes]
-
   return from.map(from => {
     const artifact = df.getArtifactsWithIds(from.heldArtifactIds).find(a => {
       return a
         && !isActivated(a)
         && canBeActivated(a)
-        && typesToActivate.includes(a.artifactType)
+        && config.artifactTypes.includes(a.artifactType)
     })
 
     artifact && df.activateArtifact(from.locationId, artifact.id, undefined)

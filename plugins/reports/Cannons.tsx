@@ -19,6 +19,8 @@ export function Cannons(props: SelectedPlanetProp)
 
   const rows = getAllArtifacts()
     .filter(a => a && a.artifactType == ArtifactTypes.PhotoidCannon)
+    .filter(a => a && ! a.unconfirmedMove)
+    .filter(a => a && ! a.unconfirmedActivateArtifact)
     .filter(a => a && a.rarity > ArtifactRarities.Common)
     .sort((a, b) => b!.rarity - a!.rarity)
 
