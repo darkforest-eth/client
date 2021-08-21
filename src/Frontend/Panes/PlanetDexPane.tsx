@@ -190,25 +190,26 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
   }, [visible, uiManager]);
 
   // refresh planets every 10 seconds
-  // useEffect(() => {
-  //   if (!uiManager) return;
+  useEffect(() => {
+    if (!uiManager) return;
+    if (!visible) return;
 
-  //   const refreshPlanets = () => {
-  //     if (!uiManager) return;
-  //     const myAddr = uiManager.getAccount();
-  //     if (!myAddr) return;
-  //     const ownedPlanets = uiManager
-  //       .getAllOwnedPlanets()
-  //       .filter((planet) => planet.owner === myAddr);
-  //     setPlanets(ownedPlanets);
-  //   };
+    const refreshPlanets = () => {
+      if (!uiManager) return;
+      const myAddr = uiManager.getAccount();
+      if (!myAddr) return;
+      const ownedPlanets = uiManager
+        .getAllOwnedPlanets()
+        .filter((planet) => planet.owner === myAddr);
+      setPlanets(ownedPlanets);
+    };
 
-  //   const intervalId = setInterval(refreshPlanets, 10000);
+    const intervalId = setInterval(refreshPlanets, 10000);
 
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, [uiManager]);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [visible, uiManager]);
 
   const headers = ['', 'Planet Name', 'Level', 'Energy', 'Silver', 'Artifacts', 'Prospect', 'Find'];
   const alignments: Array<'r' | 'c' | 'l'> = ['r', 'l', 'r', 'r', 'r', 'r', 'r', 'r'];

@@ -376,6 +376,17 @@ export function SettingsPane({
             settingDescription='toggle disable default shortcuts'
           />
         </Section>
+
+        <Section>
+          <SectionHeader>Enable Experimental Features</SectionHeader>
+          Features that aren't quite ready for production but we think are cool.
+          <Spacer height={8} />
+          <BooleanSetting
+            uiManager={uiManager}
+            setting={Setting.ExperimentalFeatures}
+            settingDescription='toggle expeirmental features'
+          />
+        </Section>
       </SettingsContent>
     </ModalPane>
   );

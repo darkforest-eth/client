@@ -309,8 +309,6 @@ export class GameObjects {
           planet.coordsRevealed = true;
           planet.revealer = revealedLocation.revealer;
         }
-
-        this.setPlanet(planet);
         const arrivalsWithTimers = this.processArrivalsForPlanet(
           planet.locationId,
           arrivalsForPlanet
@@ -329,6 +327,7 @@ export class GameObjects {
           (planet as LocatablePlanet).biome = this.getBiome(planetLocation);
         }
 
+        this.setPlanet(planet);
         this.updateScore(planetId as LocationId);
       }
     });
@@ -627,7 +626,7 @@ export class GameObjects {
   public addPlanetLocation(planetLocation: WorldLocation): void {
     this.layeredMap.insertPlanet(
       planetLocation,
-      this.getPlanetWithId(planetLocation.hash)?.planetLevel ||
+      this.getPlanetWithId(planetLocation.hash, false)?.planetLevel ||
         this.planetLevelFromHexPerlin(planetLocation.hash, planetLocation.perlin)
     );
 

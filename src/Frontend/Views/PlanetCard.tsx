@@ -35,6 +35,7 @@ import { TooltipName } from '../Game/WindowManager';
 import { PlanetIcons } from '../Renderers/PlanetscapeRenderer/PlanetIcons';
 import dfstyles, { snips } from '../Styles/dfstyles';
 import { useActiveArtifact, useUIManager } from '../Utils/AppHooks';
+import { Setting, useBooleanSetting } from '../Utils/SettingsHooks';
 import {
   DestroyedMarker,
   PlanetActiveArtifact,
@@ -90,7 +91,7 @@ export function PlanetCard({
   const uiManager = useUIManager();
   const active = useActiveArtifact(p, uiManager);
   const planet = p.value;
-
+  const [experimentalFeatures] = useBooleanSetting(uiManager, Setting.ExperimentalFeatures);
   if (!planet || !isLocatable(planet)) return <></>;
 
   return (
@@ -120,19 +121,21 @@ export function PlanetCard({
         )}
 
         <FullWidth>
-          <ElevatedContainer
-            style={{
-              padding: '2px',
-              marginRight: '8px',
-              backgroundColor: 'rgba(0, 20, 80, 1.0)',
-              display: 'inline-flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '110px',
-            }}
-          >
-            <PlanetPreview planet={planet} size={'50px'} />
-          </ElevatedContainer>
+          {experimentalFeatures && (
+            <ElevatedContainer
+              style={{
+                padding: '2px',
+                marginRight: '8px',
+                backgroundColor: 'rgba(0, 20, 80, 1.0)',
+                display: 'inline-flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '110px',
+              }}
+            >
+              <PlanetPreview planet={planet} size={'50px'} />
+            </ElevatedContainer>
+          )}
           <ElevatedContainer>
             <StatRow>
               <SpreadApart>

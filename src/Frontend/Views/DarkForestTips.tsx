@@ -76,17 +76,17 @@ const tips = [
     <Link to='https://discord.gg/C23An5qNGv'>Dark Forest Discord</Link>!
   </>,
   'There are many different artifact types, each with unique properties... try activating one on a planet!',
-  'You can talk to artifacts that you own. They are powered by GPT3. Try it out from the Artifact Details pane!',
   'The top 63 players get NFT rewards at the end of each v0.6 round!',
   "There are many different ways to enjoy Dark Forest - as long as you're having fun, you're doing it right.",
   'Be careful when capturing planets - if you attack a player-owned planet, it may look like an act of war!',
   'A planet can have at most one active artifact.',
-  'Withdrawing silver (via Spacetime Rips) and finding artifacts adds to your score.',
   'Withdrawing an artifact (via a Spacetime Rip) gives you full control of that artifact as an ERC 721 token. You can deposit artifacts you have withdrawn back into the universe via Spacetime Rips.',
   'You can use plugins to enhance your capabilities by automating repetitive tasks. The top players are probably using plugins (:',
   'Quasars can store lots of energy and silver, at the expense of being able to generate neither.',
   'Never share your private key with anyone else!',
   'Broadcasting a planet reveals its location to ALL other players!',
+  // TODO: Remove after Round 3
+  'Claiming a planet reveals its location to ALL other players!',
   'You can spend silver to upgrade your planets.',
   'Planets in Nebula are more difficult to capture than planets in Deep Space.',
   'Some of the universe is corrupted, and contains special versions of the artifacts.',
@@ -104,7 +104,6 @@ const tips = [
   "Planetary Shield artifacts will massively boost a planet's defense, but at the cost of energy and energy growth stats. Planetary Shield artifacts are destroyed upon deactivation.",
   "Bloom Filter artifacts instantly set a planet's energy and silver to full, but are destroyed upon activation. Try using them on a Quasar!",
   'Dark Forest exists on the blockchain, so you can play with an entirely different client if you want.',
-  "Try running df.setMinerCores(8) in either the Dark Forest terminal, or your browser's developer tools console. This will make the game utilize more cores to mine the universe, mining it faster!",
   <>
     Writing plugins? Check out some documentation{' '}
     <Link to='https://github.com/darkforest-eth/client/blob/master/docs/classes/Backend_GameLogic_GameManager.default.md'>

@@ -6,7 +6,6 @@ import {
 } from '../../../Backend/GameLogic/ArrivalUtils';
 import { Btn } from '../../Components/Btn';
 import { Spacer } from '../../Components/CoreUI';
-import { ScoreLabel } from '../../Components/Labels/KeywordLabels';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Red, Sub, White } from '../../Components/Text';
 
@@ -57,8 +56,7 @@ export function Find({
         <White>
           {blocksLeftToProspectExpiration(currentBlockNumber, planet.prospectedBlockNumber)} blocks
         </White>{' '}
-        to find an artifact on this planet, otherwise the prospect will expire. Finding artifacts
-        increases your <ScoreLabel />!{' '}
+        to find an artifact on this planet, otherwise the prospect will expire.
       </Sub>
     </>
   );

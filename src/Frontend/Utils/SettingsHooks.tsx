@@ -41,6 +41,7 @@ export const enum Setting {
   TutorialOpen = 'TutorialOpen',
   IsMining = 'IsMining',
   DisableDefaultShortcuts = 'DisableDefaultShortcuts',
+  ExperimentalFeatures = 'ExperimentalFeatures',
 }
 
 export const ALL_AUTO_GAS_SETTINGS = [
@@ -82,6 +83,7 @@ const defaultSettings: Record<Setting, string> = {
   MiningCores: '1',
   IsMining: 'true',
   DisableDefaultShortcuts: 'false',
+  ExperimentalFeatures: 'false',
 };
 
 /**
