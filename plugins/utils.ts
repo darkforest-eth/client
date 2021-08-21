@@ -80,7 +80,7 @@ export function getPlanetTypeAcronym(planet: Planet): string {
   }
 }
 
-export function isArtifact(pet: Planet | Artifact): pet is Artifact {
+export function isArtifact(pet: Planet | Artifact | undefined): pet is Artifact {
   return (pet as Artifact).artifactType !== undefined;
 }
 
@@ -139,6 +139,7 @@ export function getMyPlanetsInRange(p: Planet) {
 const emptyAddress = "0x0000000000000000000000000000000000000000";
 
 export const isUnowned = (planet: Planet) => planet.owner === emptyAddress;
+export const isOwned = (planet: Planet) => planet.owner !== emptyAddress;
 
 export function isMine(planet: Planet) {
   return planet.owner === df.getAccount()

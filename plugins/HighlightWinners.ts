@@ -3,6 +3,7 @@ import {
   ArtifactId,
   artifactNameFromArtifact,
   ArtifactRarity,
+  ArtifactType,
   LocatablePlanet,
   LocationId,
   Planet,
@@ -35,7 +36,7 @@ import { withdrawArtifacts } from './strategies/WithdrawArtifacts'
 import { prospectAndFind } from './strategies/ProspectAndFind'
 import { addHours, formatDistanceToNow, fromUnixTime, isAfter, isBefore, subHours } from 'date-fns'
 import { isLocatable } from 'src/_types/global/GlobalTypes'
-import { canHaveArtifact, closestToCenter, distToCenter, isUnowned, PlanetTypes } from './utils'
+import { ArtifactTypes, canHaveArtifact, closestToCenter, distToCenter, isArtifact, isOwned, isUnowned, PlanetTypes } from './utils'
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants'
 
 declare const df: GameManager
@@ -46,19 +47,33 @@ const html = htm.bind(h)
 const MAX_WINNERS = 63
 
 export function getWinnerPlanets(all: LocatablePlanet[]) {
-  return all.slice(0, MAX_WINNERS)
+  const winners = new Set()
+  const planets = []
+
+  for (const planet of all) {
+    if (isUnowned(planet)) {
+      planets.push(planet)
+    }
+    else if (! winners.has(planet.owner)) {
+      planets.push(planet)
+      winners.add(planet.owner)
+    }
+
+    if (planets.length >= 63) break
+  }
+
+  return planets
 }
 
-export function getExtraPlanets(winnerPlanets: LocatablePlanet[], all: LocatablePlanet[]) {
-  const winners = winnerPlanets
-    .map(p => p.owner)
-    .filter(a => a !== EMPTY_ADDRESS)
-
-  const uniqueWinners = [...new Set(winners)]
-
-  const extraPlanetCount = winners.length - uniqueWinners.length
-
-  return all.slice(MAX_WINNERS + 1, MAX_WINNERS + 1 + extraPlanetCount)
+export function l5PlanetesWithNoWormhole() {
+  return Array.from(df.getMyPlanets())
+    .filter(isLocatable)
+    .filter(p => p.planetLevel >= PlanetLevel.FIVE)
+    .filter(p => p.planetType === PlanetTypes.PLANET)
+    .filter(p => {
+      const artifacts = df.getArtifactsWithIds(p.heldArtifactIds).filter(isArtifact)
+      return ! artifacts.some(a => [ArtifactTypes.Wormhole, ArtifactTypes.PhotoidCannon].includes(a.artifactType))
+    })
 }
 
 export function getRips(all: LocatablePlanet[]) {
@@ -107,6 +122,7 @@ class HighlightWinners implements DFPlugin {
   extraPlanets: LocatablePlanet[] = []
   rips: LocatablePlanet[] = []
   foundries: LocatablePlanet[] = []
+  cannons: LocatablePlanet[] = []
 
   constructor() {
     const all = Array.from(df.getAllPlanets())
@@ -116,17 +132,17 @@ class HighlightWinners implements DFPlugin {
       .sort(closestToCenter)
 
     this.winnerPlanets = getWinnerPlanets(all)
-    this.extraPlanets = getExtraPlanets(this.winnerPlanets, all)
     this.rips = getRips(all)
     this.foundries = getFoundries(all)
+    this.cannons = l5PlanetesWithNoWormhole()
   }
 
   draw(ctx) {
     ctx.save();
-    this.winnerPlanets.map(p => circlePlanet(ctx, p, 'green'))
-    this.extraPlanets.map(p => circlePlanet(ctx, p, 'blue'))
     this.rips.map(p => circlePlanet(ctx, p, 'red'))
+    this.cannons.map(p => circlePlanet(ctx, p, 'blue'))
     this.foundries.map(p => circlePlanet(ctx, p, 'yellow'))
+    this.winnerPlanets.map(p => circlePlanet(ctx, p, 'green'))
     ctx.restore();
   }
 

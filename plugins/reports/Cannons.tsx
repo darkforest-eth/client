@@ -22,7 +22,17 @@ export function Cannons(props: SelectedPlanetProp)
     .filter(a => a && ! a.unconfirmedMove)
     .filter(a => a && ! a.unconfirmedActivateArtifact)
     .filter(a => a && a.rarity > ArtifactRarities.Common)
-    .sort((a, b) => b!.rarity - a!.rarity)
+    .sort((a, b) => {
+      const pa = df.getPlanetWithId(a.onPlanetId)
+      const pb = df.getPlanetWithId(b.onPlanetId)
+      const levelA = pa ? pa.planetLevel : 10
+      const levelB = pb ? pb.planetLevel : 10
+
+      const rarity = b.rarity - a.rarity
+      const level = levelB - levelA
+
+      return level || rarity
+    })
 
   const columns = [
     (a: Artifact) => <Sub>{artifactNameFromArtifact(a)}</Sub>,

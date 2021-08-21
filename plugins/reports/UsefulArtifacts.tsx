@@ -61,34 +61,34 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
       types: [ArtifactTypes.BloomFilter],
       rarities: [level],
       toPlanetType: PlanetTypes.QUASAR,
-      toMinLevel: level + (level - 1), // Rare to 3+, Epic to 5+ etc..
-      toMaxLevel: PlanetLevel.NINE,
+      toMinLevel: level * 2 - 1, // Rare to 3+, Epic to 5+ etc..
+      toMaxLevel: level * 2,
       ifEmpty: false,
     })
   }
 
-  // Cannons from rips to l6+ planets
+  // Cannons from rips to 5 planets (unless it has a wormhole)
   distributeArtifacts({
     fromId: selectedPlanet?.locationId,
     fromPlanetType: PlanetTypes.RIP,
     types: [ArtifactTypes.PhotoidCannon],
-    rarities,
+    rarities: [ArtifactRarities.Rare],
+    toPlanetType: PlanetTypes.PLANET,
+    toMinLevel: PlanetLevel.FIVE,
+    toMaxLevel: PlanetLevel.FIVE,
+    ifEmpty: true,
+  })
+
+  // Wormholes from rips to l6+ planets
+  distributeArtifacts({
+    fromId: selectedPlanet?.locationId,
+    fromPlanetType: PlanetTypes.RIP,
+    types: [ArtifactTypes.Wormhole],
+    rarities: [ArtifactRarities.Rare],
     toPlanetType: PlanetTypes.PLANET,
     toMinLevel: PlanetLevel.SIX,
     toMaxLevel: PlanetLevel.NINE,
     ifEmpty: false,
-  })
-
-  // Other Good artifacts from rips to l6+ planets
-  distributeArtifacts({
-    fromId: selectedPlanet?.locationId,
-    fromPlanetType: PlanetTypes.RIP,
-    types: [ArtifactTypes.Wormhole, ArtifactTypes.PlanetaryShield, ArtifactTypes.BlackDomain],
-    rarities,
-    toPlanetType: PlanetTypes.PLANET,
-    toMinLevel: PlanetLevel.SIX,
-    toMaxLevel: PlanetLevel.NINE,
-    ifEmpty: true,
   })
 }
 
@@ -102,16 +102,23 @@ function onActivateClick(selectedPlanet: Planet|null = null) {
   activateArtifacts({
     fromId: selectedPlanet?.locationId,
     minLevel: PlanetLevel.FOUR,
-    artifactTypes: [ArtifactTypes.PhotoidCannon, ...artifactStatTypes],
+    artifactTypes: [ArtifactTypes.PhotoidCannon],
     planetTypes: [PlanetTypes.PLANET],
   })
 
   activateArtifacts({
     fromId: selectedPlanet?.locationId,
     minLevel: PlanetLevel.FOUR,
-    artifactTypes: [ArtifactTypes.BloomFilter],
-    planetTypes: [PlanetTypes.QUASAR],
+    artifactTypes: artifactStatTypes,
+    planetTypes: [PlanetTypes.PLANET],
   })
+
+  // activateArtifacts({
+  //   fromId: selectedPlanet?.locationId,
+  //   minLevel: PlanetLevel.FOUR,
+  //   artifactTypes: [ArtifactTypes.BloomFilter],
+  //   planetTypes: [PlanetTypes.QUASAR],
+  // })
 }
 
 export class UsefulArtifacts extends Component
@@ -147,7 +154,18 @@ export class UsefulArtifacts extends Component
       .filter(a => a && a.rarity > ArtifactRarities.Common)
       .filter(a => [ArtifactTypes.Wormhole, ArtifactTypes.BloomFilter].includes(a.artifactType))
       .filter(canBeActivated)
-      .sort((a, b) => b.artifactType - a.artifactType || b.rarity - a.rarity)
+      .sort((a, b) => {
+        const pa = df.getPlanetWithId(a.onPlanetId)
+        const pb = df.getPlanetWithId(b.onPlanetId)
+        const levelA = pa ? pa.planetLevel : 10
+        const levelB = pb ? pb.planetLevel : 10
+
+        const type = b.artifactType - a.artifactType
+        const rarity = b.rarity - a.rarity
+        const level = levelB - levelA
+
+        return type || level || rarity
+      })
 
     const columns = [
       (a: Artifact) => <Sub>{artifactNameFromArtifact(a)}</Sub>,

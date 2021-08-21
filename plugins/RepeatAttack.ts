@@ -127,6 +127,11 @@ function AttackList() {
 
   let actionsChildren = actions
     .filter((a) => a.type == "PESTER")
+    .sort((a, b) => {
+      const planetA = df.getPlanetWithId(a.payload.srcId)
+      const planetB = df.getPlanetWithId(b.payload.srcId)
+      return planetName(planetA).localeCompare(planetName(planetB))
+    })
     .map((action) => {
       return html`
         <${Attack}
@@ -170,7 +175,7 @@ class Plugin {
 
   async render(container) {
     this.container = container;
-    container.style.width = "400px";
+    container.style.width = "500px";
     render(html`<${App} />`, container);
   }
 

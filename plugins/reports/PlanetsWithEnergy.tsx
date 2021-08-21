@@ -20,7 +20,7 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
     fromMinEnergyLeftPercent: 37.5,
     toMinLevel: PlanetLevel.THREE,
     toPlanetTypes: [PlanetTypes.FOUNDRY],
@@ -30,7 +30,7 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetTypes: [PlanetTypes.PLANET, PlanetTypes.ASTEROID, PlanetTypes.RIP],
     toMinLevel: PlanetLevel.FOUR,
@@ -64,8 +64,8 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
 
   distributeEnergy({
     fromId: selectedPlanet?.locationId,
-    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FIVE,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
+    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
   })
 }
 
@@ -81,7 +81,7 @@ export class PlanetsWithEnergy extends Component
       onCrawlClick()
       onDistributeClick()
     })
-    this.interval.pause()
+    // this.interval.pause()
   }
 
   render()

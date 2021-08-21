@@ -36,7 +36,7 @@ export function distributeSilver(config: config)
   const from = getMyPlanets()
     .filter(p => p.planetLevel >= config.fromMinLevel)
     .filter(p => p.planetLevel <= config.fromMaxLevel)
-    .filter(p => p.planetType !== PlanetTypes.PLANET)
+    .filter(p => p.planetType === config.fromPlanetType)
     .filter(p => p.silver > 0)
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
@@ -85,7 +85,7 @@ export function distributeSilver(config: config)
     const silver = Math.floor(maxSilverToSend(move.from, move.to))
 
     if (
-      planetWillHaveMinEnergyAfterMove(move, 1)
+      planetWillHaveMinEnergyAfterMove(move, 15)
       && silver > 0
       && planetCanAcceptMove(move.to)
       && count++ < 100
