@@ -76,6 +76,13 @@ export function l5PlanetesWithNoWormhole() {
     })
 }
 
+export function planetsWithDoubleRange(all: LocatablePlanet[]) {
+  return all
+    .filter(p => p.planetLevel >= PlanetLevel.SIX)
+    .filter(p => p.planetType === PlanetTypes.PLANET)
+    .filter(p => p.bonus[2]) // range bonus
+}
+
 export function getRips(all: LocatablePlanet[]) {
   return all
     .filter(p => p.planetLevel >= PlanetLevel.THREE)
@@ -83,7 +90,7 @@ export function getRips(all: LocatablePlanet[]) {
 }
 
 export function getFoundries(all: LocatablePlanet[]) {
-  return all.filter(canHaveArtifact)
+  return all.filter(canHaveArtifact).filter(p => p.planetLevel >= 4)
 }
 
 function App() {
@@ -100,14 +107,16 @@ function circlePlanet(ctx: CanvasRenderingContext2D, planet: LocatablePlanet, co
 {
   const viewport = ui.getViewport();
 
+  const radius = ui.getRadiusOfPlanetLevel(planet.planetLevel)
+
   ctx.strokeStyle = color;
   ctx.lineWidth = 4;
-  // ctx.setLineDash([5, 15])
+  ctx.setLineDash([15, 5])
   ctx.beginPath();
   ctx.arc(
     viewport.worldToCanvasX(planet.location.coords.x),
     viewport.worldToCanvasY(planet.location.coords.y),
-    viewport.worldToCanvasDist(ui.getRadiusOfPlanetLevel(planet.planetLevel)),
+    viewport.worldToCanvasDist(radius * 1.5),
     0,
     2 * Math.PI
   );
@@ -123,6 +132,7 @@ class HighlightWinners implements DFPlugin {
   rips: LocatablePlanet[] = []
   foundries: LocatablePlanet[] = []
   cannons: LocatablePlanet[] = []
+  doubleRange: LocatablePlanet[] = []
 
   constructor() {
     const all = Array.from(df.getAllPlanets())
@@ -135,6 +145,7 @@ class HighlightWinners implements DFPlugin {
     this.rips = getRips(all)
     this.foundries = getFoundries(all)
     this.cannons = l5PlanetesWithNoWormhole()
+    this.doubleRange = planetsWithDoubleRange(all)
   }
 
   draw(ctx) {
@@ -143,6 +154,7 @@ class HighlightWinners implements DFPlugin {
     this.cannons.map(p => circlePlanet(ctx, p, 'blue'))
     this.foundries.map(p => circlePlanet(ctx, p, 'yellow'))
     this.winnerPlanets.map(p => circlePlanet(ctx, p, 'green'))
+    this.doubleRange.map(p => circlePlanet(ctx, p, 'pink'))
     ctx.restore();
   }
 

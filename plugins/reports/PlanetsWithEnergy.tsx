@@ -20,9 +20,10 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
+    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
     fromMinEnergyLeftPercent: 37.5,
-    toMinLevel: PlanetLevel.THREE,
+    toMinLevel: PlanetLevel.FOUR,
     toPlanetTypes: [PlanetTypes.FOUNDRY],
     toTargetEnergy: 50,
     sortFunction: highestLevel,
@@ -30,23 +31,24 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
 
   capturePlanets({
     fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
+    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
     fromMinEnergyLeftPercent: 37.5,
     toPlanetTypes: [PlanetTypes.PLANET, PlanetTypes.ASTEROID, PlanetTypes.RIP],
-    toMinLevel: PlanetLevel.FOUR,
+    toMinLevel: PlanetLevel.FIVE,
     toTargetEnergy: 15,
     sortFunction: directionToCenter,
   })
 
-  capturePlanets({
-    fromId: selectedPlanet?.locationId,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
-    fromMinEnergyLeftPercent: 37.5,
-    toMinLevel: PlanetLevel.TWO,
-    toPlanetTypes: [PlanetTypes.FOUNDRY],
-    toTargetEnergy: 96,
-    sortFunction: highestLevel,
-  })
+  // capturePlanets({
+  //   fromId: selectedPlanet?.locationId,
+  //   fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+  //   fromMinEnergyLeftPercent: 37.5,
+  //   toMinLevel: PlanetLevel.TWO,
+  //   toPlanetTypes: [PlanetTypes.FOUNDRY],
+  //   toTargetEnergy: 96,
+  //   sortFunction: highestLevel,
+  // })
 
   // capturePlanets({
   //   fromId: selectedPlanet?.locationId,
@@ -65,7 +67,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
   distributeEnergy({
     fromId: selectedPlanet?.locationId,
     fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
   })
 }
 
@@ -94,6 +96,7 @@ export class PlanetsWithEnergy extends Component
       .filter(p => p.planetLevel >= 5)
       .filter(p => ! isFoundry(p))
       .filter(p => ! hasPendingMove(p))
+      .filter(p => p.planetType === PlanetTypes.PLANET)
       .filter(p => energy(p) > 75)
       // .sort((a, b) => energy(b) - energy(a))
       .sort((a, b) => b.planetLevel - a.planetLevel || energy(b) - energy(a))

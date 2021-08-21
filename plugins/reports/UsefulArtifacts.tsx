@@ -7,6 +7,7 @@ import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 
 import { distributeArtifacts } from '../strategies/DistributeArtifacts'
+import { dropArtifacts } from '../strategies/DropArtifacts'
 // import { withdrawArtifacts } from '../strategies/WithdrawArtifacts'
 import { activateArtifacts } from '../strategies/ActivateArtifacts'
 import { ManageInterval } from '../Components/ManageInterval'
@@ -88,7 +89,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
     toPlanetType: PlanetTypes.PLANET,
     toMinLevel: PlanetLevel.SIX,
     toMaxLevel: PlanetLevel.NINE,
-    ifEmpty: false,
+    ifEmpty: true,
   })
 }
 
@@ -97,6 +98,41 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
 //     fromId: selectedPlanet?.locationId
 //   })
 // }
+
+function onDropClick(selectedPlanet: Planet|null = null) {
+  // // Bloom Filters near Quasars
+  // dropArtifacts({
+  //   onId: selectedPlanet?.locationId,
+  //   types: [ArtifactTypes.BloomFilter],
+  //   rarities: [ArtifactRarities.Rare],
+  //   maxRipLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+  //   nearMinLevel: PlanetLevel.FOUR,
+  //   nearMaxLevel: PlanetLevel.FOUR,
+  //   nearPlanetType: PlanetTypes.QUASAR,
+  // })
+
+  // Cannons near L5
+  dropArtifacts({
+    onId: selectedPlanet?.locationId,
+    types: [ArtifactTypes.PhotoidCannon],
+    rarities: [ArtifactRarities.Rare],
+    maxRipLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    nearMinLevel: PlanetLevel.FIVE,
+    nearMaxLevel: PlanetLevel.FIVE,
+    nearPlanetType: PlanetTypes.PLANET,
+  })
+
+  // Wormholes near L6
+  dropArtifacts({
+    onId: selectedPlanet?.locationId,
+    types: [ArtifactTypes.Wormhole],
+    rarities: [ArtifactRarities.Rare],
+    maxRipLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    nearMinLevel: PlanetLevel.SIX,
+    nearMaxLevel: PlanetLevel.SIX,
+    nearPlanetType: PlanetTypes.PLANET,
+  })
+}
 
 function onActivateClick(selectedPlanet: Planet|null = null) {
   activateArtifacts({
@@ -130,6 +166,7 @@ export class UsefulArtifacts extends Component
     this.interval = pauseable.setInterval(PrimeMinutes.THIRTEEN, () => {
       onDistributeClick()
       // onWithdrawClick()
+      onDropClick()
       onActivateClick()
     })
     // this.interval.pause()
@@ -200,6 +237,7 @@ export class UsefulArtifacts extends Component
       <div style={buttonGridStyle}>
         <button onClick={() => onDistributeClick(ui.getSelectedPlanet())}>Distribute</button>
         {/* <button onClick={() => onWithdrawClick(ui.getSelectedPlanet())}>Withdraw</button> */}
+        <button onClick={() => onDropClick(ui.getSelectedPlanet())}>Drop</button>
         <button onClick={() => onActivateClick(ui.getSelectedPlanet())}>Activate</button>
       </div>
       <Table

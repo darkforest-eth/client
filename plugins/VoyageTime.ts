@@ -102,7 +102,7 @@ class VoyageTime {
       energyPercent,
     })
 
-    this.energyArriving.innerText = `${Math.round(energyOnPlanetAfterAttack)} ${Math.round(energyPercent)}%`
+    this.energyArriving.innerText = `${Math.round(energyOnPlanetAfterAttack)} ${Math.floor(energyPercent)}%`
   }
 
   render(container) {

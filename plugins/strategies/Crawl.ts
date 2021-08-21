@@ -80,6 +80,7 @@ export function shortestPathToCenter(a: MoveWithData, b: MoveWithData) {
 
 interface config {
   fromId?: LocationId,
+  fromMinLevel: PlanetLevel,
   fromMaxLevel: PlanetLevel,
   fromMinEnergyLeftPercent: number,
   toMinLevel: PlanetLevel,
@@ -99,8 +100,9 @@ export function capturePlanets(config: config)
 
   const from = getMyPlanets()
     .filter(isLocatable)
+    .filter(p => p.planetLevel >= config.fromMinLevel)
     .filter(p => p.planetLevel <= config.fromMaxLevel)
-    .filter(p => [PlanetTypes.PLANET, PlanetTypes.RIP].includes(p.planetType))
+    .filter(p => [PlanetTypes.PLANET].includes(p.planetType))
     .filter(p => ! config.fromId || p.locationId === config.fromId)
 
   // Calculate moves required to take and use the first one

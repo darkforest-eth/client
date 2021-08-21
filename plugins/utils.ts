@@ -1,5 +1,6 @@
 import { Artifact, ArtifactId, ArtifactRarity, ArtifactType, LocatablePlanet, Planet, PlanetType, QueuedArrival, SpaceType, UnconfirmedMove, UpgradeBranchName, WorldCoords } from "@darkforest_eth/types"
 import { addHours, fromUnixTime, isAfter } from "date-fns"
+import { isLocatable } from "src/_types/global/GlobalTypes"
 
 export const PlanetTypes: { [ key:string]: PlanetType } = {
   PLANET: 0,
@@ -124,8 +125,8 @@ export function getAllArtifacts()
   return artifacts
 }
 
-export function getMyPlanets() {
-  return df.getMyPlanets().filter(p => ! p.destroyed)
+export function getMyPlanets(): LocatablePlanet[] {
+  return df.getMyPlanets().filter(p => ! p.destroyed).filter(isLocatable)
 }
 
 export function getMyPlanetsInRange(p: Planet) {

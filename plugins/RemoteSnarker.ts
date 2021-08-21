@@ -295,7 +295,7 @@ function SnarkerUI({ snarker, onRemove }) {
 }
 
 function App({ initialPool = [], addSnarker, removeSnarker }) {
-  const [nextUrl, setNextUrl] = useState("http://craigs-mac-mini.local:8082/move");
+  const [nextUrl, setNextUrl] = useState("http://craigs-macbook-pro.local:8082/move");
   const [concurrency, setConcurrency] = useState(1);
   const [pool, setPool] = useState(initialPool);
   const wrapper = { display: "flex" };
