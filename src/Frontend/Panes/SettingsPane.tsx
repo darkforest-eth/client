@@ -384,7 +384,7 @@ export function SettingsPane({
           <BooleanSetting
             uiManager={uiManager}
             setting={Setting.ExperimentalFeatures}
-            settingDescription='toggle expeirmental features'
+            settingDescription='toggle experimental features'
           />
         </Section>
       </SettingsContent>
