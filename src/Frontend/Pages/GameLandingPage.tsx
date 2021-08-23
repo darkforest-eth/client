@@ -220,16 +220,25 @@ export function GameLandingPage() {
       terminal.current?.println(``);
       terminal.current?.println(`Select an option:`, TerminalTextStyle.Text);
 
-      const userInput = await terminal.current?.getInput();
-      if (userInput === 'a' && accounts.length > 0) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const accountNumber = urlParams.get('accountNumber');
+
+      // if ?accountNumber param exists and it is a number
+      if (accountNumber && !isNaN(parseInt(accountNumber))) {
+        terminal.current?.println(`Selecting option: #${accountNumber}`, TerminalTextStyle.Text);
         setStep(TerminalPromptStep.DISPLAY_ACCOUNTS);
-      } else if (userInput === 'n') {
-        setStep(TerminalPromptStep.GENERATE_ACCOUNT);
-      } else if (userInput === 'i') {
-        setStep(TerminalPromptStep.IMPORT_ACCOUNT);
       } else {
-        terminal.current?.println('Unrecognized input. Please try again.');
-        await advanceStateFromCompatibilityPassed(terminal);
+        const userInput = await terminal.current?.getInput();
+        if (userInput === 'a' && accounts.length > 0) {
+          setStep(TerminalPromptStep.DISPLAY_ACCOUNTS);
+        } else if (userInput === 'n') {
+          setStep(TerminalPromptStep.GENERATE_ACCOUNT);
+        } else if (userInput === 'i') {
+          setStep(TerminalPromptStep.IMPORT_ACCOUNT);
+        } else {
+          terminal.current?.println('Unrecognized input. Please try again.');
+          await advanceStateFromCompatibilityPassed(terminal);
+        }
       }
     },
     []
@@ -246,7 +255,18 @@ export function GameLandingPage() {
       terminal.current?.println(``);
       terminal.current?.println(`Select an account:`, TerminalTextStyle.Text);
 
-      const selection = +((await terminal.current?.getInput()) || '');
+      const urlParams = new URLSearchParams(window.location.search);
+      const accountNumber = urlParams.get('accountNumber');
+
+      let selection: number;
+
+      if (accountNumber && !isNaN(parseInt(accountNumber))) {
+        selection = parseInt(accountNumber);
+        terminal.current?.println(`Logging in with account: #${selection}`, TerminalTextStyle.Text);
+      } else {
+        selection = +((await terminal.current?.getInput()) || '');
+      }
+
       if (isNaN(selection) || selection > accounts.length) {
         terminal.current?.println('Unrecognized input. Please try again.');
         await advanceStateFromDisplayAccounts(terminal);
