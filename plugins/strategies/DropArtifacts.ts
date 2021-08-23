@@ -31,8 +31,8 @@ export function dropArtifacts(config: config)
     .filter(r => r.planetType === PlanetTypes.RIP)
     .filter(r => r.planetLevel <= config.maxRipLevel)
     .filter(r => ! config.onId || r.locationId === config.onId)
-    .filter(r => r.heldArtifactIds.length <= 5)
-    .filter(r => df.getPlanetsInRange(r.locationId, 100).some(p => (
+    .filter(r => r.heldArtifactIds.length === 0)
+    .filter(r => getMyPlanetsInRange(r).some(p => (
         p.planetType === config.nearPlanetType
         && p.planetLevel >= config.nearMinLevel
         && p.planetLevel <= config.nearMaxLevel

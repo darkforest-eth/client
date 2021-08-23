@@ -21,7 +21,7 @@ declare const ui: GameUIManager
 function onDistributeClick(selectedPlanet: Planet|null = null) {
   distributeSilver({
     fromId: selectedPlanet?.locationId,
-    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FIVE,
     fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.NINE,
     fromPlanetType: selectedPlanet?.planetType || PlanetTypes.ASTEROID,
     toMinLevel: PlanetLevel.FIVE,
@@ -54,7 +54,7 @@ export class FullSilver extends Component
       onDistributeClick()
       onWithdrawClick()
     })
-    // this.interval.pause()
+    this.interval.pause()
   }
 
   render()

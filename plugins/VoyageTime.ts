@@ -2,6 +2,7 @@
 //
 // View estimated time for a voyage.
 import GameUIManager from '@df/GameUIManager'
+import { addSeconds, format } from 'date-fns';
 import { isLocatable } from 'src/_types/global/GlobalTypes';
 import { availableEnergy, isMine } from './utils';
 
@@ -41,6 +42,7 @@ class VoyageTime {
         let time = Math.ceil(
           df.getTimeForMove(fromPlanet.locationId, toPlanet.locationId)
         );
+        let date = addSeconds(new Date(), time)
         let hours = Math.floor(time / oneHour);
         let minutes = Math.floor(time % oneHour / 60);
         let seconds = Math.ceil(time % oneHour % oneMinute);
@@ -51,7 +53,8 @@ class VoyageTime {
         } else {
           this.estimatedTime.innerText = `${seconds} secs`;
         }
-        this.estimatedTimeSeconds.innerText = `${time} secs`;
+        this.estimatedTimeSeconds.innerText = `${time} secs - ${format(date, 'H:m:s')}`;
+
       } else {
         this.estimatedTime.innerText = '?????';
         this.estimatedTimeSeconds.innerText = ``;

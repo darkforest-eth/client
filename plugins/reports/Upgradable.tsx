@@ -27,7 +27,7 @@ export class Upgradable extends Component
   constructor() {
     super()
     this.interval = pauseable.setInterval(PrimeMinutes.THREE, onUpgradeClick)
-    // this.interval.pause()
+    this.interval.pause()
   }
 
   render()

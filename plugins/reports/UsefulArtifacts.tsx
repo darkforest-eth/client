@@ -169,7 +169,7 @@ export class UsefulArtifacts extends Component
       onDropClick()
       onActivateClick()
     })
-    // this.interval.pause()
+    this.interval.pause()
   }
 
   render()
@@ -188,8 +188,11 @@ export class UsefulArtifacts extends Component
       .filter(a => a && ! isActivated(a))
       .filter(a => a && ! a.unconfirmedMove)
       .filter(a => a && ! a.unconfirmedActivateArtifact)
-      .filter(a => a && a.rarity > ArtifactRarities.Common)
-      .filter(a => [ArtifactTypes.Wormhole, ArtifactTypes.BloomFilter].includes(a.artifactType))
+      .filter(a => a && a.rarity >= ArtifactRarities.Rare)
+      .filter(a => (
+        [ArtifactTypes.Wormhole,ArtifactTypes.BloomFilter].includes(a.artifactType))
+        || a.artifactType === ArtifactTypes.PlanetaryShield && a.rarity >= ArtifactRarities.Epic
+      )
       .filter(canBeActivated)
       .sort((a, b) => {
         const pa = df.getPlanetWithId(a.onPlanetId)

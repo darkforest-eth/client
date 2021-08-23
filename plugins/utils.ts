@@ -97,6 +97,10 @@ export function energy(p: Planet) {
   return Math.floor(availableEnergy(p) / p.energyCap * 100);
 }
 
+export function hasCannon(p: Planet) {
+  return df.getArtifactsWithIds(p.heldArtifactIds).some(a => a?.artifactType === ArtifactTypes.PhotoCannon)
+}
+
 /**
  * df.getMyArtifacts() misses some.. This function loops through
  * all planets and gathers artifacts then combines them with

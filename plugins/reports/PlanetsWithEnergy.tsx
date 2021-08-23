@@ -18,27 +18,27 @@ declare const ui: GameUIManager
 function onCrawlClick(selectedPlanet: Planet|null = null) {
   console.log('Crawling')
 
-  capturePlanets({
-    fromId: selectedPlanet?.locationId,
-    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
-    fromMinEnergyLeftPercent: 37.5,
-    toMinLevel: PlanetLevel.FOUR,
-    toPlanetTypes: [PlanetTypes.FOUNDRY],
-    toTargetEnergy: 50,
-    sortFunction: highestLevel,
-  })
+  // capturePlanets({
+  //   fromId: selectedPlanet?.locationId,
+  //   fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+  //   fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
+  //   fromMinEnergyLeftPercent: 37.5,
+  //   toMinLevel: PlanetLevel.FOUR,
+  //   toPlanetTypes: [PlanetTypes.FOUNDRY],
+  //   toTargetEnergy: 50,
+  //   sortFunction: highestLevel,
+  // })
 
-  capturePlanets({
-    fromId: selectedPlanet?.locationId,
-    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
-    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
-    fromMinEnergyLeftPercent: 37.5,
-    toPlanetTypes: [PlanetTypes.PLANET, PlanetTypes.ASTEROID, PlanetTypes.RIP],
-    toMinLevel: PlanetLevel.FIVE,
-    toTargetEnergy: 15,
-    sortFunction: directionToCenter,
-  })
+  // capturePlanets({
+  //   fromId: selectedPlanet?.locationId,
+  //   fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+  //   fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
+  //   fromMinEnergyLeftPercent: 37.5,
+  //   toPlanetTypes: [PlanetTypes.PLANET, PlanetTypes.ASTEROID, PlanetTypes.RIP],
+  //   toMinLevel: PlanetLevel.FIVE,
+  //   toTargetEnergy: 15,
+  //   sortFunction: directionToCenter,
+  // })
 
   // capturePlanets({
   //   fromId: selectedPlanet?.locationId,
@@ -83,7 +83,7 @@ export class PlanetsWithEnergy extends Component
       onCrawlClick()
       onDistributeClick()
     })
-    // this.interval.pause()
+    this.interval.pause()
   }
 
   render()
