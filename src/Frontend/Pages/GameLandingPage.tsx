@@ -705,7 +705,7 @@ export function GameLandingPage() {
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
       terminal.current?.println('');
       terminal.current?.println('Press ENTER to begin:');
-      await terminal.current?.getInput();
+      // await terminal.current?.getInput();
       setStep(TerminalPromptStep.COMPLETE);
       setInitRenderState(InitRenderState.COMPLETE);
       terminal.current?.clear();
