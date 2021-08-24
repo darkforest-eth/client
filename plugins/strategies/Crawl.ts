@@ -100,7 +100,6 @@ export function capturePlanets(config: config)
 
   const from = getMyPlanets()
     .filter(isLocatable)
-    .filter(p => ! hasCannon(p))
     .filter(p => p.planetLevel >= config.fromMinLevel)
     .filter(p => p.planetLevel <= config.fromMaxLevel)
     .filter(p => [PlanetTypes.PLANET].includes(p.planetType))
