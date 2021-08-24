@@ -131,6 +131,7 @@ export class OwnedPluginView extends React.Component<Props, State> {
               color={dfstyles.colors.dfgreen}
               noBorder={true}
               onClick={this.runClicked}
+              id={this.props.plugin.id}
             >
               run
             </Btn>
