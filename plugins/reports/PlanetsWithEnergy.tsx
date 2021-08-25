@@ -7,7 +7,7 @@ import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../components/Table';
 import { ManageInterval } from '../components/ManageInterval'
 
-import { capturePlanets, closestToCenter, directionToCenter, highestLevel, lowestEnergy } from '../strategies/Crawl'
+import { bestStats, capturePlanets, closestToCenter, directionToCenter, highestLevel, lowestEnergy } from '../strategies/Crawl'
 import { distributeEnergy } from '../strategies/DistributeEnergy'
 import { buttonGridStyle, energy, getMyPlanets, getPlanetTypeAcronym, hasPendingMove, isAsteroid, isFoundry, planetName, PlanetTypes, PrimeMinutes } from '../utils'
 const pauseable = require('pauseable')
@@ -29,16 +29,16 @@ function onCrawlClick(selectedPlanet: Planet|null = null) {
   //   sortFunction: highestLevel,
   // })
 
-  // capturePlanets({
-  //   fromId: selectedPlanet?.locationId,
-  //   fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
-  //   fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
-  //   fromMinEnergyLeftPercent: 37.5,
-  //   toPlanetTypes: [PlanetTypes.PLANET, PlanetTypes.ASTEROID, PlanetTypes.RIP],
-  //   toMinLevel: PlanetLevel.FIVE,
-  //   toTargetEnergy: 15,
-  //   sortFunction: directionToCenter,
-  // })
+  capturePlanets({
+    fromId: selectedPlanet?.locationId,
+    fromMinLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
+    fromMaxLevel: selectedPlanet?.planetLevel || PlanetLevel.SIX,
+    fromMinEnergyLeftPercent: 37.5,
+    toPlanetTypes: [PlanetTypes.PLANET, PlanetTypes.ASTEROID, PlanetTypes.RIP],
+    toMinLevel: PlanetLevel.FIVE,
+    toTargetEnergy: 15,
+    sortFunction: bestStats,
+  })
 
   // capturePlanets({
   //   fromId: selectedPlanet?.locationId,

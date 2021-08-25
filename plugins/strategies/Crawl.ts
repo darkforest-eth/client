@@ -63,11 +63,23 @@ function angle(p1: WorldCoords, p2: WorldCoords) {
  * but still "group" them so we use the least energy.
  */
 export function directionToCenter(a: MoveWithData, b: MoveWithData) {
-  return a.angleDiffGroup - b.angleDiffGroup || a.energy - b.energy
+  return a.angleDiffGroup - b.angleDiffGroup
 }
 
 export function highestLevel(a: Move, b: Move) {
-  return b.to.planetLevel - a.to.planetLevel || a.energy - b.energy
+  return b.to.planetLevel - a.to.planetLevel
+}
+
+/**
+ * Targets planets with boosters. Ignore defence as not
+ * worth it. Silver cap also not that relevant.
+ */
+export function bestStats(a: Move, b:Move) {
+  return b.to.range - a.to.range
+    || b.to.energyGrowth - a.to.energyGrowth
+    || b.to.energyCap - a.to.energyCap
+    || b.to.energy - a.to.energy
+    || b.to.speed - a.to.speed
 }
 
 /**
@@ -111,7 +123,8 @@ export function capturePlanets(config: config)
   // next best move - or wait until the best move is possible?
   const movesToMake = to.flatMap(to => getMovesToTake(to, from, config.toTargetEnergy))
 
-  movesToMake.sort(config.sortFunction)
+  // sort according to callback, then the lowest energy required to take.
+  movesToMake.sort((a, b) => config.sortFunction(a, b) || a.energy - b.energy)
 
   console.log({ movesToMake })
 
