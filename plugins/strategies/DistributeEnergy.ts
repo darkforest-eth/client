@@ -64,9 +64,10 @@ export function distributeEnergy(config: config)
 
   console.log('Sending energy to ', movesToMake2)
 
-  // Move max 100 at a time
-  const moves = movesToMake2.slice(0, 50).map(move => {
-    if (planetCanAcceptMove(move.to)
+  const moves = movesToMake2.map(move => {
+    if (
+      planetCanAcceptMove(move.to)
+      && df.getUnconfirmedMoves().length < 50
     ) {
       console.log(`SENDING ${move.energy} energy to ${planetName(move.to)} (ui.centerLocationId('${move.to.locationId}')) FROM ${planetName(move.from)} (ui.centerLocationId('${move.from.locationId}'))`)
       return df.move(move.from.locationId, move.to.locationId, move.energy, 0);

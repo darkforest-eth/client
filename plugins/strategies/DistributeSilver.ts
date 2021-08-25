@@ -80,7 +80,6 @@ export function distributeSilver(config: config)
   console.log('Sending silver to ', movesToMake)
 
   // Move max 100 at a time
-  let count = 0
   const moves = movesToMake.map(move => {
     const silver = Math.floor(maxSilverToSend(move.from, move.to))
 
@@ -88,7 +87,7 @@ export function distributeSilver(config: config)
       planetWillHaveMinEnergyAfterMove(move, 15)
       && silver > 0
       && planetCanAcceptMove(move.to)
-      && count++ < 100
+      && df.getUnconfirmedMoves().length < 50
     ) {
       console.log(`SENDING ${move.silver} silver to ${planetName(move.to)} (ui.centerLocationId('${move.to.locationId}')) FROM ${planetName(move.from)} (ui.centerLocationId('${move.from.locationId}')) WITH ${move.energy}`)
       return df.move(move.from.locationId, move.to.locationId, move.energy, silver);

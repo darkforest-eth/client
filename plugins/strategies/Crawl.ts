@@ -128,13 +128,11 @@ export function capturePlanets(config: config)
 
   console.log({ movesToMake })
 
-  // Max 100 at a time
-  let count = 0
   const moves = movesToMake.map(move => {
     if (
       planetWillHaveMinEnergyAfterMove(move, config.fromMinEnergyLeftPercent)
       && ! hasIncomingMove(move.to)
-      && count++ < 100
+      && df.getUnconfirmedMoves().length < 50
     ) {
       console.log(`CAPTURING ${planetName(move.to)} (${move.to.locationId}) FROM ${planetName(move.from)} WITH ${move.energy}`)
       return df.move(move.from.locationId, move.to.locationId, move.energy, 0);
