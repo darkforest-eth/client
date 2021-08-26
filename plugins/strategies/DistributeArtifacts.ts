@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { artifactNameFromArtifact, ArtifactRarity, ArtifactType, LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, isActivated, MAX_ARTIFACT_COUNT, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { ArtifactTypes, closestToCenter, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, isActivated, MAX_ARTIFACT_COUNT, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
@@ -18,64 +18,57 @@ function findArtifact(p: Planet, rarities: ArtifactRarity[], types: ArtifactType
 
 interface config {
   fromId?: LocationId,
-  fromPlanetType: PlanetType,
   types: ArtifactType[]
   rarities: ArtifactRarity[],
-  toMinLevel: PlanetLevel,
-  toMaxLevel: PlanetLevel,
-  toPlanetType: PlanetType,
-  ifEmpty: boolean
+  nearMinLevel: PlanetLevel,
+  nearMaxLevel: PlanetLevel,
+  nearPlanetType: PlanetType,
 }
+/**
+ * @todo
+ *
+ * Goes through each rip:
+ *
+ * 1. If artifact & planet in range, send to planet
+ * 2. If artifact & ! planet in range, withdraw
+ * 3. If ! artifact & planet in range, drop
+ * 4. if ! artifact & ! planet in range, do nothing...
+ */
 export function distributeArtifacts(config: config)
 {
-  const from = getMyPlanets()
-    .filter(p => p.planetType === config.fromPlanetType)
-    .filter(p => ! config.fromId || p.locationId === config.fromId)
-    .filter(p => findArtifact(p, config.rarities, config.types))
-
-  console.log(`Distributing artifacts from ${from.length} planets with `, config)
-
-  // current max artifacts on the planet (before the move)
-  const maxArtifacts = config.ifEmpty ? 0 : 5
-
-  const movesToMake: Move[] = from.flatMap(from => {
-    const to = getMyPlanetsInRange(from)
-      .filter(p => p.planetLevel >= config.toMinLevel)
-      .filter(p => p.planetLevel <= config.toMaxLevel)
-      .filter(p => p.planetType === config.toPlanetType)
-      .filter(p => planetCanAcceptMove(p, maxArtifacts))
-
-    const moves = to.map(to => {
-      const energy = getMinimumEnergyNeeded(from, to)
-      const artifact = findArtifact(from, config.rarities, config.types)
-
-      return {
-        from,
-        to,
-        energy,
+  const dropsToMake = getMyPlanets()
+    .filter(r => r.planetType === PlanetTypes.RIP)
+    .filter(r => ! config.fromId || r.locationId === config.fromId)
+    .filter(r => r.heldArtifactIds.length === 0)
+    .filter(r =>
+      (r).some(p => (
+        p.planetType === config.nearPlanetType
+        && p.planetLevel >= config.nearMinLevel
+        && p.planetLevel <= config.nearMaxLevel
+        && planetCanAcceptMove(p, 0)
+    )))
+    .sort(closestToCenter)
+    .flatMap(rip => df.getMyArtifacts().filter(a => (
+        ! a.onPlanetId
+        && config.types.includes(a.artifactType)
+        && config.rarities.includes(a.rarity)
+      )).map(artifact => ({
         artifact,
-      }
-    })
+        rip
+      }))
+    )
 
-    return moves
-  })
+  console.log({ dropsToMake })
 
-  // Make the moves with the rarest artifacts first
-  movesToMake.sort((a, b) => b.artifact!.rarity - a.artifact!.rarity || a.energy - b.energy)
-
-  console.log({ movesToMake })
-
-  // Max 100 at a time
-  const moves = movesToMake.slice(0, 100).map(move => {
+  const drops = dropsToMake.map(drop => {
     if (
-      planetWillHaveMinEnergyAfterMove(move, 1)
-      && ! move.artifact!.unconfirmedMove
-      && planetCanAcceptMove(move.to, maxArtifacts)
+      ! drop.rip.unconfirmedDepositArtifact
+      && ! drop.artifact.unconfirmedDepositArtifact
     ) {
-      console.log(`SENDING ${artifactNameFromArtifact(move.artifact!)} FROM ${planetName(move.from)} (ui.centerLocationId('${move.from.locationId}')) TO ${planetName(move.to)} (ui.centerLocationId('${move.to.locationId}')) WITH ${move.energy}`)
-      return df.move(move.from.locationId, move.to.locationId, move.energy, 0, move.artifact!.id);
+      console.log(`DROPPING ${artifactNameFromArtifact(drop.artifact!)} ${Object.keys(ArtifactTypes)[drop.artifact.artifactType]} TO ${planetName(drop.rip)}`)
+      return df.depositArtifact(drop.rip.locationId, drop.artifact.id)
     }
   })
 
-  return moves
+  return drops
 }

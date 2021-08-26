@@ -141,6 +141,14 @@ export function getMyPlanetsInRange(p: Planet) {
   return planets
 }
 
+export function getClosestPlanet(p: Planet, filter: (p: Planet) => boolean) {
+  return df.getPlanetsInRange(p.locationId, 100)
+    .filter(p => ! p.destroyed)
+    .filter(filter)
+    .sort((a, b) => getMinimumEnergyNeeded(p, a) - getMinimumEnergyNeeded(p, b))
+    [0]
+}
+
 const emptyAddress = "0x0000000000000000000000000000000000000000";
 
 export const isUnowned = (planet: Planet) => planet.owner === emptyAddress;

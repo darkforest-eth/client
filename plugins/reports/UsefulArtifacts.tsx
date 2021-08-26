@@ -6,8 +6,8 @@ import { PlanetLink } from '../components/PlanetLink'
 import { Header, Sub, Title } from '../components/Text'
 import { Table } from '../Components/Table';
 
+import { harvestArtifacts } from '../strategies/HarvestArtifacts'
 import { distributeArtifacts } from '../strategies/DistributeArtifacts'
-import { dropArtifacts } from '../strategies/DropArtifacts'
 // import { withdrawArtifacts } from '../strategies/WithdrawArtifacts'
 import { activateArtifacts } from '../strategies/ActivateArtifacts'
 import { ManageInterval } from '../Components/ManageInterval'
@@ -19,17 +19,17 @@ const pauseable = require('pauseable')
 declare const df: GameManager
 declare const ui: GameUIManager
 
-function onDistributeClick(selectedPlanet: Planet|null = null) {
-  const rarities = [
-    // ArtifactRarities.Common,
-    ArtifactRarities.Rare,
-    ArtifactRarities.Epic,
-    ArtifactRarities.Legendary,
-    ArtifactRarities.Mythic,
-  ]
+const rarities = [
+  // ArtifactRarities.Common,
+  ArtifactRarities.Rare,
+  ArtifactRarities.Epic,
+  ArtifactRarities.Legendary,
+  ArtifactRarities.Mythic,
+]
 
+function onHarvestClick(selectedPlanet: Planet|null = null) {
   // Shit artifacts from foundries to planets
-  distributeArtifacts({
+  harvestArtifacts({
     fromId: selectedPlanet?.locationId,
     fromPlanetType: PlanetTypes.FOUNDRY,
     types: artifactStatTypes,
@@ -42,7 +42,7 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
 
   // Good artifacts from foundries to rips
   for (const level of rarities) {
-    distributeArtifacts({
+    harvestArtifacts({
       fromId: selectedPlanet?.locationId,
       fromPlanetType: PlanetTypes.FOUNDRY,
       types: artifactTacticalTypes,
@@ -53,17 +53,18 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
       ifEmpty: false,
     })
   }
+}
 
+function onDistributeClick(selectedPlanet: Planet|null = null) {
   // Bloom filters to Quasars
   for (const level of rarities) {
     distributeArtifacts({
       fromId: selectedPlanet?.locationId,
-      fromPlanetType: PlanetTypes.RIP,
       types: [ArtifactTypes.BloomFilter],
       rarities: [level],
-      toPlanetType: PlanetTypes.QUASAR,
-      toMinLevel: level * 2 - 1, // Rare to 3+, Epic to 5+ etc..
-      toMaxLevel: level * 2,
+      nearPlanetType: PlanetTypes.QUASAR,
+      nearMinLevel: level * 2 - 1, // Rare to 3+, Epic to 5+ etc..
+      nearMaxLevel: level * 2,
       ifEmpty: false,
     })
   }
@@ -71,66 +72,21 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
   // Cannons from rips to 5 planets (unless it has a wormhole)
   distributeArtifacts({
     fromId: selectedPlanet?.locationId,
-    fromPlanetType: PlanetTypes.RIP,
     types: [ArtifactTypes.PhotoidCannon],
     rarities: [ArtifactRarities.Rare],
-    toPlanetType: PlanetTypes.PLANET,
-    toMinLevel: PlanetLevel.FIVE,
-    toMaxLevel: PlanetLevel.FIVE,
-    ifEmpty: true,
+    nearPlanetType: PlanetTypes.PLANET,
+    nearMinLevel: PlanetLevel.FIVE,
+    nearMaxLevel: PlanetLevel.FIVE,
   })
 
   // Wormholes from rips to l6+ planets
   distributeArtifacts({
     fromId: selectedPlanet?.locationId,
-    fromPlanetType: PlanetTypes.RIP,
     types: [ArtifactTypes.Wormhole],
     rarities: [ArtifactRarities.Rare],
-    toPlanetType: PlanetTypes.PLANET,
-    toMinLevel: PlanetLevel.SIX,
-    toMaxLevel: PlanetLevel.NINE,
-    ifEmpty: true,
-  })
-}
-
-// function onWithdrawClick(selectedPlanet: Planet|null = null) {
-//   withdrawArtifacts({
-//     fromId: selectedPlanet?.locationId
-//   })
-// }
-
-function onDropClick(selectedPlanet: Planet|null = null) {
-  // // Bloom Filters near Quasars
-  // dropArtifacts({
-  //   onId: selectedPlanet?.locationId,
-  //   types: [ArtifactTypes.BloomFilter],
-  //   rarities: [ArtifactRarities.Rare],
-  //   maxRipLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
-  //   nearMinLevel: PlanetLevel.FOUR,
-  //   nearMaxLevel: PlanetLevel.FOUR,
-  //   nearPlanetType: PlanetTypes.QUASAR,
-  // })
-
-  // Cannons near L5
-  dropArtifacts({
-    onId: selectedPlanet?.locationId,
-    types: [ArtifactTypes.PhotoidCannon],
-    rarities: [ArtifactRarities.Rare],
-    maxRipLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
-    nearMinLevel: PlanetLevel.FIVE,
-    nearMaxLevel: PlanetLevel.FIVE,
     nearPlanetType: PlanetTypes.PLANET,
-  })
-
-  // Wormholes near L6
-  dropArtifacts({
-    onId: selectedPlanet?.locationId,
-    types: [ArtifactTypes.Wormhole],
-    rarities: [ArtifactRarities.Rare],
-    maxRipLevel: selectedPlanet?.planetLevel || PlanetLevel.FOUR,
     nearMinLevel: PlanetLevel.SIX,
-    nearMaxLevel: PlanetLevel.SIX,
-    nearPlanetType: PlanetTypes.PLANET,
+    nearMaxLevel: PlanetLevel.NINE,
   })
 }
 
@@ -139,6 +95,13 @@ function onActivateClick(selectedPlanet: Planet|null = null) {
     fromId: selectedPlanet?.locationId,
     minLevel: PlanetLevel.FOUR,
     artifactTypes: [ArtifactTypes.PhotoidCannon],
+    planetTypes: [PlanetTypes.PLANET],
+  })
+
+  activateArtifacts({
+    fromId: selectedPlanet?.locationId,
+    minLevel: PlanetLevel.FOUR,
+    artifactTypes: [ArtifactTypes.Wormhole],
     planetTypes: [PlanetTypes.PLANET],
   })
 
@@ -164,9 +127,8 @@ export class UsefulArtifacts extends Component
   constructor() {
     super()
     this.interval = pauseable.setInterval(PrimeMinutes.THIRTEEN, () => {
+      onHarvestClick()
       onDistributeClick()
-      // onWithdrawClick()
-      onDropClick()
       onActivateClick()
     })
     this.interval.pause()
@@ -238,9 +200,8 @@ export class UsefulArtifacts extends Component
       <Header>Useful Artifacts</Header>
       <ManageInterval interval={this.interval} />
       <div style={buttonGridStyle}>
+        <button onClick={() => onHarvestClick(ui.getSelectedPlanet())}>Harvest</button>
         <button onClick={() => onDistributeClick(ui.getSelectedPlanet())}>Distribute</button>
-        {/* <button onClick={() => onWithdrawClick(ui.getSelectedPlanet())}>Withdraw</button> */}
-        <button onClick={() => onDropClick(ui.getSelectedPlanet())}>Drop</button>
         <button onClick={() => onActivateClick(ui.getSelectedPlanet())}>Activate</button>
       </div>
       <Table

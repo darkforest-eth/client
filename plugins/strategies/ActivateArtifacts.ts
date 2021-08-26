@@ -1,7 +1,7 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { ArtifactType, LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types'
-import { artifactStatTypes, ArtifactTypes, canBeActivated, getClosestPlanet, getMyPlanets, isActivated } from '../utils'
+import { artifactStatTypes, ArtifactTypes, canBeActivated, getClosestPlanet, getMyPlanets, isActivated, planetName } from '../utils'
 import { mineAndBigger } from './DistributeEnergy'
 
 declare const df: GameManager
@@ -41,13 +41,15 @@ export function activateArtifacts(config: config)
 
     if (! artifact) return
 
-    const filter = (p: Planet) => mineAndBigger(from, p)
-
-    const wormholeTo = artifact.artifactType === ArtifactTypes.Wormhole
-      ? getClosestPlanet(from, filter)?.locationId
-      : undefined
-
-    df.activateArtifact(from.locationId, artifact.id, wormholeTo)
-    console.log('Activating on ' + from.locationId)
+    if (artifact.artifactType === ArtifactTypes.Wormhole) {
+      const filter = (p: Planet) => mineAndBigger(from, p)
+      const wormholeTo = getClosestPlanet(from, filter)
+      wormholeTo && df.activateArtifact(from.locationId, artifact.id, wormholeTo.locationId)
+      wormholeTo && console.log(`Activating wormhole on ${planetName(from)} to ${planetName(wormholeTo)}`)
+    }
+    else {
+      df.activateArtifact(from.locationId, artifact.id, undefined)
+      console.log('Activating on ' + planetName(from))
+    }
   })
 }
