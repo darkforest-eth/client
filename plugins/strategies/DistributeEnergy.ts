@@ -1,10 +1,17 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { ArtifactTypes, availableSilver, energy, enoughEnergyToProspect, getIncomingMoves, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, getPlanetMaxRank, getPlanetRank, getSilverRequiredForNextUpgrade, hasBeenProspected, hasCannon, isAsteroid, isFoundry, isFoundry, isMine, isUnowned, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { ArtifactTypes, availableSilver, energy, enoughEnergyToProspect, getClosestPlanet, getIncomingMoves, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, getPlanetMaxRank, getPlanetRank, getSilverRequiredForNextUpgrade, hasBeenProspected, hasCannon, isAsteroid, isFoundry, isFoundry, isMine, isUnowned, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
+
+export function mineAndBigger(from: Planet, candidate: Planet) {
+  const isBigger = candidate.planetLevel > from.planetLevel;
+  const isPlanet = candidate.planetType === PlanetTypes.PLANET;
+
+  return isMine(candidate) && isBigger && isPlanet
+}
 
 interface config {
   fromId?: LocationId,
@@ -33,29 +40,25 @@ export function distributeEnergy(config: config)
     // When 75% energy, send 50% of it.. 37.5% left optimum for S curve
     const energy = Math.floor(0.5 * from.energy)
 
-    const to = df.getPlanetsInRange(from.locationId, energy / from.energyCap * 100)
-      .filter(p => {
-        const isBigger = p.planetLevel > from.planetLevel
-        const isPlanet = p.planetType === PlanetTypes.PLANET
-        const isFoundryWantingEnergy = isFoundry(p) && ! hasBeenProspected(p) && ! enoughEnergyToProspect(p)
-        const mineBiggerPlanet = isMine(p) && isBigger && (isPlanet || isFoundryWantingEnergy)
+    const to = getClosestPlanet(from, p => {
+      const foundryWantingEnergy = isMine(p) && isFoundry(p) && !hasBeenProspected(p) && !enoughEnergyToProspect(p);
+      const mineBiggerPlanet = mineAndBigger(from, p);
+      const unownedAndWant = isUnowned(p) && p.planetLevel >= from.planetLevel && p.planetType !== PlanetTypes.QUASAR;
 
-        const unownedAndWant = isUnowned(p) && p.planetLevel >= from.planetLevel && p.planetType !== PlanetTypes.QUASAR
-        return mineBiggerPlanet || unownedAndWant
-      })
-      .sort((a, b) => getMinimumEnergyNeeded(from, a) - getMinimumEnergyNeeded(from, b))
+      return mineBiggerPlanet || unownedAndWant || foundryWantingEnergy;
+    })
 
-    if (to.length < 1) return null
+    if (! to) return null
 
-    const dist = df.getDist(from.locationId, to[0].locationId)
+    const dist = df.getDist(from.locationId, to.locationId)
 
     return {
       from,
-      to: to[0],
+      to,
       fromName: planetName(from),
-      toName: planetName(to[0]),
+      toName: planetName(to),
       energy,
-      energyArriving: df.getEnergyArrivingForMove(from.locationId, to[0].locationId, dist, energy)
+      energyArriving: df.getEnergyArrivingForMove(from.locationId, to.locationId, dist, energy)
     }
   })
 
