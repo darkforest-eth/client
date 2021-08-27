@@ -1,20 +1,10 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { artifactNameFromArtifact, ArtifactRarity, ArtifactType, LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, isActivated, MAX_ARTIFACT_COUNT, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { artifactType, findArtifact, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, isActivated, MAX_ARTIFACT_COUNT, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
-
-function findArtifact(p: Planet, rarities: ArtifactRarity[], types: ArtifactType[]) {
-  return df.getArtifactsWithIds(p.heldArtifactIds).find(a => {
-    return a
-    && ! a.unconfirmedMove
-    && rarities.includes(a.rarity)
-    && types.includes(a.artifactType)
-    && !isActivated(a)
-  })
-}
 
 interface config {
   fromId?: LocationId,
@@ -65,14 +55,14 @@ export function harvestArtifacts(config: config)
 
   console.log({ movesToMake })
 
-  // Max 100 at a time
-  const moves = movesToMake.slice(0, 100).map(move => {
+  const moves = movesToMake.map(move => {
     if (
       planetWillHaveMinEnergyAfterMove(move, 1)
       && ! move.artifact!.unconfirmedMove
       && planetCanAcceptMove(move.to, maxArtifacts)
+      && df.getUnconfirmedMoves().length < 50
     ) {
-      console.log(`SENDING ${artifactNameFromArtifact(move.artifact!)} FROM ${planetName(move.from)} (ui.centerLocationId('${move.from.locationId}')) TO ${planetName(move.to)} (ui.centerLocationId('${move.to.locationId}')) WITH ${move.energy}`)
+      console.log(`SENDING ${artifactType(move.artifact!)} FROM ${planetName(move.from)} TO ${planetName(move.to)}`)
       return df.move(move.from.locationId, move.to.locationId, move.energy, 0, move.artifact!.id);
     }
   })

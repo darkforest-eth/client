@@ -129,6 +129,29 @@ export function getAllArtifacts()
   return artifacts
 }
 
+export function findArtifact(p: Planet, rarities: ArtifactRarity[], types: ArtifactType[]) {
+  return df.getArtifactsWithIds(p.heldArtifactIds).find(a => {
+    return a
+    && ! a.unconfirmedMove
+    && rarities.includes(a.rarity)
+    && types.includes(a.artifactType)
+    && !isActivated(a)
+  })
+}
+
+export function findArtifactFromInventory(rarities: ArtifactRarity[], types: ArtifactType[]) {
+  return df.getMyArtifacts().find(a => (
+    ! a.onPlanetId
+    && ! a.unconfirmedDepositArtifact
+    && types.includes(a.artifactType)
+    && rarities.includes(a.rarity)
+  ))
+}
+
+export function artifactType(a: Artifact) {
+  return Object.keys(ArtifactTypes)[a.artifactType]
+}
+
 export function getMyPlanets(): LocatablePlanet[] {
   return df.getMyPlanets().filter(p => ! p.destroyed).filter(isLocatable)
 }

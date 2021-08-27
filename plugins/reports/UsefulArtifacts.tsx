@@ -12,7 +12,7 @@ import { distributeArtifacts } from '../strategies/DistributeArtifacts'
 import { activateArtifacts } from '../strategies/ActivateArtifacts'
 import { ManageInterval } from '../Components/ManageInterval'
 
-import { ArtifactRarities, artifactStatTypes, artifactTacticalTypes, ArtifactTypes, buttonGridStyle, canBeActivated, getAllArtifacts, getPlanetTypeAcronym, isActivated, planetName, PlanetTypes, PrimeMinutes } from '../utils'
+import { ArtifactRarities, artifactStatTypes, artifactTacticalTypes, artifactType, ArtifactTypes, buttonGridStyle, canBeActivated, getAllArtifacts, getPlanetTypeAcronym, isActivated, planetName, PlanetTypes, PrimeMinutes } from '../utils'
 
 const pauseable = require('pauseable')
 
@@ -65,7 +65,6 @@ function onDistributeClick(selectedPlanet: Planet|null = null) {
       nearPlanetType: PlanetTypes.QUASAR,
       nearMinLevel: level * 2 - 1, // Rare to 3+, Epic to 5+ etc..
       nearMaxLevel: level * 2,
-      ifEmpty: false,
     })
   }
 
@@ -171,7 +170,7 @@ export class UsefulArtifacts extends Component
 
     const columns = [
       (a: Artifact) => <Sub>{artifactNameFromArtifact(a)}</Sub>,
-      (a: Artifact) => <Sub>{Object.keys(ArtifactTypes)[a.artifactType]}</Sub>,
+      (a: Artifact) => <Sub>{artifactType(a)}</Sub>,
       (a: Artifact) => {
         const planet = df.getPlanetWithId(a.onPlanetId)
 

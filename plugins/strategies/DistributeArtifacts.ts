@@ -1,20 +1,10 @@
 import GameManager from '../../declarations/src/Backend/GameLogic/GameManager'
 import GameUIManager from '../../declarations/src/Backend/GameLogic/GameUIManager'
 import { artifactNameFromArtifact, ArtifactRarity, ArtifactType, LocationId, Planet, PlanetLevel, PlanetType } from '@darkforest_eth/types';
-import { ArtifactTypes, closestToCenter, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, isActivated, MAX_ARTIFACT_COUNT, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
+import { artifactType, ArtifactTypes, closestToCenter, findArtifact, findArtifactFromInventory, getClosestPlanet, getMinimumEnergyNeeded, getMyPlanets, getMyPlanetsInRange, isActivated, isMine, MAX_ARTIFACT_COUNT, Move, planetCanAcceptMove, planetName, PlanetTypes, planetWillHaveMinEnergyAfterMove } from '../utils';
 
 declare const df: GameManager
 declare const ui: GameUIManager
-
-function findArtifact(p: Planet, rarities: ArtifactRarity[], types: ArtifactType[]) {
-  return df.getArtifactsWithIds(p.heldArtifactIds).find(a => {
-    return a
-    && ! a.unconfirmedMove
-    && rarities.includes(a.rarity)
-    && types.includes(a.artifactType)
-    && !isActivated(a)
-  })
-}
 
 interface config {
   fromId?: LocationId,
@@ -36,39 +26,61 @@ interface config {
  */
 export function distributeArtifacts(config: config)
 {
-  const dropsToMake = getMyPlanets()
+  // Rips to send from or withdraw
+  getMyPlanets()
     .filter(r => r.planetType === PlanetTypes.RIP)
     .filter(r => ! config.fromId || r.locationId === config.fromId)
-    .filter(r => r.heldArtifactIds.length === 0)
-    .filter(r =>
-      (r).some(p => (
-        p.planetType === config.nearPlanetType
-        && p.planetLevel >= config.nearMinLevel
-        && p.planetLevel <= config.nearMaxLevel
-        && planetCanAcceptMove(p, 0)
-    )))
+    .filter(r => findArtifact(r, config.rarities, config.types))
     .sort(closestToCenter)
-    .flatMap(rip => df.getMyArtifacts().filter(a => (
-        ! a.onPlanetId
-        && config.types.includes(a.artifactType)
-        && config.rarities.includes(a.rarity)
-      )).map(artifact => ({
-        artifact,
-        rip
-      }))
-    )
+    .forEach(rip => {
+      const planet = getClosestPlanet(rip, p => (
+          isMine(p)
+          && p.planetType === config.nearPlanetType
+          && p.planetLevel >= config.nearMinLevel
+          && p.planetLevel <= config.nearMaxLevel
+          && planetCanAcceptMove(p, 0)
+      ))
 
-  console.log({ dropsToMake })
+      const artifact = findArtifact(rip, config.rarities, config.types)
 
-  const drops = dropsToMake.map(drop => {
-    if (
-      ! drop.rip.unconfirmedDepositArtifact
-      && ! drop.artifact.unconfirmedDepositArtifact
-    ) {
-      console.log(`DROPPING ${artifactNameFromArtifact(drop.artifact!)} ${Object.keys(ArtifactTypes)[drop.artifact.artifactType]} TO ${planetName(drop.rip)}`)
-      return df.depositArtifact(drop.rip.locationId, drop.artifact.id)
-    }
-  })
+      if (! artifact) return
 
-  return drops
+      if (planet) {
+        const energy = getMinimumEnergyNeeded(rip, planet)
+
+        console.log(`SENDING ${artifactNameFromArtifact(artifact)} FROM ${planetName(rip)} TO ${planetName(planet)}`)
+
+        return df.move(rip.locationId, planet.locationId, energy, 0, artifact.id);
+      }
+      else {
+        // @todo Rip level for Artifact rarity?
+        console.log(`WITHDRAWING ${artifactType(artifact)} FROM ${planetName(rip)}`)
+
+        return df.withdrawArtifact(rip.locationId, artifact.id)
+      }
+    })
+
+    // Planets which want an artifact - drop nearby
+    getMyPlanets()
+      .filter(p => p.planetType === config.nearPlanetType)
+      .filter(p => p.planetLevel >= config.nearMinLevel)
+      .filter(p => p.planetLevel <= config.nearMaxLevel)
+      .filter(p => ! config.fromId || p.locationId === config.fromId)
+      .filter(p => planetCanAcceptMove(p, 0))
+      .sort(closestToCenter)
+      .forEach(planet => {
+        const artifact = findArtifactFromInventory(config.rarities, config.types)
+
+        // @todo Rip level for Artifact rarity?
+        const rip = getClosestPlanet(planet, r => (
+            isMine(r)
+            && r.planetType === PlanetTypes.RIP
+        ))
+
+        if (! rip || ! artifact) return
+
+        console.log(`DROPPING ${artifactType(artifact)} ON ${planetName(rip)}`)
+
+        return df.depositArtifact(rip.locationId, artifact.id)
+      })
 }
