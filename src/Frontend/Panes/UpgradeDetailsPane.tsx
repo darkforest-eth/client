@@ -41,8 +41,8 @@ export function UpgradeDetailsPaneHelpContent() {
       </p>
       <Spacer height={8} />
       <p>
-        All planets have a certain max rank, and only you to upgrade each of the upgrade branches
-        only to a certain rank.
+        All planets have a certain max rank, and each branch can only be upgraded so many times.
+        Choose wisely!
       </p>
     </div>
   );

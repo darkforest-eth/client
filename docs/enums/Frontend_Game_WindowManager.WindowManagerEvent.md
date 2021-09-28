@@ -6,25 +6,10 @@
 
 ### Enumeration members
 
-- [CtrlDown](Frontend_Game_WindowManager.WindowManagerEvent.md#ctrldown)
-- [CtrlUp](Frontend_Game_WindowManager.WindowManagerEvent.md#ctrlup)
 - [MiningCoordsUpdate](Frontend_Game_WindowManager.WindowManagerEvent.md#miningcoordsupdate)
 - [StateChanged](Frontend_Game_WindowManager.WindowManagerEvent.md#statechanged)
-- [TooltipUpdated](Frontend_Game_WindowManager.WindowManagerEvent.md#tooltipupdated)
 
 ## Enumeration members
-
-### CtrlDown
-
-• **CtrlDown** = `"CtrlDown"`
-
----
-
-### CtrlUp
-
-• **CtrlUp** = `"CtrlUp"`
-
----
 
 ### MiningCoordsUpdate
 
@@ -35,9 +20,3 @@
 ### StateChanged
 
 • **StateChanged** = `"StateChanged"`
-
----
-
-### TooltipUpdated
-
-• **TooltipUpdated** = `"TooltipUpdated"`

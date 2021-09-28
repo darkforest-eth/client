@@ -42,7 +42,7 @@ const BtnElement = styled.span`
 
     ${small && `font-size: 0.8em;`}
     ${wide && `width: 100%;`}
-    ${(textColor || color) && `color: ${textColor || color || dfstyles.colors.text};`}
+    color: ${textColor || color || dfstyles.colors.text};
 
     &:hover {
       ${!disabled &&

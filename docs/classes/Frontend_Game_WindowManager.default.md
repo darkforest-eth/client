@@ -16,22 +16,17 @@
 
 ### Properties
 
-- [currentTooltip](Frontend_Game_WindowManager.default.md#currenttooltip)
+- [activeWindowId$](Frontend_Game_WindowManager.default.md#activewindowid$)
 - [cursorState](Frontend_Game_WindowManager.default.md#cursorstate)
 - [lastZIndex](Frontend_Game_WindowManager.default.md#lastzindex)
-- [mousePos](Frontend_Game_WindowManager.default.md#mousepos)
-- [mousedownPos](Frontend_Game_WindowManager.default.md#mousedownpos)
 - [instance](Frontend_Game_WindowManager.default.md#instance)
 
 ### Methods
 
 - [acceptInputForTarget](Frontend_Game_WindowManager.default.md#acceptinputfortarget)
-- [getClickDelta](Frontend_Game_WindowManager.default.md#getclickdelta)
 - [getCursorState](Frontend_Game_WindowManager.default.md#getcursorstate)
 - [getIndex](Frontend_Game_WindowManager.default.md#getindex)
-- [getTooltip](Frontend_Game_WindowManager.default.md#gettooltip)
 - [setCursorState](Frontend_Game_WindowManager.default.md#setcursorstate)
-- [setTooltip](Frontend_Game_WindowManager.default.md#settooltip)
 - [getInstance](Frontend_Game_WindowManager.default.md#getinstance)
 
 ## Constructors
@@ -46,9 +41,9 @@ EventEmitter.constructor
 
 ## Properties
 
-### currentTooltip
+### activeWindowId$
 
-• `Private` **currentTooltip**: [`TooltipName`](../enums/Frontend_Game_WindowManager.TooltipName.md)
+• `Readonly` **activeWindowId$**: `Monomitter`<`string`\>
 
 ---
 
@@ -61,18 +56,6 @@ EventEmitter.constructor
 ### lastZIndex
 
 • `Private` **lastZIndex**: `number`
-
----
-
-### mousePos
-
-• `Private` **mousePos**: [`MousePos`](../modules/Frontend_Game_WindowManager.md#mousepos)
-
----
-
-### mousedownPos
-
-• `Private` **mousedownPos**: `null` \| [`MousePos`](../modules/Frontend_Game_WindowManager.md#mousepos)
 
 ---
 
@@ -98,16 +81,6 @@ EventEmitter.constructor
 
 ---
 
-### getClickDelta
-
-▸ **getClickDelta**(): [`MousePos`](../modules/Frontend_Game_WindowManager.md#mousepos)
-
-#### Returns
-
-[`MousePos`](../modules/Frontend_Game_WindowManager.md#mousepos)
-
----
-
 ### getCursorState
 
 ▸ **getCursorState**(): [`CursorState`](../enums/Frontend_Game_WindowManager.CursorState.md)
@@ -128,16 +101,6 @@ EventEmitter.constructor
 
 ---
 
-### getTooltip
-
-▸ **getTooltip**(): [`TooltipName`](../enums/Frontend_Game_WindowManager.TooltipName.md)
-
-#### Returns
-
-[`TooltipName`](../enums/Frontend_Game_WindowManager.TooltipName.md)
-
----
-
 ### setCursorState
 
 ▸ **setCursorState**(`newstate`): `void`
@@ -147,22 +110,6 @@ EventEmitter.constructor
 | Name       | Type                                                                 |
 | :--------- | :------------------------------------------------------------------- |
 | `newstate` | [`CursorState`](../enums/Frontend_Game_WindowManager.CursorState.md) |
-
-#### Returns
-
-`void`
-
----
-
-### setTooltip
-
-▸ **setTooltip**(`tooltip`): `void`
-
-#### Parameters
-
-| Name      | Type                                                                 |
-| :-------- | :------------------------------------------------------------------- |
-| `tooltip` | [`TooltipName`](../enums/Frontend_Game_WindowManager.TooltipName.md) |
 
 #### Returns
 

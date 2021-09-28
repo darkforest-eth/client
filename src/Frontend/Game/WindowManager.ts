@@ -1,3 +1,4 @@
+import { monomitter, Monomitter } from '@darkforest_eth/events';
 import { WorldCoords } from '@darkforest_eth/types';
 import { EventEmitter } from 'events';
 import { GameWindowZIndex } from '../Utils/constants';
@@ -11,9 +12,6 @@ export type MousePos = {
 export const enum WindowManagerEvent {
   StateChanged = 'StateChanged',
   MiningCoordsUpdate = 'MiningCoordsUpdate',
-  TooltipUpdated = 'TooltipUpdated',
-  CtrlDown = 'CtrlDown',
-  CtrlUp = 'CtrlUp',
 }
 
 export const enum CursorState {
@@ -23,7 +21,6 @@ export const enum CursorState {
 }
 
 export const enum TooltipName {
-  None,
   SilverGrowth,
   SilverCap,
   Silver,
@@ -47,6 +44,17 @@ export const enum TooltipName {
   CurrentMining,
   HoverPlanet,
   SilverProd,
+  TimeUntilActivationPossible,
+  DepositArtifact,
+  DeactivateArtifact,
+  WithdrawArtifact,
+  ActivateArtifact,
+
+  DefenseMultiplier,
+  EnergyCapMultiplier,
+  EnergyGrowthMultiplier,
+  RangeMultiplier,
+  SpeedMultiplier,
 
   // relative orders matter
   BonusEnergyCap,
@@ -85,30 +93,15 @@ export const enum TooltipName {
 
 class WindowManager extends EventEmitter {
   static instance: WindowManager;
-  private mousePos: MousePos;
-  private mousedownPos: MousePos | null;
   private lastZIndex: number;
   private cursorState: CursorState;
-  private currentTooltip: TooltipName;
+
+  public readonly activeWindowId$: Monomitter<string>;
 
   private constructor() {
     super();
-    this.mousePos = { x: 0, y: 0 };
-    this.mousedownPos = null;
     this.lastZIndex = 0;
-    this.currentTooltip = TooltipName.None;
-
-    // is it bad that this doesn't get cleaned up?
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Control') {
-        this.emit(WindowManagerEvent.CtrlDown);
-      }
-    });
-    window.addEventListener('keyup', (e) => {
-      if (e.key === 'Control') {
-        this.emit(WindowManagerEvent.CtrlUp);
-      }
-    });
+    this.activeWindowId$ = monomitter(true);
   }
 
   static getInstance(): WindowManager {
@@ -117,24 +110,6 @@ class WindowManager extends EventEmitter {
     }
 
     return WindowManager.instance;
-  }
-
-  setTooltip(tooltip: TooltipName): void {
-    this.currentTooltip = tooltip;
-    this.emit(WindowManagerEvent.TooltipUpdated, this.currentTooltip);
-  }
-
-  getTooltip(): TooltipName {
-    return this.currentTooltip;
-  }
-
-  getClickDelta(): MousePos {
-    if (!this.mousedownPos) return { x: 0, y: 0 };
-    else
-      return {
-        x: this.mousePos.x - this.mousedownPos.x,
-        y: this.mousePos.y - this.mousedownPos.y,
-      };
   }
 
   getIndex(): number {

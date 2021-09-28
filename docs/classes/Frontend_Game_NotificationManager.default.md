@@ -23,6 +23,7 @@
 - [artifactFound](Frontend_Game_NotificationManager.default.md#artifactfound)
 - [artifactProspected](Frontend_Game_NotificationManager.default.md#artifactprospected)
 - [balanceEmpty](Frontend_Game_NotificationManager.default.md#balanceempty)
+- [clearNotification](Frontend_Game_NotificationManager.default.md#clearnotification)
 - [foundBiome](Frontend_Game_NotificationManager.default.md#foundbiome)
 - [foundComet](Frontend_Game_NotificationManager.default.md#foundcomet)
 - [foundDeadSpace](Frontend_Game_NotificationManager.default.md#founddeadspace)
@@ -40,6 +41,7 @@
 - [planetCanUpgrade](Frontend_Game_NotificationManager.default.md#planetcanupgrade)
 - [planetConquered](Frontend_Game_NotificationManager.default.md#planetconquered)
 - [planetLost](Frontend_Game_NotificationManager.default.md#planetlost)
+- [reallyLongNotification](Frontend_Game_NotificationManager.default.md#reallylongnotification)
 - [receivedPlanet](Frontend_Game_NotificationManager.default.md#receivedplanet)
 - [txConfirm](Frontend_Game_NotificationManager.default.md#txconfirm)
 - [txInit](Frontend_Game_NotificationManager.default.md#txinit)
@@ -103,6 +105,22 @@ EventEmitter.constructor
 ### balanceEmpty
 
 ▸ **balanceEmpty**(): `void`
+
+#### Returns
+
+`void`
+
+---
+
+### clearNotification
+
+▸ **clearNotification**(`id`): `void`
+
+#### Parameters
+
+| Name | Type     |
+| :--- | :------- |
+| `id` | `string` |
 
 #### Returns
 
@@ -379,6 +397,16 @@ EventEmitter.constructor
 | Name     | Type              |
 | :------- | :---------------- |
 | `planet` | `LocatablePlanet` |
+
+#### Returns
+
+`void`
+
+---
+
+### reallyLongNotification
+
+▸ **reallyLongNotification**(): `void`
 
 #### Returns
 

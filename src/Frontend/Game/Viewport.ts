@@ -4,7 +4,6 @@ import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { CanvasCoords, distL2, vectorLength } from '../../Backend/Utils/Coordinates';
 import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
-import { AnimationManager } from './ViewportAnimation';
 
 export const getDefaultScroll = (): number => {
   const isFirefox = navigator.userAgent.indexOf('Firefox') > 0;
@@ -58,7 +57,6 @@ class Viewport {
 
   scale: number;
   private isSending = false;
-  private animationManager: AnimationManager;
 
   private constructor(
     gameUIManager: GameUIManager,
@@ -80,7 +78,6 @@ class Viewport {
 
     this.mouseLastCoords = centerWorldCoords;
     this.canvas = canvas;
-    this.animationManager = new AnimationManager();
 
     const scroll = localStorage.getItem('scrollSpeed');
     if (scroll) {
@@ -310,8 +307,6 @@ class Viewport {
 
   // Event handlers
   onMouseDown(canvasCoords: CanvasCoords) {
-    this.animationManager.stopCurrentAnimation();
-
     if (this.isSending) return;
 
     this.mousedownCoords = canvasCoords;

@@ -9,6 +9,7 @@
 - [loadGettersContract](Backend_Network_Blockchain.md#loadgetterscontract)
 - [loadGptCreditContract](Backend_Network_Blockchain.md#loadgptcreditcontract)
 - [loadScoringContract](Backend_Network_Blockchain.md#loadscoringcontract)
+- [loadTokensContract](Backend_Network_Blockchain.md#loadtokenscontract)
 - [loadWhitelistContract](Backend_Network_Blockchain.md#loadwhitelistcontract)
 
 ## Functions
@@ -109,6 +110,28 @@ Loads the Round 3 Scoring contract which tracks claimed planets and player claim
 #### Returns
 
 `Promise`<`DarkForestScoringRound3`\>
+
+---
+
+### loadTokensContract
+
+▸ **loadTokensContract**(`address`, `provider`, `signer?`): `Promise`<`DarkForestTokens`\>
+
+Loads the Tokens contract, which contains utility view functions which handles artifacts.
+
+**`see`** https://github.com/darkforest-eth/eth/blob/master/contracts/DarkForestTokens.sol
+
+#### Parameters
+
+| Name       | Type                        |
+| :--------- | :-------------------------- |
+| `address`  | `string`                    |
+| `provider` | `providers.JsonRpcProvider` |
+| `signer?`  | `Wallet`                    |
+
+#### Returns
+
+`Promise`<`DarkForestTokens`\>
 
 ---
 

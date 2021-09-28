@@ -11,7 +11,7 @@ import { Green, Red } from '../Components/Text';
 import Viewport, { getDefaultScroll } from '../Game/Viewport';
 import { useAccount, useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';
-import { BooleanSetting, MultiSelectSetting, Setting } from '../Utils/SettingsHooks';
+import { BooleanSetting, MultiSelectSetting, NumberSetting, Setting } from '../Utils/SettingsHooks';
 import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 
 const SCROLL_MIN = 0.0001 * 10000;
@@ -320,23 +320,50 @@ export function SettingsPane({
 
         <Section>
           <SectionHeader>Performance</SectionHeader>
-          Some performance settings. These will definitely be changed as we zero in on the
-          performance bottlenecks in this game.
-          <Spacer height={16} />
+          High performance mode turns off background rendering, and reduces the detail at which
+          smaller planets are rendered.
+          <Spacer height={8} />
           <BooleanSetting
             uiManager={uiManager}
             setting={Setting.HighPerformanceRendering}
-            settingDescription='performance mode'
+            settingDescription='high performance mode'
+          />
+          <Spacer height={8} />
+          <BooleanSetting
+            uiManager={uiManager}
+            setting={Setting.DisableEmojiRendering}
+            settingDescription='disable emoji rendering'
+          />
+          <Spacer height={8} />
+          <BooleanSetting
+            uiManager={uiManager}
+            setting={Setting.DisableHatRendering}
+            settingDescription='disable hat rendering'
           />
         </Section>
 
         <Section>
-          <SectionHeader>Show notifications for MOVE</SectionHeader>
+          <SectionHeader>Notifications</SectionHeader>
           <Spacer height={8} />
           <BooleanSetting
             uiManager={uiManager}
             setting={Setting.MoveNotifications}
-            settingDescription='move notifications'
+            settingDescription='show notifications for move transactions'
+          />
+          <Spacer height={8} />
+          Auto clear transaction confirmation notifications after this many seconds. Set to a
+          negative number to not auto-clear.
+          <Spacer height={8} />
+          <NumberSetting
+            uiManager={uiManager}
+            setting={Setting.AutoClearConfirmedTransactionsAfterSeconds}
+          />
+          <Spacer height={8} />
+          Auto clear transaction rejection notifications after this many seconds. Set to a negative
+          number to not auto-clear.
+          <NumberSetting
+            uiManager={uiManager}
+            setting={Setting.AutoClearRejectedTransactionsAfterSeconds}
           />
         </Section>
 

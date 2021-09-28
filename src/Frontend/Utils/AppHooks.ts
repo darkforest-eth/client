@@ -24,6 +24,10 @@ export const { useDefinedContext: useUIManager, provider: UIManagerProvider } =
 export const { useDefinedContext: useTopLevelDiv, provider: TopLevelDivProvider } =
   createDefinedContext<HTMLDivElement>();
 
+export function useOverlayContainer(): HTMLDivElement | null {
+  return useUIManager()?.getOverlayContainer()?.current ?? null;
+}
+
 /**
  * Get the currently used account on the client.
  * @param uiManager instance of GameUIManager

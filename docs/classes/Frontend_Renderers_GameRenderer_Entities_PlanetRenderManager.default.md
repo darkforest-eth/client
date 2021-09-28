@@ -225,15 +225,17 @@ energy would be able to travel.
 
 ### queueLocation
 
-▸ **queueLocation**(`renderInfo`, `now`, `highPerfMode`): `void`
+▸ **queueLocation**(`renderInfo`, `now`, `highPerfMode`, `disableEmojis`, `disableHats`): `void`
 
 #### Parameters
 
-| Name           | Type                                                                                       |
-| :------------- | :----------------------------------------------------------------------------------------- |
-| `renderInfo`   | [`PlanetRenderInfo`](../interfaces/Backend_GameLogic_ViewportEntities.PlanetRenderInfo.md) |
-| `now`          | `number`                                                                                   |
-| `highPerfMode` | `boolean`                                                                                  |
+| Name            | Type                                                                                       |
+| :-------------- | :----------------------------------------------------------------------------------------- |
+| `renderInfo`    | [`PlanetRenderInfo`](../interfaces/Backend_GameLogic_ViewportEntities.PlanetRenderInfo.md) |
+| `now`           | `number`                                                                                   |
+| `highPerfMode`  | `boolean`                                                                                  |
+| `disableEmojis` | `boolean`                                                                                  |
+| `disableHats`   | `boolean`                                                                                  |
 
 #### Returns
 
@@ -299,7 +301,7 @@ energy would be able to travel.
 
 ### queuePlanets
 
-▸ **queuePlanets**(`cachedPlanets`, `now`, `highPerfMode`): `void`
+▸ **queuePlanets**(`cachedPlanets`, `now`, `highPerfMode`, `disableEmojis`, `disableHats`): `void`
 
 #### Parameters
 
@@ -308,6 +310,8 @@ energy would be able to travel.
 | `cachedPlanets` | `Map`<`LocationId`, [`PlanetRenderInfo`](../interfaces/Backend_GameLogic_ViewportEntities.PlanetRenderInfo.md)\> |
 | `now`           | `number`                                                                                                         |
 | `highPerfMode`  | `boolean`                                                                                                        |
+| `disableEmojis` | `boolean`                                                                                                        |
+| `disableHats`   | `boolean`                                                                                                        |
 
 #### Returns
 

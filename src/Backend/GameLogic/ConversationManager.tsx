@@ -8,9 +8,6 @@ import {
   Message,
 } from '@darkforest_eth/types';
 import React from 'react';
-import styled from 'styled-components';
-import { WikiPane } from '../../Frontend/Panes/WikiPane';
-import dfstyles from '../../Frontend/Styles/dfstyles';
 import { TerminalTextStyle } from '../../Frontend/Utils/TerminalTypes';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import { startConversationOpenAI, stepConversationOpenAI } from '../Network/ConversationAPI';
@@ -128,18 +125,14 @@ export class ConversationManager {
     }
   }
 
-  private printClean(
-    message: string,
-    style?: TerminalTextStyle,
-    hoverContents?: () => JSX.Element
-  ) {
+  private printClean(message: string, style?: TerminalTextStyle) {
     let cleanedVersion = message;
 
     if (message !== null && message.length !== 0) {
       cleanedVersion = clean(message);
     }
 
-    this.terminal.current?.print(cleanedVersion, style, hoverContents);
+    this.terminal.current?.print(cleanedVersion, style);
   }
 
   private printLastMessage(message: Message) {
@@ -151,27 +144,10 @@ export class ConversationManager {
     let cursor = 0;
     for (const highlight of message.highlights) {
       this.printClean(message.message.substr(cursor, highlight.start - cursor));
-      this.printClean(
-        message.message.substr(highlight.start, highlight.stop - highlight.start),
-        TerminalTextStyle.Hoverable,
-        () => (
-          <WikiPane>
-            <WikiEntryTitle>{highlight.entry.name}</WikiEntryTitle>
-            {highlight.entry.definition}
-          </WikiPane>
-        )
-      );
+      this.printClean(message.message.substr(highlight.start, highlight.stop - highlight.start));
       cursor = highlight.stop;
     }
     this.terminal.current?.print(message.message.substr(cursor, message.message.length - cursor));
     this.terminal.current?.newline();
   }
 }
-
-const WikiEntryTitle = styled.div`
-  font-weight: bold;
-  font-size: 150%;
-  margin-bottom: 8px;
-  text-decoration: underline;
-  color: ${dfstyles.colors.text};
-`;

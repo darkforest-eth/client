@@ -3,12 +3,14 @@ import coreContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestCore.js
 import gettersContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestGetters.json';
 import gptCreditContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestGPTCredit.json';
 import scoringContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestScoringRound3.json';
+import tokensContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForestTokens.json';
 import whitelistContractAbiUrl from '@darkforest_eth/contracts/abis/Whitelist.json';
 import type {
   DarkForestCore,
   DarkForestGetters,
   DarkForestGPTCredit,
   DarkForestScoringRound3,
+  DarkForestTokens,
   Whitelist,
 } from '@darkforest_eth/contracts/typechain';
 import { createContract, createEthConnection, EthConnection } from '@darkforest_eth/network';
@@ -41,6 +43,20 @@ export async function loadGettersContract(
   const gettersContractAbi = await fetch(gettersContractAbiUrl).then((r) => r.json());
 
   return createContract<DarkForestGetters>(address, gettersContractAbi, provider, signer);
+}
+
+/**
+ * Loads the Tokens contract, which contains utility view functions which handles artifacts.
+ * @see https://github.com/darkforest-eth/eth/blob/master/contracts/DarkForestTokens.sol
+ */
+export async function loadTokensContract(
+  address: string,
+  provider: providers.JsonRpcProvider,
+  signer?: Wallet
+): Promise<DarkForestTokens> {
+  const tokensContractAbi = await fetch(tokensContractAbiUrl).then((r) => r.json());
+
+  return createContract<DarkForestTokens>(address, tokensContractAbi, provider, signer);
 }
 
 /**

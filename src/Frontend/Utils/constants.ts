@@ -46,4 +46,5 @@ export const enum GameWindowZIndex {
   HoverPlanet = 999,
   Modal = 1000,
   Tooltip = 16000000,
+  Notification = 1053,
 }

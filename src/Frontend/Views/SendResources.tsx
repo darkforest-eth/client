@@ -12,7 +12,7 @@ import { LongDash, Sub, Subber } from '../Components/Text';
 import WindowManager, { CursorState } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
 import { useOnSendCompleted, usePlanetInactiveArtifacts, useUIManager } from '../Utils/AppHooks';
-import { SpecialKey, useIsDown, useOnUp } from '../Utils/KeyEmitters';
+import { useOnUp } from '../Utils/KeyEmitters';
 import { EXIT_PANE, TOGGLE_SEND } from '../Utils/ShortcutConstants';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 
@@ -338,8 +338,6 @@ export function SendResources({
     }
   }, [p, windowManager, uiManager]);
 
-  const shiftDown = useIsDown(SpecialKey.Shift);
-
   useOnUp(TOGGLE_SEND, doSend);
   useOnUp(EXIT_PANE, () => {
     if (!sending) uiManager.selectedPlanetId$.publish(undefined);
@@ -349,27 +347,27 @@ export function SendResources({
     }
   });
 
-  for (let i = 0; i < 10; i++) {
+  // this variable is an array of 10 elements. each element is a key. whenever the user presses a
+  // key, we set the amount of energy that we're sending to be proportional to how late in the array
+  // that key is
+  const energyShortcuts = '1234567890'.split('');
+
+  // same as above, except for silver
+  const silverShortcuts = '!@#$%^&*()'.split('');
+
+  // for each of the above keys, we set up a listener that is triggered whenever that key is
+  // pressed, and sets the corresponding resource sending amount
+  for (let i = 0; i < energyShortcuts.length; i++) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    useOnUp(i + '', () => {
-      let percent = i * 10;
-
-      if (i === 0) {
-        percent = 100;
-      }
-
-      !shiftDown && setEnergyPercent(percent);
-      shiftDown && setSilverPercent(percent);
-    });
+    useOnUp(energyShortcuts[i], () => setEnergyPercent((i + 1) * 10));
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useOnUp(silverShortcuts[i], () => setSilverPercent((i + 1) * 10));
   }
 
-  const setPercent = shiftDown ? setSilverPercent : setEnergyPercent;
-  useOnUp('-', () => {
-    setPercent((p) => _.clamp(p - 10, 0, 100));
-  });
-  useOnUp('+', () => {
-    setPercent((p) => _.clamp(p + 10, 0, 100));
-  });
+  useOnUp('-', () => setEnergyPercent((p) => _.clamp(p - 10, 0, 100)));
+  useOnUp('=', () => setEnergyPercent((p) => _.clamp(p + 10, 0, 100)));
+  useOnUp('_', () => setSilverPercent((p) => _.clamp(p - 10, 0, 100)));
+  useOnUp('+', () => setSilverPercent((p) => _.clamp(p + 10, 0, 100)));
 
   useOnSendCompleted(() => {
     setSending(false);

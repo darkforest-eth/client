@@ -72,7 +72,6 @@ export function PaidArtifactConversationPane({
       title={title}
       hook={hook}
       backgroundColor={dfstyles.colors.dfyellow}
-      titlebarColor={dfstyles.colors.dfyellow}
       borderColor={'#918d0c'}
     >
       <ContentContainer>

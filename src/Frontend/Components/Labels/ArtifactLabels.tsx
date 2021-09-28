@@ -11,10 +11,9 @@ import { isAncient } from '../../../Backend/GameLogic/ArtifactUtils';
 import { RarityColors } from '../../Styles/Colors';
 import { LegendaryLabel } from './LegendaryLabel';
 import { MythicLabel } from './MythicLabel';
-// raw text
 
-export const ArtifactRarityText = ({ artifact }: { artifact: Artifact }) => (
-  <>{ArtifactRarityNames[artifact.rarity]}</>
+export const ArtifactRarityText = ({ rarity }: { rarity: ArtifactRarity }) => (
+  <>{ArtifactRarityNames[rarity]}</>
 );
 
 export const ArtifactBiomeText = ({ artifact }: { artifact: Artifact }) => (
@@ -31,26 +30,26 @@ export const StyledArtifactRarityLabel = styled.span<{ rarity: ArtifactRarity }>
   color: ${({ rarity }) => RarityColors[rarity]};
 `;
 
-export const ArtifactRarityLabel = ({ artifact }: { artifact: Artifact }) => (
-  <StyledArtifactRarityLabel rarity={artifact.rarity}>
-    <ArtifactRarityText artifact={artifact} />
+export const ArtifactRarityLabel = ({ rarity }: { rarity: ArtifactRarity }) => (
+  <StyledArtifactRarityLabel rarity={rarity}>
+    <ArtifactRarityText rarity={rarity} />
   </StyledArtifactRarityLabel>
 );
 
-export const ArtifactRarityLabelAnim = ({ artifact }: { artifact: Artifact }) =>
-  artifact.rarity === ArtifactRarity.Mythic ? (
+export const ArtifactRarityLabelAnim = ({ rarity }: { rarity: ArtifactRarity }) =>
+  rarity === ArtifactRarity.Mythic ? (
     <MythicLabel />
-  ) : artifact.rarity === ArtifactRarity.Legendary ? (
+  ) : rarity === ArtifactRarity.Legendary ? (
     <LegendaryLabel />
   ) : (
-    <ArtifactRarityLabel artifact={artifact} />
+    <ArtifactRarityLabel rarity={rarity} />
   );
 
 // combined labels
 
 export const ArtifactRarityBiomeTypeText = ({ artifact }: { artifact: Artifact }) => (
   <>
-    <ArtifactRarityText artifact={artifact} /> <ArtifactBiomeText artifact={artifact} />{' '}
+    <ArtifactRarityText rarity={artifact.rarity} /> <ArtifactBiomeText artifact={artifact} />{' '}
     <ArtifactTypeText artifact={artifact} />
   </>
 );

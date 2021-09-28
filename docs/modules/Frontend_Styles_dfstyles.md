@@ -60,6 +60,7 @@
 | `colors.subbesttext`           | `string`                     |
 | `colors.subtext`               | `string`                     |
 | `colors.text`                  | `string`                     |
+| `colors.textLight`             | `string`                     |
 | `fontH1`                       | `string`                     |
 | `fontH1S`                      | `string`                     |
 | `fontH2`                       | `string`                     |

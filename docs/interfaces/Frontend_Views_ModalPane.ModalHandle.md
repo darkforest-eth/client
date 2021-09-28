@@ -6,11 +6,28 @@
 
 ## Table of contents
 
+### Properties
+
+- [id](Frontend_Views_ModalPane.ModalHandle.md#id)
+- [isActive](Frontend_Views_ModalPane.ModalHandle.md#isactive)
+
 ### Methods
 
 - [pop](Frontend_Views_ModalPane.ModalHandle.md#pop)
 - [popAll](Frontend_Views_ModalPane.ModalHandle.md#popall)
 - [push](Frontend_Views_ModalPane.ModalHandle.md#push)
+
+## Properties
+
+### id
+
+• **id**: `string`
+
+---
+
+### isActive
+
+• **isActive**: `boolean`
 
 ## Methods
 

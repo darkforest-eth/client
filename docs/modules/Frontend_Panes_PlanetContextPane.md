@@ -5,6 +5,7 @@
 ### Functions
 
 - [PlanetContextPane](Frontend_Panes_PlanetContextPane.md#planetcontextpane)
+- [SelectedPlanetHelpContent](Frontend_Panes_PlanetContextPane.md#selectedplanethelpcontent)
 
 ## Functions
 
@@ -18,6 +19,16 @@
 | :----------------------- | :--------------------------------------------------- |
 | `__namedParameters`      | `Object`                                             |
 | `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+
+#### Returns
+
+`Element`
+
+---
+
+### SelectedPlanetHelpContent
+
+▸ **SelectedPlanetHelpContent**(): `Element`
 
 #### Returns
 

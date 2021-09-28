@@ -778,7 +778,7 @@ export const FoundPirates = ({ height, width }: AlertIcon) => {
   return <img height={height} width={width} src='public/icons/alerts/combat/pirates.svg' />;
 };
 
-export const FoundComet = ({ height, width }: AlertIcon) => {
+export const Generic = ({ height, width }: AlertIcon) => {
   return <img height={height} width={width} src='public/icons/alerts/generic/generic.svg' />;
 };
 

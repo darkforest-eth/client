@@ -8,7 +8,6 @@
 
 - [Blue](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#blue)
 - [Green](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#green)
-- [Hoverable](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#hoverable)
 - [Invisible](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#invisible)
 - [Mythic](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#mythic)
 - [Red](Frontend_Utils_TerminalTypes.TerminalTextStyle.md#red)
@@ -32,12 +31,6 @@
 
 ---
 
-### Hoverable
-
-• **Hoverable** = `9`
-
----
-
 ### Invisible
 
 • **Invisible** = `7`
@@ -46,7 +39,7 @@
 
 ### Mythic
 
-• **Mythic** = `10`
+• **Mythic** = `9`
 
 ---
 

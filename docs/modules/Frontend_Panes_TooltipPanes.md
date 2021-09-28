@@ -4,6 +4,7 @@
 
 ### Functions
 
+- [ActivateArtifactPane](Frontend_Panes_TooltipPanes.md#activateartifactpane)
 - [BonusDefenseTooltipPane](Frontend_Panes_TooltipPanes.md#bonusdefensetooltippane)
 - [BonusEnergyCapTooltipPane](Frontend_Panes_TooltipPanes.md#bonusenergycaptooltippane)
 - [BonusEnergyGroTooltipPane](Frontend_Panes_TooltipPanes.md#bonusenergygrotooltippane)
@@ -12,6 +13,11 @@
 - [BonusTooltipPane](Frontend_Panes_TooltipPanes.md#bonustooltippane)
 - [ClowntownTooltipPane](Frontend_Panes_TooltipPanes.md#clowntowntooltippane)
 - [CurrentMiningTooltipPane](Frontend_Panes_TooltipPanes.md#currentminingtooltippane)
+- [DeactivateArtifactPane](Frontend_Panes_TooltipPanes.md#deactivateartifactpane)
+- [DefenseMultiplierPane](Frontend_Panes_TooltipPanes.md#defensemultiplierpane)
+- [DepositArtifactPane](Frontend_Panes_TooltipPanes.md#depositartifactpane)
+- [EnergyCapMultiplierPane](Frontend_Panes_TooltipPanes.md#energycapmultiplierpane)
+- [EnergyGrowthMultiplierPane](Frontend_Panes_TooltipPanes.md#energygrowthmultiplierpane)
 - [EnergyGrowthTooltipPane](Frontend_Panes_TooltipPanes.md#energygrowthtooltippane)
 - [EnergyTooltipPane](Frontend_Panes_TooltipPanes.md#energytooltippane)
 - [MaxLevelTooltipPane](Frontend_Panes_TooltipPanes.md#maxleveltooltippane)
@@ -27,6 +33,7 @@
 - [ModalUpgradeDetailsTooltipPane](Frontend_Panes_TooltipPanes.md#modalupgradedetailstooltippane)
 - [PiratesTooltipPane](Frontend_Panes_TooltipPanes.md#piratestooltippane)
 - [PlanetRankTooltipPane](Frontend_Panes_TooltipPanes.md#planetranktooltippane)
+- [RangeMultiplierPane](Frontend_Panes_TooltipPanes.md#rangemultiplierpane)
 - [RangeTooltipPane](Frontend_Panes_TooltipPanes.md#rangetooltippane)
 - [RankTooltipPane](Frontend_Panes_TooltipPanes.md#ranktooltippane)
 - [ScoreTooltipPane](Frontend_Panes_TooltipPanes.md#scoretooltippane)
@@ -35,13 +42,26 @@
 - [SilverGrowthTooltipPane](Frontend_Panes_TooltipPanes.md#silvergrowthtooltippane)
 - [SilverProdTooltipPane](Frontend_Panes_TooltipPanes.md#silverprodtooltippane)
 - [SilverTooltipPane](Frontend_Panes_TooltipPanes.md#silvertooltippane)
+- [SpeedMultiplierPane](Frontend_Panes_TooltipPanes.md#speedmultiplierpane)
 - [Time50TooltipPane](Frontend_Panes_TooltipPanes.md#time50tooltippane)
 - [Time90TooltipPane](Frontend_Panes_TooltipPanes.md#time90tooltippane)
+- [TimeUntilActivationPossiblePane](Frontend_Panes_TooltipPanes.md#timeuntilactivationpossiblepane)
 - [TooltipContent](Frontend_Panes_TooltipPanes.md#tooltipcontent)
 - [TwitterHandleTooltipPane](Frontend_Panes_TooltipPanes.md#twitterhandletooltippane)
 - [UpgradesTooltipPane](Frontend_Panes_TooltipPanes.md#upgradestooltippane)
+- [WithdrawArtifactPane](Frontend_Panes_TooltipPanes.md#withdrawartifactpane)
 
 ## Functions
+
+### ActivateArtifactPane
+
+▸ **ActivateArtifactPane**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
 
 ### BonusDefenseTooltipPane
 
@@ -116,6 +136,56 @@
 ### CurrentMiningTooltipPane
 
 ▸ **CurrentMiningTooltipPane**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
+
+### DeactivateArtifactPane
+
+▸ **DeactivateArtifactPane**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
+
+### DefenseMultiplierPane
+
+▸ **DefenseMultiplierPane**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
+
+### DepositArtifactPane
+
+▸ **DepositArtifactPane**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
+
+### EnergyCapMultiplierPane
+
+▸ **EnergyCapMultiplierPane**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
+
+### EnergyGrowthMultiplierPane
+
+▸ **EnergyGrowthMultiplierPane**(): `Element`
 
 #### Returns
 
@@ -273,6 +343,16 @@
 
 ---
 
+### RangeMultiplierPane
+
+▸ **RangeMultiplierPane**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
+
 ### RangeTooltipPane
 
 ▸ **RangeTooltipPane**(): `Element`
@@ -353,6 +433,16 @@
 
 ---
 
+### SpeedMultiplierPane
+
+▸ **SpeedMultiplierPane**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
+
 ### Time50TooltipPane
 
 ▸ **Time50TooltipPane**(): `Element`
@@ -373,16 +463,26 @@
 
 ---
 
+### TimeUntilActivationPossiblePane
+
+▸ **TimeUntilActivationPossiblePane**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
+
 ### TooltipContent
 
 ▸ **TooltipContent**(`__namedParameters`): `Element`
 
 #### Parameters
 
-| Name                     | Type                                                                 |
-| :----------------------- | :------------------------------------------------------------------- |
-| `__namedParameters`      | `Object`                                                             |
-| `__namedParameters.name` | [`TooltipName`](../enums/Frontend_Game_WindowManager.TooltipName.md) |
+| Name                     | Type                                                                                |
+| :----------------------- | :---------------------------------------------------------------------------------- |
+| `__namedParameters`      | `Object`                                                                            |
+| `__namedParameters.name` | [`TooltipName`](../enums/Frontend_Game_WindowManager.TooltipName.md) \| `undefined` |
 
 #### Returns
 
@@ -403,6 +503,16 @@
 ### UpgradesTooltipPane
 
 ▸ **UpgradesTooltipPane**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
+
+### WithdrawArtifactPane
+
+▸ **WithdrawArtifactPane**(): `Element`
 
 #### Returns
 

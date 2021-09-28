@@ -30,6 +30,7 @@ import autoBind from 'auto-bind';
 import { BigNumber } from 'ethers';
 import EventEmitter from 'events';
 import deferred from 'p-defer';
+import React from 'react';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import Viewport from '../../Frontend/Game/Viewport';
 import WindowManager, { CursorState } from '../../Frontend/Game/WindowManager';
@@ -70,6 +71,13 @@ class GameUIManager extends EventEmitter {
   private readonly gameManager: GameManager;
 
   private terminal: React.MutableRefObject<TerminalHandle | undefined>;
+
+  /**
+   * In order to render React on top of the game, we need to insert React nodes into an overlay
+   * container. We keep a reference to this container, so that our React components can optionally
+   * choose to render themselves into this overlay container using React Portals.
+   */
+  private overlayContainer: React.MutableRefObject<HTMLDivElement | null>;
   private previousSelectedPlanet: Planet | undefined;
   private selectedPlanet: LocatablePlanet | undefined;
   private selectedCoords: WorldCoords | undefined;
@@ -163,6 +171,22 @@ class GameUIManager extends EventEmitter {
     this.viewportEntities = new ViewportEntities(this.gameManager, this);
 
     autoBind(this);
+  }
+
+  /**
+   * Sets the overlay container. See {@link GameUIManger.overlayContainer} for more information
+   * about what the overlay container is.
+   */
+  public setOverlayContainer(randomContainer: React.MutableRefObject<HTMLDivElement | null>) {
+    this.overlayContainer = randomContainer;
+  }
+
+  /**
+   * Gets the overlay container. See {@link GameUIManger.overlayContainer} for more information
+   * about what the overlay container is.
+   */
+  public getOverlayContainer(): React.MutableRefObject<HTMLDivElement | null> {
+    return this.overlayContainer;
   }
 
   public static async create(

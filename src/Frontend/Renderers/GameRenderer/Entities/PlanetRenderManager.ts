@@ -32,7 +32,13 @@ export default class PlanetRenderManager {
     this.renderer = renderer;
   }
 
-  queueLocation(renderInfo: PlanetRenderInfo, now: number, highPerfMode: boolean): void {
+  queueLocation(
+    renderInfo: PlanetRenderInfo,
+    now: number,
+    highPerfMode: boolean,
+    disableEmojis: boolean,
+    disableHats: boolean
+  ): void {
     const { gameUIManager: uiManager, circleRenderer: cR } = this.renderer;
     const planet = renderInfo.planet;
     const renderAtReducedQuality = renderInfo.radii.radiusPixels <= 5 && highPerfMode;
@@ -90,7 +96,9 @@ export default class PlanetRenderManager {
       );
     }
 
-    this.queueHat(planet, planet.location.coords, renderInfo.radii.radiusWorld);
+    if (!disableHats) {
+      this.queueHat(planet, planet.location.coords, renderInfo.radii.radiusWorld);
+    }
 
     /* draw text */
     if (!renderAtReducedQuality) {
@@ -109,12 +117,15 @@ export default class PlanetRenderManager {
       );
 
       this.queueArtifactIcon(planet, planet.location.coords, renderInfo.radii.radiusWorld);
-      this.drawPlanetMessages(
-        renderInfo,
-        planet.location.coords,
-        renderInfo.radii.radiusWorld,
-        isHovering ? 0.2 : textAlpha
-      );
+
+      if (!disableEmojis) {
+        this.drawPlanetMessages(
+          renderInfo,
+          planet.location.coords,
+          renderInfo.radii.radiusWorld,
+          isHovering ? 0.2 : textAlpha
+        );
+      }
     }
 
     if (isHovering && !isSelected) {
@@ -445,10 +456,12 @@ export default class PlanetRenderManager {
   queuePlanets(
     cachedPlanets: Map<LocationId, PlanetRenderInfo>,
     now: number,
-    highPerfMode: boolean
+    highPerfMode: boolean,
+    disableEmojis: boolean,
+    disableHats: boolean
   ): void {
     for (const entry of cachedPlanets.entries()) {
-      this.queueLocation(entry[1], now, highPerfMode);
+      this.queueLocation(entry[1], now, highPerfMode, disableEmojis, disableHats);
     }
   }
 

@@ -15,7 +15,6 @@ import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import {
   ArtifactFound,
   ArtifactProspected,
-  FoundComet,
   FoundCorrupted,
   FoundDeadSpace,
   FoundDeepSpace,
@@ -33,6 +32,7 @@ import {
   FoundTradingPost,
   FoundTundra,
   FoundWasteland,
+  Generic,
   PlanetAttacked,
   PlanetConquered,
   PlanetLost,
@@ -119,6 +119,7 @@ export type NotificationInfo = {
 
 export const enum NotificationManagerEvent {
   Notify = 'Notify',
+  ClearNotification = 'ClearNotification',
 }
 
 const getNotifColor = (type: NotificationType, txStatus?: EthTxStatus): string | undefined => {
@@ -179,9 +180,7 @@ class NotificationManager extends EventEmitter {
       case NotificationType.FoundTradingPost:
         return <FoundTradingPost height={'48px'} width={'48px'} />;
         break;
-      case NotificationType.FoundComet:
-        return <FoundComet height={'48px'} width={'48px'} />;
-        break;
+
       case NotificationType.FoundFoundry:
         return <FoundRuins height={'64px'} width={'64px'} />;
         break;
@@ -230,9 +229,29 @@ class NotificationManager extends EventEmitter {
       case NotificationType.ArtifactFound:
         return <ArtifactFound height={'48px'} width={'48px'} />;
       default:
-        return <span>!</span>;
+        return <Generic height={'48px'} width={'48px'} />;
         break;
     }
+  }
+
+  reallyLongNotification() {
+    let message = '';
+
+    for (let i = 0; i < 100; i++) {
+      message += 'lol ';
+    }
+
+    this.emit(NotificationManagerEvent.Notify, {
+      type: NotificationType.Generic,
+      message,
+      id: getRandomActionId(),
+      icon: this.getIcon(NotificationType.Generic),
+      color: getNotifColor(NotificationType.Generic),
+    });
+  }
+
+  clearNotification(id: string) {
+    this.emit(NotificationManagerEvent.ClearNotification, id);
   }
 
   notify(type: NotificationType, message: React.ReactNode): void {
@@ -443,8 +462,8 @@ class NotificationManager extends EventEmitter {
       NotificationType.ArtifactFound,
       <span>
         You have found <ArtifactNameLink id={artifact.id} />, a{' '}
-        <ArtifactRarityLabelAnim artifact={artifact} /> <ArtifactBiomeText artifact={artifact} />{' '}
-        <ArtifactTypeText artifact={artifact} />
+        <ArtifactRarityLabelAnim rarity={artifact.rarity} />{' '}
+        <ArtifactBiomeText artifact={artifact} /> <ArtifactTypeText artifact={artifact} />
         {'!'.repeat(artifact.rarity)} <br />
         Click to view <PlanetNameLink planet={planet} />
       </span>

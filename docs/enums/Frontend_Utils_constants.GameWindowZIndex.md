@@ -9,6 +9,7 @@
 - [HoverPlanet](Frontend_Utils_constants.GameWindowZIndex.md#hoverplanet)
 - [MenuBar](Frontend_Utils_constants.GameWindowZIndex.md#menubar)
 - [Modal](Frontend_Utils_constants.GameWindowZIndex.md#modal)
+- [Notification](Frontend_Utils_constants.GameWindowZIndex.md#notification)
 - [Tooltip](Frontend_Utils_constants.GameWindowZIndex.md#tooltip)
 
 ## Enumeration members
@@ -28,6 +29,12 @@
 ### Modal
 
 • **Modal** = `1000`
+
+---
+
+### Notification
+
+• **Notification** = `1053`
 
 ---
 

@@ -29,7 +29,7 @@ import {
 } from '../Components/Labels/PlanetLabels';
 import { PlanetPreview } from '../Components/PlanetPreview';
 import { ReadMore } from '../Components/ReadMore';
-import { Smaller, Sub } from '../Components/Text';
+import { Sub } from '../Components/Text';
 import { TextPreview } from '../Components/TextPreview';
 import { TooltipName } from '../Game/WindowManager';
 import { PlanetIcons } from '../Renderers/PlanetscapeRenderer/PlanetIcons';
@@ -44,7 +44,6 @@ import {
   TimesTwo,
   TitleBar,
 } from './PlanetCardComponents';
-import { DistanceFromCenterRow, PlanetClaimedRow } from './PlanetNotifications';
 
 export function PlanetCardTitle({
   planet,
@@ -311,13 +310,6 @@ export function PlanetCard({
           </ElevatedContainer>
         </FullWidth>
 
-        {standalone && (
-          <Smaller>
-            <PlanetClaimedRow planet={new Wrapper(planet)} />
-            <DistanceFromCenterRow planet={new Wrapper(planet)} />
-          </Smaller>
-        )}
-
         {!standalone && (
           <ReadMore height={'0'}>
             <SpreadApart>
@@ -341,12 +333,21 @@ export function PlanetCard({
             </SpreadApart>
 
             <SpreadApart>
-              <Sub>owner address</Sub>
+              <Sub>owner</Sub>
               <Sub>
                 <AccountLabel ethAddress={planet.owner} includeAddressIfHasTwitter={true} />
               </Sub>
             </SpreadApart>
           </ReadMore>
+        )}
+
+        {standalone && (
+          <SpreadApart>
+            <Sub>owner</Sub>
+            <Sub>
+              <AccountLabel ethAddress={planet.owner} includeAddressIfHasTwitter={true} />
+            </Sub>
+          </SpreadApart>
         )}
       </div>
     </>

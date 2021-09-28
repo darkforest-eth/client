@@ -12,6 +12,9 @@
 
 ▸ **NotificationsPane**(): `Element`
 
+React component in charge of listening for new notifications and displaying them interactively to
+the user.
+
 #### Returns
 
 `Element`

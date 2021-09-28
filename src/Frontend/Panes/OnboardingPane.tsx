@@ -12,21 +12,13 @@ const StyledOnboardingContent = styled.div`
   width: 36em;
   height: 32em;
   position: relative;
-  padding: 16px;
+  padding: 8px;
+  color: ${dfstyles.colors.text};
 
   .btn {
     position: absolute;
     right: 0.5em;
     bottom: 0.5em;
-  }
-
-  a {
-    color: ${dfstyles.colors.text};
-    text-decoration: underline;
-  }
-
-  p {
-    color: ${dfstyles.colors.subtext};
   }
 
   .indent {

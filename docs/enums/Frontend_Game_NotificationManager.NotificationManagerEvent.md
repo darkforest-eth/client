@@ -6,9 +6,16 @@
 
 ### Enumeration members
 
+- [ClearNotification](Frontend_Game_NotificationManager.NotificationManagerEvent.md#clearnotification)
 - [Notify](Frontend_Game_NotificationManager.NotificationManagerEvent.md#notify)
 
 ## Enumeration members
+
+### ClearNotification
+
+• **ClearNotification** = `"ClearNotification"`
+
+---
 
 ### Notify
 

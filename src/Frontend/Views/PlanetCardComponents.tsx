@@ -95,8 +95,8 @@ export function PlanetActiveArtifact({
         Active Artifact:{' '}
         <White>
           {' '}
-          <ArtifactRarityLabelAnim artifact={artifact} /> <ArtifactBiomeText artifact={artifact} />{' '}
-          <ArtifactTypeText artifact={artifact} />
+          <ArtifactRarityLabelAnim rarity={artifact.rarity} />{' '}
+          <ArtifactBiomeText artifact={artifact} /> <ArtifactTypeText artifact={artifact} />
         </White>
       </Sub>
     </StyledPlanetActiveArtifact>

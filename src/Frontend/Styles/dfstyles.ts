@@ -13,6 +13,7 @@ export const SPACE_TYPE_COLORS = {
 } as const;
 
 const text = color('#bbb').hex();
+const textLight = color(text).lighten(0.3).hex();
 const subtext = color(text).darken(0.3).hex();
 const subbertext = color(text).darken(0.5).hex();
 const subbesttext = color(text).darken(0.8).hex();
@@ -40,6 +41,7 @@ const dfwhite = '#ffffff';
 const dfstyles = {
   colors: {
     text,
+    textLight,
     subtext,
     subbertext,
     subbesttext,

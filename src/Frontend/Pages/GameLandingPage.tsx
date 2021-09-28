@@ -202,6 +202,22 @@ export function GameLandingPage() {
         TerminalTextStyle.Text
       );
       terminal.current?.newline();
+
+      terminal.current?.print('    v0.6 r3    ', TerminalTextStyle.Text);
+      terminal.current?.print('08/22/2021        ', TerminalTextStyle.Text);
+      terminal.current?.printLink(
+        '@orden_gg',
+        () => {
+          window.open('https://twitter.com/orden_gg');
+        },
+        TerminalTextStyle.Text
+      );
+      terminal.current?.newline();
+
+      terminal.current?.print('    v0.6 r4    ', TerminalTextStyle.Text);
+      terminal.current?.print('10/01/2021        ', TerminalTextStyle.Text);
+      terminal.current?.print('t.b.d');
+      terminal.current?.newline();
       terminal.current?.newline();
 
       const accounts = getAccounts();

@@ -56,9 +56,6 @@ export function getNotifsForPlanet(
     notifs.push(PlanetNotifType.CanAddEmoji);
   }
 
-  if (planet.claimer !== undefined) notifs.push(PlanetNotifType.Claimed);
-  notifs.push(PlanetNotifType.DistanceFromCenter);
-
   return notifs;
 }
 

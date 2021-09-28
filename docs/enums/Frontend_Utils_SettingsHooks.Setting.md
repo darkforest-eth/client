@@ -10,7 +10,11 @@ per instance of the dark forest contract that it's connected to.
 ### Enumeration members
 
 - [AutoApproveNonPurchaseTransactions](Frontend_Utils_SettingsHooks.Setting.md#autoapprovenonpurchasetransactions)
+- [AutoClearConfirmedTransactionsAfterSeconds](Frontend_Utils_SettingsHooks.Setting.md#autoclearconfirmedtransactionsafterseconds)
+- [AutoClearRejectedTransactionsAfterSeconds](Frontend_Utils_SettingsHooks.Setting.md#autoclearrejectedtransactionsafterseconds)
 - [DisableDefaultShortcuts](Frontend_Utils_SettingsHooks.Setting.md#disabledefaultshortcuts)
+- [DisableEmojiRendering](Frontend_Utils_SettingsHooks.Setting.md#disableemojirendering)
+- [DisableHatRendering](Frontend_Utils_SettingsHooks.Setting.md#disablehatrendering)
 - [DrawChunkBorders](Frontend_Utils_SettingsHooks.Setting.md#drawchunkborders)
 - [ExperimentalFeatures](Frontend_Utils_SettingsHooks.Setting.md#experimentalfeatures)
 - [FoundArtifact](Frontend_Utils_SettingsHooks.Setting.md#foundartifact)
@@ -41,9 +45,33 @@ per instance of the dark forest contract that it's connected to.
 
 ---
 
+### AutoClearConfirmedTransactionsAfterSeconds
+
+• **AutoClearConfirmedTransactionsAfterSeconds** = `"AutoClearConfirmedTransactionsAfterSeconds"`
+
+---
+
+### AutoClearRejectedTransactionsAfterSeconds
+
+• **AutoClearRejectedTransactionsAfterSeconds** = `"AutoClearRejectedTransactionsAfterSeconds"`
+
+---
+
 ### DisableDefaultShortcuts
 
 • **DisableDefaultShortcuts** = `"DisableDefaultShortcuts"`
+
+---
+
+### DisableEmojiRendering
+
+• **DisableEmojiRendering** = `"DisableEmojiRendering"`
+
+---
+
+### DisableHatRendering
+
+• **DisableHatRendering** = `"DisableHatRendering"`
 
 ---
 

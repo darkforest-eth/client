@@ -6,6 +6,7 @@
 
 ### Enumeration members
 
+- [ActivateArtifact](Frontend_Game_WindowManager.TooltipName.md#activateartifact)
 - [ArtifactBuff](Frontend_Game_WindowManager.TooltipName.md#artifactbuff)
 - [ArtifactStored](Frontend_Game_WindowManager.TooltipName.md#artifactstored)
 - [Bonus](Frontend_Game_WindowManager.TooltipName.md#bonus)
@@ -16,9 +17,14 @@
 - [BonusSpeed](Frontend_Game_WindowManager.TooltipName.md#bonusspeed)
 - [Clowntown](Frontend_Game_WindowManager.TooltipName.md#clowntown)
 - [CurrentMining](Frontend_Game_WindowManager.TooltipName.md#currentmining)
+- [DeactivateArtifact](Frontend_Game_WindowManager.TooltipName.md#deactivateartifact)
 - [Defense](Frontend_Game_WindowManager.TooltipName.md#defense)
+- [DefenseMultiplier](Frontend_Game_WindowManager.TooltipName.md#defensemultiplier)
+- [DepositArtifact](Frontend_Game_WindowManager.TooltipName.md#depositartifact)
 - [Energy](Frontend_Game_WindowManager.TooltipName.md#energy)
+- [EnergyCapMultiplier](Frontend_Game_WindowManager.TooltipName.md#energycapmultiplier)
 - [EnergyGrowth](Frontend_Game_WindowManager.TooltipName.md#energygrowth)
+- [EnergyGrowthMultiplier](Frontend_Game_WindowManager.TooltipName.md#energygrowthmultiplier)
 - [FindArtifact](Frontend_Game_WindowManager.TooltipName.md#findartifact)
 - [HashesPerSec](Frontend_Game_WindowManager.TooltipName.md#hashespersec)
 - [HoverPlanet](Frontend_Game_WindowManager.TooltipName.md#hoverplanet)
@@ -39,10 +45,10 @@
 - [ModalUpgradeDetails](Frontend_Game_WindowManager.TooltipName.md#modalupgradedetails)
 - [ModalWithdrawSilver](Frontend_Game_WindowManager.TooltipName.md#modalwithdrawsilver)
 - [ModalYourArtifacts](Frontend_Game_WindowManager.TooltipName.md#modalyourartifacts)
-- [None](Frontend_Game_WindowManager.TooltipName.md#none)
 - [Pirates](Frontend_Game_WindowManager.TooltipName.md#pirates)
 - [PlanetRank](Frontend_Game_WindowManager.TooltipName.md#planetrank)
 - [Range](Frontend_Game_WindowManager.TooltipName.md#range)
+- [RangeMultiplier](Frontend_Game_WindowManager.TooltipName.md#rangemultiplier)
 - [Rank](Frontend_Game_WindowManager.TooltipName.md#rank)
 - [Score](Frontend_Game_WindowManager.TooltipName.md#score)
 - [SelectedSilver](Frontend_Game_WindowManager.TooltipName.md#selectedsilver)
@@ -51,301 +57,358 @@
 - [SilverGrowth](Frontend_Game_WindowManager.TooltipName.md#silvergrowth)
 - [SilverProd](Frontend_Game_WindowManager.TooltipName.md#silverprod)
 - [Speed](Frontend_Game_WindowManager.TooltipName.md#speed)
+- [SpeedMultiplier](Frontend_Game_WindowManager.TooltipName.md#speedmultiplier)
 - [Time50](Frontend_Game_WindowManager.TooltipName.md#time50)
 - [Time90](Frontend_Game_WindowManager.TooltipName.md#time90)
+- [TimeUntilActivationPossible](Frontend_Game_WindowManager.TooltipName.md#timeuntilactivationpossible)
 - [TwitterHandle](Frontend_Game_WindowManager.TooltipName.md#twitterhandle)
 - [Upgrades](Frontend_Game_WindowManager.TooltipName.md#upgrades)
+- [WithdrawArtifact](Frontend_Game_WindowManager.TooltipName.md#withdrawartifact)
 
 ## Enumeration members
 
+### ActivateArtifact
+
+• **ActivateArtifact** = `27`
+
+---
+
 ### ArtifactBuff
 
-• **ArtifactBuff** = `35`
+• **ArtifactBuff** = `44`
 
 ---
 
 ### ArtifactStored
 
-• **ArtifactStored** = `14`
+• **ArtifactStored** = `13`
 
 ---
 
 ### Bonus
 
-• **Bonus** = `5`
+• **Bonus** = `4`
 
 ---
 
 ### BonusDefense
 
-• **BonusDefense** = `28`
+• **BonusDefense** = `37`
 
 ---
 
 ### BonusEnergyCap
 
-• **BonusEnergyCap** = `24`
+• **BonusEnergyCap** = `33`
 
 ---
 
 ### BonusEnergyGro
 
-• **BonusEnergyGro** = `25`
+• **BonusEnergyGro** = `34`
 
 ---
 
 ### BonusRange
 
-• **BonusRange** = `26`
+• **BonusRange** = `35`
 
 ---
 
 ### BonusSpeed
 
-• **BonusSpeed** = `27`
+• **BonusSpeed** = `36`
 
 ---
 
 ### Clowntown
 
-• **Clowntown** = `34`
+• **Clowntown** = `43`
 
 ---
 
 ### CurrentMining
 
-• **CurrentMining** = `21`
+• **CurrentMining** = `20`
+
+---
+
+### DeactivateArtifact
+
+• **DeactivateArtifact** = `25`
 
 ---
 
 ### Defense
 
-• **Defense** = `33`
+• **Defense** = `42`
+
+---
+
+### DefenseMultiplier
+
+• **DefenseMultiplier** = `28`
+
+---
+
+### DepositArtifact
+
+• **DepositArtifact** = `24`
 
 ---
 
 ### Energy
 
-• **Energy** = `29`
+• **Energy** = `38`
+
+---
+
+### EnergyCapMultiplier
+
+• **EnergyCapMultiplier** = `29`
 
 ---
 
 ### EnergyGrowth
 
-• **EnergyGrowth** = `30`
+• **EnergyGrowth** = `39`
+
+---
+
+### EnergyGrowthMultiplier
+
+• **EnergyGrowthMultiplier** = `30`
 
 ---
 
 ### FindArtifact
 
-• **FindArtifact** = `13`
+• **FindArtifact** = `12`
 
 ---
 
 ### HashesPerSec
 
-• **HashesPerSec** = `20`
+• **HashesPerSec** = `19`
 
 ---
 
 ### HoverPlanet
 
-• **HoverPlanet** = `22`
+• **HoverPlanet** = `21`
 
 ---
 
 ### MaxLevel
 
-• **MaxLevel** = `12`
+• **MaxLevel** = `11`
 
 ---
 
 ### MinEnergy
 
-• **MinEnergy** = `6`
+• **MinEnergy** = `5`
 
 ---
 
 ### MiningPause
 
-• **MiningPause** = `18`
+• **MiningPause** = `17`
 
 ---
 
 ### MiningTarget
 
-• **MiningTarget** = `19`
+• **MiningTarget** = `18`
 
 ---
 
 ### ModalFindArtifact
 
-• **ModalFindArtifact** = `46`
+• **ModalFindArtifact** = `55`
 
 ---
 
 ### ModalHats
 
-• **ModalHats** = `43`
+• **ModalHats** = `52`
 
 ---
 
 ### ModalHelp
 
-• **ModalHelp** = `36`
+• **ModalHelp** = `45`
 
 ---
 
 ### ModalLeaderboard
 
-• **ModalLeaderboard** = `38`
+• **ModalLeaderboard** = `47`
 
 ---
 
 ### ModalPlanetDetails
 
-• **ModalPlanetDetails** = `37`
+• **ModalPlanetDetails** = `46`
 
 ---
 
 ### ModalPlanetDex
 
-• **ModalPlanetDex** = `39`
+• **ModalPlanetDex** = `48`
 
 ---
 
 ### ModalPlugins
 
-• **ModalPlugins** = `47`
+• **ModalPlugins** = `56`
 
 ---
 
 ### ModalSettings
 
-• **ModalSettings** = `44`
+• **ModalSettings** = `53`
 
 ---
 
 ### ModalTwitterBroadcast
 
-• **ModalTwitterBroadcast** = `42`
+• **ModalTwitterBroadcast** = `51`
 
 ---
 
 ### ModalTwitterVerification
 
-• **ModalTwitterVerification** = `41`
+• **ModalTwitterVerification** = `50`
 
 ---
 
 ### ModalUpgradeDetails
 
-• **ModalUpgradeDetails** = `40`
+• **ModalUpgradeDetails** = `49`
 
 ---
 
 ### ModalWithdrawSilver
 
-• **ModalWithdrawSilver** = `48`
+• **ModalWithdrawSilver** = `57`
 
 ---
 
 ### ModalYourArtifacts
 
-• **ModalYourArtifacts** = `45`
-
----
-
-### None
-
-• **None** = `0`
+• **ModalYourArtifacts** = `54`
 
 ---
 
 ### Pirates
 
-• **Pirates** = `9`
+• **Pirates** = `8`
 
 ---
 
 ### PlanetRank
 
-• **PlanetRank** = `11`
+• **PlanetRank** = `10`
 
 ---
 
 ### Range
 
-• **Range** = `31`
+• **Range** = `40`
+
+---
+
+### RangeMultiplier
+
+• **RangeMultiplier** = `31`
 
 ---
 
 ### Rank
 
-• **Rank** = `16`
+• **Rank** = `15`
 
 ---
 
 ### Score
 
-• **Score** = `17`
+• **Score** = `16`
 
 ---
 
 ### SelectedSilver
 
-• **SelectedSilver** = `15`
+• **SelectedSilver** = `14`
 
 ---
 
 ### Silver
 
-• **Silver** = `3`
+• **Silver** = `2`
 
 ---
 
 ### SilverCap
 
-• **SilverCap** = `2`
+• **SilverCap** = `1`
 
 ---
 
 ### SilverGrowth
 
-• **SilverGrowth** = `1`
+• **SilverGrowth** = `0`
 
 ---
 
 ### SilverProd
 
-• **SilverProd** = `23`
+• **SilverProd** = `22`
 
 ---
 
 ### Speed
 
-• **Speed** = `32`
+• **Speed** = `41`
+
+---
+
+### SpeedMultiplier
+
+• **SpeedMultiplier** = `32`
 
 ---
 
 ### Time50
 
-• **Time50** = `7`
+• **Time50** = `6`
 
 ---
 
 ### Time90
 
-• **Time90** = `8`
+• **Time90** = `7`
+
+---
+
+### TimeUntilActivationPossible
+
+• **TimeUntilActivationPossible** = `23`
 
 ---
 
 ### TwitterHandle
 
-• **TwitterHandle** = `4`
+• **TwitterHandle** = `3`
 
 ---
 
 ### Upgrades
 
-• **Upgrades** = `10`
+• **Upgrades** = `9`
+
+---
+
+### WithdrawArtifact
+
+• **WithdrawArtifact** = `26`

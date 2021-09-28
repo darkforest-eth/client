@@ -65,15 +65,14 @@
 
 ### print
 
-▸ **print**(`str`, `style?`, `hoverContents?`): `void`
+▸ **print**(`str`, `style?`): `void`
 
 #### Parameters
 
-| Name             | Type                                                                              |
-| :--------------- | :-------------------------------------------------------------------------------- |
-| `str`            | `string`                                                                          |
-| `style?`         | [`TerminalTextStyle`](../enums/Frontend_Utils_TerminalTypes.TerminalTextStyle.md) |
-| `hoverContents?` | () => `Element`                                                                   |
+| Name     | Type                                                                              |
+| :------- | :-------------------------------------------------------------------------------- |
+| `str`    | `string`                                                                          |
+| `style?` | [`TerminalTextStyle`](../enums/Frontend_Utils_TerminalTypes.TerminalTextStyle.md) |
 
 #### Returns
 
@@ -160,15 +159,14 @@
 
 ### println
 
-▸ **println**(`str`, `style?`, `hoverContents?`): `void`
+▸ **println**(`str`, `style?`): `void`
 
 #### Parameters
 
-| Name             | Type                                                                              |
-| :--------------- | :-------------------------------------------------------------------------------- |
-| `str`            | `string`                                                                          |
-| `style?`         | [`TerminalTextStyle`](../enums/Frontend_Utils_TerminalTypes.TerminalTextStyle.md) |
-| `hoverContents?` | () => `Element`                                                                   |
+| Name     | Type                                                                              |
+| :------- | :-------------------------------------------------------------------------------- |
+| `str`    | `string`                                                                          |
+| `style?` | [`TerminalTextStyle`](../enums/Frontend_Utils_TerminalTypes.TerminalTextStyle.md) |
 
 #### Returns
 

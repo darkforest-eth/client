@@ -129,15 +129,14 @@
 
 ### printClean
 
-▸ `Private` **printClean**(`message`, `style?`, `hoverContents?`): `void`
+▸ `Private` **printClean**(`message`, `style?`): `void`
 
 #### Parameters
 
-| Name             | Type                                                                              |
-| :--------------- | :-------------------------------------------------------------------------------- |
-| `message`        | `string`                                                                          |
-| `style?`         | [`TerminalTextStyle`](../enums/Frontend_Utils_TerminalTypes.TerminalTextStyle.md) |
-| `hoverContents?` | () => `Element`                                                                   |
+| Name      | Type                                                                              |
+| :-------- | :-------------------------------------------------------------------------------- |
+| `message` | `string`                                                                          |
+| `style?`  | [`TerminalTextStyle`](../enums/Frontend_Utils_TerminalTypes.TerminalTextStyle.md) |
 
 #### Returns
 

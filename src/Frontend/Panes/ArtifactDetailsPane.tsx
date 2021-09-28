@@ -201,7 +201,7 @@ export function ArtifactDetailsBody({
     <PaddedRecommendedModalWidth>
       <ArtifactName>{artifactName(artifact)}</ArtifactName>
       <ArtifactNameSubtitle>
-        <ArtifactRarityLabelAnim artifact={artifact} />{' '}
+        <ArtifactRarityLabelAnim rarity={artifact.rarity} />{' '}
         <ArtifactBiomeLabelAnim artifact={artifact} /> <ArtifactTypeText artifact={artifact} />
       </ArtifactNameSubtitle>
 

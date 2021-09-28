@@ -70,7 +70,7 @@
 
 ### CLAIM_PLANET_COOLDOWN
 
-• **CLAIM_PLANET_COOLDOWN**: `number`
+• `Optional` **CLAIM_PLANET_COOLDOWN**: `number`
 
 ---
 

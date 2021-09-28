@@ -2,103 +2,127 @@ import { PlanetType } from '@darkforest_eth/types';
 import React from 'react';
 import { getPlanetRank, isFullRank } from '../../Backend/Utils/Utils';
 import { ScoreLabel } from '../Components/Labels/KeywordLabels';
-import { Green, Red, Sub, White } from '../Components/Text';
+import { Green, Red, White } from '../Components/Text';
 import { TooltipName } from '../Game/WindowManager';
 import { useAccount, useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 
+export function DefenseMultiplierPane() {
+  return <>Defense multiplier</>;
+}
+
+export function EnergyCapMultiplierPane() {
+  return <>EnergyCap multiplier</>;
+}
+
+export function EnergyGrowthMultiplierPane() {
+  return <>EnergyGrowth multiplier</>;
+}
+
+export function RangeMultiplierPane() {
+  return <>Range multiplier</>;
+}
+
+export function SpeedMultiplierPane() {
+  return <>Speed multiplier</>;
+}
+
+export function DepositArtifactPane() {
+  return <>Deposit this artifact</>;
+}
+
+export function DeactivateArtifactPane() {
+  return <>Deactivate this artifact</>;
+}
+
+export function WithdrawArtifactPane() {
+  return <>Withdraw this artifact</>;
+}
+
+export function ActivateArtifactPane() {
+  return <>Activate this artifact</>;
+}
+
+export function TimeUntilActivationPossiblePane() {
+  return <>You must wait this amount of time before you can activate this artifact</>;
+}
+
 export function TwitterHandleTooltipPane() {
   return (
-    <div>
-      <Sub>
-        You may connect your account to <White>Twitter</White>
-        <br />
-        to identify yourself on the <White>Leaderboard</White>.
-      </Sub>
-    </div>
+    <>
+      You may connect your account to <White>Twitter</White>
+      <br />
+      to identify yourself on the <White>Leaderboard</White>.
+    </>
   );
 }
 
 export function RankTooltipPane() {
   return (
-    <div>
-      <Sub>
-        Your current rank, based on <ScoreLabel />.
-      </Sub>
-    </div>
+    <>
+      Your current rank, based on <ScoreLabel />.
+    </>
   );
 }
 
 export function ScoreTooltipPane() {
   return (
-    <div>
-      <Sub>
-        Your current <ScoreLabel /> is the distance between your closest to the center claimed
-        planet and the center. Check out the <White>Help Pane</White> for more info on scoring.
-      </Sub>
-    </div>
+    <>
+      You earn <ScoreLabel /> by finding artifacts and withdrawing silver. Check out the{' '}
+      <White>Help Pane</White> for more info on scoring.
+    </>
   );
 }
 
 export function MiningPauseTooltipPane() {
   return (
-    <div>
-      <Sub>
-        Start / Stop your <White>explorer</White>. Your explorerer looks for planets in chunks of{' '}
-        <White>16</White> x <White>16</White>.
-      </Sub>
-    </div>
+    <>
+      Start / Stop your <White>explorer</White>. Your explorer looks for planets in chunks of{' '}
+      <White>16</White> x <White>16</White>.
+    </>
   );
 }
 
 export function MiningTargetTooltipPane() {
   return (
-    <div>
-      <Sub>
-        Change the location of your <White>explorer</White>. Click anywhere on the{' '}
-        <White>Game Screen</White>, and your <White>miner</White> will start hashing around that
-        chunk.
-      </Sub>
-    </div>
+    <>
+      Change the location of your <White>explorer</White>. Click anywhere on the{' '}
+      <White>Game Screen</White>, and your <White>miner</White> will start hashing around that
+      chunk.
+    </>
   );
 }
 
 export function CurrentMiningTooltipPane() {
   return (
-    <div>
-      <Sub>
-        The current coordinates of your <White>explorer</White>.
-      </Sub>
-    </div>
+    <>
+      The current coordinates of your <White>explorer</White>.
+    </>
   );
 }
 
 export function BonusTooltipPane() {
   return (
-    <div>
+    <>
       <Green>This stat has been randomly doubled!</Green>
-    </div>
+    </>
   );
 }
 
 export function SilverTooltipPane() {
   return (
-    <div>
-      <Sub>
-        <White>Silver:</White> the universe's monetary resource. It allows you to buy upgrades. Only
-        <White> Asteroid Fields</White> produce silver. They're much rarer than planets!
-      </Sub>
-    </div>
+    <>
+      <White>Silver:</White> the universe's monetary resource. It allows you to buy upgrades. Only
+      <White> Asteroid Fields</White> produce silver or so we've been told...
+    </>
   );
 }
 
 export function EnergyTooltipPane() {
   return (
-    <div>
-      <Sub>
-        <White>Energy:</White> allows you to make moves. Energy grows following an{' '}
-        <White>s-curve</White>, and grows fastest at <White>50% capacity</White>.
-      </Sub>
-    </div>
+    <>
+      <White>Energy:</White> allows you to make moves. Energy grows following an{' '}
+      <White>s-curve</White>, and grows fastest at <White>50% capacity</White>.
+    </>
   );
 }
 
@@ -107,33 +131,27 @@ export function PlanetRankTooltipPane() {
   const selected = useSelectedPlanet(uiManager);
   const rank = getPlanetRank(selected.value);
   return (
-    <div>
-      <Sub>
-        This planet is{' '}
-        <White>{isFullRank(selected.value) ? 'fully upgraded' : 'rank ' + rank}</White>!
-      </Sub>
-    </div>
+    <>
+      This planet is <White>{isFullRank(selected.value) ? 'fully upgraded' : 'rank ' + rank}</White>
+      !
+    </>
   );
 }
 
 export function MaxLevelTooltipPane() {
   return (
-    <div>
-      <Sub>
-        This planet is <White>Level 9</White>, making it one of the <br />
-        most powerful planets in the galaxy!
-      </Sub>
-    </div>
+    <>
+      This planet is <White>Level 9</White>, making it one of the <br />
+      most powerful planets in the galaxy!
+    </>
   );
 }
 
 export function SilverProdTooltipPane() {
   return (
-    <div>
-      <Sub>
-        This planet produces <White>Silver</White>! Use it to buy upgrades!
-      </Sub>
-    </div>
+    <>
+      This planet produces <White>Silver</White>! Use it to buy upgrades!
+    </>
   );
 }
 
@@ -142,205 +160,187 @@ export function SelectedSilverTooltipPane() {
   const selected = useSelectedPlanet(uiManager);
 
   return (
-    <div>
+    <>
       {selected.value ? (
         <>
-          <div>
-            <Sub>Silver:</Sub>
+          <>
+            Silver:
             <span>{selected.value.silver}</span>
-          </div>
-          <div>
-            <Sub>Cap:</Sub>
+          </>
+          <>
+            Cap:
             <span>{selected.value.silverCap}</span>
-          </div>
+          </>
           {selected.value.planetType === PlanetType.SILVER_MINE ? (
-            <div>
-              <Sub>Growth:</Sub>
+            <>
+              Growth:
               <span>{selected.value.silverGrowth * 60}</span>
-            </div>
+            </>
           ) : (
-            <div>
+            <>
               <Red>This planet does not produce silver.</Red>
-            </div>
+            </>
           )}
         </>
       ) : (
-        <>Select a planet to view more about its stats.</>
+        <>Select a planet to view more about its stats. </>
       )}
-    </div>
+    </>
   );
 }
 
 export function RangeTooltipPane() {
   return (
-    <div>
-      <Sub>
-        <White>Range:</White> how far you can send your forces. <White>Forces decay</White> the
-        farther out you send them. <br />
-        Higher range means that you can send forces the same distance with less decay.
-      </Sub>
-    </div>
+    <>
+      <White>Range:</White> how far you can send your forces. <White>Forces decay</White> the
+      farther out you send them. <br />
+      Higher range means that you can send forces the same distance with less decay.
+    </>
   );
 }
 
 export function MinEnergyTooltipPane() {
   return (
-    <div>
-      <Sub>
-        The minimum energy you need to send a move from this planet. <br />
-        Moves incur a base cost of 5% of the planet's <White>Energy Cap</White>.
-      </Sub>
-    </div>
+    <>
+      The minimum energy you need to send a move from this planet. <br />
+      Moves incur a base cost of 5% of the planet's <White>Energy Cap</White>.
+    </>
   );
 }
 
 export function Time50TooltipPane() {
   return (
-    <div>
-      <Sub>
-        Time to <White>50%</White> of full energy.
-      </Sub>
-    </div>
+    <>
+      Time to <White>50%</White> of full energy.
+    </>
   );
 }
 
 export function Time90TooltipPane() {
   return (
-    <div>
-      <Sub>
-        Time to <White>90%</White> of full energy. Since energy grows on an s-curve, energy growth
-        slows drastically by this point.
-      </Sub>
-    </div>
+    <>
+      Time to <White>90%</White> of full energy. Since energy grows on an s-curve, energy growth
+      slows drastically by this point.
+    </>
   );
 }
 
 export function EnergyGrowthTooltipPane() {
   return (
-    <div>
-      <Sub>
-        <White>Energy Growth:</White> the maximum growth rate of this planet's energy representing
-        the rate at the middle of the <White>s-curve</White>.
-      </Sub>
-    </div>
+    <>
+      <White>Energy Growth:</White> the maximum growth rate of this planet's energy representing the
+      rate at the middle of the <White>s-curve</White>.
+    </>
   );
 }
 
 export function SilverGrowthTooltipPane() {
   return (
-    <div>
-      <Sub>
-        <White>Silver Growth</White>: the per-minute linear growth rate of this planet's silver.
-      </Sub>
-    </div>
+    <>
+      <White>Silver Growth</White>: the per-minute linear growth rate of this planet's silver.
+    </>
   );
 }
 
 export function SilverCapTooltipPane() {
   return (
-    <div>
-      <Sub>
-        <White>Silver Cap</White>: the maximum silver that this planet can hold.
-      </Sub>
-    </div>
+    <>
+      <White>Silver Cap</White>: the maximum silver that this planet can hold.
+    </>
   );
 }
 
 export function PiratesTooltipPane() {
   return (
-    <div>
-      <Sub>
-        <Red>This planet has space pirates!</Red> Move energy to unoccupied planets to conquer them!
-      </Sub>
-    </div>
+    <>
+      <Red>This planet has space pirates!</Red> Move energy to unoccupied planets to conquer them!
+    </>
   );
 }
 
 export function UpgradesTooltipPane() {
   return (
-    <div>
-      <Sub>
-        <White>Planet Rank</White>: the number of times you've upgraded your planet.
-      </Sub>
-    </div>
+    <>
+      <White>Planet Rank</White>: the number of times you've upgraded your planet.
+    </>
   );
 }
 
 export function ModalHelpTooltipPane() {
-  return <div>View patch notes and instructions</div>;
+  return <>View patch notes and instructions</>;
 }
 
 export function ModalPlanetDetailsTooltipPane() {
-  return <div>View detailed information about the selected planet</div>;
+  return <>View detailed information about the selected planet</>;
 }
 
 export function ModalLeaderboardTooltipPane() {
-  return <div>View the top players, and their top planets</div>;
+  return <>View the top players, and their top planets</>;
 }
 
 export function ModalPlanetDexTooltipPane() {
-  return <div>View a list of your planets</div>;
+  return <>View a list of your planets</>;
 }
 
 export function ModalUpgradeDetailsTooltipPane() {
-  return <div>Upgrade the selected planet</div>;
+  return <>Upgrade the selected planet</>;
 }
 
 export function ModalTwitterVerificationTooltipPane() {
-  return <div>Connect your address to Twitter</div>;
+  return <>Connect your address to Twitter</>;
 }
 
 export function ModalBroadcastTooltipPane() {
-  return <div>Broadcast the selected planet's coordinates to the world</div>;
+  return <>Broadcast the selected planet's coordinates to the world</>;
 }
 
 export function BonusEnergyCapTooltipPane() {
   return (
-    <div>
+    <>
       <Green>
         This planet's <White>Energy Cap</White> has been randomly doubled!
       </Green>
-    </div>
+    </>
   );
 }
 
 export function BonusEnergyGroTooltipPane() {
   return (
-    <div>
+    <>
       <Green>
         This planet's <White>Energy Growth</White> has been randomly doubled!
       </Green>
-    </div>
+    </>
   );
 }
 
 export function BonusRangeTooltipPane() {
   return (
-    <div>
+    <>
       <Green>
         This planet's <White>Range</White> has been randomly doubled!
       </Green>
-    </div>
+    </>
   );
 }
 
 export function BonusSpeedTooltipPane() {
   return (
-    <div>
+    <>
       <Green>
         This planet's <White>Speed</White> has been randomly doubled!
       </Green>
-    </div>
+    </>
   );
 }
 
 export function BonusDefenseTooltipPane() {
   return (
-    <div>
+    <>
       <Green>
         This planet's <White>Defense</White> has been randomly doubled!
       </Green>
-    </div>
+    </>
   );
 }
 
@@ -350,55 +350,65 @@ export function ClowntownTooltipPane() {
   const account = useAccount(uiManager);
 
   return (
-    <div>
+    <>
       <span>
         {selected.value?.owner === account
           ? `You are the proud mayor of Clown Town!`
           : `It's a town of clowns...`}
       </span>
-    </div>
+    </>
   );
 }
 
 function DefenseTooltipPane() {
-  return <div>Planets with higher defense are more resistant to attack.</div>;
+  return (
+    <>
+      <White>Defense:</White> Planets with higher defense will negate incoming damage. Planets with
+      lower than 100 defense are vulnerable and will take more damage!
+    </>
+  );
 }
 
 function SpeedTooltipPane() {
-  return <div>Moves sent out from planets with higher speed travel the universe faster.</div>;
+  return (
+    <>
+      <White>Speed:</White> The rate at which energy travels across the universe, the faster the
+      better!
+    </>
+  );
 }
 
 function ArtifactBuffPane() {
-  return <div>A powerful artifact on this planet is influencing this stat!</div>;
+  return <>A powerful artifact on this planet is influencing this stat!</>;
 }
 
 function PluginsTooltipPane() {
-  return <div>Manage plugins, which allow you to add functionality to the client.</div>;
+  return <>Manage plugins, which allow you to add functionality to the client.</>;
 }
 
 function SettingsPane() {
-  return <div>Manage settings - export SKEY, manage maps, and more.</div>;
+  return <>Manage settings - export SKEY, manage maps, and more.</>;
 }
 
 function YourArtifacts() {
-  return <div>View your artifacts.</div>;
+  return <>View your artifacts.</>;
 }
 
-const ModalWithdrawSilverTooltipPane = () => <div>Withdraw silver to earn score.</div>;
+const ModalWithdrawSilverTooltipPane = () => <>Withdraw silver to earn score.</>;
 
-const Hats = () => <div>Buy hats for the selected planet.</div>;
+const Hats = () => <>Buy hats for the selected planet.</>;
 
 const FindArtifact = () => (
-  <div>
+  <>
     <Green>This planet has a powerful artifact hidden somewhere!</Green> Maybe you could find it...
-  </div>
+  </>
 );
 
-const ArtifactStored = () => <div>This planet has a powerful artifact on it!</div>;
+const ArtifactStored = () => <>This planet has a powerful artifact on it!</>;
 
-const HashesPerSec = () => <div>hashes / sec</div>;
+const HashesPerSec = () => <>hashes / sec</>;
 
-export function TooltipContent({ name }: { name: TooltipName }) {
+export function TooltipContent({ name }: { name: TooltipName | undefined }) {
   if (name === TooltipName.SilverGrowth) return <SilverGrowthTooltipPane />;
   if (name === TooltipName.SilverCap) return <SilverCapTooltipPane />;
   if (name === TooltipName.Silver) return <SilverTooltipPane />;
@@ -445,6 +455,15 @@ export function TooltipContent({ name }: { name: TooltipName }) {
   if (name === TooltipName.ArtifactStored) return <ArtifactStored />;
   if (name === TooltipName.HashesPerSec) return <HashesPerSec />;
   if (name === TooltipName.ModalWithdrawSilver) return <ModalWithdrawSilverTooltipPane />;
-
+  if (name === TooltipName.TimeUntilActivationPossible) return <TimeUntilActivationPossiblePane />;
+  if (name === TooltipName.DepositArtifact) return <DepositArtifactPane />;
+  if (name === TooltipName.DeactivateArtifact) return <DeactivateArtifactPane />;
+  if (name === TooltipName.WithdrawArtifact) return <WithdrawArtifactPane />;
+  if (name === TooltipName.ActivateArtifact) return <ActivateArtifactPane />;
+  if (name === TooltipName.DefenseMultiplier) return <DefenseMultiplierPane />;
+  if (name === TooltipName.EnergyCapMultiplier) return <EnergyCapMultiplierPane />;
+  if (name === TooltipName.EnergyGrowthMultiplier) return <EnergyGrowthMultiplierPane />;
+  if (name === TooltipName.RangeMultiplier) return <RangeMultiplierPane />;
+  if (name === TooltipName.SpeedMultiplier) return <SpeedMultiplierPane />;
   return <></>;
 }

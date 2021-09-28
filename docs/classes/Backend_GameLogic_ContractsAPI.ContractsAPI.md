@@ -32,6 +32,7 @@ reading and writing to and from the blockchain.
 - [gettersContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getterscontract)
 - [gptCreditContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#gptcreditcontract)
 - [scoreContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#scorecontract)
+- [tokensContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#tokenscontract)
 - [whitelistContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#whitelistcontract)
 
 ### Methods
@@ -176,6 +177,16 @@ Don't allow users to submit txs if balance falls below this amount/
 #### Returns
 
 `DarkForestScoringRound3`
+
+---
+
+### tokensContract
+
+• `get` **tokensContract**(): `DarkForestTokens`
+
+#### Returns
+
+`DarkForestTokens`
 
 ---
 
@@ -332,6 +343,10 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 ### claim
 
 ▸ **claim**(`args`, `action`): `Promise`<`void` \| `TransactionReceipt`\>
+
+DISABLED for round 4
+
+**`todo`** migrate to claim to first-party plugin architecture
 
 #### Parameters
 

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import {
@@ -14,6 +15,7 @@ import { PaneProps } from '../Components/GameWindowComponents';
 import WindowManager from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
 import { GameWindowZIndex } from '../Utils/constants';
+import { useEmitterValue } from '../Utils/EmitterHooks';
 import { useOnUp } from '../Utils/KeyEmitters';
 import { MODAL_BACK_SHORTCUT } from '../Utils/ShortcutConstants';
 import { DFErrorBoundary } from './DFErrorBoundary';
@@ -127,17 +129,18 @@ const Title = styled(Truncate)`
  * and allows the user to drag the window around.
  */
 const TitleBar = styled.div`
-  ${({ minimized }: { minimized: boolean }) => css`
+  ${({ minimized, active }: { minimized: boolean; active: boolean }) => css`
     user-select: none;
     line-height: 1.5em;
     width: 100%;
     cursor: grab;
     padding: 8px;
-    background-color: ${dfstyles.colors.background};
+    background-color: ${active ? dfstyles.colors.backgrounddark : dfstyles.colors.background};
     border-bottom: 1px solid ${minimized ? 'transparent' : dfstyles.colors.borderDark};
     display: flex;
     justify-content: center;
     align-items: flex-end;
+    color: ${active && dfstyles.colors.textLight};
   `}
 `;
 
@@ -170,7 +173,6 @@ export type ModalProps = PaneProps & {
   width?: string;
   borderColor?: string;
   backgroundColor?: string;
-  titlebarColor?: string;
   initialPosition?: {
     x: number;
     y: number;
@@ -193,6 +195,8 @@ export interface ModalHandle {
   push(frame: ModalFrame): void;
   popAll(): void;
   pop(): void;
+  id: string;
+  isActive: boolean;
 }
 
 export function ModalPane({
@@ -205,10 +209,12 @@ export function ModalPane({
   width,
   borderColor,
   backgroundColor,
-  titlebarColor,
   initialPosition,
 }: ModalProps) {
   const windowManager = WindowManager.getInstance();
+  const activeWindowId = useEmitterValue(windowManager.activeWindowId$, undefined);
+  const [windowId] = useState(() => uuidv4());
+  const isActive = windowId === activeWindowId;
   const [frames, setFrames] = useState<ModalFrame[]>([]);
   const [renderedFrame, setRenderedFrame] = useState<undefined | React.ReactElement>();
   const [renderedFrameHelp, setRenderedFrameHelp] = useState<undefined | React.ReactElement>();
@@ -221,7 +227,10 @@ export function ModalPane({
   const [zIndex, setZIndex] = useState<number>(GameWindowZIndex.Modal);
   const containerRef = useRef<HTMLDivElement>(document.createElement('div'));
   const headerRef = useRef<HTMLDivElement>(document.createElement('div'));
-  const push = useCallback(() => setZIndex(windowManager.getIndex()), [windowManager]);
+  const push = useCallback(() => {
+    windowManager.activeWindowId$.publish(windowId);
+    setZIndex(windowManager.getIndex());
+  }, [windowManager, windowId]);
   const [hasSetInitialPosition, setHasSetInitialPosition] = useState(false);
   const [gameSize, setGameSize] =
     useState<
@@ -264,8 +273,10 @@ export function ModalPane({
       popAll: () => {
         setFrames([]);
       },
+      id: windowId,
+      isActive,
     }),
-    []
+    [windowId, isActive]
   );
 
   useEffect(() => {
@@ -396,7 +407,9 @@ export function ModalPane({
   ]);
 
   useOnUp(MODAL_BACK_SHORTCUT, () => {
-    api.pop();
+    if (isActive) {
+      api.pop();
+    }
   });
 
   useEffect(() => {
@@ -446,10 +459,10 @@ export function ModalPane({
       onMouseDown={onMouseDown}
     >
       <TitleBar
+        active={isActive}
         ref={headerRef}
         style={{
           cursor: styleClicking ? 'grabbing' : 'grab',
-          backgroundColor: titlebarColor === undefined ? undefined : titlebarColor,
         }}
         minimized={minimized}
         onMouseLeave={(_e) => {
@@ -479,7 +492,7 @@ export function ModalPane({
                   <CenteredText>Back</CenteredText>
                 </Btn>
                 <EmSpacer width={0.5} />
-                <ShortcutKeyDown shortcutKey={MODAL_BACK_SHORTCUT} />
+                <ShortcutKeyDown shortcutKey={MODAL_BACK_SHORTCUT} disabled={!isActive} />
               </AlignCenterHorizontally>
               <EmSpacer width={1} />
             </>

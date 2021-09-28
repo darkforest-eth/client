@@ -19,7 +19,7 @@ function HelpContent() {
   return (
     <div>
       <p>
-        Plugins are bits of code that can be written by anyone, and allow the writer to program the
+        Plugins are bits of code that can be written by anyone, and allows the writer to program the
         game. Plugins range from cosmetic (try the rage cage plugin) to functional (imagine a plugin
         that fights your wars for you).
       </p>

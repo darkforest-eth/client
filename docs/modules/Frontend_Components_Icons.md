@@ -17,7 +17,6 @@
 - [EnergyGrowthIcon](Frontend_Components_Icons.md#energygrowthicon)
 - [EnergyIcon](Frontend_Components_Icons.md#energyicon)
 - [EthIcon](Frontend_Components_Icons.md#ethicon)
-- [FoundComet](Frontend_Components_Icons.md#foundcomet)
 - [FoundCorrupted](Frontend_Components_Icons.md#foundcorrupted)
 - [FoundDeadSpace](Frontend_Components_Icons.md#founddeadspace)
 - [FoundDeepSpace](Frontend_Components_Icons.md#founddeepspace)
@@ -37,6 +36,7 @@
 - [FoundTundra](Frontend_Components_Icons.md#foundtundra)
 - [FoundWasteland](Frontend_Components_Icons.md#foundwasteland)
 - [FullRankIcon](Frontend_Components_Icons.md#fullrankicon)
+- [Generic](Frontend_Components_Icons.md#generic)
 - [HatIcon](Frontend_Components_Icons.md#haticon)
 - [HelpIcon](Frontend_Components_Icons.md#helpicon)
 - [LeaderboardIcon](Frontend_Components_Icons.md#leaderboardicon)
@@ -272,22 +272,6 @@
 ### EthIcon
 
 ▸ `Const` **EthIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### FoundComet
-
-▸ `Const` **FoundComet**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                | Type        |
-| :------------------ | :---------- |
-| `__namedParameters` | `AlertIcon` |
 
 #### Returns
 
@@ -586,6 +570,22 @@
 ### FullRankIcon
 
 ▸ `Const` **FullRankIcon**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
+
+### Generic
+
+▸ `Const` **Generic**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                | Type        |
+| :------------------ | :---------- |
+| `__namedParameters` | `AlertIcon` |
 
 #### Returns
 

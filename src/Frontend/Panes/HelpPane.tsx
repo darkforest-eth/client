@@ -22,8 +22,8 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
       <HelpContent>
         {useUIManager().isRoundOver() && (
           <Section>
-            <SectionHeader>Round 3 Complete</SectionHeader>
-            Dark Forest v0.6 Round 3 is now complete! Scores are being compiled and winners will be
+            <SectionHeader>Round 4 Complete</SectionHeader>
+            Dark Forest v0.6 Round 4 is now complete! Scores are being compiled and winners will be
             announced shortly. Also, Artifacts will no longer be mintable. Thanks for playing!
           </Section>
         )}
@@ -41,7 +41,7 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
         </Section>
 
         <Section>
-          <SectionHeader>Dark Forest v0.6 R3: Grape Extra-Small</SectionHeader>
+          <SectionHeader>Dark Forest v0.6 R4: Society Eggnog</SectionHeader>
           Dark Forest is a vast universe, obfuscated by zero-knowledge cryptography. Your{' '}
           <White>explorer</White> (bottom left) explores the universe, searching for{' '}
           <White>Planets</White> and other players.
@@ -59,17 +59,16 @@ export function HelpPane({ hook }: { hook: ModalHook }) {
 
         <Section>
           <SectionHeader>Prizes and Scoring</SectionHeader>A snapshot of scores will be taken on{' '}
-          <White>August 22, 2021</White> at 9AM Pacific Time. At that time, the top 63
+          <White>October 4, 2021</White> at 9PM Pacific Time. At that time, the top 63
           highest-scoring players will be awarded prizes from a pool 63 prize planets. You can see
           the current rankings by scrolling down on the landing page of the game.
           <EmSpacer height={1} />
-          This round is a race to the center. You can <White>claim</White> any level 3+ planet that
-          you own; there is a 3 hour cooldown on claiming planets. Your score at the end of the
-          round is the distance of your closest claimed planet from the center (0, 0).
-          <EmSpacer height={1} />
-          Note that planets that are destroyed with black domain artifacts do not count towards
-          score, and other players can conquer and claim planets you've already claimed, overwriting
-          your claim!
+          Scoring this round is made up of two parts: finding artifacts and withdrawing silver. Each
+          time you find an artifact, your score increases by an amount that depends on the rarity of
+          that artifact. Rarer artifacts are found on larger foundries, and increase your score
+          more. You can also increase your score by withdrawing silver from the game. Each single
+          silver you withdraw increases your score by one. You can only withdraw silver using space
+          time rips.
         </Section>
       </HelpContent>
     </ModalPane>

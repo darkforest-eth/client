@@ -63,10 +63,10 @@
 
 #### Parameters
 
-| Name                         | Type       |
-| :--------------------------- | :--------- |
-| `__namedParameters`          | `Object`   |
-| `__namedParameters.artifact` | `Artifact` |
+| Name                       | Type             |
+| :------------------------- | :--------------- |
+| `__namedParameters`        | `Object`         |
+| `__namedParameters.rarity` | `ArtifactRarity` |
 
 #### Returns
 
@@ -80,10 +80,10 @@
 
 #### Parameters
 
-| Name                         | Type       |
-| :--------------------------- | :--------- |
-| `__namedParameters`          | `Object`   |
-| `__namedParameters.artifact` | `Artifact` |
+| Name                       | Type             |
+| :------------------------- | :--------------- |
+| `__namedParameters`        | `Object`         |
+| `__namedParameters.rarity` | `ArtifactRarity` |
 
 #### Returns
 
@@ -97,10 +97,10 @@
 
 #### Parameters
 
-| Name                         | Type       |
-| :--------------------------- | :--------- |
-| `__namedParameters`          | `Object`   |
-| `__namedParameters.artifact` | `Artifact` |
+| Name                       | Type             |
+| :------------------------- | :--------------- |
+| `__namedParameters`        | `Object`         |
+| `__namedParameters.rarity` | `ArtifactRarity` |
 
 #### Returns
 

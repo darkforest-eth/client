@@ -8,6 +8,5 @@ export const enum TerminalTextStyle {
   Blue,
   Invisible,
   Underline,
-  Hoverable,
   Mythic,
 }

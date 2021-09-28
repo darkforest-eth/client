@@ -1,22 +1,21 @@
-import { Planet } from '@darkforest_eth/types';
+import { Planet, PlanetType } from '@darkforest_eth/types';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { Padded, Spacer, VerticalSplit } from '../Components/CoreUI';
 import {
   OpenBroadcastPaneButton,
-  OpenClaimPlanetPane,
   OpenHatPaneButton,
   OpenManagePlanetArtifactsButton,
   OpenUpgradeDetailsPaneButton,
 } from '../Components/OpenPaneButtons';
-import { SelectedPlanetHelpContent } from '../Copy/HelpContent';
 import { useAccount, useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';
 import { ModalHandle, ModalHook, ModalPane } from '../Views/ModalPane';
 import { PlanetCard, PlanetCardTitle } from '../Views/PlanetCard';
 import { getNotifsForPlanet, PlanetNotifications } from '../Views/PlanetNotifications';
 import { SendResources } from '../Views/SendResources';
+import { WithdrawSilver } from '../Views/WithdrawSilver';
 
 function PlanetContextPaneContent({
   modal,
@@ -48,37 +47,46 @@ function PlanetContextPaneContent({
           <SendResources planetWrapper={planet} />
         </>
       )}
-      {/* disabled in round 3 */}
-      {/* {owned && isPost && (
-        <>
-          <Padded>
-            <WithdrawSilver wrapper={planet} />
-          </Padded>
-        </>
-      )} */}
+
+      {owned && planet.value?.planetType === PlanetType.TRADING_POST && (
+        <Padded>
+          <WithdrawSilver wrapper={planet} />
+        </Padded>
+      )}
 
       <VerticalSplit>
         {[
           <Padded right='4px' left='0' key={'left'}>
             {owned && (
               <>
-                <OpenUpgradeDetailsPaneButton modal={modal} planetId={planet.value?.locationId} />
-                <Spacer height={8} />
-                <OpenClaimPlanetPane modal={modal} planetId={planet.value?.locationId} />
+                <OpenUpgradeDetailsPaneButton
+                  modal={modal}
+                  planetId={planet.value?.locationId}
+                  shortcutDisabled={!modal.isActive}
+                />
                 <Spacer height={8} />
               </>
             )}
-            <OpenBroadcastPaneButton modal={modal} planetId={planet.value?.locationId} />
+            <OpenBroadcastPaneButton
+              modal={modal}
+              planetId={planet.value?.locationId}
+              shortcutDisabled={!modal.isActive}
+            />
           </Padded>,
           <Padded right='0' left='4px' key={'right'}>
+            <OpenManagePlanetArtifactsButton
+              modal={modal}
+              planetId={planet.value?.locationId}
+              shortcutDisabled={!modal.isActive}
+            />
             {owned && (
               <>
-                <OpenManagePlanetArtifactsButton
+                <Spacer height={8} />
+                <OpenHatPaneButton
                   modal={modal}
                   planetId={planet.value?.locationId}
+                  shortcutDisabled={!modal.isActive}
                 />
-                <Spacer height={8} />
-                <OpenHatPaneButton modal={modal} planetId={planet.value?.locationId} />
               </>
             )}
           </Padded>,
@@ -86,6 +94,17 @@ function PlanetContextPaneContent({
       </VerticalSplit>
       {notifs.length > 0 && <PlanetNotifications planet={planet} notifs={notifs} />}
     </Padded>
+  );
+}
+
+export function SelectedPlanetHelpContent() {
+  return (
+    <div>
+      <p>
+        This pane allows you to interact with the currently selected planet. Pressing the ESCAPE key
+        allows you to deselect the current planet.
+      </p>
+    </div>
   );
 }
 

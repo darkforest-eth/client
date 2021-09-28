@@ -1,13 +1,14 @@
-import { Artifact, ArtifactRarityNames, ArtifactType } from '@darkforest_eth/types';
+import { Artifact, ArtifactType } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
 import { artifactAvailableTimestamp, isActivated } from '../../../Backend/GameLogic/ArtifactUtils';
-import { HoverableTooltip } from '../../Components/CoreUI';
-import { Hoverable, TOOLTIP_SLOW } from '../../Components/Hoverable';
 import { ActivateIcon, DeactivateIcon, DepositIcon, WithdrawIcon } from '../../Components/Icons';
+import { ArtifactRarityLabelAnim } from '../../Components/Labels/ArtifactLabels';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Smaller, Sub } from '../../Components/Text';
 import { TimeUntil } from '../../Components/TimeUntil';
+import { TooltipName } from '../../Game/WindowManager';
+import { TooltipTrigger, TooltipTriggerProps } from '../Tooltip';
 
 export function ArtifactActions({
   artifact,
@@ -32,11 +33,7 @@ export function ArtifactActions({
   deposit: (artifact: Artifact) => void;
   withdraw: (artifact: Artifact) => void;
 }) {
-  const actions: Array<{
-    tooltip: string;
-    action: () => void;
-    icon: React.ReactElement;
-  }> = [];
+  const actions: TooltipTriggerProps[] = [];
 
   if (artifact.unconfirmedWithdrawArtifact) {
     return (
@@ -80,43 +77,77 @@ export function ArtifactActions({
 
   if (planetOwnedByPlayer) {
     if (viewingDepositList) {
-      // should only be able to view deposit list in the first place if planet is trading post
-      // but just in case...
       if (planetIsTradingPost) {
         actions.unshift({
-          tooltip: canHandleArtifact
-            ? 'deposit this artifact'
-            : `${ArtifactRarityNames[artifact.rarity]} artifacts can only be deposited into level ${
-                artifact.rarity + 1
-              }+ spacetime rips`,
-          icon: <DepositIcon color={canHandleArtifact ? undefined : 'grey'} />,
-          action: canHandleArtifact ? () => deposit(artifact) : () => {},
+          name: TooltipName.DepositArtifact,
+          extraContent: !canHandleArtifact && (
+            <>
+              . <ArtifactRarityLabelAnim rarity={artifact.rarity} />
+              {` artifacts can only be deposited on level ${artifact.rarity + 1}+ spacetime rips`}
+            </>
+          ),
+          children: (
+            <ArtifactActionIconContainer
+              onClick={(e) => {
+                e.stopPropagation();
+                canHandleArtifact && deposit(artifact);
+              }}
+            >
+              <DepositIcon color={canHandleArtifact ? undefined : 'grey'} />
+            </ArtifactActionIconContainer>
+          ),
         });
       }
     } else if (isActivated(artifact) && artifact.artifactType !== ArtifactType.BlackDomain) {
       actions.unshift({
-        tooltip: 'deactivate this artifact',
-        icon: <DeactivateIcon />,
-        action: () => deactivate(artifact),
+        name: TooltipName.DeactivateArtifact,
+        children: (
+          <ArtifactActionIconContainer
+            onClick={(e) => {
+              e.stopPropagation();
+              deactivate(artifact);
+            }}
+          >
+            <DeactivateIcon />
+          </ArtifactActionIconContainer>
+        ),
       });
     } else {
       if (planetIsTradingPost) {
         actions.unshift({
-          tooltip: canHandleArtifact
-            ? 'withdraw this artifact'
-            : `${ArtifactRarityNames[artifact.rarity]} artifacts can only be withdrawn from level ${
-                artifact.rarity + 1
-              }+ spacetime rips`,
-          icon: <WithdrawIcon color={canHandleArtifact ? undefined : 'grey'} />,
-          action: canHandleArtifact ? () => withdraw(artifact) : () => {},
+          name: TooltipName.WithdrawArtifact,
+          extraContent: !canHandleArtifact && (
+            <>
+              . <ArtifactRarityLabelAnim rarity={artifact.rarity} />
+              {` artifacts can only be withdrawn from level ${artifact.rarity + 1}+ spacetime rips`}
+            </>
+          ),
+          children: (
+            <ArtifactActionIconContainer
+              onClick={(e) => {
+                e.stopPropagation();
+                canHandleArtifact && withdraw(artifact);
+              }}
+            >
+              <WithdrawIcon color={canHandleArtifact ? undefined : 'grey'} />
+            </ArtifactActionIconContainer>
+          ),
         });
       }
 
       if (!anyArtifactActive && availableToActivate) {
         actions.unshift({
-          tooltip: 'activate this artifact',
-          icon: <ActivateIcon />,
-          action: () => activate(artifact),
+          name: TooltipName.ActivateArtifact,
+          children: (
+            <ArtifactActionIconContainer
+              onClick={(e) => {
+                e.stopPropagation();
+                activate(artifact);
+              }}
+            >
+              <ActivateIcon />
+            </ArtifactActionIconContainer>
+          ),
         });
       }
     }
@@ -125,38 +156,16 @@ export function ArtifactActions({
   return (
     <ActionsContainer>
       {!availableToActivate && (
-        <Hoverable
-          quick
-          hoverDelay={TOOLTIP_SLOW}
-          hoverContents={() => (
-            <HoverableTooltip>
-              wait time until you can <br /> activate this artifact
-            </HoverableTooltip>
-          )}
-        >
+        <TooltipTrigger name={TooltipName.TimeUntilActivationPossible}>
           <Smaller>
             <Sub>
               <TimeUntil timestamp={available} ifPassed={''} />
             </Sub>
           </Smaller>
-        </Hoverable>
+        </TooltipTrigger>
       )}
       {actions.map((a, i) => (
-        <Hoverable
-          key={i}
-          quick
-          hoverDelay={TOOLTIP_SLOW}
-          hoverContents={() => <HoverableTooltip>{a.tooltip}</HoverableTooltip>}
-        >
-          <ArtifactActionIconContainer
-            onClick={(e) => {
-              a.action();
-              e.stopPropagation();
-            }}
-          >
-            {a.icon}
-          </ArtifactActionIconContainer>
-        </Hoverable>
+        <TooltipTrigger key={i} {...a} />
       ))}
     </ActionsContainer>
   );

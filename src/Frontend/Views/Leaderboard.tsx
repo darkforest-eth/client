@@ -115,14 +115,14 @@ function LeaderboardTable({ rows }: { rows: Array<[string, number | undefined]> 
 }
 
 // TODO: update this each round, or pull from contract constants
-const round2EndTimestamp = '2021-08-22T16:00:00.000Z';
-const round2EndTime = new Date(round2EndTimestamp).getTime();
+const roundEndTimestamp = '2021-10-05T04:00:00.000Z';
+const roundEndTime = new Date(roundEndTimestamp).getTime();
 
 function CountDown() {
   const [str, setStr] = useState('');
 
   const update = () => {
-    const timeUntilEndms = round2EndTime - new Date().getTime();
+    const timeUntilEndms = roundEndTime - new Date().getTime();
     if (timeUntilEndms <= 0) {
       setStr('yes');
     } else {
@@ -157,7 +157,7 @@ function LeaderboardBody({ leaderboard }: { leaderboard: Leaderboard }) {
       return -1;
     }
 
-    return a.score - b.score;
+    return b.score - a.score;
   });
 
   const rows: [string, number | undefined][] = leaderboard.entries.map((entry) => {
@@ -174,7 +174,7 @@ function LeaderboardBody({ leaderboard }: { leaderboard: Leaderboard }) {
         <StatsTable>
           <tbody>
             <tr>
-              <td>round 3 complete</td>
+              <td>round 4 complete</td>
               <td>
                 <CountDown />
               </td>

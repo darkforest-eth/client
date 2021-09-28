@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { SelectFrom } from '../Components/CoreUI';
+import { Input } from '../Components/Input';
 import { useEmitterSubscribe } from './EmitterHooks';
 
 /**
@@ -42,6 +43,10 @@ export const enum Setting {
   IsMining = 'IsMining',
   DisableDefaultShortcuts = 'DisableDefaultShortcuts',
   ExperimentalFeatures = 'ExperimentalFeatures',
+  DisableEmojiRendering = 'DisableEmojiRendering',
+  DisableHatRendering = 'DisableHatRendering',
+  AutoClearConfirmedTransactionsAfterSeconds = 'AutoClearConfirmedTransactionsAfterSeconds',
+  AutoClearRejectedTransactionsAfterSeconds = 'AutoClearRejectedTransactionsAfterSeconds',
 }
 
 export const ALL_AUTO_GAS_SETTINGS = [
@@ -84,6 +89,10 @@ const defaultSettings: Record<Setting, string> = {
   IsMining: 'true',
   DisableDefaultShortcuts: 'false',
   ExperimentalFeatures: 'false',
+  DisableEmojiRendering: 'false',
+  DisableHatRendering: 'false',
+  AutoClearConfirmedTransactionsAfterSeconds: '-1',
+  AutoClearRejectedTransactionsAfterSeconds: '-1',
 };
 
 /**
@@ -169,7 +178,7 @@ export function setNumberSetting(account: EthAddress | undefined, setting: Setti
 }
 
 /**
- * Allows a react component to subscribe to changes to the give setting.
+ * Allows a react component to subscribe to changes and set the given setting.
  */
 export function useSetting(
   uiManager: GameUIManager | undefined,
@@ -188,6 +197,29 @@ export function useSetting(
     settingValue,
     (newValue: string) => {
       setSetting(account, setting, newValue);
+    },
+  ];
+}
+
+/**
+ * Allows a react component to subscribe to changes and set the given setting as a number. Doesn't
+ * allow you to set the value of this setting to anything but a valid number.
+ */
+export function useNumberSetting(
+  uiManager: GameUIManager | undefined,
+  setting: Setting
+): [number, (newValue: number) => void] {
+  const [stringSetting, setStringSetting] = useSetting(uiManager, setting);
+  let parsedNumber = parseInt(stringSetting, 10);
+
+  if (isNaN(parsedNumber)) {
+    parsedNumber = 0;
+  }
+
+  return [
+    parsedNumber,
+    (newValue: number) => {
+      setStringSetting(newValue + '');
     },
   ];
 }
@@ -241,6 +273,29 @@ export function BooleanSetting({
         </BooleanLabel>
       )}
     </>
+  );
+}
+
+export function NumberSetting({
+  uiManager,
+  setting,
+}: {
+  uiManager: GameUIManager;
+  setting: Setting;
+}) {
+  const [settingValue, setSettingValue] = useNumberSetting(uiManager, setting);
+
+  return (
+    <Input
+      wide
+      value={settingValue + ''}
+      onChange={(e) => {
+        const parsedInput = parseFloat(e.target.value);
+        if (!isNaN(parsedInput)) {
+          setSettingValue(parsedInput);
+        }
+      }}
+    />
   );
 }
 

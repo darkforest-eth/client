@@ -59,7 +59,7 @@ export function ArtifactListItem({
         {isActivated(artifact) && <Green>active</Green>} {artifactName(artifact)}{' '}
         <Smaller>
           <Sub>
-            <ArtifactRarityLabelAnim artifact={artifact} />{' '}
+            <ArtifactRarityLabelAnim rarity={artifact.rarity} />{' '}
             <ArtifactBiomeText artifact={artifact} /> <ArtifactTypeText artifact={artifact} />
           </Sub>
         </Smaller>

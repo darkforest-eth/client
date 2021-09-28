@@ -31,6 +31,7 @@
 - [mouseHoveringOverPlanet](Backend_GameLogic_GameUIManager.default.md#mousehoveringoverplanet)
 - [myArtifacts$](Backend_GameLogic_GameUIManager.default.md#myartifacts$)
 - [onChooseTargetPlanet](Backend_GameLogic_GameUIManager.default.md#onchoosetargetplanet)
+- [overlayContainer](Backend_GameLogic_GameUIManager.default.md#overlaycontainer)
 - [plugins](Backend_GameLogic_GameUIManager.default.md#plugins)
 - [previousSelectedPlanet](Backend_GameLogic_GameUIManager.default.md#previousselectedplanet)
 - [radiusMap](Backend_GameLogic_GameUIManager.default.md#radiusmap)
@@ -120,6 +121,7 @@
 - [getMyPlanetMap](Backend_GameLogic_GameUIManager.default.md#getmyplanetmap)
 - [getMyScore](Backend_GameLogic_GameUIManager.default.md#getmyscore)
 - [getNextBroadcastAvailableTimestamp](Backend_GameLogic_GameUIManager.default.md#getnextbroadcastavailabletimestamp)
+- [getOverlayContainer](Backend_GameLogic_GameUIManager.default.md#getoverlaycontainer)
 - [getPerlinConfig](Backend_GameLogic_GameUIManager.default.md#getperlinconfig)
 - [getPerlinThresholds](Backend_GameLogic_GameUIManager.default.md#getperlinthresholds)
 - [getPlanetLevel](Backend_GameLogic_GameUIManager.default.md#getplanetlevel)
@@ -177,6 +179,7 @@
 - [setForcesSending](Backend_GameLogic_GameUIManager.default.md#setforcessending)
 - [setHoveringOverPlanet](Backend_GameLogic_GameUIManager.default.md#sethoveringoverplanet)
 - [setMiningPattern](Backend_GameLogic_GameUIManager.default.md#setminingpattern)
+- [setOverlayContainer](Backend_GameLogic_GameUIManager.default.md#setoverlaycontainer)
 - [setSelectedId](Backend_GameLogic_GameUIManager.default.md#setselectedid)
 - [setSelectedPlanet](Backend_GameLogic_GameUIManager.default.md#setselectedplanet)
 - [setSilverSending](Backend_GameLogic_GameUIManager.default.md#setsilversending)
@@ -328,6 +331,16 @@ indicates whether or not the player is currently selecting a target planet.
 ##### Returns
 
 `void`
+
+---
+
+### overlayContainer
+
+• `Private` **overlayContainer**: `MutableRefObject`<`null` \| `HTMLDivElement`\>
+
+In order to render React on top of the game, we need to insert React nodes into an overlay
+container. We keep a reference to this container, so that our React components can optionally
+choose to render themselves into this overlay container using React Portals.
 
 ---
 
@@ -1356,6 +1369,19 @@ state in some way
 
 ---
 
+### getOverlayContainer
+
+▸ **getOverlayContainer**(): `MutableRefObject`<`null` \| `HTMLDivElement`\>
+
+Gets the overlay container. See {@link GameUIManger.overlayContainer} for more information
+about what the overlay container is.
+
+#### Returns
+
+`MutableRefObject`<`null` \| `HTMLDivElement`\>
+
+---
+
 ### getPerlinConfig
 
 ▸ **getPerlinConfig**(`isBiome?`): `PerlinConfig`
@@ -2132,6 +2158,25 @@ drill fields like this anymore.
 | Name      | Type                                                                           |
 | :-------- | :----------------------------------------------------------------------------- |
 | `pattern` | [`MiningPattern`](../interfaces/Backend_Miner_MiningPatterns.MiningPattern.md) |
+
+#### Returns
+
+`void`
+
+---
+
+### setOverlayContainer
+
+▸ **setOverlayContainer**(`randomContainer`): `void`
+
+Sets the overlay container. See {@link GameUIManger.overlayContainer} for more information
+about what the overlay container is.
+
+#### Parameters
+
+| Name              | Type                                            |
+| :---------------- | :---------------------------------------------- |
+| `randomContainer` | `MutableRefObject`<`null` \| `HTMLDivElement`\> |
 
 #### Returns
 

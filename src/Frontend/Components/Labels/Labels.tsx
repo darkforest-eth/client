@@ -1,3 +1,4 @@
+import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
 import { EthAddress } from '@darkforest_eth/types';
 import colorFn from 'color';
 import React from 'react';
@@ -34,6 +35,10 @@ export function AccountLabel({
         )}
       </span>
     );
+  }
+
+  if (ethAddress === EMPTY_ADDRESS) {
+    return <>nobody</>;
   }
 
   return (

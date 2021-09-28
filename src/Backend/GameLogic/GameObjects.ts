@@ -491,7 +491,7 @@ export class GameObjects {
     updatedArrivals?: QueuedArrival[],
     updatedArtifactsOnPlanet?: ArtifactId[],
     revealedLocation?: RevealedLocation,
-    claimerEthAddress?: EthAddress
+    claimerEthAddress?: EthAddress // TODO: Remove this
   ): void {
     this.touchedPlanetIds.add(planet.locationId);
     // does not modify unconfirmed txs

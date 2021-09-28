@@ -176,6 +176,8 @@ class Renderer {
     // get some data
     const { cachedPlanets, chunks } = this.gameUIManager.getLocationsAndChunks();
     const isHighPerfMode = this.gameUIManager.getBooleanSetting(Setting.HighPerformanceRendering);
+    const disableEmojis = this.gameUIManager.getBooleanSetting(Setting.DisableEmojiRendering);
+    const disableHats = this.gameUIManager.getBooleanSetting(Setting.DisableHatRendering);
     const drawChunkBorders = this.gameUIManager.getBooleanSetting(Setting.DrawChunkBorders);
 
     // draw the bg
@@ -195,7 +197,13 @@ class Renderer {
     this.wormholeRenderManager.queueWormholes();
 
     // queue planets
-    this.planetRenderManager.queuePlanets(cachedPlanets, this.now, isHighPerfMode);
+    this.planetRenderManager.queuePlanets(
+      cachedPlanets,
+      this.now,
+      isHighPerfMode,
+      disableEmojis,
+      disableHats
+    );
 
     // flush all - ordering matters! (they get drawn bottom-up)
     this.lineRenderer.flush();

@@ -1,107 +1,51 @@
 import { ContractMethodName } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import styled from 'styled-components';
 import NotificationManager, {
   NotificationInfo,
   NotificationManagerEvent,
   NotificationType,
 } from '../Game/NotificationManager';
-import dfstyles from '../Styles/dfstyles';
+import dfstyles, { snips } from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
+import { GameWindowZIndex } from '../Utils/constants';
 import { Setting } from '../Utils/SettingsHooks';
 
-const NOTIF_SIZE = '4em';
-const MARGIN = '8px';
-const fadeBrightness = keyframes`
-  from {
-    filter: brightness(0.8);
-  }
-  to {
-    filter: brightness(1.2);
-  }
-`;
-
-const animation = css`
-  animation: ${fadeBrightness} 1s ${dfstyles.game.styles.animProps};
-`;
-
-const StyledNotification = styled.div`
-  margin: ${MARGIN};
-  display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-start;
-
-  & > div.n-icon {
-    width: ${NOTIF_SIZE};
-    height: ${NOTIF_SIZE};
-    border-radius: 8px;
-    border: 1px solid ${dfstyles.colors.text};
-    background: ${({ color }) => color || dfstyles.colors.backgroundlighter};
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-
-    & > span {
-      font-size: 2em;
-    }
-
-    ${animation};
-  }
-
-  & > div.n-info {
-    height: ${NOTIF_SIZE};
-    min-width: 3em;
-    max-width: 50em;
-    overflow: scroll;
-    margin-right: ${MARGIN};
-    background: ${dfstyles.colors.background};
-    padding: 0.5em 1em;
-    border-radius: 2px;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-  }
-`;
-
+/**
+ * React component which represents a single notification. Can be hovered over for more info, or
+ * clicked on to dismiss.
+ */
 function Notification({
   notif,
-  removeSelf,
+  onClick,
   style,
 }: {
   notif: NotificationInfo;
-  removeSelf: () => void;
+  onClick: () => void;
   style?: React.CSSProperties;
 }) {
-  const [showing, setShowing] = useState<boolean>(false);
-
   const { message, icon } = notif;
+  const [showing, setShowing] = useState<boolean>(false);
 
   return (
     <StyledNotification onMouseLeave={() => setShowing(false)}>
-      <div
-        className='n-icon'
+      <NotificationIconContainer
         onMouseEnter={() => setShowing(true)}
-        onClick={removeSelf}
+        onClick={onClick}
         style={{ ...style, background: notif.color }}
       >
         {icon}
-      </div>
-      {showing && <div className='n-info'>{message}</div>}
+      </NotificationIconContainer>
+      {showing && <NotificationContent>{message}</NotificationContent>}
     </StyledNotification>
   );
 }
 
-const StyledNotificationsPane = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 100;
-`;
-
+/**
+ * React component in charge of listening for new notifications and displaying them interactively to
+ * the user.
+ */
 export function NotificationsPane() {
   const [notifs, setNotifs] = useState<Array<NotificationInfo>>([]);
 
@@ -134,9 +78,15 @@ export function NotificationsPane() {
       });
     };
 
+    const clearNotif = (id: string) => {
+      setNotifs((arr) => arr.filter((n) => n.id !== id));
+    };
+
+    notifManager.on(NotificationManagerEvent.ClearNotification, clearNotif);
     notifManager.on(NotificationManagerEvent.Notify, addNotif);
 
     return () => {
+      notifManager.removeListener(NotificationManagerEvent.ClearNotification, clearNotif);
       notifManager.removeListener(NotificationManagerEvent.Notify, addNotif);
     };
   }, [uiManager]);
@@ -153,15 +103,76 @@ export function NotificationsPane() {
   };
 
   return (
-    <StyledNotificationsPane>
+    <NotificationsContainer>
       {notifs.slice(0, Math.min(10, notifs.length)).map((el, i) => (
         <Notification
           notif={el}
           key={el.id}
-          removeSelf={getRemove(el)}
+          onClick={getRemove(el)}
           style={{ opacity: 1 - (i - 2) * 0.13 }}
         />
       ))}
-    </StyledNotificationsPane>
+    </NotificationsContainer>
   );
 }
+
+const NOTIF_SIZE = '4em';
+const MARGIN = '8px';
+
+const StyledNotification = styled.div`
+  margin: ${MARGIN};
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+`;
+
+/**
+ * Element which contains the notification-dependent icon. User can hover over this to display more
+ * info about the notification.
+ */
+const NotificationIconContainer = styled.div`
+  width: ${NOTIF_SIZE};
+  height: ${NOTIF_SIZE};
+  border-radius: 8px;
+  border: 1px solid ${dfstyles.colors.text};
+  background: ${({ color }) => color || dfstyles.colors.backgroundlighter};
+  overflow: hidden;
+  display: flex;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+/**
+ * Element which contains the information which is attached to the notification. Only shown for a
+ * notification if the user is hovering over the notification's {@link NotificationIconContainer}.
+ */
+const NotificationContent = styled.div`
+  border-radius: ${snips.roundedBordersWithEdge};
+  min-height: ${NOTIF_SIZE};
+  height: ${NOTIF_SIZE};
+  min-width: 3em;
+  max-width: 50em;
+  overflow: scroll;
+  margin-right: ${MARGIN};
+  background: ${dfstyles.colors.background};
+  padding: 0.5em 1em;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 100;
+`;
+
+/**
+ * The element which contains all the notifications
+ */
+const NotificationsContainer = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: ${GameWindowZIndex.Notification};
+`;

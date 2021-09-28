@@ -45,7 +45,7 @@ export default function LandingPage() {
               <br />
               <Text>zkSNARK space warfare</Text>
               <br />
-              <Text>Round 3: Grape Extra-Small - Race to the Center</Text>
+              <Text>Round 4: Society Eggnog - Lightning Round</Text>
             </p>
 
             <Spacer height={16} />
@@ -147,6 +147,17 @@ export default function LandingPage() {
                   </td>
                   <td>
                     08/22/<HideSmall>20</HideSmall>21
+                  </td>
+                  <td>
+                    <Link to='https://twitter.com/orden_gg'>@orden_gg</Link>
+                  </td>
+                </TRow>
+                <TRow>
+                  <td>
+                    <HideSmall>v</HideSmall>0.6 round 4
+                  </td>
+                  <td>
+                    10/01/<HideSmall>20</HideSmall>21
                   </td>
                   <td>t.b.d</td>
                 </TRow>

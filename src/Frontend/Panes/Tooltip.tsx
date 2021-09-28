@@ -1,161 +1,121 @@
+import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import styled, { css, keyframes } from 'styled-components';
-import WindowManager, { TooltipName, WindowManagerEvent } from '../Game/WindowManager';
-import dfstyles, { snips } from '../Styles/dfstyles';
+import ReactDOM from 'react-dom';
+import styled from 'styled-components';
+import { TooltipName } from '../Game/WindowManager';
+import dfstyles from '../Styles/dfstyles';
+import { useOverlayContainer } from '../Utils/AppHooks';
 import { GameWindowZIndex } from '../Utils/constants';
 import { TooltipContent } from './TooltipPanes';
 
-// activate TooltipName on mouseenter, deactivate on mouse leave
-type DisplayType = 'inline' | 'block' | 'inline-block' | 'inline-flex' | 'flex';
-type TooltipProps = {
-  children: React.ReactNode;
+/**
+ * Each {@link TooltipName} has a corresponding tooltip element.
+ */
+export interface TooltipTriggerProps {
+  /**
+   * The name of the tooltip element to display. You can see all the concrete tooltip contents in
+   * the file called {@link TooltipPanes}.
+   */
   name: TooltipName;
-  needsCtrl?: boolean;
-  display?: DisplayType;
+
+  /**
+   * A {@link TooltipTrigger} wraps this child, and causes a tooltip to appear when the user hovers
+   * over it.
+   */
+  children: React.ReactNode;
+
+  /**
+   * You can append some dynamic content to the given tooltip by setting this field to a React node.
+   */
+  extraContent?: React.ReactNode;
+
+  /**
+   * You can optionally style the tooltip trigger element, not the tooltip itself.
+   */
   style?: React.CSSProperties;
-  className?: string;
-};
-
-const fade = keyframes`
-  from {
-    background: ${dfstyles.colors.dfblue}; 
-  }
-  to {
-    background: ${dfstyles.colors.backgroundlight};
-  }
-`;
-
-const _animation = css`
-  animation: ${fade} 1s ${dfstyles.game.styles.animProps};
-`;
-
-// ${(props) => (props.anim ? animation : 'animation: none;')}
-const StyledTooltipTrigger = styled.span<{
-  display?: DisplayType;
-}>`
-  border-radius: 2px;
-  display: ${(props) => props.display || 'inline'};
-`;
-
-export function TooltipTrigger({ children, name, display, style, className }: TooltipProps) {
-  const windowManager = WindowManager.getInstance();
-  const [hovering, setHovering] = useState<boolean>(false);
-
-  useEffect(() => {
-    windowManager.setTooltip(hovering ? name : TooltipName.None);
-  }, [hovering, windowManager, name]);
-
-  return (
-    <StyledTooltipTrigger
-      display={display}
-      style={{ ...style }}
-      className={className}
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
-    >
-      {children}
-    </StyledTooltipTrigger>
-  );
 }
 
-const StyledTooltip = styled.div<{
-  visible: boolean;
-}>`
-  ${snips.defaultModalWidth}
-  position: absolute;
-  min-height: 1em;
-  min-width: 5em;
-  border: 1px solid ${dfstyles.colors.border};
-  background: ${dfstyles.colors.background};
-  padding: 0.5em;
-  border-radius: 3px;
-  text-align: justify;
+export interface TooltipProps extends TooltipTriggerProps {
+  top: number;
+  left: number;
+}
 
-  z-index: ${GameWindowZIndex.Tooltip};
-  display: ${(props) => (props.visible ? 'block' : 'none')};
-`;
+/**
+ * When the player hovers over this element, triggers the tooltip with the given name to be
+ * displayed on top of everything.
+ */
+export function TooltipTrigger(props: TooltipTriggerProps) {
+  const overlayContainer = useOverlayContainer();
+  const [hovering, setHovering] = useState(false);
+  const [mouseCoords, setMouseCoords] = useState({ x: 0, y: 0 });
 
-export function Tooltip() {
-  const [top, setTop] = useState<number>(0);
-  const [left, setLeft] = useState<number>(0);
-
-  const [visible, setVisible] = useState<boolean>(false);
-
-  const windowManager = WindowManager.getInstance();
-
-  const [current, setCurrent] = useState<TooltipName>(TooltipName.None);
-
-  const [leftOffset, setLeftOffset] = useState<number>(10);
-  const [topOffset, setTopOffset] = useState<number>(10);
-
-  const elRef = useRef<HTMLDivElement>(document.createElement('div'));
-  const [height, setHeight] = useState<number>(20);
-  const [width, setWidth] = useState<number>(20);
-
-  // subscribe to tooltip changes
-  useEffect(() => {
-    const checkTooltip = () => {
-      const current = windowManager.getTooltip();
-      setCurrent(current);
-    };
-    windowManager.on(WindowManagerEvent.TooltipUpdated, checkTooltip);
-    return () => {
-      windowManager.removeListener(WindowManagerEvent.TooltipUpdated, checkTooltip);
-    };
-  }, [windowManager]);
-
-  // sync visible to current tooltip
-  useEffect(() => {
-    const checkTooltip = () => {
-      const current = windowManager.getTooltip();
-      if (current === TooltipName.None) setVisible(false);
-      else setVisible(true);
-    };
-
-    windowManager.on(WindowManagerEvent.TooltipUpdated, checkTooltip);
-
-    return () => {
-      windowManager.removeListener(WindowManagerEvent.TooltipUpdated, checkTooltip);
-    };
-  }, [windowManager, height, width]);
-
-  // sync mousemove event
   useEffect(() => {
     const doMouseMove = (e: MouseEvent) => {
-      if (!visible) return;
-      setLeft(e.clientX);
-      setTop(e.clientY);
+      setMouseCoords({ x: e.clientX, y: e.clientY });
     };
 
-    if (visible) {
-      window.addEventListener('mousemove', doMouseMove);
-    }
+    window.addEventListener('mousemove', doMouseMove);
 
     return () => {
       window.removeEventListener('mousemove', doMouseMove);
     };
-  }, [visible]);
+  });
+
+  return (
+    <>
+      <StyledTooltipTrigger
+        style={{ ...props.style }}
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
+      >
+        {props.children}
+      </StyledTooltipTrigger>
+
+      {overlayContainer &&
+        hovering &&
+        ReactDOM.createPortal(
+          <Tooltip {...props} top={mouseCoords.y} left={mouseCoords.x} />,
+          overlayContainer
+        )}
+    </>
+  );
+}
+
+/**
+ * At any given moment, there can only be one tooltip visible in the game. This is true because a
+ * player only has one mouse cursor on the screen, and therefore can only be hovering over a single
+ * {@link TooltipTrigger} element at any given time. This component is responsible for keeping track
+ * of which tooltip has been hovered over, and rendering the corresponding content.
+ */
+export function Tooltip(props: TooltipProps) {
+  const elRef = useRef<HTMLDivElement>(document.createElement('div'));
+
+  const [height, setHeight] = useState<number>(20);
+  const [width, setWidth] = useState<number>(20);
+
+  const [leftOffset, setLeftOffset] = useState<number>(10);
+  const [topOffset, setTopOffset] = useState<number>(10);
 
   // sync size to content size
   useLayoutEffect(() => {
     setHeight(elRef.current.offsetHeight);
     setWidth(elRef.current.offsetWidth);
-  }, [elRef.current.offsetHeight, elRef, visible]);
+  }, [elRef.current.offsetHeight, elRef]);
 
   // point it in the right direction based on quadrant
   useLayoutEffect(() => {
-    if (left < window.innerWidth / 2) {
+    if (props.left < window.innerWidth / 2) {
       setLeftOffset(10);
     } else {
       setLeftOffset(-10 - width);
     }
 
-    if (top < window.innerHeight / 2) {
+    if (props.top < window.innerHeight / 2) {
       setTopOffset(10);
     } else {
       setTopOffset(-10 - height);
     }
-  }, [left, top, width, height]);
+  }, [width, height, props.left, props.top]);
 
   return (
     <StyledTooltip
@@ -163,12 +123,28 @@ export function Tooltip() {
       onMouseEnter={(e) => e.preventDefault()}
       onMouseLeave={(e) => e.preventDefault()}
       style={{
-        top: `${top + topOffset}px`,
-        left: `${left + leftOffset}px`,
+        top: `${props.top + topOffset}px`,
+        left: `${props.left + leftOffset}px`,
       }}
-      visible={visible}
     >
-      <TooltipContent name={current} />
+      <TooltipContent name={props.name} />
+      {props.extraContent}
     </StyledTooltip>
   );
 }
+
+const StyledTooltipTrigger = styled.span`
+  border-radius: 2px;
+  display: ${(props) => props?.style?.display || 'inline'};
+`;
+
+const StyledTooltip = styled.div`
+  max-width: ${RECOMMENDED_MODAL_WIDTH};
+  position: absolute;
+  border: 1px solid ${dfstyles.colors.border};
+  background: ${dfstyles.colors.background};
+  padding: 0.5em 1em;
+  border-radius: 3px;
+  line-height: 1.5em;
+  z-index: ${GameWindowZIndex.Tooltip};
+`;

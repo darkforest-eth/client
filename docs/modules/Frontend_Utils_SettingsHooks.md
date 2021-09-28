@@ -15,6 +15,7 @@
 
 - [BooleanSetting](Frontend_Utils_SettingsHooks.md#booleansetting)
 - [MultiSelectSetting](Frontend_Utils_SettingsHooks.md#multiselectsetting)
+- [NumberSetting](Frontend_Utils_SettingsHooks.md#numbersetting)
 - [getBooleanSetting](Frontend_Utils_SettingsHooks.md#getbooleansetting)
 - [getLocalStorageSettingKey](Frontend_Utils_SettingsHooks.md#getlocalstoragesettingkey)
 - [getNumberSetting](Frontend_Utils_SettingsHooks.md#getnumbersetting)
@@ -24,6 +25,7 @@
 - [setNumberSetting](Frontend_Utils_SettingsHooks.md#setnumbersetting)
 - [setSetting](Frontend_Utils_SettingsHooks.md#setsetting)
 - [useBooleanSetting](Frontend_Utils_SettingsHooks.md#usebooleansetting)
+- [useNumberSetting](Frontend_Utils_SettingsHooks.md#usenumbersetting)
 - [useSetting](Frontend_Utils_SettingsHooks.md#usesetting)
 
 ## Variables
@@ -84,6 +86,24 @@ several options.
 | `__namedParameters.uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
 | `__namedParameters.values`    | `string`[]                                                         |
 | `__namedParameters.wide?`     | `boolean`                                                          |
+
+#### Returns
+
+`Element`
+
+---
+
+### NumberSetting
+
+▸ **NumberSetting**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                          | Type                                                               |
+| :---------------------------- | :----------------------------------------------------------------- |
+| `__namedParameters`           | `Object`                                                           |
+| `__namedParameters.setting`   | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)      |
+| `__namedParameters.uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
 
 #### Returns
 
@@ -269,11 +289,31 @@ a boolean.
 
 ---
 
+### useNumberSetting
+
+▸ **useNumberSetting**(`uiManager`, `setting`): [`number`, (`newValue`: `number`) => `void`]
+
+Allows a react component to subscribe to changes and set the given setting as a number. Doesn't
+allow you to set the value of this setting to anything but a valid number.
+
+#### Parameters
+
+| Name        | Type                                                                              |
+| :---------- | :-------------------------------------------------------------------------------- |
+| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) \| `undefined` |
+| `setting`   | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)                     |
+
+#### Returns
+
+[`number`, (`newValue`: `number`) => `void`]
+
+---
+
 ### useSetting
 
 ▸ **useSetting**(`uiManager`, `setting`): [`string`, (`newValue`: `string` \| `undefined`) => `void`]
 
-Allows a react component to subscribe to changes to the give setting.
+Allows a react component to subscribe to changes and set the given setting.
 
 #### Parameters
 

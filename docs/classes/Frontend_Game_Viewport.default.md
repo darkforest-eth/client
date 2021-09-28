@@ -10,7 +10,6 @@
 
 ### Properties
 
-- [animationManager](Frontend_Game_Viewport.default.md#animationmanager)
 - [canvas](Frontend_Game_Viewport.default.md#canvas)
 - [centerWorldCoords](Frontend_Game_Viewport.default.md#centerworldcoords)
 - [diagnosticUpdater](Frontend_Game_Viewport.default.md#diagnosticupdater)
@@ -104,12 +103,6 @@
 | `canvas`            | `HTMLCanvasElement`                                     |
 
 ## Properties
-
-### animationManager
-
-• `Private` **animationManager**: [`AnimationManager`](Frontend_Game_ViewportAnimation.AnimationManager.md)
-
----
 
 ### canvas
 

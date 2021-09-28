@@ -17,6 +17,7 @@
 - [useMyArtifacts](Frontend_Utils_AppHooks.md#usemyartifacts)
 - [useMyArtifactsList](Frontend_Utils_AppHooks.md#usemyartifactslist)
 - [useOnSendCompleted](Frontend_Utils_AppHooks.md#useonsendcompleted)
+- [useOverlayContainer](Frontend_Utils_AppHooks.md#useoverlaycontainer)
 - [usePlanet](Frontend_Utils_AppHooks.md#useplanet)
 - [usePlanetArtifacts](Frontend_Utils_AppHooks.md#useplanetartifacts)
 - [usePlanetInactiveArtifacts](Frontend_Utils_AppHooks.md#useplanetinactiveartifacts)
@@ -182,6 +183,16 @@ Calls {@code onCompleted} when the user sends a move via the ui.
 #### Returns
 
 `void`
+
+---
+
+### useOverlayContainer
+
+▸ **useOverlayContainer**(): `HTMLDivElement` \| `null`
+
+#### Returns
+
+`HTMLDivElement` \| `null`
 
 ---
 

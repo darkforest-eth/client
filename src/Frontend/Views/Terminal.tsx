@@ -2,7 +2,6 @@ import EventEmitter from 'events';
 import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from '../Components/CoreUI';
-import { Hoverable } from '../Components/Hoverable';
 import { MythicLabelText } from '../Components/Labels/MythicLabel';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
 import { Blue, Green, Invisible, Red, Sub, Subber, Text, White } from '../Components/Text';
@@ -19,8 +18,8 @@ export interface TerminalHandle {
   printElement: (element: React.ReactElement) => void;
   printLoadingBar: (prettyEntityName: string, ref: React.RefObject<LoadingBarHandle>) => void;
   printLoadingSpinner: () => void;
-  print: (str: string, style?: TerminalTextStyle, hoverContents?: () => JSX.Element) => void;
-  println: (str: string, style?: TerminalTextStyle, hoverContents?: () => JSX.Element) => void;
+  print: (str: string, style?: TerminalTextStyle) => void;
+  println: (str: string, style?: TerminalTextStyle) => void;
   printShellLn: (str: string) => void;
   printLink: (str: string, onClick: () => void, style: TerminalTextStyle) => void;
   focus: () => void;
@@ -75,12 +74,7 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
   }, [append]);
 
   const print = useCallback(
-    (
-      str: string,
-      style = TerminalTextStyle.Sub,
-      onClick: (() => void) | undefined = undefined,
-      hoverContents?: () => JSX.Element
-    ) => {
+    (str: string, style = TerminalTextStyle.Sub, onClick: (() => void) | undefined = undefined) => {
       let fragment: JSX.Element;
       let innerFragment: JSX.Element = <span>{str}</span>;
 
@@ -122,12 +116,6 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
               <u>{innerFragment}</u>
             </Sub>
           );
-          break;
-        case TerminalTextStyle.Hoverable:
-          if (!hoverContents) {
-            throw new Error('if the style is hoverable, you must provide the hoverable contents');
-          }
-          fragment = <Hoverable hoverContents={hoverContents}>{innerFragment}</Hoverable>;
           break;
         default:
           fragment = <Sub>{innerFragment}</Sub>;
@@ -187,11 +175,11 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
       printLoadingBar: (prettyEntityName: string, ref: React.RefObject<LoadingBarHandle>) => {
         append(<TextLoadingBar prettyEntityName={prettyEntityName} ref={ref} />);
       },
-      print: (str: string, style?: TerminalTextStyle, hoverContents?: () => JSX.Element) => {
-        print(str, style, undefined, hoverContents);
+      print: (str: string, style?: TerminalTextStyle) => {
+        print(str, style, undefined);
       },
-      println: (str: string, style?: TerminalTextStyle, hoverContents?: () => JSX.Element) => {
-        print(str, style, undefined, hoverContents);
+      println: (str: string, style?: TerminalTextStyle) => {
+        print(str, style, undefined);
         newline();
       },
       printLink: (str: string, onClick: () => void, style: TerminalTextStyle) => {
@@ -207,7 +195,7 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
       },
       printShellLn: (text: string) => {
         print(promptCharacter + ' ', TerminalTextStyle.Green);
-        print(text, TerminalTextStyle.White);
+        print(text, TerminalTextStyle.Text);
         newline();
       },
       printLoadingSpinner: () => {

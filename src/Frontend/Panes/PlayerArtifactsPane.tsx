@@ -40,7 +40,7 @@ function HelpContent() {
       <Spacer height={8} />
       <p>
         The table is interactive, and allows you to sort the artifacts by clicking each column's
-        header. You can also view more information about a particular planet by clicking on its
+        header. You can also view more information about a particular artifact by clicking on its
         name.
       </p>
     </div>
@@ -76,7 +76,7 @@ function PlayerArtifactsPaneContent({ modal }: { modal: ModalHandle }) {
       );
     },
     (artifact: Artifact) => <Sub>{ArtifactTypeNames[artifact.artifactType]}</Sub>,
-    (artifact: Artifact) => <ArtifactRarityLabelAnim artifact={artifact} />,
+    (artifact: Artifact) => <ArtifactRarityLabelAnim rarity={artifact.rarity} />,
   ];
 
   const sortFunctions = [

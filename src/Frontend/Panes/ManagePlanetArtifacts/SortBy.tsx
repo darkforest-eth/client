@@ -1,8 +1,7 @@
 import { Upgrade } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
-import { CenterRow, HoverableTooltip, Spacer } from '../../Components/CoreUI';
-import { Hoverable, TOOLTIP_SLOW } from '../../Components/Hoverable';
+import { CenterRow, Spacer } from '../../Components/CoreUI';
 import {
   DefenseIcon,
   EnergyGrowthIcon,
@@ -10,7 +9,9 @@ import {
   RangeIcon,
   SpeedIcon,
 } from '../../Components/Icons';
+import { TooltipName } from '../../Game/WindowManager';
 import dfstyles from '../../Styles/dfstyles';
+import { TooltipTrigger } from '../Tooltip';
 
 export function SortBy({
   sortBy,
@@ -23,32 +24,32 @@ export function SortBy({
   const icons: Array<{
     icon: (color: string) => React.ReactElement;
     key: keyof Upgrade;
-    tooltip: string;
+    tooltip: TooltipName;
   }> = [
     {
       icon: (color: string) => <DefenseIcon color={color} />,
       key: 'defMultiplier',
-      tooltip: 'defense multiplier',
+      tooltip: TooltipName.DefenseMultiplier,
     },
     {
       icon: (color: string) => <EnergyIcon color={color} />,
       key: 'energyCapMultiplier',
-      tooltip: 'energy cap multiplier',
+      tooltip: TooltipName.EnergyCapMultiplier,
     },
     {
       icon: (color: string) => <EnergyGrowthIcon color={color} />,
       key: 'energyGroMultiplier',
-      tooltip: 'energy growth multiplier',
+      tooltip: TooltipName.EnergyGrowthMultiplier,
     },
     {
       icon: (color: string) => <RangeIcon color={color} />,
       key: 'rangeMultiplier',
-      tooltip: 'range multiplier',
+      tooltip: TooltipName.RangeMultiplier,
     },
     {
       icon: (color: string) => <SpeedIcon color={color} />,
       key: 'speedMultiplier',
-      tooltip: 'speed multiplier',
+      tooltip: TooltipName.SpeedMultiplier,
     },
   ];
   /* eslint-enable react/display-name */
@@ -58,12 +59,7 @@ export function SortBy({
       Sort By:
       <Spacer width={8} />
       {icons.map((i) => (
-        <Hoverable
-          key={i.key}
-          quick
-          hoverDelay={TOOLTIP_SLOW}
-          hoverContents={() => <HoverableTooltip>{i.tooltip}</HoverableTooltip>}
-        >
+        <TooltipTrigger key={i.key} name={i.tooltip}>
           <SortByIconContainer
             onClick={() => {
               if (i.key === sortBy) {
@@ -75,7 +71,7 @@ export function SortBy({
           >
             {i.icon(i.key === sortBy ? dfstyles.colors.dfgreen : dfstyles.colors.subtext)}
           </SortByIconContainer>
-        </Hoverable>
+        </TooltipTrigger>
       ))}
     </CenterRow>
   );

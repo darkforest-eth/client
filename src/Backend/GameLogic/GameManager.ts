@@ -385,7 +385,6 @@ class GameManager extends EventEmitter {
       width: 0,
       height: 0,
     };
-
     this.terminal = terminal;
     this.account = account;
     this.players = players;
@@ -501,7 +500,7 @@ class GameManager extends EventEmitter {
         const player = this.players.get(entry.ethAddress);
         if (player) {
           // current player's score is updated via `this.playerInterval`
-          if (player.address !== this.account) {
+          if (player.address !== this.account && entry.score !== undefined) {
             player.score = entry.score;
           }
         }
@@ -565,7 +564,6 @@ class GameManager extends EventEmitter {
 
     await persistentChunkStore.saveTouchedPlanetIds(initialState.allTouchedPlanetIds);
     await persistentChunkStore.saveRevealedCoords(initialState.allRevealedCoords);
-    await persistentChunkStore.saveClaimedCoords(initialState.allClaimedCoords);
 
     const knownArtifacts: Map<ArtifactId, Artifact> = new Map();
 
@@ -620,7 +618,9 @@ class GameManager extends EventEmitter {
       initialState.touchedAndLocatedPlanets,
       new Set(Array.from(initialState.allTouchedPlanetIds)),
       initialState.revealedCoordsMap,
-      initialState.claimedCoordsMap,
+      initialState.claimedCoordsMap
+        ? initialState.claimedCoordsMap
+        : new Map<LocationId, ClaimedCoords>(),
       initialState.worldRadius,
       initialState.arrivals,
       initialState.planetVoyageIdMap,
@@ -839,17 +839,10 @@ class GameManager extends EventEmitter {
     const artifactsOnPlanet = artifactsOnPlanets[0];
 
     const revealedCoords = await this.contractsAPI.getRevealedCoordsByIdIfExists(planetId);
-    const claimedCoords = await this.contractsAPI.getClaimedCoordsByIdIfExists(planetId);
-
     let revealedLocation: RevealedLocation | undefined;
+    let claimedCoords: ClaimedCoords | undefined;
 
-    if (claimedCoords) {
-      revealedLocation = {
-        ...this.locationFromCoords(claimedCoords),
-        revealer: claimedCoords.revealer,
-      };
-      this.getGameObjects().setClaimedLocation(revealedLocation);
-    } else if (revealedCoords) {
+    if (revealedCoords) {
       revealedLocation = {
         ...this.locationFromCoords(revealedCoords),
         revealer: revealedCoords.revealer,
@@ -943,6 +936,7 @@ class GameManager extends EventEmitter {
   }
 
   private onTxConfirmed(unminedTx: SubmittedTx) {
+    const notifManager = NotificationManager.getInstance();
     this.terminal.current?.print(`${unminedTx.methodName} transaction (`, TerminalTextStyle.Green);
     this.terminal.current?.printLink(
       `${unminedTx.txHash.slice(0, 6)}`,
@@ -954,9 +948,21 @@ class GameManager extends EventEmitter {
     this.terminal.current?.println(`) confirmed`, TerminalTextStyle.Green);
 
     NotificationManager.getInstance().txConfirm(unminedTx);
+
+    const autoClearConfirmAfter = getNumberSetting(
+      this.account,
+      Setting.AutoClearConfirmedTransactionsAfterSeconds
+    );
+
+    if (autoClearConfirmAfter >= 0) {
+      setTimeout(() => {
+        notifManager.clearNotification(unminedTx.actionId);
+      }, autoClearConfirmAfter * 1000);
+    }
   }
 
   private onTxReverted(unminedTx: SubmittedTx) {
+    const notifManager = NotificationManager.getInstance();
     this.terminal.current?.print(`${unminedTx.methodName} transaction (`, TerminalTextStyle.Red);
     this.terminal.current?.printLink(
       `${unminedTx.txHash.slice(0, 6)}`,
@@ -965,9 +971,9 @@ class GameManager extends EventEmitter {
       },
       TerminalTextStyle.White
     );
-    this.terminal.current?.println(`) reverted`, TerminalTextStyle.Red);
 
-    NotificationManager.getInstance().txRevert(unminedTx);
+    this.terminal.current?.println(`) reverted`, TerminalTextStyle.Red);
+    notifManager.txRevert(unminedTx);
   }
 
   private onTxIntentFail(txIntent: TxIntent, e: Error): void {
@@ -979,6 +985,17 @@ class GameManager extends EventEmitter {
       TerminalTextStyle.Red
     );
     this.entityStore.clearUnconfirmedTxIntent(txIntent);
+
+    const autoClearRejectAfter = getNumberSetting(
+      this.account,
+      Setting.AutoClearRejectedTransactionsAfterSeconds
+    );
+
+    if (autoClearRejectAfter >= 0) {
+      setTimeout(() => {
+        notifManager.clearNotification(txIntent.actionId);
+      }, autoClearRejectAfter * 1000);
+    }
   }
 
   public getGptCreditPriceEmitter(): Monomitter<number> {
@@ -1290,7 +1307,7 @@ class GameManager extends EventEmitter {
     return {
       myLastClaimTimestamp: myLastClaimTimestamp || undefined,
       currentlyClaiming: !!this.entityStore.getUnconfirmedClaim(),
-      claimCooldownTime: this.contractConstants.CLAIM_PLANET_COOLDOWN,
+      claimCooldownTime: this.contractConstants?.CLAIM_PLANET_COOLDOWN || 0,
     };
   }
 
@@ -1635,6 +1652,9 @@ class GameManager extends EventEmitter {
     if (!myLastClaimTimestamp) {
       return Date.now();
     }
+    if (!this.contractConstants.CLAIM_PLANET_COOLDOWN) {
+      return 0;
+    }
 
     // both the variables in the next line are denominated in seconds
     return (myLastClaimTimestamp + this.contractConstants.CLAIM_PLANET_COOLDOWN) * 1000;
@@ -1898,11 +1918,16 @@ class GameManager extends EventEmitter {
       let d: number;
       let p: number;
 
-      // there is always a fixed area for players to spawn in, set by the contract
-      const spawnInnerRadius = Math.sqrt(
+      // if this.contractConstants.SPAWN_RIM_AREA is non-zero, then players must spawn in that
+      // area, distributed evenly in the inner perimeter of the world
+      let spawnInnerRadius = Math.sqrt(
         Math.max(Math.PI * this.worldRadius ** 2 - this.contractConstants.SPAWN_RIM_AREA, 0) /
           Math.PI
       );
+
+      if (this.contractConstants.SPAWN_RIM_AREA === 0) {
+        spawnInnerRadius = 0;
+      }
 
       do {
         // sample from square
@@ -1914,7 +1939,7 @@ class GameManager extends EventEmitter {
         p >= initPerlinMax || // keep searching if above or equal to the max
         p < initPerlinMin || // keep searching if below the minimum
         d >= this.worldRadius || // can't be out of bound
-        d <= spawnInnerRadius // can't be inside spawn percentage ring
+        d <= spawnInnerRadius // can't be inside spawn area ring
       );
 
       // when setting up a new account in development mode, you can tell
@@ -3225,6 +3250,10 @@ class GameManager extends EventEmitter {
     return this.ethConnection.loadContract(contractAddress, async (address, provider, signer) =>
       createContract<T>(address, contractABI, provider, signer)
     );
+  }
+
+  public testNotification() {
+    NotificationManager.getInstance().reallyLongNotification();
   }
 
   /**

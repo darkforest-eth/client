@@ -21,7 +21,6 @@
 - [FullWidth](Frontend_Components_CoreUI.md#fullwidth)
 - [HeaderText](Frontend_Components_CoreUI.md#headertext)
 - [Hidden](Frontend_Components_CoreUI.md#hidden)
-- [HoverableTooltip](Frontend_Components_CoreUI.md#hoverabletooltip)
 - [InlineBlock](Frontend_Components_CoreUI.md#inlineblock)
 - [KeyboardBtn](Frontend_Components_CoreUI.md#keyboardbtn)
 - [MaxWidth](Frontend_Components_CoreUI.md#maxwidth)
@@ -159,12 +158,6 @@ Expands to fill space in a flexbox.
 ### Hidden
 
 • `Const` **Hidden**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
-
----
-
-### HoverableTooltip
-
-• `Const` **HoverableTooltip**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
@@ -317,9 +310,9 @@ provided, this is just a normal button.
 
 #### Parameters
 
-| Name    | Type                                                                                                                                         |
-| :------ | :------------------------------------------------------------------------------------------------------------------------------------------- |
-| `props` | { `children`: `React.ReactNode` ; `shortcutKey?`: `string` ; `shortcutText?`: `string` } & [`BtnProps`](Frontend_Components_Btn.md#btnprops) |
+| Name    | Type                                                                                                                                                                          |
+| :------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `props` | { `children`: `React.ReactNode` ; `shortcutDisabled?`: `boolean` ; `shortcutKey?`: `string` ; `shortcutText?`: `string` } & [`BtnProps`](Frontend_Components_Btn.md#btnprops) |
 
 #### Returns
 
@@ -333,11 +326,12 @@ provided, this is just a normal button.
 
 #### Parameters
 
-| Name                             | Type     |
-| :------------------------------- | :------- |
-| `__namedParameters`              | `Object` |
-| `__namedParameters.shortcutKey?` | `string` |
-| `__namedParameters.text?`        | `string` |
+| Name                             | Type      |
+| :------------------------------- | :-------- |
+| `__namedParameters`              | `Object`  |
+| `__namedParameters.disabled?`    | `boolean` |
+| `__namedParameters.shortcutKey?` | `string`  |
+| `__namedParameters.text?`        | `string`  |
 
 #### Returns
 
