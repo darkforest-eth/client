@@ -45,6 +45,7 @@
 - [ModalUpgradeDetails](Frontend_Game_WindowManager.TooltipName.md#modalupgradedetails)
 - [ModalWithdrawSilver](Frontend_Game_WindowManager.TooltipName.md#modalwithdrawsilver)
 - [ModalYourArtifacts](Frontend_Game_WindowManager.TooltipName.md#modalyourartifacts)
+- [NetworkHealth](Frontend_Game_WindowManager.TooltipName.md#networkhealth)
 - [Pirates](Frontend_Game_WindowManager.TooltipName.md#pirates)
 - [PlanetRank](Frontend_Game_WindowManager.TooltipName.md#planetrank)
 - [Range](Frontend_Game_WindowManager.TooltipName.md#range)
@@ -298,6 +299,12 @@
 ### ModalYourArtifacts
 
 • **ModalYourArtifacts** = `54`
+
+---
+
+### NetworkHealth
+
+• **NetworkHealth** = `58`
 
 ---
 

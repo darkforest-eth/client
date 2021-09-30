@@ -598,7 +598,7 @@ DISABLED for round 4
 
 ### getGasFeeForTransaction
 
-▸ `Private` **getGasFeeForTransaction**(`tx`): `string`
+▸ `Private` **getGasFeeForTransaction**(`tx`): `string` \| `AutoGasSetting`
 
 We pass this function into {@link TxExecutor} to calculate what gas fee we should use for the
 given transaction. The result is either a number, measured in gwei, represented as a string, or
@@ -612,7 +612,7 @@ a string representing that we want to use an auto gas setting.
 
 #### Returns
 
-`string`
+`string` \| `AutoGasSetting`
 
 ---
 

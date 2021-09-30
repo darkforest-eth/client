@@ -89,6 +89,8 @@ export const enum TooltipName {
   ModalFindArtifact,
   ModalPlugins,
   ModalWithdrawSilver,
+
+  NetworkHealth,
 }
 
 class WindowManager extends EventEmitter {

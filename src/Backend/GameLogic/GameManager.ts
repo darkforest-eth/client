@@ -26,6 +26,7 @@ import {
   EthAddress,
   LocatablePlanet,
   LocationId,
+  NetworkHealthSummary,
   Planet,
   PlanetLevel,
   PlanetMessageType,
@@ -104,6 +105,7 @@ import { getConversation, startConversation, stepConversation } from '../Network
 import { eventLogger, EventType } from '../Network/EventLogger';
 import { loadLeaderboard } from '../Network/LeaderboardApi';
 import { addMessage, deleteMessages, getMessagesOnPlanets } from '../Network/MessageAPI';
+import { loadNetworkHealth } from '../Network/NetworkHealthApi';
 import {
   disconnectTwitter,
   getAllTwitters,
@@ -273,6 +275,11 @@ class GameManager extends EventEmitter {
   private scoreboardInterval: ReturnType<typeof setInterval>;
 
   /**
+   * Handle to an interval that periodically refreshes the network's health from our webserver.
+   */
+  private networkHealthInterval: ReturnType<typeof setInterval>;
+
+  /**
    * Manages the process of mining new space territory.
    */
   private minerManager?: MinerManager;
@@ -331,6 +338,12 @@ class GameManager extends EventEmitter {
    * @todo move this into a new `PlayerState` class.
    */
   private myGPTCredits$: Monomitter<number>;
+
+  /**
+   * Emits whenever we load the network health summary from the webserver, which is derived from
+   * diagnostics that the client sends up to the webserver as well.
+   */
+  public networkHealth$: Monomitter<NetworkHealthSummary>;
 
   /**
    * Diagnostic information about the game.
@@ -392,6 +405,7 @@ class GameManager extends EventEmitter {
     this.gptCreditPriceEther = gptCreditPriceEther;
     this.myGPTCredits$ = monomitter(true);
     this.gptCreditPriceEtherEmitter$ = monomitter(true);
+    this.networkHealth$ = monomitter(true);
     this.myGPTCredits = myGPTCredits;
     this.myGPTCredits$.publish(myGPTCredits);
     this.playersUpdated$ = monomitter();
@@ -467,6 +481,7 @@ class GameManager extends EventEmitter {
 
     this.diagnosticsInterval = setInterval(this.uploadDiagnostics.bind(this), 10_000);
     this.scoreboardInterval = setInterval(this.refreshScoreboard.bind(this), 10_000);
+    this.networkHealthInterval = setInterval(this.refreshNetworkHealth.bind(this), 10_000);
 
     this.playerInterval = setInterval(() => {
       if (this.account) {
@@ -490,6 +505,14 @@ class GameManager extends EventEmitter {
 
   private async uploadDiagnostics() {
     eventLogger.logEvent(EventType.Diagnostics, this.diagnostics);
+  }
+
+  private async refreshNetworkHealth() {
+    try {
+      this.networkHealth$.publish(await loadNetworkHealth());
+    } catch (e) {
+      // @todo - what do we do if we can't connect to the webserver
+    }
   }
 
   private async refreshScoreboard() {
@@ -528,6 +551,7 @@ class GameManager extends EventEmitter {
     clearInterval(this.playerInterval);
     clearInterval(this.diagnosticsInterval);
     clearInterval(this.scoreboardInterval);
+    clearInterval(this.networkHealthInterval);
     this.settingsSubscription?.unsubscribe();
   }
 

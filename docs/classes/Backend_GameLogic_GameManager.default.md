@@ -32,6 +32,8 @@
 - [minerManager](Backend_GameLogic_GameManager.default.md#minermanager)
 - [myGPTCredits](Backend_GameLogic_GameManager.default.md#mygptcredits)
 - [myGPTCredits$](Backend_GameLogic_GameManager.default.md#mygptcredits$)
+- [networkHealth$](Backend_GameLogic_GameManager.default.md#networkhealth$)
+- [networkHealthInterval](Backend_GameLogic_GameManager.default.md#networkhealthinterval)
 - [persistentChunkStore](Backend_GameLogic_GameManager.default.md#persistentchunkstore)
 - [planetHashMimc](Backend_GameLogic_GameManager.default.md#planethashmimc)
 - [playerInterval](Backend_GameLogic_GameManager.default.md#playerinterval)
@@ -173,6 +175,7 @@
 - [onTxSubmit](Backend_GameLogic_GameManager.default.md#ontxsubmit)
 - [prospectPlanet](Backend_GameLogic_GameManager.default.md#prospectplanet)
 - [refreshMyGPTCredits](Backend_GameLogic_GameManager.default.md#refreshmygptcredits)
+- [refreshNetworkHealth](Backend_GameLogic_GameManager.default.md#refreshnetworkhealth)
 - [refreshScoreboard](Backend_GameLogic_GameManager.default.md#refreshscoreboard)
 - [refreshServerPlanetStates](Backend_GameLogic_GameManager.default.md#refreshserverplanetstates)
 - [refreshTwitters](Backend_GameLogic_GameManager.default.md#refreshtwitters)
@@ -407,6 +410,23 @@ The total amount of GPT credits that belong to the current player.
 Whenever the amount of the GPT credits that this player owns changes, we publish an event here.
 
 **`todo`** move this into a new `PlayerState` class.
+
+---
+
+### networkHealth$
+
+• **networkHealth$**: `Monomitter`<`NetworkHealthSummary`\>
+
+Emits whenever we load the network health summary from the webserver, which is derived from
+diagnostics that the client sends up to the webserver as well.
+
+---
+
+### networkHealthInterval
+
+• `Private` **networkHealthInterval**: `Timeout`
+
+Handle to an interval that periodically refreshes the network's health from our webserver.
 
 ---
 
@@ -2406,6 +2426,16 @@ the given planet to the given planet.
 ### refreshMyGPTCredits
 
 ▸ `Private` **refreshMyGPTCredits**(): `Promise`<`void`\>
+
+#### Returns
+
+`Promise`<`void`\>
+
+---
+
+### refreshNetworkHealth
+
+▸ `Private` **refreshNetworkHealth**(): `Promise`<`void`\>
 
 #### Returns
 

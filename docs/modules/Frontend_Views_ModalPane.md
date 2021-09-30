@@ -30,7 +30,7 @@
 
 ### ModalProps
 
-Ƭ **ModalProps**: [`PaneProps`](Frontend_Components_GameWindowComponents.md#paneprops) & { `backgroundColor?`: `string` ; `borderColor?`: `string` ; `hideClose?`: `boolean` ; `hook`: [`Hook`](_types_global_GlobalTypes.md#hook)<`boolean`\> ; `initialPosition?`: { `x`: `number` ; `y`: `number` } ; `name?`: [`ModalName`](../enums/Frontend_Views_ModalPane.ModalName.md) ; `noPadding?`: `boolean` ; `style?`: `React.CSSProperties` ; `title`: `string` \| `React.ReactNode` ; `width?`: `string` ; `helpContent?`: () => `ReactNode` }
+Ƭ **ModalProps**: [`PaneProps`](Frontend_Components_GameWindowComponents.md#paneprops) & { `borderColor?`: `string` ; `hideClose?`: `boolean` ; `hook`: [`Hook`](_types_global_GlobalTypes.md#hook)<`boolean`\> ; `initialPosition?`: { `x`: `number` ; `y`: `number` } ; `name?`: [`ModalName`](../enums/Frontend_Views_ModalPane.ModalName.md) ; `noPadding?`: `boolean` ; `style?`: `React.CSSProperties` ; `title`: `string` \| `React.ReactNode` ; `width?`: `string` ; `helpContent?`: () => `ReactNode` }
 
 ## Functions
 

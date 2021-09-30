@@ -33,6 +33,8 @@
 - [Select](Frontend_Components_CoreUI.md#select)
 - [Separator](Frontend_Components_CoreUI.md#separator)
 - [Spacer](Frontend_Components_CoreUI.md#spacer)
+- [Spread](Frontend_Components_CoreUI.md#spread)
+- [SpreadApart](Frontend_Components_CoreUI.md#spreadapart)
 - [TextButton](Frontend_Components_CoreUI.md#textbutton)
 - [Truncate](Frontend_Components_CoreUI.md#truncate)
 - [Underline](Frontend_Components_CoreUI.md#underline)
@@ -236,6 +238,24 @@ way to do this.
 ### Spacer
 
 • `Const` **Spacer**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+
+---
+
+### Spread
+
+• `Const` **Spread**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+
+Expands to fit the width of container. Is itself a flex box that spreads out its children
+horizontally.
+
+---
+
+### SpreadApart
+
+• `Const` **SpreadApart**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+
+Expands to fit the width of container. Is itself a flex box that spreads out its children
+horizontally.
 
 ---
 

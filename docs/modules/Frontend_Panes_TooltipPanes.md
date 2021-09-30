@@ -31,6 +31,7 @@
 - [ModalPlanetDexTooltipPane](Frontend_Panes_TooltipPanes.md#modalplanetdextooltippane)
 - [ModalTwitterVerificationTooltipPane](Frontend_Panes_TooltipPanes.md#modaltwitterverificationtooltippane)
 - [ModalUpgradeDetailsTooltipPane](Frontend_Panes_TooltipPanes.md#modalupgradedetailstooltippane)
+- [NetworkHealthPane](Frontend_Panes_TooltipPanes.md#networkhealthpane)
 - [PiratesTooltipPane](Frontend_Panes_TooltipPanes.md#piratestooltippane)
 - [PlanetRankTooltipPane](Frontend_Panes_TooltipPanes.md#planetranktooltippane)
 - [RangeMultiplierPane](Frontend_Panes_TooltipPanes.md#rangemultiplierpane)
@@ -316,6 +317,16 @@
 ### ModalUpgradeDetailsTooltipPane
 
 ▸ **ModalUpgradeDetailsTooltipPane**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
+
+### NetworkHealthPane
+
+▸ **NetworkHealthPane**(): `Element`
 
 #### Returns
 

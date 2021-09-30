@@ -37,24 +37,6 @@ const StyledTimesTwo = styled.span`
 
 export const TimesTwo = () => <StyledTimesTwo>x2</StyledTimesTwo>;
 
-/**
- * Expands to fit the width of container. Is itself a flex box that spreads out its children
- * horizontally.
- */
-export const SpreadApart = styled.div`
-  width: 100%;
-  box-sizing: border-box;
-  flex-grow: 1;
-  display: inline-flex;
-  justify-content: space-between;
-  flex-direction: row;
-  align-items: center;
-
-  &:first-child {
-    border-left: none;
-  }
-`;
-
 export const RowTip = ({ name, children }: { name: TooltipName; children: React.ReactNode }) => (
   <TooltipTrigger
     name={name}

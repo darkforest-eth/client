@@ -4,7 +4,13 @@ import styled from 'styled-components';
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { isLocatable, StatIdx } from '../../_types/global/GlobalTypes';
-import { AlignCenterHorizontally, EmSpacer, FullWidth, InlineBlock } from '../Components/CoreUI';
+import {
+  AlignCenterHorizontally,
+  EmSpacer,
+  FullWidth,
+  InlineBlock,
+  SpreadApart,
+} from '../Components/CoreUI';
 import {
   DefenseIcon,
   EnergyGrowthIcon,
@@ -40,7 +46,6 @@ import {
   DestroyedMarker,
   PlanetActiveArtifact,
   RowTip,
-  SpreadApart,
   TimesTwo,
   TitleBar,
 } from './PlanetCardComponents';

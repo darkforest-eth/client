@@ -10,6 +10,7 @@ import { usePlayer, useUIManager } from '../Utils/AppHooks';
 import { GameWindowZIndex } from '../Utils/constants';
 import { ModalTwitterVerifyIcon } from './ModalIcon';
 import { ModalHook } from './ModalPane';
+import { NetworkHealth } from './NetworkHealth';
 
 const TopBarContainer = styled.div`
   z-index: ${GameWindowZIndex.MenuBar};
@@ -72,6 +73,8 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: ModalHook }) 
         <BoardPlacement account={account} />
         <EmSpacer width={1} />
       </AlignCenterHorizontally>
+      <br />
+      <NetworkHealth />
     </TopBarContainer>
   );
 }

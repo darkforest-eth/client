@@ -129,18 +129,16 @@ const Title = styled(Truncate)`
  * and allows the user to drag the window around.
  */
 const TitleBar = styled.div`
-  ${({ minimized, active }: { minimized: boolean; active: boolean }) => css`
+  ${({ minimized }: { minimized: boolean }) => css`
     user-select: none;
     line-height: 1.5em;
     width: 100%;
     cursor: grab;
     padding: 8px;
-    background-color: ${active ? dfstyles.colors.backgrounddark : dfstyles.colors.background};
     border-bottom: 1px solid ${minimized ? 'transparent' : dfstyles.colors.borderDark};
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    color: ${active && dfstyles.colors.textLight};
   `}
 `;
 
@@ -172,7 +170,6 @@ export type ModalProps = PaneProps & {
   helpContent?: () => React.ReactNode;
   width?: string;
   borderColor?: string;
-  backgroundColor?: string;
   initialPosition?: {
     x: number;
     y: number;
@@ -208,7 +205,6 @@ export function ModalPane({
   helpContent,
   width,
   borderColor,
-  backgroundColor,
   initialPosition,
 }: ModalProps) {
   const windowManager = WindowManager.getInstance();
@@ -453,13 +449,11 @@ export function ModalPane({
         width: currentWidth,
         maxWidth: currentWidth,
         border: borderColor !== undefined ? `1px solid ${borderColor}` : undefined,
-        backgroundColor: backgroundColor !== undefined ? `1px solid ${backgroundColor}` : undefined,
       }}
       ref={containerRef}
       onMouseDown={onMouseDown}
     >
       <TitleBar
-        active={isActive}
         ref={headerRef}
         style={{
           cursor: styleClicking ? 'grabbing' : 'grab',
