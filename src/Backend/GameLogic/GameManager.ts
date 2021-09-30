@@ -1610,7 +1610,9 @@ class GameManager extends EventEmitter {
    */
   async submitVerifyTwitter(twitter: string): Promise<boolean> {
     if (!this.account) return Promise.resolve(false);
-    const success = await verifyTwitterHandle(await this.signMessage({ twitter }));
+    const success = await verifyTwitterHandle(
+      await this.ethConnection.signMessageObject({ twitter })
+    );
     await this.refreshTwitters();
     return success;
   }
@@ -2454,7 +2456,7 @@ class GameManager extends EventEmitter {
       p.unconfirmedClearEmoji = true;
     });
 
-    const request = await this.signMessage({
+    const request = await this.ethConnection.signMessageObject({
       locationId,
       ids: this.getPlanetWithId(locationId)?.messages?.map((m) => m.id) || [],
     });
@@ -2474,7 +2476,7 @@ class GameManager extends EventEmitter {
   }
 
   public async submitDisconnectTwitter(twitter: string) {
-    await disconnectTwitter(await this.signMessage({ twitter }));
+    await disconnectTwitter(await this.ethConnection.signMessageObject({ twitter }));
     await this.refreshTwitters();
   }
 
@@ -2500,7 +2502,7 @@ class GameManager extends EventEmitter {
       p.unconfirmedAddEmoji = true;
     });
 
-    const request = await this.signMessage({
+    const request = await this.ethConnection.signMessageObject({
       locationId,
       sender: this.account,
       type,
@@ -2519,24 +2521,6 @@ class GameManager extends EventEmitter {
     }
 
     await this.refreshServerPlanetStates([locationId]);
-  }
-
-  /**
-   * Returns a signed version of this message.
-   */
-  private async signMessage<T>(obj: T): Promise<SignedMessage<T>> {
-    if (!this.account) {
-      throw new Error('not logged in');
-    }
-
-    const stringified = JSON.stringify(obj);
-    const signature = await this.ethConnection.signMessage(stringified);
-
-    return {
-      signature,
-      sender: this.account,
-      message: obj,
-    };
   }
 
   /**

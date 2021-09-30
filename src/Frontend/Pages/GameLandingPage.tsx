@@ -495,8 +495,9 @@ export function GameLandingPage() {
 
       terminal.current?.print('Enter your email address. ', TerminalTextStyle.Text);
       terminal.current?.println("We'll use this email address to notify you if you win a prize.");
+
       const email = (await terminal.current?.getInput()) || '';
-      const response = await submitPlayerEmail(email, address);
+      const response = await submitPlayerEmail(await ethConnection?.signMessageObject({ email }));
 
       if (response === EmailResponse.Success) {
         terminal.current?.println('Email successfully recorded.');

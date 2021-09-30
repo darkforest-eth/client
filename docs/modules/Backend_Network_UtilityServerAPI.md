@@ -90,14 +90,13 @@
 
 ### submitPlayerEmail
 
-▸ `Const` **submitPlayerEmail**(`email`, `ethAddress`): `Promise`<[`EmailResponse`](../enums/Backend_Network_UtilityServerAPI.EmailResponse.md)\>
+▸ `Const` **submitPlayerEmail**(`request?`): `Promise`<[`EmailResponse`](../enums/Backend_Network_UtilityServerAPI.EmailResponse.md)\>
 
 #### Parameters
 
-| Name         | Type         |
-| :----------- | :----------- |
-| `email`      | `string`     |
-| `ethAddress` | `EthAddress` |
+| Name       | Type                       |
+| :--------- | :------------------------- |
+| `request?` | `SignedMessage`<`Object`\> |
 
 #### Returns
 

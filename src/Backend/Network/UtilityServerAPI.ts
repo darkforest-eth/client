@@ -42,16 +42,15 @@ export const submitUnsubscribeEmail = async (email: string): Promise<EmailRespon
 };
 
 export const submitPlayerEmail = async (
-  email: string,
-  ethAddress: EthAddress
+  request?: SignedMessage<{ email: string }>
 ): Promise<EmailResponse> => {
-  if (!EmailValidator.validate(email)) {
+  if (!request || !EmailValidator.validate(request.message.email)) {
     return EmailResponse.Invalid;
   }
 
   const { success } = await fetch(`${WEBSERVER_URL}/email/playing`, {
     method: 'POST',
-    body: JSON.stringify({ email, address: ethAddress }),
+    body: JSON.stringify(request),
     headers: {
       'Content-Type': 'application/json',
     },
