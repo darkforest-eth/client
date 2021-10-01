@@ -98,9 +98,9 @@ module.exports = {
     new EnvironmentPlugin({
       NODE_ENV: 'development',
       DEFAULT_RPC: 'https://rpc-df.xdaichain.com/',
-      CONVERSATION_API_HOST: isProd ? 'https://api.dark-forest.online' : 'http://localhost:3000',
-      LEADERBOARD_API: isProd ? 'https://api.dark-forest.online' : 'http://localhost:3000',
-      WEBSERVER_URL: isProd ? 'https://api.dark-forest.online' : 'http://localhost:3000',
+      CONVERSATION_API_HOST: isProd ? 'https://api.zkga.me' : 'http://localhost:3000',
+      LEADERBOARD_API: isProd ? 'https://api.zkga.me' : 'http://localhost:3000',
+      WEBSERVER_URL: isProd ? 'https://api.zkga.me' : 'http://localhost:3000',
     }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({

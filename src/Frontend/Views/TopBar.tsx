@@ -73,7 +73,6 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: ModalHook }) 
         <BoardPlacement account={account} />
         <EmSpacer width={1} />
       </AlignCenterHorizontally>
-      <br />
       <NetworkHealth />
     </TopBarContainer>
   );

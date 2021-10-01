@@ -501,6 +501,7 @@ class GameManager extends EventEmitter {
     });
 
     this.refreshScoreboard();
+    this.refreshNetworkHealth();
   }
 
   private async uploadDiagnostics() {

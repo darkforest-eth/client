@@ -11,24 +11,31 @@ export function NetworkHealth() {
   const uiManager = useUIManager();
   const networkHealth = useEmitterValue(uiManager.getGameManager().networkHealth$, undefined);
 
+  if (!networkHealth || networkHealth.length === 0) {
+    return <></>;
+  }
+
   return (
-    <TooltipTrigger name={TooltipName.NetworkHealth}>
-      <Spread style={{ width: '100%' }}>
-        {networkHealth &&
-          Object.values(AutoGasSetting)
-            .map((setting) => networkHealth.find((entry) => entry[0] === setting))
-            .map(
-              (entry) =>
-                entry && (
-                  <NetworkHealthForGasSetting
-                    key={entry[0]}
-                    setting={entry[0]}
-                    confirmationWaitTime={entry[1]}
-                  />
-                )
-            )}
-      </Spread>
-    </TooltipTrigger>
+    <>
+      <br />
+      <TooltipTrigger name={TooltipName.NetworkHealth}>
+        <Spread style={{ width: '100%' }}>
+          {networkHealth &&
+            Object.values(AutoGasSetting)
+              .map((setting) => networkHealth.find((entry) => entry[0] === setting))
+              .map(
+                (entry) =>
+                  entry && (
+                    <NetworkHealthForGasSetting
+                      key={entry[0]}
+                      setting={entry[0]}
+                      confirmationWaitTime={entry[1]}
+                    />
+                  )
+              )}
+        </Spread>
+      </TooltipTrigger>
+    </>
   );
 }
 
