@@ -4,20 +4,15 @@ import styled from 'styled-components';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
-import { CenterBackgroundSubtext } from '../Components/CoreUI';
+import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
 import { SpacedFlexRow } from '../Components/FlexRows';
 import { Input } from '../Components/Input';
-import { ScoreLabelTip, SilverLabelTip } from '../Components/Labels/KeywordLabels';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
-import { Red, Sub, White } from '../Components/Text';
+import { Red } from '../Components/Text';
+import { TooltipName } from '../Game/WindowManager';
+import { TooltipTrigger } from '../Panes/Tooltip';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
-
-const StyledWithdrawSilver = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`;
 
 const Row = styled(SpacedFlexRow)`
   margin-top: 0.5em;
@@ -32,6 +27,7 @@ const StyledSilverInput = styled.div`
 
 const AllBtn = styled.div`
   color: ${dfstyles.colors.subtext};
+  font-size: ${dfstyles.fontSizeS};
   &:hover {
     cursor: pointer;
     text-decoration: underline;
@@ -75,6 +71,7 @@ export function WithdrawSilver({ wrapper }: { wrapper: Wrapper<Planet | undefine
   const uiManager = useUIManager();
 
   const [error, setError] = useState<boolean>(false);
+  const [amt, setAmt] = useState<string>('0');
 
   const withdraw = useCallback(
     (silver: string) => {
@@ -82,11 +79,10 @@ export function WithdrawSilver({ wrapper }: { wrapper: Wrapper<Planet | undefine
       const amtNum = parseInt(silver);
       if (!amtNum) setError(true);
       uiManager.withdrawSilver(wrapper.value.locationId, amtNum);
+      setAmt('0');
     },
     [wrapper, uiManager]
   );
-
-  const [amt, setAmt] = useState<string>('0');
 
   const withdrawing = useMemo(() => !!wrapper.value?.unconfirmedWithdrawSilver, [wrapper]);
   const empty = useMemo(() => !!(wrapper.value && wrapper.value.silver < 1), [wrapper]);
@@ -95,32 +91,24 @@ export function WithdrawSilver({ wrapper }: { wrapper: Wrapper<Planet | undefine
   if (wrapper.value?.planetType === PlanetType.TRADING_POST) {
     content = (
       <>
-        <p>
-          <Sub>
-            This is a <White>Spacetime Rip</White> where you can withdraw <SilverLabelTip /> for{' '}
-            <ScoreLabelTip />!
-          </Sub>
-        </p>
-        <Row>
-          <Sub>
-            <SilverLabelTip /> on Planet:
-          </Sub>
-          <White>{wrapper.value?.silver}</White>
-        </Row>
-
         {error && (
           <Row>
             <Red>Error with amount entered.</Red>
           </Row>
         )}
-
         <Row>
           <SilverInput amt={amt} setAmt={setAmt} wrapper={wrapper} />
-
-          <Btn onClick={() => withdraw(amt)} disabled={withdrawing || empty}>
-            {withdrawing ? <LoadingSpinner initialText='Withdrawing...' /> : 'Withdraw'}
-          </Btn>
+          <TooltipTrigger name={TooltipName.WithdrawSilverButton}>
+            <Btn
+              style={{ fontSize: '10pt', width: '180px' }}
+              onClick={() => withdraw(amt)}
+              disabled={withdrawing || empty}
+            >
+              {withdrawing ? <LoadingSpinner initialText='Withdrawing...' /> : 'Withdraw Silver'}
+            </Btn>
+          </TooltipTrigger>
         </Row>
+        <Spacer height={4} />
       </>
     );
   } else {
@@ -131,5 +119,7 @@ export function WithdrawSilver({ wrapper }: { wrapper: Wrapper<Planet | undefine
     );
   }
 
-  return <StyledWithdrawSilver>{content}</StyledWithdrawSilver>;
+  return (
+    <div style={{ fontSize: dfstyles.fontSizeS, color: dfstyles.colors.subtext }}>{content}</div>
+  );
 }

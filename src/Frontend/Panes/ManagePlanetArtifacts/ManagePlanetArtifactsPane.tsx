@@ -1,11 +1,7 @@
 import { Artifact, ArtifactType, LocationId } from '@darkforest_eth/types';
 import React, { useCallback } from 'react';
 import { isLocatable } from '../../../_types/global/GlobalTypes';
-import {
-  CenterBackgroundSubtext,
-  PaddedRecommendedModalWidth,
-  Underline,
-} from '../../Components/CoreUI';
+import { CenterBackgroundSubtext, Padded, Underline } from '../../Components/CoreUI';
 import { useAccount, useMyArtifacts, usePlanet, useUIManager } from '../../Utils/AppHooks';
 import { useEmitterValue } from '../../Utils/EmitterHooks';
 import { ModalHandle } from '../../Views/ModalPane';
@@ -130,5 +126,5 @@ export function ManagePlanetArtifactsPane({
     );
   }
 
-  return <PaddedRecommendedModalWidth>{content}</PaddedRecommendedModalWidth>;
+  return <Padded>{content}</Padded>;
 }

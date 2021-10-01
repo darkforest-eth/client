@@ -33,26 +33,15 @@ function PlanetContextPaneContent({
     [planet, account, currentBlockNumber]
   );
   const owned = planet.value?.owner === account;
-  // const isPost = planet.value?.planetType === PlanetType.TRADING_POST;
 
   useEffect(() => {
     if (!planet.value) modal.popAll();
   }, [planet.value, modal]);
 
   return (
-    <Padded style={{ width: '350px' }}>
+    <Padded>
       <PlanetCard planetWrapper={planet} />
-      {owned && (
-        <>
-          <SendResources planetWrapper={planet} />
-        </>
-      )}
-
-      {owned && planet.value?.planetType === PlanetType.TRADING_POST && (
-        <Padded>
-          <WithdrawSilver wrapper={planet} />
-        </Padded>
-      )}
+      {owned && <SendResources planetWrapper={planet} />}
 
       <VerticalSplit>
         {[
@@ -92,6 +81,9 @@ function PlanetContextPaneContent({
           </Padded>,
         ]}
       </VerticalSplit>
+      {owned && planet.value?.planetType === PlanetType.TRADING_POST && (
+        <WithdrawSilver wrapper={planet} />
+      )}
       {notifs.length > 0 && <PlanetNotifications planet={planet} notifs={notifs} />}
     </Padded>
   );
@@ -126,6 +118,7 @@ export function PlanetContextPane({ hook }: { hook: ModalHook }) {
       hideClose
       noPadding
       helpContent={SelectedPlanetHelpContent}
+      width={'350px'}
     >
       {render}
     </ModalPane>

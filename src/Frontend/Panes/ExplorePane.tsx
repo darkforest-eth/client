@@ -104,7 +104,7 @@ export function ExplorePane() {
   const uiManager = useUIManager();
   const windowManager = WindowManager.getInstance();
   const uiEmitter = UIEmitter.getInstance();
-  const [pattern, setPattern] = useState<string>(MiningPatternType.TowardsCenterV2.toString());
+  const [pattern, setPattern] = useState<string>(MiningPatternType.Spiral.toString());
   const [mining] = useBooleanSetting(uiManager, Setting.IsMining);
   const [targetting, setTargetting] = useState(false);
   const [coords, setCoords] = useState<WorldCoords>(uiManager.getHomeCoords());

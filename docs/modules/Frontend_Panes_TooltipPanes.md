@@ -51,6 +51,7 @@
 - [TwitterHandleTooltipPane](Frontend_Panes_TooltipPanes.md#twitterhandletooltippane)
 - [UpgradesTooltipPane](Frontend_Panes_TooltipPanes.md#upgradestooltippane)
 - [WithdrawArtifactPane](Frontend_Panes_TooltipPanes.md#withdrawartifactpane)
+- [WithdrawSilverButton](Frontend_Panes_TooltipPanes.md#withdrawsilverbutton)
 
 ## Functions
 
@@ -524,6 +525,16 @@
 ### WithdrawArtifactPane
 
 ▸ **WithdrawArtifactPane**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
+
+### WithdrawSilverButton
+
+▸ **WithdrawSilverButton**(): `Element`
 
 #### Returns
 

@@ -21,6 +21,7 @@
 - [Defense](Frontend_Game_WindowManager.TooltipName.md#defense)
 - [DefenseMultiplier](Frontend_Game_WindowManager.TooltipName.md#defensemultiplier)
 - [DepositArtifact](Frontend_Game_WindowManager.TooltipName.md#depositartifact)
+- [Empty](Frontend_Game_WindowManager.TooltipName.md#empty)
 - [Energy](Frontend_Game_WindowManager.TooltipName.md#energy)
 - [EnergyCapMultiplier](Frontend_Game_WindowManager.TooltipName.md#energycapmultiplier)
 - [EnergyGrowth](Frontend_Game_WindowManager.TooltipName.md#energygrowth)
@@ -65,6 +66,7 @@
 - [TwitterHandle](Frontend_Game_WindowManager.TooltipName.md#twitterhandle)
 - [Upgrades](Frontend_Game_WindowManager.TooltipName.md#upgrades)
 - [WithdrawArtifact](Frontend_Game_WindowManager.TooltipName.md#withdrawartifact)
+- [WithdrawSilverButton](Frontend_Game_WindowManager.TooltipName.md#withdrawsilverbutton)
 
 ## Enumeration members
 
@@ -155,6 +157,15 @@
 ### DepositArtifact
 
 • **DepositArtifact** = `24`
+
+---
+
+### Empty
+
+• **Empty** = `60`
+
+So that you can render a tooltip without anything, and control its contents entirely via the
+{@link TooltipTriggerProps#extraContent} prop field.
 
 ---
 
@@ -419,3 +430,9 @@
 ### WithdrawArtifact
 
 • **WithdrawArtifact** = `26`
+
+---
+
+### WithdrawSilverButton
+
+• **WithdrawSilverButton** = `59`

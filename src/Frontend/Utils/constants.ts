@@ -43,8 +43,8 @@ export const HAT_SIZES = [
 
 export const enum GameWindowZIndex {
   MenuBar = 4,
-  HoverPlanet = 999,
-  Modal = 1000,
+  HoverPlanet = 1001,
+  Modal = 1001,
   Tooltip = 16000000,
-  Notification = 1053,
+  Notification = 1000,
 }

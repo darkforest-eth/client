@@ -14,9 +14,9 @@ import { TooltipContent } from './TooltipPanes';
 export interface TooltipTriggerProps {
   /**
    * The name of the tooltip element to display. You can see all the concrete tooltip contents in
-   * the file called {@link TooltipPanes}.
+   * the file called {@link TooltipPanes}. Set to `undefined` to not render the tooltip.
    */
-  name: TooltipName;
+  name: TooltipName | undefined;
 
   /**
    * A {@link TooltipTrigger} wraps this child, and causes a tooltip to appear when the user hovers
@@ -117,20 +117,24 @@ export function Tooltip(props: TooltipProps) {
     }
   }, [width, height, props.left, props.top]);
 
-  return (
-    <StyledTooltip
-      ref={elRef}
-      onMouseEnter={(e) => e.preventDefault()}
-      onMouseLeave={(e) => e.preventDefault()}
-      style={{
-        top: `${props.top + topOffset}px`,
-        left: `${props.left + leftOffset}px`,
-      }}
-    >
-      <TooltipContent name={props.name} />
-      {props.extraContent}
-    </StyledTooltip>
-  );
+  if (props.name !== undefined) {
+    return (
+      <StyledTooltip
+        ref={elRef}
+        onMouseEnter={(e) => e.preventDefault()}
+        onMouseLeave={(e) => e.preventDefault()}
+        style={{
+          top: `${props.top + topOffset}px`,
+          left: `${props.left + leftOffset}px`,
+        }}
+      >
+        <TooltipContent name={props.name} />
+        {props.extraContent}
+      </StyledTooltip>
+    );
+  }
+
+  return null;
 }
 
 const StyledTooltipTrigger = styled.span`

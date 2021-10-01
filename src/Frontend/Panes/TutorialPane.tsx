@@ -110,13 +110,9 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   } else if (tutorialState === TutorialState.HowToGetScore) {
     return (
       <div className='tutzoom'>
-        <White>It's a race to the center.</White> <br />
+        <White>It's a Lightning Round!</White> <br />
         <br />
-        Your score at the end of the round is the distance of your closest <White>
-          claimed
-        </White>{' '}
-        planet from the center (0, 0). You can <White>claim</White> any level 3+ planet that you
-        own.
+        Have the highest score at the end of the round to win!
         <br />
         <div>
           <Btn
@@ -131,10 +127,8 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   } else if (tutorialState === TutorialState.ScoringDetails) {
     return (
       <div className='tutzoom'>
-        You can steal an opponent's <White>claim</White> by capturing & <White>claiming</White> the
-        planet for yourself. <br />
-        <br />
-        Destroyed planets do not count towards your score!
+        You can increase your score by withdrawing silver via space time rips, and by finding
+        artifacts. The rarer the artifact, the more points it gives you!
         <div>
           <Btn
             className='btn'
@@ -147,12 +141,12 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
     );
   } else if (tutorialState === TutorialState.Valhalla) {
     return (
-      <div>
+      <div className='tutalmost'>
         Winners of each round of Dark Forest v0.6.x will receive a prize, and be added to the{' '}
         <Underline>Valhalla</Underline> universe.
         <br />
         <br />
-        To win, have the lowest score (^:
+        To win, have the highest score (^:
         <div>
           <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.Valhalla)}>
             Next
@@ -166,10 +160,11 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         This is the end of the tutorial. Go out and explore the universe! More information will pop
         up in the <White>upper-right</White> as you discover more about the game.
         <br />
-        <br />
-        We hope you enjoy the game!
+        We hope you enjoy Dark Forest!
         <div>
-          <Btn onClick={() => tutorialManager.complete(uiManager)}>Finish</Btn>
+          <Btn className='btn' onClick={() => tutorialManager.complete(uiManager)}>
+            Finish
+          </Btn>
         </div>
       </div>
     );

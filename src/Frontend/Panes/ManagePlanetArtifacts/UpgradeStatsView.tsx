@@ -1,7 +1,7 @@
 import { ArtifactType, Upgrade } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
-import { Spacer } from '../../Components/CoreUI';
+import { EmSpacer, Spacer } from '../../Components/CoreUI';
 import {
   DefenseIcon,
   EnergyGrowthIcon,
@@ -84,7 +84,12 @@ export function UpgradeStatsView({
   }
 
   if (specialDescription) {
-    return <UpgradeSummaryContainer>{specialDescription}</UpgradeSummaryContainer>;
+    return (
+      <UpgradeSummaryContainer>
+        {specialDescription}
+        <EmSpacer height={1} />
+      </UpgradeSummaryContainer>
+    );
   }
 
   const iconProps = { active: isActive, upgrade };
@@ -93,6 +98,7 @@ export function UpgradeStatsView({
     <UpgradeSummaryContainer>
       <SingleUpgrade {...iconProps} icon={DefenseIcon} getMultiplier={getDefenseMult} />
       <SingleUpgrade {...iconProps} icon={EnergyIcon} getMultiplier={getEnergyCapMult} />
+      <Spacer height={2} />
       <SingleUpgrade {...iconProps} icon={EnergyGrowthIcon} getMultiplier={getEnergyGroMult} />
       <SingleUpgrade {...iconProps} icon={RangeIcon} getMultiplier={getRangeMult} />
       <SingleUpgrade {...iconProps} icon={SpeedIcon} getMultiplier={getSpeedMult} />
@@ -104,11 +110,12 @@ const StyledSingleUpgrade = styled.div<{ color?: string }>`
   display: inline-flex;
   justify-content: flex-start;
   align-items: center;
-  width: 50px;
+  width: 45px;
   ${({ color }) => color && `color: ${color};`}
 `;
 
 const UpgradeSummaryContainer = styled.div`
+  color: ${dfstyles.colors.subtext};
   display: inline-block;
   font-size: 12px;
   justify-content: space-between;

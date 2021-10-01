@@ -16,7 +16,7 @@
 
 ### HoverPlanet
 
-• **HoverPlanet** = `999`
+• **HoverPlanet** = `1001`
 
 ---
 
@@ -28,13 +28,13 @@
 
 ### Modal
 
-• **Modal** = `1000`
+• **Modal** = `1001`
 
 ---
 
 ### Notification
 
-• **Notification** = `1053`
+• **Notification** = `1000`
 
 ---
 

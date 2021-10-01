@@ -36,7 +36,7 @@ const SelectedEmoji = styled.div`
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid ${dfstyles.colors.border};
+  border: 1px solid ${dfstyles.colors.borderDark};
   border-radius: 3px;
   cursor: pointer;
   font-size: 1.5em;
@@ -44,13 +44,10 @@ const SelectedEmoji = styled.div`
   height: 30px;
   margin-right: 8px;
 
-  &:hover {
-    background-color: ${dfstyles.colors.backgroundlight};
-  }
-
   &:hover,
-  &:active {
-    border: 1px solid ${dfstyles.colors.text};
+  &:active,
+  &:focus {
+    border: 1px solid ${dfstyles.colors.border};
   }
 `;
 

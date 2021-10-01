@@ -11,9 +11,11 @@ import { TextPreview } from '../TextPreview';
 export function AccountLabel({
   includeAddressIfHasTwitter,
   ethAddress,
+  style,
 }: {
   includeAddressIfHasTwitter?: boolean;
   ethAddress?: EthAddress;
+  style?: React.CSSProperties;
 }) {
   const uiManager = useUIManager();
   const player = usePlayer(uiManager, ethAddress);
@@ -21,7 +23,7 @@ export function AccountLabel({
   if (player.value !== undefined && player.value.twitter !== undefined) {
     const color = colorFn(ProcgenUtils.getPlayerColor(player.value.address)).darken(0.5).hex();
     return (
-      <span>
+      <span style={style}>
         <TwitterLink twitter={player.value.twitter} color={color} />
         {includeAddressIfHasTwitter && (
           <Sub>

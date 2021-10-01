@@ -6,10 +6,12 @@ export function ReadMore({
   children,
   height,
   text,
+  toggleButtonMargin,
 }: {
   children: React.ReactNode[] | React.ReactNode;
   height?: string;
   text?: string;
+  toggleButtonMargin?: string;
 }) {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -28,7 +30,7 @@ export function ReadMore({
           fontSize: '80%',
           display: 'block',
           textAlign: 'right',
-          marginTop: collapsed ? '-0.6em' : undefined,
+          marginTop: collapsed ? toggleButtonMargin ?? '-0.6em' : undefined,
         }}
         onClick={toggle}
       >
@@ -39,5 +41,8 @@ export function ReadMore({
 }
 
 const ContentContainer = styled.div`
+  margin-top: 4px;
   overflow: hidden;
+  text-align: justify;
+  line-height: 1.2em;
 `;

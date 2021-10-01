@@ -11,6 +11,7 @@ const StyledUpgradePreview = styled.div`
   width: 100%;
   border-radius: 3px;
   border: 1px solid ${dfstyles.colors.borderDark};
+  font-size: ${dfstyles.fontSizeXS};
 `;
 
 const StatRow = styled.div`

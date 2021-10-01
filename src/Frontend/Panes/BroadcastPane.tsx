@@ -2,7 +2,7 @@ import { EthAddress, LocationId } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Btn } from '../Components/Btn';
-import { CenterBackgroundSubtext, PaddedRecommendedModalWidth, Spacer } from '../Components/CoreUI';
+import { CenterBackgroundSubtext, Padded, Spacer } from '../Components/CoreUI';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
 import { Blue, White } from '../Components/Text';
 import { TimeUntil } from '../Components/TimeUntil';
@@ -132,7 +132,7 @@ export function BroadcastPane({
   );
 
   return (
-    <PaddedRecommendedModalWidth>
+    <Padded>
       {planet ? (
         <BroadcastWrapper>
           <div>
@@ -156,6 +156,6 @@ export function BroadcastPane({
           Select a Planet
         </CenterBackgroundSubtext>
       )}
-    </PaddedRecommendedModalWidth>
+    </Padded>
   );
 }

@@ -15,11 +15,12 @@
 
 #### Parameters
 
-| Name                                            | Type         |
-| :---------------------------------------------- | :----------- |
-| `__namedParameters`                             | `Object`     |
-| `__namedParameters.ethAddress?`                 | `EthAddress` |
-| `__namedParameters.includeAddressIfHasTwitter?` | `boolean`    |
+| Name                                            | Type                  |
+| :---------------------------------------------- | :-------------------- |
+| `__namedParameters`                             | `Object`              |
+| `__namedParameters.ethAddress?`                 | `EthAddress`          |
+| `__namedParameters.includeAddressIfHasTwitter?` | `boolean`             |
+| `__namedParameters.style?`                      | `React.CSSProperties` |
 
 #### Returns
 

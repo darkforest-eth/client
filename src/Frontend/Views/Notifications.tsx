@@ -124,6 +124,9 @@ const StyledNotification = styled.div`
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-start;
+  &:hover {
+    z-index: ${GameWindowZIndex.Tooltip};
+  }
 `;
 
 /**
@@ -164,7 +167,7 @@ const NotificationContent = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  z-index: 100;
+  z-index: ${GameWindowZIndex.Tooltip};
 `;
 
 /**

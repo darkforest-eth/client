@@ -16,12 +16,12 @@ import { getUpgradeStat } from '../../Backend/Utils/Utils';
 import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
 import { StatIdx } from '../../_types/global/GlobalTypes';
 import { ArtifactImage } from '../Components/ArtifactImage';
-import { PaddedRecommendedModalWidth, Spacer } from '../Components/CoreUI';
+import { Padded, Spacer } from '../Components/CoreUI';
 import { StatIcon } from '../Components/Icons';
 import { ArtifactRarityLabelAnim, ArtifactTypeText } from '../Components/Labels/ArtifactLabels';
 import { ArtifactBiomeLabelAnim } from '../Components/Labels/BiomeLabels';
 import { ReadMore } from '../Components/ReadMore';
-import { Green, Red, Sub, White } from '../Components/Text';
+import { Green, Red, Sub, Text, White } from '../Components/Text';
 import { TextPreview } from '../Components/TextPreview';
 import { TimeUntil } from '../Components/TimeUntil';
 import { TooltipName } from '../Game/WindowManager';
@@ -198,7 +198,7 @@ export function ArtifactDetailsBody({
   }
 
   return (
-    <PaddedRecommendedModalWidth>
+    <Padded>
       <ArtifactName>{artifactName(artifact)}</ArtifactName>
       <ArtifactNameSubtitle>
         <ArtifactRarityLabelAnim rarity={artifact.rarity} />{' '}
@@ -261,10 +261,8 @@ export function ArtifactDetailsBody({
             <span>{readyInStr}</span>
           </div>
         )}
-        <Spacer height={8} />
-        {/* if one wanted to, one could add a 'next artifact' and 'previous artifact' button here */}
       </StyledArtifactDetailsBody>
-    </PaddedRecommendedModalWidth>
+    </Padded>
   );
 }
 
@@ -304,59 +302,65 @@ function ArtifactDescription({ artifact }: { artifact: Artifact }) {
   switch (artifact.artifactType) {
     case ArtifactType.BlackDomain:
       content = (
-        <Sub>
+        <Text>
           When activated, permanently disables your planet. It'll still be yours, but you won't be
           able to do anything with it. It turns completely black too. Just ... gone. Because this
           one is <White>{rarityName}</White>, it works on planets up to level{' '}
           <White>{maxLevelBlackDomain}</White>. This artifact is consumed on activation.
-        </Sub>
+        </Text>
       );
       break;
     case ArtifactType.BloomFilter:
       content = (
-        <Sub>
+        <Text>
           When activated refills your planet's energy and silver to their respective maximum values.
           How it does this, we do not know. Because this one is <White>{rarityName}</White>, it
           works on planets up to level <White>{maxLevelBloomFilter}</White>. This artifact is
           consumed on activation.
-        </Sub>
+        </Text>
       );
       break;
     case ArtifactType.Wormhole:
       content = (
-        <Sub>
+        <Text>
           When activated, shortens the distance between this planet and another one. All moves
           between those two planets decay less energy, and complete faster. Because this one is{' '}
           <White>{rarityName}</White>, it shrinks the distance by a factor of{' '}
           <White>{wormholeShrinkLevels[artifact.rarity]}</White>x.
-        </Sub>
+        </Text>
       );
       break;
     case ArtifactType.PhotoidCannon:
       content = (
-        <Sub>
+        <Text>
           Ahh, the Photoid Canon. Activate it, wait four hours. Because this one is{' '}
           <White>{rarityName}</White>, the next move you send will be able to go{' '}
           <White>{photoidRanges[artifact.rarity]}</White>x further and{' '}
           <White>{photoidSpeeds[artifact.rarity]}</White>x faster. During the 4 hour waiting period,
           your planet's defense is temporarily decreased. This artifact is consumed once the canon
           is fired.
-        </Sub>
+        </Text>
       );
       break;
     case ArtifactType.PlanetaryShield:
       content = (
-        <Sub>
+        <Text>
           Activate the planetary shield to gain a defense bonus on your planet, at the expense of
           range and speed. When this artifact is deactivated, it is destroyed and your planet's
           stats are reverted--so use it wisely!
-        </Sub>
+        </Text>
       );
       break;
   }
 
   if (content) {
-    return <ReadMore height={'1em'}>{content}</ReadMore>;
+    return (
+      <div style={{ maxWidth: '100%' }}>
+        <ReadMore height={'1.2em'} toggleButtonMargin={'0em'}>
+          {content}
+        </ReadMore>
+      </div>
+    );
   }
 
   return null;

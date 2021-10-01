@@ -89,8 +89,13 @@ export const enum TooltipName {
   ModalFindArtifact,
   ModalPlugins,
   ModalWithdrawSilver,
-
   NetworkHealth,
+  WithdrawSilverButton,
+  /**
+   * So that you can render a tooltip without anything, and control its contents entirely via the
+   * {@link TooltipTriggerProps#extraContent} prop field.
+   */
+  Empty,
 }
 
 class WindowManager extends EventEmitter {

@@ -135,7 +135,7 @@ export function ManageArtifactsPane({
             setSortBy(undefined);
           }}
         >
-          Artifacts On This Planet
+          On This Planet
         </SelectArtifactList>
         {isMyTradingPost && (
           <SelectArtifactList

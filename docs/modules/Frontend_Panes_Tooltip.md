@@ -16,7 +16,7 @@
 
 ### Tooltip
 
-▸ **Tooltip**(`props`): `Element`
+▸ **Tooltip**(`props`): `null` \| `Element`
 
 At any given moment, there can only be one tooltip visible in the game. This is true because a
 player only has one mouse cursor on the screen, and therefore can only be hovering over a single
@@ -31,7 +31,7 @@ of which tooltip has been hovered over, and rendering the corresponding content.
 
 #### Returns
 
-`Element`
+`null` \| `Element`
 
 ---
 
