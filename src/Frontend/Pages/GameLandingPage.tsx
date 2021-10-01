@@ -446,7 +446,7 @@ export function GameLandingPage() {
         terminal.current?.printLink(
           '(View Transaction)',
           () => {
-            window.open(`${BLOCK_EXPLORER_URL}/tx/${txHash}`);
+            window.open(`${BLOCK_EXPLORER_URL}/${txHash}`);
           },
           TerminalTextStyle.Blue
         );

@@ -73,7 +73,7 @@ export function TxLink({ tx }: { tx: SubmittedTx }) {
   return (
     <>
       <u>
-        <a onClick={() => window.open(`${BLOCK_EXPLORER_URL}/tx/${tx.txHash}`)}>
+        <a onClick={() => window.open(`${BLOCK_EXPLORER_URL}/${tx.txHash}`)}>
           View {tx.txHash.substring(0, 7)} on block explorer
         </a>
       </u>

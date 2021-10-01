@@ -951,7 +951,7 @@ class GameManager extends EventEmitter {
     this.terminal.current?.printLink(
       `${unminedTx.txHash.slice(0, 6)}`,
       () => {
-        window.open(`${BLOCK_EXPLORER_URL}/tx/${unminedTx.txHash}`);
+        window.open(`${BLOCK_EXPLORER_URL}/${unminedTx.txHash}`);
       },
       TerminalTextStyle.White
     );
@@ -966,7 +966,7 @@ class GameManager extends EventEmitter {
     this.terminal.current?.printLink(
       `${unminedTx.txHash.slice(0, 6)}`,
       () => {
-        window.open(`${BLOCK_EXPLORER_URL}/tx/${unminedTx.txHash}`);
+        window.open(`${BLOCK_EXPLORER_URL}/${unminedTx.txHash}`);
       },
       TerminalTextStyle.White
     );
@@ -992,7 +992,7 @@ class GameManager extends EventEmitter {
     this.terminal.current?.printLink(
       `${unminedTx.txHash.slice(0, 6)}`,
       () => {
-        window.open(`${BLOCK_EXPLORER_URL}/tx/${unminedTx.txHash}`);
+        window.open(`${BLOCK_EXPLORER_URL}/${unminedTx.txHash}`);
       },
       TerminalTextStyle.White
     );
