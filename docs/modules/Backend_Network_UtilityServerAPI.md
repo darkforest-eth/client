@@ -12,6 +12,7 @@
 
 ### Functions
 
+- [callRegisterUntilWhitelisted](Backend_Network_UtilityServerAPI.md#callregisteruntilwhitelisted)
 - [disconnectTwitter](Backend_Network_UtilityServerAPI.md#disconnecttwitter)
 - [getAllTwitters](Backend_Network_UtilityServerAPI.md#getalltwitters)
 - [requestDevFaucet](Backend_Network_UtilityServerAPI.md#requestdevfaucet)
@@ -29,6 +30,30 @@
 • `Const` **WEBSERVER_URL**: `string`
 
 ## Functions
+
+### callRegisterUntilWhitelisted
+
+▸ **callRegisterUntilWhitelisted**(`key`, `address`, `terminal`): `Promise`<`string` \| `undefined`\>
+
+Attempts to register the given player into the game.
+
+- if the key is invalid, returns `undefined`
+- if there is an error submitting the whitelist key, indicated by a null response, or if the
+  response is not successful, tries again, until it succeeds.
+
+#### Parameters
+
+| Name       | Type                                                                                                                  |
+| :--------- | :-------------------------------------------------------------------------------------------------------------------- |
+| `key`      | `string`                                                                                                              |
+| `address`  | `EthAddress`                                                                                                          |
+| `terminal` | `React.MutableRefObject`<[`TerminalHandle`](../interfaces/Frontend_Views_Terminal.TerminalHandle.md) \| `undefined`\> |
+
+#### Returns
+
+`Promise`<`string` \| `undefined`\>
+
+---
 
 ### disconnectTwitter
 
@@ -122,7 +147,9 @@
 
 ### submitWhitelistKey
 
-▸ `Const` **submitWhitelistKey**(`key`, `address`): `Promise`<`null` \| `string`\>
+▸ `Const` **submitWhitelistKey**(`key`, `address`): `Promise`<`null` \| `RegisterResponse`\>
+
+Submits a whitelist key to register the given player to the game.
 
 #### Parameters
 
@@ -133,7 +160,7 @@
 
 #### Returns
 
-`Promise`<`null` \| `string`\>
+`Promise`<`null` \| `RegisterResponse`\>
 
 ---
 

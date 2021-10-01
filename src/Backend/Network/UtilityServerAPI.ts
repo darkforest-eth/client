@@ -1,6 +1,7 @@
 import { EthAddress, SignedMessage } from '@darkforest_eth/types';
 import * as EmailValidator from 'email-validator';
 import timeout from 'p-timeout';
+import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
 
 export const WEBSERVER_URL = process.env.WEBSERVER_URL as string;
@@ -59,12 +60,49 @@ export const submitPlayerEmail = async (
   return success ? EmailResponse.Success : EmailResponse.ServerError;
 };
 
+type RegisterResponse = { inProgress: boolean; success?: boolean; txHash: string; error?: string };
+
+async function sleep(timeoutMs: number) {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => resolve(), timeoutMs);
+  });
+}
+
+/**
+ * Attempts to register the given player into the game.
+ *
+ * - if the key is invalid, returns `undefined`
+ * - if there is an error submitting the whitelist key, indicated by a null response, or if the
+ *   response is not successful, tries again, until it succeeds.
+ */
+export async function callRegisterUntilWhitelisted(
+  key: string,
+  address: EthAddress,
+  terminal: React.MutableRefObject<TerminalHandle | undefined>
+): Promise<string | undefined> {
+  while (true) {
+    const response = await submitWhitelistKey(key, address);
+    if (response?.error) {
+      // returning undefined here indicates to the ui that the key was invalid
+      return undefined;
+    } else if (response !== null && response.success) {
+      return response.txHash ?? 'unknown';
+    } else {
+      terminal.current?.print('.');
+      await sleep(3000);
+    }
+  }
+}
+
+/**
+ * Submits a whitelist key to register the given player to the game.
+ */
 export const submitWhitelistKey = async (
   key: string,
   address: EthAddress
-): Promise<string | null> => {
+): Promise<RegisterResponse | null> => {
   try {
-    const { txHash } = await fetch(`${WEBSERVER_URL}/whitelist/register`, {
+    return await fetch(`${WEBSERVER_URL}/whitelist/register`, {
       method: 'POST',
       body: JSON.stringify({
         key,
@@ -74,8 +112,6 @@ export const submitWhitelistKey = async (
         'Content-Type': 'application/json',
       },
     }).then((x) => x.json());
-
-    return txHash;
   } catch (e) {
     console.error(`error when registering for whitelist: ${e}`);
     return null;
