@@ -206,9 +206,9 @@ export function GameLandingPage() {
       terminal.current?.print('    v0.6 r3    ', TerminalTextStyle.Text);
       terminal.current?.print('08/22/2021        ', TerminalTextStyle.Text);
       terminal.current?.printLink(
-        '@orden_gg',
+        '@dropswap_gg',
         () => {
-          window.open('https://twitter.com/orden_gg');
+          window.open('https://twitter.com/dropswap_gg');
         },
         TerminalTextStyle.Text
       );

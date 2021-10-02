@@ -149,7 +149,7 @@ export default function LandingPage() {
                     08/22/<HideSmall>20</HideSmall>21
                   </td>
                   <td>
-                    <Link to='https://twitter.com/orden_gg'>@orden_gg</Link>
+                    <Link to='https://twitter.com/dropswap_gg'>@dropswap_gg</Link>
                   </td>
                 </TRow>
                 <TRow>
