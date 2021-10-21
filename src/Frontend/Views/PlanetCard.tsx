@@ -11,15 +11,7 @@ import {
   InlineBlock,
   SpreadApart,
 } from '../Components/CoreUI';
-import {
-  DefenseIcon,
-  EnergyGrowthIcon,
-  EnergyIcon,
-  RangeIcon,
-  SilverGrowthIcon,
-  SilverIcon,
-  SpeedIcon,
-} from '../Components/Icons';
+import { Icon, IconType } from '../Components/Icons';
 import { AccountLabel } from '../Components/Labels/Labels';
 import {
   DefenseText,
@@ -156,7 +148,7 @@ export function PlanetCard({
                     <SpreadApart>
                       <AlignCenterHorizontally>
                         <EmSpacer width={0.5} />
-                        <EnergyIcon color={dfstyles.colors.subtext} />
+                        <Icon type={IconType.Energy} />
                       </AlignCenterHorizontally>
                       <AlignCenterHorizontally>
                         <PlanetEnergyLabel planet={planet} />
@@ -179,7 +171,7 @@ export function PlanetCard({
                     <SpreadApart>
                       <AlignCenterHorizontally>
                         <EmSpacer width={0.5} />
-                        <SilverIcon color={dfstyles.colors.subtext} />
+                        <Icon type={IconType.Silver} />
                       </AlignCenterHorizontally>
                       <AlignCenterHorizontally>
                         <PlanetSilverLabel planet={planet} />
@@ -205,7 +197,7 @@ export function PlanetCard({
                     <SpreadApart>
                       <AlignCenterHorizontally>
                         <EmSpacer width={0.5} />
-                        <EnergyGrowthIcon color={dfstyles.colors.subtext} />
+                        <Icon type={IconType.EnergyGrowth} />
                       </AlignCenterHorizontally>
                       <AlignCenterHorizontally>
                         <EnergyGrowthText planet={planet} />
@@ -227,7 +219,7 @@ export function PlanetCard({
                     <SpreadApart>
                       <AlignCenterHorizontally>
                         <EmSpacer width={0.5} />
-                        <SilverGrowthIcon color={dfstyles.colors.subtext} />
+                        <Icon type={IconType.SilverGrowth} />
                       </AlignCenterHorizontally>
                       <AlignCenterHorizontally>
                         <SilverGrowthText planet={p.value} />
@@ -253,7 +245,7 @@ export function PlanetCard({
                     <SpreadApart>
                       <AlignCenterHorizontally>
                         <EmSpacer width={0.5} />
-                        <DefenseIcon color={dfstyles.colors.subtext} />
+                        <Icon type={IconType.Defense} />
                       </AlignCenterHorizontally>
                       <AlignCenterHorizontally>
                         <DefenseText planet={planet} />
@@ -276,7 +268,7 @@ export function PlanetCard({
                     <SpreadApart>
                       <AlignCenterHorizontally>
                         <EmSpacer width={0.5} />
-                        <SpeedIcon color={dfstyles.colors.subtext} />
+                        <Icon type={IconType.Speed} />
                       </AlignCenterHorizontally>
                       <AlignCenterHorizontally>
                         <SpeedText planet={planet} />
@@ -300,7 +292,7 @@ export function PlanetCard({
                     <SpreadApart>
                       <AlignCenterHorizontally>
                         <EmSpacer width={0.5} />
-                        <RangeIcon color={dfstyles.colors.subtext} />
+                        <Icon type={IconType.Range} />
                       </AlignCenterHorizontally>
 
                       <AlignCenterHorizontally>
@@ -367,7 +359,6 @@ const StatRow = styled(AlignCenterHorizontally)`
   box-sizing: border-box;
   width: 100%;
 
-  path {
-    fill: ${dfstyles.colors.subtext};
-  }
+  /* Set the Icon color to something a little dimmer */
+  --df-icon-color: ${dfstyles.colors.subtext};
 `;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
-import { SettingsIcon } from '../Components/Icons';
+import { Icon, IconType } from '../Components/Icons';
 import { Green, Red, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useAccount, useUIManager } from '../Utils/AppHooks';
@@ -76,7 +76,7 @@ function OnboardMoney({ advance }: { advance: () => void }) {
       <p>
         To ensure the safety of your balance, <White>we require you to enable popups</White> so that
         all transactions may be confirmed by you. Note that you can disable popups for small
-        transactions in settings. <SettingsIcon />
+        transactions in settings. <Icon type={IconType.Settings} />
       </p>
       <p>
         <White>Make sure you understand all of the above before proceeding.</White>

@@ -2,21 +2,20 @@
 
 ## Table of contents
 
+### Type aliases
+
+- [IconType](Frontend_Components_Icons.md#icontype)
+
+### Variables
+
+- [Icon](Frontend_Components_Icons.md#icon)
+- [IconType](Frontend_Components_Icons.md#icontype)
+
 ### Functions
 
-- [ActivateIcon](Frontend_Components_Icons.md#activateicon)
 - [ArtifactFound](Frontend_Components_Icons.md#artifactfound)
-- [ArtifactIcon](Frontend_Components_Icons.md#artifacticon)
 - [ArtifactProspected](Frontend_Components_Icons.md#artifactprospected)
 - [BranchIcon](Frontend_Components_Icons.md#branchicon)
-- [BroadcastIcon](Frontend_Components_Icons.md#broadcasticon)
-- [CloseCircleIcon](Frontend_Components_Icons.md#closecircleicon)
-- [DeactivateIcon](Frontend_Components_Icons.md#deactivateicon)
-- [DefenseIcon](Frontend_Components_Icons.md#defenseicon)
-- [DepositIcon](Frontend_Components_Icons.md#depositicon)
-- [EnergyGrowthIcon](Frontend_Components_Icons.md#energygrowthicon)
-- [EnergyIcon](Frontend_Components_Icons.md#energyicon)
-- [EthIcon](Frontend_Components_Icons.md#ethicon)
 - [FoundCorrupted](Frontend_Components_Icons.md#foundcorrupted)
 - [FoundDeadSpace](Frontend_Components_Icons.md#founddeadspace)
 - [FoundDeepSpace](Frontend_Components_Icons.md#founddeepspace)
@@ -35,68 +34,79 @@
 - [FoundTradingPost](Frontend_Components_Icons.md#foundtradingpost)
 - [FoundTundra](Frontend_Components_Icons.md#foundtundra)
 - [FoundWasteland](Frontend_Components_Icons.md#foundwasteland)
-- [FullRankIcon](Frontend_Components_Icons.md#fullrankicon)
 - [Generic](Frontend_Components_Icons.md#generic)
-- [HatIcon](Frontend_Components_Icons.md#haticon)
-- [HelpIcon](Frontend_Components_Icons.md#helpicon)
-- [LeaderboardIcon](Frontend_Components_Icons.md#leaderboardicon)
-- [LockIcon](Frontend_Components_Icons.md#lockicon)
-- [MaxLevelIcon](Frontend_Components_Icons.md#maxlevelicon)
-- [MaximizeCircleIcon](Frontend_Components_Icons.md#maximizecircleicon)
 - [MetPlayer](Frontend_Components_Icons.md#metplayer)
-- [MinimizeCircleIcon](Frontend_Components_Icons.md#minimizecircleicon)
-- [PauseIcon](Frontend_Components_Icons.md#pauseicon)
-- [PiratesIcon](Frontend_Components_Icons.md#piratesicon)
 - [PlanetAttacked](Frontend_Components_Icons.md#planetattacked)
 - [PlanetConquered](Frontend_Components_Icons.md#planetconquered)
-- [PlanetIcon](Frontend_Components_Icons.md#planeticon)
 - [PlanetLost](Frontend_Components_Icons.md#planetlost)
-- [PlanetdexIcon](Frontend_Components_Icons.md#planetdexicon)
-- [PlayIcon](Frontend_Components_Icons.md#playicon)
-- [PluginIcon](Frontend_Components_Icons.md#pluginicon)
 - [Quasar](Frontend_Components_Icons.md#quasar)
-- [QuestionCircleIcon](Frontend_Components_Icons.md#questioncircleicon)
-- [RangeIcon](Frontend_Components_Icons.md#rangeicon)
-- [Rank1Icon](Frontend_Components_Icons.md#rank1icon)
-- [Rank2Icon](Frontend_Components_Icons.md#rank2icon)
-- [Rank3Icon](Frontend_Components_Icons.md#rank3icon)
-- [Rank4Icon](Frontend_Components_Icons.md#rank4icon)
 - [RankIcon](Frontend_Components_Icons.md#rankicon)
-- [RightarrowIcon](Frontend_Components_Icons.md#rightarrowicon)
-- [SettingsIcon](Frontend_Components_Icons.md#settingsicon)
-- [ShareIcon](Frontend_Components_Icons.md#shareicon)
-- [SilverGrowthIcon](Frontend_Components_Icons.md#silvergrowthicon)
-- [SilverIcon](Frontend_Components_Icons.md#silvericon)
-- [SilverProdIcon](Frontend_Components_Icons.md#silverprodicon)
-- [SpeedIcon](Frontend_Components_Icons.md#speedicon)
 - [StatIcon](Frontend_Components_Icons.md#staticon)
-- [TargetIcon](Frontend_Components_Icons.md#targeticon)
-- [TwitterIcon](Frontend_Components_Icons.md#twittericon)
 - [TxAccepted](Frontend_Components_Icons.md#txaccepted)
 - [TxConfirmed](Frontend_Components_Icons.md#txconfirmed)
 - [TxDeclined](Frontend_Components_Icons.md#txdeclined)
 - [TxInitialized](Frontend_Components_Icons.md#txinitialized)
-- [UpgradeIcon](Frontend_Components_Icons.md#upgradeicon)
-- [WithdrawIcon](Frontend_Components_Icons.md#withdrawicon)
 
-## Functions
+## Type aliases
 
-### ActivateIcon
+### IconType
 
-▸ `Const` **ActivateIcon**(`__namedParameters`): `Element`
+Ƭ **IconType**: `Abstract`<`string`, `"IconType"`\>
 
-#### Parameters
+## Variables
 
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
+### Icon
 
-#### Returns
-
-`Element`
+• `Const` **Icon**: `ForwardRefExoticComponent`<`Partial`<`Omit`<`DarkForestIcon`, `"children"`\>\> & `Events`<`unknown`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
 
 ---
+
+### IconType
+
+• **IconType**: `Object`
+
+#### Type declaration
+
+| Name           | Type                                                |
+| :------------- | :-------------------------------------------------- |
+| `Activate`     | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Artifact`     | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Broadcast`    | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Deactivate`   | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Defense`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Deposit`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Energy`       | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `EnergyGrowth` | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Hat`          | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Help`         | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Leaderboard`  | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Lock`         | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `MaxLevel`     | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Pause`        | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Pirates`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Planet`       | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `PlanetDex`    | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Play`         | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Plugin`       | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Range`        | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `RankFour`     | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `RankMax`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `RankOne`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `RankThree`    | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `RankTwo`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `RightArrow`   | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Settings`     | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Share`        | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Silver`       | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `SilverGrowth` | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `SilverProd`   | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Speed`        | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Target`       | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Twitter`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Upgrade`      | [`IconType`](Frontend_Components_Icons.md#icontype) |
+| `Withdraw`     | [`IconType`](Frontend_Components_Icons.md#icontype) |
+
+## Functions
 
 ### ArtifactFound
 
@@ -107,16 +117,6 @@
 | Name                | Type        |
 | :------------------ | :---------- |
 | `__namedParameters` | `AlertIcon` |
-
-#### Returns
-
-`Element`
-
----
-
-### ArtifactIcon
-
-▸ `Const` **ArtifactIcon**(): `Element`
 
 #### Returns
 
@@ -150,128 +150,6 @@
 | :------------------------- | :------- |
 | `__namedParameters`        | `Object` |
 | `__namedParameters.branch` | `number` |
-
-#### Returns
-
-`Element`
-
----
-
-### BroadcastIcon
-
-▸ `Const` **BroadcastIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### CloseCircleIcon
-
-▸ `Const` **CloseCircleIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
-
-#### Returns
-
-`Element`
-
----
-
-### DeactivateIcon
-
-▸ `Const` **DeactivateIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
-
-#### Returns
-
-`Element`
-
----
-
-### DefenseIcon
-
-▸ `Const` **DefenseIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
-
-#### Returns
-
-`Element`
-
----
-
-### DepositIcon
-
-▸ `Const` **DepositIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
-
-#### Returns
-
-`Element`
-
----
-
-### EnergyGrowthIcon
-
-▸ `Const` **EnergyGrowthIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
-
-#### Returns
-
-`Element`
-
----
-
-### EnergyIcon
-
-▸ `Const` **EnergyIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
-
-#### Returns
-
-`Element`
-
----
-
-### EthIcon
-
-▸ `Const` **EthIcon**(): `Element`
 
 #### Returns
 
@@ -567,16 +445,6 @@
 
 ---
 
-### FullRankIcon
-
-▸ `Const` **FullRankIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
 ### Generic
 
 ▸ `Const` **Generic**(`__namedParameters`): `Element`
@@ -593,73 +461,6 @@
 
 ---
 
-### HatIcon
-
-▸ `Const` **HatIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### HelpIcon
-
-▸ `Const` **HelpIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### LeaderboardIcon
-
-▸ `Const` **LeaderboardIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### LockIcon
-
-▸ `Const` **LockIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### MaxLevelIcon
-
-▸ `Const` **MaxLevelIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### MaximizeCircleIcon
-
-▸ `Const` **MaximizeCircleIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
-
-#### Returns
-
-`Element`
-
----
-
 ### MetPlayer
 
 ▸ `Const` **MetPlayer**(`__namedParameters`): `Element`
@@ -669,43 +470,6 @@
 | Name                | Type        |
 | :------------------ | :---------- |
 | `__namedParameters` | `AlertIcon` |
-
-#### Returns
-
-`Element`
-
----
-
-### MinimizeCircleIcon
-
-▸ `Const` **MinimizeCircleIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
-
-#### Returns
-
-`Element`
-
----
-
-### PauseIcon
-
-▸ `Const` **PauseIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### PiratesIcon
-
-▸ `Const` **PiratesIcon**(): `Element`
 
 #### Returns
 
@@ -745,16 +509,6 @@
 
 ---
 
-### PlanetIcon
-
-▸ `Const` **PlanetIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
 ### PlanetLost
 
 ▸ `Const` **PlanetLost**(`__namedParameters`): `Element`
@@ -771,36 +525,6 @@
 
 ---
 
-### PlanetdexIcon
-
-▸ `Const` **PlanetdexIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### PlayIcon
-
-▸ `Const` **PlayIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### PluginIcon
-
-▸ `Const` **PluginIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
 ### Quasar
 
 ▸ `Const` **Quasar**(`__namedParameters`): `Element`
@@ -810,80 +534,6 @@
 | Name                | Type        |
 | :------------------ | :---------- |
 | `__namedParameters` | `AlertIcon` |
-
-#### Returns
-
-`Element`
-
----
-
-### QuestionCircleIcon
-
-▸ `Const` **QuestionCircleIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
-
-#### Returns
-
-`Element`
-
----
-
-### RangeIcon
-
-▸ `Const` **RangeIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
-
-#### Returns
-
-`Element`
-
----
-
-### Rank1Icon
-
-▸ `Const` **Rank1Icon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### Rank2Icon
-
-▸ `Const` **Rank2Icon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### Rank3Icon
-
-▸ `Const` **Rank3Icon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### Rank4Icon
-
-▸ `Const` **Rank4Icon**(): `Element`
 
 #### Returns
 
@@ -908,97 +558,6 @@
 
 ---
 
-### RightarrowIcon
-
-▸ `Const` **RightarrowIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### SettingsIcon
-
-▸ `Const` **SettingsIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### ShareIcon
-
-▸ `Const` **ShareIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### SilverGrowthIcon
-
-▸ `Const` **SilverGrowthIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
-
-#### Returns
-
-`Element`
-
----
-
-### SilverIcon
-
-▸ `Const` **SilverIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
-
-#### Returns
-
-`Element`
-
----
-
-### SilverProdIcon
-
-▸ `Const` **SilverProdIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### SpeedIcon
-
-▸ `Const` **SpeedIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
-
-#### Returns
-
-`Element`
-
----
-
 ### StatIcon
 
 ▸ `Const` **StatIcon**(`__namedParameters`): `Element`
@@ -1009,26 +568,6 @@
 | :----------------------- | :--------------------------------------------------------- |
 | `__namedParameters`      | `Object`                                                   |
 | `__namedParameters.stat` | [`StatIdx`](../enums/_types_global_GlobalTypes.StatIdx.md) |
-
-#### Returns
-
-`Element`
-
----
-
-### TargetIcon
-
-▸ `Const` **TargetIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### TwitterIcon
-
-▸ `Const` **TwitterIcon**(): `Element`
 
 #### Returns
 
@@ -1093,33 +632,6 @@
 | Name                | Type        |
 | :------------------ | :---------- |
 | `__namedParameters` | `AlertIcon` |
-
-#### Returns
-
-`Element`
-
----
-
-### UpgradeIcon
-
-▸ `Const` **UpgradeIcon**(): `Element`
-
-#### Returns
-
-`Element`
-
----
-
-### WithdrawIcon
-
-▸ `Const` **WithdrawIcon**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                       | Type     |
-| :------------------------- | :------- |
-| `__namedParameters`        | `Object` |
-| `__namedParameters.color?` | `string` |
 
 #### Returns
 

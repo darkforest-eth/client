@@ -51,9 +51,9 @@ const BtnElement = styled.span`
         border: ${noBorder ? 0 : 1}px solid ${borderColor || color || dfstyles.colors.border};
         color: ${dfstyles.colors.background};
         background: ${color || dfstyles.colors.text};
-        span svg path {
-          fill: ${dfstyles.colors.background};
-        }
+
+        /* Set the Icon color to a darker value on hover */
+        --df-icon-color: ${dfstyles.colors.background};
       `}
     }
 

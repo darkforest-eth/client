@@ -228,14 +228,13 @@ export function ModalPane({
     setZIndex(windowManager.getIndex());
   }, [windowManager, windowId]);
   const [hasSetInitialPosition, setHasSetInitialPosition] = useState(false);
-  const [gameSize, setGameSize] =
-    useState<
-      | {
-          width: number;
-          height: number;
-        }
-      | undefined
-    >();
+  const [gameSize, setGameSize] = useState<
+    | {
+        width: number;
+        height: number;
+      }
+    | undefined
+  >();
   const [showingInformationSection, setShowingInformationSection] = useState(false);
   const onMouseDown = useCallback(
     (e: React.SyntheticEvent) => {

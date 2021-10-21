@@ -10,7 +10,7 @@ import {
 import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { formatNumber, getPlanetRank } from '../../Backend/Utils/Utils';
 import { CenterBackgroundSubtext, Padded, Spacer } from '../Components/CoreUI';
-import { ArtifactIcon, SilverGrowthIcon, SilverIcon, WithdrawIcon } from '../Components/Icons';
+import { Icon, IconType } from '../Components/Icons';
 import { Green, Sub } from '../Components/Text';
 import { engineConsts } from '../Renderers/GameRenderer/EngineConsts';
 import { RGBVec } from '../Renderers/GameRenderer/EngineTypes';
@@ -20,12 +20,15 @@ import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
 import { PlanetLink } from '../Views/PlanetLink';
 import { SortableTable } from '../Views/SortableTable';
 
-const StyledPlanetThumb = styled.div`
+const StyledPlanetThumb = styled.div<{ iconColor?: string }>`
   width: 20px;
   height: 20px;
   position: relative;
   line-height: 0;
   z-index: -1;
+
+  /* Set the Icon color if specified on the outer component */
+  --df-icon-color: ${({ iconColor }) => iconColor};
 `;
 
 const PlanetElement = styled.div`
@@ -45,12 +48,6 @@ const PlanetName = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100px;
-`;
-
-const ColorIcon = styled.span<{ color: string }>`
-  path {
-    fill: ${({ color }) => color} !important;
-  }
 `;
 
 const TableContainer = styled.div`
@@ -76,34 +73,26 @@ export function PlanetThumb({ planet }: { planet: Planet }) {
 
   if (planet.planetType === PlanetType.SILVER_MINE) {
     return (
-      <StyledPlanetThumb>
-        <ColorIcon color={baseStr}>
-          <SilverIcon />
-        </ColorIcon>
+      <StyledPlanetThumb iconColor={baseStr}>
+        <Icon type={IconType.Silver} />
       </StyledPlanetThumb>
     );
   } else if (planet.planetType === PlanetType.SILVER_BANK) {
     return (
-      <StyledPlanetThumb>
-        <ColorIcon color={baseStr}>
-          <SilverGrowthIcon />
-        </ColorIcon>
+      <StyledPlanetThumb iconColor={baseStr}>
+        <Icon type={IconType.SilverGrowth} />
       </StyledPlanetThumb>
     );
   } else if (planet.planetType === PlanetType.RUINS) {
     return (
-      <StyledPlanetThumb>
-        <ColorIcon color={baseStr}>
-          <ArtifactIcon />
-        </ColorIcon>
+      <StyledPlanetThumb iconColor={baseStr}>
+        <Icon type={IconType.Artifact} />
       </StyledPlanetThumb>
     );
   } else if (planet.planetType === PlanetType.TRADING_POST) {
     return (
-      <StyledPlanetThumb>
-        <ColorIcon color={baseStr}>
-          <WithdrawIcon />
-        </ColorIcon>
+      <StyledPlanetThumb iconColor={baseStr}>
+        <Icon type={IconType.Withdraw} />
       </StyledPlanetThumb>
     );
   }

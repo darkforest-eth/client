@@ -22,8 +22,9 @@ export function PaidArtifactConversationPane({
 }) {
   const uiManager = useUIManager();
   const terminalHandle = useRef<TerminalHandle | undefined>();
-  const [conversationManager, setConversationManager] =
-    useState<PaidConversationManager | undefined>();
+  const [conversationManager, setConversationManager] = useState<
+    PaidConversationManager | undefined
+  >();
   const [conversation, setConversation] = useState<Conversation | undefined>();
   const [loading, setLoading] = useState(true);
 

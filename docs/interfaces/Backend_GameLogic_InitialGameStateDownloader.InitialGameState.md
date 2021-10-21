@@ -11,7 +11,6 @@
 - [allTouchedPlanetIds](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#alltouchedplanetids)
 - [arrivals](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#arrivals)
 - [artifactsOnVoyages](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#artifactsonvoyages)
-- [balance](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#balance)
 - [claimedCoordsMap](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#claimedcoordsmap)
 - [contractConstants](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#contractconstants)
 - [gptCreditPriceEther](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#gptcreditpriceether)
@@ -56,12 +55,6 @@
 ### artifactsOnVoyages
 
 • **artifactsOnVoyages**: `Artifact`[]
-
----
-
-### balance
-
-• **balance**: `number`
 
 ---
 

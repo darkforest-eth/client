@@ -2,7 +2,7 @@ import { Artifact, ArtifactType } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
 import { artifactAvailableTimestamp, isActivated } from '../../../Backend/GameLogic/ArtifactUtils';
-import { ActivateIcon, DeactivateIcon, DepositIcon, WithdrawIcon } from '../../Components/Icons';
+import { Icon, IconType } from '../../Components/Icons';
 import { ArtifactRarityLabelAnim } from '../../Components/Labels/ArtifactLabels';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Smaller, Sub } from '../../Components/Text';
@@ -92,8 +92,9 @@ export function ArtifactActions({
                 e.stopPropagation();
                 canHandleArtifact && deposit(artifact);
               }}
+              iconColor={canHandleArtifact ? undefined : 'grey'}
             >
-              <DepositIcon color={canHandleArtifact ? undefined : 'grey'} />
+              <Icon type={IconType.Deposit} />
             </ArtifactActionIconContainer>
           ),
         });
@@ -108,7 +109,7 @@ export function ArtifactActions({
               deactivate(artifact);
             }}
           >
-            <DeactivateIcon />
+            <Icon type={IconType.Deactivate} />
           </ArtifactActionIconContainer>
         ),
       });
@@ -128,8 +129,9 @@ export function ArtifactActions({
                 e.stopPropagation();
                 canHandleArtifact && withdraw(artifact);
               }}
+              iconColor={canHandleArtifact ? undefined : 'grey'}
             >
-              <WithdrawIcon color={canHandleArtifact ? undefined : 'grey'} />
+              <Icon type={IconType.Withdraw} />
             </ArtifactActionIconContainer>
           ),
         });
@@ -145,7 +147,7 @@ export function ArtifactActions({
                 activate(artifact);
               }}
             >
-              <ActivateIcon />
+              <Icon type={IconType.Activate} />
             </ArtifactActionIconContainer>
           ),
         });
@@ -170,9 +172,12 @@ export function ArtifactActions({
     </ActionsContainer>
   );
 }
-const ArtifactActionIconContainer = styled.div`
+const ArtifactActionIconContainer = styled.div<{ iconColor?: string }>`
   line-height: 0;
   padding-left: 8px;
+
+  /* Set the Icon color if specified on the outer component */
+  --df-icon-color: ${({ iconColor }) => iconColor};
 `;
 
 const ArtifactSpinnerContainer = styled.div`

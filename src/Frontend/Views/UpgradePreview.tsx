@@ -2,7 +2,7 @@ import { Planet, Upgrade, UpgradeBranchName } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
 import { getPlanetMaxRank, getPlanetRank, upgradeName } from '../../Backend/Utils/Utils';
-import { RightarrowIcon } from '../Components/Icons';
+import { Icon, IconType } from '../Components/Icons';
 import { Green, Red, Sub } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 
@@ -40,9 +40,9 @@ const StatRow = styled.div`
       // arrow
       text-align: center;
       width: 1.5em;
-      & svg path {
-        fill: ${dfstyles.colors.subtext};
-      }
+
+      /* Set the Icon color to something a little dimmer */
+      --df-icon-color: ${dfstyles.colors.subtext};
     }
     &:nth-child(5) {
       width: 5em;
@@ -128,7 +128,7 @@ const StatRowFilled = ({
       <span>{title}</span>
       <span>{statNow(stat)}</span>
       <span>
-        <RightarrowIcon />
+        <Icon type={IconType.RightArrow} />
       </span>
       <span>{statFuture(stat)}</span>
       <span>{statDiff(stat)}</span>
@@ -175,7 +175,7 @@ export function UpgradePreview({
         <span>{branchStrName} Rank</span>
         <span>{branchUpgradeState}</span>
         <span>
-          <RightarrowIcon />
+          <Icon type={IconType.RightArrow} />
         </span>
         <span>
           {branchUpgradeState + increment} of {maxBranchRank} <Sub>max</Sub>
@@ -186,7 +186,7 @@ export function UpgradePreview({
         <span>Planet Rank</span>
         <span>{getPlanetRank(planet)}</span>
         <span>
-          <RightarrowIcon />
+          <Icon type={IconType.RightArrow} />
         </span>
         <span>
           {getPlanetRank(planet) + increment} of {maxRank} <Sub>max</Sub>

@@ -1,4 +1,3 @@
-import { weiToEth } from '@darkforest_eth/network';
 import {
   Artifact,
   ArtifactId,
@@ -36,7 +35,6 @@ export interface InitialGameState {
   myArtifacts: Artifact[];
   heldArtifacts: Artifact[][];
   loadedPlanets: LocationId[];
-  balance: number;
   revealedCoordsMap: Map<LocationId, RevealedCoords>;
   claimedCoordsMap?: Map<LocationId, ClaimedCoords>;
   planetVoyageIdMap: Map<LocationId, VoyageId[]>;
@@ -89,7 +87,6 @@ export class InitialGameStateDownloader {
     const worldRadius = contractsAPI.getWorldRadius();
     const gptCreditPriceEther = contractsAPI.getGPTCreditPriceEther();
     const myGPTCredits = contractsAPI.getGPTCreditBalance(contractsAPI.getAccount());
-    const balance = contractsAPI.getBalance();
 
     const players = contractsAPI.getPlayers(playersLoadingBar);
 
@@ -191,7 +188,6 @@ export class InitialGameStateDownloader {
       myArtifacts: await myArtifacts,
       heldArtifacts: await heldArtifacts,
       loadedPlanets: planetsToLoad,
-      balance: weiToEth(await balance),
       revealedCoordsMap,
       claimedCoordsMap,
       planetVoyageIdMap,

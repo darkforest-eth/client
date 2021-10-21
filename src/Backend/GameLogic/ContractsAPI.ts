@@ -87,7 +87,7 @@ import {
   WorldLocation,
 } from '@darkforest_eth/types';
 import bigInt from 'big-integer';
-import { BigNumber as EthersBN, ContractFunction, ethers, Event, providers, utils } from 'ethers';
+import { BigNumber as EthersBN, ContractFunction, ethers, Event, providers } from 'ethers';
 import { EventEmitter } from 'events';
 import _ from 'lodash';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
@@ -246,7 +246,7 @@ export class ContractsAPI extends EventEmitter {
           coreContract.filters.ArtifactDeposited(null, null, null).topics,
           coreContract.filters.ArtifactFound(null, null, null).topics,
           coreContract.filters.ArtifactWithdrawn(null, null, null).topics,
-          coreContract.filters.LocationRevealed(null, null).topics,
+          coreContract.filters.LocationRevealed(null, null, null, null).topics,
           coreContract.filters.PlanetHatBought(null, null, null).topics,
           coreContract.filters.PlanetProspected(null, null).topics,
           coreContract.filters.PlanetSilverWithdrawn(null, null, null).topics,
@@ -1017,13 +1017,6 @@ export class ContractsAPI extends EventEmitter {
     return timestamp;
   }
 
-  public async getContractBalance(): Promise<number> {
-    const rawBalance = await this.makeCall<EthersBN>(this.coreContract.getBalance);
-    const myBalance = utils.formatEther(rawBalance);
-    const numBalance = parseFloat(myBalance);
-    return numBalance;
-  }
-
   public async getArrival(arrivalId: number): Promise<QueuedArrival | undefined> {
     const rawArrival = await this.makeCall(this.coreContract.planetArrivals, [arrivalId]);
     return decodeArrival(rawArrival);
@@ -1284,16 +1277,6 @@ export class ContractsAPI extends EventEmitter {
 
   public getAccount(): EthAddress | undefined {
     return this.ethConnection.getAddress();
-  }
-
-  public async getBalance(): Promise<EthersBN> {
-    const address = this.getAccount();
-
-    if (!address) {
-      return EthersBN.from(0);
-    }
-
-    return this.ethConnection.loadBalance(address);
   }
 
   public setDiagnosticUpdater(diagnosticUpdater?: DiagnosticUpdater) {

@@ -6,18 +6,7 @@ import styled from 'styled-components';
 import { ProcgenUtils } from '../../../Backend/Procedural/ProcgenUtils';
 import { getPlanetRank } from '../../../Backend/Utils/Utils';
 import { isLocatable, StatIdx } from '../../../_types/global/GlobalTypes';
-import {
-  ArtifactIcon,
-  DefenseIcon,
-  EnergyGrowthIcon,
-  EnergyIcon,
-  MaxLevelIcon,
-  PiratesIcon,
-  RangeIcon,
-  RankIcon,
-  SilverProdIcon,
-  SpeedIcon,
-} from '../../Components/Icons';
+import { Icon, IconType, RankIcon } from '../../Components/Icons';
 import { TooltipName } from '../../Game/WindowManager';
 import { TooltipTrigger } from '../../Panes/Tooltip';
 import dfstyles from '../../Styles/dfstyles';
@@ -65,42 +54,42 @@ export function PlanetIcons({ planet }: { planet: Planet | undefined }) {
     <StyledPlanetIcons>
       {planet.owner === EMPTY_ADDRESS && planet.energy > 0 && (
         <TooltipTrigger name={TooltipName.Pirates}>
-          <PiratesIcon />
+          <Icon type={IconType.Pirates} />
         </TooltipTrigger>
       )}
       {planet.planetLevel === MAX_PLANET_LEVEL && (
         <TooltipTrigger name={TooltipName.MaxLevel}>
-          <MaxLevelIcon />
+          <Icon type={IconType.MaxLevel} />
         </TooltipTrigger>
       )}
       {planet.planetType === PlanetType.SILVER_MINE && (
         <TooltipTrigger name={TooltipName.SilverProd}>
-          <SilverProdIcon />
+          <Icon type={IconType.SilverProd} />
         </TooltipTrigger>
       )}
       {bonuses[StatIdx.EnergyCap] && (
         <TooltipTrigger name={TooltipName.BonusEnergyCap}>
-          <EnergyIcon />
+          <Icon type={IconType.Energy} />
         </TooltipTrigger>
       )}
       {bonuses[StatIdx.EnergyGro] && (
         <TooltipTrigger name={TooltipName.BonusEnergyGro}>
-          <EnergyGrowthIcon />
+          <Icon type={IconType.EnergyGrowth} />
         </TooltipTrigger>
       )}
       {bonuses[StatIdx.Range] && (
         <TooltipTrigger name={TooltipName.BonusRange}>
-          <RangeIcon />
+          <Icon type={IconType.Range} />
         </TooltipTrigger>
       )}
       {bonuses[StatIdx.Speed] && (
         <TooltipTrigger name={TooltipName.BonusSpeed}>
-          <SpeedIcon />
+          <Icon type={IconType.Speed} />
         </TooltipTrigger>
       )}
       {bonuses[StatIdx.Defense] && (
         <TooltipTrigger name={TooltipName.BonusDefense}>
-          <DefenseIcon />
+          <Icon type={IconType.Defense} />
         </TooltipTrigger>
       )}
       {rank > 0 && (
@@ -117,7 +106,7 @@ export function PlanetIcons({ planet }: { planet: Planet | undefined }) {
         planet.planetType === PlanetType.RUINS &&
         !planet.hasTriedFindingArtifact && (
           <TooltipTrigger name={TooltipName.FindArtifact}>
-            <ArtifactIcon />
+            <Icon type={IconType.Artifact} />
           </TooltipTrigger>
         )}
     </StyledPlanetIcons>

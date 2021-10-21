@@ -7,7 +7,7 @@ import TutorialManager, {
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import { Underline } from '../Components/CoreUI';
-import { PauseIcon, TargetIcon } from '../Components/Icons';
+import { Icon, IconType } from '../Components/Icons';
 import { White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
@@ -68,8 +68,9 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         areas before you can view them.
         <br />
         <br />
-        You'll notice a target <TargetIcon /> indicating where you are currently exploring.{' '}
-        <White>Press next when you can see it.</White> You can also zoom using the mouse wheel.
+        You'll notice a target <Icon type={IconType.Target} /> indicating where you are currently
+        exploring. <White>Press next when you can see it.</White> You can also zoom using the mouse
+        wheel.
         <div>
           <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.ZoomOut)}>
             Next
@@ -84,7 +85,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         <br />
         <br />
         <White>
-          Try moving your explorer by clicking on the Move <TargetIcon /> button
+          Try moving your explorer by clicking on the Move <Icon type={IconType.Target} /> button
         </White>
         , then clicking somewhere in space.
       </div>
@@ -92,7 +93,8 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   } else if (tutorialState === TutorialState.MinerPause) {
     return (
       <div>
-        Great! You can also pause your explorer by clicking the pause <PauseIcon /> button.
+        Great! You can also pause your explorer by clicking the pause <Icon type={IconType.Pause} />{' '}
+        button.
         <br />
         <br />
         <White>Try pausing your explorer now.</White>

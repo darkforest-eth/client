@@ -55,12 +55,10 @@ reading and writing to and from the blockchain.
 - [getArrival](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getarrival)
 - [getArrivalsForPlanet](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getarrivalsforplanet)
 - [getArtifactById](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getartifactbyid)
-- [getBalance](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getbalance)
 - [getClaimedCoordsByIdIfExists](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getclaimedcoordsbyidifexists)
 - [getClaimedPlanetsCoords](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getclaimedplanetscoords)
 - [getConstants](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getconstants)
 - [getContractAddress](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getcontractaddress)
-- [getContractBalance](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getcontractbalance)
 - [getGPTCreditBalance](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgptcreditbalance)
 - [getGPTCreditPriceEther](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgptcreditpriceether)
 - [getGasFeeForTransaction](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgasfeefortransaction)
@@ -496,16 +494,6 @@ DISABLED for round 4
 
 ---
 
-### getBalance
-
-▸ **getBalance**(): `Promise`<`BigNumber`\>
-
-#### Returns
-
-`Promise`<`BigNumber`\>
-
----
-
 ### getClaimedCoordsByIdIfExists
 
 ▸ **getClaimedCoordsByIdIfExists**(`planetId`): `Promise`<`undefined` \| `ClaimedCoords`\>
@@ -557,16 +545,6 @@ DISABLED for round 4
 #### Returns
 
 `EthAddress`
-
----
-
-### getContractBalance
-
-▸ **getContractBalance**(): `Promise`<`number`\>
-
-#### Returns
-
-`Promise`<`number`\>
 
 ---
 

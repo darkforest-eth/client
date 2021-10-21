@@ -295,7 +295,7 @@ Diagnostic information about the game.
 
 ### diagnosticsInterval
 
-• `Private` **diagnosticsInterval**: `Timeout`
+• `Private` **diagnosticsInterval**: `Timer`
 
 Handle to an interval that periodically uploads diagnostic information from this client.
 
@@ -424,7 +424,7 @@ diagnostics that the client sends up to the webserver as well.
 
 ### networkHealthInterval
 
-• `Private` **networkHealthInterval**: `Timeout`
+• `Private` **networkHealthInterval**: `Timer`
 
 Handle to an interval that periodically refreshes the network's health from our webserver.
 
@@ -469,7 +469,7 @@ faster hash function. Othewise, in production mode, use MiMC hash (https://byt3b
 
 ### playerInterval
 
-• `Private` **playerInterval**: `Timeout`
+• `Private` **playerInterval**: `Timer`
 
 Handle to an interval that periodically refreshes some information about the player from the
 blockchain.
@@ -500,7 +500,7 @@ Whenever we refresh the players twitter accounts or scores, we publish an event 
 
 ### scoreboardInterval
 
-• `Private` **scoreboardInterval**: `Timeout`
+• `Private` **scoreboardInterval**: `Timer`
 
 Handle to an interval that periodically refreshes the scoreboard from our webserver.
 

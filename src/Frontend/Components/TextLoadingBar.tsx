@@ -11,8 +11,9 @@ interface LoadingBarProps {
   prettyEntityName: string;
 }
 
-export const TextLoadingBar =
-  React.forwardRef<LoadingBarHandle | undefined, LoadingBarProps>(TextLoadingBarImpl);
+export const TextLoadingBar = React.forwardRef<LoadingBarHandle | undefined, LoadingBarProps>(
+  TextLoadingBarImpl
+);
 
 export function TextLoadingBarImpl(
   { prettyEntityName }: LoadingBarProps,

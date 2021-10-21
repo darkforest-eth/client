@@ -2,13 +2,7 @@ import { ArtifactType, Upgrade } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
 import { EmSpacer, Spacer } from '../../Components/CoreUI';
-import {
-  DefenseIcon,
-  EnergyGrowthIcon,
-  EnergyIcon,
-  RangeIcon,
-  SpeedIcon,
-} from '../../Components/Icons';
+import { Icon, IconType } from '../../Components/Icons';
 import dfstyles from '../../Styles/dfstyles';
 
 const { dfgreen, dfred, subtext } = dfstyles.colors;
@@ -23,10 +17,6 @@ function upgradeValue(value: number) {
   }
 }
 
-type IconProps = {
-  color?: string;
-};
-
 function SingleUpgrade({
   upgrade,
   active,
@@ -35,7 +25,7 @@ function SingleUpgrade({
 }: {
   upgrade: Upgrade;
   active: boolean;
-  icon: (p: IconProps) => JSX.Element;
+  icon: IconType;
   getMultiplier: (u: Upgrade) => number;
 }) {
   const mult = getMultiplier(upgrade);
@@ -43,8 +33,8 @@ function SingleUpgrade({
   const color = active ? activeColor : subtext;
 
   return (
-    <StyledSingleUpgrade color={color}>
-      {icon({ color })}
+    <StyledSingleUpgrade color={color} iconColor={color}>
+      <Icon type={icon} />
       <Spacer width={2} />
       {upgradeValue(getMultiplier(upgrade))}
     </StyledSingleUpgrade>
@@ -96,22 +86,25 @@ export function UpgradeStatsView({
 
   return (
     <UpgradeSummaryContainer>
-      <SingleUpgrade {...iconProps} icon={DefenseIcon} getMultiplier={getDefenseMult} />
-      <SingleUpgrade {...iconProps} icon={EnergyIcon} getMultiplier={getEnergyCapMult} />
+      <SingleUpgrade {...iconProps} icon={IconType.Defense} getMultiplier={getDefenseMult} />
+      <SingleUpgrade {...iconProps} icon={IconType.Energy} getMultiplier={getEnergyCapMult} />
       <Spacer height={2} />
-      <SingleUpgrade {...iconProps} icon={EnergyGrowthIcon} getMultiplier={getEnergyGroMult} />
-      <SingleUpgrade {...iconProps} icon={RangeIcon} getMultiplier={getRangeMult} />
-      <SingleUpgrade {...iconProps} icon={SpeedIcon} getMultiplier={getSpeedMult} />
+      <SingleUpgrade {...iconProps} icon={IconType.EnergyGrowth} getMultiplier={getEnergyGroMult} />
+      <SingleUpgrade {...iconProps} icon={IconType.Range} getMultiplier={getRangeMult} />
+      <SingleUpgrade {...iconProps} icon={IconType.Speed} getMultiplier={getSpeedMult} />
     </UpgradeSummaryContainer>
   );
 }
 
-const StyledSingleUpgrade = styled.div<{ color?: string }>`
+const StyledSingleUpgrade = styled.div<{ color?: string; iconColor?: string }>`
   display: inline-flex;
   justify-content: flex-start;
   align-items: center;
   width: 45px;
-  ${({ color }) => color && `color: ${color};`}
+  color: ${({ color }) => color};
+
+  /* Set the Icon color if specified on the outer component */
+  --df-icon-color: ${({ iconColor }) => iconColor};
 `;
 
 const UpgradeSummaryContainer = styled.div`

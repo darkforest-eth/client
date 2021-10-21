@@ -10,6 +10,7 @@ export const enum Incompatibility {
 }
 
 export const hasTouchscreen = () => {
+  // @ts-ignore       TS2551: Property 'msMaxTouchPoints' does not exist on type 'Navigator'
   return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 };
 

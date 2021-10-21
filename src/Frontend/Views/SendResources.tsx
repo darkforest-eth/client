@@ -8,7 +8,7 @@ import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { ArtifactImage } from '../Components/ArtifactImage';
 import { CenteredText, EmSpacer, FullWidth, ShortcutButton, Spacer } from '../Components/CoreUI';
-import { EnergyIcon, SilverIcon } from '../Components/Icons';
+import { Icon, IconType } from '../Components/Icons';
 import { LongDash, Sub, Subber } from '../Components/Text';
 import WindowManager, { CursorState, TooltipName } from '../Game/WindowManager';
 import { TooltipTrigger } from '../Panes/Tooltip';
@@ -36,8 +36,8 @@ const enum RowType {
 function ResourceRowIcon({ rowType }: { rowType: RowType }) {
   return (
     <StyledRowIcon>
-      {rowType === RowType.Energy && <EnergyIcon />}
-      {rowType === RowType.Silver && <SilverIcon />}
+      {rowType === RowType.Energy && <Icon type={IconType.Energy} />}
+      {rowType === RowType.Silver && <Icon type={IconType.Silver} />}
     </StyledRowIcon>
   );
 }

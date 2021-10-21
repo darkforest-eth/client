@@ -10,7 +10,7 @@ import {
   TowardsCenterPatternV2,
 } from '../../Backend/Miner/MiningPatterns';
 import { EmSpacer, SelectFrom, ShortcutButton } from '../Components/CoreUI';
-import { PauseIcon, PlayIcon, TargetIcon } from '../Components/Icons';
+import { Icon, IconType } from '../Components/Icons';
 import { Coords, Sub } from '../Components/Text';
 import WindowManager, { CursorState, TooltipName, WindowManagerEvent } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
@@ -160,7 +160,7 @@ export function ExplorePane() {
         <ShortcutButton onClick={doTarget} shortcutKey={TOGGLE_TARGETTING}>
           {targetting ? 'Moving...' : 'Move'}
           <EmSpacer width={1} />
-          <TargetIcon />
+          <Icon type={IconType.Target} />
         </ShortcutButton>
       </TooltipTrigger>
       <EmSpacer width={0.5} />
@@ -173,7 +173,7 @@ export function ExplorePane() {
           shortcutText={'space'}
         >
           {mining ? 'Pause' : 'Explore!'} <EmSpacer width={1} />{' '}
-          {mining ? <PauseIcon /> : <PlayIcon />}
+          {mining ? <Icon type={IconType.Pause} /> : <Icon type={IconType.Play} />}
         </ShortcutButton>
       </TooltipTrigger>
 

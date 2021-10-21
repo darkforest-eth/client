@@ -2,22 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { BtnProps } from '../Components/Btn';
 import { ShortcutButton, Spacer } from '../Components/CoreUI';
-import {
-  ArtifactIcon,
-  BroadcastIcon,
-  HatIcon,
-  HelpIcon,
-  LeaderboardIcon,
-  LockIcon,
-  PlanetdexIcon,
-  PlanetIcon,
-  PluginIcon,
-  SettingsIcon,
-  ShareIcon,
-  TwitterIcon,
-  UpgradeIcon,
-  WithdrawIcon,
-} from '../Components/Icons';
+import { Icon, IconType } from '../Components/Icons';
 import { ModalHook, ModalName } from './ModalPane';
 
 const ModalIconText = styled.span`
@@ -29,20 +14,20 @@ const ModalIconText = styled.span`
 `;
 
 const icon = (modal: ModalName): React.ReactNode => {
-  if (modal === ModalName.Help) return <HelpIcon />;
-  else if (modal === ModalName.PlanetDetails) return <PlanetIcon />;
-  else if (modal === ModalName.Leaderboard) return <LeaderboardIcon />;
-  else if (modal === ModalName.PlanetDex) return <PlanetdexIcon />;
-  else if (modal === ModalName.UpgradeDetails) return <UpgradeIcon />;
-  else if (modal === ModalName.TwitterVerify) return <TwitterIcon />;
-  else if (modal === ModalName.Broadcast) return <BroadcastIcon />;
-  else if (modal === ModalName.MapShare) return <ShareIcon />;
-  else if (modal === ModalName.ManageAccount) return <LockIcon />;
-  else if (modal === ModalName.Hats) return <HatIcon />;
-  else if (modal === ModalName.Settings) return <SettingsIcon />;
-  else if (modal === ModalName.Plugins) return <PluginIcon />;
-  else if (modal === ModalName.YourArtifacts) return <ArtifactIcon />;
-  else if (modal === ModalName.WithdrawSilver) return <WithdrawIcon />;
+  if (modal === ModalName.Help) return <Icon type={IconType.Help} />;
+  else if (modal === ModalName.PlanetDetails) return <Icon type={IconType.Planet} />;
+  else if (modal === ModalName.Leaderboard) return <Icon type={IconType.Leaderboard} />;
+  else if (modal === ModalName.PlanetDex) return <Icon type={IconType.PlanetDex} />;
+  else if (modal === ModalName.UpgradeDetails) return <Icon type={IconType.Upgrade} />;
+  else if (modal === ModalName.TwitterVerify) return <Icon type={IconType.Twitter} />;
+  else if (modal === ModalName.Broadcast) return <Icon type={IconType.Broadcast} />;
+  else if (modal === ModalName.MapShare) return <Icon type={IconType.Share} />;
+  else if (modal === ModalName.ManageAccount) return <Icon type={IconType.Lock} />;
+  else if (modal === ModalName.Hats) return <Icon type={IconType.Hat} />;
+  else if (modal === ModalName.Settings) return <Icon type={IconType.Settings} />;
+  else if (modal === ModalName.Plugins) return <Icon type={IconType.Plugin} />;
+  else if (modal === ModalName.YourArtifacts) return <Icon type={IconType.Artifact} />;
+  else if (modal === ModalName.WithdrawSilver) return <Icon type={IconType.Withdraw} />;
   return <span>T</span>;
 };
 
