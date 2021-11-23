@@ -494,7 +494,7 @@
 | Name                     | Type                                                                                |
 | :----------------------- | :---------------------------------------------------------------------------------- |
 | `__namedParameters`      | `Object`                                                                            |
-| `__namedParameters.name` | [`TooltipName`](../enums/Frontend_Game_WindowManager.TooltipName.md) \| `undefined` |
+| `__namedParameters.name` | `undefined` \| [`TooltipName`](../enums/Frontend_Game_WindowManager.TooltipName.md) |
 
 #### Returns
 

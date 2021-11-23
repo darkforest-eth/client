@@ -74,7 +74,7 @@ React.Component<Props, State\>.constructor
 
 ### closeEditor
 
-• `Private` **closeEditor**: `undefined` \| () => `void`
+• `Private` **closeEditor**: `undefined` \| () => `void` = `undefined`
 
 ---
 

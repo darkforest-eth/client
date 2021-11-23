@@ -16,7 +16,6 @@ export const TOGGLE_BROADCAST_PANE = 'z';
 export const TOGGLE_UPGRADES_PANE = 'a';
 export const TOGGLE_SEND = 'q';
 export const EXIT_PANE = SpecialKey.Escape;
-export const TOGGLE_CLAIM_PLANET_PANE = 'c';
 
 // global shortcuts
 export const TOGGLE_DIAGNOSTICS_PANE = 'i';

@@ -14,11 +14,11 @@
 
 #### Parameters
 
-| Name                          | Type                           |
-| :---------------------------- | :----------------------------- |
-| `__namedParameters`           | `Object`                       |
-| `__namedParameters.sortBy`    | keyof `Upgrade` \| `undefined` |
-| `__namedParameters.setSortBy` |                                |
+| Name                          | Type                                            |
+| :---------------------------- | :---------------------------------------------- |
+| `__namedParameters`           | `Object`                                        |
+| `__namedParameters.sortBy`    | `undefined` \| keyof `Upgrade`                  |
+| `__namedParameters.setSortBy` | (`k`: `undefined` \| keyof `Upgrade`) => `void` |
 
 #### Returns
 

@@ -19,7 +19,7 @@
 
 ### SpecialKey
 
-• `Const` **SpecialKey**: `Object`
+• **SpecialKey**: `Object`
 
 #### Type declaration
 
@@ -35,13 +35,13 @@
 
 ### keyDown$
 
-• `Const` **keyDown$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
+• **keyDown$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
 
 ---
 
 ### keyUp$
 
-• `Const` **keyUp$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
+• **keyUp$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
 
 ## Functions
 

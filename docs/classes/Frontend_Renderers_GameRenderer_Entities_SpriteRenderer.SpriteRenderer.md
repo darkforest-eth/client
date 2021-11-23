@@ -327,14 +327,14 @@ Queue artifact to worldcoords, centered
 
 #### Parameters
 
-| Name                | Type                                                                                    |
-| :------------------ | :-------------------------------------------------------------------------------------- |
-| `artifact`          | [`RenderedArtifact`](../interfaces/Backend_GameLogic_ArtifactUtils.RenderedArtifact.md) |
-| `__namedParameters` | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)               |
-| `width`             | `number`                                                                                |
-| `alpha`             | `number`                                                                                |
-| `theta`             | `undefined` \| `number`                                                                 |
-| `color`             | [`RGBVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbvec)            |
+| Name                | Type                                                                                    | Default value                        |
+| :------------------ | :-------------------------------------------------------------------------------------- | :----------------------------------- |
+| `artifact`          | [`RenderedArtifact`](../interfaces/Backend_GameLogic_ArtifactUtils.RenderedArtifact.md) | `undefined`                          |
+| `__namedParameters` | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)               | `undefined`                          |
+| `width`             | `number`                                                                                | `undefined`                          |
+| `alpha`             | `number`                                                                                | `undefined`                          |
+| `theta`             | `undefined` \| `number`                                                                 | `undefined`                          |
+| `color`             | [`RGBVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbvec)            | `engineConsts.colors.artifacts.trim` |
 
 #### Returns
 
@@ -348,15 +348,15 @@ Queue artifact to worldcoords, centered
 
 #### Parameters
 
-| Name       | Type                                                                                        |
-| :--------- | :------------------------------------------------------------------------------------------ |
-| `artifact` | [`RenderedArtifact`](../interfaces/Backend_GameLogic_ArtifactUtils.RenderedArtifact.md)     |
-| `topLeft`  | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)                   |
-| `width`    | `number`                                                                                    |
-| `alpha`    | `number`                                                                                    |
-| `color`    | `undefined` \| [`RGBVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbvec) |
-| `atFrame`  | `undefined` \| `number`                                                                     |
-| `theta`    | `undefined` \| `number`                                                                     |
+| Name       | Type                                                                                        | Default value |
+| :--------- | :------------------------------------------------------------------------------------------ | :------------ |
+| `artifact` | [`RenderedArtifact`](../interfaces/Backend_GameLogic_ArtifactUtils.RenderedArtifact.md)     | `undefined`   |
+| `topLeft`  | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)                   | `undefined`   |
+| `width`    | `number`                                                                                    | `undefined`   |
+| `alpha`    | `number`                                                                                    | `undefined`   |
+| `color`    | `undefined` \| [`RGBVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbvec) | `undefined`   |
+| `atFrame`  | `undefined` \| `number`                                                                     | `undefined`   |
+| `theta`    | `undefined` \| `number`                                                                     | `undefined`   |
 
 #### Returns
 

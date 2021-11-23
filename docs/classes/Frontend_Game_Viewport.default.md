@@ -184,7 +184,7 @@
 
 ### mousedownCoords
 
-• **mousedownCoords**: `undefined` \| [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)
+• **mousedownCoords**: `undefined` \| [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md) = `undefined`
 
 ---
 
@@ -196,7 +196,7 @@
 
 ### velocity
 
-• **velocity**: `undefined` \| `WorldCoords`
+• **velocity**: `undefined` \| `WorldCoords` = `undefined`
 
 ---
 
@@ -314,9 +314,9 @@
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                         |
+| :------ | :------------------------------------------- |
+| `chunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 
@@ -457,9 +457,9 @@
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                         |
+| :------ | :------------------------------------------- |
+| `chunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 

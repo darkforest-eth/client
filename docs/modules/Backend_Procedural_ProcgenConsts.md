@@ -14,7 +14,7 @@
 
 ### blurb2grammar
 
-• `Const` **blurb2grammar**: `Object`
+• **blurb2grammar**: `Object`
 
 #### Type declaration
 
@@ -53,7 +53,7 @@
 
 ### blurbGrammar
 
-• `Const` **blurbGrammar**: `Object`
+• **blurbGrammar**: `Object`
 
 #### Type declaration
 
@@ -84,16 +84,16 @@
 
 ### planetNameWords
 
-• `Const` **planetNameWords**: `string`[]
+• **planetNameWords**: `string`[]
 
 ---
 
 ### planetTagAdj
 
-• `Const` **planetTagAdj**: `string`[]
+• **planetTagAdj**: `string`[]
 
 ---
 
 ### planetTagNoun
 
-• `Const` **planetTagNoun**: `string`[]
+• **planetTagNoun**: `string`[]

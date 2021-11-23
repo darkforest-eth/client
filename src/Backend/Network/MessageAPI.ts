@@ -6,17 +6,15 @@ import {
   SignedMessage,
 } from '@darkforest_eth/types';
 
-const MESSAGE_API_HOST = process.env.CONVERSATION_API_HOST as string;
-
 export async function getMessagesOnPlanets(
   request: PlanetMessageRequest
 ): Promise<PlanetMessageResponse> {
-  if (request.planets.length === 0) {
+  if (request.planets.length === 0 || !process.env.DF_WEBSERVER_URL) {
     return {};
   }
 
   try {
-    const response = await fetch(`${MESSAGE_API_HOST}/messages`, {
+    const response = await fetch(`${process.env.DF_WEBSERVER_URL}/messages`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -36,8 +34,12 @@ export async function getMessagesOnPlanets(
 export async function addMessage(
   request: SignedMessage<PostMessageRequest<unknown>>
 ): Promise<void> {
+  if (!process.env.DF_WEBSERVER_URL) {
+    return;
+  }
+
   try {
-    const res = await fetch(`${MESSAGE_API_HOST}/add-message`, {
+    const res = await fetch(`${process.env.DF_WEBSERVER_URL}/add-message`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -55,8 +57,12 @@ export async function addMessage(
 }
 
 export async function deleteMessages(request: SignedMessage<DeleteMessagesRequest>): Promise<void> {
+  if (!process.env.DF_WEBSERVER_URL) {
+    return;
+  }
+
   try {
-    const res = await fetch(`${MESSAGE_API_HOST}/delete-messages`, {
+    const res = await fetch(`${process.env.DF_WEBSERVER_URL}/delete-messages`, {
       headers: {
         'Content-Type': 'application/json',
       },

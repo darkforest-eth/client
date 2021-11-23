@@ -18,11 +18,11 @@ related information to the user.
 
 #### Parameters
 
-| Name                            | Type       |
-| :------------------------------ | :--------- |
-| `__namedParameters`             | `Object`   |
-| `__namedParameters.tabTitles`   | `string`[] |
-| `__namedParameters.tabContents` |            |
+| Name                            | Type                                  |
+| :------------------------------ | :------------------------------------ |
+| `__namedParameters`             | `Object`                              |
+| `__namedParameters.tabTitles`   | `string`[]                            |
+| `__namedParameters.tabContents` | (`tabIndex`: `number`) => `ReactNode` |
 
 #### Returns
 

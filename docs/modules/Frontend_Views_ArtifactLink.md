@@ -18,7 +18,7 @@
 | :--------------------------- | :--------------------------------------------------------------------- |
 | `__namedParameters`          | `Object`                                                               |
 | `__namedParameters.artifact` | `Artifact`                                                             |
-| `__namedParameters.children` | `React.ReactNode` \| `React.ReactNode`[]                               |
+| `__namedParameters.children` | `ReactNode` \| `ReactNode`[]                                           |
 | `__namedParameters.modal`    | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
 
 #### Returns

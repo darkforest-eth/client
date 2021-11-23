@@ -1,5 +1,3 @@
-import { WEBSERVER_URL } from './UtilityServerAPI';
-
 export const enum EventType {
   Transaction = 'transaction',
   Diagnostics = 'diagnostics',
@@ -11,7 +9,11 @@ export class EventLogger {
   }
 
   logEvent(eventType: EventType, event: unknown) {
-    fetch(`${WEBSERVER_URL}/event`, {
+    if (!process.env.DF_WEBSERVER_URL) {
+      return;
+    }
+
+    fetch(`${process.env.DF_WEBSERVER_URL}/event`, {
       method: 'POST',
       body: JSON.stringify(EventLogger.augmentEvent(event, eventType)),
       headers: {

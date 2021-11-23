@@ -24,8 +24,6 @@ export interface InitialGameState {
   contractConstants: ContractConstants;
   players: Map<string, Player>;
   worldRadius: number;
-  gptCreditPriceEther: number;
-  myGPTCredits: number;
   allTouchedPlanetIds: LocationId[];
   allRevealedCoords: RevealedCoords[];
   allClaimedCoords?: ClaimedCoords[];
@@ -85,8 +83,6 @@ export class InitialGameStateDownloader {
 
     const contractConstants = contractsAPI.getConstants();
     const worldRadius = contractsAPI.getWorldRadius();
-    const gptCreditPriceEther = contractsAPI.getGPTCreditPriceEther();
-    const myGPTCredits = contractsAPI.getGPTCreditBalance(contractsAPI.getAccount());
 
     const players = contractsAPI.getPlayers(playersLoadingBar);
 
@@ -178,8 +174,6 @@ export class InitialGameStateDownloader {
       contractConstants: await contractConstants,
       players: await players,
       worldRadius: await worldRadius,
-      gptCreditPriceEther: await gptCreditPriceEther,
-      myGPTCredits: await myGPTCredits,
       allTouchedPlanetIds,
       allRevealedCoords,
       pendingMoves,

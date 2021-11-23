@@ -191,14 +191,14 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name     | Type                                                                           | Default value |
-| :------- | :----------------------------------------------------------------------------- | :------------ |
-| `start`  | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)      | `undefined`   |
-| `end`    | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)      | `undefined`   |
-| `color`  | [`RGBAVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbavec) | `undefined`   |
-| `width`  | `number`                                                                       | `1`           |
-| `zIdx`   | `number`                                                                       | `undefined`   |
-| `dashed` | `boolean`                                                                      | `false`       |
+| Name     | Type                                                                           | Default value          |
+| :------- | :----------------------------------------------------------------------------- | :--------------------- |
+| `start`  | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)      | `undefined`            |
+| `end`    | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)      | `undefined`            |
+| `color`  | [`RGBAVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbavec) | `undefined`            |
+| `width`  | `number`                                                                       | `1`                    |
+| `zIdx`   | `number`                                                                       | `RenderZIndex.DEFAULT` |
+| `dashed` | `boolean`                                                                      | `false`                |
 
 #### Returns
 
@@ -212,14 +212,14 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name     | Type                                                                           | Default value |
-| :------- | :----------------------------------------------------------------------------- | :------------ |
-| `start`  | `WorldCoords`                                                                  | `undefined`   |
-| `end`    | `WorldCoords`                                                                  | `undefined`   |
-| `color`  | [`RGBAVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbavec) | `undefined`   |
-| `width`  | `number`                                                                       | `1`           |
-| `zIdx`   | `number`                                                                       | `undefined`   |
-| `dashed` | `boolean`                                                                      | `false`       |
+| Name     | Type                                                                           | Default value          |
+| :------- | :----------------------------------------------------------------------------- | :--------------------- |
+| `start`  | `WorldCoords`                                                                  | `undefined`            |
+| `end`    | `WorldCoords`                                                                  | `undefined`            |
+| `color`  | [`RGBAVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbavec) | `undefined`            |
+| `width`  | `number`                                                                       | `1`                    |
+| `zIdx`   | `number`                                                                       | `RenderZIndex.DEFAULT` |
+| `dashed` | `boolean`                                                                      | `false`                |
 
 #### Returns
 

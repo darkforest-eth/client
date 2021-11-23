@@ -14,28 +14,28 @@
 
 ### ANCIENT_BLUE
 
-• `Const` **ANCIENT_BLUE**: `"#b2fffc"`
+• **ANCIENT_BLUE**: `"#b2fffc"`
 
 ---
 
 ### ANCIENT_PURPLE
 
-• `Const` **ANCIENT_PURPLE**: `"#d23191"`
+• **ANCIENT_PURPLE**: `"#d23191"`
 
 ---
 
 ### BiomeBackgroundColors
 
-• `Const` **BiomeBackgroundColors**: `Object`
+• **BiomeBackgroundColors**: `Object`
 
 ---
 
 ### BiomeTextColors
 
-• `Const` **BiomeTextColors**: `Object`
+• **BiomeTextColors**: `Object`
 
 ---
 
 ### RarityColors
 
-• `Const` **RarityColors**: `Object`
+• **RarityColors**: `Object`

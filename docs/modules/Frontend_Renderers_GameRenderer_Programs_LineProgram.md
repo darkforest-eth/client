@@ -10,7 +10,7 @@
 
 ### LINE_PROGRAM_DEFINITION
 
-• `Const` **LINE_PROGRAM_DEFINITION**: `Object`
+• **LINE_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

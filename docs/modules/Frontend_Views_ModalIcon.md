@@ -34,7 +34,7 @@
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns
@@ -54,7 +54,7 @@
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns
@@ -74,7 +74,7 @@
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns
@@ -94,7 +94,7 @@
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns
@@ -114,7 +114,7 @@
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns
@@ -134,7 +134,7 @@
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns
@@ -154,7 +154,7 @@
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns
@@ -174,7 +174,7 @@
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns
@@ -194,7 +194,7 @@
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns
@@ -214,7 +214,7 @@
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns
@@ -234,7 +234,7 @@
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns
@@ -251,9 +251,9 @@ A button which allows you to open a modal.
 
 #### Parameters
 
-| Name    | Type                                                                                                                                                                                                                                                                           |
-| :------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `props` | { `hook`: [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) ; `modal`: [`ModalName`](../enums/Frontend_Views_ModalPane.ModalName.md) ; `shortcutKey?`: `string` ; `style?`: `React.CSSProperties` ; `text?`: `string` } & [`BtnProps`](Frontend_Components_Btn.md#btnprops) |
+| Name    | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| :------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `props` | { `hook`: [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) ; `modal`: [`ModalName`](../enums/Frontend_Views_ModalPane.ModalName.md) ; `shortcutKey?`: `string` ; `style?`: `CSSProperties` ; `text?`: `string` } & { `borderColor?`: `string` ; `color?`: `string` ; `disabled?`: `boolean` ; `forceActive?`: `boolean` ; `noBorder?`: `boolean` ; `small?`: `boolean` ; `textColor?`: `string` ; `wide?`: `boolean` } & `HTMLAttributes`<`HTMLSpanElement`\> |
 
 #### Returns
 
@@ -267,9 +267,9 @@ A button which allows you to open a modal.
 
 #### Parameters
 
-| Name    | Type                                                                                                                                                                                                  |
-| :------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `props` | { `hook`: [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) ; `shortcutKey?`: `string` ; `style?`: `React.CSSProperties` ; `text?`: `string` } & [`BtnProps`](Frontend_Components_Btn.md#btnprops) |
+| Name    | Type                                                                                                                                                                                                                                                                                                                                                                                     |
+| :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `props` | { `hook`: [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) ; `shortcutKey?`: `string` ; `style?`: `CSSProperties` ; `text?`: `string` } & { `borderColor?`: `string` ; `color?`: `string` ; `disabled?`: `boolean` ; `forceActive?`: `boolean` ; `noBorder?`: `boolean` ; `small?`: `boolean` ; `textColor?`: `string` ; `wide?`: `boolean` } & `HTMLAttributes`<`HTMLSpanElement`\> |
 
 #### Returns
 
@@ -288,7 +288,7 @@ A button which allows you to open a modal.
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns
@@ -308,7 +308,7 @@ A button which allows you to open a modal.
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns
@@ -328,7 +328,7 @@ A button which allows you to open a modal.
 | `__namedParameters`              | `Object`                                             |
 | `__namedParameters.hook`         | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
 | `__namedParameters.shortcutKey?` | `string`                                             |
-| `__namedParameters.style?`       | `React.CSSProperties`                                |
+| `__namedParameters.style?`       | `CSSProperties`                                      |
 | `__namedParameters.text?`        | `string`                                             |
 
 #### Returns

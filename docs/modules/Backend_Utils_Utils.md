@@ -29,7 +29,7 @@
 
 ### ONE_DAY
 
-• `Const` **ONE_DAY**: `number`
+• **ONE_DAY**: `number`
 
 ## Functions
 
@@ -179,10 +179,10 @@
 
 #### Parameters
 
-| Name      | Type                                                       |
-| :-------- | :--------------------------------------------------------- |
-| `upgrade` | `Upgrade`                                                  |
-| `stat`    | [`StatIdx`](../enums/_types_global_GlobalTypes.StatIdx.md) |
+| Name      | Type                                                      |
+| :-------- | :-------------------------------------------------------- |
+| `upgrade` | `Upgrade`                                                 |
+| `stat`    | [`StatIdx`](../enums/types_global_GlobalTypes.StatIdx.md) |
 
 #### Returns
 

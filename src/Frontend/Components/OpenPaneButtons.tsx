@@ -1,7 +1,6 @@
 import { LocationId } from '@darkforest_eth/types';
 import React, { useCallback } from 'react';
 import { BroadcastPane, BroadcastPaneHelpContent } from '../Panes/BroadcastPane';
-import { ClaimPlanetPane } from '../Panes/ClaimPlanetPane';
 import { HatPane } from '../Panes/HatPane';
 import {
   ManagePlanetArtifactsHelpContent,
@@ -11,7 +10,6 @@ import { UpgradeDetailsPane, UpgradeDetailsPaneHelpContent } from '../Panes/Upgr
 import { useOnUp } from '../Utils/KeyEmitters';
 import {
   TOGGLE_BROADCAST_PANE,
-  TOGGLE_CLAIM_PLANET_PANE,
   TOGGLE_HAT_PANE,
   TOGGLE_PLANET_ARTIFACTS_PANE,
   TOGGLE_UPGRADES_PANE,
@@ -58,26 +56,6 @@ export function OpenPaneButton({
         <CenteredText>{title}</CenteredText>
       </ShortcutButton>
     </AlignCenterHorizontally>
-  );
-}
-
-export function OpenClaimPlanetPane({
-  modal,
-  planetId,
-  shortcutDisabled,
-}: {
-  modal: ModalHandle;
-  planetId: LocationId | undefined;
-  shortcutDisabled?: boolean;
-}) {
-  return (
-    <OpenPaneButton
-      modal={modal}
-      title='Claim'
-      shortcutKey={TOGGLE_CLAIM_PLANET_PANE}
-      element={() => <ClaimPlanetPane modal={modal} initialPlanetId={planetId} />}
-      shortcutDisabled={shortcutDisabled}
-    />
   );
 }
 

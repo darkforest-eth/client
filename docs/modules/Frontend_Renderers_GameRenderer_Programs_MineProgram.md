@@ -10,7 +10,7 @@
 
 ### MINE_PROGRAM_DEFINITION
 
-• `Const` **MINE_PROGRAM_DEFINITION**: `Object`
+• **MINE_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

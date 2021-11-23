@@ -19,7 +19,7 @@
 
 ### PLANET_PROGRAM_DEFINITION
 
-• `Const` **PLANET_PROGRAM_DEFINITION**: `Object`
+• **PLANET_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

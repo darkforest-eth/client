@@ -48,12 +48,12 @@ Create a renderer from a WebGLManager and program data.
 
 #### Parameters
 
-| Name           | Type                                                                                         |
-| :------------- | :------------------------------------------------------------------------------------------- |
-| `manager`      | [`GameGLManager`](Frontend_Renderers_GameRenderer_WebGL_GameGLManager.GameGLManager.md)      |
-| `config`       | `PerlinConfig`                                                                               |
-| `thresholds`   | [`number`, `number`, `number`]                                                               |
-| `rectRenderer` | `undefined` \| [`default`](Frontend_Renderers_GameRenderer_Entities_RectRenderer.default.md) |
+| Name           | Type                                                                                         | Default value |
+| :------------- | :------------------------------------------------------------------------------------------- | :------------ |
+| `manager`      | [`GameGLManager`](Frontend_Renderers_GameRenderer_WebGL_GameGLManager.GameGLManager.md)      | `undefined`   |
+| `config`       | `PerlinConfig`                                                                               | `undefined`   |
+| `thresholds`   | [`number`, `number`, `number`]                                                               | `undefined`   |
+| `rectRenderer` | `undefined` \| [`default`](Frontend_Renderers_GameRenderer_Entities_RectRenderer.default.md) | `undefined`   |
 
 #### Overrides
 
@@ -198,7 +198,7 @@ The number of queued vertices so far. Used for batch rendering.
 
 | Name      | Type                                                                                            |
 | :-------- | :---------------------------------------------------------------------------------------------- |
-| `rect`    | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)                             |
+| `rect`    | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)                              |
 | `octave`  | [`PerlinOctave`](../enums/Frontend_Renderers_GameRenderer_Entities_PerlinUtils.PerlinOctave.md) |
 | `topGrad` | [`default`](Frontend_Renderers_GameRenderer_WebGL_AttribManager.default.md)                     |
 | `botGrad` | [`default`](Frontend_Renderers_GameRenderer_WebGL_AttribManager.default.md)                     |
@@ -217,9 +217,9 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name       | Type                                                                           | Description                                                     |
-| :--------- | :----------------------------------------------------------------------------- | :-------------------------------------------------------------- |
-| `drawMode` | [`DrawMode`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.DrawMode.md) | The drawing mode for the buffered vertices. Default: Triangles. |
+| Name       | Type                                                                           | Default value        | Description                                                     |
+| :--------- | :----------------------------------------------------------------------------- | :------------------- | :-------------------------------------------------------------- |
+| `drawMode` | [`DrawMode`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.DrawMode.md) | `DrawMode.Triangles` | The drawing mode for the buffered vertices. Default: Triangles. |
 
 #### Returns
 
@@ -237,9 +237,9 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                         |
+| :------ | :------------------------------------------- |
+| `chunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 
@@ -253,9 +253,9 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name   | Type                                                                |
-| :----- | :------------------------------------------------------------------ |
-| `rect` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
+| Name   | Type                                                               |
+| :----- | :----------------------------------------------------------------- |
+| `rect` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 

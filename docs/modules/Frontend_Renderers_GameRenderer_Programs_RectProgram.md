@@ -10,7 +10,7 @@
 
 ### RECT_PROGRAM_DEFINITION
 
-• `Const` **RECT_PROGRAM_DEFINITION**: `Object`
+• **RECT_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

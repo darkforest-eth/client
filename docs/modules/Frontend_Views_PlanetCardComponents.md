@@ -17,7 +17,7 @@
 
 ### DestroyedMarker
 
-• `Const` **DestroyedMarker**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• **DestroyedMarker**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 Displayed in [PlanetContextPane](Frontend_Panes_PlanetContextPane.md#planetcontextpane) when a planet is {@code destroyed}.
 
@@ -25,7 +25,7 @@ Displayed in [PlanetContextPane](Frontend_Panes_PlanetContextPane.md#planetconte
 
 ### TitleBar
 
-• `Const` **TitleBar**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• **TitleBar**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ## Functions
 
@@ -39,7 +39,7 @@ Displayed in [PlanetContextPane](Frontend_Panes_PlanetContextPane.md#planetconte
 | :--------------------------- | :---------------------- |
 | `__namedParameters`          | `Object`                |
 | `__namedParameters.artifact` | `Artifact`              |
-| `__namedParameters.planet`   | `Planet` \| `undefined` |
+| `__namedParameters.planet`   | `undefined` \| `Planet` |
 
 #### Returns
 
