@@ -81,5 +81,10 @@ export function getEthConnection(): Promise<EthConnection> {
     url = 'http://localhost:8545';
   }
 
+  console.log(`GAME METADATA:`);
+  console.log(`rpc url:${url}`);
+  console.log(`is production: ${isProd}`);
+  console.log(`webserver url: ${process.env.DF_WEBSERVER_URL}`);
+
   return createEthConnection(url);
 }

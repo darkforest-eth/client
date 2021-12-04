@@ -16,6 +16,7 @@
   "include": ["src/**/*", "embedded_plugins/*", "plugins/*"],
   "exclude": ["./node_modules", "./dist", "./declarations"],
   "typedocOptions": {
+    "entryPointStrategy": "expand",
     "entryPoints": ["src"],
     "out": "docs",
     "hideBreadcrumbs": true,

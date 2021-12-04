@@ -11,8 +11,6 @@ const CopyPlugin = require('copy-webpack-plugin');
 const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
 const styledComponentsTransformer = createStyledComponentsTransformer();
 
-const isProd = process.env.NODE_ENV === 'production';
-
 module.exports = {
   mode: 'production',
   entry: ['./src/Frontend/EntryPoints/index.tsx'],
@@ -100,7 +98,7 @@ module.exports = {
       NODE_ENV: 'development',
       DEFAULT_RPC: 'https://rpc-df.xdaichain.com/',
       // This must be null to indicate to webpack that this environment variable is optional
-      DF_WEBSERVER_URL: isProd ? 'https://api.zkga.me' : null,
+      DF_WEBSERVER_URL: null,
     }),
     new HtmlWebpackPlugin({
       template: './index.html',
