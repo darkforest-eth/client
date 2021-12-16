@@ -386,7 +386,7 @@ export function GameLandingPage() {
           setStep(TerminalPromptStep.FETCHING_ETH_DATA);
         } else {
           terminal.current?.println(
-            'Your address is not whitelisted. Please fill out this form to request a whitelist.',
+            'Your address is not whitelisted\n. Please fill out this form to request a whitelist.',
             TerminalTextStyle.Red
           );
           setStep(TerminalPromptStep.TERMINATED);
