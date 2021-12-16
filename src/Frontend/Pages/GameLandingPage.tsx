@@ -72,16 +72,20 @@ export function GameLandingPage() {
   const [ethConnection, setEthConnection] = useState<EthConnection | undefined>();
   const [step, setStep] = useState(TerminalPromptStep.NONE);
 
+  const isProd = process.env.NODE_ENV === 'production';
+
   useEffect(() => {
     getEthConnection()
-      .then((ethConnection) => setEthConnection(ethConnection))
+      .then((ethConnection) => {
+          setEthConnection(ethConnection);
+          // Player needs to approve RPC Endpoint for localtunnel;
+          if(!isProd) window.open(ethConnection.getRpcEndpoint());
+      })
       .catch((e) => {
         alert('error connecting to blockchain');
         console.log(e);
       });
   }, []);
-
-  const isProd = process.env.NODE_ENV === 'production';
 
   const advanceStateFromNone = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
@@ -386,7 +390,7 @@ export function GameLandingPage() {
           setStep(TerminalPromptStep.FETCHING_ETH_DATA);
         } else {
           terminal.current?.println(
-            'Your address is not whitelisted\n. Please fill out this form to request a whitelist.',
+            'Your address is not whitelisted.\nPlease fill out this form to request a whitelist.',
             TerminalTextStyle.Red
           );
           setStep(TerminalPromptStep.TERMINATED);
