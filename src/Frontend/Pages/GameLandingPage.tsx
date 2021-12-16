@@ -229,8 +229,8 @@ export function GameLandingPage() {
         terminal.current?.println('Login with existing account.');
       }
 
-      terminal.current?.print('(n) ', TerminalTextStyle.Sub);
-      terminal.current?.println(`Generate new burner wallet account.`);
+      // terminal.current?.print('(n) ', TerminalTextStyle.Sub);
+      // terminal.current?.println(`Generate new burner wallet account.`);
       terminal.current?.print('(i) ', TerminalTextStyle.Sub);
       terminal.current?.println(`Import private key.`);
       terminal.current?.println(``);
@@ -240,7 +240,8 @@ export function GameLandingPage() {
       if (userInput === 'a' && accounts.length > 0) {
         setStep(TerminalPromptStep.DISPLAY_ACCOUNTS);
       } else if (userInput === 'n') {
-        setStep(TerminalPromptStep.GENERATE_ACCOUNT);
+        setStep(TerminalPromptStep.TERMINATED);
+        //setStep(TerminalPromptStep.GENERATE_ACCOUNT);
       } else if (userInput === 'i') {
         setStep(TerminalPromptStep.IMPORT_ACCOUNT);
       } else {
@@ -367,10 +368,11 @@ export function GameLandingPage() {
         const isWhitelisted = await whitelist.isWhitelisted(address);
 
         terminal.current?.println('');
-        terminal.current?.print('Checking if whitelisted... ');
+        terminal.current?.println('Checking if whitelisted... ');
 
+        // announce drip and welcome to game
         if (isWhitelisted) {
-          terminal.current?.println('Player whitelisted.');
+          terminal.current?.println('Player whitelisted and has been given $0.15 xDai to start.');
           terminal.current?.println('');
           terminal.current?.println(`Welcome, player ${address}.`);
           // TODO: Provide own env variable for this feature
@@ -383,7 +385,11 @@ export function GameLandingPage() {
           }
           setStep(TerminalPromptStep.FETCHING_ETH_DATA);
         } else {
-          setStep(TerminalPromptStep.ASKING_HAS_WHITELIST_KEY);
+          terminal.current?.println(
+            'Your address is not whitelisted. Please fill out this form to request a whitelist.',
+            TerminalTextStyle.Red
+          );
+          setStep(TerminalPromptStep.TERMINATED);
         }
       } catch (e) {
         console.error(`error connecting to whitelist: ${e}`);
@@ -653,6 +659,8 @@ export function GameLandingPage() {
       terminal.current?.println('');
 
       terminal.current?.newline();
+
+      // Press ENTER to receive a one-time whitelist drip of x ether?
 
       terminal.current?.println('Press ENTER to find a home planet. This may take up to 120s.');
       terminal.current?.println('This will consume a lot of CPU.');
