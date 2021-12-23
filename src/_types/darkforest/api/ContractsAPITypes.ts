@@ -161,6 +161,7 @@ export interface ContractConstants {
   PLANET_RARITY: number;
   PLANET_TYPE_WEIGHTS: PlanetTypeWeightsBySpaceType;
   ARTIFACT_POINT_VALUES: ArtifactPointValues;
+  DESTROY_THRESHOLD: number;
 
   PHOTOID_ACTIVATION_DELAY: number;
   LOCATION_REVEAL_COOLDOWN: number;

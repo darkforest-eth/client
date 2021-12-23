@@ -357,6 +357,7 @@ export class ContractsAPI extends EventEmitter {
         location: EthersBN,
         _: Event
       ) => {
+        console.log("planet destroyed: ", locationIdFromEthersBN(location));
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
       },
     };
@@ -796,6 +797,7 @@ export class ContractsAPI extends EventEmitter {
       PLANET_RARITY,
       PHOTOID_ACTIVATION_DELAY,
       LOCATION_REVEAL_COOLDOWN,
+      DESTROY_THRESHOLD
     } = await this.makeCall(this.coreContract.gameConstants);
 
     const TOKEN_MINT_END_SECONDS = (
@@ -845,6 +847,7 @@ export class ContractsAPI extends EventEmitter {
       PLANET_RARITY: PLANET_RARITY.toNumber(),
       PLANET_TYPE_WEIGHTS,
       ARTIFACT_POINT_VALUES,
+      DESTROY_THRESHOLD: DESTROY_THRESHOLD.toNumber(),
 
       PHOTOID_ACTIVATION_DELAY: PHOTOID_ACTIVATION_DELAY.toNumber(),
       SPAWN_RIM_AREA: SPAWN_RIM_AREA.toNumber(),
