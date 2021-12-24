@@ -15,6 +15,7 @@ import { isEmojiFlagMessage } from '../../_types/global/GlobalTypes';
 import { hasOwner } from '../Utils/Utils';
 import { isActivated } from './ArtifactUtils';
 
+
 // TODO: planet class, cmon, let's go
 export const blocksLeftToProspectExpiration = (
   currentBlockNumber: number,
@@ -147,7 +148,7 @@ export const arrive = (
   toPlanet: Planet,
   artifactsOnPlanet: Artifact[],
   arrival: QueuedArrival,
-  contractConstants: ContractConstants
+  contractConstants: ContractConstants,
 ): PlanetDiff => {
   // this function optimistically simulates an arrival
   if (toPlanet.locationId !== arrival.toPlanet) {
@@ -165,8 +166,6 @@ export const arrive = (
   // apply energy
   const { energyArriving } = arrival;
 
-  console.log("toPlanet energy", toPlanet.energy);
-
   if (arrival.player !== toPlanet.owner) {
     // attacking enemy - includes emptyAddress
     if (
@@ -180,12 +179,13 @@ export const arrive = (
         CONTRACT_PRECISION;
     } else {
       // conquers planet
+
       // Destroy if energyArriving is > planet population * destroy threshold.
-      // TODO: get DESTROY THRESHOLD from contract
       if(prevPlanet.owner != EMPTY_ADDRESS && contractConstants.DESTROY_THRESHOLD > 0) {
         const DESTROY_THRESHOLD = contractConstants.DESTROY_THRESHOLD;
         const preciseEnergyArriving = Math.floor((energyArriving * CONTRACT_PRECISION * 100) / toPlanet.defense) / CONTRACT_PRECISION;
         if(toPlanet.energy * DESTROY_THRESHOLD < preciseEnergyArriving) {
+          // console.log(`currEnergy * threshold: ${toPlanet.energy * DESTROY_THRESHOLD} ? energyArriving ${preciseEnergyArriving}`)
           toPlanet.destroyed = true;
         }
       }
