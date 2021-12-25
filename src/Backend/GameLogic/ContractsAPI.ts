@@ -233,6 +233,8 @@ export class ContractsAPI extends EventEmitter {
           coreContract.filters.PlanetTransferred(null, null, null).topics,
           coreContract.filters.PlanetUpgraded(null, null, null, null).topics,
           coreContract.filters.PlayerInitialized(null, null).topics,
+          coreContract.filters.PlanetDestroyed(null,null).topics
+
         ].map((topicsOrUndefined) => (topicsOrUndefined || [])[0]),
       ] as Array<string | Array<string>>,
     };
@@ -352,6 +354,14 @@ export class ContractsAPI extends EventEmitter {
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
         this.emit(ContractsAPIEvent.PlayerUpdate, address(player));
       },
+      [ContractEvent.PlanetDestroyed]: async (
+        player: string,
+        location: EthersBN,
+        _: Event
+      ) => {
+        console.log("planet destroyed event: ", locationIdFromEthersBN(location));
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
+      },
     };
 
     this.ethConnection.subscribeToContractEvents(coreContract, eventHandlers, filter);
@@ -372,6 +382,7 @@ export class ContractsAPI extends EventEmitter {
     coreContract.removeAllListeners(ContractEvent.ArtifactDeactivated);
     coreContract.removeAllListeners(ContractEvent.LocationRevealed);
     coreContract.removeAllListeners(ContractEvent.PlanetSilverWithdrawn);
+    coreContract.removeAllListeners(ContractEvent.PlanetDestroyed);
   }
 
   public getContractAddress(): EthAddress {
@@ -659,7 +670,7 @@ export class ContractsAPI extends EventEmitter {
   }
 
   // throws if tx initialization fails
-  // otherwise, returns a promise of a submtited (unmined) tx receipt
+  // otherwise, returns a promise of a submitted (unmined) tx receipt
   async move(
     actionId: string,
     snarkArgs: MoveSnarkContractCallArgs,
@@ -789,6 +800,7 @@ export class ContractsAPI extends EventEmitter {
       PLANET_RARITY,
       PHOTOID_ACTIVATION_DELAY,
       LOCATION_REVEAL_COOLDOWN,
+      DESTROY_THRESHOLD
     } = await this.makeCall(this.coreContract.gameConstants);
 
     const TOKEN_MINT_END_SECONDS = (
@@ -838,6 +850,7 @@ export class ContractsAPI extends EventEmitter {
       PLANET_RARITY: PLANET_RARITY.toNumber(),
       PLANET_TYPE_WEIGHTS,
       ARTIFACT_POINT_VALUES,
+      DESTROY_THRESHOLD: DESTROY_THRESHOLD.toNumber(),
 
       PHOTOID_ACTIVATION_DELAY: PHOTOID_ACTIVATION_DELAY.toNumber(),
       SPAWN_RIM_AREA: SPAWN_RIM_AREA.toNumber(),
@@ -1039,6 +1052,11 @@ export class ContractsAPI extends EventEmitter {
       }
     }
     return planets;
+  }
+
+  public async refreshPlanet(planetId: LocationId) {
+    const decStrId = locationIdToDecStr(planetId);
+    await this.makeCall(this.coreContract.refreshPlanet, [decStrId]);
   }
 
   public async getPlanetById(planetId: LocationId): Promise<Planet | undefined> {

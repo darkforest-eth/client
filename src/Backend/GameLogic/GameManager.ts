@@ -137,6 +137,7 @@ export enum GameManagerEvent {
   Moved = 'Moved',
 }
 
+
 class GameManager extends EventEmitter {
   /**
    * This variable contains the internal state of objects that live in the game world.
@@ -424,6 +425,12 @@ class GameManager extends EventEmitter {
       contractConstants,
       worldRadius
     );
+
+    this.entityStore.on("PlanetDestroyed", async (planet: Planet) => {
+      await this.contractsAPI.refreshPlanet(planet.locationId);
+      const p = await this.contractsAPI.getPlanetById(planet.locationId);
+      console.log("planet after refresh", planet);
+    });
 
     this.contractsAPI = contractsAPI;
     this.persistentChunkStore = persistentChunkStore;
@@ -825,12 +832,13 @@ class GameManager extends EventEmitter {
       revealedLocation,
       claimedCoords?.revealer
     );
-
+    
     // it's important that we reload the artifacts that are on the planet after the move
     // completes because this move could have been a photoid canon move. one of the side
     // effects of this type of move is that the active photoid canon deactivates upon a move
     // meaning we need to reload its data from the blockchain.
     artifactsOnPlanet.forEach((a) => this.entityStore.replaceArtifactFromContractData(a));
+
   }
 
   private async bulkHardRefreshPlanets(planetIds: LocationId[]): Promise<void> {
@@ -864,6 +872,7 @@ class GameManager extends EventEmitter {
 
       const voyagesForPlanet = planetVoyageMap.get(planet.locationId);
       if (voyagesForPlanet) {
+
         this.entityStore.replacePlanetFromContractData(
           planet,
           voyagesForPlanet,
@@ -871,6 +880,8 @@ class GameManager extends EventEmitter {
         );
       }
     }
+
+
 
     for (const artifacts of artifactsOnPlanets) {
       this.entityStore.replaceArtifactsFromContractData(artifacts);
@@ -2447,10 +2458,16 @@ class GameManager extends EventEmitter {
     }
 
     const oldPlanet = this.entityStore.getPlanetWithLocation(oldLocation);
+    const newPlanet = this.entityStore.getPlanetWithLocation(newLocation);
 
     if ((!bypassChecks && !this.account) || !oldPlanet || oldPlanet.owner !== this.account) {
       throw new Error('attempted to move from a planet not owned by player');
     }
+
+    if (newPlanet && newPlanet.destroyed) {
+      throw new Error('tried to move to planet that is destroyed');
+    }
+
     const actionId = getRandomActionId();
     const txIntent: UnconfirmedMove = {
       actionId,
