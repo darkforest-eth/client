@@ -233,7 +233,8 @@ export class ContractsAPI extends EventEmitter {
           coreContract.filters.PlanetTransferred(null, null, null).topics,
           coreContract.filters.PlanetUpgraded(null, null, null, null).topics,
           coreContract.filters.PlayerInitialized(null, null).topics,
-          coreContract.filters.PlanetDestroyed(null,null).topics
+          coreContract.filters.PlanetDestroyed(null,null).topics,
+          coreContract.filters.RadiusUpdated(null).topics
 
         ].map((topicsOrUndefined) => (topicsOrUndefined || [])[0]),
       ] as Array<string | Array<string>>,
@@ -362,6 +363,13 @@ export class ContractsAPI extends EventEmitter {
         console.log("planet destroyed event: ", locationIdFromEthersBN(location));
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
       },
+      [ContractEvent.RadiusUpdated]: async (
+        radius: EthersBN,
+        _: Event
+      ) => {
+        console.log("radius updated: ", (radius.toNumber()));
+        this.emit(ContractsAPIEvent.RadiusUpdated);
+      },
     };
 
     this.ethConnection.subscribeToContractEvents(coreContract, eventHandlers, filter);
@@ -383,6 +391,8 @@ export class ContractsAPI extends EventEmitter {
     coreContract.removeAllListeners(ContractEvent.LocationRevealed);
     coreContract.removeAllListeners(ContractEvent.PlanetSilverWithdrawn);
     coreContract.removeAllListeners(ContractEvent.PlanetDestroyed);
+    coreContract.removeAllListeners(ContractEvent.RadiusUpdated);
+
   }
 
   public getContractAddress(): EthAddress {
@@ -919,6 +929,10 @@ export class ContractsAPI extends EventEmitter {
   public async getWorldRadius(): Promise<number> {
     const radius = (await this.makeCall<EthersBN>(this.coreContract.worldRadius)).toNumber();
     return radius;
+  }
+
+  public async updateWorldRadius(): Promise<void> {
+    await this.makeCall(this.coreContract._updateWorldRadius);
   }
 
   // timestamp since epoch (in seconds)
