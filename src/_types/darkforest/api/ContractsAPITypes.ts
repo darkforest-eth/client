@@ -162,6 +162,13 @@ export interface ContractConstants {
   PLANET_TYPE_WEIGHTS: PlanetTypeWeightsBySpaceType;
   ARTIFACT_POINT_VALUES: ArtifactPointValues;
   DESTROY_THRESHOLD: number;
+  SHRINK: boolean,
+  MIN_RADIUS: number,
+  SHRINK_FACTOR: number,
+  SHRINK_START: number,
+  ROUND_END: number,
+  DISC_LOWER_BOUND: number,
+  DISC_UPPER_BOUND: number
 
   PHOTOID_ACTIVATION_DELAY: number;
   LOCATION_REVEAL_COOLDOWN: number;

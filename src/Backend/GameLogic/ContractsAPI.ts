@@ -800,7 +800,14 @@ export class ContractsAPI extends EventEmitter {
       PLANET_RARITY,
       PHOTOID_ACTIVATION_DELAY,
       LOCATION_REVEAL_COOLDOWN,
-      DESTROY_THRESHOLD
+      DESTROY_THRESHOLD,
+      SHRINK,
+      MIN_RADIUS,
+      SHRINK_FACTOR,
+      SHRINK_START,
+      ROUND_END,
+      DISC_LOWER_BOUND,
+      DISC_UPPER_BOUND
     } = await this.makeCall(this.coreContract.gameConstants);
 
     const TOKEN_MINT_END_SECONDS = (
@@ -851,6 +858,13 @@ export class ContractsAPI extends EventEmitter {
       PLANET_TYPE_WEIGHTS,
       ARTIFACT_POINT_VALUES,
       DESTROY_THRESHOLD: DESTROY_THRESHOLD.toNumber(),
+      SHRINK,
+      MIN_RADIUS: MIN_RADIUS.toNumber(),
+      SHRINK_FACTOR: SHRINK_FACTOR.toNumber(),
+      SHRINK_START: SHRINK_START.toNumber(),
+      ROUND_END: ROUND_END.toNumber(),
+      DISC_LOWER_BOUND: DISC_LOWER_BOUND.toNumber(),
+      DISC_UPPER_BOUND: DISC_UPPER_BOUND.toNumber(),
 
       PHOTOID_ACTIVATION_DELAY: PHOTOID_ACTIVATION_DELAY.toNumber(),
       SPAWN_RIM_AREA: SPAWN_RIM_AREA.toNumber(),

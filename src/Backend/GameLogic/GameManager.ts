@@ -1807,6 +1807,17 @@ class GameManager extends EventEmitter {
         spawnInnerRadius = 0;
       }
 
+      let discUpperBound: number, discLowerBound: number;
+      if(this.contractConstants.SHRINK) {
+        discUpperBound = this.contractConstants.DISC_UPPER_BOUND;
+        discLowerBound = this.contractConstants.DISC_LOWER_BOUND;
+      }
+      else {
+        discUpperBound = this.worldRadius;
+        discLowerBound = 0;
+      }
+
+      // Finds a suitable place to begin searching.
       do {
         // sample from square
         x = Math.random() * this.worldRadius * 2 - this.worldRadius;
@@ -1818,8 +1829,8 @@ class GameManager extends EventEmitter {
         p < initPerlinMin || // keep searching if below the minimum
         d >= this.worldRadius || // can't be out of bound
         d <= spawnInnerRadius || // can't be inside spawn area ring
-        d >= this.worldRadius * .75 || // can't be outside spawn ring
-        d <= this.worldRadius * .25 // can't be inside spawn ring
+        d >= this.worldRadius *  discUpperBound || // can't be outside spawn disc
+        d <= this.worldRadius *  discLowerBound // can't be inside spawn disc
       );  
 
       // when setting up a new account in development mode, you can tell
@@ -1895,15 +1906,14 @@ class GameManager extends EventEmitter {
           );
           const planet = this.getPlanetWithId(homePlanetLocation.hash);
           const distFromOrigin = Math.sqrt(planetX ** 2 + planetY ** 2);
-          console.log("candidate radius", distFromOrigin);
+          console.log(`upper ${discUpperBound} candidate ${distFromOrigin} lower ${discLowerBound}`);
           if (
             planetPerlin < initPerlinMax &&
             planetPerlin >= initPerlinMin &&
             distFromOrigin < this.worldRadius &&
             distFromOrigin > spawnInnerRadius &&
-            // hard code these constrants
-            distFromOrigin <= this.worldRadius * .75 && // can't be outside spawn ring
-            distFromOrigin >= this.worldRadius * .25 && // can't be inside spawn ring
+            distFromOrigin <= this.worldRadius * discUpperBound && // can't be outside spawn ring
+            distFromOrigin >= this.worldRadius * discLowerBound && // can't be inside spawn ring
             planetLevel === MIN_PLANET_LEVEL &&
             planetType === PlanetType.PLANET &&
             (!planet || !planet.isInContract) // init will fail if planet has been initialized in contract already
