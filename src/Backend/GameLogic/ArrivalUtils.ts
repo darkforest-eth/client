@@ -1,4 +1,4 @@
-import { CONTRACT_PRECISION } from '@darkforest_eth/constants';
+import { CONTRACT_PRECISION, EMPTY_ADDRESS } from '@darkforest_eth/constants';
 import {
   Artifact,
   ArtifactType,
@@ -14,6 +14,7 @@ import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes
 import { isEmojiFlagMessage } from '../../_types/global/GlobalTypes';
 import { hasOwner } from '../Utils/Utils';
 import { isActivated } from './ArtifactUtils';
+
 
 // TODO: planet class, cmon, let's go
 export const blocksLeftToProspectExpiration = (
@@ -147,7 +148,7 @@ export const arrive = (
   toPlanet: Planet,
   artifactsOnPlanet: Artifact[],
   arrival: QueuedArrival,
-  contractConstants: ContractConstants
+  contractConstants: ContractConstants,
 ): PlanetDiff => {
   // this function optimistically simulates an arrival
   if (toPlanet.locationId !== arrival.toPlanet) {
@@ -178,11 +179,22 @@ export const arrive = (
         CONTRACT_PRECISION;
     } else {
       // conquers planet
+
+      // Destroy if energyArriving is > planet population * destroy threshold.
+      if(prevPlanet.owner != EMPTY_ADDRESS && contractConstants.DESTROY_THRESHOLD > 0) {
+        const DESTROY_THRESHOLD = contractConstants.DESTROY_THRESHOLD;
+        const preciseEnergyArriving = Math.floor((energyArriving * CONTRACT_PRECISION * 100) / toPlanet.defense) / CONTRACT_PRECISION;
+        if(toPlanet.energy * DESTROY_THRESHOLD < preciseEnergyArriving) {
+          // console.log(`currEnergy * threshold: ${toPlanet.energy * DESTROY_THRESHOLD} ? energyArriving ${preciseEnergyArriving}`)
+          toPlanet.destroyed = true;
+        }
+      }
       toPlanet.owner = arrival.player;
       toPlanet.energy =
         energyArriving -
         Math.floor((toPlanet.energy * CONTRACT_PRECISION * toPlanet.defense) / 100) /
           CONTRACT_PRECISION;
+
     }
   } else {
     // moving between my own planets

@@ -233,6 +233,9 @@ export class ContractsAPI extends EventEmitter {
           coreContract.filters.PlanetTransferred(null, null, null).topics,
           coreContract.filters.PlanetUpgraded(null, null, null, null).topics,
           coreContract.filters.PlayerInitialized(null, null).topics,
+          coreContract.filters.PlanetDestroyed(null,null).topics,
+          coreContract.filters.RadiusUpdated(null).topics
+
         ].map((topicsOrUndefined) => (topicsOrUndefined || [])[0]),
       ] as Array<string | Array<string>>,
     };
@@ -352,6 +355,21 @@ export class ContractsAPI extends EventEmitter {
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
         this.emit(ContractsAPIEvent.PlayerUpdate, address(player));
       },
+      [ContractEvent.PlanetDestroyed]: async (
+        player: string,
+        location: EthersBN,
+        _: Event
+      ) => {
+        console.log("planet destroyed event: ", locationIdFromEthersBN(location));
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
+      },
+      [ContractEvent.RadiusUpdated]: async (
+        radius: EthersBN,
+        _: Event
+      ) => {
+        console.log("radius updated: ", (radius.toNumber()));
+        this.emit(ContractsAPIEvent.RadiusUpdated);
+      },
     };
 
     this.ethConnection.subscribeToContractEvents(coreContract, eventHandlers, filter);
@@ -372,6 +390,9 @@ export class ContractsAPI extends EventEmitter {
     coreContract.removeAllListeners(ContractEvent.ArtifactDeactivated);
     coreContract.removeAllListeners(ContractEvent.LocationRevealed);
     coreContract.removeAllListeners(ContractEvent.PlanetSilverWithdrawn);
+    coreContract.removeAllListeners(ContractEvent.PlanetDestroyed);
+    coreContract.removeAllListeners(ContractEvent.RadiusUpdated);
+
   }
 
   public getContractAddress(): EthAddress {
@@ -659,7 +680,7 @@ export class ContractsAPI extends EventEmitter {
   }
 
   // throws if tx initialization fails
-  // otherwise, returns a promise of a submtited (unmined) tx receipt
+  // otherwise, returns a promise of a submitted (unmined) tx receipt
   async move(
     actionId: string,
     snarkArgs: MoveSnarkContractCallArgs,
@@ -789,6 +810,14 @@ export class ContractsAPI extends EventEmitter {
       PLANET_RARITY,
       PHOTOID_ACTIVATION_DELAY,
       LOCATION_REVEAL_COOLDOWN,
+      DESTROY_THRESHOLD,
+      SHRINK,
+      MIN_RADIUS,
+      SHRINK_FACTOR,
+      SHRINK_START,
+      ROUND_END,
+      DISC_LOWER_BOUND,
+      DISC_UPPER_BOUND
     } = await this.makeCall(this.coreContract.gameConstants);
 
     const TOKEN_MINT_END_SECONDS = (
@@ -838,6 +867,14 @@ export class ContractsAPI extends EventEmitter {
       PLANET_RARITY: PLANET_RARITY.toNumber(),
       PLANET_TYPE_WEIGHTS,
       ARTIFACT_POINT_VALUES,
+      DESTROY_THRESHOLD: DESTROY_THRESHOLD.toNumber(),
+      SHRINK,
+      MIN_RADIUS: MIN_RADIUS.toNumber(),
+      SHRINK_FACTOR: SHRINK_FACTOR.toNumber(),
+      SHRINK_START: SHRINK_START.toNumber(),
+      ROUND_END: ROUND_END.toNumber(),
+      DISC_LOWER_BOUND: DISC_LOWER_BOUND.toNumber(),
+      DISC_UPPER_BOUND: DISC_UPPER_BOUND.toNumber(),
 
       PHOTOID_ACTIVATION_DELAY: PHOTOID_ACTIVATION_DELAY.toNumber(),
       SPAWN_RIM_AREA: SPAWN_RIM_AREA.toNumber(),
@@ -892,6 +929,10 @@ export class ContractsAPI extends EventEmitter {
   public async getWorldRadius(): Promise<number> {
     const radius = (await this.makeCall<EthersBN>(this.coreContract.worldRadius)).toNumber();
     return radius;
+  }
+
+  public async updateWorldRadius(): Promise<void> {
+    await this.makeCall(this.coreContract._updateWorldRadius);
   }
 
   // timestamp since epoch (in seconds)
@@ -1039,6 +1080,11 @@ export class ContractsAPI extends EventEmitter {
       }
     }
     return planets;
+  }
+
+  public async refreshPlanet(planetId: LocationId) {
+    const decStrId = locationIdToDecStr(planetId);
+    await this.makeCall(this.coreContract.refreshPlanet, [decStrId]);
   }
 
   public async getPlanetById(planetId: LocationId): Promise<Planet | undefined> {

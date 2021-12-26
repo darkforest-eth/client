@@ -61,6 +61,7 @@ import { arrive, PlanetDiff, updatePlanetToTime } from './ArrivalUtils';
 import { isActivated } from './ArtifactUtils';
 import { LayeredMap } from './LayeredMap';
 import { Radii } from './ViewportEntities';
+import { EventEmitter } from 'events';
 
 type CoordsString = Abstract<string, 'CoordString'>;
 
@@ -71,7 +72,7 @@ const getCoordsString = (coords: WorldCoords): CoordsString => {
 /**
  * Representation of the objects which exist in the world.
  */
-export class GameObjects {
+export class GameObjects extends EventEmitter {
   /**
    * This is a data structure that allows us to efficiently calculate which planets are visible on
    * the player's screen given the viewport's position and size.
@@ -242,6 +243,8 @@ export class GameObjects {
     contractConstants: ContractConstants,
     worldRadius: number
   ) {
+
+    super();
     autoBind(this);
 
     this.address = address;
@@ -1147,7 +1150,15 @@ export class GameObjects {
       previous.owner !== ethers.constants.AddressZero &&
       current.owner === this.address
     ) {
-      notifManager.planetConquered(current as LocatablePlanet);
+      
+      if(!previous.destroyed && current.destroyed) {
+        this.emit("PlanetDestroyed", current);
+        notifManager.planetDestroyed(current as LocatablePlanet);
+      }
+      else {
+        notifManager.planetConquered(current as LocatablePlanet);
+      }
+
     }
     if (previous.owner === this.address && current.owner !== this.address) {
       notifManager.planetLost(current as LocatablePlanet);

@@ -53,6 +53,8 @@ export const enum ContractEvent {
   ArtifactActivated = 'ArtifactActivated',
   ArtifactDeactivated = 'ArtifactDeactivated',
   PlanetSilverWithdrawn = 'PlanetSilverWithdrawn',
+  PlanetDestroyed = 'PlanetDestroyed',
+  RadiusUpdated = 'RadiusUpdated'
 }
 
 export const enum ContractsAPIEvent {
@@ -160,6 +162,14 @@ export interface ContractConstants {
   PLANET_RARITY: number;
   PLANET_TYPE_WEIGHTS: PlanetTypeWeightsBySpaceType;
   ARTIFACT_POINT_VALUES: ArtifactPointValues;
+  DESTROY_THRESHOLD: number;
+  SHRINK: boolean,
+  MIN_RADIUS: number,
+  SHRINK_FACTOR: number,
+  SHRINK_START: number,
+  ROUND_END: number,
+  DISC_LOWER_BOUND: number,
+  DISC_UPPER_BOUND: number
 
   PHOTOID_ACTIVATION_DELAY: number;
   LOCATION_REVEAL_COOLDOWN: number;

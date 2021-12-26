@@ -137,6 +137,7 @@ export enum GameManagerEvent {
   Moved = 'Moved',
 }
 
+
 class GameManager extends EventEmitter {
   /**
    * This variable contains the internal state of objects that live in the game world.
@@ -424,6 +425,13 @@ class GameManager extends EventEmitter {
       contractConstants,
       worldRadius
     );
+
+    this.entityStore.on("PlanetDestroyed", async (planet: Planet) => {
+      console.log("client planet destroyed");
+      // await this.contractsAPI.refreshPlanet(planet.locationId);
+      // const p = await this.contractsAPI.getPlanetById(planet.locationId);
+      // console.log("planet after refresh", planet);
+    });
 
     this.contractsAPI = contractsAPI;
     this.persistentChunkStore = persistentChunkStore;
@@ -825,12 +833,13 @@ class GameManager extends EventEmitter {
       revealedLocation,
       claimedCoords?.revealer
     );
-
+    
     // it's important that we reload the artifacts that are on the planet after the move
     // completes because this move could have been a photoid canon move. one of the side
     // effects of this type of move is that the active photoid canon deactivates upon a move
     // meaning we need to reload its data from the blockchain.
     artifactsOnPlanet.forEach((a) => this.entityStore.replaceArtifactFromContractData(a));
+
   }
 
   private async bulkHardRefreshPlanets(planetIds: LocationId[]): Promise<void> {
@@ -864,6 +873,7 @@ class GameManager extends EventEmitter {
 
       const voyagesForPlanet = planetVoyageMap.get(planet.locationId);
       if (voyagesForPlanet) {
+
         this.entityStore.replacePlanetFromContractData(
           planet,
           voyagesForPlanet,
@@ -871,6 +881,8 @@ class GameManager extends EventEmitter {
         );
       }
     }
+
+
 
     for (const artifacts of artifactsOnPlanets) {
       this.entityStore.replaceArtifactsFromContractData(artifacts);
@@ -1775,6 +1787,9 @@ class GameManager extends EventEmitter {
   }
 
   private async findRandomHomePlanet(): Promise<LocatablePlanet> {
+    // Need to update worldRadius before looking for home planets.
+    if(this.contractConstants.SHRINK) await this.contractsAPI.updateWorldRadius;
+    
     return new Promise<LocatablePlanet>((resolve, reject) => {
       const initPerlinMin = this.contractConstants.INIT_PERLIN_MIN;
       const initPerlinMax = this.contractConstants.INIT_PERLIN_MAX;
@@ -1791,11 +1806,22 @@ class GameManager extends EventEmitter {
         Math.max(Math.PI * this.worldRadius ** 2 - this.contractConstants.SPAWN_RIM_AREA, 0) /
           Math.PI
       );
-
+      
       if (this.contractConstants.SPAWN_RIM_AREA === 0) {
         spawnInnerRadius = 0;
       }
 
+      let discUpperBound: number, discLowerBound: number;
+      if(this.contractConstants.SHRINK) {
+        discUpperBound = this.contractConstants.DISC_UPPER_BOUND / 100;
+        discLowerBound = this.contractConstants.DISC_LOWER_BOUND / 100;
+      }
+      else {
+        discUpperBound = this.worldRadius;
+        discLowerBound = 0;
+      }
+
+      // Finds a suitable place to begin searching.
       do {
         // sample from square
         x = Math.random() * this.worldRadius * 2 - this.worldRadius;
@@ -1806,8 +1832,10 @@ class GameManager extends EventEmitter {
         p >= initPerlinMax || // keep searching if above or equal to the max
         p < initPerlinMin || // keep searching if below the minimum
         d >= this.worldRadius || // can't be out of bound
-        d <= spawnInnerRadius // can't be inside spawn area ring
-      );
+        d <= spawnInnerRadius || // can't be inside spawn area ring
+        d >= this.worldRadius *  discUpperBound || // can't be outside spawn disc
+        d <= this.worldRadius *  discLowerBound // can't be inside spawn disc
+      );  
 
       // when setting up a new account in development mode, you can tell
       // the game where to start searching for planets using this query
@@ -1882,11 +1910,14 @@ class GameManager extends EventEmitter {
           );
           const planet = this.getPlanetWithId(homePlanetLocation.hash);
           const distFromOrigin = Math.sqrt(planetX ** 2 + planetY ** 2);
+          console.log(`upper ${discUpperBound * this.worldRadius} candidate ${distFromOrigin} lower ${discLowerBound * this.worldRadius}`);
           if (
             planetPerlin < initPerlinMax &&
             planetPerlin >= initPerlinMin &&
             distFromOrigin < this.worldRadius &&
             distFromOrigin > spawnInnerRadius &&
+            distFromOrigin <= this.worldRadius * discUpperBound && // can't be outside spawn ring
+            distFromOrigin >= this.worldRadius * discLowerBound && // can't be inside spawn ring
             planetLevel === MIN_PLANET_LEVEL &&
             planetType === PlanetType.PLANET &&
             (!planet || !planet.isInContract) // init will fail if planet has been initialized in contract already
@@ -2447,10 +2478,16 @@ class GameManager extends EventEmitter {
     }
 
     const oldPlanet = this.entityStore.getPlanetWithLocation(oldLocation);
+    const newPlanet = this.entityStore.getPlanetWithLocation(newLocation);
 
     if ((!bypassChecks && !this.account) || !oldPlanet || oldPlanet.owner !== this.account) {
       throw new Error('attempted to move from a planet not owned by player');
     }
+
+    if (newPlanet && newPlanet.destroyed) {
+      throw new Error('tried to move to planet that is destroyed');
+    }
+
     const actionId = getRandomActionId();
     const txIntent: UnconfirmedMove = {
       actionId,

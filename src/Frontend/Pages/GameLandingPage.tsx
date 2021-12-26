@@ -390,8 +390,15 @@ export function GameLandingPage() {
           setStep(TerminalPromptStep.FETCHING_ETH_DATA);
         } else {
           terminal.current?.println(
-            'Your address is not whitelisted.\nPlease fill out this form to request a whitelist.',
+            'Your address is not whitelisted.\nPlease join dfdao\'s Discord to request a whitelist',
             TerminalTextStyle.Red
+          );
+          terminal.current?.printLink(
+            'dfdao',
+            () => {
+              window.open('https://discord.gg/57nrgRcTGK');
+            },
+            TerminalTextStyle.Blue
           );
           setStep(TerminalPromptStep.TERMINATED);
         }
