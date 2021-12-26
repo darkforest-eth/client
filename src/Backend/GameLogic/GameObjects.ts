@@ -1150,10 +1150,15 @@ export class GameObjects extends EventEmitter {
       previous.owner !== ethers.constants.AddressZero &&
       current.owner === this.address
     ) {
-      notifManager.planetConquered(current as LocatablePlanet);
+      
       if(!previous.destroyed && current.destroyed) {
         this.emit("PlanetDestroyed", current);
+        notifManager.planetDestroyed(current as LocatablePlanet);
       }
+      else {
+        notifManager.planetConquered(current as LocatablePlanet);
+      }
+
     }
     if (previous.owner === this.address && current.owner !== this.address) {
       notifManager.planetLost(current as LocatablePlanet);
@@ -1265,6 +1270,7 @@ export class GameObjects extends EventEmitter {
   }
 
   public spaceTypeFromPerlin(perlin: number): SpaceType {
+    return SpaceType.DEAD_SPACE;
     if (perlin < this.contractConstants.PERLIN_THRESHOLD_1) {
       return SpaceType.NEBULA;
     } else if (perlin < this.contractConstants.PERLIN_THRESHOLD_2) {
