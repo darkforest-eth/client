@@ -82,6 +82,7 @@ export const enum NotificationType {
   FoundBiomeLava,
   FoundBiomeCorrupted,
   PlanetLost,
+  PlanetDestroyed,
   PlanetWon,
   PlanetAttacked,
   ArtifactProspected,
@@ -220,6 +221,9 @@ class NotificationManager extends EventEmitter {
       case NotificationType.PlanetLost:
         return <PlanetLost height={'48px'} width={'48px'} />;
         break;
+        case NotificationType.PlanetDestroyed:
+          return <PlanetLost height={'48px'} width={'48px'} />;
+          break;
       case NotificationType.PlanetWon:
         return <PlanetConquered height={'48px'} width={'48px'} />;
         break;
@@ -482,6 +486,14 @@ class NotificationManager extends EventEmitter {
       NotificationType.PlanetLost,
       <span>
         You lost <PlanetNameLink planet={planet}></PlanetNameLink>, oh no!
+      </span>
+    );
+  }
+  planetDestroyed(planet: LocatablePlanet): void {
+    this.notify(
+      NotificationType.PlanetLost,
+      <span>
+        You destroyed <PlanetNameLink planet={planet}></PlanetNameLink>, boom!
       </span>
     );
   }

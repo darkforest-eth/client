@@ -53,7 +53,8 @@ export const enum ContractEvent {
   ArtifactActivated = 'ArtifactActivated',
   ArtifactDeactivated = 'ArtifactDeactivated',
   PlanetSilverWithdrawn = 'PlanetSilverWithdrawn',
-  PlanetDestroyed = 'PlanetDestroyed'
+  PlanetDestroyed = 'PlanetDestroyed',
+  RadiusUpdated = 'RadiusUpdated'
 }
 
 export const enum ContractsAPIEvent {
