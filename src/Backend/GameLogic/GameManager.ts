@@ -1786,6 +1786,9 @@ class GameManager extends EventEmitter {
   }
 
   private async findRandomHomePlanet(): Promise<LocatablePlanet> {
+    // Need to update worldRadius before looking for home planets.
+    if(this.contractConstants.SHRINK) await this.contractsAPI.updateWorldRadius;
+    
     return new Promise<LocatablePlanet>((resolve, reject) => {
       const initPerlinMin = this.contractConstants.INIT_PERLIN_MIN;
       const initPerlinMax = this.contractConstants.INIT_PERLIN_MAX;
@@ -1809,8 +1812,8 @@ class GameManager extends EventEmitter {
 
       let discUpperBound: number, discLowerBound: number;
       if(this.contractConstants.SHRINK) {
-        discUpperBound = this.contractConstants.DISC_UPPER_BOUND;
-        discLowerBound = this.contractConstants.DISC_LOWER_BOUND;
+        discUpperBound = this.contractConstants.DISC_UPPER_BOUND / 100;
+        discLowerBound = this.contractConstants.DISC_LOWER_BOUND / 100;
       }
       else {
         discUpperBound = this.worldRadius;
@@ -1906,7 +1909,7 @@ class GameManager extends EventEmitter {
           );
           const planet = this.getPlanetWithId(homePlanetLocation.hash);
           const distFromOrigin = Math.sqrt(planetX ** 2 + planetY ** 2);
-          console.log(`upper ${discUpperBound} candidate ${distFromOrigin} lower ${discLowerBound}`);
+          console.log(`upper ${discUpperBound * this.worldRadius} candidate ${distFromOrigin} lower ${discLowerBound * this.worldRadius}`);
           if (
             planetPerlin < initPerlinMax &&
             planetPerlin >= initPerlinMin &&
