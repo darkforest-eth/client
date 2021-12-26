@@ -1802,7 +1802,7 @@ class GameManager extends EventEmitter {
         Math.max(Math.PI * this.worldRadius ** 2 - this.contractConstants.SPAWN_RIM_AREA, 0) /
           Math.PI
       );
-
+      
       if (this.contractConstants.SPAWN_RIM_AREA === 0) {
         spawnInnerRadius = 0;
       }
@@ -1817,8 +1817,10 @@ class GameManager extends EventEmitter {
         p >= initPerlinMax || // keep searching if above or equal to the max
         p < initPerlinMin || // keep searching if below the minimum
         d >= this.worldRadius || // can't be out of bound
-        d <= spawnInnerRadius // can't be inside spawn area ring
-      );
+        d <= spawnInnerRadius || // can't be inside spawn area ring
+        d >= this.worldRadius * .75 || // can't be outside spawn ring
+        d <= this.worldRadius * .25 // can't be inside spawn ring
+      );  
 
       // when setting up a new account in development mode, you can tell
       // the game where to start searching for planets using this query
@@ -1893,11 +1895,15 @@ class GameManager extends EventEmitter {
           );
           const planet = this.getPlanetWithId(homePlanetLocation.hash);
           const distFromOrigin = Math.sqrt(planetX ** 2 + planetY ** 2);
+          console.log("candidate radius", distFromOrigin);
           if (
             planetPerlin < initPerlinMax &&
             planetPerlin >= initPerlinMin &&
             distFromOrigin < this.worldRadius &&
             distFromOrigin > spawnInnerRadius &&
+            // hard code these constrants
+            distFromOrigin <= this.worldRadius * .75 && // can't be outside spawn ring
+            distFromOrigin >= this.worldRadius * .25 && // can't be inside spawn ring
             planetLevel === MIN_PLANET_LEVEL &&
             planetType === PlanetType.PLANET &&
             (!planet || !planet.isInContract) // init will fail if planet has been initialized in contract already
