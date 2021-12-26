@@ -427,9 +427,10 @@ class GameManager extends EventEmitter {
     );
 
     this.entityStore.on("PlanetDestroyed", async (planet: Planet) => {
-      await this.contractsAPI.refreshPlanet(planet.locationId);
-      const p = await this.contractsAPI.getPlanetById(planet.locationId);
-      console.log("planet after refresh", planet);
+      console.log("client planet destroyed");
+      // await this.contractsAPI.refreshPlanet(planet.locationId);
+      // const p = await this.contractsAPI.getPlanetById(planet.locationId);
+      // console.log("planet after refresh", planet);
     });
 
     this.contractsAPI = contractsAPI;
