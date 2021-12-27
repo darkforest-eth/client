@@ -18,7 +18,7 @@ import { engineConsts } from '../EngineConsts';
 import { TextAlign, TextAnchor } from '../EngineTypes';
 import Renderer from '../Renderer';
 
-const { whiteA, barbsA, gold } = engineConsts.colors;
+const { whiteA, barbsA, gold, purpleA } = engineConsts.colors;
 const { maxRadius } = engineConsts.planet;
 
 /**
@@ -364,7 +364,7 @@ export default class PlanetRenderManager {
     if (lockedEnergy > 0) energyString += ` (-${formatNumber(lockedEnergy)})`;
 
     const playerColor = hasOwner(planet) ? ProcgenUtils.getOwnerColorVec(planet) : barbsA;
-    const color = uiManager.isOwnedByMe(planet) ? whiteA : playerColor;
+    var color = uiManager.isOwnedByMe(planet) ? whiteA : playerColor;
     color[3] = alpha;
 
     const textLoc: WorldCoords = {
@@ -391,7 +391,15 @@ export default class PlanetRenderManager {
       if (uiManager.isOwnedByMe(planet) || planet.energy === 0) {
         atkString += ` (+${formatNumber(myAtk)})`;
       } else {
+        // change color if a Destroy attack
+        if(
+          toPlanet.owner !== EMPTY_ADDRESS && 
+          (myAtk * 100 / toPlanet.defense) > uiManager.getContractConstants().DESTROY_THRESHOLD * toPlanet.energy
+        ) {
+          color = purpleA;
+        }
         atkString += ` (-${formatNumber((myAtk * 100) / toPlanet.defense)})`;
+
       }
 
       tR.queueTextWorld(atkString, textLoc, color, 1);
