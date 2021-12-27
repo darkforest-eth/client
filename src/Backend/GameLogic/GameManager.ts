@@ -2516,8 +2516,10 @@ class GameManager extends EventEmitter {
 
     this.handleTxIntent(txIntent);
 
+
+    // This is hackAf, but whatever.
     this.snarkHelper
-      .getMoveArgs(oldX, oldY, newX, newY, this.worldRadius, distMax)
+      .getMoveArgs(oldX, oldY, newX, newY, Math.floor(this.worldRadius / 2), distMax)
       .then((callArgs) => {
         this.terminal.current?.println('MOVE: calculated SNARK with args:', TerminalTextStyle.Sub);
         this.terminal.current?.println(

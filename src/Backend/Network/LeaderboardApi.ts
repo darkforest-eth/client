@@ -1,8 +1,24 @@
-import { Leaderboard } from '@darkforest_eth/types';
+import { Leaderboard, LeaderboardEntry } from '@darkforest_eth/types';
+import GameManager from '../GameLogic/GameManager';
 
-export async function loadLeaderboard(): Promise<Leaderboard> {
+export async function loadLeaderboard(gameManager: GameManager | undefined): Promise<Leaderboard> {
   if (!process.env.DF_WEBSERVER_URL) {
-    return { entries: [] };
+    if(gameManager) {
+      var entries: LeaderboardEntry[] = [];
+      const players = await gameManager.getAllPlayers();
+      players.forEach(player => {
+        let entry: LeaderboardEntry = {
+          score: player.score,
+          ethAddress: player.address,
+          twitter: player.twitter,
+        };
+        entries.push(entry);
+      });
+      return { entries };
+    }
+    else {
+      return { entries: [] };
+    }
   }
 
   const address = `${process.env.DF_WEBSERVER_URL}/leaderboard`;
