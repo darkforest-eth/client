@@ -168,7 +168,7 @@ export const requestDevFaucet = async (address: EthAddress): Promise<boolean> =>
 
 /**
  * Swallows all errors. Either loads the address to twitter map from the webserver in 5 seconds, or
- * returan empty map.
+ * return an empty map.
  */
 export const tryGetAllTwitters = async (): Promise<AddressTwitterMap> => {
   if (!process.env.DF_WEBSERVER_URL) {
