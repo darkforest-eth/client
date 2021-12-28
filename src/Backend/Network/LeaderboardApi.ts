@@ -21,7 +21,6 @@ export async function loadLeaderboard(inGame: boolean | undefined = false): Prom
         };
         entries.push(entry);
       });
-      console.log("entries", entries);
       return { entries };
     }
     else {
