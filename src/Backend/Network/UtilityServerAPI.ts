@@ -3,6 +3,7 @@ import * as EmailValidator from 'email-validator';
 import timeout from 'p-timeout';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
+import { twitters } from './twitters';
 
 export const enum EmailResponse {
   Success,
@@ -170,6 +171,9 @@ export const requestDevFaucet = async (address: EthAddress): Promise<boolean> =>
  * returan empty map.
  */
 export const tryGetAllTwitters = async (): Promise<AddressTwitterMap> => {
+  if (!process.env.DF_WEBSERVER_URL) {
+    return twitters;
+  }
   try {
     return await timeout(getAllTwitters(), 1000 * 5, "couldn't get twitter map");
   } catch (e) {}
@@ -177,6 +181,9 @@ export const tryGetAllTwitters = async (): Promise<AddressTwitterMap> => {
 };
 
 export const getAllTwitters = async (): Promise<AddressTwitterMap> => {
+  if (!process.env.DF_WEBSERVER_URL) {
+    return twitters;
+  }
   try {
     const twitterMap: AddressTwitterMap = await fetch(
       `${process.env.DF_WEBSERVER_URL}/twitter/all-twitters`

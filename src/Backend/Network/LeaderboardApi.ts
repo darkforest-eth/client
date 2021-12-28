@@ -13,9 +13,7 @@ export async function loadLeaderboard(inGame: boolean | undefined = false): Prom
       const numPlayers = await core.getNPlayers();
       const players = await getters.bulkGetPlayers(0, numPlayers);
       var entries: LeaderboardEntry[] = [];
-      console.log('twitters', twitters);
       players.forEach(player => {
-        console.log('twitter?', twitters[player.player?.toLowerCase()]);
         let entry: LeaderboardEntry = {
           score: player.score.toNumber(),
           ethAddress: player.player.toLowerCase() as EthAddress,

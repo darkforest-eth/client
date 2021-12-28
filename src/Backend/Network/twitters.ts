@@ -1,7 +1,6 @@
+import { AddressTwitterMap } from "../../_types/darkforest/api/UtilityServerAPITypes"
 
-export const twitters: {
-  [index: string]: string;
-}
+export const twitters: AddressTwitterMap
   = {
 "0x097e84f446a06528c7875b313f999c46368b7192":"baerlux",
 "0x0aa99fc47475084faee63a5047520948bf9a2189":"realmubaris",
