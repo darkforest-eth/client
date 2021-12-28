@@ -478,7 +478,7 @@ class GameManager extends EventEmitter {
   }
 
   private async refreshScoreboard() {
-    try {
+    try {    
       const leaderboard = await loadLeaderboard();
 
       for (const entry of leaderboard.entries) {

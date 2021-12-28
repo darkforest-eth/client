@@ -79,7 +79,7 @@ export function GameLandingPage() {
       .then((ethConnection) => {
           setEthConnection(ethConnection);
           // Player needs to approve RPC Endpoint for localtunnel;
-          if(!isProd) window.open(ethConnection.getRpcEndpoint());
+          if(process.env.DEV_PUBLIC_RPC) window.open(ethConnection.getRpcEndpoint());
       })
       .catch((e) => {
         alert('error connecting to blockchain');

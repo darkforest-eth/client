@@ -1,26 +1,36 @@
 import { Leaderboard, LeaderboardEntry } from '@darkforest_eth/types';
-import GameManager from '../GameLogic/GameManager';
+import { CORE_CONTRACT_ADDRESS, GETTERS_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
+import { getEthConnection, loadCoreContract, loadGettersContract } from './Blockchain';
+import { EthAddress } from '@darkforest_eth/types';
+import { twitters } from './twitters';
 
-export async function loadLeaderboard(gameManager: GameManager | undefined): Promise<Leaderboard> {
+export async function loadLeaderboard(inGame: boolean | undefined = false): Promise<Leaderboard> {
   if (!process.env.DF_WEBSERVER_URL) {
-    if(gameManager) {
+    if(!inGame) {
+      const provider = (await getEthConnection()).getProvider();
+      const core = await loadCoreContract(CORE_CONTRACT_ADDRESS, provider);
+      const getters = await loadGettersContract(GETTERS_CONTRACT_ADDRESS, provider);
+      const numPlayers = await core.getNPlayers();
+      const players = await getters.bulkGetPlayers(0, numPlayers);
       var entries: LeaderboardEntry[] = [];
-      const players = await gameManager.getAllPlayers();
+      console.log('twitters', twitters);
       players.forEach(player => {
+        console.log('twitter?', twitters[player.player?.toLowerCase()]);
         let entry: LeaderboardEntry = {
-          score: player.score,
-          ethAddress: player.address,
-          twitter: player.twitter,
+          score: player.score.toNumber(),
+          ethAddress: player.player.toLowerCase() as EthAddress,
+          twitter: twitters[player.player?.toLowerCase()] as string,
         };
         entries.push(entry);
       });
+      console.log("entries", entries);
       return { entries };
     }
     else {
       return { entries: [] };
     }
   }
-
+  
   const address = `${process.env.DF_WEBSERVER_URL}/leaderboard`;
   const res = await fetch(address, {
     method: 'GET',
