@@ -45,7 +45,7 @@ export default function LandingPage() {
               <br />
               <Text>zkSNARK space warfare</Text>
               <br />
-              <Text>Round 4: Society Eggnog - Lightning Round</Text>
+              <Text>☠️ Death of the Universe 🪐</Text>
             </p>
 
             <Spacer height={16} />

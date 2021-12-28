@@ -671,8 +671,6 @@ export function GameLandingPage() {
 
       terminal.current?.newline();
 
-      // Press ENTER to receive a one-time whitelist drip of x ether?
-
       terminal.current?.println('Press ENTER to find a home planet. This may take up to 120s.');
       terminal.current?.println('This will consume a lot of CPU.');
 
