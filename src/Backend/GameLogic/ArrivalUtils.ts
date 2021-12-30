@@ -1,4 +1,4 @@
-import { CONTRACT_PRECISION } from '@darkforest_eth/constants';
+import { CONTRACT_PRECISION, EMPTY_ADDRESS } from '@darkforest_eth/constants';
 import {
   Artifact,
   ArtifactType,
@@ -178,6 +178,14 @@ export const arrive = (
         CONTRACT_PRECISION;
     } else {
       // conquers planet
+      // Destroy if energyArriving is > planet population * destroy threshold.
+      const DESTROY_THRESHOLD = contractConstants.DESTROY_THRESHOLD;
+      if(prevPlanet.owner != EMPTY_ADDRESS && DESTROY_THRESHOLD > 0) {
+        const preciseEnergyArriving = Math.floor((energyArriving * CONTRACT_PRECISION * 100) / toPlanet.defense) / CONTRACT_PRECISION;
+        if(preciseEnergyArriving > toPlanet.energy * DESTROY_THRESHOLD) {
+          toPlanet.destroyed = true;
+        }
+      }
       toPlanet.owner = arrival.player;
       toPlanet.energy =
         energyArriving -

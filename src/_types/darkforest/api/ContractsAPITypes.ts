@@ -141,6 +141,7 @@ export interface ContractConstants {
 
   TOKEN_MINT_END_SECONDS: number;
 
+  DESTROY_THRESHOLD: number;
   MAX_NATURAL_PLANET_LEVEL: number;
   TIME_FACTOR_HUNDREDTHS: number;
   /**
