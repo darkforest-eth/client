@@ -1,4 +1,5 @@
 import { Planet, WorldCoords } from '@darkforest_eth/types';
+import { shrinkAlgorithm } from '../../../Backend/Utils/Utils';
 import { engineConsts } from './EngineConsts';
 import { RenderZIndex, RGBVec } from './EngineTypes';
 import Renderer from './Renderer';
@@ -14,7 +15,7 @@ export class UIRenderer {
 
   queueBorders() {
     const { circleRenderer, gameUIManager } = this.renderer;
-    const radius = gameUIManager.getWorldRadius();
+    const radius = shrinkAlgorithm(Date.now()/1000, gameUIManager.getContractConstants())
     const initRadius = gameUIManager.getContractConstants().INITIAL_WORLD_RADIUS
     whiteA[3] = 255;
     circleRenderer.queueCircleWorld({ x: 0, y: 0 }, radius, whiteA, 2);
