@@ -301,6 +301,13 @@ class GameManager extends EventEmitter {
   private worldRadius: number;
 
   /**
+   * Sometimes the universe gets bigger... Sometimes it doesn't.
+   *
+   * @todo move this into a new `GameConfiguration` class.
+   */
+  private intialWorldRadius: number;
+
+  /**
    * Emits whenever we load the network health summary from the webserver, which is derived from
    * diagnostics that the client sends up to the webserver as well.
    */
@@ -376,6 +383,7 @@ class GameManager extends EventEmitter {
 
     this.contractConstants = contractConstants;
     this.homeLocation = homeLocation;
+    this.intialWorldRadius = contractConstants.INITIAL_WORLD_RADIUS;
 
     const revealedLocations = new Map<LocationId, RevealedLocation>();
     for (const [locationId, coords] of revealedCoords) {

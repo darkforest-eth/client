@@ -796,7 +796,7 @@ export class ContractsAPI extends EventEmitter {
       BIOME_THRESHOLD_2,
       PLANET_RARITY,
       PHOTOID_ACTIVATION_DELAY,
-      LOCATION_REVEAL_COOLDOWN,
+      LOCATION_REVEAL_COOLDOWN
     } = await this.makeCall(this.coreContract.gameConstants);
 
     const TOKEN_MINT_END_SECONDS = (
