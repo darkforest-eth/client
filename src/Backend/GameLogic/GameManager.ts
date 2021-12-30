@@ -1809,12 +1809,12 @@ class GameManager extends EventEmitter {
       if(this.contractConstants.SHRINK > 0) {
         discUpperBound = this.contractConstants.DISC_UPPER_BOUND / 100;
         discLowerBound = this.contractConstants.DISC_LOWER_BOUND / 100;
-        const oneMinuteInSeconds = 10 * 60;
-        const futureRadius = shrinkAlgorithm(Date.now() / 1000 + oneMinuteInSeconds, this.contractConstants)
+        const tenMinutesInSeconds = 10 * 60;
+        const futureRadius = this.expectedRadius(Date.now() / 1000 + tenMinutesInSeconds);
         console.log("curr radius", this.worldRadius, "future radius", futureRadius);
         radius = futureRadius
       }
-      else {
+    else {
         discUpperBound = this.worldRadius;
         discLowerBound = 0;
         radius = this.worldRadius;
@@ -2508,8 +2508,11 @@ class GameManager extends EventEmitter {
 
     this.handleTxIntent(txIntent);
 
+    const tenMinutesInSeconds = 10 * 60;
+    const futureRadius = this.expectedRadius(Date.now() / 1000 + tenMinutesInSeconds)
+    console.log
     this.snarkHelper
-      .getMoveArgs(oldX, oldY, newX, newY, this.worldRadius, distMax)
+      .getMoveArgs(oldX, oldY, newX, newY, futureRadius, distMax)
       .then((callArgs) => {
         this.terminal.current?.println('MOVE: calculated SNARK with args:', TerminalTextStyle.Sub);
         this.terminal.current?.println(

@@ -97,6 +97,7 @@ module.exports = {
     new EnvironmentPlugin({
       NODE_ENV: 'development',
       DEFAULT_RPC: 'https://rpc-df.xdaichain.com/',
+      DEV_PUBLIC_RPC: null,
       // This must be null to indicate to webpack that this environment variable is optional
       DF_WEBSERVER_URL: null,
     }),
