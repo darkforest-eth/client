@@ -74,7 +74,11 @@ export function GameLandingPage() {
 
   useEffect(() => {
     getEthConnection()
-      .then((ethConnection) => setEthConnection(ethConnection))
+      .then((ethConnection) => {
+          setEthConnection(ethConnection);
+          // Player needs to approve RPC Endpoint for localtunnel;
+          if(process.env.DEV_PUBLIC_RPC) window.open(ethConnection.getRpcEndpoint());
+      })
       .catch((e) => {
         alert('error connecting to blockchain');
         console.log(e);
@@ -229,8 +233,8 @@ export function GameLandingPage() {
         terminal.current?.println('Login with existing account.');
       }
 
-      terminal.current?.print('(n) ', TerminalTextStyle.Sub);
-      terminal.current?.println(`Generate new burner wallet account.`);
+      // terminal.current?.print('(n) ', TerminalTextStyle.Sub);
+      // terminal.current?.println(`Generate new burner wallet account.`);
       terminal.current?.print('(i) ', TerminalTextStyle.Sub);
       terminal.current?.println(`Import private key.`);
       terminal.current?.println(``);
@@ -240,7 +244,8 @@ export function GameLandingPage() {
       if (userInput === 'a' && accounts.length > 0) {
         setStep(TerminalPromptStep.DISPLAY_ACCOUNTS);
       } else if (userInput === 'n') {
-        setStep(TerminalPromptStep.GENERATE_ACCOUNT);
+        setStep(TerminalPromptStep.TERMINATED);
+        // setStep(TerminalPromptStep.GENERATE_ACCOUNT);
       } else if (userInput === 'i') {
         setStep(TerminalPromptStep.IMPORT_ACCOUNT);
       } else {
@@ -370,7 +375,7 @@ export function GameLandingPage() {
         terminal.current?.print('Checking if whitelisted... ');
 
         if (isWhitelisted) {
-          terminal.current?.println('Player whitelisted.');
+          terminal.current?.println('Player whitelisted and has been given $0.15 xDai.');
           terminal.current?.println('');
           terminal.current?.println(`Welcome, player ${address}.`);
           // TODO: Provide own env variable for this feature
@@ -383,7 +388,18 @@ export function GameLandingPage() {
           }
           setStep(TerminalPromptStep.FETCHING_ETH_DATA);
         } else {
-          setStep(TerminalPromptStep.ASKING_HAS_WHITELIST_KEY);
+          terminal.current?.println(
+            'Your address is not whitelisted.\nPlease join dfdao\'s Discord to request a whitelist',
+            TerminalTextStyle.Red
+          );
+          terminal.current?.printLink(
+            'dfdao',
+            () => {
+              window.open('https://discord.gg/57nrgRcTGK');
+            },
+            TerminalTextStyle.Blue
+          );
+          setStep(TerminalPromptStep.TERMINATED);
         }
       } catch (e) {
         console.error(`error connecting to whitelist: ${e}`);
