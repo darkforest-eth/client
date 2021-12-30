@@ -15,6 +15,8 @@ export default class BackgroundRenderer {
   perlinRenderer: PerlinRenderer;
   borderRenderer: RectRenderer;
 
+  renderedFirstFrame = false;
+
   constructor(manager: GameGLManager, config: PerlinConfig, thresholds: [number, number, number]) {
     this.manager = manager;
     this.renderer = manager.renderer;
@@ -24,11 +26,25 @@ export default class BackgroundRenderer {
     this.perlinRenderer = new PerlinRenderer(manager, config, thresholds, rectRenderer);
   }
 
+  firstFrame() {
+    this.perlinRenderer.queueChunk({
+      chunkFootprint: { bottomLeft: { x: 0, y: 0 }, sideLength: 1 },
+      perlin: 1,
+      planetLocations: [],
+    });
+    this.flush();
+  }
+
   drawChunks(
     exploredChunks: Iterable<Chunk>,
     highPerfMode: boolean,
     drawChunkBorders: boolean
   ): void {
+    if (!this.renderedFirstFrame) {
+      this.renderedFirstFrame = true;
+      this.firstFrame();
+    }
+
     // upload current camera transform to shader
     if (highPerfMode) return;
 
