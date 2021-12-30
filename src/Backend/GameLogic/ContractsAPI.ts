@@ -789,6 +789,7 @@ export class ContractsAPI extends EventEmitter {
       PLANET_RARITY,
       PHOTOID_ACTIVATION_DELAY,
       LOCATION_REVEAL_COOLDOWN,
+      INITIAL_WORLD_RADIUS
     } = await this.makeCall(this.coreContract.gameConstants);
 
     const TOKEN_MINT_END_SECONDS = (
@@ -826,6 +827,7 @@ export class ContractsAPI extends EventEmitter {
       PERLIN_MIRROR_Y,
       CLAIM_PLANET_COOLDOWN: 0,
       TOKEN_MINT_END_SECONDS,
+      INITIAL_WORLD_RADIUS: INITIAL_WORLD_RADIUS.toNumber(),
       MAX_NATURAL_PLANET_LEVEL: MAX_NATURAL_PLANET_LEVEL.toNumber(),
       TIME_FACTOR_HUNDREDTHS: TIME_FACTOR_HUNDREDTHS.toNumber(),
       PERLIN_THRESHOLD_1: PERLIN_THRESHOLD_1.toNumber(),
