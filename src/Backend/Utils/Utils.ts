@@ -2,12 +2,44 @@ import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
 import { EthAddress, Planet, SpaceType, Upgrade, UpgradeBranchName } from '@darkforest_eth/types';
 import * as bigInt from 'big-integer';
 import { BigInteger } from 'big-integer';
+import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
 import { StatIdx } from '../../_types/global/GlobalTypes';
 
 export const ONE_DAY = 24 * 60 * 60 * 1000;
 
 type NestedBigIntArray = (BigInteger | string | NestedBigIntArray)[];
 type NestedStringArray = (string | NestedStringArray)[];
+
+export function shrinkAlgorithm(
+  currTime: number,
+  contractConstants: ContractConstants
+):number 
+{
+  const shrinkFactor = contractConstants.SHRINK;
+  const totalTime = contractConstants.ROUND_END - contractConstants.SHRINK_START;
+  const now = currTime // in Seconds.
+
+  // Only shrink after START_TIME has occurred. Allows for delaying of shrinking.
+  const startTime = contractConstants.SHRINK_START > now ? now : contractConstants.SHRINK_START;
+  const minRadius = contractConstants.MIN_RADIUS;
+  var timeElapsed = now - startTime;
+  // // Clip timeElapsed to max totalTime
+  if(timeElapsed > totalTime) timeElapsed = totalTime;
+  // // only shrink after initial time elapsed.
+  var radius = (
+      contractConstants.INITIAL_WORLD_RADIUS * 
+          (
+              (Math.pow(totalTime,shrinkFactor)) - 
+              (Math.pow(timeElapsed,shrinkFactor))
+          )
+      ) 
+      / Math.pow(totalTime,shrinkFactor);
+
+  // // set minimum
+  if (radius < minRadius) radius = minRadius;
+
+  return Math.floor(radius);
+}
 
 export const hexifyBigIntNestedArray = (arr: NestedBigIntArray): NestedStringArray => {
   return arr.map((value) => {

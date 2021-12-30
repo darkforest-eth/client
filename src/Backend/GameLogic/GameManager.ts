@@ -120,7 +120,7 @@ import {
   isUnconfirmedWithdrawArtifact,
   isUnconfirmedWithdrawSilver,
 } from '../Utils/TypeAssertions';
-import { getRandomActionId, hexifyBigIntNestedArray } from '../Utils/Utils';
+import { getRandomActionId, hexifyBigIntNestedArray, shrinkAlgorithm } from '../Utils/Utils';
 import { getEmojiMessage, getRange } from './ArrivalUtils';
 import { isActivated } from './ArtifactUtils';
 import { ContractsAPI, makeContractsAPI } from './ContractsAPI';
@@ -301,6 +301,13 @@ class GameManager extends EventEmitter {
   private worldRadius: number;
 
   /**
+   * Sometimes the universe gets bigger... Sometimes it doesn't.
+   *
+   * @todo move this into a new `GameConfiguration` class.
+   */
+  private intialWorldRadius: number;
+
+  /**
    * Emits whenever we load the network health summary from the webserver, which is derived from
    * diagnostics that the client sends up to the webserver as well.
    */
@@ -376,6 +383,7 @@ class GameManager extends EventEmitter {
 
     this.contractConstants = contractConstants;
     this.homeLocation = homeLocation;
+    this.intialWorldRadius = contractConstants.INITIAL_WORLD_RADIUS;
 
     const revealedLocations = new Map<LocationId, RevealedLocation>();
     for (const [locationId, coords] of revealedCoords) {
@@ -752,6 +760,7 @@ class GameManager extends EventEmitter {
       })
       .on(ContractsAPIEvent.RadiusUpdated, async () => {
         const newRadius = await gameManager.contractsAPI.getWorldRadius();
+        console.log("radius updated event",newRadius);
         gameManager.setRadius(newRadius);
       });
 
@@ -1796,6 +1805,21 @@ class GameManager extends EventEmitter {
         spawnInnerRadius = 0;
       }
 
+      let discUpperBound: number, discLowerBound: number, radius: number;
+      if(this.contractConstants.SHRINK > 0) {
+        discUpperBound = this.contractConstants.DISC_UPPER_BOUND / 100;
+        discLowerBound = this.contractConstants.DISC_LOWER_BOUND / 100;
+        const oneMinuteInSeconds = 10 * 60;
+        const futureRadius = shrinkAlgorithm(Date.now() / 1000 + oneMinuteInSeconds, this.contractConstants)
+        console.log("curr radius", this.worldRadius, "future radius", futureRadius);
+        radius = futureRadius
+      }
+      else {
+        discUpperBound = this.worldRadius;
+        discLowerBound = 0;
+        radius = this.worldRadius;
+      }
+
       do {
         // sample from square
         x = Math.random() * this.worldRadius * 2 - this.worldRadius;
@@ -1805,8 +1829,10 @@ class GameManager extends EventEmitter {
       } while (
         p >= initPerlinMax || // keep searching if above or equal to the max
         p < initPerlinMin || // keep searching if below the minimum
-        d >= this.worldRadius || // can't be out of bound
-        d <= spawnInnerRadius // can't be inside spawn area ring
+        d >= radius || // can't be out of bound
+        d <= spawnInnerRadius || // can't be inside spawn area ring
+        d >= radius *  discUpperBound || // can't be outside spawn disc
+        d <= radius *  discLowerBound // can't be inside spawn disc
       );
 
       // when setting up a new account in development mode, you can tell
@@ -1882,11 +1908,14 @@ class GameManager extends EventEmitter {
           );
           const planet = this.getPlanetWithId(homePlanetLocation.hash);
           const distFromOrigin = Math.sqrt(planetX ** 2 + planetY ** 2);
+          console.log(`upper ${discUpperBound * this.worldRadius} candidate ${distFromOrigin} lower ${discLowerBound * this.worldRadius}`);
           if (
             planetPerlin < initPerlinMax &&
             planetPerlin >= initPerlinMin &&
-            distFromOrigin < this.worldRadius &&
+            distFromOrigin < radius &&
             distFromOrigin > spawnInnerRadius &&
+            distFromOrigin <= radius * discUpperBound && // can't be outside spawn ring
+            distFromOrigin >= radius * discLowerBound && // can't be inside spawn ring
             planetLevel === MIN_PLANET_LEVEL &&
             planetType === PlanetType.PLANET &&
             (!planet || !planet.isInContract) // init will fail if planet has been initialized in contract already
@@ -2915,6 +2944,15 @@ class GameManager extends EventEmitter {
    */
   public getProcgenUtils() {
     return ProcgenUtils;
+  }
+
+  public expectedRadius(currTime: number = Date.now() / 1000) {
+    if(this.contractConstants.SHRINK > 0) {
+      return shrinkAlgorithm(currTime, this.contractConstants);
+    }
+    else {
+      return this.worldRadius;
+    }
   }
 
   /**

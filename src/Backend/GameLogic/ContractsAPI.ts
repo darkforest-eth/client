@@ -776,7 +776,14 @@ export class ContractsAPI extends EventEmitter {
       PERLIN_MIRROR_Y,
     } = await this.makeCall(this.coreContract.snarkConstants);
     const {
+      SHRINK,
+      SHRINK_START,
+      ROUND_END,
+      DISC_UPPER_BOUND,
+      DISC_LOWER_BOUND,
+      MIN_RADIUS,
       DESTROY_THRESHOLD,
+      INITIAL_WORLD_RADIUS,
       MAX_NATURAL_PLANET_LEVEL,
       TIME_FACTOR_HUNDREDTHS,
       PERLIN_THRESHOLD_1,
@@ -789,7 +796,7 @@ export class ContractsAPI extends EventEmitter {
       BIOME_THRESHOLD_2,
       PLANET_RARITY,
       PHOTOID_ACTIVATION_DELAY,
-      LOCATION_REVEAL_COOLDOWN,
+      LOCATION_REVEAL_COOLDOWN
     } = await this.makeCall(this.coreContract.gameConstants);
 
     const TOKEN_MINT_END_SECONDS = (
@@ -818,6 +825,14 @@ export class ContractsAPI extends EventEmitter {
 
     const constants: ContractConstants = {
       DISABLE_ZK_CHECKS,
+
+      INITIAL_WORLD_RADIUS: INITIAL_WORLD_RADIUS.toNumber(),
+      SHRINK: SHRINK.toNumber(),
+      SHRINK_START: SHRINK_START.toNumber(),
+      ROUND_END: ROUND_END.toNumber(),
+      MIN_RADIUS: MIN_RADIUS.toNumber(),
+      DISC_LOWER_BOUND: DISC_LOWER_BOUND.toNumber(),
+      DISC_UPPER_BOUND: DISC_UPPER_BOUND.toNumber(),
 
       PLANETHASH_KEY: PLANETHASH_KEY.toNumber(),
       SPACETYPE_KEY: SPACETYPE_KEY.toNumber(),

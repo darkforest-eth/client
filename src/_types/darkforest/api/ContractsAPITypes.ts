@@ -132,6 +132,14 @@ export type PlanetTypeWeightsBySpaceType = [
 export interface ContractConstants {
   DISABLE_ZK_CHECKS: boolean;
 
+  INITIAL_WORLD_RADIUS: number;
+  SHRINK: number;
+  SHRINK_START: number;
+  ROUND_END: number;
+  MIN_RADIUS: number;
+  DISC_LOWER_BOUND: number;
+  DISC_UPPER_BOUND: number;
+
   PLANETHASH_KEY: number;
   SPACETYPE_KEY: number;
   BIOMEBASE_KEY: number;
