@@ -15,8 +15,10 @@ export class UIRenderer {
   queueBorders() {
     const { circleRenderer, gameUIManager } = this.renderer;
     const radius = gameUIManager.getWorldRadius();
+    const initRadius = gameUIManager.getContractConstants().INITIAL_WORLD_RADIUS
     whiteA[3] = 255;
     circleRenderer.queueCircleWorld({ x: 0, y: 0 }, radius, whiteA, 2);
+    circleRenderer.queueCircleWorld({ x: 0, y: 0 }, initRadius, purpleA, 2);
   }
 
   queueMousePath() {
