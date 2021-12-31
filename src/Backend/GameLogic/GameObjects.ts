@@ -1147,7 +1147,12 @@ export class GameObjects {
       previous.owner !== ethers.constants.AddressZero &&
       current.owner === this.address
     ) {
-      notifManager.planetConquered(current as LocatablePlanet);
+      if(!previous.destroyed && current.destroyed) {
+        notifManager.planetDestroyed(current as LocatablePlanet);
+      }
+      else {
+        notifManager.planetConquered(current as LocatablePlanet);
+      }
     }
     if (previous.owner === this.address && current.owner !== this.address) {
       notifManager.planetLost(current as LocatablePlanet);
