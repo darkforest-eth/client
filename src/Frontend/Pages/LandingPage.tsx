@@ -43,9 +43,12 @@ export default function LandingPage() {
             <p>
               <White>Dark Forest</White>
               <br />
-              <Text>zkSNARK space warfare</Text>
+              <Text>☠️ Death of the Universe 🪐</Text>
               <br />
-              <Text>Round 4: Society Eggnog - Lightning Round</Text>
+              <Link 
+                to='https://medium.com/dfdao/a-dark-forest-new-years-community-round-death-of-the-universe-785af7c2b56e'>
+                Round Info
+              </Link>
             </p>
 
             <Spacer height={16} />
@@ -159,7 +162,31 @@ export default function LandingPage() {
                   <td>
                     10/01/<HideSmall>20</HideSmall>21
                   </td>
-                  <td>t.b.d</td>
+                  <td>
+                    <Link to='https://twitter.com/orden_gg'>@orden_gg</Link>
+                  </td>
+                </TRow>
+                <TRow>
+                  <td>
+                    Guild W - For Pioneers
+                  </td>
+                  <td>
+                    12/03/<HideSmall>20</HideSmall>21
+                  </td>
+                  <td>
+                    <Link to='https://twitter.com/marrowdao'>Red Team</Link>
+                  </td>
+                </TRow>
+                <TRow>
+                  <td>
+                    dfdao + friends - ☠️🪐
+                  </td>
+                  <td>
+                    1/01/<HideSmall>20</HideSmall>22
+                  </td>
+                  <td>
+                    t.b.d.
+                  </td>
                 </TRow>
               </tbody>
             </table>
@@ -167,9 +194,9 @@ export default function LandingPage() {
 
           <Spacer height={32} />
 
-          <EmailWrapper>
-            <EmailCTA mode={EmailCTAMode.SUBSCRIBE} />
-          </EmailWrapper>
+          <p>
+              <Text>Leaderboard inside...</Text>
+          </p>
 
           <Spacer height={16} />
 
@@ -200,7 +227,7 @@ export default function LandingPage() {
           </VariousLinksContainer>
         </MainContentContainer>
 
-        <Spacer height={128} />
+        {/* <Spacer height={128} /> */}
 
         <LeadboardDisplay />
 

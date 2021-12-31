@@ -1822,8 +1822,8 @@ class GameManager extends EventEmitter {
 
       do {
         // sample from square
-        x = Math.random() * this.worldRadius * 2 - this.worldRadius;
-        y = Math.random() * this.worldRadius * 2 - this.worldRadius;
+        x = Math.random() * radius * 2 - radius;
+        y = Math.random() * radius * 2 - radius;
         d = Math.sqrt(x ** 2 + y ** 2);
         p = this.spaceTypePerlin({ x, y }, false);
       } while (
