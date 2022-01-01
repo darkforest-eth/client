@@ -1809,8 +1809,8 @@ class GameManager extends EventEmitter {
       if(this.contractConstants.SHRINK > 0) {
         discUpperBound = this.contractConstants.DISC_UPPER_BOUND / 100;
         discLowerBound = this.contractConstants.DISC_LOWER_BOUND / 100;
-        const tenMinutesInSeconds = 10 * 60;
-        const futureRadius = this.expectedRadius(Date.now() / 1000 + tenMinutesInSeconds);
+        const fiveMinutesInSeconds = 5 * 60;
+        const futureRadius = this.expectedRadius(Date.now() / 1000 + fiveMinutesInSeconds);
         console.log("curr radius", this.worldRadius, "future radius", futureRadius);
         radius = futureRadius
       }
