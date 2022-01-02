@@ -155,6 +155,7 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
 
   const sortEntries = () => {
     const asc = sortDir === SortDir.Ascending;
+    const maxDistance = 512000;
 
     return entries.sort((a, b) => {
       switch (sort) {
@@ -162,14 +163,28 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
           if (asc) return (a.destroyedScore || 0) - (b.destroyedScore || 0);
           else return (b.destroyedScore || 0) - (a.destroyedScore || 0);
         case SortColumn.FromCenter:
-          if (asc) return (a.distanceToCenter || 0) - (b.distanceToCenter || 0);
-          else return (b.distanceToCenter || 0) - (a.distanceToCenter || 0);
+          if (asc) {
+            return (
+              (b.distanceToCenter || maxDistance) -
+              (a.distanceToCenter || maxDistance)
+            );
+          } else {
+            return (
+              (a.distanceToCenter || maxDistance) -
+              (b.distanceToCenter || maxDistance)
+            );
+          }
         case SortColumn.SilverArtifacts:
         default:
           if (asc) return (a.silverArtifacts || 0) - (b.silverArtifacts || 0);
           else return (b.silverArtifacts || 0) - (a.silverArtifacts || 0);
       }
     });
+  };
+
+  const getPlace = (position: number) => {
+    if (sortDir === SortDir.Descending) return position + 1;
+    else return entries.length - position;
   };
 
   const entriesSorted = sortEntries();
@@ -203,17 +218,25 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
         </Thead>
         <Tbody>
           {entriesSorted.map((entry, i) => {
-            const color = getRankColor([i, entry.destroyedScore])
+            const color = getRankColor([i, entry.destroyedScore]);
+            const distance =
+              entry.distanceToCenter === undefined
+                ? "-"
+                : formatNumberForDisplay(entry.distanceToCenter || 0);
             return (
               <Tr key={i}>
-                <Td style={{ color }}>{i}.</Td>
+                <Td style={{ color }}>{getPlace(i)}.</Td>
                 <Td style={{ color }}>
                   {getTwitterName(entry.twitter) ||
                     entry.ethAddress.substr(0, 12)}
                 </Td>
-                <Td style={{ color }}>{formatNumberForDisplay(entry.silverArtifacts || 0)}</Td>
-                <Td style={{ color }}>{formatNumberForDisplay(entry.distanceToCenter || 0)}</Td>
-                <Td style={{ color }}>{formatNumberForDisplay(entry.destroyedScore || 0)}</Td>
+                <Td style={{ color }}>
+                  {formatNumberForDisplay(entry.silverArtifacts || 0)}
+                </Td>
+                <Td style={{ color }}>{distance}</Td>
+                <Td style={{ color }}>
+                  {formatNumberForDisplay(entry.destroyedScore || 0)}
+                </Td>
               </Tr>
             );
           })}
