@@ -16,6 +16,7 @@ import {
   Leaderboard,
   LeaderboardEntry,
 } from "../../Backend/Network/LeaderboardApi";
+import { getPlayerColor } from "../../Backend/Utils/Utils";
 
 export function LeadboardDisplay() {
   const { leaderboard, error } = useLeaderboard();
@@ -79,6 +80,8 @@ function getRankColor([rank, score]: [number, number | undefined]) {
   if (rank >= 3 && rank <= 6) {
     return RarityColors[ArtifactRarity.Epic];
   }
+
+  return dfstyles.colors.subtext;
 
   if (rank >= 7 && rank <= 14) {
     return RarityColors[ArtifactRarity.Rare];
@@ -156,8 +159,8 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
     return entries.sort((a, b) => {
       switch (sort) {
         case SortColumn.DestroyedPlanets:
-          if (asc) return (a.destroyedPlanets || 0) - (b.destroyedPlanets || 0);
-          else return (b.destroyedPlanets || 0) - (a.destroyedPlanets || 0);
+          if (asc) return (a.destroyedScore || 0) - (b.destroyedScore || 0);
+          else return (b.destroyedScore || 0) - (a.destroyedScore || 0);
         case SortColumn.FromCenter:
           if (asc) return (a.distanceToCenter || 0) - (b.distanceToCenter || 0);
           else return (b.distanceToCenter || 0) - (a.distanceToCenter || 0);
@@ -200,16 +203,17 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
         </Thead>
         <Tbody>
           {entriesSorted.map((entry, i) => {
+            const color = getRankColor([i, entry.destroyedScore])
             return (
               <Tr key={i}>
-                <Td>{i}.</Td>
-                <Td>
+                <Td style={{ color }}>{i}.</Td>
+                <Td style={{ color }}>
                   {getTwitterName(entry.twitter) ||
                     entry.ethAddress.substr(0, 12)}
                 </Td>
-                <Td>{formatNumberForDisplay(entry.silverArtifacts || 0)}</Td>
-                <Td>{formatNumberForDisplay(entry.distanceToCenter || 0)}</Td>
-                <Td>{formatNumberForDisplay(entry.destroyedPlanets || 0)}</Td>
+                <Td style={{ color }}>{formatNumberForDisplay(entry.silverArtifacts || 0)}</Td>
+                <Td style={{ color }}>{formatNumberForDisplay(entry.distanceToCenter || 0)}</Td>
+                <Td style={{ color }}>{formatNumberForDisplay(entry.destroyedScore || 0)}</Td>
               </Tr>
             );
           })}

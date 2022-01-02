@@ -9,7 +9,7 @@ export interface Leaderboard {
 export interface LeaderboardEntry {
   silverArtifacts: number | undefined;
   distanceToCenter: number | undefined;
-  destroyedPlanets: number | undefined;
+  destroyedScore: number | undefined;
   ethAddress: EthAddress;
   twitter?: string;
 }
