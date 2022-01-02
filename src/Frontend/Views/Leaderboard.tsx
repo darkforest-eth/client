@@ -1,26 +1,33 @@
-import { ArtifactRarity, Leaderboard } from '@darkforest_eth/types';
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { Spacer } from '../Components/CoreUI';
-import { TwitterLink } from '../Components/Labels/Labels';
-import { LoadingSpinner } from '../Components/LoadingSpinner';
-import { Red } from '../Components/Text';
-import { TextPreview } from '../Components/TextPreview';
-import { RarityColors } from '../Styles/Colors';
-import dfstyles from '../Styles/dfstyles';
-import { useLeaderboard } from '../Utils/AppHooks';
-import { formatDuration } from '../Utils/TimeUtils';
-import { GenericErrorBoundary } from './GenericErrorBoundary';
-import { Table } from './Table';
+import { ArtifactRarity, EthAddress } from "@darkforest_eth/types";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { Spacer } from "../Components/CoreUI";
+import { TwitterLink } from "../Components/Labels/Labels";
+import { LoadingSpinner } from "../Components/LoadingSpinner";
+import { Red } from "../Components/Text";
+import { TextPreview } from "../Components/TextPreview";
+import { RarityColors } from "../Styles/Colors";
+import dfstyles from "../Styles/dfstyles";
+import { useLeaderboard } from "../Utils/AppHooks";
+import { formatDuration } from "../Utils/TimeUtils";
+import { GenericErrorBoundary } from "./GenericErrorBoundary";
+// import { Table } from "./Table";
+import {
+  Leaderboard,
+  LeaderboardEntry,
+} from "../../Backend/Network/LeaderboardApi";
 
 export function LeadboardDisplay() {
   const { leaderboard, error } = useLeaderboard();
+  console.log(leaderboard);
 
-  const errorMessage = 'Error Loading Leaderboard';
+  const errorMessage = "Error Loading Leaderboard";
 
   return (
     <GenericErrorBoundary errorMessage={errorMessage}>
-      {!leaderboard && !error && <LoadingSpinner initialText={'Loading Leaderboard...'} />}
+      {!leaderboard && !error && (
+        <LoadingSpinner initialText={"Loading Leaderboard..."} />
+      )}
       {leaderboard && <LeaderboardBody leaderboard={leaderboard} />}
       {error && <Red>{errorMessage}</Red>}
     </GenericErrorBoundary>
@@ -29,11 +36,11 @@ export function LeadboardDisplay() {
 
 function scoreToString(score?: number | null) {
   if (score === null || score === undefined) {
-    return 'n/a';
+    return "n/a";
   }
   score = Math.floor(score);
   if (score < 10000) {
-    return score + '';
+    return score + "";
   }
 
   return score.toLocaleString();
@@ -43,8 +50,14 @@ function scoreToString(score?: number | null) {
 // component
 function playerToEntry(playerStr: string, color: string) {
   // if this is an address
-  if (playerStr.startsWith('0x') && playerStr.length === 42) {
-    return <TextPreview text={playerStr} focusedWidth={'150px'} unFocusedWidth={'150px'} />;
+  if (playerStr.startsWith("0x") && playerStr.length === 42) {
+    return (
+      <TextPreview
+        text={playerStr}
+        focusedWidth={"150px"}
+        unFocusedWidth={"150px"}
+      />
+    );
   }
 
   return <TwitterLink twitter={playerStr} color={color} />;
@@ -76,55 +89,165 @@ function getRankColor([rank, score]: [number, number | undefined]) {
   }
 
   if (rank >= 31 && rank <= 62) {
-    return 'white';
+    return "white";
   }
 
   return dfstyles.colors.subtext;
 }
 
-function LeaderboardTable({ rows }: { rows: Array<[string, number | undefined]> }) {
+function roundToDecimal(num: number, decimalCount = 1) {
+  if (decimalCount < 1) return Math.round(num);
+  let p = Math.pow(10, decimalCount);
+  num = num * p;
+  num = Math.round(num) / p;
+  return num;
+}
+
+function formatNumberForDisplay(num: number, decimalCount = 1) {
+  if (num < 1e3) return roundToDecimal(num, decimalCount);
+  if (num < 1e6) return roundToDecimal(num / 1e3, decimalCount) + "k";
+  if (num < 1e9) return roundToDecimal(num / 1e6, decimalCount) + "m";
+  if (num < 1e12) return roundToDecimal(num / 1e9, decimalCount) + "b";
+  return roundToDecimal(num / 1e12, decimalCount) + "t";
+}
+
+enum SortColumn {
+  SilverArtifacts,
+  FromCenter,
+  DestroyedPlanets,
+}
+
+enum SortDir {
+  Ascending,
+  Descending,
+}
+
+function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
+  const [sort, setSort] = useState(SortColumn.SilverArtifacts);
+  const [sortDir, setSortDir] = useState(SortDir.Descending);
+
+  const sortStyle = (col: SortColumn) => {
+    const cursor = "pointer";
+    if (sort === col) return { color: dfstyles.colors.dfyellow, cursor };
+    return { cursor };
+  };
+
+  const toggleSortDir = () => {
+    if (sortDir === SortDir.Ascending) setSortDir(SortDir.Descending);
+    if (sortDir === SortDir.Descending) setSortDir(SortDir.Ascending);
+  };
+
+  const sortDesc = () => {
+    if (sortDir !== SortDir.Descending) setSortDir(SortDir.Descending);
+  };
+
+  const sortByColumn = (col: SortColumn) => {
+    if (sort !== col) {
+      sortDesc();
+      setSort(col);
+    } else {
+      toggleSortDir();
+    }
+  };
+
+  const sortEntries = () => {
+    const asc = sortDir === SortDir.Ascending;
+
+    return entries.sort((a, b) => {
+      switch (sort) {
+        case SortColumn.DestroyedPlanets:
+          if (asc) return (a.destroyedPlanets || 0) - (b.destroyedPlanets || 0);
+          else return (b.destroyedPlanets || 0) - (a.destroyedPlanets || 0);
+        case SortColumn.FromCenter:
+          if (asc) return (a.distanceToCenter || 0) - (b.distanceToCenter || 0);
+          else return (b.distanceToCenter || 0) - (a.distanceToCenter || 0);
+        case SortColumn.SilverArtifacts:
+        default:
+          if (asc) return (a.silverArtifacts || 0) - (b.silverArtifacts || 0);
+          else return (b.silverArtifacts || 0) - (a.silverArtifacts || 0);
+      }
+    });
+  };
+
+  const entriesSorted = sortEntries();
+
   return (
     <TableContainer>
-      <Table
-        alignments={['r', 'l', 'r']}
-        headers={[
-          <Cell key='place'>place</Cell>,
-          <Cell key='player'>player</Cell>,
-          <Cell key='score'>score</Cell>,
-        ]}
-        rows={rows}
-        columns={[
-          (row: [string, number], i) => (
-            <Cell style={{ color: getRankColor([i, row[1]]) }}>
-              {row[1] === undefined || row[1] === null ? 'unranked' : i + 1 + '.'}
-            </Cell>
-          ),
-          (row: [string, number | undefined], i) => {
-            const color = getRankColor([i, row[1]]);
-            return <Cell style={{ color }}>{playerToEntry(row[0], color)}</Cell>;
-          },
-          (row: [string, number], i) => {
+      <Table>
+        <Thead>
+          <Tr>
+            <Th>place</Th>
+            <Th>player</Th>
+            <Th
+              style={sortStyle(SortColumn.SilverArtifacts)}
+              onClick={() => sortByColumn(SortColumn.SilverArtifacts)}
+            >
+              silver / artifacts
+            </Th>
+            <Th
+              style={sortStyle(SortColumn.FromCenter)}
+              onClick={() => sortByColumn(SortColumn.FromCenter)}
+            >
+              from center
+            </Th>
+            <Th
+              style={sortStyle(SortColumn.DestroyedPlanets)}
+              onClick={() => sortByColumn(SortColumn.DestroyedPlanets)}
+            >
+              destroyed planets
+            </Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {entriesSorted.map((entry, i) => {
             return (
-              <Cell style={{ color: getRankColor([i, row[1]]) }}>{scoreToString(row[1])}</Cell>
+              <Tr key={i}>
+                <Td>{i}.</Td>
+                <Td>
+                  {getTwitterName(entry.twitter) ||
+                    entry.ethAddress.substr(0, 12)}
+                </Td>
+                <Td>{formatNumberForDisplay(entry.silverArtifacts || 0)}</Td>
+                <Td>{formatNumberForDisplay(entry.distanceToCenter || 0)}</Td>
+                <Td>{formatNumberForDisplay(entry.destroyedPlanets || 0)}</Td>
+              </Tr>
             );
-          },
-        ]}
-      />
+          })}
+        </Tbody>
+      </Table>
     </TableContainer>
   );
 }
 
+const getTwitterName = (name?: string) => {
+  if (!name) return null;
+  return <a href={`https://twitter.com/${name}`}>@{name.substr(0, 12)}</a>;
+};
+
+const Table = styled.table``;
+const Thead = styled.thead``;
+const Tbody = styled.tbody``;
+const Tr = styled.tr``;
+const Th = styled.th`
+  padding: 4px 16px;
+  text-align: left;
+`;
+const Td = styled.td`
+  padding: 4px 16px;
+  color: ${dfstyles.colors.text};
+`;
+
 // TODO: update this each round, or pull from contract constants
-const roundEndTimestamp = '2022-01-05T07:59:59.000Z';
+const roundEndTimestamp = "2022-01-05T07:59:59.000Z";
 const roundEndTime = new Date(roundEndTimestamp).getTime();
 
 function CountDown() {
-  const [str, setStr] = useState('');
+  const [str, setStr] = useState("");
 
   const update = () => {
     const timeUntilEndms = roundEndTime - new Date().getTime();
     if (timeUntilEndms <= 0) {
-      setStr('yes');
+      setStr("yes");
     } else {
       setStr(formatDuration(timeUntilEndms));
     }
@@ -144,30 +267,6 @@ function CountDown() {
 }
 
 function LeaderboardBody({ leaderboard }: { leaderboard: Leaderboard }) {
-  const rankedPlayers = leaderboard.entries.filter(
-    (entry) => entry.score !== undefined && entry.score > 0
-  );
-
-  leaderboard.entries.sort((a, b) => {
-    if (typeof a.score !== 'number' && typeof b.score !== 'number') {
-      return 0;
-    } else if (typeof a.score !== 'number') {
-      return 1;
-    } else if (typeof b.score !== 'number') {
-      return -1;
-    }
-
-    return b.score - a.score;
-  });
-
-  const rows: [string, number | undefined][] = leaderboard.entries.map((entry) => {
-    if (typeof entry.twitter === 'string') {
-      return [entry.twitter, entry.score];
-    }
-
-    return [entry.ethAddress, entry.score];
-  });
-
   return (
     <div>
       <StatsTableContainer>
@@ -183,23 +282,14 @@ function LeaderboardBody({ leaderboard }: { leaderboard: Leaderboard }) {
               <td>players</td>
               <td>{leaderboard.entries.length}</td>
             </tr>
-            {/* <tr>
-              <td>ranked players</td>
-              <td>{rankedPlayers.length}</td>
-            </tr> */}
           </tbody>
         </StatsTable>
       </StatsTableContainer>
       <Spacer height={8} />
-      {/* <LeaderboardTable rows={rows} /> */}
+      <LeaderboardTable entries={leaderboard.entries} />
     </div>
   );
 }
-
-const Cell = styled.div`
-  padding: 4px 8px;
-  color: ${dfstyles.colors.text};
-`;
 
 const TableContainer = styled.div`
   display: inline-block;

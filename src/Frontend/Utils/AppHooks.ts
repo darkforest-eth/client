@@ -2,7 +2,6 @@ import {
   Artifact,
   ArtifactId,
   EthAddress,
-  Leaderboard,
   LocationId,
   Planet,
   Player,
@@ -10,7 +9,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getActivatedArtifact, isActivated } from '../../Backend/GameLogic/ArtifactUtils';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
-import { loadLeaderboard } from '../../Backend/Network/LeaderboardApi';
+import { loadLeaderboard, Leaderboard } from '../../Backend/Network/LeaderboardApi';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { ModalHandle } from '../Views/ModalPane';
 import { createDefinedContext } from './createDefinedContext';
