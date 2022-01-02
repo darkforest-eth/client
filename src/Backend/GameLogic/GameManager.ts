@@ -485,9 +485,9 @@ class GameManager extends EventEmitter {
         const player = this.players.get(entry.ethAddress);
         if (player) {
           // current player's score is updated via `this.playerInterval`
-          if (player.address !== this.account && entry.score !== undefined) {
-            player.score = entry.score;
-          }
+          // if (player.address !== this.account && entry.score !== undefined) {
+          //   player.score = entry.score;
+          // }
         }
       }
 

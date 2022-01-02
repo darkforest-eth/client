@@ -1,14 +1,14 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
-import { Btn } from '../Components/Btn';
-import { EmSpacer, Link, Spacer } from '../Components/CoreUI';
-import { EmailCTA, EmailCTAMode } from '../Components/Email';
-import { HideSmall, Sub, Text, White } from '../Components/Text';
-import LandingPageCanvas from '../Renderers/LandingPageCanvas';
-import dfstyles from '../Styles/dfstyles';
-import { LandingPageRoundArt } from '../Views/LandingPageRoundArt';
-import { LeadboardDisplay } from '../Views/Leaderboard';
+import React from "react";
+import { useHistory } from "react-router-dom";
+import styled from "styled-components";
+import { Btn } from "../Components/Btn";
+import { EmSpacer, Link, Spacer } from "../Components/CoreUI";
+import { EmailCTA, EmailCTAMode } from "../Components/Email";
+import { HideSmall, Sub, Text, White } from "../Components/Text";
+import LandingPageCanvas from "../Renderers/LandingPageCanvas";
+import dfstyles from "../Styles/dfstyles";
+import { LandingPageRoundArt } from "../Views/LandingPageRoundArt";
+import { LeadboardDisplay } from "../Views/Leaderboard";
 
 export const enum LandingPageZIndex {
   Background = 0,
@@ -17,11 +17,11 @@ export const enum LandingPageZIndex {
 }
 
 const links = {
-  twitter: 'http://twitter.com/darkforest_eth',
-  email: 'mailto:contact@zkga.me',
-  blog: 'https://blog.zkga.me/',
-  discord: 'https://discord.gg/2u2TN6v8r6',
-  github: 'https://github.com/darkforest-eth',
+  twitter: "http://twitter.com/darkforest_eth",
+  email: "mailto:contact@zkga.me",
+  blog: "https://blog.zkga.me/",
+  discord: "https://discord.gg/2u2TN6v8r6",
+  github: "https://github.com/darkforest-eth",
 };
 
 export default function LandingPage() {
@@ -45,8 +45,7 @@ export default function LandingPage() {
               <br />
               <Text>☠️ Death of the Universe 🪐</Text>
               <br />
-              <Link 
-                to='https://medium.com/dfdao/a-dark-forest-new-years-community-round-death-of-the-universe-785af7c2b56e'>
+              <Link to="https://medium.com/dfdao/a-dark-forest-new-years-community-round-death-of-the-universe-785af7c2b56e">
                 Round Info
               </Link>
             </p>
@@ -54,10 +53,10 @@ export default function LandingPage() {
             <Spacer height={16} />
 
             <Btn
-              style={{ borderRadius: '8px', padding: '4px 8px' }}
+              style={{ borderRadius: "8px", padding: "4px 8px" }}
               color={dfstyles.colors.dfgreen}
               onClick={() => {
-                history.push('/play');
+                history.push("/play");
               }}
             >
               Enter
@@ -79,7 +78,7 @@ export default function LandingPage() {
                     02/22/<HideSmall>20</HideSmall>20
                   </td>
                   <td>
-                    <a href='https://twitter.com/zoink'>Dylan Field</a>
+                    <a href="https://twitter.com/zoink">Dylan Field</a>
                   </td>
                 </TRow>
                 <TRow>
@@ -99,7 +98,9 @@ export default function LandingPage() {
                     08/07/<HideSmall>20</HideSmall>20
                   </td>
                   <td>
-                    <Link to='https://twitter.com/hideandcleanse'>@hideandcleanse</Link>
+                    <Link to="https://twitter.com/hideandcleanse">
+                      @hideandcleanse
+                    </Link>
                   </td>
                 </TRow>
                 <TRow>
@@ -110,7 +111,9 @@ export default function LandingPage() {
                     10/02/<HideSmall>20</HideSmall>20
                   </td>
                   <td>
-                    <Link to='https://twitter.com/jacobrosenthal'>Jacob Rosenthal</Link>
+                    <Link to="https://twitter.com/jacobrosenthal">
+                      Jacob Rosenthal
+                    </Link>
                   </td>
                 </TRow>
                 <TRow>
@@ -130,7 +133,9 @@ export default function LandingPage() {
                     05/22/<HideSmall>20</HideSmall>21
                   </td>
                   <td>
-                    <Link to='https://twitter.com/adietrichs'>Ansgar Dietrichs</Link>
+                    <Link to="https://twitter.com/adietrichs">
+                      Ansgar Dietrichs
+                    </Link>
                   </td>
                 </TRow>
                 <TRow>
@@ -141,7 +146,7 @@ export default function LandingPage() {
                     07/07/<HideSmall>20</HideSmall>21
                   </td>
                   <td>
-                    <Link to='https://twitter.com/orden_gg'>@orden_gg</Link>
+                    <Link to="https://twitter.com/orden_gg">@orden_gg</Link>
                   </td>
                 </TRow>
                 <TRow>
@@ -152,7 +157,9 @@ export default function LandingPage() {
                     08/22/<HideSmall>20</HideSmall>21
                   </td>
                   <td>
-                    <Link to='https://twitter.com/dropswap_gg'>@dropswap_gg</Link>
+                    <Link to="https://twitter.com/dropswap_gg">
+                      @dropswap_gg
+                    </Link>
                   </td>
                 </TRow>
                 <TRow>
@@ -163,42 +170,30 @@ export default function LandingPage() {
                     10/01/<HideSmall>20</HideSmall>21
                   </td>
                   <td>
-                    <Link to='https://twitter.com/orden_gg'>@orden_gg</Link>
+                    <Link to="https://twitter.com/orden_gg">@orden_gg</Link>
                   </td>
                 </TRow>
                 <TRow>
-                  <td>
-                    Guild W - For Pioneers
-                  </td>
+                  <td>Guild W - For Pioneers</td>
                   <td>
                     12/03/<HideSmall>20</HideSmall>21
                   </td>
                   <td>
-                    <Link to='https://twitter.com/marrowdao'>Red Team</Link>
+                    <Link to="https://twitter.com/marrowdao">Red Team</Link>
                   </td>
                 </TRow>
                 <TRow>
-                  <td>
-                    dfdao + friends - ☠️🪐
-                  </td>
+                  <td>dfdao + friends - ☠️🪐</td>
                   <td>
                     1/01/<HideSmall>20</HideSmall>22
                   </td>
-                  <td>
-                    t.b.d.
-                  </td>
+                  <td>t.b.d.</td>
                 </TRow>
               </tbody>
             </table>
           </div>
 
           <Spacer height={32} />
-
-          <p>
-              <Text>Leaderboard inside...</Text>
-          </p>
-
-          <Spacer height={16} />
 
           <VariousLinksContainer>
             <TextLinks>
@@ -212,16 +207,16 @@ export default function LandingPage() {
             <Spacer width={8} />
 
             <IconLinks>
-              <a className={'link-twitter'} href={links.twitter}>
-                <span className={'icon-twitter'}></span>
+              <a className={"link-twitter"} href={links.twitter}>
+                <span className={"icon-twitter"}></span>
               </a>
               <Spacer width={8} />
-              <a className={'link-discord'} href={links.discord}>
-                <span className={'icon-discord'}></span>
+              <a className={"link-discord"} href={links.discord}>
+                <span className={"icon-discord"}></span>
               </a>
               <Spacer width={8} />
-              <a className={'link-github'} href={links.github}>
-                <span className={'icon-github'}></span>
+              <a className={"link-github"} href={links.github}>
+                <span className={"icon-github"}></span>
               </a>
             </IconLinks>
           </VariousLinksContainer>
@@ -249,7 +244,12 @@ const VariousLinksContainer = styled.div`
 const PrettyOverlayGradient = styled.div`
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to left top, rgba(219, 10, 20, 0.2), rgba(1, 255, 22, 0.2)) fixed;
+  background: linear-gradient(
+      to left top,
+      rgba(219, 10, 20, 0.2),
+      rgba(1, 255, 22, 0.2)
+    )
+    fixed;
   background-position: 50%, 50%;
   display: inline-block;
   position: fixed;
