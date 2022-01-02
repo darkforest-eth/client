@@ -13,7 +13,7 @@ import { EthAddress } from "@darkforest_eth/types";
 // click on a players planet to choose someone else as center
 
 // this needs to be changed
-const API_URL_GRAPH = 'https://thegraph.com/hosted-service/subgraph/cha0sg0d/death-of-the-universe';
+const API_URL_GRAPH = 'https://api.thegraph.com/subgraphs/name/cha0sg0d/death-of-the-universe';
 const API_URL_NAMES = 'https://api.zkga.me/twitter/all-twitters';
 
 // only count planets that are lvl 3 or higher for calculating the distance from center score
@@ -277,7 +277,7 @@ function Plugin() {
 	o.firstRender = true;
 	o.twitterNames = null;
 	o.sortByColumn = null;
-	o.selectedPlayer = df.getPlayer();
+	o.selectedPlayer = df.getPlayer()?.address;
 	o.centerPlayerInList = true;
 
 	o.initColumns = function() {
@@ -346,8 +346,8 @@ function Plugin() {
 	}
 	
 	o.onMouseClick = function() {
-		let newPlayer = ui.getSelectedPlanet() ? ui.getSelectedPlanet()?.owner : df.getPlayer();
-		if (newPlayer === emptyAddress) newPlayer = df.getPlayer();
+		let newPlayer = ui.getSelectedPlanet() ? ui.getSelectedPlanet()?.owner : df.getPlayer()?.address;
+		if (newPlayer === emptyAddress) newPlayer = df.getPlayer()?.address;
 		if (newPlayer === o.selectedPlayer) return;
 		o.selectedPlayer = newPlayer;
 		if (!onClickMovePlayerToTheTop) return;
