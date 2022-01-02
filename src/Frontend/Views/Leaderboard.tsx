@@ -65,7 +65,7 @@ function playerToEntry(playerStr: string, color: string) {
 }
 
 function getRankColor([rank, score]: [number, number | undefined]) {
-  if (score === undefined || score === null) {
+  if (score === undefined || score === null || score == 0) {
     return dfstyles.colors.subtext;
   }
 
@@ -81,7 +81,7 @@ function getRankColor([rank, score]: [number, number | undefined]) {
     return RarityColors[ArtifactRarity.Epic];
   }
 
-  return dfstyles.colors.subtext;
+  return "white";
 
   if (rank >= 7 && rank <= 14) {
     return RarityColors[ArtifactRarity.Rare];
@@ -149,7 +149,7 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
       sortDesc();
       setSort(col);
     } else {
-      toggleSortDir();
+      // toggleSortDir();
     }
   };
 
@@ -200,7 +200,7 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
               style={sortStyle(SortColumn.SilverArtifacts)}
               onClick={() => sortByColumn(SortColumn.SilverArtifacts)}
             >
-              silver / artifacts
+              silver + artifacts
             </Th>
             <Th
               style={sortStyle(SortColumn.FromCenter)}
@@ -218,11 +218,24 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
         </Thead>
         <Tbody>
           {entriesSorted.map((entry, i) => {
-            const color = getRankColor([i, entry.destroyedScore]);
+
             const distance =
               entry.distanceToCenter === undefined
                 ? "-"
                 : formatNumberForDisplay(entry.distanceToCenter || 0);
+
+            var score;
+            switch (sort) {
+              case SortColumn.DestroyedPlanets:
+                score = entry.destroyedScore;
+                break;
+              case SortColumn.FromCenter:
+                score = entry.distanceToCenter;
+                break;
+              default:
+                score = entry.silverArtifacts;
+            }
+            const color = getRankColor([i, score]);
             return (
               <Tr key={i}>
                 <Td style={{ color }}>{getPlace(i)}.</Td>
