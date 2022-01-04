@@ -20,7 +20,7 @@ const PLAYERS_QUERY = `
       id
       score
       destroyedScore
-      planets(orderBy: revealedRadius, where: {revealedRadius_not: 0}, first: 1) {
+      planets(orderBy: revealedRadius, where: {revealedRadius_not: 0, destroyed:false}, first: 1) {
         revealedRadius
       }
     }
