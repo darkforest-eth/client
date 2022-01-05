@@ -15,16 +15,16 @@ export interface LeaderboardEntry {
 }
 
 const PLAYERS_QUERY = `
-  {
-    players(first:1000, where:{ id_not: "0x0000000000000000000000000000000000000000" }) {
-      id
-      score
-      destroyedScore
-      planets(orderBy: revealedRadius, where: {revealedRadius_not: 0, destroyed:false}, first: 1) {
-        revealedRadius
-      }
+{
+  players(first:1000, block:{number:19943660}, where:{ id_not: "0x0000000000000000000000000000000000000000" }) {
+    id
+    score
+    destroyedScore
+    planets(orderBy: revealedRadius, where: {revealedRadius_not: 0, destroyed:false, planetLevel_gte: 3}, first: 1) {
+      revealedRadius
     }
   }
+}
 `;
 
 async function fetchGQL(query: any, graphApiUrl = API_URL_GRAPH) {
