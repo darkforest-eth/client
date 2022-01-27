@@ -20,6 +20,8 @@ import { PlanetDexPane } from '../Panes/PlanetDexPane';
 import { PlayerArtifactsPane } from '../Panes/PlayerArtifactsPane';
 import { PluginLibraryPane } from '../Panes/PluginLibraryPane';
 import { PrivatePane } from '../Panes/PrivatePane';
+import { SpecialsPane } from '../Panes/SpecialsPane';
+
 import { SettingsPane } from '../Panes/SettingsPane';
 import { TutorialPane } from '../Panes/TutorialPane';
 import { TwitterVerifyPane } from '../Panes/TwitterVerifyPane';
@@ -36,6 +38,7 @@ import {
   TOGGLE_TARGETTING,
   TOGGLE_YOUR_ARTIFACTS_PANE,
   TOGGLE_YOUR_PLANETS_DEX_PANE,
+  TOGGLE_SPECIALS_PANE
 } from '../Utils/ShortcutConstants';
 import { NotificationsPane } from './Notifications';
 import { SidebarPane } from './SidebarPane';
@@ -50,6 +53,8 @@ export function GameWindowLayout({
 }) {
   const helpHook = useState<boolean>(false);
   const planetdexHook = useState<boolean>(false);
+  const specialsHook = useState<boolean>(false);
+
   const yourArtifactsHook = useState<boolean>(false);
   const twitterVerifyHook = useState<boolean>(false);
   const settingsHook = useState<boolean>(false);
@@ -120,6 +125,15 @@ export function GameWindowLayout({
     }, [setPlanetDexOpen])
   );
 
+  const setSpecialsOpen = specialsHook[1];
+  useOnUp(
+    TOGGLE_SPECIALS_PANE,
+    useCallback(() => {
+      setPlanetDexOpen((value) => !value);
+    }, [setPlanetDexOpen])
+  );
+
+
   const setYourArtifactsOpen = yourArtifactsHook[1];
   useOnUp(
     TOGGLE_YOUR_ARTIFACTS_PANE,
@@ -151,6 +165,8 @@ export function GameWindowLayout({
       <div ref={modalsContainerRef}>
         <HelpPane hook={helpHook} />
         <PlanetDexPane hook={planetdexHook} />
+        <SpecialsPane hook={specialsHook} />
+
         <TwitterVerifyPane hook={twitterVerifyHook} />
         <SettingsPane
           ethConnection={uiManager.getEthConnection()}
@@ -183,6 +199,7 @@ export function GameWindowLayout({
             pluginsHook={pluginsHook}
             yourArtifactsHook={yourArtifactsHook}
             planetdexHook={planetdexHook}
+            specialsHook = {specialsHook}
           />
           <CanvasWrapper>
             <ControllableCanvas />

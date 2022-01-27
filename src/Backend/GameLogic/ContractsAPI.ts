@@ -61,6 +61,7 @@ import {
   SubmittedInit,
   SubmittedMove,
   SubmittedPlanetTransfer,
+  SubmittedUseSpecial,
   SubmittedProspectPlanet,
   SubmittedReveal,
   SubmittedTx,
@@ -229,6 +230,7 @@ export class ContractsAPI extends EventEmitter {
           coreContract.filters.LocationRevealed(null, null, null, null).topics,
           coreContract.filters.PlanetHatBought(null, null, null).topics,
           coreContract.filters.PlanetProspected(null, null).topics,
+          coreContract.filters.PlanetHijacked(null, null).topics,
           coreContract.filters.PlanetSilverWithdrawn(null, null, null).topics,
           coreContract.filters.PlanetTransferred(null, null, null).topics,
           coreContract.filters.PlanetUpgraded(null, null, null, null).topics,
@@ -298,6 +300,17 @@ export class ContractsAPI extends EventEmitter {
           ContractsAPIEvent.PlanetTransferred,
           locationIdFromEthersBN(planetId),
           receiverAddress.toLowerCase() as EthAddress
+        );
+      },
+      [ContractEvent.PlanetHijacked]: async (
+        _hijackerAddress: string,
+        planetId: EthersBN,
+        _: Event
+      ) => {
+        this.emit(
+          ContractsAPIEvent.PlanetHijacked,
+          _hijackerAddress.toLowerCase() as EthAddress,
+          locationIdFromEthersBN(planetId),
         );
       },
       [ContractEvent.ArrivalQueued]: async (
@@ -467,6 +480,35 @@ export class ContractsAPI extends EventEmitter {
       planetId,
       newOwner,
     };
+
+    return this.waitFor(unminedTransferTx, tx.confirmed);
+  }
+
+  async useSpecial(
+    planetId: LocationId,
+    index: number,
+    actionId: string
+  ): Promise<void | providers.TransactionReceipt> {
+    console.log("ContractsAPI use special")
+    if (!this.txExecutor) {
+      throw new Error('no signer, cannot execute tx');
+    }
+    const tx = this.txExecutor.queueTransaction(
+      actionId,
+      this.coreContract,
+      ContractMethodName.USE_SPECIAL,
+      [locationIdToDecStr(planetId), index]
+    );
+
+    const unminedTransferTx: SubmittedUseSpecial = {
+      actionId,
+      methodName: ContractMethodName.USE_SPECIAL,
+      txHash: (await tx.submitted).hash,
+      sentAtTimestamp: Math.floor(Date.now() / 1000),
+      planetId,
+      index
+    };
+
 
     return this.waitFor(unminedTransferTx, tx.confirmed);
   }
@@ -796,12 +838,14 @@ export class ContractsAPI extends EventEmitter {
       BIOME_THRESHOLD_2,
       PLANET_RARITY,
       PHOTOID_ACTIVATION_DELAY,
-      LOCATION_REVEAL_COOLDOWN
+      LOCATION_REVEAL_COOLDOWN,
+      SPECIAL_WEAPONS
     } = await this.makeCall(this.coreContract.gameConstants);
 
     const TOKEN_MINT_END_SECONDS = (
       await this.makeCall(this.coreContract.TOKEN_MINT_END_TIMESTAMP)
     ).toNumber();
+
 
     const upgrades = decodeUpgradeBranches(await this.makeCall(this.coreContract.getUpgrades));
 
@@ -871,6 +915,7 @@ export class ContractsAPI extends EventEmitter {
       planetLevelThresholds,
       planetCumulativeRarities,
       upgrades,
+      SPECIAL_WEAPONS
     };
 
     return constants;

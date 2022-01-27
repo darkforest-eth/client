@@ -21,7 +21,7 @@ public/img/artifacts
 
 # compiled contracts
 public/contracts/*.json
-!public/contracts/DarkForestCore.json
+# !public/contracts/DarkForestCore.json
 !public/contracts/DarkForestGetters.json
 !public/contracts/Whitelist.json
 !public/contracts/DarkForestGPTCredit.json

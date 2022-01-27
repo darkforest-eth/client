@@ -43,6 +43,7 @@ export const enum ModalName {
   ManageAccount,
   Onboarding,
   Private,
+  Specials
 }
 
 function InformationSection({

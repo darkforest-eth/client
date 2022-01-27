@@ -335,6 +335,15 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getMyBalance$();
   }
 
+  public useSpecial(planetId: LocationId, index: number) {
+    console.log("gameUIManager use special")
+    // if (this.gameManager.isRoundOver()) {
+    //   alert('This round has ended, and you can no longer find artifacts!');
+    //   return;
+    // }
+    this.gameManager.useSpecial(planetId, index);
+  }
+
   public findArtifact(planetId: LocationId) {
     if (this.gameManager.isRoundOver()) {
       alert('This round has ended, and you can no longer find artifacts!');
@@ -712,6 +721,7 @@ class GameUIManager extends EventEmitter {
     if (this.isSending && this.sendingPlanet) return this.sendingPlanet;
     return this.mouseDownOverPlanet;
   }
+
 
   public onSendInit(planet: LocatablePlanet | undefined): void {
     this.isSending = true;

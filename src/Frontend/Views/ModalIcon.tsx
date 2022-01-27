@@ -5,7 +5,7 @@ import { ShortcutButton, Spacer } from '../Components/CoreUI';
 import { Icon, IconType } from '../Components/Icons';
 import { ModalHook, ModalName } from './ModalPane';
 
-const ModalIconText = styled.span`
+const ModalIconText = styled.span` 
   flex-grow: 1;
   display: flex;
   justify-content: center;
@@ -22,12 +22,14 @@ const icon = (modal: ModalName): React.ReactNode => {
   else if (modal === ModalName.TwitterVerify) return <Icon type={IconType.Twitter} />;
   else if (modal === ModalName.Broadcast) return <Icon type={IconType.Broadcast} />;
   else if (modal === ModalName.MapShare) return <Icon type={IconType.Share} />;
-  else if (modal === ModalName.ManageAccount) return <Icon type={IconType.Lock} />;
+  else if (modal === ModalName.ManageAccount) return <Icon type={IconType.Lock} />; 
   else if (modal === ModalName.Hats) return <Icon type={IconType.Hat} />;
   else if (modal === ModalName.Settings) return <Icon type={IconType.Settings} />;
   else if (modal === ModalName.Plugins) return <Icon type={IconType.Plugin} />;
   else if (modal === ModalName.YourArtifacts) return <Icon type={IconType.Artifact} />;
   else if (modal === ModalName.WithdrawSilver) return <Icon type={IconType.Withdraw} />;
+  else if (modal === ModalName.Specials) return <Icon type={IconType.Specials} />;
+
   return <span>T</span>;
 };
 
@@ -107,6 +109,28 @@ export function ModalHelpIcon({
     <ModalToggleButton
       hook={hook}
       modal={ModalName.Help}
+      text={text}
+      style={style}
+      shortcutKey={shortcutKey}
+    />
+  );
+}
+
+export function ModalSpecialsIcon({
+  hook,
+  text,
+  style,
+  shortcutKey,
+}: {
+  hook: ModalHook;
+  text?: string;
+  style?: React.CSSProperties;
+  shortcutKey?: string;
+}) {
+  return (
+    <ModalToggleButton
+      hook={hook}
+      modal={ModalName.Specials}
       text={text}
       style={style}
       shortcutKey={shortcutKey}

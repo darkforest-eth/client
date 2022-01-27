@@ -46,6 +46,7 @@ export const enum ContractEvent {
   PlanetUpgraded = 'PlanetUpgraded',
   PlanetHatBought = 'PlanetHatBought',
   PlanetTransferred = 'PlanetTransferred',
+  PlanetHijacked = 'PlanetHijacked',
   LocationRevealed = 'LocationRevealed',
   ArtifactFound = 'ArtifactFound',
   ArtifactDeposited = 'ArtifactDeposited',
@@ -68,6 +69,7 @@ export const enum ContractsAPIEvent {
   TxReverted = 'TxReverted',
   PlanetTransferred = 'PlanetTransferred',
   PlanetClaimed = 'PlanetClaimed',
+  PlanetHijacked = 'PlanetHijacked'
 }
 
 // planet locationID(BigInt), branch number
@@ -169,6 +171,8 @@ export interface ContractConstants {
   PLANET_RARITY: number;
   PLANET_TYPE_WEIGHTS: PlanetTypeWeightsBySpaceType;
   ARTIFACT_POINT_VALUES: ArtifactPointValues;
+
+  SPECIAL_WEAPONS: boolean;
 
   PHOTOID_ACTIVATION_DELAY: number;
   LOCATION_REVEAL_COOLDOWN: number;

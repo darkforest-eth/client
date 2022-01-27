@@ -41,6 +41,7 @@ import {
   UnconfirmedInit,
   UnconfirmedMove,
   UnconfirmedPlanetTransfer,
+  UnconfirmedUseSpecial,
   UnconfirmedProspectPlanet,
   UnconfirmedReveal,
   UnconfirmedUpgrade,
@@ -644,6 +645,17 @@ class GameManager extends EventEmitter {
       .on(
         ContractsAPIEvent.PlanetTransferred,
         async (planetId: LocationId, newOwner: EthAddress) => {
+          await gameManager.hardRefreshPlanet(planetId);
+          const planetAfter = gameManager.getPlanetWithId(planetId);
+
+          if (planetAfter && newOwner === gameManager.account) {
+            NotificationManager.getInstance().receivedPlanet(planetAfter);
+          }
+        }
+      )
+      .on(
+        ContractsAPIEvent.PlanetHijacked,
+        async (newOwner: EthAddress, planetId: LocationId) => {
           await gameManager.hardRefreshPlanet(planetId);
           const planetAfter = gameManager.getPlanetWithId(planetId);
 
@@ -2001,6 +2013,43 @@ class GameManager extends EventEmitter {
       });
   }
 
+  public useSpecial(planetId: LocationId, index: number, bypassChecks = false) : GameManager {
+      console.log("gamemanager use special");
+      if (!bypassChecks) {
+        if (this.checkGameHasEnded()) return this;
+        const planetLoc = this.entityStore.getLocationOfPlanet(planetId);
+        if (!planetLoc) {
+          console.error('planet not found');
+          this.terminal.current?.println('[TX ERROR] Planet not found');
+          return this;
+        }
+        const planet = this.entityStore.getPlanetWithLocation(planetLoc);
+        if (!planet) {
+          console.error('planet not found');
+          this.terminal.current?.println('[TX ERROR] Planet not found');
+          return this;
+        }
+      }
+  
+      // localStorage.setItem(`${this.getAccount()?.toLowerCase()}-transferPlanet`, planetId);
+      // localStorage.setItem(`${this.getAccount()?.toLowerCase()}-transferOwner`, newOwner);
+  
+      const actionId = getRandomActionId();
+      const txIntent: UnconfirmedUseSpecial = {
+        actionId,
+        methodName: ContractMethodName.USE_SPECIAL,
+        planetId,
+        index
+      };
+      this.handleTxIntent(txIntent);
+  
+      this.contractsAPI
+        .useSpecial(planetId, index, actionId)
+        .catch((e) => this.onTxIntentFail(txIntent, e));
+    
+    return this;
+  }
+
   /**
    * Calls the contract to find an artifact on the given planet.
    */
@@ -2629,7 +2678,7 @@ class GameManager extends EventEmitter {
       actionId,
       methodName: ContractMethodName.PLANET_TRANSFER,
       planetId,
-      newOwner,
+      newOwner
     };
     this.handleTxIntent(txIntent);
 
