@@ -215,6 +215,14 @@ function ArtifactThumb({
   );
 }
 
+const StyledSetDefaultResources = styled.div`
+  margin: 0.5em;
+
+  & > span {
+    margin-left: 0.5em
+  }
+`;
+
 function SelectArtifactRow({
   sendArtifact,
   setSendArtifact,
@@ -288,6 +296,7 @@ export function SendResources({
   );
   const [silverPercent, setSilverPercent] = silverHook;
   const [sending, setSending] = useState<boolean>(false);
+  const [isDefaultResourcesChecked, setIsDefaultResourcesChecked] = useState<boolean>(false);
 
   const windowManager = WindowManager.getInstance();
 
@@ -305,9 +314,13 @@ export function SendResources({
   }, [p.value?.locationId, windowManager]);
 
   useEffect(() => {
-    setEnergyPercent(DEFAULT_ENERGY_PERCENT);
-    setSilverPercent(DEFAULT_SILVER_PERCENT);
+    setEnergyPercent(isDefaultResourcesChecked ? energyPercent: DEFAULT_ENERGY_PERCENT);
+    setSilverPercent(isDefaultResourcesChecked ? silverPercent: DEFAULT_SILVER_PERCENT);
   }, [p.value?.locationId, setEnergyPercent, setSilverPercent]);
+
+  const onSetDefaultResources = (isChecked: boolean) => {
+    setIsDefaultResourcesChecked(isChecked);
+  }
 
   const doSend = useCallback(() => {
     if (!uiManager || !windowManager) return;
@@ -398,6 +411,18 @@ export function SendResources({
           isSilver
         />
       )}
+
+      <StyledSetDefaultResources>
+        <input
+          type='checkbox'
+          checked={isDefaultResourcesChecked}
+          onChange={(event) => onSetDefaultResources(event.target.checked)}
+        />
+        <span onClick={() => onSetDefaultResources(!isDefaultResourcesChecked)}>
+          Set default resources
+        </span>
+      </StyledSetDefaultResources>
+
       {p.value && artifacts.length > 0 && (
         <>
           <SelectArtifactRow inactiveArtifacts={artifacts} {...artifactProps} />
