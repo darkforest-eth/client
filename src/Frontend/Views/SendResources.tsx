@@ -217,9 +217,14 @@ function ArtifactThumb({
 
 const StyledSetDefaultResources = styled.div`
   margin: 0.5em;
+  cursor: pointer;
+  
+  & > input {
+    cursor: inherit;
+  }
 
   & > span {
-    margin-left: 0.5em
+    margin-left: 0.5em;
   }
 `;
 
@@ -416,7 +421,10 @@ export function SendResources({
         <input
           type='checkbox'
           checked={isDefaultResourcesChecked}
-          onChange={(event) => onSetDefaultResources(event.target.checked)}
+          onChange={(event) => {
+            event.target.blur();
+            onSetDefaultResources(event.target.checked)
+          }}
         />
         <span onClick={() => onSetDefaultResources(!isDefaultResourcesChecked)}>
           Set default resources
