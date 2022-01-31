@@ -8,6 +8,7 @@
 - [EXIT_PANE](Frontend_Utils_ShortcutConstants.md#exit_pane)
 - [MODAL_BACK_SHORTCUT](Frontend_Utils_ShortcutConstants.md#modal_back_shortcut)
 - [TOGGLE_BROADCAST_PANE](Frontend_Utils_ShortcutConstants.md#toggle_broadcast_pane)
+- [TOGGLE_CLAIM_PLANET_PANE](Frontend_Utils_ShortcutConstants.md#toggle_claim_planet_pane)
 - [TOGGLE_DIAGNOSTICS_PANE](Frontend_Utils_ShortcutConstants.md#toggle_diagnostics_pane)
 - [TOGGLE_EXPLORE](Frontend_Utils_ShortcutConstants.md#toggle_explore)
 - [TOGGLE_HAT_PANE](Frontend_Utils_ShortcutConstants.md#toggle_hat_pane)
@@ -25,94 +26,100 @@
 
 ### CLOSE_MODAL
 
-• **CLOSE_MODAL**: `"t"`
+• `Const` **CLOSE_MODAL**: `"t"`
 
 ---
 
 ### EXIT_PANE
 
-• **EXIT_PANE**: `"Escape"`
+• `Const` **EXIT_PANE**: `"Escape"`
 
 ---
 
 ### MODAL_BACK_SHORTCUT
 
-• **MODAL_BACK_SHORTCUT**: `"t"`
+• `Const` **MODAL_BACK_SHORTCUT**: `"t"`
 
 ---
 
 ### TOGGLE_BROADCAST_PANE
 
-• **TOGGLE_BROADCAST_PANE**: `"z"`
+• `Const` **TOGGLE_BROADCAST_PANE**: `"z"`
+
+---
+
+### TOGGLE_CLAIM_PLANET_PANE
+
+• `Const` **TOGGLE_CLAIM_PLANET_PANE**: `"c"`
 
 ---
 
 ### TOGGLE_DIAGNOSTICS_PANE
 
-• **TOGGLE_DIAGNOSTICS_PANE**: `"i"`
+• `Const` **TOGGLE_DIAGNOSTICS_PANE**: `"i"`
 
 ---
 
 ### TOGGLE_EXPLORE
 
-• **TOGGLE_EXPLORE**: `" "`
+• `Const` **TOGGLE_EXPLORE**: `" "`
 
 ---
 
 ### TOGGLE_HAT_PANE
 
-• **TOGGLE_HAT_PANE**: `"x"`
+• `Const` **TOGGLE_HAT_PANE**: `"x"`
 
 ---
 
 ### TOGGLE_HELP_PANE
 
-• **TOGGLE_HELP_PANE**: `"j"`
+• `Const` **TOGGLE_HELP_PANE**: `"j"`
 
 ---
 
 ### TOGGLE_PLANET_ARTIFACTS_PANE
 
-• **TOGGLE_PLANET_ARTIFACTS_PANE**: `"s"`
+• `Const` **TOGGLE_PLANET_ARTIFACTS_PANE**: `"s"`
 
 ---
 
 ### TOGGLE_PLUGINS_PANE
 
-• **TOGGLE_PLUGINS_PANE**: `"k"`
+• `Const` **TOGGLE_PLUGINS_PANE**: `"k"`
 
 ---
 
 ### TOGGLE_SEND
 
-• **TOGGLE_SEND**: `"q"`
+• `Const` **TOGGLE_SEND**: `"q"`
 
 ---
 
 ### TOGGLE_SETTINGS_PANE
 
-• **TOGGLE_SETTINGS_PANE**: `"h"`
+• `Const` **TOGGLE_SETTINGS_PANE**: `"h"`
 
 ---
 
 ### TOGGLE_TARGETTING
 
-• **TOGGLE_TARGETTING**: `` "`" ``
+• `Const` **TOGGLE_TARGETTING**: `` "`" ``
 
 ---
 
 ### TOGGLE_UPGRADES_PANE
 
-• **TOGGLE_UPGRADES_PANE**: `"a"`
+• `Const` **TOGGLE_UPGRADES_PANE**: `"a"`
 
 ---
 
 ### TOGGLE_YOUR_ARTIFACTS_PANE
 
-• **TOGGLE_YOUR_ARTIFACTS_PANE**: `"l"`
+• `Const` **TOGGLE_YOUR_ARTIFACTS_PANE**: `"l"`
 
 ---
 
 ### TOGGLE_YOUR_PLANETS_DEX_PANE
 
-• **TOGGLE_YOUR_PLANETS_DEX_PANE**: `";"`
+• `Const` **TOGGLE_YOUR_PLANETS_DEX_PANE**: `";"`

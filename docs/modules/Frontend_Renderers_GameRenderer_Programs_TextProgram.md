@@ -10,7 +10,7 @@
 
 ### TEXT_PROGRAM_DEFINITION
 
-• **TEXT_PROGRAM_DEFINITION**: `Object`
+• `Const` **TEXT_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

@@ -32,13 +32,13 @@
 
 ### ALL_AUTO_GAS_SETTINGS
 
-• **ALL_AUTO_GAS_SETTINGS**: `AutoGasSetting`[]
+• `Const` **ALL_AUTO_GAS_SETTINGS**: `AutoGasSetting`[]
 
 ---
 
 ### settingChanged$
 
-• **settingChanged$**: `Monomitter`<[`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)\>
+• `Const` **settingChanged$**: `Monomitter`<[`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)\>
 
 Whenever a setting changes, we publish the setting's name to this event emitter.
 
@@ -82,7 +82,7 @@ several options.
 | `__namedParameters`           | `Object`                                                           |
 | `__namedParameters.labels`    | `string`[]                                                         |
 | `__namedParameters.setting`   | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)      |
-| `__namedParameters.style?`    | `CSSProperties`                                                    |
+| `__namedParameters.style?`    | `React.CSSProperties`                                              |
 | `__namedParameters.uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
 | `__namedParameters.values`    | `string`[]                                                         |
 | `__namedParameters.wide?`     | `boolean`                                                          |
@@ -121,7 +121,7 @@ Loads from local storage, and interprets as a boolean the setting with the given
 
 | Name      | Type                                                          |
 | :-------- | :------------------------------------------------------------ |
-| `account` | `undefined` \| `EthAddress`                                   |
+| `account` | `EthAddress` \| `undefined`                                   |
 | `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
 
 #### Returns
@@ -140,7 +140,7 @@ Each setting is stored in local storage. Each account has their own setting.
 
 | Name      | Type                                                          |
 | :-------- | :------------------------------------------------------------ |
-| `account` | `undefined` \| `EthAddress`                                   |
+| `account` | `EthAddress` \| `undefined`                                   |
 | `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
 
 #### Returns
@@ -159,7 +159,7 @@ Loads from local storage, and interprets as a boolean the setting with the given
 
 | Name      | Type                                                          |
 | :-------- | :------------------------------------------------------------ |
-| `account` | `undefined` \| `EthAddress`                                   |
+| `account` | `EthAddress` \| `undefined`                                   |
 | `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
 
 #### Returns
@@ -178,7 +178,7 @@ Read the local storage setting from local storage.
 
 | Name      | Type                                                          |
 | :-------- | :------------------------------------------------------------ |
-| `account` | `undefined` \| `EthAddress`                                   |
+| `account` | `EthAddress` \| `undefined`                                   |
 | `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
 
 #### Returns
@@ -200,7 +200,7 @@ notify the rest of the game that it changed if it changed.
 
 | Name      | Type                                                          |
 | :-------- | :------------------------------------------------------------ |
-| `account` | `undefined` \| `EthAddress`                                   |
+| `account` | `EthAddress` \| `undefined`                                   |
 | `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
 
 #### Returns
@@ -219,7 +219,7 @@ Save the given setting to local storage. Publish an event to [settingChanged$](F
 
 | Name      | Type                                                          |
 | :-------- | :------------------------------------------------------------ |
-| `account` | `undefined` \| `EthAddress`                                   |
+| `account` | `EthAddress` \| `undefined`                                   |
 | `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
 | `value`   | `boolean`                                                     |
 
@@ -239,7 +239,7 @@ Save the given setting to local storage. Publish an event to [settingChanged$](F
 
 | Name      | Type                                                          |
 | :-------- | :------------------------------------------------------------ |
-| `account` | `undefined` \| `EthAddress`                                   |
+| `account` | `EthAddress` \| `undefined`                                   |
 | `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
 | `value`   | `number`                                                      |
 
@@ -259,7 +259,7 @@ Save the given setting to local storage. Publish an event to [settingChanged$](F
 
 | Name      | Type                                                          |
 | :-------- | :------------------------------------------------------------ |
-| `account` | `undefined` \| `EthAddress`                                   |
+| `account` | `EthAddress` \| `undefined`                                   |
 | `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
 | `value`   | `string`                                                      |
 
@@ -280,7 +280,7 @@ a boolean.
 
 | Name        | Type                                                                              |
 | :---------- | :-------------------------------------------------------------------------------- |
-| `uiManager` | `undefined` \| [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) \| `undefined` |
 | `setting`   | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)                     |
 
 #### Returns
@@ -300,7 +300,7 @@ allow you to set the value of this setting to anything but a valid number.
 
 | Name        | Type                                                                              |
 | :---------- | :-------------------------------------------------------------------------------- |
-| `uiManager` | `undefined` \| [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) \| `undefined` |
 | `setting`   | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)                     |
 
 #### Returns
@@ -319,7 +319,7 @@ Allows a react component to subscribe to changes and set the given setting.
 
 | Name        | Type                                                                              |
 | :---------- | :-------------------------------------------------------------------------------- |
-| `uiManager` | `undefined` \| [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) \| `undefined` |
 | `setting`   | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)                     |
 
 #### Returns

@@ -33,34 +33,34 @@
 
 ### CanvasContainer
 
-• **CanvasContainer**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **CanvasContainer**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### CanvasWrapper
 
-• **CanvasWrapper**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **CanvasWrapper**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### MainWindow
 
-• **MainWindow**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **MainWindow**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### StyledPane
 
-• **StyledPane**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **StyledPane**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### UpperLeft
 
-• **UpperLeft**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **UpperLeft**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### WindowWrapper
 
-• **WindowWrapper**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **WindowWrapper**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>

@@ -10,7 +10,7 @@
 
 ### engineConsts
 
-• **engineConsts**: `Object`
+• `Const` **engineConsts**: `Object`
 
 #### Type declaration
 

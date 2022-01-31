@@ -13,19 +13,19 @@
 
 ### ARTIFACT_ROW_H
 
-• **ARTIFACT_ROW_H**: `48`
+• `Const` **ARTIFACT_ROW_H**: `48`
 
 ---
 
 ### SPACE_TYPE_COLORS
 
-• **SPACE_TYPE_COLORS**: `Object`
+• `Const` **SPACE_TYPE_COLORS**: `Object`
 
 ---
 
 ### default
 
-• **default**: `Object`
+• `Const` **default**: `Object`
 
 #### Type declaration
 
@@ -98,7 +98,7 @@
 
 ### snips
 
-• **snips**: `Object`
+• `Const` **snips**: `Object`
 
 #### Type declaration
 

@@ -14,7 +14,7 @@
 
 ### GIF_ARTIFACT_COLOR
 
-• **GIF_ARTIFACT_COLOR**: [`APP_BACKGROUND`](../enums/Backend_GameLogic_ArtifactUtils.ArtifactFileColor.md#app_background) = `ArtifactFileColor.APP_BACKGROUND`
+• `Const` **GIF_ARTIFACT_COLOR**: [`APP_BACKGROUND`](../enums/Backend_GameLogic_ArtifactUtils.ArtifactFileColor.md#app_background)
 
 ## Functions
 

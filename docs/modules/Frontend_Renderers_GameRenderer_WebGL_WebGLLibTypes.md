@@ -18,7 +18,7 @@
 
 ### AttributeSetters
 
-Ƭ **AttributeSetters**<`U`\>: { [key in keyof U]: Function }
+Ƭ **AttributeSetters**<`U`\>: { [key in keyof U]: function}
 
 #### Type parameters
 
@@ -63,7 +63,7 @@
 
 ### UniformSetters
 
-Ƭ **UniformSetters**<`U`\>: { [key in keyof U]: Function }
+Ƭ **UniformSetters**<`U`\>: { [key in keyof U]: function}
 
 #### Type parameters
 

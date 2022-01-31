@@ -14,11 +14,11 @@
 
 #### Parameters
 
-| Name                                   | Type                             |
-| :------------------------------------- | :------------------------------- |
-| `__namedParameters`                    | `Object`                         |
-| `__namedParameters.terminalVisible`    | `boolean`                        |
-| `__namedParameters.setTerminalVisible` | (`visible`: `boolean`) => `void` |
+| Name                                   | Type      |
+| :------------------------------------- | :-------- |
+| `__namedParameters`                    | `Object`  |
+| `__namedParameters.terminalVisible`    | `boolean` |
+| `__namedParameters.setTerminalVisible` |           |
 
 #### Returns
 

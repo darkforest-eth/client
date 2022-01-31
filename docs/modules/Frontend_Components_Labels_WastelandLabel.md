@@ -14,7 +14,7 @@
 
 ### WastelandLabel
 
-• **WastelandLabel**: `MemoExoticComponent`<`fn`\>
+• `Const` **WastelandLabel**: `MemoExoticComponent`<`fn`\>
 
 ## Functions
 

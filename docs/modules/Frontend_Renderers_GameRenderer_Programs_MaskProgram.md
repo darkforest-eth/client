@@ -10,7 +10,7 @@
 
 ### MASK_PROGRAM_DEFINITION
 
-• **MASK_PROGRAM_DEFINITION**: `Object`
+• `Const` **MASK_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

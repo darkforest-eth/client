@@ -14,7 +14,7 @@
 
 ### ARTIFACT_URL
 
-• **ARTIFACT_URL**: `"https://d2wspbczt15cqu.cloudfront.net/v0.6.0-artifacts/"`
+• `Const` **ARTIFACT_URL**: `"https://d2wspbczt15cqu.cloudfront.net/v0.6.0-artifacts/"`
 
 ## Functions
 

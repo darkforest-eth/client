@@ -10,7 +10,7 @@
 
 ### ASTEROID_PROGRAM_DEFINITION
 
-• **ASTEROID_PROGRAM_DEFINITION**: `Object`
+• `Const` **ASTEROID_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

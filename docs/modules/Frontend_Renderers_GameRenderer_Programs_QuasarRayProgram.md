@@ -10,7 +10,7 @@
 
 ### QUASARRAY_PROGRAM_DEFINITION
 
-• **QUASARRAY_PROGRAM_DEFINITION**: `Object`
+• `Const` **QUASARRAY_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

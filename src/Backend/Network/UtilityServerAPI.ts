@@ -4,6 +4,8 @@ import timeout from 'p-timeout';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
 
+export const WEBSERVER_URL = process.env.WEBSERVER_URL as string;
+
 export const enum EmailResponse {
   Success,
   Invalid,
@@ -11,14 +13,10 @@ export const enum EmailResponse {
 }
 
 export const submitInterestedEmail = async (email: string): Promise<EmailResponse> => {
-  if (!process.env.DF_WEBSERVER_URL) {
-    return EmailResponse.ServerError;
-  }
-
   if (!EmailValidator.validate(email)) {
     return EmailResponse.Invalid;
   }
-  const { success } = await fetch(`${process.env.DF_WEBSERVER_URL}/email/interested`, {
+  const { success } = await fetch(`${WEBSERVER_URL}/email/interested`, {
     method: 'POST',
     body: JSON.stringify({ email }),
     headers: {
@@ -30,14 +28,10 @@ export const submitInterestedEmail = async (email: string): Promise<EmailRespons
 };
 
 export const submitUnsubscribeEmail = async (email: string): Promise<EmailResponse> => {
-  if (!process.env.DF_WEBSERVER_URL) {
-    return EmailResponse.ServerError;
-  }
-
   if (!EmailValidator.validate(email)) {
     return EmailResponse.Invalid;
   }
-  const { success } = await fetch(`${process.env.DF_WEBSERVER_URL}/email/unsubscribe`, {
+  const { success } = await fetch(`${WEBSERVER_URL}/email/unsubscribe`, {
     method: 'POST',
     body: JSON.stringify({ email }),
     headers: {
@@ -51,15 +45,11 @@ export const submitUnsubscribeEmail = async (email: string): Promise<EmailRespon
 export const submitPlayerEmail = async (
   request?: SignedMessage<{ email: string }>
 ): Promise<EmailResponse> => {
-  if (!process.env.DF_WEBSERVER_URL) {
-    return EmailResponse.ServerError;
-  }
-
   if (!request || !EmailValidator.validate(request.message.email)) {
     return EmailResponse.Invalid;
   }
 
-  const { success } = await fetch(`${process.env.DF_WEBSERVER_URL}/email/playing`, {
+  const { success } = await fetch(`${WEBSERVER_URL}/email/playing`, {
     method: 'POST',
     body: JSON.stringify(request),
     headers: {
@@ -90,10 +80,6 @@ export async function callRegisterUntilWhitelisted(
   address: EthAddress,
   terminal: React.MutableRefObject<TerminalHandle | undefined>
 ): Promise<string | undefined> {
-  if (!process.env.DF_WEBSERVER_URL) {
-    return undefined;
-  }
-
   while (true) {
     const response = await submitWhitelistKey(key, address);
     if (response?.error) {
@@ -109,19 +95,14 @@ export async function callRegisterUntilWhitelisted(
 }
 
 /**
- * Submits a whitelist key to register the given player to the game. Returns null if there was an
- * error.
+ * Submits a whitelist key to register the given player to the game.
  */
 export const submitWhitelistKey = async (
   key: string,
   address: EthAddress
 ): Promise<RegisterResponse | null> => {
-  if (!process.env.DF_WEBSERVER_URL) {
-    return null;
-  }
-
   try {
-    return await fetch(`${process.env.DF_WEBSERVER_URL}/whitelist/register`, {
+    return await fetch(`${WEBSERVER_URL}/whitelist/register`, {
       method: 'POST',
       body: JSON.stringify({
         key,
@@ -138,17 +119,12 @@ export const submitWhitelistKey = async (
 };
 
 export const requestDevFaucet = async (address: EthAddress): Promise<boolean> => {
-  if (!process.env.DF_WEBSERVER_URL) {
-    return false;
-  }
-
   // TODO: Provide own env variable for this feature
   if (process.env.NODE_ENV === 'production') {
     return false;
   }
-
   try {
-    const { success } = await fetch(`${process.env.DF_WEBSERVER_URL}/whitelist/faucet`, {
+    const { success } = await fetch(`${WEBSERVER_URL}/whitelist/faucet`, {
       method: 'POST',
       body: JSON.stringify({
         address,
@@ -178,9 +154,9 @@ export const tryGetAllTwitters = async (): Promise<AddressTwitterMap> => {
 
 export const getAllTwitters = async (): Promise<AddressTwitterMap> => {
   try {
-    const twitterMap: AddressTwitterMap = await fetch(
-      `${process.env.DF_WEBSERVER_URL}/twitter/all-twitters`
-    ).then((x) => x.json());
+    const twitterMap: AddressTwitterMap = await fetch(`${WEBSERVER_URL}/twitter/all-twitters`).then(
+      (x) => x.json()
+    );
     return twitterMap;
   } catch (e) {
     return {};
@@ -191,7 +167,7 @@ export const verifyTwitterHandle = async (
   verifyMessage: SignedMessage<{ twitter: string }>
 ): Promise<boolean> => {
   try {
-    const res = await fetch(`${process.env.DF_WEBSERVER_URL}/twitter/verify-twitter`, {
+    const res = await fetch(`${WEBSERVER_URL}/twitter/verify-twitter`, {
       method: 'POST',
       body: JSON.stringify({
         verifyMessage,
@@ -212,7 +188,7 @@ export const disconnectTwitter = async (
   disconnectMessage: SignedMessage<{ twitter: string }>
 ): Promise<boolean> => {
   try {
-    const res = await fetch(`${process.env.DF_WEBSERVER_URL}/twitter/disconnect`, {
+    const res = await fetch(`${WEBSERVER_URL}/twitter/disconnect`, {
       method: 'POST',
       body: JSON.stringify({
         disconnectMessage,

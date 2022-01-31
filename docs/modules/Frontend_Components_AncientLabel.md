@@ -15,7 +15,7 @@
 
 ### ancientAnim
 
-• **ancientAnim**: `FlattenSimpleInterpolation`
+• `Const` **ancientAnim**: `FlattenSimpleInterpolation`
 
 ## Functions
 

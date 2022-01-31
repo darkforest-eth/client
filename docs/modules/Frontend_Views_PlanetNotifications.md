@@ -59,7 +59,7 @@
 | :------------------------- | :------------------------------------------------------------------------------------ |
 | `__namedParameters`        | `Object`                                                                              |
 | `__namedParameters.notifs` | [`PlanetNotifType`](../enums/Frontend_Views_PlanetNotifications.PlanetNotifType.md)[] |
-| `__namedParameters.planet` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\>    |
+| `__namedParameters.planet` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\>    |
 
 #### Returns
 
@@ -75,9 +75,9 @@
 
 | Name                 | Type                        |
 | :------------------- | :-------------------------- |
-| `planet`             | `undefined` \| `Planet`     |
-| `account`            | `undefined` \| `EthAddress` |
-| `currentBlockNumber` | `undefined` \| `number`     |
+| `planet`             | `Planet` \| `undefined`     |
+| `account`            | `EthAddress` \| `undefined` |
+| `currentBlockNumber` | `number` \| `undefined`     |
 
 #### Returns
 

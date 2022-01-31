@@ -16,14 +16,12 @@
   "include": ["src/**/*", "embedded_plugins/*", "plugins/*"],
   "exclude": ["./node_modules", "./dist", "./declarations"],
   "typedocOptions": {
-    "entryPointStrategy": "expand",
     "entryPoints": ["src"],
     "out": "docs",
     "hideBreadcrumbs": true,
     "readme": "none",
     "disableSources": true,
-    "cleanOutputDir": false,
-    "githubPages": false,
+    "disableOutputCheck": true,
     "excludeExternals": true,
     "listInvalidSymbolLinks": true
   }

@@ -45,25 +45,25 @@
 
 ### ARTIFACTS_THUMBS_URL
 
-• **ARTIFACTS_THUMBS_URL**: `"public/sprites/artifactthumbs.png"`
+• `Const` **ARTIFACTS_THUMBS_URL**: `"public/sprites/artifactthumbs.png"`
 
 ---
 
 ### ARTIFACTS_URL
 
-• **ARTIFACTS_URL**: `"public/sprites/artifacts.png"`
+• `Const` **ARTIFACTS_URL**: `"public/sprites/artifacts.png"`
 
 ---
 
 ### EMPTY_SET
 
-• **EMPTY_SET**: `SpriteSet`
+• `Const` **EMPTY_SET**: `SpriteSet`
 
 ---
 
 ### EMPTY_SPRITE
 
-• **EMPTY_SPRITE**: [`SpriteRectangle`](Frontend_Renderers_GameRenderer_TextureManager.md#spriterectangle)
+• `Const` **EMPTY_SPRITE**: [`SpriteRectangle`](Frontend_Renderers_GameRenderer_TextureManager.md#spriterectangle)
 
 Represents a sprite that doesn't exist.
 
@@ -71,31 +71,31 @@ Represents a sprite that doesn't exist.
 
 ### GLASS_URL
 
-• **GLASS_URL**: `"public/sprites/glass.png"`
+• `Const` **GLASS_URL**: `"public/sprites/glass.png"`
 
 ---
 
 ### SPRITESHEET_HEIGHT_PX
 
-• **SPRITESHEET_HEIGHT_PX**: `number`
+• `Const` **SPRITESHEET_HEIGHT_PX**: `number`
 
 ---
 
 ### SPRITESHEET_WIDTH_PX
 
-• **SPRITESHEET_WIDTH_PX**: `number`
+• `Const` **SPRITESHEET_WIDTH_PX**: `number`
 
 ---
 
 ### SPRITES_HORIZONTALLY
 
-• **SPRITES_HORIZONTALLY**: `16`
+• `Const` **SPRITES_HORIZONTALLY**: `16`
 
 ---
 
 ### SPRITES_VERTICALLY
 
-• **SPRITES_VERTICALLY**: `16`
+• `Const` **SPRITES_VERTICALLY**: `16`
 
 ## Functions
 

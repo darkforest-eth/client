@@ -69,7 +69,7 @@ Get the currently used account on the client.
 
 | Name        | Type                                                                               |
 | :---------- | :--------------------------------------------------------------------------------- |
-| `planet`    | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\> |
+| `planet`    | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\> |
 | `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md)                 |
 
 #### Returns
@@ -121,9 +121,9 @@ Loads the leaderboard
 
 #### Parameters
 
-| Name   | Type                    | Default value |
-| :----- | :---------------------- | :------------ |
-| `poll` | `undefined` \| `number` | `undefined`   |
+| Name   | Type                    |
+| :----- | :---------------------- |
+| `poll` | `number` \| `undefined` |
 
 #### Returns
 
@@ -205,7 +205,7 @@ Calls {@code onCompleted} when the user sends a move via the ui.
 | Name         | Type                                                               |
 | :----------- | :----------------------------------------------------------------- |
 | `uiManager`  | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
-| `locationId` | `undefined` \| `LocationId`                                        |
+| `locationId` | `LocationId` \| `undefined`                                        |
 
 #### Returns
 
@@ -221,7 +221,7 @@ Calls {@code onCompleted} when the user sends a move via the ui.
 
 | Name        | Type                                                                               |
 | :---------- | :--------------------------------------------------------------------------------- |
-| `planet`    | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\> |
+| `planet`    | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\> |
 | `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md)                 |
 
 #### Returns
@@ -238,7 +238,7 @@ Calls {@code onCompleted} when the user sends a move via the ui.
 
 | Name        | Type                                                                               |
 | :---------- | :--------------------------------------------------------------------------------- |
-| `planet`    | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\> |
+| `planet`    | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\> |
 | `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md)                 |
 
 #### Returns
@@ -275,7 +275,7 @@ Hook which gets you the player, and updates whenever that player's twitter or sc
 | Name         | Type                                                                   |
 | :----------- | :--------------------------------------------------------------------- |
 | `modal`      | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
-| `startingId` | `undefined` \| `LocationId`                                            |
+| `startingId` | `LocationId` \| `undefined`                                            |
 
 #### Returns
 

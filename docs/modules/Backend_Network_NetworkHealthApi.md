@@ -2,9 +2,19 @@
 
 ## Table of contents
 
+### Variables
+
+- [WEBSERVER_URL](Backend_Network_NetworkHealthApi.md#webserver_url)
+
 ### Functions
 
 - [loadNetworkHealth](Backend_Network_NetworkHealthApi.md#loadnetworkhealth)
+
+## Variables
+
+### WEBSERVER_URL
+
+• `Const` **WEBSERVER_URL**: `string`
 
 ## Functions
 

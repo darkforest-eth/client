@@ -21,25 +21,25 @@
 
 ### mockCommon
 
-• **mockCommon**: `Artifact`
+• `Const` **mockCommon**: `Artifact`
 
 ---
 
 ### mockEpic
 
-• **mockEpic**: `Artifact`
+• `Const` **mockEpic**: `Artifact`
 
 ---
 
 ### mockLegendary
 
-• **mockLegendary**: `Artifact`
+• `Const` **mockLegendary**: `Artifact`
 
 ---
 
 ### mockRare
 
-• **mockRare**: `Artifact`
+• `Const` **mockRare**: `Artifact`
 
 ## Functions
 
@@ -97,11 +97,11 @@
 
 #### Parameters
 
-| Name           | Type             | Default value            |
-| :------------- | :--------------- | :----------------------- |
-| `rarity`       | `ArtifactRarity` | `undefined`              |
-| `artifactType` | `ArtifactType`   | `ArtifactType.Spaceship` |
-| `planetBiome`  | `Biome`          | `Biome.WASTELAND`        |
+| Name           | Type             |
+| :------------- | :--------------- |
+| `rarity`       | `ArtifactRarity` |
+| `artifactType` | `ArtifactType`   |
+| `planetBiome`  | `Biome`          |
 
 #### Returns
 
@@ -115,11 +115,11 @@
 
 #### Parameters
 
-| Name           | Type             | Default value            |
-| :------------- | :--------------- | :----------------------- |
-| `rarity`       | `ArtifactRarity` | `undefined`              |
-| `artifactType` | `ArtifactType`   | `ArtifactType.Spaceship` |
-| `planetBiome`  | `Biome`          | `Biome.WASTELAND`        |
+| Name           | Type             |
+| :------------- | :--------------- |
+| `rarity`       | `ArtifactRarity` |
+| `artifactType` | `ArtifactType`   |
+| `planetBiome`  | `Biome`          |
 
 #### Returns
 

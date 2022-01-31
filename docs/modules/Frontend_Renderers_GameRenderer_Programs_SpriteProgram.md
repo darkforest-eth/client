@@ -10,7 +10,7 @@
 
 ### SPRITE_PROGRAM_DEFINITION
 
-• **SPRITE_PROGRAM_DEFINITION**: `Object`
+• `Const` **SPRITE_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

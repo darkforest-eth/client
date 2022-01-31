@@ -11,10 +11,10 @@
 
 ### DFInput
 
-• **DFInput**: `StyledComponent`<`"input"`, `any`, `Object`, `never`\>
+• `Const` **DFInput**: `StyledComponent`<`"input"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Input
 
-• **Input**: `ForwardRefExoticComponent`<`Pick`<`ClassAttributes`<`HTMLInputElement`\> & `InputHTMLAttributes`<`HTMLInputElement`\> & `InputProps`, `"key"` \| `"wide"` \| keyof `InputHTMLAttributes`<`HTMLInputElement`\>\> & `RefAttributes`<`HTMLInputElement`\>\>
+• `Const` **Input**: `ForwardRefExoticComponent`<`Pick`<`ClassAttributes`<`HTMLInputElement`\> & `InputHTMLAttributes`<`HTMLInputElement`\> & `InputProps`, `"key"` \| `"wide"` \| keyof `InputHTMLAttributes`<`HTMLInputElement`\>\> & `RefAttributes`<`HTMLInputElement`\>\>

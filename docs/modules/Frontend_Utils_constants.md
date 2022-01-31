@@ -17,19 +17,19 @@
 
 ### HAT_SIZES
 
-• **HAT_SIZES**: `string`[]
+• `Const` **HAT_SIZES**: `string`[]
 
 ---
 
 ### LOCATION_ID_UB
 
-• **LOCATION_ID_UB**: `BigInteger`
+• `Const` **LOCATION_ID_UB**: `BigInteger`
 
 ---
 
 ### MAX_CHUNK_SIZE
 
-• **MAX_CHUNK_SIZE**: `number`
+• `Const` **MAX_CHUNK_SIZE**: `number`
 
 **`tutorial`** to speed up the game's background rendering code, it is possible to set this value to
 be a higher power of two. This means that smaller chunks will be merged into larger chunks via
@@ -41,4 +41,4 @@ the algorithms implemented in {@link ChunkUtils}.
 
 ### MIN_CHUNK_SIZE
 
-• **MIN_CHUNK_SIZE**: `16`
+• `Const` **MIN_CHUNK_SIZE**: `16`

@@ -24,7 +24,7 @@
 
 ### RING_PROGRAM_DEFINITION
 
-• **RING_PROGRAM_DEFINITION**: `Object`
+• `Const` **RING_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

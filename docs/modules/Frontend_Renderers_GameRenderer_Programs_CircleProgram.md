@@ -10,7 +10,7 @@
 
 ### CIRCLE_PROGRAM_DEFINITION
 
-• **CIRCLE_PROGRAM_DEFINITION**: `Object`
+• `Const` **CIRCLE_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

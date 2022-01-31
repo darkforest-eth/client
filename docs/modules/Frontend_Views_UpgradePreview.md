@@ -17,10 +17,10 @@
 | Name                            | Type                               |
 | :------------------------------ | :--------------------------------- |
 | `__namedParameters`             | `Object`                           |
-| `__namedParameters.branchName`  | `undefined` \| `UpgradeBranchName` |
+| `__namedParameters.branchName`  | `UpgradeBranchName` \| `undefined` |
 | `__namedParameters.cantUpgrade` | `boolean`                          |
-| `__namedParameters.planet`      | `undefined` \| `Planet`            |
-| `__namedParameters.upgrade`     | `undefined` \| `Upgrade`           |
+| `__namedParameters.planet`      | `Planet` \| `undefined`            |
+| `__namedParameters.upgrade`     | `Upgrade` \| `undefined`           |
 
 #### Returns
 

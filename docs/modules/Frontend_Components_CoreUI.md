@@ -51,7 +51,7 @@
 
 ### AlignCenterHorizontally
 
-• **AlignCenterHorizontally**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **AlignCenterHorizontally**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 Fills parent width, aligns children horizontally in the center.
 
@@ -59,25 +59,25 @@ Fills parent width, aligns children horizontally in the center.
 
 ### AlignCenterVertically
 
-• **AlignCenterVertically**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **AlignCenterVertically**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### BorderlessPane
 
-• **BorderlessPane**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **BorderlessPane**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Bottom
 
-• **Bottom**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Bottom**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### CenterBackgroundSubtext
 
-• **CenterBackgroundSubtext**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **CenterBackgroundSubtext**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 A box which centers some darkened text. Useful for displaying
 _somthing_ instead of empty space, if there isn't something to
@@ -87,25 +87,25 @@ be displayed. Think of it as a placeholder.
 
 ### CenterRow
 
-• **CenterRow**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **CenterRow**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### CenteredText
 
-• **CenteredText**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **CenteredText**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Display
 
-• **Display**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Display**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### DontShrink
 
-• **DontShrink**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **DontShrink**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 Don't shrink in a flexbox.
 
@@ -113,7 +113,7 @@ Don't shrink in a flexbox.
 
 ### EmSpacer
 
-• **EmSpacer**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **EmSpacer**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 Inline block rectangle, measured in ems, default 1em by 1em.
 
@@ -121,13 +121,13 @@ Inline block rectangle, measured in ems, default 1em by 1em.
 
 ### Emphasized
 
-• **Emphasized**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Emphasized**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Expand
 
-• **Expand**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Expand**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 Expands to fill space in a flexbox.
 
@@ -135,67 +135,67 @@ Expands to fill space in a flexbox.
 
 ### FloatRight
 
-• **FloatRight**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **FloatRight**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### FullHeight
 
-• **FullHeight**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **FullHeight**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### FullWidth
 
-• **FullWidth**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **FullWidth**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### HeaderText
 
-• **HeaderText**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **HeaderText**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Hidden
 
-• **Hidden**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Hidden**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### InlineBlock
 
-• **InlineBlock**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **InlineBlock**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### KeyboardBtn
 
-• **KeyboardBtn**: `StyledComponent`<`"kbd"`, `any`, `Object`, `never`\>
+• `Const` **KeyboardBtn**: `StyledComponent`<`"kbd"`, `any`, `Object`, `never`\>
 
 ---
 
 ### MaxWidth
 
-• **MaxWidth**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **MaxWidth**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Padded
 
-• **Padded**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Padded**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### PaddedRecommendedModalWidth
 
-• **PaddedRecommendedModalWidth**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **PaddedRecommendedModalWidth**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### PluginElements
 
-• **PluginElements**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **PluginElements**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 The container element into which a plugin renders its html elements.
 Contains styles for child elements so that plugins can use UI
@@ -207,43 +207,43 @@ way to do this.
 
 ### RecommendedModalWidth
 
-• **RecommendedModalWidth**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **RecommendedModalWidth**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Section
 
-• **Section**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Section**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### SectionHeader
 
-• **SectionHeader**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **SectionHeader**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Select
 
-• **Select**: `StyledComponent`<`"select"`, `any`, `Object`, `never`\>
+• `Const` **Select**: `StyledComponent`<`"select"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Separator
 
-• **Separator**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Separator**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Spacer
 
-• **Spacer**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Spacer**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Spread
 
-• **Spread**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Spread**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 Expands to fit the width of container. Is itself a flex box that spreads out its children
 horizontally.
@@ -252,7 +252,7 @@ horizontally.
 
 ### SpreadApart
 
-• **SpreadApart**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **SpreadApart**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 Expands to fit the width of container. Is itself a flex box that spreads out its children
 horizontally.
@@ -261,19 +261,19 @@ horizontally.
 
 ### TextButton
 
-• **TextButton**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **TextButton**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Truncate
 
-• **Truncate**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Truncate**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Underline
 
-• **Underline**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Underline**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ## Functions
 
@@ -285,9 +285,9 @@ This is the link that all core ui in Dark Forest should use. Please!
 
 #### Parameters
 
-| Name    | Type                                                                                                                                          |
-| :------ | :-------------------------------------------------------------------------------------------------------------------------------------------- |
-| `props` | { `children`: `ReactNode` ; `color?`: `string` ; `openInThisTab?`: `boolean` ; `to?`: `string` } & `HtmlHTMLAttributes`<`HTMLAnchorElement`\> |
+| Name    | Type                                                                                                                                                      |
+| :------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `props` | { `children`: `React.ReactNode` ; `color?`: `string` ; `openInThisTab?`: `boolean` ; `to?`: `string` } & `React.HtmlHTMLAttributes`<`HTMLAnchorElement`\> |
 
 #### Returns
 
@@ -304,15 +304,15 @@ given string values.
 
 #### Parameters
 
-| Name                         | Type                          |
-| :--------------------------- | :---------------------------- |
-| `__namedParameters`          | `Object`                      |
-| `__namedParameters.labels`   | `string`[]                    |
-| `__namedParameters.style?`   | `CSSProperties`               |
-| `__namedParameters.value`    | `string`                      |
-| `__namedParameters.values`   | `string`[]                    |
-| `__namedParameters.wide?`    | `boolean`                     |
-| `__namedParameters.setValue` | (`value`: `string`) => `void` |
+| Name                         | Type                  |
+| :--------------------------- | :-------------------- |
+| `__namedParameters`          | `Object`              |
+| `__namedParameters.labels`   | `string`[]            |
+| `__namedParameters.style?`   | `React.CSSProperties` |
+| `__namedParameters.value`    | `string`              |
+| `__namedParameters.values`   | `string`[]            |
+| `__namedParameters.wide?`    | `boolean`             |
+| `__namedParameters.setValue` |                       |
 
 #### Returns
 
@@ -330,9 +330,9 @@ provided, this is just a normal button.
 
 #### Parameters
 
-| Name    | Type                                                                                                                                                                                                                                                                                                                                                             |
-| :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `props` | { `children`: `ReactNode` ; `shortcutDisabled?`: `boolean` ; `shortcutKey?`: `string` ; `shortcutText?`: `string` } & { `borderColor?`: `string` ; `color?`: `string` ; `disabled?`: `boolean` ; `forceActive?`: `boolean` ; `noBorder?`: `boolean` ; `small?`: `boolean` ; `textColor?`: `string` ; `wide?`: `boolean` } & `HTMLAttributes`<`HTMLSpanElement`\> |
+| Name    | Type                                                                                                                                                                          |
+| :------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `props` | { `children`: `React.ReactNode` ; `shortcutDisabled?`: `boolean` ; `shortcutKey?`: `string` ; `shortcutText?`: `string` } & [`BtnProps`](Frontend_Components_Btn.md#btnprops) |
 
 #### Returns
 

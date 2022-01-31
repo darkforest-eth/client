@@ -17,7 +17,7 @@
 | Name                       | Type                    |
 | :------------------------- | :---------------------- |
 | `__namedParameters`        | `Object`                |
-| `__namedParameters.planet` | `undefined` \| `Planet` |
+| `__namedParameters.planet` | `Planet` \| `undefined` |
 
 #### Returns
 

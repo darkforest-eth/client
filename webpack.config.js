@@ -1,24 +1,23 @@
 const path = require('path');
-const dotenv = require('dotenv');
-
-dotenv.config();
 
 const { EnvironmentPlugin } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 //const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
 const styledComponentsTransformer = createStyledComponentsTransformer();
 
+const isProd = process.env.NODE_ENV === 'production';
+
 module.exports = {
   mode: 'production',
-  entry: ['./src/Frontend/EntryPoints/index.tsx'],
+  entry: ['react-hot-loader/patch', './src/Frontend/EntryPoints/index.tsx'],
   output: {
     path: path.join(__dirname, '/dist'),
-    filename: 'bundle-[contenthash].min.js',
+    filename: 'bundle-[hash:6].min.js',
     publicPath: '/',
-    clean: true,
   },
 
   // Enable sourcemaps for debugging webpack's output.
@@ -30,19 +29,19 @@ module.exports = {
 
   resolve: {
     // Add '.ts' and '.tsx' as resolvable extensions.
-    extensions: ['.ts', '.tsx', '...'],
-    // Used to reference packages in the monorepo by their package name
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    // we need this to reference files in the symlinked src/circuits directory
     symlinks: false,
+    alias: {
+      'react-dom': '@hot-loader/react-dom',
+    },
   },
 
   module: {
     rules: [
-      // Still depends on raw-loader here, with the javascript/auto content type,
-      // because otherwise the module can't be imported in PluginManager
       {
         test: /\.[jt]sx?$/,
         include: /embedded_plugins/,
-        type: 'javascript/auto',
         use: ['raw-loader', 'ts-loader'],
       },
       {
@@ -60,35 +59,37 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.(woff(2)?|ttf|eot|svg)$/,
-        type: 'asset/resource',
-        generator: {
-          filename: 'fonts/[name][ext]',
-        },
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'fonts/',
+            },
+          },
+        ],
       },
-      // Any non-JS files from other packages in the monorepo should be loaded
-      // as a plain file so we `include` only the `@darkforest_eth` namespace here
+      // Any non-JS files from other packages in the monorepo should be loaded as a plain file
+      // so we `include` only the `@darkforest_eth` namespace here.
       {
-        test: /\.(wasm|zkey|json)$/,
-        type: 'asset/resource',
+        test: /\.(zkey|wasm|json)$/i,
+        type: 'javascript/auto',
         include: /@darkforest_eth/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+            },
+          },
+        ],
       },
-      // All output '.js' files will have any sourcemaps
-      // re-processed by 'source-map-loader'.
+      // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       {
         enforce: 'pre',
         test: /\.js$/,
         loader: 'source-map-loader',
-        options: {
-          filterSourceMappingUrl(url, resourcePath) {
-            // The sourcemaps in react-sortable are screwed up
-            if (resourcePath.includes('react-sortablejs')) {
-              return false;
-            }
-
-            return true;
-          },
-        },
       },
     ],
   },
@@ -97,14 +98,20 @@ module.exports = {
     new EnvironmentPlugin({
       NODE_ENV: 'development',
       DEFAULT_RPC: 'https://rpc-df.xdaichain.com/',
-      // This must be null to indicate to webpack that this environment variable is optional
-      DF_WEBSERVER_URL: null,
+      CONVERSATION_API_HOST: isProd ? 'https://api.zkga.me' : 'http://localhost:3000',
+      LEADERBOARD_API: isProd ? 'https://api.zkga.me' : 'http://localhost:3000',
+      WEBSERVER_URL: isProd ? 'https://api.zkga.me' : 'http://localhost:3000',
     }),
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './index.html',
     }),
-    new CopyPlugin({
-      patterns: [{ from: 'public', to: 'public' }],
-    }),
+    new CopyPlugin([{ from: 'public', to: 'public' }]),
   ],
+
+  // When importing a module whose path matches one of the following, just
+  // assume a corresponding global variable exists and use that instead.
+  // This is important because it allows us to avoid bundling all of our
+  // dependencies, which allows browsers to cache those libraries between builds.
+  externals: {},
 };

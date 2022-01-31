@@ -1,8 +1,10 @@
 import React from 'react';
+import { hot } from 'react-hot-loader/root';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 import { LandingPageBackground } from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
+import { ConversationTest } from './ConversationTest';
 import { GameLandingPage } from './GameLandingPage';
 import { GifMaker } from './GifMaker';
 import LandingPage from './LandingPage';
@@ -28,6 +30,7 @@ function App() {
           <Route path='/artifact/:artifactId' component={ShareArtifact} />
           <Route path='/wallet/:addr/:actionId/:balance/:method' component={TxConfirmPopup} />
           <Route path='/unsubscribe' component={UnsubscribePage} />
+          <Route path='/conversation' component={ConversationTest} />
           <Route path='/valhalla' component={ValhallaPage} />
           {!isProd && <Route path='/images' component={TestArtifactImages} />}
           {!isProd && <Route path='/preview' component={PreviewPage} />}
@@ -52,4 +55,4 @@ body {
 }
 `;
 
-export default App;
+export default hot(App);

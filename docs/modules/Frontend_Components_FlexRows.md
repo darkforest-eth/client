@@ -10,4 +10,4 @@
 
 ### SpacedFlexRow
 
-• **SpacedFlexRow**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **SpacedFlexRow**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>

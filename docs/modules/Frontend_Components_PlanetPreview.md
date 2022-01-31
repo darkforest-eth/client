@@ -18,7 +18,7 @@
 | Name                       | Type                    |
 | :------------------------- | :---------------------- |
 | `__namedParameters`        | `Object`                |
-| `__namedParameters.planet` | `undefined` \| `Planet` |
+| `__namedParameters.planet` | `Planet` \| `undefined` |
 | `__namedParameters.size`   | `string`                |
 
 #### Returns
@@ -36,7 +36,7 @@
 | Name                       | Type                    |
 | :------------------------- | :---------------------- |
 | `__namedParameters`        | `Object`                |
-| `__namedParameters.planet` | `undefined` \| `Planet` |
+| `__namedParameters.planet` | `Planet` \| `undefined` |
 
 #### Returns
 

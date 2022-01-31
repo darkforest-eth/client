@@ -19,7 +19,7 @@
 
 ### StyledArtifactRarityLabel
 
-• **StyledArtifactRarityLabel**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **StyledArtifactRarityLabel**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ## Functions
 

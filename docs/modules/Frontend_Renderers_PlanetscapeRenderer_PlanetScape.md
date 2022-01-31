@@ -15,13 +15,13 @@
 
 ### SCAPE_HEIGHT
 
-• **SCAPE_HEIGHT**: `150`
+• `Const` **SCAPE_HEIGHT**: `150`
 
 ---
 
 ### SCAPE_WIDTH
 
-• **SCAPE_WIDTH**: `450`
+• `Const` **SCAPE_WIDTH**: `450`
 
 ## Functions
 
@@ -34,7 +34,7 @@
 | Name                        | Type                                                                               |
 | :-------------------------- | :--------------------------------------------------------------------------------- |
 | `__namedParameters`         | `Object`                                                                           |
-| `__namedParameters.wrapper` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\> |
+| `__namedParameters.wrapper` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\> |
 
 #### Returns
 

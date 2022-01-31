@@ -24,10 +24,14 @@
 - [endTimeSeconds](Backend_GameLogic_GameManager.default.md#endtimeseconds)
 - [entityStore](Backend_GameLogic_GameManager.default.md#entitystore)
 - [ethConnection](Backend_GameLogic_GameManager.default.md#ethconnection)
+- [gptCreditPriceEther](Backend_GameLogic_GameManager.default.md#gptcreditpriceether)
+- [gptCreditPriceEtherEmitter$](Backend_GameLogic_GameManager.default.md#gptcreditpriceetheremitter$)
 - [hashConfig](Backend_GameLogic_GameManager.default.md#hashconfig)
 - [hashRate](Backend_GameLogic_GameManager.default.md#hashrate)
 - [homeLocation](Backend_GameLogic_GameManager.default.md#homelocation)
 - [minerManager](Backend_GameLogic_GameManager.default.md#minermanager)
+- [myGPTCredits](Backend_GameLogic_GameManager.default.md#mygptcredits)
+- [myGPTCredits$](Backend_GameLogic_GameManager.default.md#mygptcredits$)
 - [networkHealth$](Backend_GameLogic_GameManager.default.md#networkhealth$)
 - [networkHealthInterval](Backend_GameLogic_GameManager.default.md#networkhealthinterval)
 - [persistentChunkStore](Backend_GameLogic_GameManager.default.md#persistentchunkstore)
@@ -54,8 +58,10 @@
 - [biomebasePerlin](Backend_GameLogic_GameManager.default.md#biomebaseperlin)
 - [bulkAddNewChunks](Backend_GameLogic_GameManager.default.md#bulkaddnewchunks)
 - [bulkHardRefreshPlanets](Backend_GameLogic_GameManager.default.md#bulkhardrefreshplanets)
+- [buyGPTCredits](Backend_GameLogic_GameManager.default.md#buygptcredits)
 - [buyHat](Backend_GameLogic_GameManager.default.md#buyhat)
 - [checkGameHasEnded](Backend_GameLogic_GameManager.default.md#checkgamehasended)
+- [claimLocation](Backend_GameLogic_GameManager.default.md#claimlocation)
 - [clearEmoji](Backend_GameLogic_GameManager.default.md#clearemoji)
 - [deactivateArtifact](Backend_GameLogic_GameManager.default.md#deactivateartifact)
 - [depositArtifact](Backend_GameLogic_GameManager.default.md#depositartifact)
@@ -78,6 +84,7 @@
 - [getConstructors](Backend_GameLogic_GameManager.default.md#getconstructors)
 - [getContractAddress](Backend_GameLogic_GameManager.default.md#getcontractaddress)
 - [getContractConstants](Backend_GameLogic_GameManager.default.md#getcontractconstants)
+- [getConversation](Backend_GameLogic_GameManager.default.md#getconversation)
 - [getCurrentlyExploringChunk](Backend_GameLogic_GameManager.default.md#getcurrentlyexploringchunk)
 - [getDiagnostics](Backend_GameLogic_GameManager.default.md#getdiagnostics)
 - [getDist](Backend_GameLogic_GameManager.default.md#getdist)
@@ -90,10 +97,13 @@
 - [getEthConnection](Backend_GameLogic_GameManager.default.md#getethconnection)
 - [getExploredChunks](Backend_GameLogic_GameManager.default.md#getexploredchunks)
 - [getGameObjects](Backend_GameLogic_GameManager.default.md#getgameobjects)
+- [getGptCreditBalanceEmitter](Backend_GameLogic_GameManager.default.md#getgptcreditbalanceemitter)
+- [getGptCreditPriceEmitter](Backend_GameLogic_GameManager.default.md#getgptcreditpriceemitter)
 - [getHashConfig](Backend_GameLogic_GameManager.default.md#gethashconfig)
 - [getHashesPerSec](Backend_GameLogic_GameManager.default.md#gethashespersec)
 - [getHomeCoords](Backend_GameLogic_GameManager.default.md#gethomecoords)
 - [getHomeHash](Backend_GameLogic_GameManager.default.md#gethomehash)
+- [getIsBuyingCreditsEmitter](Backend_GameLogic_GameManager.default.md#getisbuyingcreditsemitter)
 - [getLocationOfPlanet](Backend_GameLogic_GameManager.default.md#getlocationofplanet)
 - [getMaxMoveDist](Backend_GameLogic_GameManager.default.md#getmaxmovedist)
 - [getMiningPattern](Backend_GameLogic_GameManager.default.md#getminingpattern)
@@ -108,6 +118,7 @@
 - [getMyScore](Backend_GameLogic_GameManager.default.md#getmyscore)
 - [getNextBroadcastAvailableTimestamp](Backend_GameLogic_GameManager.default.md#getnextbroadcastavailabletimestamp)
 - [getNextClaimAvailableTimestamp](Backend_GameLogic_GameManager.default.md#getnextclaimavailabletimestamp)
+- [getNextClaimCountdownInfo](Backend_GameLogic_GameManager.default.md#getnextclaimcountdowninfo)
 - [getNextRevealCountdownInfo](Backend_GameLogic_GameManager.default.md#getnextrevealcountdowninfo)
 - [getNotificationsManager](Backend_GameLogic_GameManager.default.md#getnotificationsmanager)
 - [getPerlinThresholds](Backend_GameLogic_GameManager.default.md#getperlinthresholds)
@@ -163,6 +174,7 @@
 - [onTxReverted](Backend_GameLogic_GameManager.default.md#ontxreverted)
 - [onTxSubmit](Backend_GameLogic_GameManager.default.md#ontxsubmit)
 - [prospectPlanet](Backend_GameLogic_GameManager.default.md#prospectplanet)
+- [refreshMyGPTCredits](Backend_GameLogic_GameManager.default.md#refreshmygptcredits)
 - [refreshNetworkHealth](Backend_GameLogic_GameManager.default.md#refreshnetworkhealth)
 - [refreshScoreboard](Backend_GameLogic_GameManager.default.md#refreshscoreboard)
 - [refreshServerPlanetStates](Backend_GameLogic_GameManager.default.md#refreshserverplanetstates)
@@ -178,7 +190,9 @@
 - [softRefreshPlanet](Backend_GameLogic_GameManager.default.md#softrefreshplanet)
 - [spaceTypeFromPerlin](Backend_GameLogic_GameManager.default.md#spacetypefromperlin)
 - [spaceTypePerlin](Backend_GameLogic_GameManager.default.md#spacetypeperlin)
+- [startConversation](Backend_GameLogic_GameManager.default.md#startconversation)
 - [startExplore](Backend_GameLogic_GameManager.default.md#startexplore)
+- [stepConversation](Backend_GameLogic_GameManager.default.md#stepconversation)
 - [stopExplore](Backend_GameLogic_GameManager.default.md#stopexplore)
 - [submitDisconnectTwitter](Backend_GameLogic_GameManager.default.md#submitdisconnecttwitter)
 - [submitPlanetMessage](Backend_GameLogic_GameManager.default.md#submitplanetmessage)
@@ -198,7 +212,7 @@
 
 ### constructor
 
-• `Private` **new default**(`terminal`, `account`, `players`, `touchedPlanets`, `allTouchedPlanetIds`, `revealedCoords`, `claimedCoords`, `worldRadius`, `unprocessedArrivals`, `unprocessedPlanetArrivalIds`, `contractsAPI`, `contractConstants`, `persistentChunkStore`, `snarkHelper`, `homeLocation`, `useMockHash`, `artifacts`, `ethConnection`)
+• `Private` **new default**(`terminal`, `account`, `players`, `touchedPlanets`, `allTouchedPlanetIds`, `revealedCoords`, `claimedCoords`, `worldRadius`, `unprocessedArrivals`, `unprocessedPlanetArrivalIds`, `contractsAPI`, `contractConstants`, `persistentChunkStore`, `snarkHelper`, `homeLocation`, `useMockHash`, `artifacts`, `ethConnection`, `gptCreditPriceEther`, `myGPTCredits`)
 
 #### Parameters
 
@@ -215,13 +229,15 @@
 | `unprocessedArrivals`         | `Map`<`VoyageId`, `QueuedArrival`\>                                                                             |
 | `unprocessedPlanetArrivalIds` | `Map`<`LocationId`, `VoyageId`[]\>                                                                              |
 | `contractsAPI`                | [`ContractsAPI`](Backend_GameLogic_ContractsAPI.ContractsAPI.md)                                                |
-| `contractConstants`           | [`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md)                |
+| `contractConstants`           | [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)               |
 | `persistentChunkStore`        | [`default`](Backend_Storage_PersistentChunkStore.default.md)                                                    |
 | `snarkHelper`                 | [`default`](Backend_Utils_SnarkArgsHelper.default.md)                                                           |
 | `homeLocation`                | `undefined` \| `WorldLocation`                                                                                  |
 | `useMockHash`                 | `boolean`                                                                                                       |
 | `artifacts`                   | `Map`<`ArtifactId`, `Artifact`\>                                                                                |
 | `ethConnection`               | `EthConnection`                                                                                                 |
+| `gptCreditPriceEther`         | `number`                                                                                                        |
+| `myGPTCredits`                | `number`                                                                                                        |
 
 #### Overrides
 
@@ -241,7 +257,7 @@ contract and view it without be able to make any moves.
 
 ### contractConstants
 
-• `Private` `Readonly` **contractConstants**: [`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md)
+• `Private` `Readonly` **contractConstants**: [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)
 
 Game parameters set by the contract. Stuff like perlin keys, which are important for mining the
 correct universe, or the time multiplier, which allows us to tune how quickly voyages go.
@@ -287,7 +303,7 @@ Handle to an interval that periodically uploads diagnostic information from this
 
 ### endTimeSeconds
 
-• `Private` `Readonly` **endTimeSeconds**: `number` = `1643587533`
+• `Private` `Readonly` **endTimeSeconds**: `number` = `1948939200`
 
 **`todo`** change this to the correct timestamp each round.
 
@@ -311,9 +327,28 @@ address and balance, etc.
 
 ---
 
+### gptCreditPriceEther
+
+• `Private` **gptCreditPriceEther**: `number`
+
+Price of a single gpt credit, which buys you a single interaction with the GPT-powered AI
+Artifact Chat Bots.
+
+**`todo`** move this into a new `GameConfiguration` class.
+
+---
+
+### gptCreditPriceEtherEmitter$
+
+• `Private` **gptCreditPriceEtherEmitter$**: `Monomitter`<`number`\>
+
+Whenever the price of single GPT credit changes, we emit that event here.
+
+---
+
 ### hashConfig
 
-• `Private` `Readonly` **hashConfig**: [`HashConfig`](../modules/types_global_GlobalTypes.md#hashconfig)
+• `Private` `Readonly` **hashConfig**: [`HashConfig`](../modules/_types_global_GlobalTypes.md#hashconfig)
 
 Each round we change the hash configuration of the game. The hash configuration is download
 from the blockchain, and essentially acts as a salt, permuting the universe into a unique
@@ -358,6 +393,26 @@ Manages the process of mining new space territory.
 
 ---
 
+### myGPTCredits
+
+• `Private` **myGPTCredits**: `number`
+
+The total amount of GPT credits that belong to the current player.
+
+**`todo`** move this into a new `PlayerState` class.
+
+---
+
+### myGPTCredits$
+
+• `Private` **myGPTCredits$**: `Monomitter`<`number`\>
+
+Whenever the amount of the GPT credits that this player owns changes, we publish an event here.
+
+**`todo`** move this into a new `PlayerState` class.
+
+---
+
 ### networkHealth$
 
 • **networkHealth$**: `Monomitter`<`NetworkHealthSummary`\>
@@ -389,6 +444,9 @@ or something like that.
 ### planetHashMimc
 
 • `Private` `Readonly` **planetHashMimc**: (...`inputs`: `number`[]) => `BigInteger`
+
+The aforementioned hash function. In debug mode where `DISABLE_ZK_CHECKS` is on, we use a
+faster hash function. Othewise, in production mode, use MiMC hash (https://byt3bit.github.io/primesym/).
 
 #### Type declaration
 
@@ -554,9 +612,9 @@ all of the information about those planets from the blockchain.
 
 #### Parameters
 
-| Name    | Type                                         |
-| :------ | :------------------------------------------- |
-| `chunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                          |
+| :------ | :-------------------------------------------- |
+| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 
@@ -592,9 +650,9 @@ to load all of the associated planet data in an efficient manner.
 
 #### Parameters
 
-| Name     | Type                                           |
-| :------- | :--------------------------------------------- |
-| `chunks` | [`Chunk`](types_global_GlobalTypes.Chunk.md)[] |
+| Name     | Type                                            |
+| :------- | :---------------------------------------------- |
+| `chunks` | [`Chunk`](_types_global_GlobalTypes.Chunk.md)[] |
 
 #### Returns
 
@@ -615,6 +673,22 @@ to load all of the associated planet data in an efficient manner.
 #### Returns
 
 `Promise`<`void`\>
+
+---
+
+### buyGPTCredits
+
+▸ **buyGPTCredits**(`amount`): [`default`](Backend_GameLogic_GameManager.default.md)
+
+#### Parameters
+
+| Name     | Type     |
+| :------- | :------- |
+| `amount` | `number` |
+
+#### Returns
+
+[`default`](Backend_GameLogic_GameManager.default.md)
 
 ---
 
@@ -647,6 +721,22 @@ look your best. Just like in the real world, more money means more hat.
 #### Returns
 
 `boolean`
+
+---
+
+### claimLocation
+
+▸ **claimLocation**(`planetId`): [`default`](Backend_GameLogic_GameManager.default.md)
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `planetId` | `LocationId` |
+
+#### Returns
+
+[`default`](Backend_GameLogic_GameManager.default.md)
 
 ---
 
@@ -889,17 +979,17 @@ represented by `undefined`.
 
 ### getChunk
 
-▸ **getChunk**(`chunkFootprint`): `undefined` \| [`Chunk`](types_global_GlobalTypes.Chunk.md)
+▸ **getChunk**(`chunkFootprint`): `undefined` \| [`Chunk`](_types_global_GlobalTypes.Chunk.md)
 
 #### Parameters
 
-| Name             | Type                                                               |
-| :--------------- | :----------------------------------------------------------------- |
-| `chunkFootprint` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
+| Name             | Type                                                                |
+| :--------------- | :------------------------------------------------------------------ |
+| `chunkFootprint` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 
-`undefined` \| [`Chunk`](types_global_GlobalTypes.Chunk.md)
+`undefined` \| [`Chunk`](_types_global_GlobalTypes.Chunk.md)
 
 ---
 
@@ -960,24 +1050,42 @@ the 'backend' of the game.
 
 ### getContractConstants
 
-▸ **getContractConstants**(): [`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md)
+▸ **getContractConstants**(): [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)
 
 #### Returns
 
-[`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md)
+[`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)
+
+---
+
+### getConversation
+
+▸ **getConversation**(`artifactId`): `Promise`<`undefined` \| `Conversation`\>
+
+Gets the GPT conversation with an artifact; undefined if there is none so far
+
+#### Parameters
+
+| Name         | Type         |
+| :----------- | :----------- |
+| `artifactId` | `ArtifactId` |
+
+#### Returns
+
+`Promise`<`undefined` \| `Conversation`\>
 
 ---
 
 ### getCurrentlyExploringChunk
 
-▸ **getCurrentlyExploringChunk**(): `undefined` \| [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)
+▸ **getCurrentlyExploringChunk**(): `undefined` \| [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)
 
 Gets the rectangle bounding the chunk that the miner is currently in the process
 of hashing.
 
 #### Returns
 
-`undefined` \| [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)
+`undefined` \| [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)
 
 ---
 
@@ -1139,14 +1247,14 @@ Gets the total amount of energy that lives on planets that the given player owns
 
 ### getExploredChunks
 
-▸ **getExploredChunks**(): `Iterable`<[`Chunk`](types_global_GlobalTypes.Chunk.md)\>
+▸ **getExploredChunks**(): `Iterable`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>
 
 Gets all the map chunks that this client is aware of. Chunks may have come from
 mining, or from importing map data.
 
 #### Returns
 
-`Iterable`<[`Chunk`](types_global_GlobalTypes.Chunk.md)\>
+`Iterable`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>
 
 ---
 
@@ -1163,15 +1271,35 @@ voyages, planets, artifacts, and active wormholes,
 
 ---
 
+### getGptCreditBalanceEmitter
+
+▸ **getGptCreditBalanceEmitter**(): `Monomitter`<`number`\>
+
+#### Returns
+
+`Monomitter`<`number`\>
+
+---
+
+### getGptCreditPriceEmitter
+
+▸ **getGptCreditPriceEmitter**(): `Monomitter`<`number`\>
+
+#### Returns
+
+`Monomitter`<`number`\>
+
+---
+
 ### getHashConfig
 
-▸ **getHashConfig**(): [`HashConfig`](../modules/types_global_GlobalTypes.md#hashconfig)
+▸ **getHashConfig**(): [`HashConfig`](../modules/_types_global_GlobalTypes.md#hashconfig)
 
 Gets the HASH CONFIG
 
 #### Returns
 
-[`HashConfig`](../modules/types_global_GlobalTypes.md#hashconfig)
+[`HashConfig`](../modules/_types_global_GlobalTypes.md#hashconfig)
 
 ---
 
@@ -1208,6 +1336,16 @@ Gets the hash of the location of your home planet.
 #### Returns
 
 `undefined` \| `LocationId`
+
+---
+
+### getIsBuyingCreditsEmitter
+
+▸ **getIsBuyingCreditsEmitter**(): `Monomitter`<`boolean`\>
+
+#### Returns
+
+`Monomitter`<`boolean`\>
 
 ---
 
@@ -1391,15 +1529,27 @@ Gets the timestamp (ms) of the next time that we can claim a planet.
 
 ---
 
+### getNextClaimCountdownInfo
+
+▸ **getNextClaimCountdownInfo**(): [`ClaimCountdownInfo`](../interfaces/_types_global_GlobalTypes.ClaimCountdownInfo.md)
+
+Returns info about the next time you can claim a Planet
+
+#### Returns
+
+[`ClaimCountdownInfo`](../interfaces/_types_global_GlobalTypes.ClaimCountdownInfo.md)
+
+---
+
 ### getNextRevealCountdownInfo
 
-▸ **getNextRevealCountdownInfo**(): [`RevealCountdownInfo`](../interfaces/types_global_GlobalTypes.RevealCountdownInfo.md)
+▸ **getNextRevealCountdownInfo**(): [`RevealCountdownInfo`](../interfaces/_types_global_GlobalTypes.RevealCountdownInfo.md)
 
 Returns info about the next time you can broadcast coordinates
 
 #### Returns
 
-[`RevealCountdownInfo`](../interfaces/types_global_GlobalTypes.RevealCountdownInfo.md)
+[`RevealCountdownInfo`](../interfaces/_types_global_GlobalTypes.RevealCountdownInfo.md)
 
 ---
 
@@ -1927,11 +2077,11 @@ represent a multiplier.
 
 ### getWormholes
 
-▸ **getWormholes**(): `Iterable`<[`Wormhole`](../modules/types_global_GlobalTypes.md#wormhole)\>
+▸ **getWormholes**(): `Iterable`<[`Wormhole`](../modules/_types_global_GlobalTypes.md#wormhole)\>
 
 #### Returns
 
-`Iterable`<[`Wormhole`](../modules/types_global_GlobalTypes.md#wormhole)\>
+`Iterable`<[`Wormhole`](../modules/_types_global_GlobalTypes.md#wormhole)\>
 
 ---
 
@@ -2019,9 +2169,9 @@ Whether or not the given rectangle has been mined.
 
 #### Parameters
 
-| Name            | Type                                                               |
-| :-------------- | :----------------------------------------------------------------- |
-| `chunkLocation` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
+| Name            | Type                                                                |
+| :-------------- | :------------------------------------------------------------------ |
+| `chunkLocation` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 
@@ -2273,6 +2423,16 @@ the given planet to the given planet.
 
 ---
 
+### refreshMyGPTCredits
+
+▸ `Private` **refreshMyGPTCredits**(): `Promise`<`void`\>
+
+#### Returns
+
+`Promise`<`void`\>
+
+---
+
 ### refreshNetworkHealth
 
 ▸ `Private` **refreshNetworkHealth**(): `Promise`<`void`\>
@@ -2429,9 +2589,9 @@ planet was signed by the owner.
 
 #### Parameters
 
-| Name       | Type                                                                                              |
-| :--------- | :------------------------------------------------------------------------------------------------ |
-| `twitters` | [`AddressTwitterMap`](../modules/types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap) |
+| Name       | Type                                                                                               |
+| :--------- | :------------------------------------------------------------------------------------------------- |
+| `twitters` | [`AddressTwitterMap`](../modules/_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap) |
 
 #### Returns
 
@@ -2528,6 +2688,24 @@ on this value.
 
 ---
 
+### startConversation
+
+▸ **startConversation**(`artifactId`): `Promise`<`Conversation`\>
+
+Starts a GPT conversation with an artifact
+
+#### Parameters
+
+| Name         | Type         |
+| :----------- | :----------- |
+| `artifactId` | `ArtifactId` |
+
+#### Returns
+
+`Promise`<`Conversation`\>
+
+---
+
 ### startExplore
 
 ▸ **startExplore**(): `void`
@@ -2537,6 +2715,25 @@ Starts the miner.
 #### Returns
 
 `void`
+
+---
+
+### stepConversation
+
+▸ **stepConversation**(`artifactId`, `message`): `Promise`<`Conversation`\>
+
+Sends a message to an artifact you are having a GPT conversation with
+
+#### Parameters
+
+| Name         | Type         |
+| :----------- | :----------- |
+| `artifactId` | `ArtifactId` |
+| `message`    | `string`     |
+
+#### Returns
+
+`Promise`<`Conversation`\>
 
 ---
 

@@ -10,7 +10,7 @@
 
 ### BLACKDOMAIN_PROGRAM_DEFINITION
 
-• **BLACKDOMAIN_PROGRAM_DEFINITION**: `Object`
+• `Const` **BLACKDOMAIN_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

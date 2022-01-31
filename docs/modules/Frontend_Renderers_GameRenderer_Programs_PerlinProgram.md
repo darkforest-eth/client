@@ -10,7 +10,7 @@
 
 ### PERLIN_PROGRAM_DEFINITION
 
-• **PERLIN_PROGRAM_DEFINITION**: `Object`
+• `Const` **PERLIN_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

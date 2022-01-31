@@ -19,34 +19,34 @@
 
 ### aDexCanvasH
 
-• **aDexCanvasH**: `number`
+• `Const` **aDexCanvasH**: `number`
 
 ---
 
 ### aDexCanvasW
 
-• **aDexCanvasW**: `number`
+• `Const` **aDexCanvasW**: `number`
 
 ---
 
 ### aListCanvasH
 
-• **aListCanvasH**: `400`
+• `Const` **aListCanvasH**: `400`
 
 ---
 
 ### aListCanvasW
 
-• **aListCanvasW**: `48`
+• `Const` **aListCanvasW**: `48`
 
 ---
 
 ### artifactColM
 
-• **artifactColM**: `32`
+• `Const` **artifactColM**: `32`
 
 ---
 
 ### artifactColW
 
-• **artifactColW**: `number`
+• `Const` **artifactColW**: `number`

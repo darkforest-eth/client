@@ -30,6 +30,8 @@ reading and writing to and from the blockchain.
 
 - [coreContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#corecontract)
 - [gettersContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getterscontract)
+- [gptCreditContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#gptcreditcontract)
+- [scoreContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#scorecontract)
 - [tokensContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#tokenscontract)
 - [whitelistContract](Backend_GameLogic_ContractsAPI.ContractsAPI.md#whitelistcontract)
 
@@ -41,7 +43,9 @@ reading and writing to and from the blockchain.
 - [bulkGetArtifacts](Backend_GameLogic_ContractsAPI.ContractsAPI.md#bulkgetartifacts)
 - [bulkGetArtifactsOnPlanets](Backend_GameLogic_ContractsAPI.ContractsAPI.md#bulkgetartifactsonplanets)
 - [bulkGetPlanets](Backend_GameLogic_ContractsAPI.ContractsAPI.md#bulkgetplanets)
+- [buyGPTCredits](Backend_GameLogic_ContractsAPI.ContractsAPI.md#buygptcredits)
 - [buyHat](Backend_GameLogic_ContractsAPI.ContractsAPI.md#buyhat)
+- [claim](Backend_GameLogic_ContractsAPI.ContractsAPI.md#claim)
 - [deactivateArtifact](Backend_GameLogic_ContractsAPI.ContractsAPI.md#deactivateartifact)
 - [depositArtifact](Backend_GameLogic_ContractsAPI.ContractsAPI.md#depositartifact)
 - [destroy](Backend_GameLogic_ContractsAPI.ContractsAPI.md#destroy)
@@ -51,8 +55,12 @@ reading and writing to and from the blockchain.
 - [getArrival](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getarrival)
 - [getArrivalsForPlanet](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getarrivalsforplanet)
 - [getArtifactById](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getartifactbyid)
+- [getClaimedCoordsByIdIfExists](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getclaimedcoordsbyidifexists)
+- [getClaimedPlanetsCoords](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getclaimedplanetscoords)
 - [getConstants](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getconstants)
 - [getContractAddress](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getcontractaddress)
+- [getGPTCreditBalance](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgptcreditbalance)
+- [getGPTCreditPriceEther](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgptcreditpriceether)
 - [getGasFeeForTransaction](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getgasfeefortransaction)
 - [getPlanetById](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getplanetbyid)
 - [getPlayerArtifacts](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getplayerartifacts)
@@ -60,6 +68,7 @@ reading and writing to and from the blockchain.
 - [getPlayers](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getplayers)
 - [getRevealedCoordsByIdIfExists](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getrevealedcoordsbyidifexists)
 - [getRevealedPlanetsCoords](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getrevealedplanetscoords)
+- [getScoreV3](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getscorev3)
 - [getTokenMintEndTimestamp](Backend_GameLogic_ContractsAPI.ContractsAPI.md#gettokenmintendtimestamp)
 - [getTouchedPlanetIds](Backend_GameLogic_ContractsAPI.ContractsAPI.md#gettouchedplanetids)
 - [getWorldRadius](Backend_GameLogic_ContractsAPI.ContractsAPI.md#getworldradius)
@@ -146,6 +155,26 @@ Don't allow users to submit txs if balance falls below this amount/
 #### Returns
 
 `DarkForestGetters`
+
+---
+
+### gptCreditContract
+
+• `get` **gptCreditContract**(): `DarkForestGPTCredit`
+
+#### Returns
+
+`DarkForestGPTCredit`
+
+---
+
+### scoreContract
+
+• `get` **scoreContract**(): `DarkForestScoringRound3`
+
+#### Returns
+
+`DarkForestScoringRound3`
 
 ---
 
@@ -274,6 +303,23 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 
 ---
 
+### buyGPTCredits
+
+▸ **buyGPTCredits**(`amount`, `actionId`): `Promise`<`void` \| `TransactionReceipt`\>
+
+#### Parameters
+
+| Name       | Type     |
+| :--------- | :------- |
+| `amount`   | `number` |
+| `actionId` | `string` |
+
+#### Returns
+
+`Promise`<`void` \| `TransactionReceipt`\>
+
+---
+
 ### buyHat
 
 ▸ **buyHat**(`planetIdDecStr`, `currentHatLevel`, `actionId`): `Promise`<`void` \| `TransactionReceipt`\>
@@ -285,6 +331,27 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 | `planetIdDecStr`  | `string` |
 | `currentHatLevel` | `number` |
 | `actionId`        | `string` |
+
+#### Returns
+
+`Promise`<`void` \| `TransactionReceipt`\>
+
+---
+
+### claim
+
+▸ **claim**(`args`, `action`): `Promise`<`void` \| `TransactionReceipt`\>
+
+DISABLED for round 4
+
+**`todo`** migrate to claim to first-party plugin architecture
+
+#### Parameters
+
+| Name     | Type                                                                           |
+| :------- | :----------------------------------------------------------------------------- |
+| `args`   | [`ClaimArgs`](../modules/_types_darkforest_api_ContractsAPITypes.md#claimargs) |
+| `action` | `UnconfirmedClaim`                                                             |
 
 #### Returns
 
@@ -427,13 +494,47 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 
 ---
 
-### getConstants
+### getClaimedCoordsByIdIfExists
 
-▸ **getConstants**(): `Promise`<[`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md)\>
+▸ **getClaimedCoordsByIdIfExists**(`planetId`): `Promise`<`undefined` \| `ClaimedCoords`\>
+
+#### Parameters
+
+| Name       | Type         |
+| :--------- | :----------- |
+| `planetId` | `LocationId` |
 
 #### Returns
 
-`Promise`<[`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md)\>
+`Promise`<`undefined` \| `ClaimedCoords`\>
+
+---
+
+### getClaimedPlanetsCoords
+
+▸ **getClaimedPlanetsCoords**(`startingAt`, `onProgressIds?`, `onProgressCoords?`): `Promise`<`ClaimedCoords`[]\>
+
+#### Parameters
+
+| Name                | Type                                      |
+| :------------------ | :---------------------------------------- |
+| `startingAt`        | `number`                                  |
+| `onProgressIds?`    | (`fractionCompleted`: `number`) => `void` |
+| `onProgressCoords?` | (`fractionCompleted`: `number`) => `void` |
+
+#### Returns
+
+`Promise`<`ClaimedCoords`[]\>
+
+---
+
+### getConstants
+
+▸ **getConstants**(): `Promise`<[`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)\>
+
+#### Returns
+
+`Promise`<[`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)\>
 
 ---
 
@@ -444,6 +545,32 @@ interaction. To prevent the queued transaction from being submitted, throw an Er
 #### Returns
 
 `EthAddress`
+
+---
+
+### getGPTCreditBalance
+
+▸ **getGPTCreditBalance**(`address`): `Promise`<`number`\>
+
+#### Parameters
+
+| Name      | Type                        |
+| :-------- | :-------------------------- |
+| `address` | `undefined` \| `EthAddress` |
+
+#### Returns
+
+`Promise`<`number`\>
+
+---
+
+### getGPTCreditPriceEther
+
+▸ **getGPTCreditPriceEther**(): `Promise`<`number`\>
+
+#### Returns
+
+`Promise`<`number`\>
 
 ---
 
@@ -563,6 +690,25 @@ a string representing that we want to use an auto gas setting.
 #### Returns
 
 `Promise`<`RevealedCoords`[]\>
+
+---
+
+### getScoreV3
+
+▸ **getScoreV3**(`address`): `Promise`<`undefined` \| `number`\>
+
+If this player has a claimed planet, their score is the distance between the claimed planet and
+the center. If this player does not have a claimed planet, then the score is undefined.
+
+#### Parameters
+
+| Name      | Type                        |
+| :-------- | :-------------------------- |
+| `address` | `undefined` \| `EthAddress` |
+
+#### Returns
+
+`Promise`<`undefined` \| `number`\>
 
 ---
 
@@ -767,10 +913,10 @@ a string representing that we want to use an auto gas setting.
 
 #### Parameters
 
-| Name       | Type                                                                              |
-| :--------- | :-------------------------------------------------------------------------------- |
-| `args`     | [`UpgradeArgs`](../modules/types_darkforest_api_ContractsAPITypes.md#upgradeargs) |
-| `actionId` | `string`                                                                          |
+| Name       | Type                                                                               |
+| :--------- | :--------------------------------------------------------------------------------- |
+| `args`     | [`UpgradeArgs`](../modules/_types_darkforest_api_ContractsAPITypes.md#upgradeargs) |
+| `actionId` | `string`                                                                           |
 
 #### Returns
 
@@ -783,7 +929,7 @@ a string representing that we want to use an auto gas setting.
 ▸ **waitFor**(`submitted`, `receiptPromise`): `Promise`<`void` \| `TransactionReceipt`\>
 
 Given an unconfirmed (but submitted) transaction, emits the appropriate
-[ContractsAPIEvent](../enums/types_darkforest_api_ContractsAPITypes.ContractsAPIEvent.md).
+[ContractsAPIEvent](../enums/_types_darkforest_api_ContractsAPITypes.ContractsAPIEvent.md).
 
 #### Parameters
 

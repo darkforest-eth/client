@@ -1,11 +1,9 @@
 import { Leaderboard } from '@darkforest_eth/types';
 
-export async function loadLeaderboard(): Promise<Leaderboard> {
-  if (!process.env.DF_WEBSERVER_URL) {
-    return { entries: [] };
-  }
+const LEADERBOARD_API = process.env.LEADERBOARD_API as string;
 
-  const address = `${process.env.DF_WEBSERVER_URL}/leaderboard`;
+export async function loadLeaderboard(): Promise<Leaderboard> {
+  const address = `${LEADERBOARD_API}/leaderboard`;
   const res = await fetch(address, {
     method: 'GET',
   });
