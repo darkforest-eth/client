@@ -117,6 +117,17 @@ export type NotificationInfo = {
   txStatus?: EthTxStatus;
 };
 
+export type NotificationsDictionaryItem = {
+  notifications: Array<NotificationInfo>,
+  color: string | undefined,
+  icon: React.ReactNode,
+  order: number
+};
+
+export type NotificationsDictionary = {
+  [key: string]: NotificationsDictionaryItem
+};
+
 export const enum NotificationManagerEvent {
   Notify = 'Notify',
   ClearNotification = 'ClearNotification',
