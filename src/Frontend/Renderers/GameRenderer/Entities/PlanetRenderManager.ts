@@ -233,7 +233,7 @@ export default class PlanetRenderManager {
     for (const unconfirmedMove of fromPlanet.unconfirmedDepartures) {
       effectiveEnergy -= unconfirmedMove.forces;
     }
-    const shipsMoved = (uiManager.getForcesSending(fromPlanet.locationId) / 100) * effectiveEnergy;
+    const shipsMoved = (uiManager.getForcesSending() / 100) * effectiveEnergy;
 
     const myAtk: number = uiManager.getEnergyArrivingForMove(
       fromPlanet.locationId,
@@ -432,7 +432,7 @@ export default class PlanetRenderManager {
 
     if (planet.owner === EMPTY_ADDRESS) return;
 
-    const percentForces = gameUIManager.getForcesSending(planet.locationId); // [0, 100]
+    const percentForces = gameUIManager.getForcesSending(); // [0, 100]
     const forces = (percentForces / 100) * planet.energy;
     const scaledForces = (percentForces * planet.energy) / planet.energyCap;
     const range = getRange(planet, scaledForces);

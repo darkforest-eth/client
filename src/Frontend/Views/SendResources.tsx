@@ -216,15 +216,27 @@ function ArtifactThumb({
 }
 
 const StyledSetDefaultResources = styled.div`
+  display: flex;
+  justify-content: space-between;
   margin: 0.5em;
-  cursor: pointer;
   
-  & > input {
-    cursor: inherit;
-  }
-
-  & > span {
-    margin-left: 0.5em;
+  & > div {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  
+    & > input {
+      cursor: inherit;
+    }
+  
+    & > span {
+      margin: 0 0.5em;
+    }
   }
 `;
 
@@ -289,26 +301,27 @@ export function SendResources({
 }) {
   const uiManager = useUIManager();
   const energyHook = useState<number>(
-    p.value && uiManager.getForcesSending(p.value.locationId)
-      ? uiManager.getForcesSending(p.value.locationId)
+    p.value && uiManager.getForcesSending()
+      ? uiManager.getForcesSending()
       : DEFAULT_ENERGY_PERCENT
   );
   const [energyPercent, setEnergyPercent] = energyHook;
   const silverHook = useState<number>(
-    p.value && uiManager.getSilverSending(p.value.locationId)
-      ? uiManager.getSilverSending(p.value.locationId)
+    p.value && uiManager.getSilverSending()
+      ? uiManager.getSilverSending()
       : DEFAULT_SILVER_PERCENT
   );
   const [silverPercent, setSilverPercent] = silverHook;
   const [sending, setSending] = useState<boolean>(false);
-  const [isDefaultResourcesChecked, setIsDefaultResourcesChecked] = useState<boolean>(false);
+  const [isDefaultEnergyChecked, setIsDefaultEnergyChecked] = useState<boolean>(localStorage.getItem('isDefaultEnergyChecked') === 'true');
+  const [isDefaultSilverChecked, setIsDefaultSilverChecked] = useState<boolean>(localStorage.getItem('isDefaultSilverChecked') === 'true');
 
   const windowManager = WindowManager.getInstance();
 
   useEffect(() => {
     if (!p.value || !uiManager) return;
-    uiManager.setForcesSending(p.value.locationId, energyPercent);
-    uiManager.setSilverSending(p.value.locationId, silverPercent);
+    uiManager.setForcesSending(energyPercent);
+    uiManager.setSilverSending(silverPercent);
   }, [energyPercent, silverPercent, p, uiManager]);
 
   useEffect(() => {
@@ -319,12 +332,24 @@ export function SendResources({
   }, [p.value?.locationId, windowManager]);
 
   useEffect(() => {
-    setEnergyPercent(isDefaultResourcesChecked ? energyPercent: DEFAULT_ENERGY_PERCENT);
-    setSilverPercent(isDefaultResourcesChecked ? silverPercent: DEFAULT_SILVER_PERCENT);
+    setEnergyPercent(energyPercent => {
+      return isDefaultEnergyChecked ? energyPercent : DEFAULT_ENERGY_PERCENT;
+    });
+    setSilverPercent(silverPercent => {
+      return isDefaultSilverChecked ? silverPercent : DEFAULT_SILVER_PERCENT;
+    });
   }, [p.value?.locationId, setEnergyPercent, setSilverPercent]);
 
-  const onSetDefaultResources = (isChecked: boolean) => {
-    setIsDefaultResourcesChecked(isChecked);
+  const onSetDefaultEnergyCheckbox = (isChecked: boolean) => {
+    setIsDefaultEnergyChecked(isChecked);
+
+    localStorage.setItem('isDefaultEnergyChecked', `${isChecked}`);
+  }
+
+  const onSetDefaultSilverCheckbox = (isChecked: boolean) => {
+    setIsDefaultSilverChecked(isChecked);
+
+    localStorage.setItem('isDefaultSilverChecked', `${isChecked}`);
   }
 
   const doSend = useCallback(() => {
@@ -418,17 +443,32 @@ export function SendResources({
       )}
 
       <StyledSetDefaultResources>
-        <input
-          type='checkbox'
-          checked={isDefaultResourcesChecked}
-          onChange={(event) => {
-            event.target.blur();
-            onSetDefaultResources(event.target.checked)
-          }}
-        />
-        <span onClick={() => onSetDefaultResources(!isDefaultResourcesChecked)}>
-          Set default resources
-        </span>
+        <div onClick={() => onSetDefaultEnergyCheckbox(!isDefaultEnergyChecked)}>
+          <input
+            type='checkbox'
+            checked={isDefaultEnergyChecked}
+            onChange={(event) => {
+              event.target.blur();
+              onSetDefaultEnergyCheckbox(event.target.checked)
+            }}
+          />
+          <span>Set default</span>
+          <Icon type={IconType.Energy} />
+        </div>
+        { p.value && p.value.silver > 0 &&
+          <div  onClick={() => onSetDefaultSilverCheckbox(!isDefaultSilverChecked)}>
+            <input
+              type='checkbox'
+              checked={isDefaultSilverChecked}
+              onChange={(event) => {
+                event.target.blur();
+                onSetDefaultSilverCheckbox(event.target.checked)
+              }}
+            />
+            <span>Set default</span>
+            <Icon type={IconType.Silver} />
+          </div>
+        }
       </StyledSetDefaultResources>
 
       {p.value && artifacts.length > 0 && (
