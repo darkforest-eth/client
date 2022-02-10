@@ -100,8 +100,8 @@ class GameUIManager extends EventEmitter {
   private minerLocation: WorldCoords | undefined;
   private extraMinerLocations: WorldCoords[] = [];
 
-  private forcesSending: { [key: string]: number } = {}; // this is a percentage
-  private silverSending: { [key: string]: number } = {}; // this is a percentage
+  private forcesSending: number = 0; // this is a percentage
+  private silverSending: number = 0; // this is a percentage
 
   private artifactSending: { [key: string]: Artifact | undefined } = {};
 
@@ -502,7 +502,7 @@ class GameUIManager extends EventEmitter {
         for (const unconfirmedMove of from.unconfirmedDepartures) {
           effectiveEnergy -= unconfirmedMove.forces;
         }
-        const effPercent = Math.min(this.getForcesSending(from.locationId), 98);
+        const effPercent = Math.min(this.getForcesSending(), 98);
         let forces = Math.floor((effectiveEnergy * effPercent) / 100);
 
         // make it so you leave one force behind
@@ -520,7 +520,7 @@ class GameUIManager extends EventEmitter {
           forces
         );
 
-        let effPercentSilver = this.getSilverSending(from.locationId);
+        let effPercentSilver = this.getSilverSending();
 
         if (
           effPercentSilver > 98 &&
@@ -589,12 +589,12 @@ class GameUIManager extends EventEmitter {
     else windowManager.setCursorState(CursorState.TargetingExplorer);
   }
 
-  public setForcesSending(planetId: LocationId, percentage: number) {
-    this.forcesSending[planetId] = percentage;
+  public setForcesSending(percentage: number) {
+    this.forcesSending = percentage;
   }
 
-  public setSilverSending(planetId: LocationId, percentage: number) {
-    this.silverSending[planetId] = percentage;
+  public setSilverSending(percentage: number) {
+    this.silverSending = percentage;
   }
 
   public setArtifactSending(planetId: LocationId, artifact?: Artifact) {
@@ -918,16 +918,16 @@ class GameUIManager extends EventEmitter {
   /**
    * Percent from 0 to 100.
    */
-  public getForcesSending(planetId: LocationId): number {
-    const forces = this.forcesSending[planetId];
+  public getForcesSending(): number {
+    const forces = this.forcesSending;
     return forces ?? 50;
   }
 
   /**
    * Percent from 0 to 100.
    */
-  public getSilverSending(planetId: LocationId): number {
-    return this.silverSending[planetId] || 0;
+  public getSilverSending(): number {
+    return this.silverSending || 0;
   }
 
   public getArtifactSending(planetId: LocationId): Artifact | undefined {

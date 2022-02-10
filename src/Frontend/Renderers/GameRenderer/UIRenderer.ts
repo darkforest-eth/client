@@ -45,7 +45,7 @@ export class UIRenderer {
             effectiveEnergy -= unconfirmedMove.forces;
           }
 
-          const energy = (uiManager.getForcesSending(myPlanet.locationId) / 100) * effectiveEnergy;
+          const energy = (uiManager.getForcesSending() / 100) * effectiveEnergy;
           const distance = uiManager.getDistCoords(from, to);
 
           const myAtk: number = uiManager.getEnergyArrivingForMove(
