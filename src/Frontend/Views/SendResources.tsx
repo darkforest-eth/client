@@ -223,7 +223,6 @@ const StyledSetDefaultResources = styled.div`
   & > div {
     display: flex;
     align-items: center;
-    width: 50%;
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
@@ -231,11 +230,14 @@ const StyledSetDefaultResources = styled.div`
     -ms-user-select: none;
   
     & > input {
+      margin-bottom: 2px;
       cursor: inherit;
     }
   
     & > span {
       margin: 0 0.5em;
+      font-size: 14px;
+      line-height: 14px;
     }
   }
 `;
