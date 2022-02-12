@@ -1,4 +1,4 @@
-import { ContractMethodName } from '@darkforest_eth/types';
+import { ContractMethodName, EthTxStatus } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
@@ -23,13 +23,17 @@ function Notification({
   item,
   index,
   onClick,
+  onMouseLeave,
   style,
+  isTerminalVisible
 }: {
   dictionary: NotificationsDictionary,
   item: NotificationsDictionaryItem;
   index: number;
   onClick: () => void;
+  onMouseLeave: () => void;
   style?: React.CSSProperties;
+  isTerminalVisible: boolean;
 }) {
   const { notifications, color, icon } = item;
   const [showing, setShowing] = useState<boolean>(false);
@@ -46,6 +50,7 @@ function Notification({
     <StyledNotification onMouseLeave={() => setShowing(false)}>
       <NotificationIconContainer
         onMouseEnter={() => setShowing(true)}
+        onMouseLeave={onMouseLeave}
         onClick={onClick}
         style={{ ...style, background: color }}
       >
@@ -55,10 +60,19 @@ function Notification({
         </NotificationsCounter>
       </NotificationIconContainer>
       {
-        <NotificationsContentWrapper height={notifications.length * (NOTIF_SIZE + MARGIN)} top={notificationsTopPosition}>
+        <NotificationsContentWrapper
+          height={notifications.length * (NOTIF_SIZE + MARGIN)}
+          top={notificationsTopPosition}
+          right={isTerminalVisible ? `calc(${NOTIF_SIZE + MARGIN}em + ${dfstyles.game.terminalWidth})` : `${NOTIF_SIZE + MARGIN}em`}
+        >
           { showing &&
               notifications.map(notification => (
-                <NotificationContent key={notification.id}>{ notification.message }</NotificationContent>
+                <NotificationContent
+                  key={notification.id}
+                  style={{ opacity: notification.isSeen ? 0.5 : 1 }}
+                >
+                  { notification.message }
+                </NotificationContent>
               ))
           }
         </NotificationsContentWrapper>
@@ -71,7 +85,7 @@ function Notification({
  * React component in charge of listening for new notifications and displaying them interactively to
  * the user.
  */
-export function NotificationsPane() {
+export function NotificationsPane({ isTerminalVisible }: {isTerminalVisible: boolean}) {
   const [notifs, setNotifs] = useState<NotificationsDictionary>({});
 
   const uiManager = useUIManager();
@@ -102,11 +116,49 @@ export function NotificationsPane() {
             notifications: [],
             color: notif.color,
             icon: notif.icon,
-            order: currentKeys.length + 1
-          };
+            timeAdded: new Date()
+          } as NotificationsDictionaryItem;
         }
 
-        notificationsDictionaryCopy[dictionaryKey].notifications.push(notif);
+        notificationsDictionaryCopy[dictionaryKey].notifications.unshift(notif);
+
+        if (notif.type === NotificationType.Tx) {
+          let indexToRemove: number;
+
+          switch (notif.txStatus) {
+            case EthTxStatus.Submit:
+              indexToRemove = notificationsDictionaryCopy[`${NotificationType.Tx}${EthTxStatus.Init}`]
+                .notifications.findIndex(notification => notification.id === notif.id);
+              notificationsDictionaryCopy[`${NotificationType.Tx}${EthTxStatus.Init}`].notifications.splice(indexToRemove, 1);
+
+              if (notificationsDictionaryCopy[`${NotificationType.Tx}${EthTxStatus.Init}`].notifications.length === 0) {
+                delete notificationsDictionaryCopy[`${NotificationType.Tx}${EthTxStatus.Init}`]
+              }
+
+              break;
+            case EthTxStatus.Confirm:
+              indexToRemove = notificationsDictionaryCopy[`${NotificationType.Tx}${EthTxStatus.Submit}`]
+                .notifications.findIndex(notification => notification.id === notif.id);
+              notificationsDictionaryCopy[`${NotificationType.Tx}${EthTxStatus.Submit}`].notifications.splice(indexToRemove, 1);
+
+              if (notificationsDictionaryCopy[`${NotificationType.Tx}${EthTxStatus.Submit}`].notifications.length === 0) {
+                delete notificationsDictionaryCopy[`${NotificationType.Tx}${EthTxStatus.Submit}`]
+              }
+
+              break;
+
+            case EthTxStatus.Fail:
+              indexToRemove = notificationsDictionaryCopy[`${NotificationType.Tx}${EthTxStatus.Init}`]
+                .notifications.findIndex(notification => notification.id === notif.id);
+              notificationsDictionaryCopy[`${NotificationType.Tx}${EthTxStatus.Init}`].notifications.splice(indexToRemove, 1);
+
+              if (notificationsDictionaryCopy[`${NotificationType.Tx}${EthTxStatus.Init}`].notifications.length === 0) {
+                delete notificationsDictionaryCopy[`${NotificationType.Tx}${EthTxStatus.Init}`]
+              }
+
+              break;
+          }
+        }
 
         return notificationsDictionaryCopy;
       });
@@ -141,20 +193,31 @@ export function NotificationsPane() {
     };
   };
 
+  const handleSetIsNotifactionSeen = (key: string) => {
+    return (): void => {
+      setNotifs(notifsCache => {
+        notifsCache[key].notifications.forEach(notif => notif.isSeen = true);
+
+        return notifsCache;
+      })
+    };
+  };
+
   return (
     <NotificationsContainer>
       {
-        Object.entries(notifs).sort(([,a],[,b]) => a.order - b.order).map(([key, dictionaryItem], index) => (
+        Object.entries(notifs).sort(([,a],[,b]) => a.timeAdded.getTime() - b.timeAdded.getTime()).map(([key, dictionaryItem], index) => (
           <Notification
-              dictionary={notifs}
-              item={dictionaryItem}
-              index={index}
-              key={key}
-              onClick={getRemove(key)}
-              style={{ opacity: 1 - (index - 2) * 0.13 }}
-            />
-          )
-        )
+            isTerminalVisible={isTerminalVisible}
+            dictionary={notifs}
+            item={dictionaryItem}
+            index={index}
+            key={key}
+            onClick={getRemove(key)}
+            onMouseLeave={handleSetIsNotifactionSeen(key)}
+            style={{ opacity: 1 - (index - 2) * 0.13 }}
+          />
+        ))
       }
     </NotificationsContainer>
   );
@@ -232,10 +295,15 @@ const NotificationsCounter = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
-  padding: 0 2px;
+  padding: 3px;
   color: #ffffff;
   border-radius: 0 25%;
-  background-color: #2d8bb9;
+  background-color: #030607;
+  font-size: 11px;
+  font-weight: bold;
+  min-width: 18px;
+  line-height: 1;
+  text-align: center;
 `;
 
 /**
@@ -243,13 +311,13 @@ const NotificationsCounter = styled.div`
  */
  const NotificationsContentWrapper = styled.div`
   position: fixed;
-  right: ${NOTIF_SIZE + MARGIN}em;
   bottom: 0.5em;
   display: flex;
   flex-direction: column;
-  ${({ height, top }: { height: number; top: number }) => css`
+  ${({ height, top, right }: { height: number; top: number, right: string }) => css`
     height: ${height}em;
-    top: ${top}em
+    top: ${top}em;
+    right: ${right};
   `};
   max-height: calc(100vh - 1em);
   overflow-y: auto;

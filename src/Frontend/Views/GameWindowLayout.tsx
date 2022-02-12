@@ -188,7 +188,7 @@ export function GameWindowLayout({
             <ControllableCanvas />
           </CanvasWrapper>
 
-          <NotificationsPane />
+          <NotificationsPane isTerminalVisible={terminalVisible}/>
           <CoordsPane />
           <ExplorePane />
 

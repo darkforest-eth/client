@@ -112,6 +112,7 @@ export type NotificationInfo = {
   message: React.ReactNode;
   icon: React.ReactNode;
   id: string;
+  isSeen: boolean;
   color?: string;
   txData?: TxIntent;
   txStatus?: EthTxStatus;
@@ -121,7 +122,7 @@ export type NotificationsDictionaryItem = {
   notifications: Array<NotificationInfo>,
   color: string | undefined,
   icon: React.ReactNode,
-  order: number
+  timeAdded: Date
 };
 
 export type NotificationsDictionary = {
