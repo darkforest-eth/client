@@ -1,3 +1,3 @@
-[submodule "df-plugins"]
-	path = df-plugins
-	url = https://github.com/orden-gg/df-plugins.git
+[submodule "orden-plugins"]
+	path = orden-plugins
+	url = https://github.com/orden-gg/orden-plugins.git

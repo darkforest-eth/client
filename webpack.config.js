@@ -41,12 +41,12 @@ module.exports = {
     rules: [
       {
         test: /\.[jt]sx?$/,
-        include: /(embedded_plugins|df-plugins)/,
+        include: /(embedded_plugins|orden-plugins)/,
         use: ['raw-loader', 'ts-loader'],
       },
       {
         test: /\.ts(x?)$/,
-        exclude: /(node_modules|embedded_plugins|df-plugins)/,
+        exclude: /(node_modules|embedded_plugins|orden-plugins)/,
         loader: 'ts-loader',
         options: {
           getCustomTransformers: () => ({
