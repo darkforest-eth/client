@@ -20,7 +20,7 @@ Preview basic planet information - used in `PlanetContextPane` and `HoverPlanetP
 | Name                              | Type                                                                               |
 | :-------------------------------- | :--------------------------------------------------------------------------------- |
 | `__namedParameters`               | `Object`                                                                           |
-| `__namedParameters.planetWrapper` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\> |
+| `__namedParameters.planetWrapper` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\> |
 | `__namedParameters.standalone?`   | `boolean`                                                                          |
 
 #### Returns
@@ -38,7 +38,7 @@ Preview basic planet information - used in `PlanetContextPane` and `HoverPlanetP
 | Name                       | Type                                                                               |
 | :------------------------- | :--------------------------------------------------------------------------------- |
 | `__namedParameters`        | `Object`                                                                           |
-| `__namedParameters.planet` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\> |
+| `__namedParameters.planet` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\> |
 | `__namedParameters.small?` | `boolean`                                                                          |
 
 #### Returns

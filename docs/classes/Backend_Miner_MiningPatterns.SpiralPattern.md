@@ -45,7 +45,7 @@
 
 ### fromChunk
 
-• **fromChunk**: [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)
+• **fromChunk**: [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)
 
 #### Implementation of
 
@@ -55,7 +55,7 @@
 
 ### type
 
-• **type**: [`MiningPatternType`](../enums/Backend_Miner_MiningPatterns.MiningPatternType.md)
+• **type**: [`MiningPatternType`](../enums/Backend_Miner_MiningPatterns.MiningPatternType.md) = `MiningPatternType.Spiral`
 
 #### Implementation of
 
@@ -65,17 +65,17 @@
 
 ### nextChunk
 
-▸ **nextChunk**(`chunk`): [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)
+▸ **nextChunk**(`chunk`): [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)
 
 #### Parameters
 
-| Name    | Type                                                                |
-| :------ | :------------------------------------------------------------------ |
-| `chunk` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
+| Name    | Type                                                               |
+| :------ | :----------------------------------------------------------------- |
+| `chunk` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 
-[`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)
+[`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)
 
 #### Implementation of
 

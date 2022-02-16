@@ -10,7 +10,7 @@
 
 ### RUINS_PROGRAM_DEFINITION
 
-• `Const` **RUINS_PROGRAM_DEFINITION**: `Object`
+• **RUINS_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

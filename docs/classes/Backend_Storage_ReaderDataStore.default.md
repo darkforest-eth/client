@@ -40,25 +40,25 @@ particular user.
 
 #### Parameters
 
-| Name                   | Type                                                                                               |
-| :--------------------- | :------------------------------------------------------------------------------------------------- |
-| `viewer`               | `undefined` \| `EthAddress`                                                                        |
-| `addressTwitterMap`    | [`AddressTwitterMap`](../modules/_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap) |
-| `contractConstants`    | [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)  |
-| `contractsAPI`         | [`ContractsAPI`](Backend_GameLogic_ContractsAPI.ContractsAPI.md)                                   |
-| `persistentChunkStore` | `undefined` \| [`default`](Backend_Storage_PersistentChunkStore.default.md)                        |
+| Name                   | Type                                                                                              |
+| :--------------------- | :------------------------------------------------------------------------------------------------ |
+| `viewer`               | `undefined` \| `EthAddress`                                                                       |
+| `addressTwitterMap`    | [`AddressTwitterMap`](../modules/types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap) |
+| `contractConstants`    | [`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md)  |
+| `contractsAPI`         | [`ContractsAPI`](Backend_GameLogic_ContractsAPI.ContractsAPI.md)                                  |
+| `persistentChunkStore` | `undefined` \| [`default`](Backend_Storage_PersistentChunkStore.default.md)                       |
 
 ## Properties
 
 ### addressTwitterMap
 
-• `Private` `Readonly` **addressTwitterMap**: [`AddressTwitterMap`](../modules/_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)
+• `Private` `Readonly` **addressTwitterMap**: [`AddressTwitterMap`](../modules/types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)
 
 ---
 
 ### contractConstants
 
-• `Private` `Readonly` **contractConstants**: [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)
+• `Private` `Readonly` **contractConstants**: [`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md)
 
 ---
 

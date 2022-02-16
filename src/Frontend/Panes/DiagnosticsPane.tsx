@@ -105,9 +105,9 @@ function RenderingTab({ diagnostics }: { diagnostics: Wrapper<Diagnostics> }) {
       <SpreadApart>
         <span>viewport</span>
         <span>
-          <span>{diagnostics.value.width.toLocaleString()}</span>
+          <span>{diagnostics.value.width?.toLocaleString()}</span>
           <span> x </span>
-          <span>{diagnostics.value.height.toLocaleString()}</span>
+          <span>{diagnostics.value.height?.toLocaleString()}</span>
         </span>
       </SpreadApart>
       <Separator />

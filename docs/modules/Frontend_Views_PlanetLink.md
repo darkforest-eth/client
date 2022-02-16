@@ -14,11 +14,11 @@
 
 #### Parameters
 
-| Name                         | Type              |
-| :--------------------------- | :---------------- |
-| `__namedParameters`          | `Object`          |
-| `__namedParameters.children` | `React.ReactNode` |
-| `__namedParameters.planet`   | `Planet`          |
+| Name                         | Type        |
+| :--------------------------- | :---------- |
+| `__namedParameters`          | `Object`    |
+| `__namedParameters.children` | `ReactNode` |
+| `__namedParameters.planet`   | `Planet`    |
 
 #### Returns
 

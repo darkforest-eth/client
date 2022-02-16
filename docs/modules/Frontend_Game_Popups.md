@@ -19,7 +19,7 @@
 | `ethConnection` | `EthConnection`     |
 | `txRequest`     | `QueuedTransaction` |
 | `from`          | `EthAddress`        |
-| `gasFeeGwei`    | `EthersBN`          |
+| `gasFeeGwei`    | `BigNumber`         |
 
 #### Returns
 

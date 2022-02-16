@@ -20,14 +20,14 @@
 
 #### Parameters
 
-| Name                              | Type                                             |
-| :-------------------------------- | :----------------------------------------------- |
-| `__namedParameters`               | `Object`                                         |
-| `__namedParameters.alignments?`   | (`"r"` \| `"c"` \| `"l"`)[]                      |
-| `__namedParameters.columns`       | (`t`: `T`, `i`: `number`) => `React.ReactNode`[] |
-| `__namedParameters.headers`       | `React.ReactNode`[]                              |
-| `__namedParameters.rows`          | `T`[]                                            |
-| `__namedParameters.sortFunctions` | (`left`: `T`, `right`: `T`) => `number`[]        |
+| Name                              | Type                                       |
+| :-------------------------------- | :----------------------------------------- |
+| `__namedParameters`               | `Object`                                   |
+| `__namedParameters.alignments?`   | (`"r"` \| `"l"` \| `"c"`)[]                |
+| `__namedParameters.columns`       | (`t`: `T`, `i`: `number`) => `ReactNode`[] |
+| `__namedParameters.headers`       | `ReactNode`[]                              |
+| `__namedParameters.rows`          | `T`[]                                      |
+| `__namedParameters.sortFunctions` | (`left`: `T`, `right`: `T`) => `number`[]  |
 
 #### Returns
 

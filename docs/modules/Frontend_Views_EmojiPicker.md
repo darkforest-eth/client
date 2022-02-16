@@ -14,11 +14,11 @@
 
 #### Parameters
 
-| Name                         | Type                    |
-| :--------------------------- | :---------------------- |
-| `__namedParameters`          | `Object`                |
-| `__namedParameters.emoji`    | `string` \| `undefined` |
-| `__namedParameters.setEmoji` |                         |
+| Name                         | Type                          |
+| :--------------------------- | :---------------------------- |
+| `__namedParameters`          | `Object`                      |
+| `__namedParameters.emoji`    | `undefined` \| `string`       |
+| `__namedParameters.setEmoji` | (`emoji`: `string`) => `void` |
 
 #### Returns
 

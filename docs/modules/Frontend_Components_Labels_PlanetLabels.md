@@ -158,7 +158,7 @@
 | Name                       | Type                    |
 | :------------------------- | :---------------------- |
 | `__namedParameters`        | `Object`                |
-| `__namedParameters.planet` | `Planet` \| `undefined` |
+| `__namedParameters.planet` | `undefined` \| `Planet` |
 
 #### Returns
 
@@ -213,7 +213,7 @@ Either 'yours' in green text,
 | `__namedParameters`                       | `Object`                |
 | `__namedParameters.abbreviateOwnAddress?` | `boolean`               |
 | `__namedParameters.colorWithOwnerColor?`  | `boolean`               |
-| `__namedParameters.planet`                | `Planet` \| `undefined` |
+| `__namedParameters.planet`                | `undefined` \| `Planet` |
 
 #### Returns
 
@@ -264,7 +264,7 @@ Either 'yours' in green text,
 | Name                       | Type                    |
 | :------------------------- | :---------------------- |
 | `__namedParameters`        | `Object`                |
-| `__namedParameters.planet` | `Planet` \| `undefined` |
+| `__namedParameters.planet` | `undefined` \| `Planet` |
 
 #### Returns
 
@@ -380,12 +380,12 @@ Either 'yours' in green text,
 
 #### Parameters
 
-| Name                        | Type                    |
-| :-------------------------- | :---------------------- |
-| `__namedParameters`         | `Object`                |
-| `__namedParameters.planet`  | `Planet` \| `undefined` |
-| `__namedParameters.style?`  | `React.CSSProperties`   |
-| `__namedParameters.getStat` |                         |
+| Name                        | Type                        |
+| :-------------------------- | :-------------------------- |
+| `__namedParameters`         | `Object`                    |
+| `__namedParameters.planet`  | `undefined` \| `Planet`     |
+| `__namedParameters.style?`  | `CSSProperties`             |
+| `__namedParameters.getStat` | (`p`: `Planet`) => `number` |
 
 #### Returns
 

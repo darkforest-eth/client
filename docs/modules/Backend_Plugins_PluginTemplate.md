@@ -10,4 +10,4 @@
 
 ### PLUGIN_TEMPLATE
 
-• `Const` **PLUGIN_TEMPLATE**: `string`
+• **PLUGIN_TEMPLATE**: `string`

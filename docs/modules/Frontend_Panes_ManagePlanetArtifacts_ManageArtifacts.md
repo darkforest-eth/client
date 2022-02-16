@@ -18,18 +18,18 @@
 | :--------------------------------------- | :--------------------------------------------------------------------- |
 | `__namedParameters`                      | `Object`                                                               |
 | `__namedParameters.artifactsInInventory` | `Artifact`[]                                                           |
-| `__namedParameters.artifactsOnPlanet`    | (`Artifact` \| `undefined`)[]                                          |
-| `__namedParameters.currentBlockNumber`   | `number` \| `undefined`                                                |
+| `__namedParameters.artifactsOnPlanet`    | (`undefined` \| `Artifact`)[]                                          |
+| `__namedParameters.currentBlockNumber`   | `undefined` \| `number`                                                |
 | `__namedParameters.modal`                | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
 | `__namedParameters.planet`               | `LocatablePlanet`                                                      |
 | `__namedParameters.playerAddress`        | `string`                                                               |
 | `__namedParameters.roundOver`            | `boolean`                                                              |
-| `__namedParameters.activate`             |                                                                        |
-| `__namedParameters.deactivate`           |                                                                        |
-| `__namedParameters.deposit`              |                                                                        |
-| `__namedParameters.find`                 |                                                                        |
-| `__namedParameters.prospect`             |                                                                        |
-| `__namedParameters.withdraw`             |                                                                        |
+| `__namedParameters.activate`             | (`artifact`: `Artifact`) => `void`                                     |
+| `__namedParameters.deactivate`           | (`artifact`: `Artifact`) => `void`                                     |
+| `__namedParameters.deposit`              | (`artifact`: `Artifact`) => `void`                                     |
+| `__namedParameters.find`                 | () => `void`                                                           |
+| `__namedParameters.prospect`             | () => `void`                                                           |
+| `__namedParameters.withdraw`             | (`artifact`: `Artifact`) => `void`                                     |
 
 #### Returns
 

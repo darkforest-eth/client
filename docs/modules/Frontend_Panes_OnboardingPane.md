@@ -14,10 +14,10 @@
 
 #### Parameters
 
-| Name                              | Type                                                    |
-| :-------------------------------- | :------------------------------------------------------ |
-| `__namedParameters`               | `Object`                                                |
-| `__namedParameters.newPlayerHook` | [`Hook`](_types_global_GlobalTypes.md#hook)<`boolean`\> |
+| Name                              | Type                                                   |
+| :-------------------------------- | :----------------------------------------------------- |
+| `__namedParameters`               | `Object`                                               |
+| `__namedParameters.newPlayerHook` | [`Hook`](types_global_GlobalTypes.md#hook)<`boolean`\> |
 
 #### Returns
 

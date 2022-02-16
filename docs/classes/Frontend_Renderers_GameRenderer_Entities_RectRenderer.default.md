@@ -175,9 +175,9 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name       | Type                                                                           | Description                                                     |
-| :--------- | :----------------------------------------------------------------------------- | :-------------------------------------------------------------- |
-| `drawMode` | [`DrawMode`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.DrawMode.md) | The drawing mode for the buffered vertices. Default: Triangles. |
+| Name       | Type                                                                           | Default value        | Description                                                     |
+| :--------- | :----------------------------------------------------------------------------- | :------------------- | :-------------------------------------------------------------- |
+| `drawMode` | [`DrawMode`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.DrawMode.md) | `DrawMode.Triangles` | The drawing mode for the buffered vertices. Default: Triangles. |
 
 #### Returns
 
@@ -195,9 +195,9 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                         |
+| :------ | :------------------------------------------- |
+| `chunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 
@@ -211,14 +211,14 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name                | Type                                                                         | Default value |
-| :------------------ | :--------------------------------------------------------------------------- | :------------ |
-| `__namedParameters` | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)    | `undefined`   |
-| `width`             | `number`                                                                     | `undefined`   |
-| `height`            | `number`                                                                     | `undefined`   |
-| `color`             | [`RGBVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbvec) | `undefined`   |
-| `stroke`            | `number`                                                                     | `-1`          |
-| `zIdx`              | `number`                                                                     | `undefined`   |
+| Name                | Type                                                                         | Default value          |
+| :------------------ | :--------------------------------------------------------------------------- | :--------------------- |
+| `__namedParameters` | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)    | `undefined`            |
+| `width`             | `number`                                                                     | `undefined`            |
+| `height`            | `number`                                                                     | `undefined`            |
+| `color`             | [`RGBVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbvec) | `undefined`            |
+| `stroke`            | `number`                                                                     | `-1`                   |
+| `zIdx`              | `number`                                                                     | `RenderZIndex.DEFAULT` |
 
 #### Returns
 
@@ -232,14 +232,14 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name     | Type                                                                         | Default value |
-| :------- | :--------------------------------------------------------------------------- | :------------ |
-| `center` | `WorldCoords`                                                                | `undefined`   |
-| `width`  | `number`                                                                     | `undefined`   |
-| `height` | `number`                                                                     | `undefined`   |
-| `color`  | [`RGBVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbvec) | `undefined`   |
-| `stroke` | `number`                                                                     | `-1`          |
-| `zIdx`   | `number`                                                                     | `undefined`   |
+| Name     | Type                                                                         | Default value          |
+| :------- | :--------------------------------------------------------------------------- | :--------------------- |
+| `center` | `WorldCoords`                                                                | `undefined`            |
+| `width`  | `number`                                                                     | `undefined`            |
+| `height` | `number`                                                                     | `undefined`            |
+| `color`  | [`RGBVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbvec) | `undefined`            |
+| `stroke` | `number`                                                                     | `-1`                   |
+| `zIdx`   | `number`                                                                     | `RenderZIndex.DEFAULT` |
 
 #### Returns
 
@@ -253,14 +253,14 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name     | Type                                                                         | Default value |
-| :------- | :--------------------------------------------------------------------------- | :------------ |
-| `coords` | `WorldCoords`                                                                | `undefined`   |
-| `width`  | `number`                                                                     | `undefined`   |
-| `height` | `number`                                                                     | `undefined`   |
-| `color`  | [`RGBVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbvec) | `undefined`   |
-| `stroke` | `number`                                                                     | `-1`          |
-| `zIdx`   | `number`                                                                     | `undefined`   |
+| Name     | Type                                                                         | Default value          |
+| :------- | :--------------------------------------------------------------------------- | :--------------------- |
+| `coords` | `WorldCoords`                                                                | `undefined`            |
+| `width`  | `number`                                                                     | `undefined`            |
+| `height` | `number`                                                                     | `undefined`            |
+| `color`  | [`RGBVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbvec) | `undefined`            |
+| `stroke` | `number`                                                                     | `-1`                   |
+| `zIdx`   | `number`                                                                     | `RenderZIndex.DEFAULT` |
 
 #### Returns
 

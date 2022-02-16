@@ -67,11 +67,11 @@
 
 #### Parameters
 
-| Name               | Type                                                       |
-| :----------------- | :--------------------------------------------------------- |
-| `exploredChunks`   | `Iterable`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\> |
-| `highPerfMode`     | `boolean`                                                  |
-| `drawChunkBorders` | `boolean`                                                  |
+| Name               | Type                                                      |
+| :----------------- | :-------------------------------------------------------- |
+| `exploredChunks`   | `Iterable`<[`Chunk`](types_global_GlobalTypes.Chunk.md)\> |
+| `highPerfMode`     | `boolean`                                                 |
+| `drawChunkBorders` | `boolean`                                                 |
 
 #### Returns
 

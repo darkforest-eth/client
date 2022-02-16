@@ -36,7 +36,7 @@
 
 ### hats
 
-• `Const` **hats**: `Record`<[`HatType`](../enums/Frontend_Utils_Hats.HatType.md), [`Hat`](Frontend_Utils_Hats.md#hat)\>
+• **hats**: `Record`<[`HatType`](../enums/Frontend_Utils_Hats.HatType.md), [`Hat`](Frontend_Utils_Hats.md#hat)\>
 
 ## Functions
 

@@ -4,7 +4,7 @@
 
 ## Implements
 
-- [`ChunkStore`](../interfaces/_types_darkforest_api_ChunkStoreTypes.ChunkStore.md)
+- [`ChunkStore`](../interfaces/types_darkforest_api_ChunkStoreTypes.ChunkStore.md)
 
 ## Table of contents
 
@@ -32,11 +32,11 @@
 
 #### Parameters
 
-| Name            | Type                                                               |
-| :-------------- | :----------------------------------------------------------------- |
-| `initPerlinMin` | `number`                                                           |
-| `initPerlinMax` | `number`                                                           |
-| `hashConfig`    | [`HashConfig`](../modules/_types_global_GlobalTypes.md#hashconfig) |
+| Name            | Type                                                              |
+| :-------------- | :---------------------------------------------------------------- |
+| `initPerlinMin` | `number`                                                          |
+| `initPerlinMax` | `number`                                                          |
+| `hashConfig`    | [`HashConfig`](../modules/types_global_GlobalTypes.md#hashconfig) |
 
 ## Properties
 
@@ -70,9 +70,9 @@
 
 #### Parameters
 
-| Name            | Type                                          |
-| :-------------- | :-------------------------------------------- |
-| `exploredChunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name            | Type                                         |
+| :-------------- | :------------------------------------------- |
+| `exploredChunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 
@@ -86,9 +86,9 @@
 
 #### Parameters
 
-| Name             | Type                                                                |
-| :--------------- | :------------------------------------------------------------------ |
-| `chunkFootprint` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
+| Name             | Type                                                               |
+| :--------------- | :----------------------------------------------------------------- |
+| `chunkFootprint` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 
@@ -96,4 +96,4 @@
 
 #### Implementation of
 
-[ChunkStore](../interfaces/_types_darkforest_api_ChunkStoreTypes.ChunkStore.md).[hasMinedChunk](../interfaces/_types_darkforest_api_ChunkStoreTypes.ChunkStore.md#hasminedchunk)
+[ChunkStore](../interfaces/types_darkforest_api_ChunkStoreTypes.ChunkStore.md).[hasMinedChunk](../interfaces/types_darkforest_api_ChunkStoreTypes.ChunkStore.md#hasminedchunk)

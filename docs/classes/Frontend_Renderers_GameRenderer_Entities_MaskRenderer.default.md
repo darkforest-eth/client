@@ -179,9 +179,9 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name       | Type                                                                           | Description                                                     |
-| :--------- | :----------------------------------------------------------------------------- | :-------------------------------------------------------------- |
-| `drawMode` | [`DrawMode`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.DrawMode.md) | The drawing mode for the buffered vertices. Default: Triangles. |
+| Name       | Type                                                                           | Default value        | Description                                                     |
+| :--------- | :----------------------------------------------------------------------------- | :------------------- | :-------------------------------------------------------------- |
+| `drawMode` | [`DrawMode`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.DrawMode.md) | `DrawMode.Triangles` | The drawing mode for the buffered vertices. Default: Triangles. |
 
 #### Returns
 
@@ -199,9 +199,9 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                         |
+| :------ | :------------------------------------------- |
+| `chunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 

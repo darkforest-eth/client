@@ -38,7 +38,7 @@
 
 ### RelicsList
 
-• `Const` **RelicsList**: `ArtifactType`[]
+• **RelicsList**: `ArtifactType`[]
 
 ## Functions
 
@@ -80,13 +80,13 @@
 
 #### Parameters
 
-| Name         | Type                                                                                    |
-| :----------- | :-------------------------------------------------------------------------------------- |
-| `videoMode`  | `boolean`                                                                               |
-| `thumb`      | `boolean`                                                                               |
-| `artifact`   | [`RenderedArtifact`](../interfaces/Backend_GameLogic_ArtifactUtils.RenderedArtifact.md) |
-| `color`      | [`ArtifactFileColor`](../enums/Backend_GameLogic_ArtifactUtils.ArtifactFileColor.md)    |
-| `debugProps` | { `forceAncient`: `boolean` ; `skipCaching`: `boolean` } \| `undefined`                 |
+| Name         | Type                                                                                    | Default value |
+| :----------- | :-------------------------------------------------------------------------------------- | :------------ |
+| `videoMode`  | `boolean`                                                                               | `undefined`   |
+| `thumb`      | `boolean`                                                                               | `undefined`   |
+| `artifact`   | [`RenderedArtifact`](../interfaces/Backend_GameLogic_ArtifactUtils.RenderedArtifact.md) | `undefined`   |
+| `color`      | [`ArtifactFileColor`](../enums/Backend_GameLogic_ArtifactUtils.ArtifactFileColor.md)    | `undefined`   |
+| `debugProps` | `undefined` \| { `forceAncient`: `boolean` ; `skipCaching`: `boolean` }                 | `undefined`   |
 
 #### Returns
 
@@ -200,7 +200,7 @@ Convert an `artifactId` to an int in [0, 255]
 
 | Name       | Type                      |
 | :--------- | :------------------------ |
-| `artifact` | `Artifact` \| `undefined` |
+| `artifact` | `undefined` \| `Artifact` |
 
 #### Returns
 

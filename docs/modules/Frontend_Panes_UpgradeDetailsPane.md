@@ -18,7 +18,7 @@
 | Name                                | Type                                                                   |
 | :---------------------------------- | :--------------------------------------------------------------------- |
 | `__namedParameters`                 | `Object`                                                               |
-| `__namedParameters.initialPlanetId` | `LocationId` \| `undefined`                                            |
+| `__namedParameters.initialPlanetId` | `undefined` \| `LocationId`                                            |
 | `__namedParameters.modal`           | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
 
 #### Returns

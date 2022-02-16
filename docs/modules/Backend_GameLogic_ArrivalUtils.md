@@ -45,12 +45,12 @@
 
 #### Parameters
 
-| Name                | Type                                                                                              |
-| :------------------ | :------------------------------------------------------------------------------------------------ |
-| `toPlanet`          | `Planet`                                                                                          |
-| `artifactsOnPlanet` | `Artifact`[]                                                                                      |
-| `arrival`           | `QueuedArrival`                                                                                   |
-| `contractConstants` | [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md) |
+| Name                | Type                                                                                             |
+| :------------------ | :----------------------------------------------------------------------------------------------- |
+| `toPlanet`          | `Planet`                                                                                         |
+| `artifactsOnPlanet` | `Artifact`[]                                                                                     |
+| `arrival`           | `QueuedArrival`                                                                                  |
+| `contractConstants` | [`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md) |
 
 #### Returns
 
@@ -102,7 +102,7 @@
 
 | Name     | Type                    |
 | :------- | :---------------------- |
-| `planet` | `Planet` \| `undefined` |
+| `planet` | `undefined` \| `Planet` |
 
 #### Returns
 
@@ -185,13 +185,13 @@
 
 #### Parameters
 
-| Name                | Type                                                                                              |
-| :------------------ | :------------------------------------------------------------------------------------------------ |
-| `planet`            | `Planet`                                                                                          |
-| `planetArtifacts`   | `Artifact`[]                                                                                      |
-| `atTimeMillis`      | `number`                                                                                          |
-| `contractConstants` | [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md) |
-| `setPlanet`         | (`p`: `Planet`) => `void`                                                                         |
+| Name                | Type                                                                                             |
+| :------------------ | :----------------------------------------------------------------------------------------------- |
+| `planet`            | `Planet`                                                                                         |
+| `planetArtifacts`   | `Artifact`[]                                                                                     |
+| `atTimeMillis`      | `number`                                                                                         |
+| `contractConstants` | [`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md) |
+| `setPlanet`         | (`p`: `Planet`) => `void`                                                                        |
 
 #### Returns
 

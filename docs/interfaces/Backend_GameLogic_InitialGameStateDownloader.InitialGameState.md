@@ -13,11 +13,9 @@
 - [artifactsOnVoyages](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#artifactsonvoyages)
 - [claimedCoordsMap](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#claimedcoordsmap)
 - [contractConstants](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#contractconstants)
-- [gptCreditPriceEther](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#gptcreditpriceether)
 - [heldArtifacts](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#heldartifacts)
 - [loadedPlanets](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#loadedplanets)
 - [myArtifacts](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#myartifacts)
-- [myGPTCredits](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#mygptcredits)
 - [pendingMoves](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#pendingmoves)
 - [planetVoyageIdMap](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#planetvoyageidmap)
 - [players](Backend_GameLogic_InitialGameStateDownloader.InitialGameState.md#players)
@@ -66,13 +64,7 @@
 
 ### contractConstants
 
-• **contractConstants**: [`ContractConstants`](_types_darkforest_api_ContractsAPITypes.ContractConstants.md)
-
----
-
-### gptCreditPriceEther
-
-• **gptCreditPriceEther**: `number`
+• **contractConstants**: [`ContractConstants`](types_darkforest_api_ContractsAPITypes.ContractConstants.md)
 
 ---
 
@@ -91,12 +83,6 @@
 ### myArtifacts
 
 • **myArtifacts**: `Artifact`[]
-
----
-
-### myGPTCredits
-
-• **myGPTCredits**: `number`
 
 ---
 
@@ -132,7 +118,7 @@
 
 ### twitters
 
-• **twitters**: [`AddressTwitterMap`](../modules/_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)
+• **twitters**: [`AddressTwitterMap`](../modules/types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)
 
 ---
 

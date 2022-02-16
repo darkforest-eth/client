@@ -42,7 +42,7 @@ EventEmitter.constructor
 
 ### tutorialState
 
-• `Private` **tutorialState**: [`TutorialState`](../enums/Backend_GameLogic_TutorialManager.TutorialState.md)
+• `Private` **tutorialState**: [`TutorialState`](../enums/Backend_GameLogic_TutorialManager.TutorialState.md) = `TutorialState.None`
 
 ---
 

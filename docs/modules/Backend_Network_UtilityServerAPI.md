@@ -6,10 +6,6 @@
 
 - [EmailResponse](../enums/Backend_Network_UtilityServerAPI.EmailResponse.md)
 
-### Variables
-
-- [WEBSERVER_URL](Backend_Network_UtilityServerAPI.md#webserver_url)
-
 ### Functions
 
 - [callRegisterUntilWhitelisted](Backend_Network_UtilityServerAPI.md#callregisteruntilwhitelisted)
@@ -22,12 +18,6 @@
 - [submitWhitelistKey](Backend_Network_UtilityServerAPI.md#submitwhitelistkey)
 - [tryGetAllTwitters](Backend_Network_UtilityServerAPI.md#trygetalltwitters)
 - [verifyTwitterHandle](Backend_Network_UtilityServerAPI.md#verifytwitterhandle)
-
-## Variables
-
-### WEBSERVER_URL
-
-• `Const` **WEBSERVER_URL**: `string`
 
 ## Functions
 
@@ -43,11 +33,11 @@ Attempts to register the given player into the game.
 
 #### Parameters
 
-| Name       | Type                                                                                                                  |
-| :--------- | :-------------------------------------------------------------------------------------------------------------------- |
-| `key`      | `string`                                                                                                              |
-| `address`  | `EthAddress`                                                                                                          |
-| `terminal` | `React.MutableRefObject`<[`TerminalHandle`](../interfaces/Frontend_Views_Terminal.TerminalHandle.md) \| `undefined`\> |
+| Name       | Type                                                                                                            |
+| :--------- | :-------------------------------------------------------------------------------------------------------------- |
+| `key`      | `string`                                                                                                        |
+| `address`  | `EthAddress`                                                                                                    |
+| `terminal` | `MutableRefObject`<`undefined` \| [`TerminalHandle`](../interfaces/Frontend_Views_Terminal.TerminalHandle.md)\> |
 
 #### Returns
 
@@ -73,11 +63,11 @@ Attempts to register the given player into the game.
 
 ### getAllTwitters
 
-▸ `Const` **getAllTwitters**(): `Promise`<[`AddressTwitterMap`](_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
+▸ `Const` **getAllTwitters**(): `Promise`<[`AddressTwitterMap`](types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
 
 #### Returns
 
-`Promise`<[`AddressTwitterMap`](_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
+`Promise`<[`AddressTwitterMap`](types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
 
 ---
 
@@ -149,7 +139,8 @@ Attempts to register the given player into the game.
 
 ▸ `Const` **submitWhitelistKey**(`key`, `address`): `Promise`<`null` \| `RegisterResponse`\>
 
-Submits a whitelist key to register the given player to the game.
+Submits a whitelist key to register the given player to the game. Returns null if there was an
+error.
 
 #### Parameters
 
@@ -166,14 +157,14 @@ Submits a whitelist key to register the given player to the game.
 
 ### tryGetAllTwitters
 
-▸ `Const` **tryGetAllTwitters**(): `Promise`<[`AddressTwitterMap`](_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
+▸ `Const` **tryGetAllTwitters**(): `Promise`<[`AddressTwitterMap`](types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
 
 Swallows all errors. Either loads the address to twitter map from the webserver in 5 seconds, or
 returan empty map.
 
 #### Returns
 
-`Promise`<[`AddressTwitterMap`](_types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
+`Promise`<[`AddressTwitterMap`](types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
 
 ---
 

@@ -223,10 +223,10 @@
 
 #### Parameters
 
-| Name       | Type                    |
-| :--------- | :---------------------- |
-| `artifact` | `Artifact`              |
-| `atFrame`  | `undefined` \| `number` |
+| Name       | Type                    | Default value |
+| :--------- | :---------------------- | :------------ |
+| `artifact` | `Artifact`              | `undefined`   |
+| `atFrame`  | `undefined` \| `number` | `undefined`   |
 
 #### Returns
 

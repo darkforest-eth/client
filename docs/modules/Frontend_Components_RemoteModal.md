@@ -18,13 +18,13 @@ Useful for loading temporary modals from ANYWHERE in the UI, not just
 
 #### Parameters
 
-| Name                          | Type                                      |
-| :---------------------------- | :---------------------------------------- |
-| `__namedParameters`           | `Object`                                  |
-| `__namedParameters.children`  | `React.ReactElement`                      |
-| `__namedParameters.container` | `Element`                                 |
-| `__namedParameters.hook`      | [`boolean`, (`set`: `boolean`) => `void`] |
-| `__namedParameters.title`     | `string`                                  |
+| Name                          | Type                                                                |
+| :---------------------------- | :------------------------------------------------------------------ |
+| `__namedParameters`           | `Object`                                                            |
+| `__namedParameters.children`  | `ReactElement`<`any`, `string` \| `JSXElementConstructor`<`any`\>\> |
+| `__namedParameters.container` | `Element`                                                           |
+| `__namedParameters.hook`      | [`boolean`, (`set`: `boolean`) => `void`]                           |
+| `__namedParameters.title`     | `string`                                                            |
 
 #### Returns
 
