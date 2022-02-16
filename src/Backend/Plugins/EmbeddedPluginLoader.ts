@@ -13,7 +13,7 @@ export interface EmbeddedPlugin {
  * Load all of the embedded plugins in the dist directory of the `embedded_plugins/` project
  * as Plain Text files. This means that `embedded_plugins/` can't use `import` for relative paths.
  */
-const pluginsContext = require.context('../../../embedded_plugins/', false, /\.[jt]sx?$/);
+const pluginsContext = require.context('../../../df-plugins/', false, /\.[jt]sx?$/);
 
 function cleanFilename(filename: string) {
   return filename
