@@ -84,7 +84,6 @@ export default class PlanetRenderManager {
     }
 
     if (hasOwner(planet)) {
-      // const isAllie = 
       color[3] = cA * 120;
       cR.isAllie = ORDEN_ALLIES.some( allie => allie.address === planet.owner);
       cR.queueCircleWorld(planet.location.coords, renderInfo.radii.radiusWorld * 1.1, color, 0.5);
