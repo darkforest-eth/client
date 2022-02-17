@@ -20,15 +20,12 @@ const CheckboxGroup = styled(Padded)`
 `;
 
 export function OrdenPane({ hook }: { hook: ModalHook }) {
-  const [ settings, setSettings ] = useState(getOrdenSettings());
+  const [settings, setSettings] = useState(getOrdenSettings());
 
   const handleChange = (name: string, b: boolean) => (event: object) => {
-    console.log(settings);
     
-    let duplicate = {...settings};
+    const duplicate = {...settings};
 
-    console.log(duplicate, name, b);
-    
     duplicate[name] = !b;
     
     setSettings(duplicate);

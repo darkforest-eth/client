@@ -78,7 +78,7 @@ export default class CircleRenderer extends GenericRenderer<typeof CIRCLE_PROGRA
     const { allies } = getOrdenSettings();
     const centerCanvas = this.viewport.worldToCanvasCoords(center);
     const rCanvas = this.viewport.worldToCanvasDist(radius);
-    const updatedColor: [ number, number, number, number] = this.isAllie && allies ? [100, 100, 100, 255] : color;
+    const updatedColor: RGBAVec = this.isAllie && allies ? [100, 100, 100, 255] : color;
     this.queueCircle(centerCanvas, rCanvas, updatedColor, stroke, angle, dashed);
   }
 

@@ -195,9 +195,7 @@ export class ProcgenUtils {
 
     return this.rgbsByHash.get(player) as RGBAVec;
   }
-  
   public static getOwnerColorVec(planet: Planet): RGBAVec {
-    
     if (planet.owner === EMPTY_ADDRESS) return [153, 153, 102, 255];
     return ProcgenUtils.getPlayerColorVec(planet.owner);
   }
