@@ -138,14 +138,16 @@ class Renderer {
     bufferCanvas: HTMLCanvasElement,
     gameUIManager: GameUIManager
   ) {
+    const ordenSettings = getOrdenSettings();
 
-    if(!getOrdenSettings()) setOrdenSettings({
-      'allies': true,
-      'double range': true,
-      'double defence': true,
-      'double energy': true
-    });
-
+    if (Object.keys(ordenSettings).length === 0) {
+      setOrdenSettings({
+        'allies': true,
+        'double range': true,
+        'double defence': true,
+        'double energy': true
+      });
+    }
 
     const canvasRenderer = new Renderer(canvas, glCanvas, bufferCanvas, gameUIManager);
     Renderer.instance = canvasRenderer;

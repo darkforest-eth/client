@@ -14,13 +14,12 @@ export default class CircleRenderer extends GenericRenderer<typeof CIRCLE_PROGRA
 
   viewport: Viewport;
 
-  isAllie: boolean;
+  isAllie: boolean = false;
 
   constructor(manager: GameGLManager) {
     super(manager, CIRCLE_PROGRAM_DEFINITION);
     this.viewport = Viewport.getInstance();
     this.quadBuffer = EngineUtils.makeEmptyDoubleQuad();
-    this.isAllie = false;
   }
 
   public queueCircle(
