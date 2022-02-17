@@ -8,6 +8,7 @@ import {
   TOGGLE_SETTINGS_PANE,
   TOGGLE_YOUR_ARTIFACTS_PANE,
   TOGGLE_YOUR_PLANETS_DEX_PANE,
+  TOGGLE_YOUR_ORDEN_PLANET_PANE
 } from '../Utils/ShortcutConstants';
 import {
   ModalHelpIcon,
@@ -15,6 +16,7 @@ import {
   ModalPluginIcon,
   ModalSettingsIcon,
   ModalYourArtifactsIcon,
+  ModalOrdenPaneIcon
 } from './ModalIcon';
 import { ModalHook } from './ModalPane';
 
@@ -24,12 +26,14 @@ export function SidebarPane({
   pluginsHook,
   yourArtifactsHook,
   planetdexHook,
+  ordenPaneHook
 }: {
   settingsHook: ModalHook;
   helpHook: ModalHook;
   pluginsHook: ModalHook;
   yourArtifactsHook: ModalHook;
   planetdexHook: ModalHook;
+  ordenPaneHook: ModalHook;
 }) {
   const [sidebarHovered, setSidebarHovered] = useState<boolean>(false);
 
@@ -93,6 +97,17 @@ export function SidebarPane({
           }}
           text={sidebarHovered ? 'Your Planets' : undefined}
           shortcutKey={sidebarHovered ? TOGGLE_YOUR_PLANETS_DEX_PANE : undefined}
+        />
+        <EmSpacer height={0.5} />
+        <ModalOrdenPaneIcon
+          hook={ordenPaneHook}
+          style={{
+            width: '100%',
+            height: '2em',
+            padding: '4px 8px',
+          }}
+          text={sidebarHovered ? 'Orden Panel' : undefined}
+          shortcutKey={sidebarHovered ? TOGGLE_YOUR_ORDEN_PLANET_PANE : undefined}
         />
       </BorderlessPane>
     </WindowTogglesPaneContainer>

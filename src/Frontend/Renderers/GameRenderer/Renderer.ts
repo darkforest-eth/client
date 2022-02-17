@@ -23,6 +23,8 @@ import Overlay2DRenderer from './Overlay2DRenderer';
 import { UIRenderer } from './UIRenderer';
 import { GameGLManager } from './WebGL/GameGLManager';
 
+import { getOrdenSettings, setOrdenSettings } from '../../Utils/OrdenUtils';
+ 
 class Renderer {
   static instance: Renderer | null;
 
@@ -136,6 +138,15 @@ class Renderer {
     bufferCanvas: HTMLCanvasElement,
     gameUIManager: GameUIManager
   ) {
+
+    if(!getOrdenSettings()) setOrdenSettings({
+      'allies': true,
+      'double range': true,
+      'double defence': true,
+      'double energy': true
+    });
+
+
     const canvasRenderer = new Renderer(canvas, glCanvas, bufferCanvas, gameUIManager);
     Renderer.instance = canvasRenderer;
 

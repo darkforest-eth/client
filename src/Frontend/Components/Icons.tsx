@@ -173,3 +173,14 @@ export const TxInitialized = ({ height, width }: AlertIcon) => {
 export const TxDeclined = ({ height, width }: AlertIcon) => {
   return <img height={height} width={width} src='public/icons/alerts/transactions/declined.svg' />;
 };
+
+export const OrdenIcon = ({ height, width }: AlertIcon) => {
+  return (
+    <img 
+      height={height}
+      width={width}
+      style={{transform: 'scale(2.2)'}}
+      src='public/ordenGG.svg'
+    />
+  )
+};

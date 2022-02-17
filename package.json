@@ -15,6 +15,7 @@
     "@darkforest_eth/snarks": "6.6.7",
     "@darkforest_eth/types": "6.6.7",
     "@darkforest_eth/ui": "6.6.7",
+    "@ordenGG/allies": "git+ssh://git@github.com:orden-gg/orden-allies.git",
     "@hot-loader/react-dom": "^17.0.1",
     "@lit-labs/react": "^1.0.0",
     "@types/animejs": "^3.1.3",

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { BtnProps } from '../Components/Btn';
 import { ShortcutButton, Spacer } from '../Components/CoreUI';
-import { Icon, IconType } from '../Components/Icons';
+import { Icon, IconType, OrdenIcon } from '../Components/Icons';
 import { ModalHook, ModalName } from './ModalPane';
 
 const ModalIconText = styled.span`
@@ -28,7 +28,8 @@ const icon = (modal: ModalName): React.ReactNode => {
   else if (modal === ModalName.Plugins) return <Icon type={IconType.Plugin} />;
   else if (modal === ModalName.YourArtifacts) return <Icon type={IconType.Artifact} />;
   else if (modal === ModalName.WithdrawSilver) return <Icon type={IconType.Withdraw} />;
-  return <span>T</span>;
+  else if (modal === ModalName.OrdenPane) return <OrdenIcon width='15' height='15' />;
+  return <span>O</span>;
 };
 
 /**
@@ -396,6 +397,28 @@ export function ModalWithdrawIcon({
       style={style}
       shortcutKey={shortcutKey}
       text={text}
+    />
+  );
+}
+
+export function ModalOrdenPaneIcon({
+  hook,
+  text,
+  style,
+  shortcutKey,
+}: {
+  hook: ModalHook;
+  text?: string;
+  style?: React.CSSProperties;
+  shortcutKey?: string;
+}) {
+  return (
+    <ModalToggleButton
+      hook={hook}
+      modal={ModalName.OrdenPane}
+      text={text}
+      style={style}
+      shortcutKey={shortcutKey}
     />
   );
 }

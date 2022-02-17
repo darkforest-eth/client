@@ -21,6 +21,7 @@
 - [TOGGLE_UPGRADES_PANE](Frontend_Utils_ShortcutConstants.md#toggle_upgrades_pane)
 - [TOGGLE_YOUR_ARTIFACTS_PANE](Frontend_Utils_ShortcutConstants.md#toggle_your_artifacts_pane)
 - [TOGGLE_YOUR_PLANETS_DEX_PANE](Frontend_Utils_ShortcutConstants.md#toggle_your_planets_dex_pane)
+- [TOGGLE_YOUR_ORDEN_PANEL_PANE](Frontend_Utils_ShortcutConstants.md#toggle_your_orden_panel_pane)
 
 ## Variables
 

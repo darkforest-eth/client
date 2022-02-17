@@ -15,6 +15,7 @@ import { ExplorePane } from '../Panes/ExplorePane';
 import { HelpPane } from '../Panes/HelpPane';
 import { HoverPlanetPane } from '../Panes/HoverPlanetPane';
 import OnboardingPane from '../Panes/OnboardingPane';
+import { OrdenPane } from '../Panes/Orden/OrdenPane';
 import { PlanetContextPane } from '../Panes/PlanetContextPane';
 import { PlanetDexPane } from '../Panes/PlanetDexPane';
 import { PlayerArtifactsPane } from '../Panes/PlayerArtifactsPane';
@@ -36,6 +37,7 @@ import {
   TOGGLE_TARGETTING,
   TOGGLE_YOUR_ARTIFACTS_PANE,
   TOGGLE_YOUR_PLANETS_DEX_PANE,
+  TOGGLE_YOUR_ORDEN_PLANET_PANE
 } from '../Utils/ShortcutConstants';
 import { NotificationsPane } from './Notifications';
 import { SidebarPane } from './SidebarPane';
@@ -62,6 +64,7 @@ export function GameWindowLayout({
   const selected = useSelectedPlanet(uiManager).value;
   const selectedPlanetHook = useState<boolean>(!!selected);
   const diagnosticsHook = useState<boolean>(false);
+  const ordenPaneHook = useState<boolean>(false);
   const [, setSelectedPlanetVisible] = selectedPlanetHook;
 
   const [userTerminalVisibleSetting, setTerminalVisibleSetting] = useBooleanSetting(
@@ -135,6 +138,14 @@ export function GameWindowLayout({
       setDiagnosticsHookOpen((value) => !value);
     }, [setDiagnosticsHookOpen])
   );
+  
+  const setOrdenPaneHookOpen = ordenPaneHook[1];
+  useOnUp(
+    TOGGLE_YOUR_ORDEN_PLANET_PANE,
+    useCallback(() => {
+      setOrdenPaneHookOpen((value) => !value);
+    }, [setOrdenPaneHookOpen])
+  );
 
   useOnUp(TOGGLE_EXPLORE, uiManager.toggleExplore.bind(uiManager));
   useOnUp(TOGGLE_TARGETTING, uiManager.toggleTargettingExplorer.bind(uiManager));
@@ -161,6 +172,7 @@ export function GameWindowLayout({
         <PlayerArtifactsPane hook={yourArtifactsHook} />
         <PlanetContextPane hook={selectedPlanetHook} />
         <DiagnosticsPane hook={diagnosticsHook} />
+        <OrdenPane hook={ordenPaneHook} />
         {modalsContainerRef.current && (
           <PluginLibraryPane
             modalsContainer={modalsContainerRef.current}
@@ -183,6 +195,7 @@ export function GameWindowLayout({
             pluginsHook={pluginsHook}
             yourArtifactsHook={yourArtifactsHook}
             planetdexHook={planetdexHook}
+            ordenPaneHook={ordenPaneHook}
           />
           <CanvasWrapper>
             <ControllableCanvas />

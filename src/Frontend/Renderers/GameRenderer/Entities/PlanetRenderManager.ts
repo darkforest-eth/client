@@ -17,6 +17,7 @@ import { HatType } from '../../../Utils/Hats';
 import { engineConsts } from '../EngineConsts';
 import { TextAlign, TextAnchor } from '../EngineTypes';
 import Renderer from '../Renderer';
+import { ORDEN_ALLIES } from '@ordenGG/allies/orden-allies';
 
 const { whiteA, barbsA, gold } = engineConsts.colors;
 const { maxRadius } = engineConsts.planet;
@@ -83,7 +84,9 @@ export default class PlanetRenderManager {
     }
 
     if (hasOwner(planet)) {
+      // const isAllie = 
       color[3] = cA * 120;
+      cR.isAllie = ORDEN_ALLIES.some( allie => allie.address === planet.owner);
       cR.queueCircleWorld(planet.location.coords, renderInfo.radii.radiusWorld * 1.1, color, 0.5);
       const pct = planet.energy / planet.energyCap;
       color[3] = cA * 255;
