@@ -16,7 +16,6 @@
 
 ### Properties
 
-- [WorkerCtor](Backend_Miner_MinerManager.default.md#workerctor)
 - [cores](Backend_Miner_MinerManager.default.md#cores)
 - [currentJobId](Backend_Miner_MinerManager.default.md#currentjobid)
 - [exploringChunk](Backend_Miner_MinerManager.default.md#exploringchunk)
@@ -29,6 +28,7 @@
 - [perlinOptions](Backend_Miner_MinerManager.default.md#perlinoptions)
 - [planetRarity](Backend_Miner_MinerManager.default.md#planetrarity)
 - [useMockHash](Backend_Miner_MinerManager.default.md#usemockhash)
+- [workerFactory](Backend_Miner_MinerManager.default.md#workerfactory)
 - [workers](Backend_Miner_MinerManager.default.md#workers)
 - [worldRadius](Backend_Miner_MinerManager.default.md#worldradius)
 
@@ -57,31 +57,25 @@
 
 ### constructor
 
-• `Private` **new default**(`minedChunksStore`, `miningPattern`, `worldRadius`, `planetRarity`, `hashConfig`, `useMockHash`, `WorkerCtor`)
+• `Private` **new default**(`minedChunksStore`, `miningPattern`, `worldRadius`, `planetRarity`, `hashConfig`, `useMockHash`, `workerFactory`)
 
 #### Parameters
 
-| Name               | Type                                                                              |
-| :----------------- | :-------------------------------------------------------------------------------- |
-| `minedChunksStore` | [`ChunkStore`](../interfaces/_types_darkforest_api_ChunkStoreTypes.ChunkStore.md) |
-| `miningPattern`    | [`MiningPattern`](../interfaces/Backend_Miner_MiningPatterns.MiningPattern.md)    |
-| `worldRadius`      | `number`                                                                          |
-| `planetRarity`     | `number`                                                                          |
-| `hashConfig`       | [`HashConfig`](../modules/_types_global_GlobalTypes.md#hashconfig)                |
-| `useMockHash`      | `boolean`                                                                         |
-| `WorkerCtor`       | typeof [`default`](_types_worker_loader_WorkerTypes.default.md)                   |
+| Name               | Type                                                                             |
+| :----------------- | :------------------------------------------------------------------------------- |
+| `minedChunksStore` | [`ChunkStore`](../interfaces/types_darkforest_api_ChunkStoreTypes.ChunkStore.md) |
+| `miningPattern`    | [`MiningPattern`](../interfaces/Backend_Miner_MiningPatterns.MiningPattern.md)   |
+| `worldRadius`      | `number`                                                                         |
+| `planetRarity`     | `number`                                                                         |
+| `hashConfig`       | [`HashConfig`](../modules/types_global_GlobalTypes.md#hashconfig)                |
+| `useMockHash`      | `boolean`                                                                        |
+| `workerFactory`    | [`workerFactory`](../modules/Backend_Miner_MinerManager.md#workerfactory)        |
 
 #### Overrides
 
 EventEmitter.constructor
 
 ## Properties
-
-### WorkerCtor
-
-• `Private` **WorkerCtor**: typeof [`default`](_types_worker_loader_WorkerTypes.default.md)
-
----
 
 ### cores
 
@@ -101,7 +95,7 @@ EventEmitter.constructor
 
 #### Index signature
 
-▪ [chunkKey: `string`]: [`Chunk`](_types_global_GlobalTypes.Chunk.md)
+▪ [chunkKey: `string`]: [`Chunk`](types_global_GlobalTypes.Chunk.md)
 
 ---
 
@@ -117,7 +111,7 @@ EventEmitter.constructor
 
 ### hashConfig
 
-• `Private` **hashConfig**: [`HashConfig`](../modules/_types_global_GlobalTypes.md#hashconfig)
+• `Private` **hashConfig**: [`HashConfig`](../modules/types_global_GlobalTypes.md#hashconfig)
 
 ---
 
@@ -129,7 +123,7 @@ EventEmitter.constructor
 
 ### minedChunksStore
 
-• `Private` `Readonly` **minedChunksStore**: [`ChunkStore`](../interfaces/_types_darkforest_api_ChunkStoreTypes.ChunkStore.md)
+• `Private` `Readonly` **minedChunksStore**: [`ChunkStore`](../interfaces/types_darkforest_api_ChunkStoreTypes.ChunkStore.md)
 
 ---
 
@@ -167,9 +161,15 @@ EventEmitter.constructor
 
 ---
 
+### workerFactory
+
+• `Private` **workerFactory**: [`workerFactory`](../modules/Backend_Miner_MinerManager.md#workerfactory)
+
+---
+
 ### workers
 
-• `Private` **workers**: [`default`](_types_worker_loader_WorkerTypes.default.md)[]
+• `Private` **workers**: `Worker`[]
 
 ---
 
@@ -181,7 +181,7 @@ EventEmitter.constructor
 
 ### chunkKeyToLocation
 
-▸ `Private` **chunkKeyToLocation**(`chunkKey`): `undefined` \| [[`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md), `number`]
+▸ `Private` **chunkKeyToLocation**(`chunkKey`): `undefined` \| [[`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md), `number`]
 
 #### Parameters
 
@@ -191,7 +191,7 @@ EventEmitter.constructor
 
 #### Returns
 
-`undefined` \| [[`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md), `number`]
+`undefined` \| [[`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md), `number`]
 
 ---
 
@@ -201,10 +201,10 @@ EventEmitter.constructor
 
 #### Parameters
 
-| Name            | Type                                                                |
-| :-------------- | :------------------------------------------------------------------ |
-| `chunkLocation` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
-| `jobId`         | `number`                                                            |
+| Name            | Type                                                               |
+| :-------------- | :----------------------------------------------------------------- |
+| `chunkLocation` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
+| `jobId`         | `number`                                                           |
 
 #### Returns
 
@@ -228,10 +228,10 @@ EventEmitter.constructor
 
 #### Parameters
 
-| Name        | Type                                                                |
-| :---------- | :------------------------------------------------------------------ |
-| `fromChunk` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
-| `jobId`     | `number`                                                            |
+| Name        | Type                                                               |
+| :---------- | :----------------------------------------------------------------- |
+| `fromChunk` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
+| `jobId`     | `number`                                                           |
 
 #### Returns
 
@@ -241,11 +241,11 @@ EventEmitter.constructor
 
 ### getCurrentlyExploringChunk
 
-▸ **getCurrentlyExploringChunk**(): `undefined` \| [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)
+▸ **getCurrentlyExploringChunk**(): `undefined` \| [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)
 
 #### Returns
 
-`undefined` \| [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)
+`undefined` \| [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)
 
 ---
 
@@ -291,9 +291,9 @@ EventEmitter.constructor
 
 #### Parameters
 
-| Name            | Type                                                                |
-| :-------------- | :------------------------------------------------------------------ |
-| `chunkLocation` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
+| Name            | Type                                                               |
+| :-------------- | :----------------------------------------------------------------- |
+| `chunkLocation` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 
@@ -303,18 +303,18 @@ EventEmitter.constructor
 
 ### nextValidExploreTarget
 
-▸ `Private` **nextValidExploreTarget**(`chunkLocation`, `jobId`): `Promise`<`undefined` \| [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)\>
+▸ `Private` **nextValidExploreTarget**(`chunkLocation`, `jobId`): `Promise`<`undefined` \| [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)\>
 
 #### Parameters
 
-| Name            | Type                                                                |
-| :-------------- | :------------------------------------------------------------------ |
-| `chunkLocation` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
-| `jobId`         | `number`                                                            |
+| Name            | Type                                                               |
+| :-------------- | :----------------------------------------------------------------- |
+| `chunkLocation` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
+| `jobId`         | `number`                                                           |
 
 #### Returns
 
-`Promise`<`undefined` \| [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)\>
+`Promise`<`undefined` \| [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)\>
 
 ---
 
@@ -324,10 +324,10 @@ EventEmitter.constructor
 
 #### Parameters
 
-| Name            | Type                                          |
-| :-------------- | :-------------------------------------------- |
-| `exploredChunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
-| `jobId`         | `number`                                      |
+| Name            | Type                                         |
+| :-------------- | :------------------------------------------- |
+| `exploredChunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
+| `jobId`         | `number`                                     |
 
 #### Returns
 
@@ -341,10 +341,10 @@ EventEmitter.constructor
 
 #### Parameters
 
-| Name             | Type                                                                |
-| :--------------- | :------------------------------------------------------------------ |
-| `chunkToExplore` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
-| `jobId`          | `number`                                                            |
+| Name             | Type                                                               |
+| :--------------- | :----------------------------------------------------------------- |
+| `chunkToExplore` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
+| `jobId`          | `number`                                                           |
 
 #### Returns
 
@@ -422,19 +422,19 @@ EventEmitter.constructor
 
 ### create
 
-▸ `Static` **create**(`chunkStore`, `miningPattern`, `worldRadius`, `planetRarity`, `hashConfig`, `useMockHash?`, `WorkerCtor?`): [`default`](Backend_Miner_MinerManager.default.md)
+▸ `Static` **create**(`chunkStore`, `miningPattern`, `worldRadius`, `planetRarity`, `hashConfig`, `useMockHash?`, `workerFactory?`): [`default`](Backend_Miner_MinerManager.default.md)
 
 #### Parameters
 
-| Name            | Type                                                                              | Default value |
-| :-------------- | :-------------------------------------------------------------------------------- | :------------ |
-| `chunkStore`    | [`ChunkStore`](../interfaces/_types_darkforest_api_ChunkStoreTypes.ChunkStore.md) | `undefined`   |
-| `miningPattern` | [`MiningPattern`](../interfaces/Backend_Miner_MiningPatterns.MiningPattern.md)    | `undefined`   |
-| `worldRadius`   | `number`                                                                          | `undefined`   |
-| `planetRarity`  | `number`                                                                          | `undefined`   |
-| `hashConfig`    | [`HashConfig`](../modules/_types_global_GlobalTypes.md#hashconfig)                | `undefined`   |
-| `useMockHash`   | `boolean`                                                                         | `false`       |
-| `WorkerCtor`    | typeof [`default`](_types_worker_loader_WorkerTypes.default.md)                   | `undefined`   |
+| Name            | Type                                                                             | Default value   |
+| :-------------- | :------------------------------------------------------------------------------- | :-------------- |
+| `chunkStore`    | [`ChunkStore`](../interfaces/types_darkforest_api_ChunkStoreTypes.ChunkStore.md) | `undefined`     |
+| `miningPattern` | [`MiningPattern`](../interfaces/Backend_Miner_MiningPatterns.MiningPattern.md)   | `undefined`     |
+| `worldRadius`   | `number`                                                                         | `undefined`     |
+| `planetRarity`  | `number`                                                                         | `undefined`     |
+| `hashConfig`    | [`HashConfig`](../modules/types_global_GlobalTypes.md#hashconfig)                | `undefined`     |
+| `useMockHash`   | `boolean`                                                                        | `false`         |
+| `workerFactory` | [`workerFactory`](../modules/Backend_Miner_MinerManager.md#workerfactory)        | `defaultWorker` |
 
 #### Returns
 

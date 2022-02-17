@@ -2,20 +2,16 @@
 
 ## Table of contents
 
-### Properties
+### Functions
 
 - [default](Frontend_Pages_App.md#default)
 
-## Properties
+## Functions
 
 ### default
 
-• **default**: () => `Element`
+▸ **default**(): `Element`
 
-#### Type declaration
-
-▸ (): `Element`
-
-##### Returns
+#### Returns
 
 `Element`

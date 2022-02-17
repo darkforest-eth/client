@@ -17,7 +17,7 @@
 | Name                        | Type                                                                               |
 | :-------------------------- | :--------------------------------------------------------------------------------- |
 | `__namedParameters`         | `Object`                                                                           |
-| `__namedParameters.wrapper` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\> |
+| `__namedParameters.wrapper` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\> |
 
 #### Returns
 

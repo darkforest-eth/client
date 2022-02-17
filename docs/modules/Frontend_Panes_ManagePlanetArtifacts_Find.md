@@ -17,11 +17,11 @@
 | Name                                   | Type                    |
 | :------------------------------------- | :---------------------- |
 | `__namedParameters`                    | `Object`                |
-| `__namedParameters.currentBlockNumber` | `number` \| `undefined` |
+| `__namedParameters.currentBlockNumber` | `undefined` \| `number` |
 | `__namedParameters.isFinding`          | `boolean`               |
 | `__namedParameters.planet`             | `Planet`                |
 | `__namedParameters.roundOver`          | `boolean`               |
-| `__namedParameters.find`               |                         |
+| `__namedParameters.find`               | () => `void`            |
 
 #### Returns
 

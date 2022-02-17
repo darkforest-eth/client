@@ -14,13 +14,13 @@
 
 #### Parameters
 
-| Name                              | Type      |
-| :-------------------------------- | :-------- |
-| `__namedParameters`               | `Object`  |
-| `__namedParameters.isProspecting` | `boolean` |
-| `__namedParameters.planet`        | `Planet`  |
-| `__namedParameters.roundOver`     | `boolean` |
-| `__namedParameters.prospect`      |           |
+| Name                              | Type         |
+| :-------------------------------- | :----------- |
+| `__namedParameters`               | `Object`     |
+| `__namedParameters.isProspecting` | `boolean`    |
+| `__namedParameters.planet`        | `Planet`     |
+| `__namedParameters.roundOver`     | `boolean`    |
+| `__namedParameters.prospect`      | () => `void` |
 
 #### Returns
 

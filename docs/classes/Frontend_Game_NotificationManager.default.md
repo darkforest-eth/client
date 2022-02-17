@@ -166,9 +166,9 @@ EventEmitter.constructor
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                         |
+| :------ | :------------------------------------------- |
+| `chunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 
@@ -182,9 +182,9 @@ EventEmitter.constructor
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                         |
+| :------ | :------------------------------------------- |
+| `chunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 
@@ -262,9 +262,9 @@ EventEmitter.constructor
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                         |
+| :------ | :------------------------------------------- |
+| `chunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 

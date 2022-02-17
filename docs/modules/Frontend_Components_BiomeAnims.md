@@ -13,22 +13,22 @@
 
 ### burnAnim
 
-• `Const` **burnAnim**: `FlattenSimpleInterpolation`
+• **burnAnim**: `FlattenSimpleInterpolation`
 
 ---
 
 ### icyAnim
 
-• `Const` **icyAnim**: `FlattenSimpleInterpolation`
+• **icyAnim**: `FlattenSimpleInterpolation`
 
 ---
 
 ### shakeAnim
 
-• `Const` **shakeAnim**: `FlattenSimpleInterpolation`
+• **shakeAnim**: `FlattenSimpleInterpolation`
 
 ---
 
 ### wiggle
 
-• `Const` **wiggle**: `Keyframes`
+• **wiggle**: `Keyframes`

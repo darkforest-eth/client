@@ -53,12 +53,10 @@
 - [addAccount](Backend_GameLogic_GameUIManager.default.md#addaccount)
 - [addNewChunk](Backend_GameLogic_GameUIManager.default.md#addnewchunk)
 - [bulkAddNewChunks](Backend_GameLogic_GameUIManager.default.md#bulkaddnewchunks)
-- [buyGPTCredits](Backend_GameLogic_GameUIManager.default.md#buygptcredits)
 - [buyHat](Backend_GameLogic_GameUIManager.default.md#buyhat)
 - [centerCoords](Backend_GameLogic_GameUIManager.default.md#centercoords)
 - [centerLocationId](Backend_GameLogic_GameUIManager.default.md#centerlocationid)
 - [centerPlanet](Backend_GameLogic_GameUIManager.default.md#centerplanet)
-- [claimLocation](Backend_GameLogic_GameUIManager.default.md#claimlocation)
 - [deactivateArtifact](Backend_GameLogic_GameUIManager.default.md#deactivateartifact)
 - [depositArtifact](Backend_GameLogic_GameUIManager.default.md#depositartifact)
 - [destroy](Backend_GameLogic_GameUIManager.default.md#destroy)
@@ -82,7 +80,6 @@
 - [getChunk](Backend_GameLogic_GameUIManager.default.md#getchunk)
 - [getContractAddress](Backend_GameLogic_GameUIManager.default.md#getcontractaddress)
 - [getContractConstants](Backend_GameLogic_GameUIManager.default.md#getcontractconstants)
-- [getConversation](Backend_GameLogic_GameUIManager.default.md#getconversation)
 - [getDiagnostics](Backend_GameLogic_GameUIManager.default.md#getdiagnostics)
 - [getDiscoverBiomeName](Backend_GameLogic_GameUIManager.default.md#getdiscoverbiomename)
 - [getDistCoords](Backend_GameLogic_GameUIManager.default.md#getdistcoords)
@@ -95,8 +92,6 @@
 - [getForcesSending](Backend_GameLogic_GameUIManager.default.md#getforcessending)
 - [getGameManager](Backend_GameLogic_GameUIManager.default.md#getgamemanager)
 - [getGameObjects](Backend_GameLogic_GameUIManager.default.md#getgameobjects)
-- [getGptCreditBalanceEmitter](Backend_GameLogic_GameUIManager.default.md#getgptcreditbalanceemitter)
-- [getGptCreditPriceEmitter](Backend_GameLogic_GameUIManager.default.md#getgptcreditpriceemitter)
 - [getHashConfig](Backend_GameLogic_GameUIManager.default.md#gethashconfig)
 - [getHashesPerSec](Backend_GameLogic_GameUIManager.default.md#gethashespersec)
 - [getHomeCoords](Backend_GameLogic_GameUIManager.default.md#gethomecoords)
@@ -104,7 +99,6 @@
 - [getHomePlanet](Backend_GameLogic_GameUIManager.default.md#gethomeplanet)
 - [getHoveringOverCoords](Backend_GameLogic_GameUIManager.default.md#gethoveringovercoords)
 - [getHoveringOverPlanet](Backend_GameLogic_GameUIManager.default.md#gethoveringoverplanet)
-- [getIsBuyingCreditsEmitter](Backend_GameLogic_GameUIManager.default.md#getisbuyingcreditsemitter)
 - [getIsChoosingTargetPlanet](Backend_GameLogic_GameUIManager.default.md#getischoosingtargetplanet)
 - [getIsHighPerfMode](Backend_GameLogic_GameUIManager.default.md#getishighperfmode)
 - [getLocationOfPlanet](Backend_GameLogic_GameUIManager.default.md#getlocationofplanet)
@@ -154,7 +148,6 @@
 - [getWorldSilver](Backend_GameLogic_GameUIManager.default.md#getworldsilver)
 - [getWormholes](Backend_GameLogic_GameUIManager.default.md#getwormholes)
 - [hasMinedChunk](Backend_GameLogic_GameUIManager.default.md#hasminedchunk)
-- [isCurrentlyClaiming](Backend_GameLogic_GameUIManager.default.md#iscurrentlyclaiming)
 - [isCurrentlyRevealing](Backend_GameLogic_GameUIManager.default.md#iscurrentlyrevealing)
 - [isMining](Backend_GameLogic_GameUIManager.default.md#ismining)
 - [isOverOwnPlanet](Backend_GameLogic_GameUIManager.default.md#isoverownplanet)
@@ -184,10 +177,8 @@
 - [setSelectedPlanet](Backend_GameLogic_GameUIManager.default.md#setselectedplanet)
 - [setSilverSending](Backend_GameLogic_GameUIManager.default.md#setsilversending)
 - [spaceTypeFromPerlin](Backend_GameLogic_GameUIManager.default.md#spacetypefromperlin)
-- [startConversation](Backend_GameLogic_GameUIManager.default.md#startconversation)
 - [startExplore](Backend_GameLogic_GameUIManager.default.md#startexplore)
 - [startWormholeFrom](Backend_GameLogic_GameUIManager.default.md#startwormholefrom)
-- [stepConversation](Backend_GameLogic_GameUIManager.default.md#stepconversation)
 - [stopExplore](Backend_GameLogic_GameUIManager.default.md#stopexplore)
 - [toggleExplore](Backend_GameLogic_GameUIManager.default.md#toggleexplore)
 - [toggleTargettingExplorer](Backend_GameLogic_GameUIManager.default.md#toggletargettingexplorer)
@@ -476,9 +467,9 @@ choose to render themselves into this overlay container using React Portals.
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                         |
+| :------ | :------------------------------------------- |
+| `chunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 
@@ -492,29 +483,13 @@ choose to render themselves into this overlay container using React Portals.
 
 #### Parameters
 
-| Name     | Type                                            |
-| :------- | :---------------------------------------------- |
-| `chunks` | [`Chunk`](_types_global_GlobalTypes.Chunk.md)[] |
+| Name     | Type                                           |
+| :------- | :--------------------------------------------- |
+| `chunks` | [`Chunk`](types_global_GlobalTypes.Chunk.md)[] |
 
 #### Returns
 
 `Promise`<`void`\>
-
----
-
-### buyGPTCredits
-
-▸ **buyGPTCredits**(`amount`): `void`
-
-#### Parameters
-
-| Name     | Type     |
-| :------- | :------- |
-| `amount` | `number` |
-
-#### Returns
-
-`void`
 
 ---
 
@@ -575,22 +550,6 @@ choose to render themselves into this overlay container using React Portals.
 | Name     | Type                             |
 | :------- | :------------------------------- |
 | `planet` | `undefined` \| `LocatablePlanet` |
-
-#### Returns
-
-`void`
-
----
-
-### claimLocation
-
-▸ **claimLocation**(`locationId`): `void`
-
-#### Parameters
-
-| Name         | Type         |
-| :----------- | :----------- |
-| `locationId` | `LocationId` |
 
 #### Returns
 
@@ -881,17 +840,17 @@ choose to render themselves into this overlay container using React Portals.
 
 ### getChunk
 
-▸ **getChunk**(`chunkFootprint`): `undefined` \| [`Chunk`](_types_global_GlobalTypes.Chunk.md)
+▸ **getChunk**(`chunkFootprint`): `undefined` \| [`Chunk`](types_global_GlobalTypes.Chunk.md)
 
 #### Parameters
 
-| Name             | Type                                                                |
-| :--------------- | :------------------------------------------------------------------ |
-| `chunkFootprint` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
+| Name             | Type                                                               |
+| :--------------- | :----------------------------------------------------------------- |
+| `chunkFootprint` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 
-`undefined` \| [`Chunk`](_types_global_GlobalTypes.Chunk.md)
+`undefined` \| [`Chunk`](types_global_GlobalTypes.Chunk.md)
 
 ---
 
@@ -907,27 +866,11 @@ choose to render themselves into this overlay container using React Portals.
 
 ### getContractConstants
 
-▸ **getContractConstants**(): [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)
+▸ **getContractConstants**(): [`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md)
 
 #### Returns
 
-[`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)
-
----
-
-### getConversation
-
-▸ **getConversation**(`artifactId`): `Promise`<`undefined` \| `Conversation`\>
-
-#### Parameters
-
-| Name         | Type         |
-| :----------- | :----------- |
-| `artifactId` | `ArtifactId` |
-
-#### Returns
-
-`Promise`<`undefined` \| `Conversation`\>
+[`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md)
 
 ---
 
@@ -1048,11 +991,11 @@ choose to render themselves into this overlay container using React Portals.
 
 ### getExploredChunks
 
-▸ **getExploredChunks**(): `Iterable`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>
+▸ **getExploredChunks**(): `Iterable`<[`Chunk`](types_global_GlobalTypes.Chunk.md)\>
 
 #### Returns
 
-`Iterable`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>
+`Iterable`<[`Chunk`](types_global_GlobalTypes.Chunk.md)\>
 
 ---
 
@@ -1098,33 +1041,13 @@ state in some way
 
 ---
 
-### getGptCreditBalanceEmitter
-
-▸ **getGptCreditBalanceEmitter**(): `Monomitter`<`number`\>
-
-#### Returns
-
-`Monomitter`<`number`\>
-
----
-
-### getGptCreditPriceEmitter
-
-▸ **getGptCreditPriceEmitter**(): `Monomitter`<`number`\>
-
-#### Returns
-
-`Monomitter`<`number`\>
-
----
-
 ### getHashConfig
 
-▸ **getHashConfig**(): [`HashConfig`](../modules/_types_global_GlobalTypes.md#hashconfig)
+▸ **getHashConfig**(): [`HashConfig`](../modules/types_global_GlobalTypes.md#hashconfig)
 
 #### Returns
 
-[`HashConfig`](../modules/_types_global_GlobalTypes.md#hashconfig)
+[`HashConfig`](../modules/types_global_GlobalTypes.md#hashconfig)
 
 ---
 
@@ -1188,16 +1111,6 @@ state in some way
 
 ---
 
-### getIsBuyingCreditsEmitter
-
-▸ **getIsBuyingCreditsEmitter**(): `Monomitter`<`boolean`\>
-
-#### Returns
-
-`Monomitter`<`boolean`\>
-
----
-
 ### getIsChoosingTargetPlanet
 
 ▸ **getIsChoosingTargetPlanet**(): `boolean`
@@ -1245,7 +1158,7 @@ state in some way
 | Name            | Type                                                                                                             |
 | :-------------- | :--------------------------------------------------------------------------------------------------------------- |
 | `cachedPlanets` | `Map`<`LocationId`, [`PlanetRenderInfo`](../interfaces/Backend_GameLogic_ViewportEntities.PlanetRenderInfo.md)\> |
-| `chunks`        | `Set`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>                                                            |
+| `chunks`        | `Set`<[`Chunk`](types_global_GlobalTypes.Chunk.md)\>                                                             |
 
 ---
 
@@ -1780,11 +1693,11 @@ drill fields like this anymore.
 
 ### getWormholes
 
-▸ **getWormholes**(): `Iterable`<[`Wormhole`](../modules/_types_global_GlobalTypes.md#wormhole)\>
+▸ **getWormholes**(): `Iterable`<[`Wormhole`](../modules/types_global_GlobalTypes.md#wormhole)\>
 
 #### Returns
 
-`Iterable`<[`Wormhole`](../modules/_types_global_GlobalTypes.md#wormhole)\>
+`Iterable`<[`Wormhole`](../modules/types_global_GlobalTypes.md#wormhole)\>
 
 ---
 
@@ -1794,19 +1707,9 @@ drill fields like this anymore.
 
 #### Parameters
 
-| Name            | Type                                                                |
-| :-------------- | :------------------------------------------------------------------ |
-| `chunkLocation` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
-
-#### Returns
-
-`boolean`
-
----
-
-### isCurrentlyClaiming
-
-▸ **isCurrentlyClaiming**(): `boolean`
+| Name            | Type                                                               |
+| :-------------- | :----------------------------------------------------------------- |
+| `chunkLocation` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 
@@ -1898,9 +1801,9 @@ drill fields like this anymore.
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                         |
+| :------ | :------------------------------------------- |
+| `chunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 
@@ -2249,22 +2152,6 @@ about what the overlay container is.
 
 ---
 
-### startConversation
-
-▸ **startConversation**(`artifactId`): `Promise`<`Conversation`\>
-
-#### Parameters
-
-| Name         | Type         |
-| :----------- | :----------- |
-| `artifactId` | `ArtifactId` |
-
-#### Returns
-
-`Promise`<`Conversation`\>
-
----
-
 ### startExplore
 
 ▸ **startExplore**(): `void`
@@ -2288,23 +2175,6 @@ about what the overlay container is.
 #### Returns
 
 `Promise`<`undefined` \| `LocatablePlanet`\>
-
----
-
-### stepConversation
-
-▸ **stepConversation**(`artifactId`, `message`): `Promise`<`Conversation`\>
-
-#### Parameters
-
-| Name         | Type         |
-| :----------- | :----------- |
-| `artifactId` | `ArtifactId` |
-| `message`    | `string`     |
-
-#### Returns
-
-`Promise`<`Conversation`\>
 
 ---
 

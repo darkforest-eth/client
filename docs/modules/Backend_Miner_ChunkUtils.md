@@ -38,13 +38,13 @@ for sibling chunks that existed prior to this function being called.
 
 #### Parameters
 
-| Name             | Type                                                                                                                            |
-| :--------------- | :------------------------------------------------------------------------------------------------------------------------------ |
-| `existingChunks` | `Map`<[`ChunkId`](_types_darkforest_api_ChunkStoreTypes.md#chunkid), [`Chunk`](../classes/_types_global_GlobalTypes.Chunk.md)\> |
-| `newChunk`       | [`Chunk`](../classes/_types_global_GlobalTypes.Chunk.md)                                                                        |
-| `onAdd?`         | (`arg`: [`Chunk`](../classes/_types_global_GlobalTypes.Chunk.md)) => `void`                                                     |
-| `onRemove?`      | (`arg`: [`Chunk`](../classes/_types_global_GlobalTypes.Chunk.md)) => `void`                                                     |
-| `maxChunkSize?`  | `number`                                                                                                                        |
+| Name             | Type                                                                                                                          |
+| :--------------- | :---------------------------------------------------------------------------------------------------------------------------- |
+| `existingChunks` | `Map`<[`ChunkId`](types_darkforest_api_ChunkStoreTypes.md#chunkid), [`Chunk`](../classes/types_global_GlobalTypes.Chunk.md)\> |
+| `newChunk`       | [`Chunk`](../classes/types_global_GlobalTypes.Chunk.md)                                                                       |
+| `onAdd?`         | (`arg`: [`Chunk`](../classes/types_global_GlobalTypes.Chunk.md)) => `void`                                                    |
+| `onRemove?`      | (`arg`: [`Chunk`](../classes/types_global_GlobalTypes.Chunk.md)) => `void`                                                    |
+| `maxChunkSize?`  | `number`                                                                                                                      |
 
 #### Returns
 
@@ -54,7 +54,7 @@ for sibling chunks that existed prior to this function being called.
 
 ### getBucket
 
-▸ **getBucket**(`chunk`): [`BucketId`](_types_darkforest_api_ChunkStoreTypes.md#bucketid)
+▸ **getBucket**(`chunk`): [`BucketId`](types_darkforest_api_ChunkStoreTypes.md#bucketid)
 
 Deterministically assigns a bucket ID to a rectangle, based on its position and size in the
 universe. This is kind of like a shitty hash function. Its purpose is to distribute chunks
@@ -62,38 +62,38 @@ roughly evenly between the buckets.
 
 #### Parameters
 
-| Name    | Type                                                                |
-| :------ | :------------------------------------------------------------------ |
-| `chunk` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
+| Name    | Type                                                               |
+| :------ | :----------------------------------------------------------------- |
+| `chunk` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 
-[`BucketId`](_types_darkforest_api_ChunkStoreTypes.md#bucketid)
+[`BucketId`](types_darkforest_api_ChunkStoreTypes.md#bucketid)
 
 ---
 
 ### getChunkKey
 
-▸ **getChunkKey**(`chunkLoc`): [`ChunkId`](_types_darkforest_api_ChunkStoreTypes.md#chunkid)
+▸ **getChunkKey**(`chunkLoc`): [`ChunkId`](types_darkforest_api_ChunkStoreTypes.md#chunkid)
 
 A unique ID generated for each chunk based on its rectangle, as well as its bucket. It's the
 primary key by which chunks are identified.
 
 #### Parameters
 
-| Name       | Type                                                                |
-| :--------- | :------------------------------------------------------------------ |
-| `chunkLoc` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
+| Name       | Type                                                               |
+| :--------- | :----------------------------------------------------------------- |
+| `chunkLoc` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 
-[`ChunkId`](_types_darkforest_api_ChunkStoreTypes.md#chunkid)
+[`ChunkId`](types_darkforest_api_ChunkStoreTypes.md#chunkid)
 
 ---
 
 ### getChunkOfSideLengthContainingPoint
 
-▸ **getChunkOfSideLengthContainingPoint**(`coords`, `sideLength`): [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)
+▸ **getChunkOfSideLengthContainingPoint**(`coords`, `sideLength`): [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)
 
 Returns the unique aligned chunk (for definition of "aligned" see comment on
 `getSiblingLocations`) with the given side length that contains the given point. A chunk contains
@@ -109,13 +109,13 @@ it does not contain points which are on its right or top edges.
 
 #### Returns
 
-[`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)
+[`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)
 
 ---
 
 ### getSiblingLocations
 
-▸ `Const` **getSiblingLocations**(`chunkLoc`): [[`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md), [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md), [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)]
+▸ `Const` **getSiblingLocations**(`chunkLoc`): [[`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md), [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md), [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)]
 
 An aligned chunk is one whose corner's coordinates are multiples of its side length, and its side
 length is a power of two between [MIN_CHUNK_SIZE](Frontend_Utils_constants.md#min_chunk_size) and [MAX_CHUNK_SIZE](Frontend_Utils_constants.md#max_chunk_size) inclusive.
@@ -134,46 +134,46 @@ the given chunk.
 
 #### Parameters
 
-| Name       | Type                                                                |
-| :--------- | :------------------------------------------------------------------ |
-| `chunkLoc` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
+| Name       | Type                                                               |
+| :--------- | :----------------------------------------------------------------- |
+| `chunkLoc` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 
-[[`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md), [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md), [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)]
+[[`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md), [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md), [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)]
 
 ---
 
 ### toExploredChunk
 
-▸ `Const` **toExploredChunk**(`chunk`): [`Chunk`](../classes/_types_global_GlobalTypes.Chunk.md)
+▸ `Const` **toExploredChunk**(`chunk`): [`Chunk`](../classes/types_global_GlobalTypes.Chunk.md)
 
 Converts from the persisted representation of a chunk to the in-game representation of a chunk.
 
 #### Parameters
 
-| Name    | Type                                                                                      |
-| :------ | :---------------------------------------------------------------------------------------- |
-| `chunk` | [`PersistedChunk`](../interfaces/_types_darkforest_api_ChunkStoreTypes.PersistedChunk.md) |
+| Name    | Type                                                                                     |
+| :------ | :--------------------------------------------------------------------------------------- |
+| `chunk` | [`PersistedChunk`](../interfaces/types_darkforest_api_ChunkStoreTypes.PersistedChunk.md) |
 
 #### Returns
 
-[`Chunk`](../classes/_types_global_GlobalTypes.Chunk.md)
+[`Chunk`](../classes/types_global_GlobalTypes.Chunk.md)
 
 ---
 
 ### toPersistedChunk
 
-▸ **toPersistedChunk**(`chunk`): [`PersistedChunk`](../interfaces/_types_darkforest_api_ChunkStoreTypes.PersistedChunk.md)
+▸ **toPersistedChunk**(`chunk`): [`PersistedChunk`](../interfaces/types_darkforest_api_ChunkStoreTypes.PersistedChunk.md)
 
 Converts from the in-game representation of a chunk to its persisted representation.
 
 #### Parameters
 
-| Name    | Type                                                     |
-| :------ | :------------------------------------------------------- |
-| `chunk` | [`Chunk`](../classes/_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                                    |
+| :------ | :------------------------------------------------------ |
+| `chunk` | [`Chunk`](../classes/types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 
-[`PersistedChunk`](../interfaces/_types_darkforest_api_ChunkStoreTypes.PersistedChunk.md)
+[`PersistedChunk`](../interfaces/types_darkforest_api_ChunkStoreTypes.PersistedChunk.md)

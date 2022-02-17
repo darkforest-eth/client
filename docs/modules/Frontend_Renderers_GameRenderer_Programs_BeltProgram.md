@@ -24,7 +24,7 @@
 
 ### BELT_PROGRAM_DEFINITION
 
-• `Const` **BELT_PROGRAM_DEFINITION**: `Object`
+• **BELT_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

@@ -57,7 +57,7 @@
 
 ### Icon
 
-• `Const` **Icon**: `ForwardRefExoticComponent`<`Partial`<`Omit`<`DarkForestIcon`, `"children"`\>\> & `Events`<`unknown`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
+• **Icon**: `ForwardRefExoticComponent`<`Partial`<`Omit`<`DarkForestIcon`, `"children"`\>\> & `Events`<`unknown`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
 
 ---
 
@@ -564,10 +564,10 @@
 
 #### Parameters
 
-| Name                     | Type                                                       |
-| :----------------------- | :--------------------------------------------------------- |
-| `__namedParameters`      | `Object`                                                   |
-| `__namedParameters.stat` | [`StatIdx`](../enums/_types_global_GlobalTypes.StatIdx.md) |
+| Name                     | Type                                                      |
+| :----------------------- | :-------------------------------------------------------- |
+| `__namedParameters`      | `Object`                                                  |
+| `__namedParameters.stat` | [`StatIdx`](../enums/types_global_GlobalTypes.StatIdx.md) |
 
 #### Returns
 

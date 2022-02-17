@@ -14,9 +14,9 @@
 
 #### Parameters
 
-| Name                | Type                             |
-| :------------------ | :------------------------------- |
-| `__namedParameters` | `RouteComponentProps`<`Object`\> |
+| Name                | Type                                                         |
+| :------------------ | :----------------------------------------------------------- |
+| `__namedParameters` | `RouteComponentProps`<`Object`, `StaticContext`, `unknown`\> |
 
 #### Returns
 

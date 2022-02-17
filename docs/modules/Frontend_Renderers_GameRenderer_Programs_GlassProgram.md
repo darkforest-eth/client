@@ -46,13 +46,13 @@
 
 ### glassPosProps
 
-• `Const` **glassPosProps**: [`AttribProps`](Frontend_Renderers_GameRenderer_EngineTypes.md#attribprops)
+• **glassPosProps**: [`AttribProps`](Frontend_Renderers_GameRenderer_EngineTypes.md#attribprops)
 
 ---
 
 ### glassTexProps
 
-• `Const` **glassTexProps**: [`AttribProps`](Frontend_Renderers_GameRenderer_EngineTypes.md#attribprops)
+• **glassTexProps**: [`AttribProps`](Frontend_Renderers_GameRenderer_EngineTypes.md#attribprops)
 
 ## Functions
 

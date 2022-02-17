@@ -35,7 +35,7 @@ Wraps an existing emitter and emits an event with the current and previous value
 
 | Name      | Type                                | Description                        |
 | :-------- | :---------------------------------- | :--------------------------------- |
-| `emitter` | `Monomitter`<`Obj` \| `undefined`\> | an emitter announcing game objects |
+| `emitter` | `Monomitter`<`undefined` \| `Obj`\> | an emitter announcing game objects |
 
 #### Returns
 
@@ -120,7 +120,7 @@ Create a monomitter to emit objects with a given id from a cached map of ids to 
 | Name          | Type                               | Description                                             |
 | :------------ | :--------------------------------- | :------------------------------------------------------ |
 | `objMap`      | `Map`<`Id`, `Obj`\>                | the cached map of `<Id, Obj>`                           |
-| `objId$`      | `Monomitter`<`Id` \| `undefined`\> | the object id to select                                 |
+| `objId$`      | `Monomitter`<`undefined` \| `Id`\> | the object id to select                                 |
 | `objUpdated$` | `Monomitter`<`Id`\>                | emitter which indicates when an object has been updated |
 
 #### Returns
@@ -182,7 +182,7 @@ of our owned objects, and also emits a message that the object was updated.
 | :------------------ | :--------------------------------- | :---------------------------------------------- |
 | `objectMap`         | `Map`<`Id`, `Obj`\>                | map that caches known objects                   |
 | `myObjectMap`       | `Map`<`Id`, `Obj`\>                | map that caches known objects owned by the user |
-| `address`           | `EthAddress` \| `undefined`        | the user's account address                      |
+| `address`           | `undefined` \| `EthAddress`        | the user's account address                      |
 | `objUpdated$`       | `Monomitter`<`Id`\>                | emitter for announcing object updates           |
 | `myObjListUpdated$` | `Monomitter`<`Map`<`Id`, `Obj`\>\> | -                                               |
 | `getId`             | (`o`: `Obj`) => `Id`               | -                                               |

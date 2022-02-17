@@ -10,7 +10,7 @@
 
 ### QUASARBODY_PROGRAM_DEFINITION
 
-• `Const` **QUASARBODY_PROGRAM_DEFINITION**: `Object`
+• **QUASARBODY_PROGRAM_DEFINITION**: `Object`
 
 #### Type declaration
 

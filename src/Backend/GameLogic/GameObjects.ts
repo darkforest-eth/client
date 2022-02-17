@@ -20,9 +20,7 @@ import {
   SpaceType,
   TxIntent,
   UnconfirmedActivateArtifact,
-  UnconfirmedBuyGPTCredits,
   UnconfirmedBuyHat,
-  UnconfirmedClaim,
   UnconfirmedMove,
   UnconfirmedPlanetTransfer,
   UnconfirmedReveal,
@@ -46,9 +44,7 @@ import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes
 import { Chunk, isLocatable, Wormhole } from '../../_types/global/GlobalTypes';
 import {
   isUnconfirmedActivateArtifact,
-  isUnconfirmedBuyGPTCredits,
   isUnconfirmedBuyHat,
-  isUnconfirmedClaim,
   isUnconfirmedDeactivateArtifact,
   isUnconfirmedDepositArtifact,
   isUnconfirmedFindArtifact,
@@ -202,8 +198,6 @@ export class GameObjects {
    */
 
   private unconfirmedReveal?: UnconfirmedReveal; // at most one at a time
-  private unconfirmedBuyGPTCredits?: UnconfirmedBuyGPTCredits; // at most one at a time
-  private unconfirmedClaim?: UnconfirmedClaim; // at most one at a time
   private readonly unconfirmedMoves: Record<string, UnconfirmedMove>;
   private readonly unconfirmedUpgrades: Record<string, UnconfirmedUpgrade>;
   private readonly unconfirmedBuyHats: Record<string, UnconfirmedBuyHat>;
@@ -234,14 +228,6 @@ export class GameObjects {
    * {@link GameObjects.myPlanetsUpdated$} for more info.
    */
   public readonly myArtifactsUpdated$: Monomitter<Map<ArtifactId, Artifact>>;
-
-  /**
-   * Event emitter which publishes whenever the player begins and finishes (whether with a success
-   * or an error) buying gpt credits.
-   *
-   * @todo move into `PlayerInfo`
-   */
-  public readonly isBuyingCredits$: Monomitter<boolean>;
 
   constructor(
     address: EthAddress | undefined,
@@ -279,7 +265,6 @@ export class GameObjects {
     this.artifactUpdated$ = monomitter();
     this.myArtifactsUpdated$ = monomitter();
     this.myPlanetsUpdated$ = monomitter();
-    this.isBuyingCredits$ = monomitter(true);
 
     for (const chunk of allChunks) {
       for (const planetLocation of chunk.planetLocations) {
@@ -334,8 +319,6 @@ export class GameObjects {
 
     this.arrivals = arrivals;
     this.planetArrivalIds = planetArrivalIds;
-    this.unconfirmedBuyGPTCredits = undefined;
-    this.isBuyingCredits$.publish(false);
     this.unconfirmedReveal = undefined;
     this.unconfirmedMoves = {};
     this.unconfirmedUpgrades = {};
@@ -362,10 +345,6 @@ export class GameObjects {
         }
       });
     }, 120 * 1000);
-  }
-
-  public getIsBuyingCreditsEmitter() {
-    return this.isBuyingCredits$;
   }
 
   public getArtifactById(artifactId: ArtifactId): Artifact | undefined {
@@ -722,14 +701,7 @@ export class GameObjects {
     const notifManager = NotificationManager.getInstance();
     notifManager.txInit(txIntent);
 
-    if (isUnconfirmedClaim(txIntent)) {
-      this.unconfirmedClaim = txIntent;
-      const planet = this.getPlanetWithId(txIntent.locationId);
-      if (planet) {
-        planet.unconfirmedClaim = txIntent;
-        this.setPlanet(planet);
-      }
-    } else if (isUnconfirmedReveal(txIntent)) {
+    if (isUnconfirmedReveal(txIntent)) {
       const planet = this.getPlanetWithId(txIntent.locationId);
       if (planet) {
         planet.unconfirmedReveal = txIntent;
@@ -836,9 +808,6 @@ export class GameObjects {
         planet.unconfirmedWithdrawSilver = txIntent;
         this.setPlanet(planet);
       }
-    } else if (isUnconfirmedBuyGPTCredits(txIntent)) {
-      this.isBuyingCredits$.publish(true);
-      this.unconfirmedBuyGPTCredits = txIntent;
     }
   }
 
@@ -853,14 +822,7 @@ export class GameObjects {
    * @todo Make this less tedious.
    */
   public clearUnconfirmedTxIntent(txIntent: TxIntent) {
-    if (isUnconfirmedClaim(txIntent)) {
-      this.unconfirmedClaim = undefined;
-      const planet = this.getPlanetWithId(txIntent.locationId);
-      if (planet) {
-        planet.unconfirmedClaim = undefined;
-        this.setPlanet(planet);
-      }
-    } else if (isUnconfirmedReveal(txIntent)) {
+    if (isUnconfirmedReveal(txIntent)) {
       const planet = this.getPlanetWithId(txIntent.locationId);
 
       if (planet) {
@@ -1022,15 +984,6 @@ export class GameObjects {
         delete planet.unconfirmedWithdrawSilver;
         this.setPlanet(planet);
       }
-    } else if (isUnconfirmedBuyGPTCredits(txIntent)) {
-      if (txIntent.actionId === this.unconfirmedBuyGPTCredits?.actionId) {
-        this.isBuyingCredits$.publish(false);
-        this.unconfirmedBuyGPTCredits = undefined;
-      } else {
-        console.error(
-          "unexpected error occurred: tried to clear an unconfirmed GPT credit purchase that doesn't exist"
-        );
-      }
     }
   }
 
@@ -1052,13 +1005,6 @@ export class GameObjects {
 
   public getUnconfirmedReveal(): UnconfirmedReveal | undefined {
     return this.unconfirmedReveal;
-  }
-  public getUnconfirmedClaim(): UnconfirmedClaim | undefined {
-    return this.unconfirmedClaim;
-  }
-
-  public getUnconfirmedBuyGPTCredits(): UnconfirmedBuyGPTCredits | undefined {
-    return this.unconfirmedBuyGPTCredits;
   }
 
   public getPlanetMap(): Map<LocationId, Planet> {

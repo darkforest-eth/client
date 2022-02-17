@@ -16,12 +16,14 @@
   "include": ["src/**/*", "embedded_plugins/*", "orden-plugins/*", "plugins/*"],
   "exclude": ["./node_modules", "./dist", "./declarations"],
   "typedocOptions": {
+    "entryPointStrategy": "expand",
     "entryPoints": ["src"],
     "out": "docs",
     "hideBreadcrumbs": true,
     "readme": "none",
     "disableSources": true,
-    "disableOutputCheck": true,
+    "cleanOutputDir": false,
+    "githubPages": false,
     "excludeExternals": true,
     "listInvalidSymbolLinks": true
   }

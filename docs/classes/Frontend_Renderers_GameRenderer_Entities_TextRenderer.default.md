@@ -248,14 +248,14 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name                | Type                                                                               |
-| :------------------ | :--------------------------------------------------------------------------------- |
-| `text`              | `string`                                                                           |
-| `__namedParameters` | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)          |
-| `color`             | [`RGBAVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbavec)     |
-| `align`             | [`TextAlign`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.TextAlign.md)   |
-| `anchor`            | [`TextAnchor`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.TextAnchor.md) |
-| `zIdx`              | `number`                                                                           |
+| Name                | Type                                                                               | Default value          |
+| :------------------ | :--------------------------------------------------------------------------------- | :--------------------- |
+| `text`              | `string`                                                                           | `undefined`            |
+| `__namedParameters` | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)          | `undefined`            |
+| `color`             | [`RGBAVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbavec)     | `undefined`            |
+| `align`             | [`TextAlign`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.TextAlign.md)   | `TextAlign.Center`     |
+| `anchor`            | [`TextAnchor`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.TextAnchor.md) | `TextAnchor.Top`       |
+| `zIdx`              | `number`                                                                           | `RenderZIndex.DEFAULT` |
 
 #### Returns
 
@@ -269,15 +269,15 @@ Draw all buffered vertices to the screen.
 
 #### Parameters
 
-| Name     | Type                                                                               | Default value |
-| :------- | :--------------------------------------------------------------------------------- | :------------ |
-| `text`   | `string`                                                                           | `undefined`   |
-| `coords` | `WorldCoords`                                                                      | `undefined`   |
-| `color`  | [`RGBAVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbavec)     | `undefined`   |
-| `offY`   | `number`                                                                           | `0`           |
-| `align`  | [`TextAlign`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.TextAlign.md)   | `undefined`   |
-| `anchor` | [`TextAnchor`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.TextAnchor.md) | `undefined`   |
-| `zIdx`   | `number`                                                                           | `undefined`   |
+| Name     | Type                                                                               | Default value       |
+| :------- | :--------------------------------------------------------------------------------- | :------------------ |
+| `text`   | `string`                                                                           | `undefined`         |
+| `coords` | `WorldCoords`                                                                      | `undefined`         |
+| `color`  | [`RGBAVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbavec)     | `undefined`         |
+| `offY`   | `number`                                                                           | `0`                 |
+| `align`  | [`TextAlign`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.TextAlign.md)   | `TextAlign.Center`  |
+| `anchor` | [`TextAnchor`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.TextAnchor.md) | `TextAnchor.Top`    |
+| `zIdx`   | `number`                                                                           | `RenderZIndex.Text` |
 
 #### Returns
 

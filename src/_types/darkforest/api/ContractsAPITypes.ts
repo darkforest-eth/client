@@ -53,11 +53,6 @@ export const enum ContractEvent {
   ArtifactActivated = 'ArtifactActivated',
   ArtifactDeactivated = 'ArtifactDeactivated',
   PlanetSilverWithdrawn = 'PlanetSilverWithdrawn',
-
-  // DarkForestGPTCredit
-  ChangedGPTCreditPrice = 'ChangedCreditPrice',
-  // DarkForestScoringRound3
-  LocationClaimed = 'LocationClaimed',
 }
 
 export const enum ContractsAPIEvent {
@@ -67,7 +62,6 @@ export const enum ContractsAPIEvent {
   ArtifactUpdate = 'ArtifactUpdate',
   RadiusUpdated = 'RadiusUpdated',
   LocationRevealed = 'LocationRevealed',
-  ChangedGPTCreditPrice = 'ChangedCreditPrice',
   TxInitFailed = 'TxInitFailed',
   TxSubmitted = 'TxSubmitted',
   TxConfirmed = 'TxConfirmed',

@@ -7,7 +7,6 @@ import {
   Artifact,
   ArtifactId,
   Biome,
-  Conversation,
   Diagnostics,
   EthAddress,
   LocatablePlanet,
@@ -413,24 +412,8 @@ class GameUIManager extends EventEmitter {
     this.gameManager.revealLocation(locationId);
   }
 
-  public claimLocation(locationId: LocationId) {
-    this.gameManager.claimLocation(locationId);
-  }
-
   public getNextBroadcastAvailableTimestamp() {
     return this.gameManager.getNextBroadcastAvailableTimestamp();
-  }
-
-  public getConversation(artifactId: ArtifactId): Promise<Conversation | undefined> {
-    return this.gameManager.getConversation(artifactId);
-  }
-
-  public startConversation(artifactId: ArtifactId): Promise<Conversation> {
-    return this.gameManager.startConversation(artifactId);
-  }
-
-  public stepConversation(artifactId: ArtifactId, message: string): Promise<Conversation> {
-    return this.gameManager.stepConversation(artifactId, message);
   }
 
   public getEnergyArrivingForMove(
@@ -1009,9 +992,6 @@ class GameUIManager extends EventEmitter {
   public isCurrentlyRevealing(): boolean {
     return this.gameManager.getNextRevealCountdownInfo().currentlyRevealing;
   }
-  public isCurrentlyClaiming(): boolean {
-    return this.gameManager.getNextClaimCountdownInfo().currentlyClaiming;
-  }
 
   public getUnconfirmedWormholeActivations(): UnconfirmedActivateArtifact[] {
     return this.gameManager.getUnconfirmedWormholeActivations();
@@ -1083,22 +1063,6 @@ class GameUIManager extends EventEmitter {
     // TODO: do something like JSON.stringify(args) so we know formatting is correct
     this.terminal.current?.printShellLn(`df.buyHat('${planet.locationId}')`);
     this.gameManager.buyHat(planet.locationId);
-  }
-
-  public buyGPTCredits(amount: number) {
-    this.gameManager.buyGPTCredits(amount);
-  }
-
-  public getGptCreditPriceEmitter(): Monomitter<number> {
-    return this.gameManager.getGptCreditPriceEmitter();
-  }
-
-  public getGptCreditBalanceEmitter(): Monomitter<number> {
-    return this.gameManager.getGptCreditBalanceEmitter();
-  }
-
-  public getIsBuyingCreditsEmitter(): Monomitter<boolean> {
-    return this.gameManager.getIsBuyingCreditsEmitter();
   }
 
   // non-nullable

@@ -18,4 +18,4 @@
 
 ### eventLogger
 
-• `Const` **eventLogger**: [`EventLogger`](../classes/Backend_Network_EventLogger.EventLogger.md)
+• **eventLogger**: [`EventLogger`](../classes/Backend_Network_EventLogger.EventLogger.md)

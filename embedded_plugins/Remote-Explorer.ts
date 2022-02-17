@@ -8,7 +8,6 @@ import {
   useState,
   //@ts-ignore
 } from 'https://unpkg.com/htm/preact/standalone.module.js';
-import type WebpackWorker from 'worker-loader!*';
 import type MinerManager from '../src/Backend/Miner/MinerManager';
 import type { Chunk, MinerWorkerMessage } from '../src/_types/global/GlobalTypes';
 
@@ -41,72 +40,72 @@ function getPattern(coords: WorldCoords, patternType: string, chunkSize: number)
   }
 }
 
-function workerFactory(url: string) {
-  class RemoteWorker implements WebpackWorker {
-    url: string = url;
+class RemoteWorker implements Worker {
+  private url: string;
 
-    async postMessage(msg: string) {
-      const msgJson: MinerWorkerMessage = JSON.parse(msg);
-
-      const resp = await fetch(this.url, {
-        method: 'POST',
-        body: JSON.stringify({
-          chunkFootprint: msgJson.chunkFootprint,
-          planetRarity: msgJson.planetRarity,
-          planetHashKey: msgJson.planetHashKey,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const exploredChunk = await resp.json();
-
-      const chunkCenter = {
-        x: exploredChunk.chunkFootprint.bottomLeft.x + exploredChunk.chunkFootprint.sideLength / 2,
-        y: exploredChunk.chunkFootprint.bottomLeft.y + exploredChunk.chunkFootprint.sideLength / 2,
-      };
-
-      exploredChunk.perlin = df.spaceTypePerlin(chunkCenter, false);
-      for (const planetLoc of exploredChunk.planetLocations) {
-        planetLoc.hash = locationIdFromDecStr(planetLoc.hash);
-        planetLoc.perlin = df.spaceTypePerlin(
-          { x: planetLoc.coords.x, y: planetLoc.coords.y },
-          true
-        );
-        planetLoc.biomebase = df.biomebasePerlin(
-          { x: planetLoc.coords.x, y: planetLoc.coords.y },
-          true
-        );
-      }
-
-      this.onmessage({ data: JSON.stringify([exploredChunk, msgJson.jobId]) });
-    }
-
-    onmessage(_a: { data: string }) {
-      console.warn('Unimplemented: onmessage');
-    }
-    terminate() {
-      console.warn('Unimplemented: terminate');
-    }
-    onmessageerror() {
-      console.warn('Unimplemented: onmessageerror');
-    }
-    addEventListener() {
-      console.warn('Unimplemented: addEventListener');
-    }
-    removeEventListener() {
-      console.warn('Unimplemented: removeEventListener');
-    }
-    dispatchEvent(_event: Event): boolean {
-      return false;
-    }
-    onerror() {
-      console.warn('Unimplemented: onerror');
-    }
+  constructor(url: string) {
+    this.url = url
   }
 
-  return RemoteWorker;
+  async postMessage(msg: string) {
+    const msgJson: MinerWorkerMessage = JSON.parse(msg);
+
+    const resp = await fetch(this.url, {
+      method: 'POST',
+      body: JSON.stringify({
+        chunkFootprint: msgJson.chunkFootprint,
+        planetRarity: msgJson.planetRarity,
+        planetHashKey: msgJson.planetHashKey,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const exploredChunk = await resp.json();
+
+    const chunkCenter = {
+      x: exploredChunk.chunkFootprint.bottomLeft.x + exploredChunk.chunkFootprint.sideLength / 2,
+      y: exploredChunk.chunkFootprint.bottomLeft.y + exploredChunk.chunkFootprint.sideLength / 2,
+    };
+
+    exploredChunk.perlin = df.spaceTypePerlin(chunkCenter, false);
+    for (const planetLoc of exploredChunk.planetLocations) {
+      planetLoc.hash = locationIdFromDecStr(planetLoc.hash);
+      planetLoc.perlin = df.spaceTypePerlin(
+        { x: planetLoc.coords.x, y: planetLoc.coords.y },
+        true
+      );
+      planetLoc.biomebase = df.biomebasePerlin(
+        { x: planetLoc.coords.x, y: planetLoc.coords.y },
+        true
+      );
+    }
+
+    this.onmessage({ data: JSON.stringify([exploredChunk, msgJson.jobId]) });
+  }
+
+  onmessage(_a: { data: string }) {
+    console.warn('Unimplemented: onmessage');
+  }
+  terminate() {
+    console.warn('Unimplemented: terminate');
+  }
+  onmessageerror() {
+    console.warn('Unimplemented: onmessageerror');
+  }
+  addEventListener() {
+    console.warn('Unimplemented: addEventListener');
+  }
+  removeEventListener() {
+    console.warn('Unimplemented: removeEventListener');
+  }
+  dispatchEvent(_event: Event): boolean {
+    return false;
+  }
+  onerror() {
+    console.warn('Unimplemented: onerror');
+  }
 }
 
 function Target() {
@@ -335,7 +334,7 @@ class RemoteExplorerPlugin implements DFPlugin {
       df.planetRarity,
       df.getHashConfig(),
       false,
-      workerFactory(url)
+      () => new RemoteWorker(url)
     ) as ExtendedMinerManager;
 
     miner.url = url;

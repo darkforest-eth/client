@@ -43,7 +43,7 @@
 
 | Name          | Type                                                                                                            |
 | :------------ | :-------------------------------------------------------------------------------------------------------------- |
-| `hashConfig`  | [`HashConfig`](../modules/_types_global_GlobalTypes.md#hashconfig)                                              |
+| `hashConfig`  | [`HashConfig`](../modules/types_global_GlobalTypes.md#hashconfig)                                               |
 | `terminal`    | `MutableRefObject`<`undefined` \| [`TerminalHandle`](../interfaces/Frontend_Views_Terminal.TerminalHandle.md)\> |
 | `useMockHash` | `boolean`                                                                                                       |
 
@@ -57,7 +57,7 @@
 
 ### hashConfig
 
-• `Private` `Readonly` **hashConfig**: [`HashConfig`](../modules/_types_global_GlobalTypes.md#hashconfig)
+• `Private` `Readonly` **hashConfig**: [`HashConfig`](../modules/types_global_GlobalTypes.md#hashconfig)
 
 ---
 
@@ -289,7 +289,7 @@ How many snark results to keep in an LRU cache.
 
 | Name         | Type                                                                                                            | Default value |
 | :----------- | :-------------------------------------------------------------------------------------------------------------- | :------------ |
-| `hashConfig` | [`HashConfig`](../modules/_types_global_GlobalTypes.md#hashconfig)                                              | `undefined`   |
+| `hashConfig` | [`HashConfig`](../modules/types_global_GlobalTypes.md#hashconfig)                                               | `undefined`   |
 | `terminal`   | `MutableRefObject`<`undefined` \| [`TerminalHandle`](../interfaces/Frontend_Views_Terminal.TerminalHandle.md)\> | `undefined`   |
 | `fakeHash`   | `boolean`                                                                                                       | `false`       |
 

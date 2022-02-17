@@ -24,7 +24,7 @@
 
 ### fromChunk
 
-• **fromChunk**: [`Rectangle`](_types_global_GlobalTypes.Rectangle.md)
+• **fromChunk**: [`Rectangle`](types_global_GlobalTypes.Rectangle.md)
 
 ---
 
@@ -36,14 +36,14 @@
 
 ### nextChunk
 
-▸ **nextChunk**(`prevLoc`): [`Rectangle`](_types_global_GlobalTypes.Rectangle.md)
+▸ **nextChunk**(`prevLoc`): [`Rectangle`](types_global_GlobalTypes.Rectangle.md)
 
 #### Parameters
 
-| Name      | Type                                                  |
-| :-------- | :---------------------------------------------------- |
-| `prevLoc` | [`Rectangle`](_types_global_GlobalTypes.Rectangle.md) |
+| Name      | Type                                                 |
+| :-------- | :--------------------------------------------------- |
+| `prevLoc` | [`Rectangle`](types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 
-[`Rectangle`](_types_global_GlobalTypes.Rectangle.md)
+[`Rectangle`](types_global_GlobalTypes.Rectangle.md)

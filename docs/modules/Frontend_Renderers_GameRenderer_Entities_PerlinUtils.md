@@ -72,18 +72,18 @@
 
 ### getPerlinChunks
 
-▸ **getPerlinChunks**(`footprint`, `lengthScale`): `Iterable`<[`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)\>
+▸ **getPerlinChunks**(`footprint`, `lengthScale`): `Iterable`<[`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)\>
 
 #### Parameters
 
-| Name          | Type                                                                |
-| :------------ | :------------------------------------------------------------------ |
-| `footprint`   | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
-| `lengthScale` | `number`                                                            |
+| Name          | Type                                                               |
+| :------------ | :----------------------------------------------------------------- |
+| `footprint`   | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
+| `lengthScale` | `number`                                                           |
 
 #### Returns
 
-`Iterable`<[`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md)\>
+`Iterable`<[`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md)\>
 
 ---
 

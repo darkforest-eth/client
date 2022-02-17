@@ -16,11 +16,11 @@ Executes the callback `cb` every `poll` ms
 
 #### Parameters
 
-| Name        | Type                     | Description                                        |
-| :---------- | :----------------------- | :------------------------------------------------- |
-| `cb`        | () => `void`             | callback to execute                                |
-| `poll`      | `number` \| `undefined`  | ms to poll                                         |
-| `execFirst` | `boolean` \| `undefined` | if we want to execute the callback on first render |
+| Name        | Type                     | Default value | Description                                        |
+| :---------- | :----------------------- | :------------ | :------------------------------------------------- |
+| `cb`        | () => `void`             | `undefined`   | callback to execute                                |
+| `poll`      | `undefined` \| `number`  | `undefined`   | ms to poll                                         |
+| `execFirst` | `undefined` \| `boolean` | `undefined`   | if we want to execute the callback on first render |
 
 #### Returns
 

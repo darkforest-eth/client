@@ -10,7 +10,8 @@ import { StatIdx } from '../../_types/global/GlobalTypes';
 customElements.define(DarkForestIcon.tagName, DarkForestIcon);
 
 // This wraps the customElement in a React wrapper to make it behave exactly like a React component
-export const Icon = createComponent(React, DarkForestIcon.tagName, DarkForestIcon, {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const Icon = createComponent(React as any, DarkForestIcon.tagName, DarkForestIcon, {
   // If we had any, we would map DOM events to React handlers passed in as props. For example:
   // onClick: 'click'
 });

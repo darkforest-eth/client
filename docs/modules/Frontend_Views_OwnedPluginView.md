@@ -49,4 +49,4 @@ Should
 
 ### Actions
 
-• `Const` **Actions**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• **Actions**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>

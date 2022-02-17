@@ -33,73 +33,73 @@
 
 ### Blue
 
-• `Const` **Blue**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• **Blue**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Colored
 
-• `Const` **Colored**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• **Colored**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Gold
 
-• `Const` **Gold**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• **Gold**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Green
 
-• `Const` **Green**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• **Green**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### HideSmall
 
-• `Const` **HideSmall**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• **HideSmall**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Invisible
 
-• `Const` **Invisible**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• **Invisible**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Red
 
-• `Const` **Red**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• **Red**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Smaller
 
-• `Const` **Smaller**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• **Smaller**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Sub
 
-• `Const` **Sub**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• **Sub**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Subber
 
-• `Const` **Subber**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• **Subber**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### Text
 
-• `Const` **Text**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• **Text**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ---
 
 ### White
 
-• `Const` **White**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• **White**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 ## Functions
 
@@ -136,11 +136,11 @@
 
 #### Parameters
 
-| Name                         | Type                                                     |
-| :--------------------------- | :------------------------------------------------------- |
-| `__namedParameters`          | `Object`                                                 |
-| `__namedParameters.children` | `React.ReactNode`                                        |
-| `__namedParameters.chunk`    | [`Chunk`](../classes/_types_global_GlobalTypes.Chunk.md) |
+| Name                         | Type                                                    |
+| :--------------------------- | :------------------------------------------------------ |
+| `__namedParameters`          | `Object`                                                |
+| `__namedParameters.children` | `ReactNode`                                             |
+| `__namedParameters.chunk`    | [`Chunk`](../classes/types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 
@@ -154,11 +154,11 @@
 
 #### Parameters
 
-| Name                         | Type              |
-| :--------------------------- | :---------------- |
-| `__namedParameters`          | `Object`          |
-| `__namedParameters.children` | `React.ReactNode` |
-| `__namedParameters.planet`   | `Planet`          |
+| Name                         | Type        |
+| :--------------------------- | :---------- |
+| `__namedParameters`          | `Object`    |
+| `__namedParameters.children` | `ReactNode` |
+| `__namedParameters.planet`   | `Planet`    |
 
 #### Returns
 
@@ -189,10 +189,10 @@
 
 #### Parameters
 
-| Name                         | Type              |
-| :--------------------------- | :---------------- |
-| `__namedParameters`          | `Object`          |
-| `__namedParameters.children` | `React.ReactNode` |
+| Name                         | Type        |
+| :--------------------------- | :---------- |
+| `__namedParameters`          | `Object`    |
+| `__namedParameters.children` | `ReactNode` |
 
 #### Returns
 

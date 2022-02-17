@@ -19,13 +19,13 @@ plugin id is provided, assumes we're editing a new plugin.
 
 #### Parameters
 
-| Name                            | Type                                                                                     |
-| :------------------------------ | :--------------------------------------------------------------------------------------- |
-| `__namedParameters`             | `Object`                                                                                 |
-| `__namedParameters.pluginHost?` | [`PluginManager`](../classes/Backend_GameLogic_PluginManager.PluginManager.md) \| `null` |
-| `__namedParameters.pluginId?`   | [`PluginId`](Backend_Plugins_SerializedPlugin.md#pluginid)                               |
-| `__namedParameters.overwrite`   |                                                                                          |
-| `__namedParameters.setIsOpen`   |                                                                                          |
+| Name                            | Type                                                                                                                                      |
+| :------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------- |
+| `__namedParameters`             | `Object`                                                                                                                                  |
+| `__namedParameters.pluginHost?` | `null` \| [`PluginManager`](../classes/Backend_GameLogic_PluginManager.PluginManager.md)                                                  |
+| `__namedParameters.pluginId?`   | [`PluginId`](Backend_Plugins_SerializedPlugin.md#pluginid)                                                                                |
+| `__namedParameters.overwrite`   | (`newPluginName`: `string`, `newPluginCode`: `string`, `pluginId?`: [`PluginId`](Backend_Plugins_SerializedPlugin.md#pluginid)) => `void` |
+| `__namedParameters.setIsOpen`   | (`open`: `boolean`) => `void`                                                                                                             |
 
 #### Returns
 

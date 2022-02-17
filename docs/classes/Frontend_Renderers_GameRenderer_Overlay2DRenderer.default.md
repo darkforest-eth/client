@@ -136,9 +136,9 @@
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                         |
+| :------ | :------------------------------------------- |
+| `chunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 
@@ -288,13 +288,13 @@
 
 #### Parameters
 
-| Name    | Type                                                                             | Default value |
-| :------ | :------------------------------------------------------------------------------- | :------------ |
-| `text`  | `string`                                                                         | `undefined`   |
-| `x`     | `number`                                                                         | `undefined`   |
-| `y`     | `number`                                                                         | `undefined`   |
-| `color` | `string`                                                                         | `'white'`     |
-| `align` | [`TextAlign`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.TextAlign.md) | `undefined`   |
+| Name    | Type                                                                             | Default value      |
+| :------ | :------------------------------------------------------------------------------- | :----------------- |
+| `text`  | `string`                                                                         | `undefined`        |
+| `x`     | `number`                                                                         | `undefined`        |
+| `y`     | `number`                                                                         | `undefined`        |
+| `color` | `string`                                                                         | `'white'`          |
+| `align` | [`TextAlign`](../enums/Frontend_Renderers_GameRenderer_EngineTypes.TextAlign.md) | `TextAlign.Center` |
 
 #### Returns
 

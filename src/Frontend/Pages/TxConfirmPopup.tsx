@@ -158,9 +158,8 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
   const hatPlanet = localStorage.getItem(`${addr.toLowerCase()}-hatPlanet`);
   const hatLevel = localStorage.getItem(`${addr.toLowerCase()}-hatLevel`);
   const hatCost: number = method === 'buyHat' && hatLevel ? 2 ** parseInt(hatLevel) : 0;
-  const gptCost: number = method === 'buyCredits' ? 0.5 : 0;
 
-  const txCost: number = hatCost + gptCost + 0.002 * weiToGwei(gasFee);
+  const txCost: number = hatCost + 0.002 * weiToGwei(gasFee);
 
   const upPlanet = localStorage.getItem(`${addr.toLowerCase()}-upPlanet`);
   const branch = localStorage.getItem(`${addr.toLowerCase()}-branch`);
@@ -185,9 +184,6 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
   const withdrawSilverPlanet = localStorage.getItem(`${addr.toLowerCase()}-withdrawSilverPlanet`);
 
   const revealPlanet = localStorage.getItem(`${addr.toLowerCase()}-revealLocationId`);
-
-  const buyGPTCreditsAmount = localStorage.getItem(`${addr.toLowerCase()}-buyGPTCreditAmount`);
-  const buyGPTCreditsCost = localStorage.getItem(`${addr.toLowerCase()}-buyGPTCreditCost`);
 
   return (
     <StyledTxConfirmPopup>
@@ -322,18 +318,6 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
             </div>
           </>
         )}
-        {method === 'buyCredits' && (
-          <>
-            <div>
-              <b>Amount</b>
-              <span className='mono'>{buyGPTCreditsAmount}</span>
-            </div>
-            <div>
-              <b>Cost</b>
-              <span>{buyGPTCreditsCost} xDAI</span>
-            </div>
-          </>
-        )}
       </div>
 
       <div>
@@ -382,8 +366,8 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
             <ConfirmIcon /> DF connected to xDAI
           </span>
           <span>
-            Auto-confirm all transactions except purchases. Currently, you can only purchase GPT
-            Credits, and Hats, as well as anything 3rd party plugins offer. <Spacer width={8} />
+            Auto-confirm all transactions except purchases. Currently, you can only purchase Hats,
+            or anything 3rd party plugins offer. <Spacer width={8} />
             <input
               type='checkbox'
               checked={autoApproveChecked}

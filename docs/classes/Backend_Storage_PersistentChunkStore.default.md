@@ -4,7 +4,7 @@
 
 ## Implements
 
-- [`ChunkStore`](../interfaces/_types_darkforest_api_ChunkStoreTypes.ChunkStore.md)
+- [`ChunkStore`](../interfaces/types_darkforest_api_ChunkStoreTypes.ChunkStore.md)
 
 ## Table of contents
 
@@ -79,7 +79,7 @@
 
 ### chunkMap
 
-• `Private` **chunkMap**: `Map`<[`ChunkId`](../modules/_types_darkforest_api_ChunkStoreTypes.md#chunkid), [`Chunk`](_types_global_GlobalTypes.Chunk.md)\>
+• `Private` **chunkMap**: `Map`<[`ChunkId`](../modules/types_darkforest_api_ChunkStoreTypes.md#chunkid), [`Chunk`](types_global_GlobalTypes.Chunk.md)\>
 
 ---
 
@@ -131,10 +131,10 @@ i.e. it already exists in persistent storage.
 
 #### Parameters
 
-| Name           | Type                                          | Default value |
-| :------------- | :-------------------------------------------- | :------------ |
-| `chunk`        | [`Chunk`](_types_global_GlobalTypes.Chunk.md) | `undefined`   |
-| `persistChunk` | `boolean`                                     | `true`        |
+| Name           | Type                                         | Default value |
+| :------------- | :------------------------------------------- | :------------ |
+| `chunk`        | [`Chunk`](types_global_GlobalTypes.Chunk.md) | `undefined`   |
+| `persistChunk` | `boolean`                                    | `true`        |
 
 #### Returns
 
@@ -160,11 +160,11 @@ i.e. it already exists in persistent storage.
 
 ### allChunks
 
-▸ **allChunks**(): `Iterable`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>
+▸ **allChunks**(): `Iterable`<[`Chunk`](types_global_GlobalTypes.Chunk.md)\>
 
 #### Returns
 
-`Iterable`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>
+`Iterable`<[`Chunk`](types_global_GlobalTypes.Chunk.md)\>
 
 ---
 
@@ -213,7 +213,7 @@ i.e. it already exists in persistent storage.
 
 ### getChunkByFootprint
 
-▸ **getChunkByFootprint**(`chunkLoc`): `undefined` \| [`Chunk`](_types_global_GlobalTypes.Chunk.md)
+▸ **getChunkByFootprint**(`chunkLoc`): `undefined` \| [`Chunk`](types_global_GlobalTypes.Chunk.md)
 
 Returns the explored chunk data for the given rectangle if that chunk has been mined. If this
 chunk is entirely contained within another bigger chunk that has been mined, return that chunk.
@@ -222,29 +222,29 @@ function.
 
 #### Parameters
 
-| Name       | Type                                                                |
-| :--------- | :------------------------------------------------------------------ |
-| `chunkLoc` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
+| Name       | Type                                                               |
+| :--------- | :----------------------------------------------------------------- |
+| `chunkLoc` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 
-`undefined` \| [`Chunk`](_types_global_GlobalTypes.Chunk.md)
+`undefined` \| [`Chunk`](types_global_GlobalTypes.Chunk.md)
 
 ---
 
 ### getChunkById
 
-▸ `Private` **getChunkById**(`chunkId`): `undefined` \| [`Chunk`](_types_global_GlobalTypes.Chunk.md)
+▸ `Private` **getChunkById**(`chunkId`): `undefined` \| [`Chunk`](types_global_GlobalTypes.Chunk.md)
 
 #### Parameters
 
-| Name      | Type                                                                     |
-| :-------- | :----------------------------------------------------------------------- |
-| `chunkId` | [`ChunkId`](../modules/_types_darkforest_api_ChunkStoreTypes.md#chunkid) |
+| Name      | Type                                                                    |
+| :-------- | :---------------------------------------------------------------------- |
+| `chunkId` | [`ChunkId`](../modules/types_darkforest_api_ChunkStoreTypes.md#chunkid) |
 
 #### Returns
 
-`undefined` \| [`Chunk`](_types_global_GlobalTypes.Chunk.md)
+`undefined` \| [`Chunk`](types_global_GlobalTypes.Chunk.md)
 
 ---
 
@@ -274,10 +274,10 @@ current configuration of the client.
 
 #### Parameters
 
-| Name       | Type          |
-| :--------- | :------------ |
-| `key`      | `string`      |
-| `objStore` | `ObjectStore` |
+| Name       | Type          | Default value         |
+| :--------- | :------------ | :-------------------- |
+| `key`      | `string`      | `undefined`           |
+| `objStore` | `ObjectStore` | `ObjectStore.DEFAULT` |
 
 #### Returns
 
@@ -287,7 +287,7 @@ current configuration of the client.
 
 ### getMinedSubChunks
 
-▸ `Private` **getMinedSubChunks**(`chunk`): [`Chunk`](_types_global_GlobalTypes.Chunk.md)[]
+▸ `Private` **getMinedSubChunks**(`chunk`): [`Chunk`](types_global_GlobalTypes.Chunk.md)[]
 
 Returns all the mined chunks with smaller sidelength strictly contained in the chunk.
 
@@ -296,13 +296,13 @@ the function named `addToChunkMap`.
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type                                         |
+| :------ | :------------------------------------------- |
+| `chunk` | [`Chunk`](types_global_GlobalTypes.Chunk.md) |
 
 #### Returns
 
-[`Chunk`](_types_global_GlobalTypes.Chunk.md)[]
+[`Chunk`](types_global_GlobalTypes.Chunk.md)[]
 
 ---
 
@@ -352,9 +352,9 @@ the function named `addToChunkMap`.
 
 #### Parameters
 
-| Name       | Type                                                                |
-| :--------- | :------------------------------------------------------------------ |
-| `chunkLoc` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
+| Name       | Type                                                               |
+| :--------- | :----------------------------------------------------------------- |
+| `chunkLoc` | [`Rectangle`](../interfaces/types_global_GlobalTypes.Rectangle.md) |
 
 #### Returns
 
@@ -362,7 +362,7 @@ the function named `addToChunkMap`.
 
 #### Implementation of
 
-[ChunkStore](../interfaces/_types_darkforest_api_ChunkStoreTypes.ChunkStore.md).[hasMinedChunk](../interfaces/_types_darkforest_api_ChunkStoreTypes.ChunkStore.md#hasminedchunk)
+[ChunkStore](../interfaces/types_darkforest_api_ChunkStoreTypes.ChunkStore.md).[hasMinedChunk](../interfaces/types_darkforest_api_ChunkStoreTypes.ChunkStore.md#hasminedchunk)
 
 ---
 
@@ -450,10 +450,10 @@ indexed db.
 
 #### Parameters
 
-| Name       | Type          |
-| :--------- | :------------ |
-| `key`      | `string`      |
-| `objStore` | `ObjectStore` |
+| Name       | Type          | Default value         |
+| :--------- | :------------ | :-------------------- |
+| `key`      | `string`      | `undefined`           |
+| `objStore` | `ObjectStore` | `ObjectStore.DEFAULT` |
 
 #### Returns
 
@@ -552,11 +552,11 @@ current configuration of the client.
 
 #### Parameters
 
-| Name       | Type          |
-| :--------- | :------------ |
-| `key`      | `string`      |
-| `value`    | `string`      |
-| `objStore` | `ObjectStore` |
+| Name       | Type          | Default value         |
+| :--------- | :------------ | :-------------------- |
+| `key`      | `string`      | `undefined`           |
+| `value`    | `string`      | `undefined`           |
+| `objStore` | `ObjectStore` | `ObjectStore.DEFAULT` |
 
 #### Returns
 

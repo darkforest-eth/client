@@ -45,13 +45,13 @@
 
 ### scapeColorProps
 
-• `Const` **scapeColorProps**: [`AttribProps`](Frontend_Renderers_GameRenderer_EngineTypes.md#attribprops)
+• **scapeColorProps**: [`AttribProps`](Frontend_Renderers_GameRenderer_EngineTypes.md#attribprops)
 
 ---
 
 ### scapePosProps
 
-• `Const` **scapePosProps**: [`AttribProps`](Frontend_Renderers_GameRenderer_EngineTypes.md#attribprops)
+• **scapePosProps**: [`AttribProps`](Frontend_Renderers_GameRenderer_EngineTypes.md#attribprops)
 
 ## Functions
 
