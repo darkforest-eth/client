@@ -1,5 +1,4 @@
-import type { Abstract, LocationId } from '@darkforest_eth/types';
-import type { Rectangle } from '../../global/GlobalTypes';
+import type { Abstract, LocationId, Rectangle } from '@darkforest_eth/types';
 
 /**
  * one of "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"

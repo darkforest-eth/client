@@ -18,7 +18,7 @@
 
 ### BiomeLabel
 
-• `Const` **BiomeLabel**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• **BiomeLabel**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
 
 Renders colored text corresponding to a biome
 

@@ -60,14 +60,14 @@ left coordinate, width, and height) in the world and of a level that was passed 
 
 #### Parameters
 
-| Name                 | Type                                                                                   |
-| :------------------- | :------------------------------------------------------------------------------------- |
-| `worldX`             | `number`                                                                               |
-| `worldY`             | `number`                                                                               |
-| `worldWidth`         | `number`                                                                               |
-| `worldHeight`        | `number`                                                                               |
-| `planetLevels`       | `number`[]                                                                             |
-| `planetLevelToRadii` | `Map`<`number`, [`Radii`](../interfaces/Backend_GameLogic_ViewportEntities.Radii.md)\> |
+| Name                 | Type                      |
+| :------------------- | :------------------------ |
+| `worldX`             | `number`                  |
+| `worldY`             | `number`                  |
+| `worldWidth`         | `number`                  |
+| `worldHeight`        | `number`                  |
+| `planetLevels`       | `number`[]                |
+| `planetLevelToRadii` | `Map`<`number`, `Radii`\> |
 
 #### Returns
 

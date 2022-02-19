@@ -2,10 +2,6 @@
 
 ## Table of contents
 
-### Interfaces
-
-- [CanvasCoords](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)
-
 ### Functions
 
 - [coordsEqual](Backend_Utils_Coordinates.md#coordsequal)
@@ -39,10 +35,10 @@
 
 #### Parameters
 
-| Name | Type                                                                                       |
-| :--- | :----------------------------------------------------------------------------------------- |
-| `a`  | `WorldCoords` \| [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md) |
-| `b`  | `WorldCoords` \| [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md) |
+| Name | Type                            |
+| :--- | :------------------------------ |
+| `a`  | `WorldCoords` \| `CanvasCoords` |
+| `b`  | `WorldCoords` \| `CanvasCoords` |
 
 #### Returns
 
@@ -94,9 +90,9 @@
 
 #### Parameters
 
-| Name | Type                                                                                       |
-| :--- | :----------------------------------------------------------------------------------------- |
-| `a`  | `WorldCoords` \| [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md) |
+| Name | Type                            |
+| :--- | :------------------------------ |
+| `a`  | `WorldCoords` \| `CanvasCoords` |
 
 #### Returns
 

@@ -2,19 +2,40 @@
 
 ## Table of contents
 
+### Classes
+
+- [DarkForestCheckbox](../classes/Frontend_Components_Input.DarkForestCheckbox.md)
+- [DarkForestColorInput](../classes/Frontend_Components_Input.DarkForestColorInput.md)
+- [DarkForestNumberInput](../classes/Frontend_Components_Input.DarkForestNumberInput.md)
+- [DarkForestTextInput](../classes/Frontend_Components_Input.DarkForestTextInput.md)
+
 ### Variables
 
-- [DFInput](Frontend_Components_Input.md#dfinput)
-- [Input](Frontend_Components_Input.md#input)
+- [Checkbox](Frontend_Components_Input.md#checkbox)
+- [ColorInput](Frontend_Components_Input.md#colorinput)
+- [NumberInput](Frontend_Components_Input.md#numberinput)
+- [TextInput](Frontend_Components_Input.md#textinput)
 
 ## Variables
 
-### DFInput
+### Checkbox
 
-• `Const` **DFInput**: `StyledComponent`<`"input"`, `any`, `Object`, `never`\>
+• **Checkbox**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestCheckbox`](../classes/Frontend_Components_Input.DarkForestCheckbox.md), `"children"`\>\> & `Events`<`Object`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
 
 ---
 
-### Input
+### ColorInput
 
-• `Const` **Input**: `ForwardRefExoticComponent`<`Pick`<`ClassAttributes`<`HTMLInputElement`\> & `InputHTMLAttributes`<`HTMLInputElement`\> & `InputProps`, `"key"` \| `"wide"` \| keyof `InputHTMLAttributes`<`HTMLInputElement`\>\> & `RefAttributes`<`HTMLInputElement`\>\>
+• **ColorInput**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestColorInput`](../classes/Frontend_Components_Input.DarkForestColorInput.md), `"children"`\>\> & `Events`<`Object`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
+
+---
+
+### NumberInput
+
+• **NumberInput**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestNumberInput`](../classes/Frontend_Components_Input.DarkForestNumberInput.md), `"children"`\>\> & `Events`<`Object`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
+
+---
+
+### TextInput
+
+• **TextInput**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestTextInput`](../classes/Frontend_Components_Input.DarkForestTextInput.md), `"children"`\>\> & `Events`<`Object`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>

@@ -1,8 +1,13 @@
 import React, { Dispatch, SetStateAction, useLayoutEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { InitRenderState } from '../Pages/GameLandingPage';
 import dfstyles from '../Styles/dfstyles';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
+
+export const enum InitRenderState {
+  NONE,
+  LOADING,
+  COMPLETE,
+}
 
 type LandingWrapperProps = {
   children: React.ReactNode;
@@ -12,7 +17,6 @@ type LandingWrapperProps = {
 
 const StyledWrapper = styled.div<{
   initRender: InitRenderState;
-  terminalEnabled: boolean;
 }>`
   width: 100%;
   height: 100%;
@@ -25,12 +29,8 @@ const StyledWrapper = styled.div<{
     props.initRender !== InitRenderState.NONE ? 'space-between' : 'space-around'};
 `;
 
-export function Wrapper({ children, initRender, terminalEnabled }: LandingWrapperProps) {
-  return (
-    <StyledWrapper initRender={initRender} terminalEnabled={terminalEnabled}>
-      {children}
-    </StyledWrapper>
-  );
+export function Wrapper({ children, initRender }: LandingWrapperProps) {
+  return <StyledWrapper initRender={initRender}>{children}</StyledWrapper>;
 }
 
 const STWInit = css`

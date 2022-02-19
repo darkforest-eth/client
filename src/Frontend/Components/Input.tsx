@@ -1,48 +1,60 @@
-import React, { forwardRef } from 'react';
-import styled, { css } from 'styled-components';
-import dfstyles from '../Styles/dfstyles';
+import {
+  DarkForestCheckbox,
+  DarkForestColorInput,
+  DarkForestNumberInput,
+  DarkForestTextInput,
+} from '@darkforest_eth/ui';
+import { createComponent } from '@lit-labs/react';
+import React from 'react';
 
-export const Input = forwardRef(InputImpl);
+customElements.define(DarkForestCheckbox.tagName, DarkForestCheckbox);
+customElements.define(DarkForestColorInput.tagName, DarkForestColorInput);
+customElements.define(DarkForestNumberInput.tagName, DarkForestNumberInput);
+customElements.define(DarkForestTextInput.tagName, DarkForestTextInput);
 
-interface InputProps {
-  wide?: boolean;
-}
+export { DarkForestCheckbox, DarkForestColorInput, DarkForestNumberInput, DarkForestTextInput };
 
-function InputImpl(
-  props: React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
-    InputProps,
-  ref: React.Ref<HTMLInputElement>
-) {
-  return (
-    <DFInput
-      {...props}
-      ref={ref}
-      disabled={false}
-      onChange={props.disabled ? () => {} : props.onChange}
-      onKeyUp={(e) => {
-        if (props.onKeyUp) {
-          props.onKeyUp(e);
-        }
-      }}
-    />
-  );
-}
+// This wraps the customElement in a React wrapper to make it behave exactly like a React component
+export const Checkbox = createComponent<
+  DarkForestCheckbox,
+  {
+    onChange: (e: Event & React.ChangeEvent<DarkForestCheckbox>) => void;
+  }
+>(React, DarkForestCheckbox.tagName, DarkForestCheckbox, {
+  onChange: 'input',
+});
 
-export const DFInput = styled.input`
-  ${({ wide }: { wide?: boolean }) => css`
-    outline: none;
-    background: ${dfstyles.colors.background};
-    color: ${dfstyles.colors.subtext};
-    border-radius: 4px;
-    border: 1px solid ${dfstyles.colors.borderDark};
-    ${wide ? `width: 100%;` : `width: 21em;`}
-    padding: 2px 12px;
+// This wraps the customElement in a React wrapper to make it behave exactly like a React component
+export const ColorInput = createComponent<
+  DarkForestColorInput,
+  {
+    onChange: (e: Event & React.ChangeEvent<DarkForestColorInput>) => void;
+  }
+>(React, DarkForestColorInput.tagName, DarkForestColorInput, {
+  // The `input` event is more like what we expect as `onChange` in React
+  onChange: 'input',
+});
 
-    &:hover,
-    &:focus {
-      border: 1px solid ${dfstyles.colors.border};
-      background: ${dfstyles.colors.backgroundlight};
-      color: ${dfstyles.colors.text};
-    }
-  `}
-`;
+// This wraps the customElement in a React wrapper to make it behave exactly like a React component
+export const NumberInput = createComponent<
+  DarkForestNumberInput,
+  {
+    onChange: (e: Event & React.ChangeEvent<DarkForestNumberInput>) => void;
+  }
+>(React, DarkForestNumberInput.tagName, DarkForestNumberInput, {
+  // The `input` event is more like what we expect as `onChange` in React
+  onChange: 'input',
+});
+
+// This wraps the customElement in a React wrapper to make it behave exactly like a React component
+export const TextInput = createComponent<
+  DarkForestTextInput,
+  {
+    onChange: (e: Event & React.ChangeEvent<DarkForestTextInput>) => void;
+    onBlur: (e: Event) => void;
+  }
+>(React, DarkForestTextInput.tagName, DarkForestTextInput, {
+  // The `input` event is more like what we expect as `onChange` in React
+  onChange: 'input',
+  onBlur: 'blur',
+});

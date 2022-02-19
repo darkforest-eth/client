@@ -1,11 +1,12 @@
+import { isUnconfirmedRevealTx } from '@darkforest_eth/serde';
 import { EthAddress, LocationId } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Btn } from '../Components/Btn';
-import { CenterBackgroundSubtext, Padded, Spacer } from '../Components/CoreUI';
+import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
 import { Blue, White } from '../Components/Text';
-import { TimeUntil } from '../Components/TimeUntil';
+import { formatDuration, TimeUntil } from '../Components/TimeUntil';
 import dfstyles from '../Styles/dfstyles';
 import { usePlanet, useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';
@@ -87,11 +88,10 @@ export function BroadcastPane({
 
   if (isRevealed) {
     revealBtn = <Btn disabled={true}>Broadcast Coordinates</Btn>;
-  } else if (planet?.unconfirmedReveal) {
+  } else if (planet?.transactions?.hasTransaction(isUnconfirmedRevealTx)) {
     revealBtn = (
       <Btn disabled={true}>
-        {planet.unconfirmedReveal && <LoadingSpinner initialText={'Broadcasting...'} />}
-        {!planet.unconfirmedReveal && 'Broadcast Coordinates'}
+        <LoadingSpinner initialText={'Broadcasting...'} />
       </Btn>
     );
   } else if (!broadcastCooldownPassed) {
@@ -131,31 +131,31 @@ export function BroadcastPane({
     </div>
   );
 
-  return (
-    <Padded>
-      {planet ? (
-        <BroadcastWrapper>
-          <div>
-            You can broadcast a planet to publically reveal its location on the map. You can only
-            broadcast a planet's location once every{' '}
-            <White>
-              {Math.floor(uiManager.getContractConstants().LOCATION_REVEAL_COOLDOWN / 60 / 60)}
-            </White>{' '}
-            hours.
-          </div>
-          <div className='message'>{warningsSection}</div>
-          <div className='row'>
-            <span>Coordinates</span>
-            <span>{`(${getLoc().x}, ${getLoc().y})`}</span>
-          </div>
-          <Spacer height={8} />
-          <p style={{ textAlign: 'right' }}>{revealBtn}</p>
-        </BroadcastWrapper>
-      ) : (
-        <CenterBackgroundSubtext width='100%' height='75px'>
-          Select a Planet
-        </CenterBackgroundSubtext>
-      )}
-    </Padded>
-  );
+  if (planet) {
+    return (
+      <BroadcastWrapper>
+        <div>
+          You can broadcast a planet to publically reveal its location on the map. You can only
+          broadcast a planet's location once every{' '}
+          <White>
+            {formatDuration(uiManager.contractConstants.LOCATION_REVEAL_COOLDOWN * 1000)}
+          </White>
+          .
+        </div>
+        <div className='message'>{warningsSection}</div>
+        <div className='row'>
+          <span>Coordinates</span>
+          <span>{`(${getLoc().x}, ${getLoc().y})`}</span>
+        </div>
+        <Spacer height={8} />
+        <p style={{ textAlign: 'right' }}>{revealBtn}</p>
+      </BroadcastWrapper>
+    );
+  } else {
+    return (
+      <CenterBackgroundSubtext width='100%' height='75px'>
+        Select a Planet
+      </CenterBackgroundSubtext>
+    );
+  }
 }

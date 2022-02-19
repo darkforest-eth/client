@@ -1,198 +1,203 @@
-import { Artifact, ArtifactType } from '@darkforest_eth/types';
-import React from 'react';
-import styled from 'styled-components';
-import { artifactAvailableTimestamp, isActivated } from '../../../Backend/GameLogic/ArtifactUtils';
-import { Icon, IconType } from '../../Components/Icons';
+import {
+  canActivateArtifact,
+  canDepositArtifact,
+  canWithdrawArtifact,
+  durationUntilArtifactAvailable,
+  isActivated,
+  isLocatable,
+} from '@darkforest_eth/gamelogic';
+import {
+  isUnconfirmedActivateArtifactTx,
+  isUnconfirmedDeactivateArtifactTx,
+  isUnconfirmedDepositArtifactTx,
+  isUnconfirmedWithdrawArtifactTx,
+} from '@darkforest_eth/serde';
+import { Artifact, ArtifactId, ArtifactType, LocationId, TooltipName } from '@darkforest_eth/types';
+import React, { useCallback } from 'react';
+import { Btn } from '../../Components/Btn';
+import { Spacer } from '../../Components/CoreUI';
 import { ArtifactRarityLabelAnim } from '../../Components/Labels/ArtifactLabels';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
-import { Smaller, Sub } from '../../Components/Text';
-import { TimeUntil } from '../../Components/TimeUntil';
-import { TooltipName } from '../../Game/WindowManager';
+import { Sub } from '../../Components/Text';
+import { formatDuration } from '../../Components/TimeUntil';
+import {
+  useAccount,
+  useArtifact,
+  usePlanet,
+  usePlanetArtifacts,
+  useUIManager,
+} from '../../Utils/AppHooks';
 import { TooltipTrigger, TooltipTriggerProps } from '../Tooltip';
 
 export function ArtifactActions({
-  artifact,
-  viewingDepositList,
-  anyArtifactActive,
-  planetOwnedByPlayer,
-  planetIsTradingPost,
-  planetLevel,
-  activate,
-  deactivate,
-  deposit,
-  withdraw,
+  artifactId,
+  depositOn,
 }: {
-  artifact: Artifact;
-  viewingDepositList: boolean;
-  anyArtifactActive: boolean;
-  planetOwnedByPlayer: boolean;
-  planetIsTradingPost: boolean;
-  planetLevel: number;
-  activate: (artifact: Artifact) => void;
-  deactivate: (artifact: Artifact) => void;
-  deposit: (artifact: Artifact) => void;
-  withdraw: (artifact: Artifact) => void;
+  artifactId: ArtifactId;
+  depositOn?: LocationId;
 }) {
+  const uiManager = useUIManager();
+  const account = useAccount(uiManager);
+  const artifactWrapper = useArtifact(uiManager, artifactId);
+  const artifact = artifactWrapper.value;
+
+  const depositPlanetWrapper = usePlanet(uiManager, depositOn);
+  const onPlanetWrapper = usePlanet(uiManager, artifact?.onPlanetId);
+  const depositPlanet = depositPlanetWrapper.value;
+  const onPlanet = onPlanetWrapper.value;
+
+  const otherArtifactsOnPlanet = usePlanetArtifacts(onPlanetWrapper, uiManager);
+
+  const withdraw = useCallback(
+    (artifact: Artifact) => {
+      onPlanet && uiManager.withdrawArtifact(onPlanet.locationId, artifact?.id);
+    },
+    [onPlanet, uiManager]
+  );
+
+  const deposit = useCallback(
+    (artifact: Artifact) => {
+      artifact &&
+        depositPlanetWrapper.value &&
+        uiManager.depositArtifact(depositPlanetWrapper.value.locationId, artifact?.id);
+    },
+    [uiManager, depositPlanetWrapper.value]
+  );
+
+  const activate = useCallback(
+    async (artifact: Artifact) => {
+      if (onPlanet && isLocatable(onPlanet)) {
+        let targetPlanetId = undefined;
+
+        if (artifact.artifactType === ArtifactType.Wormhole) {
+          const targetPlanet = await uiManager.startWormholeFrom(onPlanet);
+          targetPlanetId = targetPlanet?.locationId;
+        }
+
+        uiManager.activateArtifact(onPlanet.locationId, artifact.id, targetPlanetId);
+      }
+    },
+    [onPlanet, uiManager]
+  );
+
+  const deactivate = useCallback(
+    (artifact: Artifact) => {
+      onPlanet && uiManager.deactivateArtifact(onPlanet.locationId, artifact.id);
+    },
+    [onPlanet, uiManager]
+  );
+
+  if (!artifact || (!onPlanet && !depositPlanet) || !account) return null;
+
   const actions: TooltipTriggerProps[] = [];
 
-  if (artifact.unconfirmedWithdrawArtifact) {
-    return (
-      <ArtifactSpinnerContainer>
-        <LoadingSpinner initialText={'Withdrawing...'} />
-      </ArtifactSpinnerContainer>
-    );
-  } else if (artifact.unconfirmedDepositArtifact) {
-    return (
-      <ArtifactSpinnerContainer>
-        <LoadingSpinner initialText={'Depositing...'} />
-      </ArtifactSpinnerContainer>
-    );
-  } else if (artifact.unconfirmedActivateArtifact) {
-    return (
-      <ArtifactSpinnerContainer>
-        <LoadingSpinner initialText={'Activating...'} />
-      </ArtifactSpinnerContainer>
-    );
-  } else if (artifact.unconfirmedDeactivateArtifact) {
-    return (
-      <ArtifactSpinnerContainer>
-        <LoadingSpinner initialText={'Deactivating...'} />
-      </ArtifactSpinnerContainer>
-    );
-  } else if (artifact.unconfirmedMove) {
-    return (
-      <ArtifactSpinnerContainer>
-        <LoadingSpinner initialText={'Moving...'} />
-      </ArtifactSpinnerContainer>
-    );
+  const withdrawing = artifact.transactions?.hasTransaction(isUnconfirmedWithdrawArtifactTx);
+  const depositing = artifact.transactions?.hasTransaction(isUnconfirmedDepositArtifactTx);
+  const activating = artifact.transactions?.hasTransaction(isUnconfirmedActivateArtifactTx);
+  const deactivating = artifact.transactions?.hasTransaction(isUnconfirmedDeactivateArtifactTx);
+
+  const canHandleDeposit =
+    depositPlanetWrapper.value && depositPlanetWrapper.value.planetLevel > artifact.rarity;
+  const canHandleWithdraw =
+    onPlanetWrapper.value && onPlanetWrapper.value.planetLevel > artifact.rarity;
+
+  const wait = durationUntilArtifactAvailable(artifact);
+
+  if (canDepositArtifact(account, artifact, depositPlanetWrapper.value)) {
+    actions.unshift({
+      name: TooltipName.DepositArtifact,
+      extraContent: !canHandleDeposit && (
+        <>
+          . <ArtifactRarityLabelAnim rarity={artifact.rarity} />
+          {` artifacts can only be deposited on level ${artifact.rarity + 1}+ spacetime rips`}
+        </>
+      ),
+      children: (
+        <Btn
+          disabled={depositing}
+          onClick={(e) => {
+            e.stopPropagation();
+            canHandleDeposit && deposit(artifact);
+          }}
+        >
+          {depositing ? <LoadingSpinner initialText={'Depositing...'} /> : 'Deposit'}
+        </Btn>
+      ),
+    });
+  }
+  if (isActivated(artifact) && artifact.artifactType !== ArtifactType.BlackDomain) {
+    actions.unshift({
+      name: TooltipName.DeactivateArtifact,
+      children: (
+        <Btn
+          disabled={deactivating}
+          onClick={(e) => {
+            e.stopPropagation();
+            deactivate(artifact);
+          }}
+        >
+          {deactivating ? <LoadingSpinner initialText={'Deactivating...'} /> : 'Deactivate'}
+        </Btn>
+      ),
+    });
+  }
+  if (canWithdrawArtifact(account, artifact, onPlanet)) {
+    actions.unshift({
+      name: TooltipName.WithdrawArtifact,
+      extraContent: !canHandleWithdraw && (
+        <>
+          . <ArtifactRarityLabelAnim rarity={artifact.rarity} />
+          {` artifacts can only be withdrawn from level ${artifact.rarity + 1}+ spacetime rips`}
+        </>
+      ),
+      children: (
+        <Btn
+          disabled={withdrawing}
+          onClick={(e) => {
+            e.stopPropagation();
+            canHandleWithdraw && withdraw(artifact);
+          }}
+        >
+          {withdrawing ? <LoadingSpinner initialText={'Withdrawing...'} /> : 'Withdraw'}
+        </Btn>
+      ),
+    });
   }
 
-  const now = Date.now();
-  const available = artifactAvailableTimestamp(artifact);
+  if (canActivateArtifact(artifact, onPlanet, otherArtifactsOnPlanet)) {
+    actions.unshift({
+      name: TooltipName.ActivateArtifact,
+      children: (
+        <Btn
+          disabled={activating}
+          onClick={(e) => {
+            e.stopPropagation();
+            activate(artifact);
+          }}
+        >
+          {activating ? <LoadingSpinner initialText={'Activating...'} /> : 'Activate'}
+        </Btn>
+      ),
+    });
+  }
 
-  const waitUntilAvailable = available - now;
-  const availableToActivate = waitUntilAvailable <= -0;
-
-  const canHandleArtifact = planetLevel > artifact.rarity;
-
-  if (planetOwnedByPlayer) {
-    if (viewingDepositList) {
-      if (planetIsTradingPost) {
-        actions.unshift({
-          name: TooltipName.DepositArtifact,
-          extraContent: !canHandleArtifact && (
-            <>
-              . <ArtifactRarityLabelAnim rarity={artifact.rarity} />
-              {` artifacts can only be deposited on level ${artifact.rarity + 1}+ spacetime rips`}
-            </>
-          ),
-          children: (
-            <ArtifactActionIconContainer
-              onClick={(e) => {
-                e.stopPropagation();
-                canHandleArtifact && deposit(artifact);
-              }}
-              iconColor={canHandleArtifact ? undefined : 'grey'}
-            >
-              <Icon type={IconType.Deposit} />
-            </ArtifactActionIconContainer>
-          ),
-        });
-      }
-    } else if (isActivated(artifact) && artifact.artifactType !== ArtifactType.BlackDomain) {
-      actions.unshift({
-        name: TooltipName.DeactivateArtifact,
-        children: (
-          <ArtifactActionIconContainer
-            onClick={(e) => {
-              e.stopPropagation();
-              deactivate(artifact);
-            }}
-          >
-            <Icon type={IconType.Deactivate} />
-          </ArtifactActionIconContainer>
-        ),
-      });
-    } else {
-      if (planetIsTradingPost) {
-        actions.unshift({
-          name: TooltipName.WithdrawArtifact,
-          extraContent: !canHandleArtifact && (
-            <>
-              . <ArtifactRarityLabelAnim rarity={artifact.rarity} />
-              {` artifacts can only be withdrawn from level ${artifact.rarity + 1}+ spacetime rips`}
-            </>
-          ),
-          children: (
-            <ArtifactActionIconContainer
-              onClick={(e) => {
-                e.stopPropagation();
-                canHandleArtifact && withdraw(artifact);
-              }}
-              iconColor={canHandleArtifact ? undefined : 'grey'}
-            >
-              <Icon type={IconType.Withdraw} />
-            </ArtifactActionIconContainer>
-          ),
-        });
-      }
-
-      if (!anyArtifactActive && availableToActivate) {
-        actions.unshift({
-          name: TooltipName.ActivateArtifact,
-          children: (
-            <ArtifactActionIconContainer
-              onClick={(e) => {
-                e.stopPropagation();
-                activate(artifact);
-              }}
-            >
-              <Icon type={IconType.Activate} />
-            </ArtifactActionIconContainer>
-          ),
-        });
-      }
-    }
+  if (wait > 0) {
+    actions.unshift({
+      name: TooltipName.Empty,
+      extraContent: <>You have to wait before activating an artifact again</>,
+      children: <Sub>{formatDuration(wait)}</Sub>,
+    });
   }
 
   return (
-    <ActionsContainer>
-      {!availableToActivate && (
-        <TooltipTrigger name={TooltipName.TimeUntilActivationPossible}>
-          <Smaller>
-            <Sub>
-              <TimeUntil timestamp={available} ifPassed={''} />
-            </Sub>
-          </Smaller>
-        </TooltipTrigger>
-      )}
+    <div>
+      {actions.length > 0 && <Spacer height={4} />}
       {actions.map((a, i) => (
-        <TooltipTrigger key={i} {...a} />
+        <span key={i}>
+          <TooltipTrigger {...a} />
+          <Spacer width={4} />
+        </span>
       ))}
-    </ActionsContainer>
+    </div>
   );
 }
-const ArtifactActionIconContainer = styled.div<{ iconColor?: string }>`
-  line-height: 0;
-  padding-left: 8px;
-
-  /* Set the Icon color if specified on the outer component */
-  --df-icon-color: ${({ iconColor }) => iconColor};
-`;
-
-const ArtifactSpinnerContainer = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 4px;
-  font-size: 80%;
-`;
-
-const ActionsContainer = styled.div`
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-`;

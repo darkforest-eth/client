@@ -1,17 +1,18 @@
+import { biomeName, isLocatable } from '@darkforest_eth/gamelogic';
 import {
   Artifact,
   Biome,
+  Chunk,
+  ContractMethodName,
   EthTxStatus,
   LocatablePlanet,
   Planet,
-  SubmittedTx,
   TxIntent,
 } from '@darkforest_eth/types';
 import EventEmitter from 'events';
+import { startCase } from 'lodash';
 import React from 'react';
-import { biomeName } from '../../Backend/GameLogic/ArtifactUtils';
 import { getRandomActionId } from '../../Backend/Utils/Utils';
-import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import {
   ArtifactFound,
   ArtifactProspected,
@@ -37,24 +38,14 @@ import {
   PlanetConquered,
   PlanetLost,
   Quasar,
-  TxAccepted,
-  TxConfirmed,
   TxDeclined,
-  TxInitialized,
 } from '../Components/Icons';
 import {
   ArtifactBiomeText,
   ArtifactRarityLabelAnim,
   ArtifactTypeText,
 } from '../Components/Labels/ArtifactLabels';
-import {
-  ArtifactNameLink,
-  CenterChunkLink,
-  FAQ04Link,
-  PlanetNameLink,
-  TxLink,
-} from '../Components/Text';
-import dfstyles from '../Styles/dfstyles';
+import { ArtifactNameLink, CenterChunkLink, FAQ04Link, PlanetNameLink } from '../Components/Text';
 
 export const enum NotificationType {
   Tx,
@@ -88,6 +79,7 @@ export const enum NotificationType {
   ArtifactFound,
   ReceivedPlanet,
   Generic,
+  TxInitError,
 }
 
 const BiomeNotificationMap = {
@@ -122,16 +114,6 @@ export const enum NotificationManagerEvent {
   ClearNotification = 'ClearNotification',
 }
 
-const getNotifColor = (type: NotificationType, txStatus?: EthTxStatus): string | undefined => {
-  if (type === NotificationType.Tx) {
-    if (txStatus === EthTxStatus.Init) return dfstyles.colors.dfblue;
-    else if (txStatus === EthTxStatus.Submit) return dfstyles.colors.dfgreen;
-    else if (txStatus === EthTxStatus.Confirm) return undefined;
-    else if (txStatus === EthTxStatus.Fail) return dfstyles.colors.dfred;
-  }
-  return undefined;
-};
-
 class NotificationManager extends EventEmitter {
   static instance: NotificationManager;
 
@@ -147,18 +129,10 @@ class NotificationManager extends EventEmitter {
     return NotificationManager.instance;
   }
 
-  private getIcon(type: NotificationType, txStatus?: EthTxStatus) {
+  private getIcon(type: NotificationType) {
     switch (type) {
-      case NotificationType.Tx:
-        if (txStatus === EthTxStatus.Init) return <TxInitialized height={'48px'} width={'48px'} />;
-        else if (txStatus === EthTxStatus.Submit)
-          return <TxAccepted height={'px'} width={'48px'} />;
-        else if (txStatus === EthTxStatus.Confirm)
-          return <TxConfirmed height={'48px'} width={'48px'} />;
-        else if (txStatus === EthTxStatus.Fail)
-          return <TxDeclined height={'48px'} width={'48px'} />;
-
-        break;
+      case NotificationType.TxInitError:
+        return <TxDeclined height={'48px'} width={'48px'} />;
       case NotificationType.FoundSilverBank:
         return <Quasar height={'48px'} width={'48px'} />;
         break;
@@ -246,7 +220,6 @@ class NotificationManager extends EventEmitter {
       message,
       id: getRandomActionId(),
       icon: this.getIcon(NotificationType.Generic),
-      color: getNotifColor(NotificationType.Generic),
     });
   }
 
@@ -260,75 +233,7 @@ class NotificationManager extends EventEmitter {
       message,
       id: getRandomActionId(),
       icon: this.getIcon(type),
-      color: getNotifColor(type),
     });
-  }
-
-  notifyTx(txData: TxIntent, message: React.ReactNode, txStatus: EthTxStatus): void {
-    this.emit(NotificationManagerEvent.Notify, {
-      type: NotificationType.Tx,
-      message,
-      id: txData.actionId,
-      icon: this.getIcon(NotificationType.Tx, txStatus),
-      txData,
-      txStatus,
-    });
-  }
-
-  txInit(txIntent: TxIntent): void {
-    this.notifyTx(
-      txIntent,
-      <span>Transaction {txIntent.actionId} initialized.</span>,
-      EthTxStatus.Init
-    );
-  }
-
-  txSubmit(tx: SubmittedTx): void {
-    this.notifyTx(
-      tx,
-      <span>
-        Transaction {tx.actionId} accepted by Ethereum.
-        <br />
-        <TxLink tx={tx} />
-      </span>,
-      EthTxStatus.Submit
-    );
-  }
-
-  txConfirm(tx: SubmittedTx): void {
-    this.notifyTx(
-      tx,
-      <span>
-        Transaction {tx.actionId} confirmed.
-        <br />
-        Hash: <TxLink tx={tx} />
-      </span>,
-      EthTxStatus.Confirm
-    );
-  }
-
-  unsubmittedTxFail(txIntent: TxIntent, _e: Error): void {
-    this.notifyTx(
-      txIntent,
-      <span>
-        Transaction {txIntent.actionId} failed.
-        <br />
-        Check the console for more info.
-      </span>,
-      EthTxStatus.Fail
-    );
-  }
-
-  txRevert(tx: SubmittedTx): void {
-    this.notifyTx(
-      tx,
-      <span>
-        Transaction {tx.txHash.slice(0, 8)} reverted.
-        <br />
-        <TxLink tx={tx} />
-      </span>,
-      EthTxStatus.Fail
-    );
   }
 
   welcomePlayer(): void {
@@ -520,6 +425,15 @@ class NotificationManager extends EventEmitter {
       <span>
         Someone just sent you their planet: <PlanetNameLink planet={planet} />.{' '}
         {!isLocatable(planet) && "You'll need to ask the person who sent it for its location."}
+      </span>
+    );
+  }
+
+  txInitError(methodName: ContractMethodName, failureReason: string) {
+    this.notify(
+      NotificationType.TxInitError,
+      <span>
+        {startCase(methodName)} failed. Reason: {failureReason}
       </span>
     );
   }

@@ -1,8 +1,8 @@
-import { DiagnosticUpdater, Planet, WorldCoords } from '@darkforest_eth/types';
+import { isLocatable } from '@darkforest_eth/gamelogic';
+import { CanvasCoords, Chunk, DiagnosticUpdater, Planet, WorldCoords } from '@darkforest_eth/types';
 import autoBind from 'auto-bind';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
-import { CanvasCoords, distL2, vectorLength } from '../../Backend/Utils/Coordinates';
-import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
+import { distL2, vectorLength } from '../../Backend/Utils/Coordinates';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 
 export const getDefaultScroll = (): number => {

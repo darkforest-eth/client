@@ -1,17 +1,11 @@
+import { SpecialKey } from '@darkforest_eth/constants';
 import { monomitter } from '@darkforest_eth/events';
+import { Setting } from '@darkforest_eth/types';
 import { useEffect, useState } from 'react';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { useUIManager } from './AppHooks';
 import { useEmitterSubscribe } from './EmitterHooks';
-import { Setting, useBooleanSetting } from './SettingsHooks';
-
-export const SpecialKey = {
-  Space: ' ',
-  Tab: 'Tab',
-  Escape: 'Escape',
-  Control: 'Control',
-  Shift: 'Shift',
-} as const;
+import { useBooleanSetting } from './SettingsHooks';
 
 export const keyUp$ = monomitter<Wrapper<string>>();
 export const keyDown$ = monomitter<Wrapper<string>>();
@@ -55,12 +49,18 @@ function getSpecialKeyFromEvent(e: KeyboardEvent): string | undefined {
 
 export function useIsDown(key?: string) {
   const [isDown, setIsDown] = useState(false);
-  useEmitterSubscribe(keyDown$, (k) => key !== undefined && k.value === key && setIsDown(true));
-  useEmitterSubscribe(keyUp$, (k) => key !== undefined && k.value === key && setIsDown(false));
+  useEmitterSubscribe(keyDown$, (k) => key !== undefined && k.value === key && setIsDown(true), [
+    key,
+    setIsDown,
+  ]);
+  useEmitterSubscribe(keyUp$, (k) => key !== undefined && k.value === key && setIsDown(false), [
+    key,
+    setIsDown,
+  ]);
   return isDown;
 }
 
-export function useOnUp(key?: string, onUp?: () => void) {
+export function useOnUp(key: string, onUp: () => void, deps: React.DependencyList = []) {
   const [disableDefaultShortcuts] = useBooleanSetting(
     useUIManager(),
     Setting.DisableDefaultShortcuts
@@ -68,12 +68,21 @@ export function useOnUp(key?: string, onUp?: () => void) {
 
   useEffect(() => {
     const onKeyUp = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === key && !shouldIgnoreShortcutKeypress(e)) {
+      if (
+        (getSpecialKeyFromEvent(e) === key || e.key.toLowerCase() === key) &&
+        !shouldIgnoreShortcutKeypress(e)
+      ) {
         !disableDefaultShortcuts && onUp && onUp();
       }
     };
 
     document.addEventListener('keyup', onKeyUp);
     return () => document.removeEventListener('keyup', onKeyUp);
-  }, [key, onUp, disableDefaultShortcuts]);
+  }, [
+    key,
+    onUp,
+    disableDefaultShortcuts,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    ...deps,
+  ]);
 }

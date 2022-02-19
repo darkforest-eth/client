@@ -14,14 +14,15 @@
 
 #### Parameters
 
-| Name                                  | Type                                                 |
-| :------------------------------------ | :--------------------------------------------------- |
-| `__namedParameters`                   | `Object`                                             |
-| `__namedParameters.helpHook`          | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
-| `__namedParameters.planetdexHook`     | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
-| `__namedParameters.pluginsHook`       | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
-| `__namedParameters.settingsHook`      | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
-| `__namedParameters.yourArtifactsHook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                                   | Type                                                   |
+| :------------------------------------- | :----------------------------------------------------- |
+| `__namedParameters`                    | `Object`                                               |
+| `__namedParameters.helpHook`           | [`Hook`](types_global_GlobalTypes.md#hook)<`boolean`\> |
+| `__namedParameters.planetdexHook`      | [`Hook`](types_global_GlobalTypes.md#hook)<`boolean`\> |
+| `__namedParameters.pluginsHook`        | [`Hook`](types_global_GlobalTypes.md#hook)<`boolean`\> |
+| `__namedParameters.settingsHook`       | [`Hook`](types_global_GlobalTypes.md#hook)<`boolean`\> |
+| `__namedParameters.transactionLogHook` | [`Hook`](types_global_GlobalTypes.md#hook)<`boolean`\> |
+| `__namedParameters.yourArtifactsHook`  | [`Hook`](types_global_GlobalTypes.md#hook)<`boolean`\> |
 
 #### Returns
 

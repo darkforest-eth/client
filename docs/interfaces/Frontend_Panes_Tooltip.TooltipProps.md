@@ -54,7 +54,7 @@ You can append some dynamic content to the given tooltip by setting this field t
 
 ### name
 
-• **name**: `undefined` \| [`TooltipName`](../enums/Frontend_Game_WindowManager.TooltipName.md)
+• **name**: `undefined` \| `TooltipName`
 
 The name of the tooltip element to display. You can see all the concrete tooltip contents in
 the file called {@link TooltipPanes}. Set to `undefined` to not render the tooltip.

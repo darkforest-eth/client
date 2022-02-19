@@ -1,22 +1,18 @@
+import { ModalName } from '@darkforest_eth/types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { Hook } from '../../_types/global/GlobalTypes';
 import { BorderlessPane, EmSpacer } from '../Components/CoreUI';
-import { GameWindowZIndex } from '../Utils/constants';
+import { DFZIndex } from '../Utils/constants';
 import {
   TOGGLE_HELP_PANE,
   TOGGLE_PLUGINS_PANE,
   TOGGLE_SETTINGS_PANE,
+  TOGGLE_TRANSACTIONS_PANE,
   TOGGLE_YOUR_ARTIFACTS_PANE,
   TOGGLE_YOUR_PLANETS_DEX_PANE,
 } from '../Utils/ShortcutConstants';
-import {
-  ModalHelpIcon,
-  ModalPlanetDexIcon,
-  ModalPluginIcon,
-  ModalSettingsIcon,
-  ModalYourArtifactsIcon,
-} from './ModalIcon';
-import { ModalHook } from './ModalPane';
+import { ModalToggleButton } from './ModalIcon';
 
 export function SidebarPane({
   settingsHook,
@@ -24,12 +20,14 @@ export function SidebarPane({
   pluginsHook,
   yourArtifactsHook,
   planetdexHook,
+  transactionLogHook,
 }: {
-  settingsHook: ModalHook;
-  helpHook: ModalHook;
-  pluginsHook: ModalHook;
-  yourArtifactsHook: ModalHook;
-  planetdexHook: ModalHook;
+  settingsHook: Hook<boolean>;
+  helpHook: Hook<boolean>;
+  pluginsHook: Hook<boolean>;
+  yourArtifactsHook: Hook<boolean>;
+  planetdexHook: Hook<boolean>;
+  transactionLogHook: Hook<boolean>;
 }) {
   const [sidebarHovered, setSidebarHovered] = useState<boolean>(false);
 
@@ -38,61 +36,59 @@ export function SidebarPane({
       onMouseEnter={() => setSidebarHovered(true)}
       onMouseLeave={() => setSidebarHovered(false)}
     >
-      <BorderlessPane style={{ zIndex: sidebarHovered ? GameWindowZIndex.Tooltip : undefined }}>
-        <ModalSettingsIcon
+      <BorderlessPane style={{ zIndex: sidebarHovered ? DFZIndex.Tooltip : undefined }}>
+        <ModalToggleButton
+          modal={ModalName.Settings}
           hook={settingsHook}
-          style={{
-            width: '100%',
-            height: '2em',
-            padding: '4px 8px',
-          }}
           text={sidebarHovered ? 'Settings' : undefined}
-          shortcutKey={sidebarHovered ? TOGGLE_SETTINGS_PANE : undefined}
+          size='stretch'
+          shortcutKey={TOGGLE_SETTINGS_PANE}
+          shortcutText={sidebarHovered ? TOGGLE_SETTINGS_PANE : undefined}
         />
         <EmSpacer height={0.5} />
-        <ModalHelpIcon
+        <ModalToggleButton
+          modal={ModalName.Help}
           hook={helpHook}
-          style={{
-            width: '100%',
-            height: '2em',
-            padding: '4px 8px',
-          }}
           text={sidebarHovered ? 'Help' : undefined}
-          shortcutKey={sidebarHovered ? TOGGLE_HELP_PANE : undefined}
+          size='stretch'
+          shortcutKey={TOGGLE_HELP_PANE}
+          shortcutText={sidebarHovered ? TOGGLE_HELP_PANE : undefined}
         />
         <EmSpacer height={0.5} />
-
-        <ModalPluginIcon
+        <ModalToggleButton
+          modal={ModalName.Plugins}
           hook={pluginsHook}
-          style={{
-            width: '100%',
-            height: '2em',
-            padding: '4px 8px',
-          }}
           text={sidebarHovered ? 'Plugins' : undefined}
-          shortcutKey={sidebarHovered ? TOGGLE_PLUGINS_PANE : undefined}
+          size='stretch'
+          shortcutKey={TOGGLE_PLUGINS_PANE}
+          shortcutText={sidebarHovered ? TOGGLE_PLUGINS_PANE : undefined}
         />
         <EmSpacer height={0.5} />
-        <ModalYourArtifactsIcon
+        <ModalToggleButton
+          modal={ModalName.YourArtifacts}
           hook={yourArtifactsHook}
-          style={{
-            width: '100%',
-            height: '2em',
-            padding: '4px 8px',
-          }}
-          text={sidebarHovered ? 'Your Artifacts' : undefined}
-          shortcutKey={sidebarHovered ? TOGGLE_YOUR_ARTIFACTS_PANE : undefined}
+          text={sidebarHovered ? 'Your Inventory' : undefined}
+          size='stretch'
+          shortcutKey={TOGGLE_YOUR_ARTIFACTS_PANE}
+          shortcutText={sidebarHovered ? TOGGLE_YOUR_ARTIFACTS_PANE : undefined}
         />
         <EmSpacer height={0.5} />
-        <ModalPlanetDexIcon
+        <ModalToggleButton
+          modal={ModalName.PlanetDex}
           hook={planetdexHook}
-          style={{
-            width: '100%',
-            height: '2em',
-            padding: '4px 8px',
-          }}
           text={sidebarHovered ? 'Your Planets' : undefined}
-          shortcutKey={sidebarHovered ? TOGGLE_YOUR_PLANETS_DEX_PANE : undefined}
+          size='stretch'
+          shortcutKey={TOGGLE_YOUR_PLANETS_DEX_PANE}
+          shortcutText={sidebarHovered ? TOGGLE_YOUR_PLANETS_DEX_PANE : undefined}
+        />
+        <EmSpacer height={0.5} />
+        <ModalToggleButton
+          modal={ModalName.TransactionLog}
+          hook={transactionLogHook}
+          text={sidebarHovered ? 'Transaction Log' : undefined}
+          size='stretch'
+          shortcutKey={TOGGLE_TRANSACTIONS_PANE}
+          shortcutText={sidebarHovered ? TOGGLE_TRANSACTIONS_PANE : undefined}
         />
       </BorderlessPane>
     </WindowTogglesPaneContainer>

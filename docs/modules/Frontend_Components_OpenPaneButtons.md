@@ -5,10 +5,10 @@
 ### Functions
 
 - [OpenBroadcastPaneButton](Frontend_Components_OpenPaneButtons.md#openbroadcastpanebutton)
-- [OpenClaimPlanetPane](Frontend_Components_OpenPaneButtons.md#openclaimplanetpane)
 - [OpenHatPaneButton](Frontend_Components_OpenPaneButtons.md#openhatpanebutton)
 - [OpenManagePlanetArtifactsButton](Frontend_Components_OpenPaneButtons.md#openmanageplanetartifactsbutton)
 - [OpenPaneButton](Frontend_Components_OpenPaneButtons.md#openpanebutton)
+- [OpenPlanetInfoButton](Frontend_Components_OpenPaneButtons.md#openplanetinfobutton)
 - [OpenUpgradeDetailsPaneButton](Frontend_Components_OpenPaneButtons.md#openupgradedetailspanebutton)
 
 ## Functions
@@ -19,31 +19,11 @@
 
 #### Parameters
 
-| Name                                  | Type                                                                   |
-| :------------------------------------ | :--------------------------------------------------------------------- |
-| `__namedParameters`                   | `Object`                                                               |
-| `__namedParameters.modal`             | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
-| `__namedParameters.planetId`          | `LocationId` \| `undefined`                                            |
-| `__namedParameters.shortcutDisabled?` | `boolean`                                                              |
-
-#### Returns
-
-`Element`
-
----
-
-### OpenClaimPlanetPane
-
-▸ **OpenClaimPlanetPane**(`__namedParameters`): `Element`
-
-#### Parameters
-
-| Name                                  | Type                                                                   |
-| :------------------------------------ | :--------------------------------------------------------------------- |
-| `__namedParameters`                   | `Object`                                                               |
-| `__namedParameters.modal`             | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
-| `__namedParameters.planetId`          | `LocationId` \| `undefined`                                            |
-| `__namedParameters.shortcutDisabled?` | `boolean`                                                              |
+| Name                         | Type                                                                   |
+| :--------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`          | `Object`                                                               |
+| `__namedParameters.modal`    | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
+| `__namedParameters.planetId` | `undefined` \| `LocationId`                                            |
 
 #### Returns
 
@@ -57,12 +37,11 @@
 
 #### Parameters
 
-| Name                                  | Type                                                                   |
-| :------------------------------------ | :--------------------------------------------------------------------- |
-| `__namedParameters`                   | `Object`                                                               |
-| `__namedParameters.modal`             | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
-| `__namedParameters.planetId`          | `LocationId` \| `undefined`                                            |
-| `__namedParameters.shortcutDisabled?` | `boolean`                                                              |
+| Name                         | Type                                                                   |
+| :--------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`          | `Object`                                                               |
+| `__namedParameters.modal`    | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
+| `__namedParameters.planetId` | `undefined` \| `LocationId`                                            |
 
 #### Returns
 
@@ -76,12 +55,11 @@
 
 #### Parameters
 
-| Name                                  | Type                                                                   |
-| :------------------------------------ | :--------------------------------------------------------------------- |
-| `__namedParameters`                   | `Object`                                                               |
-| `__namedParameters.modal`             | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
-| `__namedParameters.planetId`          | `LocationId` \| `undefined`                                            |
-| `__namedParameters.shortcutDisabled?` | `boolean`                                                              |
+| Name                         | Type                                                                   |
+| :--------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`          | `Object`                                                               |
+| `__namedParameters.modal`    | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
+| `__namedParameters.planetId` | `undefined` \| `LocationId`                                            |
 
 #### Returns
 
@@ -95,15 +73,32 @@
 
 #### Parameters
 
-| Name                                  | Type                                                                   |
-| :------------------------------------ | :--------------------------------------------------------------------- |
-| `__namedParameters`                   | `Object`                                                               |
-| `__namedParameters.helpContent?`      | `React.ReactElement`                                                   |
-| `__namedParameters.modal`             | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
-| `__namedParameters.shortcutDisabled?` | `boolean`                                                              |
-| `__namedParameters.shortcutKey?`      | `string`                                                               |
-| `__namedParameters.title`             | `string`                                                               |
-| `__namedParameters.element`           |                                                                        |
+| Name                             | Type                                                                      |
+| :------------------------------- | :------------------------------------------------------------------------ |
+| `__namedParameters`              | `Object`                                                                  |
+| `__namedParameters.helpContent?` | `ReactElement`<`any`, `string` \| `JSXElementConstructor`<`any`\>\>       |
+| `__namedParameters.modal`        | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md)    |
+| `__namedParameters.shortcut?`    | `string`                                                                  |
+| `__namedParameters.title`        | `string`                                                                  |
+| `__namedParameters.element`      | () => `ReactElement`<`any`, `string` \| `JSXElementConstructor`<`any`\>\> |
+
+#### Returns
+
+`Element`
+
+---
+
+### OpenPlanetInfoButton
+
+▸ **OpenPlanetInfoButton**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                         | Type                                                                   |
+| :--------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`          | `Object`                                                               |
+| `__namedParameters.modal`    | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
+| `__namedParameters.planetId` | `undefined` \| `LocationId`                                            |
 
 #### Returns
 
@@ -117,12 +112,11 @@
 
 #### Parameters
 
-| Name                                  | Type                                                                   |
-| :------------------------------------ | :--------------------------------------------------------------------- |
-| `__namedParameters`                   | `Object`                                                               |
-| `__namedParameters.modal`             | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
-| `__namedParameters.planetId`          | `LocationId` \| `undefined`                                            |
-| `__namedParameters.shortcutDisabled?` | `boolean`                                                              |
+| Name                         | Type                                                                   |
+| :--------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`          | `Object`                                                               |
+| `__namedParameters.modal`    | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
+| `__namedParameters.planetId` | `undefined` \| `LocationId`                                            |
 
 #### Returns
 

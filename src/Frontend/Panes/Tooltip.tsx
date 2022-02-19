@@ -1,11 +1,11 @@
 import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
+import { TooltipName } from '@darkforest_eth/types';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import { TooltipName } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
 import { useOverlayContainer } from '../Utils/AppHooks';
-import { GameWindowZIndex } from '../Utils/constants';
+import { DFZIndex } from '../Utils/constants';
 import { TooltipContent } from './TooltipPanes';
 
 /**
@@ -150,5 +150,5 @@ const StyledTooltip = styled.div`
   padding: 0.5em 1em;
   border-radius: 3px;
   line-height: 1.5em;
-  z-index: ${GameWindowZIndex.Tooltip};
+  z-index: ${DFZIndex.Tooltip};
 `;

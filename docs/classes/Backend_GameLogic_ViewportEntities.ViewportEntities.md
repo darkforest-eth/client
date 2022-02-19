@@ -48,13 +48,13 @@ visible planet to the mouse.
 
 ### cachedExploredChunks
 
-• `Private` **cachedExploredChunks**: `Set`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>
+• `Private` **cachedExploredChunks**: `Set`<`Chunk`\>
 
 ---
 
 ### cachedPlanets
 
-• `Private` **cachedPlanets**: `Map`<`LocationId`, [`PlanetRenderInfo`](../interfaces/Backend_GameLogic_ViewportEntities.PlanetRenderInfo.md)\>
+• `Private` **cachedPlanets**: `Map`<`LocationId`, `PlanetRenderInfo`\>
 
 ---
 
@@ -96,7 +96,7 @@ planet is returned.
 
 ### getPlanetRadii
 
-▸ `Private` **getPlanetRadii**(`viewport`): `Map`<`PlanetLevel`, [`Radii`](../interfaces/Backend_GameLogic_ViewportEntities.Radii.md)\>
+▸ `Private` **getPlanetRadii**(`viewport`): `Map`<`PlanetLevel`, `Radii`\>
 
 One entry per planet level - radius in screen pixels of that planet level given the current
 viewport configuration, as well as the world radius.
@@ -109,7 +109,7 @@ viewport configuration, as well as the world radius.
 
 #### Returns
 
-`Map`<`PlanetLevel`, [`Radii`](../interfaces/Backend_GameLogic_ViewportEntities.Radii.md)\>
+`Map`<`PlanetLevel`, `Radii`\>
 
 ---
 
@@ -121,10 +121,10 @@ viewport configuration, as well as the world radius.
 
 `Object`
 
-| Name            | Type                                                                                                             |
-| :-------------- | :--------------------------------------------------------------------------------------------------------------- |
-| `cachedPlanets` | `Map`<`LocationId`, [`PlanetRenderInfo`](../interfaces/Backend_GameLogic_ViewportEntities.PlanetRenderInfo.md)\> |
-| `chunks`        | `Set`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>                                                            |
+| Name            | Type                                     |
+| :-------------- | :--------------------------------------- |
+| `cachedPlanets` | `Map`<`LocationId`, `PlanetRenderInfo`\> |
+| `chunks`        | `Set`<`Chunk`\>                          |
 
 ---
 

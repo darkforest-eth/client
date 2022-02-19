@@ -2,32 +2,25 @@
 
 ## Table of contents
 
-### Type aliases
+### Classes
 
-- [BtnProps](Frontend_Components_Btn.md#btnprops)
+- [DarkForestButton](../classes/Frontend_Components_Btn.DarkForestButton.md)
+- [DarkForestShortcutButton](../classes/Frontend_Components_Btn.DarkForestShortcutButton.md)
+- [ShortcutPressedEvent](../classes/Frontend_Components_Btn.ShortcutPressedEvent.md)
 
-### Functions
+### Variables
 
 - [Btn](Frontend_Components_Btn.md#btn)
+- [ShortcutBtn](Frontend_Components_Btn.md#shortcutbtn)
 
-## Type aliases
-
-### BtnProps
-
-Ƭ **BtnProps**: { `borderColor?`: `string` ; `color?`: `string` ; `disabled?`: `boolean` ; `forceActive?`: `boolean` ; `noBorder?`: `boolean` ; `small?`: `boolean` ; `textColor?`: `string` ; `wide?`: `boolean` } & `React.HTMLAttributes`<`HTMLSpanElement`\>
-
-## Functions
+## Variables
 
 ### Btn
 
-▸ **Btn**(`props`): `Element`
+• **Btn**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestButton`](../classes/Frontend_Components_Btn.DarkForestButton.md), `"children"`\>\> & `Events`<`Object`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
 
-#### Parameters
+---
 
-| Name    | Type                                              |
-| :------ | :------------------------------------------------ |
-| `props` | [`BtnProps`](Frontend_Components_Btn.md#btnprops) |
+### ShortcutBtn
 
-#### Returns
-
-`Element`
+• **ShortcutBtn**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestShortcutButton`](../classes/Frontend_Components_Btn.DarkForestShortcutButton.md), `"children"`\>\> & `Events`<`Object`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>

@@ -1,8 +1,8 @@
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
+import { getPlayerColor } from '@darkforest_eth/procedural';
 import { EthAddress } from '@darkforest_eth/types';
 import colorFn from 'color';
 import React from 'react';
-import { ProcgenUtils } from '../../../Backend/Procedural/ProcgenUtils';
 import { usePlayer, useUIManager } from '../../Utils/AppHooks';
 import { Link } from '../CoreUI';
 import { Sub } from '../Text';
@@ -11,17 +11,19 @@ import { TextPreview } from '../TextPreview';
 export function AccountLabel({
   includeAddressIfHasTwitter,
   ethAddress,
+  width,
   style,
 }: {
   includeAddressIfHasTwitter?: boolean;
   ethAddress?: EthAddress;
+  width?: string;
   style?: React.CSSProperties;
 }) {
   const uiManager = useUIManager();
   const player = usePlayer(uiManager, ethAddress);
 
   if (player.value !== undefined && player.value.twitter !== undefined) {
-    const color = colorFn(ProcgenUtils.getPlayerColor(player.value.address)).darken(0.5).hex();
+    const color = colorFn(getPlayerColor(player.value.address)).darken(0.5).hex();
     return (
       <span style={style}>
         <TwitterLink twitter={player.value.twitter} color={color} />
@@ -46,8 +48,8 @@ export function AccountLabel({
   return (
     <TextPreview
       text={ethAddress || uiManager.getAccount() || '<no account>'}
-      unFocusedWidth={'150px'}
-      focusedWidth={'150px'}
+      unFocusedWidth={width ?? '150px'}
+      focusedWidth={width ?? '150px'}
     />
   );
 }

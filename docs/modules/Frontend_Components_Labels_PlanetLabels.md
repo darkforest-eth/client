@@ -8,6 +8,8 @@
 - [EnergyCapText](Frontend_Components_Labels_PlanetLabels.md#energycaptext)
 - [EnergyGrowthText](Frontend_Components_Labels_PlanetLabels.md#energygrowthtext)
 - [EnergyText](Frontend_Components_Labels_PlanetLabels.md#energytext)
+- [GrowthText](Frontend_Components_Labels_PlanetLabels.md#growthtext)
+- [JunkText](Frontend_Components_Labels_PlanetLabels.md#junktext)
 - [LevelRankText](Frontend_Components_Labels_PlanetLabels.md#levelranktext)
 - [LevelRankTextEm](Frontend_Components_Labels_PlanetLabels.md#levelranktextem)
 - [PlanetBiomeTypeLabelAnim](Frontend_Components_Labels_PlanetLabels.md#planetbiometypelabelanim)
@@ -96,6 +98,42 @@
 
 ---
 
+### GrowthText
+
+▸ **GrowthText**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                        | Type                        |
+| :-------------------------- | :-------------------------- |
+| `__namedParameters`         | `Object`                    |
+| `__namedParameters.planet`  | `undefined` \| `Planet`     |
+| `__namedParameters.style?`  | `CSSProperties`             |
+| `__namedParameters.getStat` | (`p`: `Planet`) => `number` |
+
+#### Returns
+
+`Element`
+
+---
+
+### JunkText
+
+▸ `Const` **JunkText**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                       | Type                    |
+| :------------------------- | :---------------------- |
+| `__namedParameters`        | `Object`                |
+| `__namedParameters.planet` | `undefined` \| `Planet` |
+
+#### Returns
+
+`Element`
+
+---
+
 ### LevelRankText
 
 ▸ `Const` **LevelRankText**(`__namedParameters`): `Element`
@@ -158,7 +196,7 @@
 | Name                       | Type                    |
 | :------------------------- | :---------------------- |
 | `__namedParameters`        | `Object`                |
-| `__namedParameters.planet` | `Planet` \| `undefined` |
+| `__namedParameters.planet` | `undefined` \| `Planet` |
 
 #### Returns
 
@@ -213,7 +251,7 @@ Either 'yours' in green text,
 | `__namedParameters`                       | `Object`                |
 | `__namedParameters.abbreviateOwnAddress?` | `boolean`               |
 | `__namedParameters.colorWithOwnerColor?`  | `boolean`               |
-| `__namedParameters.planet`                | `Planet` \| `undefined` |
+| `__namedParameters.planet`                | `undefined` \| `Planet` |
 
 #### Returns
 
@@ -264,7 +302,7 @@ Either 'yours' in green text,
 | Name                       | Type                    |
 | :------------------------- | :---------------------- |
 | `__namedParameters`        | `Object`                |
-| `__namedParameters.planet` | `Planet` \| `undefined` |
+| `__namedParameters.planet` | `undefined` \| `Planet` |
 
 #### Returns
 
@@ -298,6 +336,7 @@ Either 'yours' in green text,
 | Name                       | Type                    |
 | :------------------------- | :---------------------- |
 | `__namedParameters`        | `Object`                |
+| `__namedParameters.buff?`  | `number`                |
 | `__namedParameters.planet` | `undefined` \| `Planet` |
 
 #### Returns
@@ -366,6 +405,7 @@ Either 'yours' in green text,
 | Name                       | Type                    |
 | :------------------------- | :---------------------- |
 | `__namedParameters`        | `Object`                |
+| `__namedParameters.buff?`  | `number`                |
 | `__namedParameters.planet` | `undefined` \| `Planet` |
 
 #### Returns
@@ -380,12 +420,13 @@ Either 'yours' in green text,
 
 #### Parameters
 
-| Name                        | Type                    |
-| :-------------------------- | :---------------------- |
-| `__namedParameters`         | `Object`                |
-| `__namedParameters.planet`  | `Planet` \| `undefined` |
-| `__namedParameters.style?`  | `React.CSSProperties`   |
-| `__namedParameters.getStat` |                         |
+| Name                        | Type                        |
+| :-------------------------- | :-------------------------- |
+| `__namedParameters`         | `Object`                    |
+| `__namedParameters.buff?`   | `number`                    |
+| `__namedParameters.planet`  | `undefined` \| `Planet`     |
+| `__namedParameters.style?`  | `CSSProperties`             |
+| `__namedParameters.getStat` | (`p`: `Planet`) => `number` |
 
 #### Returns
 

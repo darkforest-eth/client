@@ -1,6 +1,5 @@
-import { WorldCoords, WorldLocation } from '@darkforest_eth/types';
+import { Chunk, Rectangle, WorldCoords, WorldLocation } from '@darkforest_eth/types';
 import { BucketId, ChunkId, PersistedChunk } from '../../_types/darkforest/api/ChunkStoreTypes';
-import { Chunk, Rectangle } from '../../_types/global/GlobalTypes';
 
 /**
  * Deterministically assigns a bucket ID to a rectangle, based on its position and size in the

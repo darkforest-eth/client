@@ -5,6 +5,7 @@
 ### Functions
 
 - [TimeUntil](Frontend_Components_TimeUntil.md#timeuntil)
+- [formatDuration](Frontend_Components_TimeUntil.md#formatduration)
 
 ## Functions
 
@@ -26,3 +27,19 @@ If the timestamp is in the past, displays the given hardcoded value.
 #### Returns
 
 `Element`
+
+---
+
+### formatDuration
+
+▸ **formatDuration**(`msDuration`): `string`
+
+#### Parameters
+
+| Name         | Type     |
+| :----------- | :------- |
+| `msDuration` | `number` |
+
+#### Returns
+
+`string`

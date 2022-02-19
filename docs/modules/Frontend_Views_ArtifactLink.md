@@ -14,12 +14,13 @@
 
 #### Parameters
 
-| Name                         | Type                                                                   |
-| :--------------------------- | :--------------------------------------------------------------------- |
-| `__namedParameters`          | `Object`                                                               |
-| `__namedParameters.artifact` | `Artifact`                                                             |
-| `__namedParameters.children` | `React.ReactNode` \| `React.ReactNode`[]                               |
-| `__namedParameters.modal`    | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
+| Name                           | Type                                                                   |
+| :----------------------------- | :--------------------------------------------------------------------- |
+| `__namedParameters`            | `Object`                                                               |
+| `__namedParameters.artifact`   | `Artifact`                                                             |
+| `__namedParameters.children`   | `ReactNode` \| `ReactNode`[]                                           |
+| `__namedParameters.depositOn?` | `LocationId`                                                           |
+| `__namedParameters.modal?`     | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
 
 #### Returns
 

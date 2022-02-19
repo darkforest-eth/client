@@ -59,7 +59,7 @@
 | :------------------------- | :------------------------------------------------------------------------------------ |
 | `__namedParameters`        | `Object`                                                                              |
 | `__namedParameters.notifs` | [`PlanetNotifType`](../enums/Frontend_Views_PlanetNotifications.PlanetNotifType.md)[] |
-| `__namedParameters.planet` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\>    |
+| `__namedParameters.planet` | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\>    |
 
 #### Returns
 
@@ -69,15 +69,14 @@
 
 ### getNotifsForPlanet
 
-▸ **getNotifsForPlanet**(`planet`, `account`, `currentBlockNumber`): [`PlanetNotifType`](../enums/Frontend_Views_PlanetNotifications.PlanetNotifType.md)[]
+▸ **getNotifsForPlanet**(`planet`, `account`): [`PlanetNotifType`](../enums/Frontend_Views_PlanetNotifications.PlanetNotifType.md)[]
 
 #### Parameters
 
-| Name                 | Type                        |
-| :------------------- | :-------------------------- |
-| `planet`             | `Planet` \| `undefined`     |
-| `account`            | `EthAddress` \| `undefined` |
-| `currentBlockNumber` | `number` \| `undefined`     |
+| Name      | Type                        |
+| :-------- | :-------------------------- |
+| `planet`  | `undefined` \| `Planet`     |
+| `account` | `undefined` \| `EthAddress` |
 
 #### Returns
 

@@ -1,9 +1,10 @@
+import { ModalName } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
-import { BtnProps } from '../Components/Btn';
-import { ShortcutButton, Spacer } from '../Components/CoreUI';
+import { Hook } from '../../_types/global/GlobalTypes';
+import { Spacer } from '../Components/CoreUI';
 import { Icon, IconType } from '../Components/Icons';
-import { ModalHook, ModalName } from './ModalPane';
+import { MaybeShortcutButton } from '../Components/MaybeShortcutButton';
 
 const ModalIconText = styled.span`
   flex-grow: 1;
@@ -11,6 +12,7 @@ const ModalIconText = styled.span`
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  height: 26px;
 `;
 
 const icon = (modal: ModalName): React.ReactNode => {
@@ -28,36 +30,32 @@ const icon = (modal: ModalName): React.ReactNode => {
   else if (modal === ModalName.Plugins) return <Icon type={IconType.Plugin} />;
   else if (modal === ModalName.YourArtifacts) return <Icon type={IconType.Artifact} />;
   else if (modal === ModalName.WithdrawSilver) return <Icon type={IconType.Withdraw} />;
+  else if (modal === ModalName.TransactionLog) return <Icon type={IconType.DoubleArrows} />;
   return <span>T</span>;
 };
 
 /**
  * A button which allows you to open a modal.
  */
-export function ModalToggleButton(
-  props: {
-    modal: ModalName;
-    hook: ModalHook;
-    text?: string;
-    style?: React.CSSProperties;
-    shortcutKey?: string;
-  } & BtnProps
-) {
-  const {
-    modal,
-    hook: [_active, setActive],
-    text,
-  } = props;
+export function ModalToggleButton({
+  modal,
+  hook: [_active, setActive],
+  text,
+  style,
+  ...props
+}: {
+  modal: ModalName;
+  hook: Hook<boolean>;
+  text?: string;
+  style?: React.CSSProperties;
+} & React.ComponentProps<typeof MaybeShortcutButton>) {
+  const toggle = () => {
+    setActive((b: boolean) => !b);
+  };
 
   return (
-    <ShortcutButton
-      {...props}
-      onClick={(e) => {
-        setActive((b: boolean) => !b);
-        e.stopPropagation();
-      }}
-    >
-      <ModalIconText>
+    <MaybeShortcutButton {...props} onClick={toggle} onShortcutPressed={toggle}>
+      <ModalIconText style={style}>
         {icon(modal)}
         {text !== undefined && (
           <>
@@ -66,336 +64,6 @@ export function ModalToggleButton(
           </>
         )}
       </ModalIconText>
-    </ShortcutButton>
-  );
-}
-
-export function ModalArtifactIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.YourArtifacts}
-      style={style}
-      shortcutKey={shortcutKey}
-      text={text}
-    />
-  );
-}
-
-export function ModalHelpIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.Help}
-      text={text}
-      style={style}
-      shortcutKey={shortcutKey}
-    />
-  );
-}
-
-export function ModalPlanetDetailsIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.PlanetDetails}
-      text={text}
-      style={style}
-      shortcutKey={shortcutKey}
-    />
-  );
-}
-
-export function ModalLeaderboardIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.Leaderboard}
-      text={text}
-      style={style}
-      shortcutKey={shortcutKey}
-    />
-  );
-}
-
-export function ModalPlanetDexIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.PlanetDex}
-      text={text}
-      style={style}
-      shortcutKey={shortcutKey}
-    />
-  );
-}
-
-export function ModalUpgradeDetailsIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.UpgradeDetails}
-      text={text}
-      style={style}
-      shortcutKey={shortcutKey}
-    />
-  );
-}
-
-export function ModalMapShareIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.MapShare}
-      text={text}
-      style={style}
-      shortcutKey={shortcutKey}
-    />
-  );
-}
-
-export function ModalTwitterVerifyIcon(
-  props: {
-    hook: ModalHook;
-    text?: string;
-    style?: React.CSSProperties;
-    shortcutKey?: string;
-  } & BtnProps
-) {
-  const { hook, text, style, shortcutKey } = props;
-
-  return (
-    <ModalToggleButton
-      {...props}
-      hook={hook}
-      modal={ModalName.TwitterVerify}
-      text={text}
-      style={style}
-      shortcutKey={shortcutKey}
-    />
-  );
-}
-
-export function ModalYourArtifactsIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.YourArtifacts}
-      text={text}
-      style={style}
-      shortcutKey={shortcutKey}
-    />
-  );
-}
-
-export function BroadcastPlanetIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.Broadcast}
-      text={text}
-      style={style}
-      shortcutKey={shortcutKey}
-    />
-  );
-}
-
-export function ModalAccountIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.ManageAccount}
-      style={style}
-      shortcutKey={shortcutKey}
-      text={text}
-    />
-  );
-}
-
-export function ModalSettingsIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.Settings}
-      text={text}
-      style={style}
-      shortcutKey={shortcutKey}
-    />
-  );
-}
-
-export function ModalPluginIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.Plugins}
-      text={text}
-      style={style}
-      shortcutKey={shortcutKey}
-    />
-  );
-}
-
-export function ModalArtifactsConversationIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.ArtifactConversation}
-      text={text}
-      style={style}
-      shortcutKey={shortcutKey}
-    />
-  );
-}
-
-export function ModalWithdrawIcon({
-  hook,
-  text,
-  style,
-  shortcutKey,
-}: {
-  hook: ModalHook;
-  text?: string;
-  style?: React.CSSProperties;
-  shortcutKey?: string;
-}) {
-  return (
-    <ModalToggleButton
-      hook={hook}
-      modal={ModalName.WithdrawSilver}
-      style={style}
-      shortcutKey={shortcutKey}
-      text={text}
-    />
+    </MaybeShortcutButton>
   );
 }

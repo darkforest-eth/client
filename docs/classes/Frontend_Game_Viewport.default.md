@@ -172,7 +172,7 @@
 
 ### mouseLastCoords
 
-• **mouseLastCoords**: `undefined` \| [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)
+• **mouseLastCoords**: `undefined` \| `CanvasCoords`
 
 ---
 
@@ -184,7 +184,7 @@
 
 ### mousedownCoords
 
-• **mousedownCoords**: `undefined` \| [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)
+• **mousedownCoords**: `undefined` \| `CanvasCoords` = `undefined`
 
 ---
 
@@ -196,7 +196,7 @@
 
 ### velocity
 
-• **velocity**: `undefined` \| `WorldCoords`
+• **velocity**: `undefined` \| `WorldCoords` = `undefined`
 
 ---
 
@@ -250,9 +250,9 @@
 
 #### Parameters
 
-| Name           | Type                                                                      |
-| :------------- | :------------------------------------------------------------------------ |
-| `canvasCoords` | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md) |
+| Name           | Type           |
+| :------------- | :------------- |
+| `canvasCoords` | `CanvasCoords` |
 
 #### Returns
 
@@ -314,9 +314,9 @@
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type    |
+| :------ | :------ |
+| `chunk` | `Chunk` |
 
 #### Returns
 
@@ -457,9 +457,9 @@
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type    |
+| :------ | :------ |
+| `chunk` | `Chunk` |
 
 #### Returns
 
@@ -521,9 +521,9 @@
 
 #### Parameters
 
-| Name           | Type                                                                      |
-| :------------- | :------------------------------------------------------------------------ |
-| `canvasCoords` | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md) |
+| Name           | Type           |
+| :------------- | :------------- |
+| `canvasCoords` | `CanvasCoords` |
 
 #### Returns
 
@@ -537,9 +537,9 @@
 
 #### Parameters
 
-| Name           | Type                                                                      |
-| :------------- | :------------------------------------------------------------------------ |
-| `canvasCoords` | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md) |
+| Name           | Type           |
+| :------------- | :------------- |
+| `canvasCoords` | `CanvasCoords` |
 
 #### Returns
 
@@ -563,9 +563,9 @@
 
 #### Parameters
 
-| Name           | Type                                                                      |
-| :------------- | :------------------------------------------------------------------------ |
-| `canvasCoords` | [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md) |
+| Name           | Type           |
+| :------------- | :------------- |
+| `canvasCoords` | `CanvasCoords` |
 
 #### Returns
 
@@ -732,7 +732,7 @@
 
 ### worldToCanvasCoords
 
-▸ **worldToCanvasCoords**(`worldCoords`): [`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)
+▸ **worldToCanvasCoords**(`worldCoords`): `CanvasCoords`
 
 #### Parameters
 
@@ -742,7 +742,7 @@
 
 #### Returns
 
-[`CanvasCoords`](../interfaces/Backend_Utils_Coordinates.CanvasCoords.md)
+`CanvasCoords`
 
 ---
 

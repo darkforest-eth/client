@@ -1,6 +1,6 @@
+import { TooltipName } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
-import { TooltipName } from '../../Game/WindowManager';
 import { TooltipTrigger } from '../../Panes/Tooltip';
 import dfstyles from '../../Styles/dfstyles';
 

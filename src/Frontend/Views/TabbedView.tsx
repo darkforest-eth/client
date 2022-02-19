@@ -11,14 +11,16 @@ import dfstyles from '../Styles/dfstyles';
 export function TabbedView({
   tabTitles,
   tabContents,
+  style,
 }: {
   tabTitles: string[];
   tabContents: (tabIndex: number) => React.ReactNode;
+  style?: React.CSSProperties;
 }) {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
   return (
-    <div>
+    <div style={style}>
       <TabButtonContainer>
         {tabTitles.map((title, i) => (
           <TabButton
@@ -43,6 +45,7 @@ const TabButton = styled.div<{ active: boolean }>`
     color: ${dfstyles.colors.subtext};
     text-decoration: underline;
     border-radius: 3px;
+    border: 1px solid ${dfstyles.colors.borderDarkest};
     padding: 4px 8px;
     margin-right: 4px;
     margin-left: 4px;

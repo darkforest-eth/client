@@ -1,53 +1,24 @@
-import { CORE_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { monomitter, Monomitter } from '@darkforest_eth/events';
-import { AutoGasSetting, EthAddress } from '@darkforest_eth/types';
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import { AutoGasSetting, EthAddress, Setting } from '@darkforest_eth/types';
+import React, { useCallback, useState } from 'react';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { SelectFrom } from '../Components/CoreUI';
-import { Input } from '../Components/Input';
+import {
+  Checkbox,
+  ColorInput,
+  DarkForestCheckbox,
+  DarkForestColorInput,
+  DarkForestNumberInput,
+  DarkForestTextInput,
+  NumberInput,
+  TextInput,
+} from '../Components/Input';
 import { useEmitterSubscribe } from './EmitterHooks';
 
 /**
  * Whenever a setting changes, we publish the setting's name to this event emitter.
  */
 export const settingChanged$: Monomitter<Setting> = monomitter();
-
-/**
- * Each setting has a unique identifier. Each account gets to store its own local storage setting,
- * per instance of the dark forest contract that it's connected to.
- */
-
-export const enum Setting {
-  OptOutMetrics = 'OptOutMetrics',
-  AutoApproveNonPurchaseTransactions = 'AutoApproveNonPurchaseTransactions',
-  DrawChunkBorders = 'DrawChunkBorders',
-  HighPerformanceRendering = 'HighPerformanceRendering',
-  MoveNotifications = 'MoveNotifications',
-  GasFeeGwei = 'GasFeeGwei',
-  TerminalVisible = 'TerminalVisible',
-  HasAcceptedPluginRisk = 'HasAcceptedPluginRisk',
-
-  FoundPirates = 'FoundPirates',
-  TutorialCompleted = 'TutorialCompleted',
-  FoundSilver = 'FoundSilver',
-  FoundSilverBank = 'FoundSilverBank',
-  FoundTradingPost = 'FoundTradingPost',
-  FoundComet = 'FoundComet',
-  FoundArtifact = 'FoundArtifact',
-  FoundDeepSpace = 'FoundDeepSpace',
-  FoundSpace = 'FoundSpace',
-  NewPlayer = 'NewPlayer',
-  MiningCores = 'MiningCores',
-  TutorialOpen = 'TutorialOpen',
-  IsMining = 'IsMining',
-  DisableDefaultShortcuts = 'DisableDefaultShortcuts',
-  ExperimentalFeatures = 'ExperimentalFeatures',
-  DisableEmojiRendering = 'DisableEmojiRendering',
-  DisableHatRendering = 'DisableHatRendering',
-  AutoClearConfirmedTransactionsAfterSeconds = 'AutoClearConfirmedTransactionsAfterSeconds',
-  AutoClearRejectedTransactionsAfterSeconds = 'AutoClearRejectedTransactionsAfterSeconds',
-}
 
 export const ALL_AUTO_GAS_SETTINGS = [
   AutoGasSetting.Slow,
@@ -64,56 +35,67 @@ function onlyInDevelopment(): string {
 }
 
 const defaultSettings: Record<Setting, string> = {
-  OptOutMetrics: onlyInDevelopment(),
-  AutoApproveNonPurchaseTransactions: onlyInDevelopment(),
-  DrawChunkBorders: 'false',
-  HighPerformanceRendering: 'false',
-  MoveNotifications: 'true',
-  HasAcceptedPluginRisk: onlyInDevelopment(),
-  GasFeeGwei: AutoGasSetting.Average,
-  TerminalVisible: 'true',
-  TutorialOpen: onlyInProduction(),
+  [Setting.OptOutMetrics]: onlyInDevelopment(),
+  [Setting.AutoApproveNonPurchaseTransactions]: onlyInDevelopment(),
+  [Setting.DrawChunkBorders]: 'false',
+  [Setting.HighPerformanceRendering]: 'false',
+  [Setting.MoveNotifications]: 'true',
+  [Setting.HasAcceptedPluginRisk]: onlyInDevelopment(),
+  [Setting.GasFeeGwei]: AutoGasSetting.Average,
+  [Setting.TerminalVisible]: 'true',
+  [Setting.TutorialOpen]: onlyInProduction(),
 
-  FoundPirates: 'false',
-  TutorialCompleted: 'false',
-  FoundSilver: 'false',
-  FoundSilverBank: 'false',
-  FoundTradingPost: 'false',
-  FoundComet: 'false',
-  FoundArtifact: 'false',
-  FoundDeepSpace: 'false',
-  FoundSpace: 'false',
+  [Setting.FoundPirates]: 'false',
+  [Setting.TutorialCompleted]: 'false',
+  [Setting.FoundSilver]: 'false',
+  [Setting.FoundSilverBank]: 'false',
+  [Setting.FoundTradingPost]: 'false',
+  [Setting.FoundComet]: 'false',
+  [Setting.FoundArtifact]: 'false',
+  [Setting.FoundDeepSpace]: 'false',
+  [Setting.FoundSpace]: 'false',
   // prevent the tutorial and help pane popping up in development mode.
-  NewPlayer: onlyInProduction(),
-  MiningCores: '1',
-  IsMining: 'true',
-  DisableDefaultShortcuts: 'false',
-  ExperimentalFeatures: 'false',
-  DisableEmojiRendering: 'false',
-  DisableHatRendering: 'false',
-  AutoClearConfirmedTransactionsAfterSeconds: '-1',
-  AutoClearRejectedTransactionsAfterSeconds: '-1',
+  [Setting.NewPlayer]: onlyInProduction(),
+  [Setting.MiningCores]: '1',
+  [Setting.IsMining]: 'true',
+  [Setting.DisableDefaultShortcuts]: 'false',
+  [Setting.ExperimentalFeatures]: 'false',
+  [Setting.DisableEmojiRendering]: 'false',
+  [Setting.DisableHatRendering]: 'false',
+  [Setting.AutoClearConfirmedTransactionsAfterSeconds]: '-1',
+  [Setting.AutoClearRejectedTransactionsAfterSeconds]: '-1',
+  [Setting.DisableFancySpaceEffect]: 'false',
+  [Setting.RendererColorInnerNebula]: '#186469',
+  [Setting.RendererColorNebula]: '#0B2B5B',
+  [Setting.RendererColorSpace]: '#0B0F34',
+  [Setting.RendererColorDeepSpace]: '#0B061F',
+  [Setting.RendererColorDeadSpace]: '#11291b',
 };
+
+interface SettingStorageConfig {
+  contractAddress: EthAddress;
+  account: EthAddress | undefined;
+}
 
 /**
  * Each setting is stored in local storage. Each account has their own setting.
  */
 export function getLocalStorageSettingKey(
-  account: EthAddress | undefined,
+  { contractAddress, account }: SettingStorageConfig,
   setting: Setting
 ): string {
   if (account === undefined) {
-    return CORE_CONTRACT_ADDRESS + ':anonymous:' + setting;
+    return contractAddress + ':anonymous:' + setting;
   }
 
-  return CORE_CONTRACT_ADDRESS + ':' + account + ':' + setting;
+  return contractAddress + ':' + account + ':' + setting;
 }
 
 /**
  * Read the local storage setting from local storage.
  */
-export function getSetting(account: EthAddress | undefined, setting: Setting): string {
-  const key = getLocalStorageSettingKey(account, setting);
+export function getSetting(config: SettingStorageConfig, setting: Setting): string {
+  const key = getLocalStorageSettingKey(config, setting);
 
   let valueInStorage = localStorage.getItem(key);
 
@@ -127,8 +109,13 @@ export function getSetting(account: EthAddress | undefined, setting: Setting): s
 /**
  * Save the given setting to local storage. Publish an event to {@link settingChanged$}.
  */
-export function setSetting(account: EthAddress | undefined, setting: Setting, value: string): void {
-  const keyInLocalStorage = account && getLocalStorageSettingKey(account, setting);
+export function setSetting(
+  { contractAddress, account }: SettingStorageConfig,
+  setting: Setting,
+  value: string
+): void {
+  const keyInLocalStorage =
+    account && getLocalStorageSettingKey({ contractAddress, account }, setting);
   if (keyInLocalStorage === undefined || account === undefined) {
     return;
   }
@@ -140,27 +127,23 @@ export function setSetting(account: EthAddress | undefined, setting: Setting, va
 /**
  * Loads from local storage, and interprets as a boolean the setting with the given name.
  */
-export function getBooleanSetting(account: EthAddress | undefined, setting: Setting): boolean {
-  const value = getSetting(account, setting);
+export function getBooleanSetting(config: SettingStorageConfig, setting: Setting): boolean {
+  const value = getSetting(config, setting);
   return value === 'true';
 }
 
 /**
  * Save the given setting to local storage. Publish an event to {@link settingChanged$}.
  */
-export function setBooleanSetting(
-  account: EthAddress | undefined,
-  setting: Setting,
-  value: boolean
-) {
-  setSetting(account, setting, value + '');
+export function setBooleanSetting(config: SettingStorageConfig, setting: Setting, value: boolean) {
+  setSetting(config, setting, value + '');
 }
 
 /**
  * Loads from local storage, and interprets as a boolean the setting with the given name.
  */
-export function getNumberSetting(account: EthAddress | undefined, setting: Setting): number {
-  const value = getSetting(account, setting);
+export function getNumberSetting(config: SettingStorageConfig, setting: Setting): number {
+  const value = getSetting(config, setting);
   const parsedValue = parseFloat(value);
 
   if (isNaN(parsedValue)) {
@@ -173,32 +156,88 @@ export function getNumberSetting(account: EthAddress | undefined, setting: Setti
 /**
  * Save the given setting to local storage. Publish an event to {@link settingChanged$}.
  */
-export function setNumberSetting(account: EthAddress | undefined, setting: Setting, value: number) {
-  setSetting(account, setting, value + '');
+export function setNumberSetting(config: SettingStorageConfig, setting: Setting, value: number) {
+  setSetting(config, setting, value + '');
 }
 
 /**
  * Allows a react component to subscribe to changes and set the given setting.
  */
 export function useSetting(
-  uiManager: GameUIManager | undefined,
+  uiManager: GameUIManager,
   setting: Setting
 ): [string, (newValue: string | undefined) => void] {
-  const account = uiManager?.getAccount();
-  const [settingValue, setSettingValue] = useState(() => getSetting(account, setting));
+  const contractAddress = uiManager.getContractAddress();
+  const account = uiManager.getAccount();
+  const config = { contractAddress, account };
+  const [settingValue, setSettingValue] = useState(() => getSetting(config, setting));
 
-  useEmitterSubscribe(settingChanged$, (changedSetting: Setting) => {
-    if (changedSetting === setting) {
-      setSettingValue(getSetting(account, changedSetting));
-    }
-  });
+  useEmitterSubscribe(
+    settingChanged$,
+    (changedSetting: Setting) => {
+      if (changedSetting === setting) {
+        setSettingValue(getSetting(config, changedSetting));
+      }
+    },
+    [setting, setSettingValue, getSetting]
+  );
 
   return [
     settingValue,
     (newValue: string) => {
-      setSetting(account, setting, newValue);
+      setSetting(config, setting, newValue);
     },
   ];
+}
+
+export function StringSetting({
+  uiManager,
+  setting,
+  settingDescription,
+}: {
+  uiManager: GameUIManager;
+  setting: Setting;
+  settingDescription?: string;
+}) {
+  const [settingValue, setSettingValue] = useSetting(uiManager, setting);
+  const onChange = useCallback(
+    (e: Event & React.ChangeEvent<DarkForestTextInput>) => {
+      setSettingValue(e.target.value);
+    },
+    [setSettingValue]
+  );
+  return (
+    <>
+      {settingDescription}
+      <br />
+      <TextInput value={settingValue} onChange={onChange} />
+    </>
+  );
+}
+
+export function ColorSetting({
+  uiManager,
+  setting,
+  settingDescription,
+}: {
+  uiManager: GameUIManager;
+  setting: Setting;
+  settingDescription?: string;
+}) {
+  const [settingValue, setSettingValue] = useSetting(uiManager, setting);
+  const onChange = useCallback(
+    (e: Event & React.ChangeEvent<DarkForestColorInput>) => {
+      setSettingValue(e.target.value);
+    },
+    [setSettingValue]
+  );
+  return (
+    <>
+      {settingDescription}
+      <br />
+      <ColorInput value={settingValue} onChange={onChange} />
+    </>
+  );
 }
 
 /**
@@ -206,7 +245,7 @@ export function useSetting(
  * allow you to set the value of this setting to anything but a valid number.
  */
 export function useNumberSetting(
-  uiManager: GameUIManager | undefined,
+  uiManager: GameUIManager,
   setting: Setting
 ): [number, (newValue: number) => void] {
   const [stringSetting, setStringSetting] = useSetting(uiManager, setting);
@@ -229,7 +268,7 @@ export function useNumberSetting(
  * a boolean.
  */
 export function useBooleanSetting(
-  uiManager: GameUIManager | undefined,
+  uiManager: GameUIManager,
   setting: Setting
 ): [boolean, (newValue: boolean) => void] {
   const [stringSetting, setStringSetting] = useSetting(uiManager, setting);
@@ -261,18 +300,13 @@ export function BooleanSetting({
   const [settingValue, setSettingValue] = useBooleanSetting(uiManager, setting);
 
   return (
-    <>
-      <input
-        type='checkbox'
-        checked={settingValue}
-        onChange={(e) => setSettingValue(e.target.checked)}
-      />
-      {settingDescription !== undefined && (
-        <BooleanLabel onClick={() => setSettingValue(!settingValue)}>
-          {' ' + settingDescription}
-        </BooleanLabel>
-      )}
-    </>
+    <Checkbox
+      label={settingDescription}
+      checked={settingValue}
+      onChange={(e: Event & React.ChangeEvent<DarkForestCheckbox>) =>
+        setSettingValue(e.target.checked)
+      }
+    />
   );
 }
 
@@ -286,13 +320,12 @@ export function NumberSetting({
   const [settingValue, setSettingValue] = useNumberSetting(uiManager, setting);
 
   return (
-    <Input
-      wide
-      value={settingValue + ''}
-      onChange={(e) => {
-        const parsedInput = parseFloat(e.target.value);
-        if (!isNaN(parsedInput)) {
-          setSettingValue(parsedInput);
+    <NumberInput
+      format='float'
+      value={settingValue}
+      onChange={(e: Event & React.ChangeEvent<DarkForestNumberInput>) => {
+        if (e.target.value) {
+          setSettingValue(e.target.value);
         }
       }}
     />
@@ -333,29 +366,20 @@ export function MultiSelectSetting({
 }
 
 /**
- * Clicking on the label also toggles a boolean setting. This is sometimes more convenient than
- * clicking on the tiny checkbox.
- */
-const BooleanLabel = styled.span`
-  cursor: pointer;
-  user-select: none;
-`;
-
-/**
- * Some settings can be set from another window. In particular, the 'auto accept transaction'
- * setting is set from multiple windows. As a result, the local storage setting can get out of sync
- * with the in memory setting. To fix this, we can poll the given setting from local storage, and
- * notify the rest of the game that it changed if it changed.
+ * Some settings can be set from another browser window. In particular, the 'auto accept
+ * transaction' setting is set from multiple browser windows. As a result, the local storage setting
+ * can get out of sync with the in memory setting. To fix this, we can poll the given setting from
+ * local storage, and notify the rest of the game that it changed if it changed.
  */
 export function pollSetting(
-  account: EthAddress | undefined,
+  config: SettingStorageConfig,
   setting: Setting
 ): ReturnType<typeof setInterval> {
   const SETTING_POLL_INTERVAL = 1000;
-  const value = getSetting(account, setting);
+  const value = getSetting(config, setting);
 
   return setInterval(() => {
-    const newValue = getSetting(account, setting);
+    const newValue = getSetting(config, setting);
 
     if (value !== newValue) {
       settingChanged$.publish(setting);

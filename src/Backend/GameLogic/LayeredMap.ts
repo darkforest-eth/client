@@ -1,8 +1,7 @@
 import { MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
-import { LocationId, WorldCoords, WorldLocation } from '@darkforest_eth/types';
+import { LocationId, Radii, WorldCoords, WorldLocation } from '@darkforest_eth/types';
 import { Box, Circle, Point, QuadTree } from 'js-quadtree';
 import { QuadTreeConfig } from 'js-quadtree/dist/types';
-import { Radii } from './ViewportEntities';
 
 /**
  * For every point in each of the planet quadtrees, we store a pointer to the planet.

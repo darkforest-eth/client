@@ -15,4 +15,4 @@
 
 ### Terminal
 
-• `Const` **Terminal**: `ForwardRefExoticComponent`<[`TerminalProps`](../interfaces/Frontend_Views_Terminal.TerminalProps.md) & `RefAttributes`<`undefined` \| [`TerminalHandle`](../interfaces/Frontend_Views_Terminal.TerminalHandle.md)\>\>
+• **Terminal**: `ForwardRefExoticComponent`<[`TerminalProps`](../interfaces/Frontend_Views_Terminal.TerminalProps.md) & `RefAttributes`<`undefined` \| [`TerminalHandle`](../interfaces/Frontend_Views_Terminal.TerminalHandle.md)\>\>

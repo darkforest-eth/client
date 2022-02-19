@@ -6,6 +6,7 @@ import { getEthConnection } from '../../Backend/Network/Blockchain';
 import ReaderDataStore from '../../Backend/Storage/ReaderDataStore';
 import LandingPageCanvas from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
+import { useUIManager } from '../Utils/AppHooks';
 import { TerminalHandle } from './Terminal';
 
 const ShareWrapper = styled.div`
@@ -75,6 +76,8 @@ export function Share<T>(props: ShareProps<T>) {
   const [state, setState] = useState<T>();
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState<boolean>(false);
+  const uiManager = useUIManager();
+  const contractAddress = uiManager.getContractAddress();
 
   const selectAccount = (idx: number) => () => {
     setCurrentAccount(knownAccounts[idx]);
@@ -99,21 +102,25 @@ export function Share<T>(props: ShareProps<T>) {
       setStore(undefined);
       setLoading(true);
 
-      ReaderDataStore.create({ current: undefined }, ethConnection, currentAccount?.address).then(
-        async (store) => {
-          setStore(store);
+      const config = {
+        connection: ethConnection,
+        viewer: currentAccount?.address,
+        contractAddress,
+      };
 
-          try {
-            setState(await props.load(store));
-          } catch (e) {
-            setError(e);
-          }
+      ReaderDataStore.create(config).then(async (store) => {
+        setStore(store);
 
-          setLoading(false);
+        try {
+          setState(await props.load(store));
+        } catch (e) {
+          setError(e);
         }
-      );
+
+        setLoading(false);
+      });
     }
-  }, [store, currentAccount, loading, ethConnection, props]);
+  }, [store, currentAccount, loading, ethConnection, props, contractAddress]);
 
   return (
     <ShareWrapper>

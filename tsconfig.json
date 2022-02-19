@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "esnext",
-    "target": "es2019",
+    "target": "es2020",
     "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
@@ -10,18 +10,20 @@
     "jsx": "react", // use typescript to transpile jsx to js
     "allowJs": true, // allow a partial TypeScript and JavaScript codebase
     "moduleResolution": "Node",
-    "lib": ["es2019", "dom"],
+    "lib": ["es2020", "dom"],
     "skipLibCheck": true
   },
   "include": ["src/**/*", "embedded_plugins/*", "plugins/*"],
   "exclude": ["./node_modules", "./dist", "./declarations"],
   "typedocOptions": {
+    "entryPointStrategy": "expand",
     "entryPoints": ["src"],
     "out": "docs",
     "hideBreadcrumbs": true,
     "readme": "none",
     "disableSources": true,
-    "disableOutputCheck": true,
+    "cleanOutputDir": false,
+    "githubPages": false,
     "excludeExternals": true,
     "listInvalidSymbolLinks": true
   }

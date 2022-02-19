@@ -30,12 +30,14 @@ export function SortableTable<T>({
   columns,
   sortFunctions,
   alignments,
+  paginated,
 }: {
   rows: T[];
   headers: React.ReactNode[];
   columns: Array<(t: T, i: number) => React.ReactNode>;
   sortFunctions: Array<(left: T, right: T) => number>;
   alignments?: Array<'r' | 'c' | 'l'>;
+  paginated?: boolean;
 }) {
   const [sortByColumn, setSortByColumn] = useState<number | undefined>(undefined);
   const [reverse, setReverse] = useState(false);
@@ -75,6 +77,7 @@ export function SortableTable<T>({
 
   return (
     <Table
+      paginated={paginated}
       headerStyle={{
         backgroundColor: dfstyles.colors.background,
         position: 'sticky',

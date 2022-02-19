@@ -1,9 +1,8 @@
-import { PlanetType } from '@darkforest_eth/types';
+import { PlanetType, TooltipName } from '@darkforest_eth/types';
 import React from 'react';
 import { getPlanetRank, isFullRank } from '../../Backend/Utils/Utils';
 import { ScoreLabel, SilverLabel } from '../Components/Labels/KeywordLabels';
 import { Green, Red, Text, White } from '../Components/Text';
-import { TooltipName } from '../Game/WindowManager';
 import { useAccount, useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 
 export function NetworkHealthPane() {
@@ -364,6 +363,16 @@ export function BonusDefenseTooltipPane() {
   );
 }
 
+export function BonusSpaceJunkTooltipPane() {
+  return (
+    <>
+      <Green>
+        This planet's <White>Space Junk</White> has been randomly halved!
+      </Green>
+    </>
+  );
+}
+
 export function ClowntownTooltipPane() {
   const uiManager = useUIManager();
   const selected = useSelectedPlanet(uiManager);
@@ -389,6 +398,34 @@ function DefenseTooltipPane() {
   );
 }
 
+function SpaceJunkTooltipPane() {
+  return (
+    <>
+      <White>Space Junk:</White> Planets are all filled with junk! Sending energy to a planet with
+      junk will remove the junk from that planet and add it to your total junk. Once you reach your
+      junk limit, you will not be able to capture planets that have junk. Abandoning planets will
+      reduce your space junk and place it back on the planet.
+    </>
+  );
+}
+
+function AbandonTooltipPane() {
+  const uiManager = useUIManager();
+  const abandonSpeedBoost = uiManager.getAbandonSpeedChangePercent() / 100;
+  const abandonRangeBoost = uiManager.getAbandonRangeChangePercent() / 100;
+
+  return (
+    <>
+      <Red>Abandon your planet:</Red> Give up ownership of this planet to dump some of your space
+      junk here. This triggers a special movement that sends full <White>Energy/Silver</White> and
+      gives a <Green>Range boost of {abandonRangeBoost}x</Green> and a{' '}
+      <Green>Speed boost of {abandonSpeedBoost}x</Green>.
+      <br />
+      <Red>You cannot abandon your home planet, or a planet that has incoming voyages.</Red>
+    </>
+  );
+}
+
 function SpeedTooltipPane() {
   return (
     <>
@@ -396,6 +433,18 @@ function SpeedTooltipPane() {
       better!
     </>
   );
+}
+
+function RetryTransactionPane() {
+  return <>Retry transaction.</>;
+}
+
+function CancelTransactionPane() {
+  return <>Cancel transaction.</>;
+}
+
+function PrioritizeTransactionPane() {
+  return <>Prioritize transaction.</>;
 }
 
 function ArtifactBuffPane() {
@@ -412,6 +461,14 @@ function SettingsPane() {
 
 function YourArtifacts() {
   return <>View your artifacts.</>;
+}
+
+function InvadablePane() {
+  return <>This planet is in a scoring zone and can be invaded</>;
+}
+
+function CapturablePane() {
+  return <>This planet has been invaded, which means you can capture it for score.</>;
 }
 
 const ModalWithdrawSilverTooltipPane = () => <>Withdraw silver to earn score.</>;
@@ -456,6 +513,7 @@ export function TooltipContent({ name }: { name: TooltipName | undefined }) {
   if (name === TooltipName.BonusRange) return <BonusRangeTooltipPane />;
   if (name === TooltipName.BonusSpeed) return <BonusSpeedTooltipPane />;
   if (name === TooltipName.BonusDefense) return <BonusDefenseTooltipPane />;
+  if (name === TooltipName.BonusSpaceJunk) return <BonusSpaceJunkTooltipPane />;
   if (name === TooltipName.Clowntown) return <ClowntownTooltipPane />;
   if (name === TooltipName.ModalHelp) return <ModalHelpTooltipPane />;
   if (name === TooltipName.ModalPlanetDetails) return <ModalPlanetDetailsTooltipPane />;
@@ -465,6 +523,8 @@ export function TooltipContent({ name }: { name: TooltipName | undefined }) {
   if (name === TooltipName.ModalTwitterVerification) return <ModalTwitterVerificationTooltipPane />;
   if (name === TooltipName.ModalTwitterBroadcast) return <ModalBroadcastTooltipPane />;
   if (name === TooltipName.Defense) return <DefenseTooltipPane />;
+  if (name === TooltipName.SpaceJunk) return <SpaceJunkTooltipPane />;
+  if (name === TooltipName.Abandon) return <AbandonTooltipPane />;
   if (name === TooltipName.Speed) return <SpeedTooltipPane />;
   if (name === TooltipName.ArtifactBuff) return <ArtifactBuffPane />;
   if (name === TooltipName.ModalPlugins) return <PluginsTooltipPane />;
@@ -487,6 +547,10 @@ export function TooltipContent({ name }: { name: TooltipName | undefined }) {
   if (name === TooltipName.SpeedMultiplier) return <SpeedMultiplierPane />;
   if (name === TooltipName.NetworkHealth) return <NetworkHealthPane />;
   if (name === TooltipName.WithdrawSilverButton) return <WithdrawSilverButton />;
-
+  if (name === TooltipName.RetryTransaction) return <RetryTransactionPane />;
+  if (name === TooltipName.CancelTransaction) return <CancelTransactionPane />;
+  if (name === TooltipName.PrioritizeTransaction) return <PrioritizeTransactionPane />;
+  if (name === TooltipName.Invadable) return <InvadablePane />;
+  if (name === TooltipName.Capturable) return <CapturablePane />;
   return <></>;
 }

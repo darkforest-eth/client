@@ -1,3 +1,4 @@
+import { ModalId } from '@darkforest_eth/types';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { ModalPane } from '../Views/ModalPane';
@@ -11,15 +12,20 @@ export function RemoteModal({
   title,
   container,
   children,
-  hook,
-}: {
+  visible,
+  onClose,
+  id,
+  width,
+}: React.PropsWithChildren<{
   title: string;
+  id: ModalId;
   container: Element;
-  children: React.ReactElement;
-  hook: [boolean, (set: boolean) => void];
-}) {
+  visible: boolean;
+  onClose: () => void;
+  width?: string;
+}>) {
   return ReactDOM.createPortal(
-    <ModalPane title={title} hook={hook}>
+    <ModalPane id={id} title={title} visible={visible} onClose={onClose} width={width}>
       {children}
     </ModalPane>,
     container

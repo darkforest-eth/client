@@ -1,7 +1,7 @@
-import { EthAddress } from '@darkforest_eth/types';
+import { Setting } from '@darkforest_eth/types';
 import { EventEmitter } from 'events';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
-import { setBooleanSetting, Setting } from '../../Frontend/Utils/SettingsHooks';
+import { setBooleanSetting } from '../../Frontend/Utils/SettingsHooks';
 import GameUIManager from './GameUIManager';
 
 export const enum TutorialManagerEvent {
@@ -13,6 +13,8 @@ export const enum TutorialState {
 
   HomePlanet,
   SendFleet,
+  SpaceJunk,
+  Spaceship,
   Deselect,
   ZoomOut,
   MinerMove,
@@ -30,13 +32,16 @@ class TutorialManager extends EventEmitter {
   static instance: TutorialManager;
   private tutorialState: TutorialState = TutorialState.None;
 
-  private constructor() {
+  private uiManager: GameUIManager;
+
+  private constructor(uiManager: GameUIManager) {
     super();
+    this.uiManager = uiManager;
   }
 
-  static getInstance() {
+  static getInstance(uiManager: GameUIManager) {
     if (!TutorialManager.instance) {
-      TutorialManager.instance = new TutorialManager();
+      TutorialManager.instance = new TutorialManager(uiManager);
     }
 
     return TutorialManager.instance;
@@ -53,17 +58,32 @@ class TutorialManager extends EventEmitter {
   }
 
   private advance() {
-    this.setTutorialState(Math.min(this.tutorialState + 1, TutorialState.Completed));
+    let newState = Math.min(this.tutorialState + 1, TutorialState.Completed);
+    if (this.shouldSkipState(newState)) newState++;
+
+    this.setTutorialState(newState);
   }
 
-  reset(account: EthAddress | undefined) {
-    setBooleanSetting(account, Setting.TutorialOpen, true);
+  private shouldSkipState(state: TutorialState) {
+    return !this.uiManager.getSpaceJunkEnabled() && state === TutorialState.SpaceJunk;
+  }
+
+  reset() {
+    const config = {
+      contractAddress: this.uiManager.getContractAddress(),
+      account: this.uiManager.getAccount(),
+    };
+    setBooleanSetting(config, Setting.TutorialOpen, true);
     this.setTutorialState(TutorialState.None);
   }
 
-  complete(gameUiManager: GameUIManager) {
+  complete() {
     this.setTutorialState(TutorialState.Completed);
-    setBooleanSetting(gameUiManager.getAccount(), Setting.TutorialCompleted, true);
+    const config = {
+      contractAddress: this.uiManager.getContractAddress(),
+      account: this.uiManager.getAccount(),
+    };
+    setBooleanSetting(config, Setting.TutorialCompleted, true);
   }
 
   acceptInput(state: TutorialState) {

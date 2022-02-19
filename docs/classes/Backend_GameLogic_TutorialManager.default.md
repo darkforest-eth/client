@@ -17,6 +17,7 @@
 ### Properties
 
 - [tutorialState](Backend_GameLogic_TutorialManager.default.md#tutorialstate)
+- [uiManager](Backend_GameLogic_TutorialManager.default.md#uimanager)
 - [instance](Backend_GameLogic_TutorialManager.default.md#instance)
 
 ### Methods
@@ -26,13 +27,20 @@
 - [complete](Backend_GameLogic_TutorialManager.default.md#complete)
 - [reset](Backend_GameLogic_TutorialManager.default.md#reset)
 - [setTutorialState](Backend_GameLogic_TutorialManager.default.md#settutorialstate)
+- [shouldSkipState](Backend_GameLogic_TutorialManager.default.md#shouldskipstate)
 - [getInstance](Backend_GameLogic_TutorialManager.default.md#getinstance)
 
 ## Constructors
 
 ### constructor
 
-• `Private` **new default**()
+• `Private` **new default**(`uiManager`)
+
+#### Parameters
+
+| Name        | Type                                                    |
+| :---------- | :------------------------------------------------------ |
+| `uiManager` | [`default`](Backend_GameLogic_GameUIManager.default.md) |
 
 #### Overrides
 
@@ -42,7 +50,13 @@ EventEmitter.constructor
 
 ### tutorialState
 
-• `Private` **tutorialState**: [`TutorialState`](../enums/Backend_GameLogic_TutorialManager.TutorialState.md)
+• `Private` **tutorialState**: [`TutorialState`](../enums/Backend_GameLogic_TutorialManager.TutorialState.md) = `TutorialState.None`
+
+---
+
+### uiManager
+
+• `Private` **uiManager**: [`default`](Backend_GameLogic_GameUIManager.default.md)
 
 ---
 
@@ -80,13 +94,7 @@ EventEmitter.constructor
 
 ### complete
 
-▸ **complete**(`gameUiManager`): `void`
-
-#### Parameters
-
-| Name            | Type                                                    |
-| :-------------- | :------------------------------------------------------ |
-| `gameUiManager` | [`default`](Backend_GameLogic_GameUIManager.default.md) |
+▸ **complete**(): `void`
 
 #### Returns
 
@@ -96,13 +104,7 @@ EventEmitter.constructor
 
 ### reset
 
-▸ **reset**(`account`): `void`
-
-#### Parameters
-
-| Name      | Type                        |
-| :-------- | :-------------------------- |
-| `account` | `undefined` \| `EthAddress` |
+▸ **reset**(): `void`
 
 #### Returns
 
@@ -126,9 +128,31 @@ EventEmitter.constructor
 
 ---
 
+### shouldSkipState
+
+▸ `Private` **shouldSkipState**(`state`): `boolean`
+
+#### Parameters
+
+| Name    | Type                                                                           |
+| :------ | :----------------------------------------------------------------------------- |
+| `state` | [`TutorialState`](../enums/Backend_GameLogic_TutorialManager.TutorialState.md) |
+
+#### Returns
+
+`boolean`
+
+---
+
 ### getInstance
 
-▸ `Static` **getInstance**(): [`default`](Backend_GameLogic_TutorialManager.default.md)
+▸ `Static` **getInstance**(`uiManager`): [`default`](Backend_GameLogic_TutorialManager.default.md)
+
+#### Parameters
+
+| Name        | Type                                                    |
+| :---------- | :------------------------------------------------------ |
+| `uiManager` | [`default`](Backend_GameLogic_GameUIManager.default.md) |
 
 #### Returns
 

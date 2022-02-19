@@ -14,10 +14,11 @@
 
 #### Parameters
 
-| Name                     | Type                                                 |
-| :----------------------- | :--------------------------------------------------- |
-| `__namedParameters`      | `Object`                                             |
-| `__namedParameters.hook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                        | Type         |
+| :-------------------------- | :----------- |
+| `__namedParameters`         | `Object`     |
+| `__namedParameters.visible` | `boolean`    |
+| `__namedParameters.onClose` | () => `void` |
 
 #### Returns
 

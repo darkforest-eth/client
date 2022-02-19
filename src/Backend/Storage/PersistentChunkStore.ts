@@ -1,11 +1,15 @@
-import { CORE_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import {
+  Chunk,
   ClaimedCoords,
   DiagnosticUpdater,
   EthAddress,
   LocationId,
+  ModalId,
+  ModalPosition,
+  PersistedTransaction,
+  Rectangle,
   RevealedCoords,
-  SubmittedTx,
+  Transaction,
   WorldLocation,
 } from '@darkforest_eth/types';
 import { IDBPDatabase, openDB } from 'idb';
@@ -13,7 +17,6 @@ import stringify from 'json-stable-stringify';
 import _ from 'lodash';
 import { MAX_CHUNK_SIZE } from '../../Frontend/Utils/constants';
 import { ChunkId, ChunkStore, PersistedChunk } from '../../_types/darkforest/api/ChunkStoreTypes';
-import { Chunk, Rectangle } from '../../_types/global/GlobalTypes';
 import {
   addToChunkMap,
   getChunkKey,
@@ -28,6 +31,10 @@ const enum ObjectStore {
   BOARD = 'knownBoard',
   UNCONFIRMED_ETH_TXS = 'unminedEthTxs',
   PLUGINS = 'plugins',
+  /**
+   * Store modal positions so that we can keep modal panes open across sessions.
+   */
+  MODAL_POS = 'modalPositions',
 }
 
 const enum DBActionType {
@@ -48,6 +55,14 @@ interface DebouncedFunc<T extends () => void> {
   cancel(): void;
 }
 
+interface PersistentChunkStoreConfig {
+  db: IDBPDatabase;
+  contractAddress: EthAddress;
+  account: EthAddress;
+}
+
+export const MODAL_POSITIONS_KEY = 'modal_positions';
+
 class PersistentChunkStore implements ChunkStore {
   private diagnosticUpdater?: DiagnosticUpdater;
   private db: IDBPDatabase;
@@ -57,8 +72,9 @@ class PersistentChunkStore implements ChunkStore {
   private chunkMap: Map<ChunkId, Chunk>;
   private confirmedTxHashes: Set<string>;
   private account: EthAddress;
+  private contractAddress: EthAddress;
 
-  constructor(db: IDBPDatabase, account: EthAddress) {
+  constructor({ db, account, contractAddress }: PersistentChunkStoreConfig) {
     this.db = db;
     this.queuedChunkWrites = [];
     this.confirmedTxHashes = new Set<string>();
@@ -68,23 +84,34 @@ class PersistentChunkStore implements ChunkStore {
     );
     this.chunkMap = new Map();
     this.account = account;
+    this.contractAddress = contractAddress;
   }
 
   destroy(): void {
     // no-op; we don't actually destroy the instance, we leave the db connection open in case we need it in the future
   }
 
-  static async create(account: EthAddress): Promise<PersistentChunkStore> {
-    const db = await openDB(`darkforest-${CORE_CONTRACT_ADDRESS}-${account}`, 1, {
+  /**
+   * NOTE! if you're creating a new object store, it will not be *added* to existing dark forest
+   * accounts. This creation code runs once per account. Therefore, if you're adding a new object
+   * store, and need to test it out, you must either clear the indexed db databse for this account,
+   * or create a brand new account.
+   */
+  static async create({
+    account,
+    contractAddress,
+  }: Omit<PersistentChunkStoreConfig, 'db'>): Promise<PersistentChunkStore> {
+    const db = await openDB(`darkforest-${contractAddress}-${account}`, 1, {
       upgrade(db) {
         db.createObjectStore(ObjectStore.DEFAULT);
         db.createObjectStore(ObjectStore.BOARD);
         db.createObjectStore(ObjectStore.UNCONFIRMED_ETH_TXS);
         db.createObjectStore(ObjectStore.PLUGINS);
+        db.createObjectStore(ObjectStore.MODAL_POS);
       },
     });
 
-    const localStorageManager = new PersistentChunkStore(db, account);
+    const localStorageManager = new PersistentChunkStore({ db, account, contractAddress });
 
     await localStorageManager.loadChunks();
 
@@ -105,7 +132,7 @@ class PersistentChunkStore implements ChunkStore {
     key: string,
     objStore: ObjectStore = ObjectStore.DEFAULT
   ): Promise<string | undefined> {
-    return await this.db.get(objStore, `${CORE_CONTRACT_ADDRESS}-${this.account}-${key}`);
+    return await this.db.get(objStore, `${this.contractAddress}-${this.account}-${key}`);
   }
 
   /**
@@ -119,11 +146,11 @@ class PersistentChunkStore implements ChunkStore {
     value: string,
     objStore: ObjectStore = ObjectStore.DEFAULT
   ): Promise<void> {
-    await this.db.put(objStore, value, `${CORE_CONTRACT_ADDRESS}-${this.account}-${key}`);
+    await this.db.put(objStore, value, `${this.contractAddress}-${this.account}-${key}`);
   }
 
   private async removeKey(key: string, objStore: ObjectStore = ObjectStore.DEFAULT): Promise<void> {
-    await this.db.delete(objStore, `${CORE_CONTRACT_ADDRESS}-${this.account}-${key}`);
+    await this.db.delete(objStore, `${this.contractAddress}-${this.account}-${key}`);
   }
 
   private async bulkSetKeyInCollection(
@@ -425,21 +452,29 @@ class PersistentChunkStore implements ChunkStore {
     return this.chunkMap.values();
   }
 
-  public async onEthTxSubmit(tx: SubmittedTx): Promise<void> {
-    if (this.confirmedTxHashes.has(tx.txHash)) {
-      // in case the tx was mined and saved already
-      return Promise.resolve();
-    }
-    await this.db.put(ObjectStore.UNCONFIRMED_ETH_TXS, tx, tx.txHash);
+  /**
+   * Whenever a transaction is submitted, it is persisted. When the transaction either fails or
+   * succeeds, it is un-persisted. The reason we persist submitted transactions is to be able to
+   * wait for them upon a fresh start of the game if you close the game before a transaction
+   * confirms.
+   */
+  public async onEthTxSubmit(tx: Transaction): Promise<void> {
+    // in case the tx was mined and saved already
+    if (!tx.hash || this.confirmedTxHashes.has(tx.hash)) return;
+    const ser: PersistedTransaction = { hash: tx.hash, intent: tx.intent };
+    await this.db.put(ObjectStore.UNCONFIRMED_ETH_TXS, JSON.parse(JSON.stringify(ser)), tx.hash);
   }
 
+  /**
+   * Partner function to {@link PersistentChunkStore#onEthTxSubmit}
+   */
   public async onEthTxComplete(txHash: string): Promise<void> {
     this.confirmedTxHashes.add(txHash);
     await this.db.delete(ObjectStore.UNCONFIRMED_ETH_TXS, txHash);
   }
 
-  public async getUnconfirmedSubmittedEthTxs(): Promise<SubmittedTx[]> {
-    const ret: SubmittedTx[] = await this.db.getAll(ObjectStore.UNCONFIRMED_ETH_TXS);
+  public async getUnconfirmedSubmittedEthTxs(): Promise<PersistedTransaction[]> {
+    const ret: PersistedTransaction[] = await this.db.getAll(ObjectStore.UNCONFIRMED_ETH_TXS);
     return ret;
   }
 
@@ -453,8 +488,20 @@ class PersistentChunkStore implements ChunkStore {
     return JSON.parse(savedPlugins) as SerializedPlugin[];
   }
 
-  public async savePlugins(plugins: SerializedPlugin[]) {
-    this.setKey('plugins', JSON.stringify(plugins), ObjectStore.PLUGINS);
+  public async savePlugins(plugins: SerializedPlugin[]): Promise<void> {
+    await this.setKey('plugins', JSON.stringify(plugins), ObjectStore.PLUGINS);
+  }
+
+  public async saveModalPositions(modalPositions: Map<ModalId, ModalPosition>): Promise<void> {
+    if (!this.db.objectStoreNames.contains(ObjectStore.MODAL_POS)) return;
+    const serialized = JSON.stringify(Array.from(modalPositions.entries()));
+    await this.setKey(MODAL_POSITIONS_KEY, serialized, ObjectStore.MODAL_POS);
+  }
+
+  public async loadModalPositions(): Promise<Map<ModalId, ModalPosition>> {
+    if (!this.db.objectStoreNames.contains(ObjectStore.MODAL_POS)) return new Map();
+    const winPos = await this.getKey(MODAL_POSITIONS_KEY, ObjectStore.MODAL_POS);
+    return new Map(winPos ? JSON.parse(winPos) : null);
   }
 }
 

@@ -2,10 +2,6 @@
 
 ## Table of contents
 
-### Enumerations
-
-- [Setting](../enums/Frontend_Utils_SettingsHooks.Setting.md)
-
 ### Variables
 
 - [ALL_AUTO_GAS_SETTINGS](Frontend_Utils_SettingsHooks.md#all_auto_gas_settings)
@@ -14,8 +10,10 @@
 ### Functions
 
 - [BooleanSetting](Frontend_Utils_SettingsHooks.md#booleansetting)
+- [ColorSetting](Frontend_Utils_SettingsHooks.md#colorsetting)
 - [MultiSelectSetting](Frontend_Utils_SettingsHooks.md#multiselectsetting)
 - [NumberSetting](Frontend_Utils_SettingsHooks.md#numbersetting)
+- [StringSetting](Frontend_Utils_SettingsHooks.md#stringsetting)
 - [getBooleanSetting](Frontend_Utils_SettingsHooks.md#getbooleansetting)
 - [getLocalStorageSettingKey](Frontend_Utils_SettingsHooks.md#getlocalstoragesettingkey)
 - [getNumberSetting](Frontend_Utils_SettingsHooks.md#getnumbersetting)
@@ -32,13 +30,13 @@
 
 ### ALL_AUTO_GAS_SETTINGS
 
-• `Const` **ALL_AUTO_GAS_SETTINGS**: `AutoGasSetting`[]
+• **ALL_AUTO_GAS_SETTINGS**: `AutoGasSetting`[]
 
 ---
 
 ### settingChanged$
 
-• `Const` **settingChanged$**: `Monomitter`<[`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)\>
+• **settingChanged$**: `Monomitter`<`Setting`\>
 
 Whenever a setting changes, we publish the setting's name to this event emitter.
 
@@ -58,7 +56,26 @@ setting was changed, and also saves it to local storage.
 | Name                                    | Type                                                               |
 | :-------------------------------------- | :----------------------------------------------------------------- |
 | `__namedParameters`                     | `Object`                                                           |
-| `__namedParameters.setting`             | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)      |
+| `__namedParameters.setting`             | `Setting`                                                          |
+| `__namedParameters.settingDescription?` | `string`                                                           |
+| `__namedParameters.uiManager`           | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+
+#### Returns
+
+`Element`
+
+---
+
+### ColorSetting
+
+▸ **ColorSetting**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                                    | Type                                                               |
+| :-------------------------------------- | :----------------------------------------------------------------- |
+| `__namedParameters`                     | `Object`                                                           |
+| `__namedParameters.setting`             | `Setting`                                                          |
 | `__namedParameters.settingDescription?` | `string`                                                           |
 | `__namedParameters.uiManager`           | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
 
@@ -81,8 +98,8 @@ several options.
 | :---------------------------- | :----------------------------------------------------------------- |
 | `__namedParameters`           | `Object`                                                           |
 | `__namedParameters.labels`    | `string`[]                                                         |
-| `__namedParameters.setting`   | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)      |
-| `__namedParameters.style?`    | `React.CSSProperties`                                              |
+| `__namedParameters.setting`   | `Setting`                                                          |
+| `__namedParameters.style?`    | `CSSProperties`                                                    |
 | `__namedParameters.uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
 | `__namedParameters.values`    | `string`[]                                                         |
 | `__namedParameters.wide?`     | `boolean`                                                          |
@@ -102,8 +119,27 @@ several options.
 | Name                          | Type                                                               |
 | :---------------------------- | :----------------------------------------------------------------- |
 | `__namedParameters`           | `Object`                                                           |
-| `__namedParameters.setting`   | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)      |
+| `__namedParameters.setting`   | `Setting`                                                          |
 | `__namedParameters.uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+
+#### Returns
+
+`Element`
+
+---
+
+### StringSetting
+
+▸ **StringSetting**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                                    | Type                                                               |
+| :-------------------------------------- | :----------------------------------------------------------------- |
+| `__namedParameters`                     | `Object`                                                           |
+| `__namedParameters.setting`             | `Setting`                                                          |
+| `__namedParameters.settingDescription?` | `string`                                                           |
+| `__namedParameters.uiManager`           | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
 
 #### Returns
 
@@ -113,16 +149,16 @@ several options.
 
 ### getBooleanSetting
 
-▸ **getBooleanSetting**(`account`, `setting`): `boolean`
+▸ **getBooleanSetting**(`config`, `setting`): `boolean`
 
 Loads from local storage, and interprets as a boolean the setting with the given name.
 
 #### Parameters
 
-| Name      | Type                                                          |
-| :-------- | :------------------------------------------------------------ |
-| `account` | `EthAddress` \| `undefined`                                   |
-| `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
+| Name      | Type                   |
+| :-------- | :--------------------- |
+| `config`  | `SettingStorageConfig` |
+| `setting` | `Setting`              |
 
 #### Returns
 
@@ -132,16 +168,16 @@ Loads from local storage, and interprets as a boolean the setting with the given
 
 ### getLocalStorageSettingKey
 
-▸ **getLocalStorageSettingKey**(`account`, `setting`): `string`
+▸ **getLocalStorageSettingKey**(`__namedParameters`, `setting`): `string`
 
 Each setting is stored in local storage. Each account has their own setting.
 
 #### Parameters
 
-| Name      | Type                                                          |
-| :-------- | :------------------------------------------------------------ |
-| `account` | `EthAddress` \| `undefined`                                   |
-| `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
+| Name                | Type                   |
+| :------------------ | :--------------------- |
+| `__namedParameters` | `SettingStorageConfig` |
+| `setting`           | `Setting`              |
 
 #### Returns
 
@@ -151,16 +187,16 @@ Each setting is stored in local storage. Each account has their own setting.
 
 ### getNumberSetting
 
-▸ **getNumberSetting**(`account`, `setting`): `number`
+▸ **getNumberSetting**(`config`, `setting`): `number`
 
 Loads from local storage, and interprets as a boolean the setting with the given name.
 
 #### Parameters
 
-| Name      | Type                                                          |
-| :-------- | :------------------------------------------------------------ |
-| `account` | `EthAddress` \| `undefined`                                   |
-| `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
+| Name      | Type                   |
+| :-------- | :--------------------- |
+| `config`  | `SettingStorageConfig` |
+| `setting` | `Setting`              |
 
 #### Returns
 
@@ -170,16 +206,16 @@ Loads from local storage, and interprets as a boolean the setting with the given
 
 ### getSetting
 
-▸ **getSetting**(`account`, `setting`): `string`
+▸ **getSetting**(`config`, `setting`): `string`
 
 Read the local storage setting from local storage.
 
 #### Parameters
 
-| Name      | Type                                                          |
-| :-------- | :------------------------------------------------------------ |
-| `account` | `EthAddress` \| `undefined`                                   |
-| `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
+| Name      | Type                   |
+| :-------- | :--------------------- |
+| `config`  | `SettingStorageConfig` |
+| `setting` | `Setting`              |
 
 #### Returns
 
@@ -189,19 +225,19 @@ Read the local storage setting from local storage.
 
 ### pollSetting
 
-▸ **pollSetting**(`account`, `setting`): `ReturnType`<typeof `setInterval`\>
+▸ **pollSetting**(`config`, `setting`): `ReturnType`<typeof `setInterval`\>
 
-Some settings can be set from another window. In particular, the 'auto accept transaction'
-setting is set from multiple windows. As a result, the local storage setting can get out of sync
-with the in memory setting. To fix this, we can poll the given setting from local storage, and
-notify the rest of the game that it changed if it changed.
+Some settings can be set from another browser window. In particular, the 'auto accept
+transaction' setting is set from multiple browser windows. As a result, the local storage setting
+can get out of sync with the in memory setting. To fix this, we can poll the given setting from
+local storage, and notify the rest of the game that it changed if it changed.
 
 #### Parameters
 
-| Name      | Type                                                          |
-| :-------- | :------------------------------------------------------------ |
-| `account` | `EthAddress` \| `undefined`                                   |
-| `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
+| Name      | Type                   |
+| :-------- | :--------------------- |
+| `config`  | `SettingStorageConfig` |
+| `setting` | `Setting`              |
 
 #### Returns
 
@@ -211,17 +247,17 @@ notify the rest of the game that it changed if it changed.
 
 ### setBooleanSetting
 
-▸ **setBooleanSetting**(`account`, `setting`, `value`): `void`
+▸ **setBooleanSetting**(`config`, `setting`, `value`): `void`
 
 Save the given setting to local storage. Publish an event to [settingChanged$](Frontend_Utils_SettingsHooks.md#settingchanged$).
 
 #### Parameters
 
-| Name      | Type                                                          |
-| :-------- | :------------------------------------------------------------ |
-| `account` | `EthAddress` \| `undefined`                                   |
-| `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
-| `value`   | `boolean`                                                     |
+| Name      | Type                   |
+| :-------- | :--------------------- |
+| `config`  | `SettingStorageConfig` |
+| `setting` | `Setting`              |
+| `value`   | `boolean`              |
 
 #### Returns
 
@@ -231,17 +267,17 @@ Save the given setting to local storage. Publish an event to [settingChanged$](F
 
 ### setNumberSetting
 
-▸ **setNumberSetting**(`account`, `setting`, `value`): `void`
+▸ **setNumberSetting**(`config`, `setting`, `value`): `void`
 
 Save the given setting to local storage. Publish an event to [settingChanged$](Frontend_Utils_SettingsHooks.md#settingchanged$).
 
 #### Parameters
 
-| Name      | Type                                                          |
-| :-------- | :------------------------------------------------------------ |
-| `account` | `EthAddress` \| `undefined`                                   |
-| `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
-| `value`   | `number`                                                      |
+| Name      | Type                   |
+| :-------- | :--------------------- |
+| `config`  | `SettingStorageConfig` |
+| `setting` | `Setting`              |
+| `value`   | `number`               |
 
 #### Returns
 
@@ -251,17 +287,17 @@ Save the given setting to local storage. Publish an event to [settingChanged$](F
 
 ### setSetting
 
-▸ **setSetting**(`account`, `setting`, `value`): `void`
+▸ **setSetting**(`__namedParameters`, `setting`, `value`): `void`
 
 Save the given setting to local storage. Publish an event to [settingChanged$](Frontend_Utils_SettingsHooks.md#settingchanged$).
 
 #### Parameters
 
-| Name      | Type                                                          |
-| :-------- | :------------------------------------------------------------ |
-| `account` | `EthAddress` \| `undefined`                                   |
-| `setting` | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md) |
-| `value`   | `string`                                                      |
+| Name                | Type                   |
+| :------------------ | :--------------------- |
+| `__namedParameters` | `SettingStorageConfig` |
+| `setting`           | `Setting`              |
+| `value`             | `string`               |
 
 #### Returns
 
@@ -278,10 +314,10 @@ a boolean.
 
 #### Parameters
 
-| Name        | Type                                                                              |
-| :---------- | :-------------------------------------------------------------------------------- |
-| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) \| `undefined` |
-| `setting`   | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)                     |
+| Name        | Type                                                               |
+| :---------- | :----------------------------------------------------------------- |
+| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+| `setting`   | `Setting`                                                          |
 
 #### Returns
 
@@ -298,10 +334,10 @@ allow you to set the value of this setting to anything but a valid number.
 
 #### Parameters
 
-| Name        | Type                                                                              |
-| :---------- | :-------------------------------------------------------------------------------- |
-| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) \| `undefined` |
-| `setting`   | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)                     |
+| Name        | Type                                                               |
+| :---------- | :----------------------------------------------------------------- |
+| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+| `setting`   | `Setting`                                                          |
 
 #### Returns
 
@@ -317,10 +353,10 @@ Allows a react component to subscribe to changes and set the given setting.
 
 #### Parameters
 
-| Name        | Type                                                                              |
-| :---------- | :-------------------------------------------------------------------------------- |
-| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) \| `undefined` |
-| `setting`   | [`Setting`](../enums/Frontend_Utils_SettingsHooks.Setting.md)                     |
+| Name        | Type                                                               |
+| :---------- | :----------------------------------------------------------------- |
+| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+| `setting`   | `Setting`                                                          |
 
 #### Returns
 

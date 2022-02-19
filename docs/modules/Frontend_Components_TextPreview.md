@@ -14,14 +14,14 @@
 
 #### Parameters
 
-| Name                                | Type                  |
-| :---------------------------------- | :-------------------- |
-| `__namedParameters`                 | `Object`              |
-| `__namedParameters.focusedWidth?`   | `string`              |
-| `__namedParameters.maxLength?`      | `number`              |
-| `__namedParameters.style?`          | `React.CSSProperties` |
-| `__namedParameters.text?`           | `string`              |
-| `__namedParameters.unFocusedWidth?` | `string`              |
+| Name                                | Type            |
+| :---------------------------------- | :-------------- |
+| `__namedParameters`                 | `Object`        |
+| `__namedParameters.focusedWidth?`   | `string`        |
+| `__namedParameters.maxLength?`      | `number`        |
+| `__namedParameters.style?`          | `CSSProperties` |
+| `__namedParameters.text?`           | `string`        |
+| `__namedParameters.unFocusedWidth?` | `string`        |
 
 #### Returns
 

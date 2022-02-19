@@ -14,13 +14,13 @@
 
 ### makeContractsAPI
 
-▸ **makeContractsAPI**(`ethConnection`): `Promise`<[`ContractsAPI`](../classes/Backend_GameLogic_ContractsAPI.ContractsAPI.md)\>
+▸ **makeContractsAPI**(`__namedParameters`): `Promise`<[`ContractsAPI`](../classes/Backend_GameLogic_ContractsAPI.ContractsAPI.md)\>
 
 #### Parameters
 
-| Name            | Type            |
-| :-------------- | :-------------- |
-| `ethConnection` | `EthConnection` |
+| Name                | Type                 |
+| :------------------ | :------------------- |
+| `__namedParameters` | `ContractsApiConfig` |
 
 #### Returns
 

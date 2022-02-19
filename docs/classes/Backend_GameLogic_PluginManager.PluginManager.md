@@ -88,11 +88,10 @@ parallel to pluginProcesses
 
 • `Private` **pluginProcesses**: `Record`<`string`, [`PluginProcess`](../interfaces/Backend_Plugins_PluginProcess.PluginProcess.md)\>
 
-Plugins that are currently loaded into the game, and are rendering into a
-window. `PluginsManager` makes sure that when a plugin starts executing, it
-is added into `pluginInstances`, and that once a plugin is unloaded, its
-`.destroy()` method is called, and that the plugin is removed from
-`pluginInstances`.
+Plugins that are currently loaded into the game, and are rendering into a modal.
+`PluginsManager` makes sure that when a plugin starts executing, it is added into
+`pluginInstances`, and that once a plugin is unloaded, its `.destroy()` method is called, and
+that the plugin is removed from `pluginInstances`.
 
 ---
 
@@ -112,11 +111,11 @@ adds a new plugin into the plugin library.
 
 #### Parameters
 
-| Name   | Type                                                                  |
-| :----- | :-------------------------------------------------------------------- |
-| `id`   | [`PluginId`](../modules/Backend_Plugins_SerializedPlugin.md#pluginid) |
-| `name` | `string`                                                              |
-| `code` | `string`                                                              |
+| Name   | Type       |
+| :----- | :--------- |
+| `id`   | `PluginId` |
+| `name` | `string`   |
+| `code` | `string`   |
 
 #### Returns
 
@@ -133,9 +132,9 @@ the plugin if it is running.
 
 #### Parameters
 
-| Name       | Type                                                                  |
-| :--------- | :-------------------------------------------------------------------- |
-| `pluginId` | [`PluginId`](../modules/Backend_Plugins_SerializedPlugin.md#pluginid) |
+| Name       | Type       |
+| :--------- | :--------- |
+| `pluginId` | `PluginId` |
 
 #### Returns
 
@@ -152,9 +151,9 @@ and remove it from `pluginInstances`. Stop listening for new local plugins.
 
 #### Parameters
 
-| Name | Type                                                                  |
-| :--- | :-------------------------------------------------------------------- |
-| `id` | [`PluginId`](../modules/Backend_Plugins_SerializedPlugin.md#pluginid) |
+| Name | Type       |
+| :--- | :--------- |
+| `id` | `PluginId` |
 
 #### Returns
 
@@ -183,13 +182,13 @@ function, then draw that plugin to the screen.
 
 ### getAllProcessInfos
 
-▸ **getAllProcessInfos**(): `Map`<[`PluginId`](../modules/Backend_Plugins_SerializedPlugin.md#pluginid), [`ProcessInfo`](Backend_GameLogic_PluginManager.ProcessInfo.md)\>
+▸ **getAllProcessInfos**(): `Map`<`PluginId`, [`ProcessInfo`](Backend_GameLogic_PluginManager.ProcessInfo.md)\>
 
 Gets a map of all the currently running processes
 
 #### Returns
 
-`Map`<[`PluginId`](../modules/Backend_Plugins_SerializedPlugin.md#pluginid), [`ProcessInfo`](Backend_GameLogic_PluginManager.ProcessInfo.md)\>
+`Map`<`PluginId`, [`ProcessInfo`](Backend_GameLogic_PluginManager.ProcessInfo.md)\>
 
 ---
 
@@ -214,9 +213,9 @@ library. `undefined` if no plugin exists.
 
 #### Parameters
 
-| Name  | Type                                                                  |
-| :---- | :-------------------------------------------------------------------- |
-| `id?` | [`PluginId`](../modules/Backend_Plugins_SerializedPlugin.md#pluginid) |
+| Name  | Type       |
+| :---- | :--------- |
+| `id?` | `PluginId` |
 
 #### Returns
 
@@ -232,9 +231,9 @@ If this process has been started, gets its info
 
 #### Parameters
 
-| Name | Type                                                                  |
-| :--- | :-------------------------------------------------------------------- |
-| `id` | [`PluginId`](../modules/Backend_Plugins_SerializedPlugin.md#pluginid) |
+| Name | Type       |
+| :--- | :--------- |
+| `id` | `PluginId` |
 
 #### Returns
 
@@ -260,11 +259,17 @@ If this process has been started, gets its info
 
 ### load
 
-▸ **load**(): `Promise`<`void`\>
+▸ **load**(`isAdmin`): `Promise`<`void`\>
 
 Load all plugins from this disk into `pluginLibrary`. Insert the default
 plugins into the player's library if the default plugins have never been
 added before. Effectively idempotent after the first time you call it.
+
+#### Parameters
+
+| Name      | Type      |
+| :-------- | :-------- |
+| `isAdmin` | `boolean` |
 
 #### Returns
 
@@ -308,11 +313,11 @@ added before. Effectively idempotent after the first time you call it.
 
 #### Parameters
 
-| Name         | Type                                                                  |
-| :----------- | :-------------------------------------------------------------------- |
-| `newName`    | `string`                                                              |
-| `pluginCode` | `string`                                                              |
-| `id`         | [`PluginId`](../modules/Backend_Plugins_SerializedPlugin.md#pluginid) |
+| Name         | Type       |
+| :----------- | :--------- |
+| `newName`    | `string`   |
+| `pluginCode` | `string`   |
+| `id`         | `PluginId` |
 
 #### Returns
 
@@ -329,10 +334,10 @@ call it! Remembers that this plugin has been rendered.
 
 #### Parameters
 
-| Name      | Type                                                                  |
-| :-------- | :-------------------------------------------------------------------- |
-| `id`      | [`PluginId`](../modules/Backend_Plugins_SerializedPlugin.md#pluginid) |
-| `element` | `HTMLDivElement`                                                      |
+| Name      | Type             |
+| :-------- | :--------------- |
+| `id`      | `PluginId`       |
+| `element` | `HTMLDivElement` |
 
 #### Returns
 
@@ -369,9 +374,9 @@ throws an error then returns `undefined`.
 
 #### Parameters
 
-| Name | Type                                                                  |
-| :--- | :-------------------------------------------------------------------- |
-| `id` | [`PluginId`](../modules/Backend_Plugins_SerializedPlugin.md#pluginid) |
+| Name | Type       |
+| :--- | :--------- |
+| `id` | `PluginId` |
 
 #### Returns
 

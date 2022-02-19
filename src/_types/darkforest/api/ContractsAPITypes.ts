@@ -1,4 +1,4 @@
-import { ArtifactPointValues, UpgradeBranches } from '@darkforest_eth/types';
+import { ArtifactPointValues, EthAddress, UpgradeBranches } from '@darkforest_eth/types';
 import { BigNumber as EthersBN } from 'ethers';
 
 export const enum ZKArgIdx {
@@ -46,6 +46,8 @@ export const enum ContractEvent {
   PlanetUpgraded = 'PlanetUpgraded',
   PlanetHatBought = 'PlanetHatBought',
   PlanetTransferred = 'PlanetTransferred',
+  PlanetInvaded = 'PlanetInvaded',
+  PlanetCaptured = 'PlanetCaptured',
   LocationRevealed = 'LocationRevealed',
   ArtifactFound = 'ArtifactFound',
   ArtifactDeposited = 'ArtifactDeposited',
@@ -53,27 +55,56 @@ export const enum ContractEvent {
   ArtifactActivated = 'ArtifactActivated',
   ArtifactDeactivated = 'ArtifactDeactivated',
   PlanetSilverWithdrawn = 'PlanetSilverWithdrawn',
-
-  // DarkForestGPTCredit
-  ChangedGPTCreditPrice = 'ChangedCreditPrice',
-  // DarkForestScoringRound3
-  LocationClaimed = 'LocationClaimed',
+  AdminOwnershipChanged = 'AdminOwnershipChanged',
+  PauseStateChanged = 'PauseStateChanged',
+  LobbyCreated = 'LobbyCreated',
 }
 
 export const enum ContractsAPIEvent {
   PlayerUpdate = 'PlayerUpdate',
   PlanetUpdate = 'PlanetUpdate',
+  PauseStateChanged = 'PauseStateChanged',
   ArrivalQueued = 'ArrivalQueued',
   ArtifactUpdate = 'ArtifactUpdate',
   RadiusUpdated = 'RadiusUpdated',
   LocationRevealed = 'LocationRevealed',
-  ChangedGPTCreditPrice = 'ChangedCreditPrice',
-  TxInitFailed = 'TxInitFailed',
+  /**
+   * The transaction has been queued for future execution.
+   */
+  TxQueued = 'TxQueued',
+  /**
+   * The transaction has been removed from the queue and is
+   * calculating arguments in preparation for submission.
+   */
+  TxProcessing = 'TxProcessing',
+  /**
+   * The transaction is queued, but is prioritized for execution
+   * above other queued transactions.
+   */
+  TxPrioritized = 'TxPrioritized',
+  /**
+   * The transaction has been submitted and we are awaiting
+   * confirmation.
+   */
   TxSubmitted = 'TxSubmitted',
+  /**
+   * The transaction has been confirmed.
+   */
   TxConfirmed = 'TxConfirmed',
-  TxReverted = 'TxReverted',
+  /**
+   * The transaction has failed for some reason. This
+   * could either be a revert or a purely client side
+   * error. In the case of a revert, the transaction hash
+   * will be included in the transaction object.
+   */
+  TxErrored = 'TxErrored',
+  /**
+   * The transaction was cancelled before it left the queue.
+   */
+  TxCancelled = 'TxCancelled',
   PlanetTransferred = 'PlanetTransferred',
   PlanetClaimed = 'PlanetClaimed',
+  LobbyCreated = 'LobbyCreated',
 }
 
 // planet locationID(BigInt), branch number
@@ -100,7 +131,8 @@ export type MoveArgs = [
     string, // perlin ymirror (1 true, 0 false)
     string, // ships sent
     string, // silver sent
-    string // artifactId sent
+    string, // artifactId sent
+    string // is planet being released (1 true, 0 false)
   ]
 ];
 
@@ -136,6 +168,10 @@ export type PlanetTypeWeightsBySpaceType = [
 ];
 
 export interface ContractConstants {
+  ADMIN_CAN_ADD_PLANETS: boolean;
+  WORLD_RADIUS_LOCKED: boolean;
+  WORLD_RADIUS_MIN: number;
+
   DISABLE_ZK_CHECKS: boolean;
 
   PLANETHASH_KEY: number;
@@ -164,8 +200,69 @@ export interface ContractConstants {
   BIOME_THRESHOLD_1: number;
   BIOME_THRESHOLD_2: number;
   PLANET_RARITY: number;
+  /**
+     The chance for a planet to be a specific level.
+     Each index corresponds to a planet level (index 5 is level 5 planet).
+     The lower the number the lower the chance.
+     Note: This does not control if a planet spawns or not, just the level
+     when it spawns.
+   */
+  PLANET_LEVEL_THRESHOLDS: [
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number
+  ];
+  PLANET_TRANSFER_ENABLED: boolean;
   PLANET_TYPE_WEIGHTS: PlanetTypeWeightsBySpaceType;
   ARTIFACT_POINT_VALUES: ArtifactPointValues;
+  /**
+   * How much score silver gives when withdrawing.
+   * Expressed as a percentage integer.
+   * (100 is 100%)
+   */
+  SILVER_SCORE_VALUE: number;
+  // Space Junk
+  SPACE_JUNK_ENABLED: boolean;
+  /**
+     Total amount of space junk a player can take on.
+     This can be overridden at runtime by updating
+     this value for a specific player in storage.
+   */
+  SPACE_JUNK_LIMIT: number;
+  /**
+     The amount of junk that each level of planet
+     gives the player when moving to it for the
+     first time.
+   */
+  PLANET_LEVEL_JUNK: [
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number
+  ];
+  /**
+     The speed boost a movement receives when abandoning
+     a planet.
+   */
+  ABANDON_SPEED_CHANGE_PERCENT: number;
+  /**
+     The range boost a movement receives when abandoning
+     a planet.
+   */
+  ABANDON_RANGE_CHANGE_PERCENT: number;
 
   PHOTOID_ACTIVATION_DELAY: number;
   LOCATION_REVEAL_COOLDOWN: number;
@@ -186,6 +283,29 @@ export interface ContractConstants {
   planetCumulativeRarities: number[];
 
   upgrades: UpgradeBranches;
+
+  adminAddress: EthAddress;
+
+  // Capture Zones
+  GAME_START_BLOCK: number;
+  CAPTURE_ZONES_ENABLED: boolean;
+  CAPTURE_ZONE_COUNT: number;
+  CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL: number;
+  CAPTURE_ZONE_RADIUS: number;
+  CAPTURE_ZONE_PLANET_LEVEL_SCORE: [
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number
+  ];
+  CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED: number;
+  CAPTURE_ZONES_PER_5000_WORLD_RADIUS: number;
 }
 
 export type ClientMockchainData =

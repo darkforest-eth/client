@@ -1,82 +1,33 @@
-import colorFn from 'color';
+import {
+  DarkForestButton,
+  DarkForestShortcutButton,
+  ShortcutPressedEvent,
+} from '@darkforest_eth/ui';
+import { createComponent } from '@lit-labs/react';
 import React from 'react';
-import styled, { css } from 'styled-components';
-import dfstyles from '../Styles/dfstyles';
 
-export type BtnProps = {
-  disabled?: boolean;
-  noBorder?: boolean;
-  wide?: boolean;
-  small?: boolean;
-  color?: string;
-  borderColor?: string;
-  textColor?: string;
-  forceActive?: boolean;
-} & React.HTMLAttributes<HTMLSpanElement>;
+customElements.define(DarkForestButton.tagName, DarkForestButton);
+customElements.define(DarkForestShortcutButton.tagName, DarkForestShortcutButton);
 
-export function Btn(props: BtnProps) {
-  return <BtnElement {...props} onClick={props.disabled ? undefined : props.onClick} />;
-}
+export { DarkForestButton, DarkForestShortcutButton, ShortcutPressedEvent };
 
-const BtnElement = styled.span`
-  ${({
-    disabled,
-    color,
-    borderColor,
-    textColor,
-    noBorder,
-    wide,
-    forceActive,
-    small,
-  }: BtnProps) => css`
-    user-select: none;
-    display: inline-flex;
-    border-radius: 3px;
-    padding: 2px 8px;
-    ${small ? `padding: 0 4px;` : `padding: 2px 8px;`}
-    border: ${noBorder ? 0 : 1}px solid ${borderColor || color || dfstyles.colors.borderDark};
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    background-color: ${dfstyles.colors.backgrounddark};
+// This wraps the customElement in a React wrapper to make it behave exactly like a React component
+export const Btn = createComponent<
+  DarkForestButton,
+  {
+    onClick: (evt: Event & React.MouseEvent<DarkForestButton>) => void;
+  }
+>(React, DarkForestButton.tagName, DarkForestButton, {
+  onClick: 'click',
+});
 
-    ${small && `font-size: 0.8em;`}
-    ${wide && `width: 100%;`}
-    color: ${textColor || color || dfstyles.colors.text};
-
-    &:hover {
-      ${!disabled &&
-      css`
-        ${dfstyles.game.styles.active};
-        border: ${noBorder ? 0 : 1}px solid ${borderColor || color || dfstyles.colors.border};
-        color: ${dfstyles.colors.background};
-        background: ${color || dfstyles.colors.text};
-
-        /* Set the Icon color to a darker value on hover */
-        --df-icon-color: ${dfstyles.colors.background};
-      `}
-    }
-
-    &:active {
-      ${!disabled &&
-      css`
-        background: ${color || colorFn(dfstyles.colors.text).lighten(0.5).hex()};
-      `}
-    }
-
-    ${disabled &&
-    css`
-      color: ${dfstyles.colors.subtext};
-      border-color: ${dfstyles.colors.border};
-      background: none;
-      filter: none;
-    `}
-
-    ${forceActive &&
-    css`
-      border: ${noBorder ? 0 : 1}px solid ${borderColor || color || dfstyles.colors.border};
-      color: ${dfstyles.colors.background};
-      background: ${color || dfstyles.colors.text};
-    `}
-  `}
-`;
+export const ShortcutBtn = createComponent<
+  DarkForestShortcutButton,
+  {
+    onClick: (evt: Event & React.MouseEvent<DarkForestShortcutButton>) => void;
+    onShortcutPressed: (evt: ShortcutPressedEvent) => void;
+  }
+>(React, DarkForestShortcutButton.tagName, DarkForestShortcutButton, {
+  onClick: 'click',
+  onShortcutPressed: 'shortcut-pressed',
+});

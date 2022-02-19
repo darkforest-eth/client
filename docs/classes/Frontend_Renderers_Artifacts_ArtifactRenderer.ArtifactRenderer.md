@@ -4,7 +4,7 @@
 
 ## Hierarchy
 
-- [`WebGLManager`](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md)
+- `WebGLManager`
 
   ↳ **`ArtifactRenderer`**
 
@@ -59,7 +59,7 @@
 
 #### Overrides
 
-[WebGLManager](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md).[constructor](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md#constructor)
+WebGLManager.constructor
 
 ## Properties
 
@@ -75,7 +75,7 @@
 
 #### Inherited from
 
-[WebGLManager](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md).[canvas](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md#canvas)
+WebGLManager.canvas
 
 ---
 
@@ -91,7 +91,7 @@
 
 #### Inherited from
 
-[WebGLManager](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md).[gl](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md#gl)
+WebGLManager.gl
 
 ---
 
@@ -107,7 +107,7 @@
 
 #### Inherited from
 
-[WebGLManager](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md).[projectionMatrix](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md#projectionmatrix)
+WebGLManager.projectionMatrix
 
 ---
 
@@ -119,7 +119,7 @@
 
 ### spriteRenderer
 
-• `Private` **spriteRenderer**: [`SpriteRenderer`](Frontend_Renderers_GameRenderer_Entities_SpriteRenderer.SpriteRenderer.md)
+• `Private` **spriteRenderer**: `SpriteRenderer`
 
 ---
 
@@ -135,10 +135,10 @@
 
 #### Parameters
 
-| Name     | Type                                                                           |
-| :------- | :----------------------------------------------------------------------------- |
-| `bits?`  | `number`                                                                       |
-| `color?` | [`RGBAVec`](../modules/Frontend_Renderers_GameRenderer_EngineTypes.md#rgbavec) |
+| Name     | Type      |
+| :------- | :-------- |
+| `bits?`  | `number`  |
+| `color?` | `RGBAVec` |
 
 #### Returns
 
@@ -146,7 +146,7 @@
 
 #### Inherited from
 
-[WebGLManager](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md).[clear](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md#clear)
+WebGLManager.clear
 
 ---
 
@@ -218,7 +218,7 @@
 
 #### Inherited from
 
-[WebGLManager](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md).[getTexIdx](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md#gettexidx)
+WebGLManager.getTexIdx
 
 ---
 
@@ -309,7 +309,7 @@
 
 #### Inherited from
 
-[WebGLManager](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md).[setProjectionMatrix](Frontend_Renderers_GameRenderer_WebGL_WebGLManager.WebGLManager.md#setprojectionmatrix)
+WebGLManager.setProjectionMatrix
 
 ---
 

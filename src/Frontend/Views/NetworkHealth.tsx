@@ -1,8 +1,7 @@
-import { AutoGasSetting } from '@darkforest_eth/types';
+import { AutoGasSetting, TooltipName } from '@darkforest_eth/types';
 import React from 'react';
 import { Spread } from '../Components/CoreUI';
 import { Sub, Text } from '../Components/Text';
-import { TooltipName } from '../Game/WindowManager';
 import { TooltipTrigger } from '../Panes/Tooltip';
 import { useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';

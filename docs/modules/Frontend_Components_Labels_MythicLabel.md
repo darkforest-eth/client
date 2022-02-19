@@ -14,7 +14,7 @@
 
 ### MythicLabel
 
-• `Const` **MythicLabel**: `MemoExoticComponent`<`fn`\>
+• **MythicLabel**: `MemoExoticComponent`<`fn`\>
 
 ## Functions
 

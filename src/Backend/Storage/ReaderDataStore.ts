@@ -1,3 +1,4 @@
+import { isLocatable } from '@darkforest_eth/gamelogic';
 import { EthConnection } from '@darkforest_eth/network';
 import {
   ArtifactId,
@@ -9,10 +10,8 @@ import {
   SpaceType,
   WorldLocation,
 } from '@darkforest_eth/types';
-import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
 import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
-import { isLocatable } from '../../_types/global/GlobalTypes';
 import { arrive, updatePlanetToTime } from '../GameLogic/ArrivalUtils';
 import { ContractsAPI, makeContractsAPI } from '../GameLogic/ContractsAPI';
 import { getAllTwitters } from '../Network/UtilityServerAPI';
@@ -21,6 +20,15 @@ import PersistentChunkStore from './PersistentChunkStore';
 export const enum SinglePlanetDataStoreEvent {
   REFRESHED_PLANET = 'REFRESHED_PLANET',
   REFRESHED_ARTIFACT = 'REFRESHED_ARTIFACT',
+}
+
+interface ReaderDataStoreConfig {
+  contractAddress: EthAddress;
+  viewer: EthAddress | undefined;
+  addressTwitterMap: AddressTwitterMap;
+  contractConstants: ContractConstants;
+  contractsAPI: ContractsAPI;
+  persistentChunkStore: PersistentChunkStore | undefined;
 }
 
 /**
@@ -35,13 +43,13 @@ class ReaderDataStore {
   private readonly contractsAPI: ContractsAPI;
   private readonly persistentChunkStore: PersistentChunkStore | undefined;
 
-  private constructor(
-    viewer: EthAddress | undefined,
-    addressTwitterMap: AddressTwitterMap,
-    contractConstants: ContractConstants,
-    contractsAPI: ContractsAPI,
-    persistentChunkStore: PersistentChunkStore | undefined
-  ) {
+  private constructor({
+    viewer,
+    addressTwitterMap,
+    contractConstants,
+    contractsAPI,
+    persistentChunkStore,
+  }: ReaderDataStoreConfig) {
     this.viewer = viewer;
     this.addressTwitterMap = addressTwitterMap;
     this.contractConstants = contractConstants;
@@ -54,23 +62,29 @@ class ReaderDataStore {
     this.persistentChunkStore?.destroy();
   }
 
-  public static async create(
-    terminal: React.MutableRefObject<TerminalHandle | undefined>,
-    ethConnection: EthConnection,
-    viewer: EthAddress | undefined
-  ): Promise<ReaderDataStore> {
-    const contractsAPI = await makeContractsAPI(ethConnection);
+  public static async create({
+    connection,
+    viewer,
+    contractAddress,
+  }: {
+    connection: EthConnection;
+    viewer: EthAddress | undefined;
+    contractAddress: EthAddress;
+  }): Promise<ReaderDataStore> {
+    const contractsAPI = await makeContractsAPI({ connection, contractAddress });
     const addressTwitterMap = await getAllTwitters();
     const contractConstants = await contractsAPI.getConstants();
-    const persistentChunkStore = viewer && (await PersistentChunkStore.create(viewer));
+    const persistentChunkStore =
+      viewer && (await PersistentChunkStore.create({ account: viewer, contractAddress }));
 
-    const singlePlanetStore = new ReaderDataStore(
+    const singlePlanetStore = new ReaderDataStore({
+      contractAddress,
       viewer,
       addressTwitterMap,
       contractConstants,
       contractsAPI,
-      persistentChunkStore
-    );
+      persistentChunkStore,
+    });
 
     return singlePlanetStore;
   }
@@ -129,7 +143,7 @@ class ReaderDataStore {
 
     for (const arrival of arrivals) {
       if (nowInSeconds < arrival.arrivalTime) break;
-      arrive(planet, [], arrival, contractConstants);
+      arrive(planet, [], arrival, undefined, contractConstants);
     }
 
     updatePlanetToTime(planet, [], Date.now(), contractConstants);

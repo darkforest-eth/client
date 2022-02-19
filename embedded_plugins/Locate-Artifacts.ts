@@ -56,7 +56,7 @@ class ArtifactsFinder implements DFPlugin {
 
   async render(container: HTMLDivElement) {
     console.log('rendered 1 artifacts finder');
-    const findArtifactsButton = document.createElement('button');
+    const findArtifactsButton = document.createElement('df-button');
     findArtifactsButton.innerText = 'find me some artifacts!';
     container.appendChild(findArtifactsButton);
     container.appendChild(document.createElement('br'));

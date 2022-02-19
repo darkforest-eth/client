@@ -13,19 +13,19 @@
 
 ### ARTIFACT_ROW_H
 
-• `Const` **ARTIFACT_ROW_H**: `48`
+• **ARTIFACT_ROW_H**: `48`
 
 ---
 
 ### SPACE_TYPE_COLORS
 
-• `Const` **SPACE_TYPE_COLORS**: `Object`
+• **SPACE_TYPE_COLORS**: `Object`
 
 ---
 
 ### default
 
-• `Const` **default**: `Object`
+• **default**: `Object`
 
 #### Type declaration
 
@@ -42,10 +42,12 @@
 | `colors.border`                | `string`                     |
 | `colors.borderDark`            | `string`                     |
 | `colors.borderDarker`          | `string`                     |
+| `colors.borderDarkest`         | `string`                     |
 | `colors.dfblue`                | `string`                     |
 | `colors.dfgreen`               | `string`                     |
 | `colors.dfgreendark`           | `string`                     |
 | `colors.dfgreenlight`          | `string`                     |
+| `colors.dforange`              | `string`                     |
 | `colors.dfpurple`              | `string`                     |
 | `colors.dfred`                 | `string`                     |
 | `colors.dfwhite`               | `string`                     |
@@ -73,6 +75,7 @@
 | `game.bonuscolors.energyCap`   | `string`                     |
 | `game.bonuscolors.energyGro`   | `string`                     |
 | `game.bonuscolors.range`       | `string`                     |
+| `game.bonuscolors.spaceJunk`   | `string`                     |
 | `game.bonuscolors.speed`       | `string`                     |
 | `game.canvasbg`                | `string`                     |
 | `game.fontSize`                | `string`                     |
@@ -98,16 +101,17 @@
 
 ### snips
 
-• `Const` **snips**: `Object`
+• **snips**: `Object`
 
 #### Type declaration
 
-| Name                     | Type                         |
-| :----------------------- | :--------------------------- |
-| `absoluteTopLeft`        | `FlattenSimpleInterpolation` |
-| `bigPadding`             | `FlattenSimpleInterpolation` |
-| `defaultBackground`      | `string`                     |
-| `defaultModalWidth`      | `FlattenSimpleInterpolation` |
-| `pane`                   | `string`                     |
-| `roundedBorders`         | `string`                     |
-| `roundedBordersWithEdge` | `FlattenSimpleInterpolation` |
+| Name                     | Type                                    |
+| :----------------------- | :-------------------------------------- |
+| `absoluteTopLeft`        | `FlattenSimpleInterpolation`            |
+| `bigPadding`             | `FlattenSimpleInterpolation`            |
+| `defaultBackground`      | `string`                                |
+| `defaultModalWidth`      | `FlattenSimpleInterpolation`            |
+| `destroyedBackground`    | `CSSStyleDeclaration` & `CSSProperties` |
+| `pane`                   | `string`                                |
+| `roundedBorders`         | `string`                                |
+| `roundedBordersWithEdge` | `FlattenSimpleInterpolation`            |

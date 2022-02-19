@@ -27,7 +27,7 @@ This code is a javascript object that complies with the
 
 ### id
 
-• **id**: [`PluginId`](../modules/Backend_Plugins_SerializedPlugin.md#pluginid)
+• **id**: `PluginId`
 
 Unique ID, assigned at the time the plugin is first saved.
 

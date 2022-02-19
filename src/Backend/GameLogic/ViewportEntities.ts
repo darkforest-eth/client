@@ -1,20 +1,18 @@
 import { MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
-import { LocatablePlanet, LocationId, PlanetLevel, WorldCoords } from '@darkforest_eth/types';
+import { isLocatable } from '@darkforest_eth/gamelogic';
+import {
+  Chunk,
+  LocatablePlanet,
+  LocationId,
+  PlanetLevel,
+  PlanetRenderInfo,
+  Radii,
+  WorldCoords,
+} from '@darkforest_eth/types';
 import Viewport from '../../Frontend/Game/Viewport';
-import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import { planetLevelToAnimationSpeed, sinusoidalAnimation } from '../Utils/Animation';
 import GameManager from './GameManager';
 import GameUIManager from './GameUIManager';
-
-export interface PlanetRenderInfo {
-  planet: LocatablePlanet;
-  radii: Radii;
-}
-
-export interface Radii {
-  radiusWorld: number;
-  radiusPixels: number;
-}
 
 /**
  * Efficiently calculates which planets are in the viewport, and allows you to find the nearest

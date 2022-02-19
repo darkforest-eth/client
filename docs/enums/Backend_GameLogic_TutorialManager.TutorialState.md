@@ -16,6 +16,8 @@
 - [None](Backend_GameLogic_TutorialManager.TutorialState.md#none)
 - [ScoringDetails](Backend_GameLogic_TutorialManager.TutorialState.md#scoringdetails)
 - [SendFleet](Backend_GameLogic_TutorialManager.TutorialState.md#sendfleet)
+- [SpaceJunk](Backend_GameLogic_TutorialManager.TutorialState.md#spacejunk)
+- [Spaceship](Backend_GameLogic_TutorialManager.TutorialState.md#spaceship)
 - [Terminal](Backend_GameLogic_TutorialManager.TutorialState.md#terminal)
 - [Valhalla](Backend_GameLogic_TutorialManager.TutorialState.md#valhalla)
 - [ZoomOut](Backend_GameLogic_TutorialManager.TutorialState.md#zoomout)
@@ -24,19 +26,19 @@
 
 ### AlmostCompleted
 
-• **AlmostCompleted** = `11`
+• **AlmostCompleted** = `13`
 
 ---
 
 ### Completed
 
-• **Completed** = `12`
+• **Completed** = `14`
 
 ---
 
 ### Deselect
 
-• **Deselect** = `3`
+• **Deselect** = `5`
 
 ---
 
@@ -48,19 +50,19 @@
 
 ### HowToGetScore
 
-• **HowToGetScore** = `8`
+• **HowToGetScore** = `10`
 
 ---
 
 ### MinerMove
 
-• **MinerMove** = `5`
+• **MinerMove** = `7`
 
 ---
 
 ### MinerPause
 
-• **MinerPause** = `6`
+• **MinerPause** = `8`
 
 ---
 
@@ -72,7 +74,7 @@
 
 ### ScoringDetails
 
-• **ScoringDetails** = `9`
+• **ScoringDetails** = `11`
 
 ---
 
@@ -82,18 +84,30 @@
 
 ---
 
+### SpaceJunk
+
+• **SpaceJunk** = `3`
+
+---
+
+### Spaceship
+
+• **Spaceship** = `4`
+
+---
+
 ### Terminal
 
-• **Terminal** = `7`
+• **Terminal** = `9`
 
 ---
 
 ### Valhalla
 
-• **Valhalla** = `10`
+• **Valhalla** = `12`
 
 ---
 
 ### ZoomOut
 
-• **ZoomOut** = `4`
+• **ZoomOut** = `6`

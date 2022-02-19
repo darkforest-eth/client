@@ -1,33 +1,36 @@
+import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
+import { dateMintedAt, hasStatBoost, isActivated, isSpaceShip } from '@darkforest_eth/gamelogic';
+import { artifactName, getPlanetName, getPlanetNameHash } from '@darkforest_eth/procedural';
 import {
   Artifact,
   ArtifactId,
   ArtifactRarityNames,
   ArtifactType,
   EthAddress,
+  LocationId,
+  TooltipName,
   Upgrade,
 } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import { isActivated } from '../../Backend/GameLogic/ArtifactUtils';
-import { artifactName, dateMintedAt } from '../../Backend/Procedural/ArtifactProcgen';
-import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { getUpgradeStat } from '../../Backend/Utils/Utils';
 import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
 import { StatIdx } from '../../_types/global/GlobalTypes';
 import { ArtifactImage } from '../Components/ArtifactImage';
-import { Padded, Spacer } from '../Components/CoreUI';
+import { Spacer } from '../Components/CoreUI';
 import { StatIcon } from '../Components/Icons';
 import { ArtifactRarityLabelAnim, ArtifactTypeText } from '../Components/Labels/ArtifactLabels';
 import { ArtifactBiomeLabelAnim } from '../Components/Labels/BiomeLabels';
+import { AccountLabel } from '../Components/Labels/Labels';
 import { ReadMore } from '../Components/ReadMore';
 import { Green, Red, Sub, Text, White } from '../Components/Text';
 import { TextPreview } from '../Components/TextPreview';
 import { TimeUntil } from '../Components/TimeUntil';
-import { TooltipName } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
 import { useArtifact, useUIManager } from '../Utils/AppHooks';
 import { ModalHandle } from '../Views/ModalPane';
+import { ArtifactActions } from './ManagePlanetArtifacts/ArtifactActions';
 import { TooltipTrigger } from './Tooltip';
 
 const StatsContainer = styled.div`
@@ -76,9 +79,17 @@ export function UpgradeStatInfo({
     }
   }
 
+  const statName = [
+    TooltipName.Energy,
+    TooltipName.EnergyGrowth,
+    TooltipName.Range,
+    TooltipName.Speed,
+    TooltipName.Defense,
+  ][stat];
+
   return (
     <div className='statrow'>
-      <TooltipTrigger name={TooltipName.Energy + stat}>
+      <TooltipTrigger name={statName}>
         <StatIcon stat={stat} />
       </TooltipTrigger>
       <span>
@@ -142,10 +153,14 @@ export function ArtifactDetailsHelpContent() {
 export function ArtifactDetailsBody({
   artifactId,
   contractConstants,
+  depositOn,
+  noActions,
 }: {
   artifactId: ArtifactId;
   contractConstants: ContractConstants;
-  modal: ModalHandle;
+  modal?: ModalHandle;
+  depositOn?: LocationId;
+  noActions?: boolean;
 }) {
   const uiManager = useUIManager();
   const artifactWrapper = useArtifact(uiManager, artifactId);
@@ -177,7 +192,7 @@ export function ArtifactDetailsBody({
   const planetArtifactName = (a: Artifact): string | undefined => {
     const onPlanet = uiManager?.getArtifactPlanet(a);
     if (!onPlanet) return undefined;
-    return ProcgenUtils.getPlanetName(onPlanet);
+    return getPlanetName(onPlanet);
   };
 
   const planetClicked = (): void => {
@@ -198,30 +213,51 @@ export function ArtifactDetailsBody({
   }
 
   return (
-    <Padded>
-      <ArtifactName>{artifactName(artifact)}</ArtifactName>
-      <ArtifactNameSubtitle>
-        <ArtifactRarityLabelAnim rarity={artifact.rarity} />{' '}
-        <ArtifactBiomeLabelAnim artifact={artifact} /> <ArtifactTypeText artifact={artifact} />
-      </ArtifactNameSubtitle>
+    <>
+      <div style={{ display: 'inline-block' }}>
+        <ArtifactImage artifact={artifact} size={32} />
+      </div>
+      <Spacer width={8} />
+      <div style={{ display: 'inline-block' }}>
+        {isSpaceShip(artifact.artifactType) ? (
+          <>
+            <ArtifactName>
+              <ArtifactTypeText artifact={artifact} />
+            </ArtifactName>
+            <ArtifactNameSubtitle>{artifactName(artifact)}</ArtifactNameSubtitle>
+          </>
+        ) : (
+          <>
+            <ArtifactName>{artifactName(artifact)}</ArtifactName>
+            <ArtifactNameSubtitle>
+              <ArtifactRarityLabelAnim rarity={artifact.rarity} />{' '}
+              <ArtifactBiomeLabelAnim artifact={artifact} />{' '}
+              <ArtifactTypeText artifact={artifact} />
+            </ArtifactNameSubtitle>
+          </>
+        )}
+      </div>
 
-      <ArtifactDetailsHeader>
-        <ArtifactImage artifact={artifact} size={128} />
-        <Spacer width={8} />
+      {hasStatBoost(artifact.artifactType) && (
+        <ArtifactDetailsHeader>
+          <StatsContainer>
+            {_.range(0, 5).map((val) => (
+              <UpgradeStatInfo
+                upgrades={[artifact.upgrade, artifact.timeDelayedUpgrade]}
+                stat={val}
+                key={val}
+              />
+            ))}
+          </StatsContainer>
+        </ArtifactDetailsHeader>
+      )}
 
-        <StatsContainer>
-          {_.range(0, 5).map((val) => (
-            <UpgradeStatInfo
-              upgrades={[artifact.upgrade, artifact.timeDelayedUpgrade]}
-              stat={val}
-              key={val}
-            />
-          ))}
-        </StatsContainer>
-      </ArtifactDetailsHeader>
+      {isSpaceShip(artifact.artifactType) && (
+        <ArtifactDescription collapsable={false} artifact={artifact} />
+      )}
 
       <StyledArtifactDetailsBody>
-        <ArtifactDescription artifact={artifact} />
+        {!isSpaceShip(artifact.artifactType) && <ArtifactDescription artifact={artifact} />}
         <Spacer height={8} />
 
         <div className='row'>
@@ -235,57 +271,86 @@ export function ArtifactDetailsBody({
           )}
         </div>
 
+        {!isSpaceShip(artifact.artifactType) && (
+          <>
+            <div className='row'>
+              <span>Minted At</span>
+              <span>{dateMintedAt(artifact)}</span>
+            </div>
+            <div className='row'>
+              <span>Discovered On</span>
+              <span>{getPlanetNameHash(artifact.planetDiscoveredOn)}</span>
+            </div>
+            <div className='row'>
+              <span>Discovered By</span>
+              <span>{discoverer()}</span>
+            </div>
+          </>
+        )}
+
+        {artifact.controller === EMPTY_ADDRESS && (
+          <div className='row'>
+            <span>Owner</span>
+            <span>{owner()}</span>
+          </div>
+        )}
         <div className='row'>
-          <span>Minted At</span>
-          <span>{dateMintedAt(artifact)}</span>
-        </div>
-        <div className='row'>
-          <span>Discovered On</span>
-          <span>{ProcgenUtils.getPlanetNameHash(artifact.planetDiscoveredOn)}</span>
-        </div>
-        <div className='row'>
-          <span>Owner</span>
-          <span>{owner()}</span>
-        </div>
-        <div className='row'>
-          <span>Discovered By</span>
-          <span>{discoverer()}</span>
-        </div>
-        <div className='row'>
-          <span>Artifact ID</span>
+          <span>ID</span>
           <TextPreview text={artifact.id} />
         </div>
+
+        {artifact.controller !== EMPTY_ADDRESS && (
+          <div className='row'>
+            <span>Controller</span>
+            <span>
+              <AccountLabel ethAddress={artifact.controller} />
+            </span>
+          </div>
+        )}
         {readyInStr && (
           <div className='row'>
             <span>Ready In</span>
             <span>{readyInStr}</span>
           </div>
         )}
+
+        {!noActions && (
+          <ArtifactActions artifactId={artifactWrapper.value?.id} depositOn={depositOn} />
+        )}
       </StyledArtifactDetailsBody>
-    </Padded>
+    </>
   );
 }
 
 export function ArtifactDetailsPane({
   modal,
   artifactId,
+  depositOn,
 }: {
   modal: ModalHandle;
   artifactId: ArtifactId;
+  depositOn?: LocationId;
 }) {
   const uiManager = useUIManager();
-  const contractConstants = uiManager.getContractConstants();
+  const contractConstants = uiManager.contractConstants;
 
   return (
     <ArtifactDetailsBody
       modal={modal}
       artifactId={artifactId}
       contractConstants={contractConstants}
+      depositOn={depositOn}
     />
   );
 }
 
-function ArtifactDescription({ artifact }: { artifact: Artifact }) {
+function ArtifactDescription({
+  artifact,
+  collapsable,
+}: {
+  artifact: Artifact;
+  collapsable?: boolean;
+}) {
   let content;
 
   const maxLevelsBlackDomain = [0, 2, 4, 6, 8, 9];
@@ -298,6 +363,8 @@ function ArtifactDescription({ artifact }: { artifact: Artifact }) {
   const rarityName = ArtifactRarityNames[artifact.rarity];
   const photoidRanges = [0, 2, 2, 2, 2, 2];
   const photoidSpeeds = [0, 5, 10, 15, 20, 25];
+
+  const genericSpaceshipDescription = <>Can move between planets without sending energy.</>;
 
   switch (artifact.artifactType) {
     case ArtifactType.BlackDomain:
@@ -351,14 +418,57 @@ function ArtifactDescription({ artifact }: { artifact: Artifact }) {
         </Text>
       );
       break;
+    case ArtifactType.ShipMothership:
+      content = (
+        <Text>
+          Doubles energy regeneration of the planet that it is currently on.{' '}
+          {genericSpaceshipDescription}
+        </Text>
+      );
+      break;
+    case ArtifactType.ShipCrescent:
+      content = (
+        <Text>
+          Activate to convert an un-owned planet whose level is more than 0 into an Asteroid Field.{' '}
+          <Red>Can only be used once.</Red> {genericSpaceshipDescription}
+        </Text>
+      );
+      break;
+    case ArtifactType.ShipGear:
+      content = (
+        <Text>
+          Allows you to prospect planets, and subsequently find artifacts on them.{' '}
+          {genericSpaceshipDescription}
+        </Text>
+      );
+      break;
+    case ArtifactType.ShipTitan:
+      content = (
+        <Text>
+          Pauses energy and silver regeneration on the planet it's on. {genericSpaceshipDescription}
+        </Text>
+      );
+      break;
+    case ArtifactType.ShipWhale:
+      content = (
+        <Text>
+          Doubles the silver regeneration of the planet that it is currently on.{' '}
+          {genericSpaceshipDescription}
+        </Text>
+      );
+      break;
   }
 
   if (content) {
     return (
-      <div style={{ maxWidth: '100%' }}>
-        <ReadMore height={'1.2em'} toggleButtonMargin={'0em'}>
-          {content}
-        </ReadMore>
+      <div>
+        {collapsable ? (
+          <ReadMore height={'1.2em'} toggleButtonMargin={'0em'}>
+            {content}
+          </ReadMore>
+        ) : (
+          content
+        )}
       </div>
     );
   }

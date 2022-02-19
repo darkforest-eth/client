@@ -174,7 +174,7 @@ function LeaderboardBody({ leaderboard }: { leaderboard: Leaderboard }) {
         <StatsTable>
           <tbody>
             <tr>
-              <td>round 4 complete</td>
+              <td>round complete</td>
               <td>
                 <CountDown />
               </td>

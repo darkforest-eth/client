@@ -36,6 +36,7 @@
 - [PlanetWon](Frontend_Game_NotificationManager.NotificationType.md#planetwon)
 - [ReceivedPlanet](Frontend_Game_NotificationManager.NotificationType.md#receivedplanet)
 - [Tx](Frontend_Game_NotificationManager.NotificationType.md#tx)
+- [TxInitError](Frontend_Game_NotificationManager.NotificationType.md#txiniterror)
 - [WelcomePlayer](Frontend_Game_NotificationManager.NotificationType.md#welcomeplayer)
 
 ## Enumeration members
@@ -217,6 +218,12 @@
 ### Tx
 
 • **Tx** = `0`
+
+---
+
+### TxInitError
+
+• **TxInitError** = `31`
 
 ---
 

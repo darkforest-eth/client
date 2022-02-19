@@ -7,18 +7,13 @@ import {
   MIN_ARTIFACT_TYPE,
   MIN_BIOME,
 } from '@darkforest_eth/constants';
+import { ArtifactFileColor, artifactFileName, setForceAncient } from '@darkforest_eth/gamelogic';
+import { mockArtifactWithRarity } from '@darkforest_eth/procedural';
+import { SpriteRenderer, WebGLManager } from '@darkforest_eth/renderer';
 import { Artifact, ArtifactRarity, ArtifactType, Biome } from '@darkforest_eth/types';
 import { mat4 } from 'gl-matrix';
 import JSZip from 'jszip';
-import {
-  ArtifactFileColor,
-  artifactFileName,
-  setForceAncient,
-} from '../../Backend/GameLogic/ArtifactUtils';
-import { mockArtifactWithRarity } from '../../Backend/Procedural/ArtifactProcgen';
 import { GIF_ARTIFACT_COLOR } from '../Pages/GifMaker';
-import { SpriteRenderer } from './GameRenderer/Entities/SpriteRenderer';
-import { WebGLManager } from './GameRenderer/WebGL/WebGLManager';
 
 const FileSaver = require('file-saver');
 
@@ -29,10 +24,10 @@ declare global {
   }
 }
 
-const COLORS: Record<ArtifactFileColor, [number, number, number, number]> = [
-  [0.0724, 0.051, 0.3111, 1],
-  [0.031372549, 0.031372549, 0.031372549, 1],
-];
+const COLORS: Record<ArtifactFileColor, readonly [number, number, number, number]> = {
+  [ArtifactFileColor.BLUE]: [0.0724, 0.051, 0.3111, 1] as const,
+  [ArtifactFileColor.APP_BACKGROUND]: [0.031372549, 0.031372549, 0.031372549, 1] as const,
+};
 
 export class GifRenderer extends WebGLManager {
   public projectionMatrix: mat4;
@@ -194,6 +189,6 @@ export class GifRenderer extends WebGLManager {
   }
 
   clear() {
-    super.clear(0, COLORS[GIF_ARTIFACT_COLOR]);
+    super.clear(0, [...COLORS[GIF_ARTIFACT_COLOR]]);
   }
 }

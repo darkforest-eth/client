@@ -14,22 +14,14 @@
 
 #### Parameters
 
-| Name                                     | Type                                                                   |
-| :--------------------------------------- | :--------------------------------------------------------------------- |
-| `__namedParameters`                      | `Object`                                                               |
-| `__namedParameters.artifactsInInventory` | `Artifact`[]                                                           |
-| `__namedParameters.artifactsOnPlanet`    | (`Artifact` \| `undefined`)[]                                          |
-| `__namedParameters.currentBlockNumber`   | `number` \| `undefined`                                                |
-| `__namedParameters.modal`                | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
-| `__namedParameters.planet`               | `LocatablePlanet`                                                      |
-| `__namedParameters.playerAddress`        | `string`                                                               |
-| `__namedParameters.roundOver`            | `boolean`                                                              |
-| `__namedParameters.activate`             |                                                                        |
-| `__namedParameters.deactivate`           |                                                                        |
-| `__namedParameters.deposit`              |                                                                        |
-| `__namedParameters.find`                 |                                                                        |
-| `__namedParameters.prospect`             |                                                                        |
-| `__namedParameters.withdraw`             |                                                                        |
+| Name                                  | Type                                                                   |
+| :------------------------------------ | :--------------------------------------------------------------------- |
+| `__namedParameters`                   | `Object`                                                               |
+| `__namedParameters.artifactsInWallet` | `Artifact`[]                                                           |
+| `__namedParameters.artifactsOnPlanet` | (`undefined` \| `Artifact`)[]                                          |
+| `__namedParameters.modal`             | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
+| `__namedParameters.planet`            | `LocatablePlanet`                                                      |
+| `__namedParameters.playerAddress`     | `string`                                                               |
 
 #### Returns
 

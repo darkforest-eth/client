@@ -12,7 +12,7 @@
 
 ### useEmitterSubscribe
 
-▸ **useEmitterSubscribe**<`T`\>(`emitter`, `callback`): `void`
+▸ **useEmitterSubscribe**<`T`\>(`emitter`, `callback`, `deps`): `void`
 
 Execute something on emitter callback
 
@@ -28,6 +28,7 @@ Execute something on emitter callback
 | :--------- | :----------------- | :--------------------------- |
 | `emitter`  | `Monomitter`<`T`\> | `Monomitter` to subscribe to |
 | `callback` | `Callback`<`T`\>   | callback to subscribe        |
+| `deps`     | `DependencyList`   | -                            |
 
 #### Returns
 
@@ -76,8 +77,8 @@ Use returned value from an emitter, and clone the reference - used to force an u
 
 | Name         | Type                              | Description                  |
 | :----------- | :-------------------------------- | :--------------------------- |
-| `emitter`    | `Monomitter`<`T` \| `undefined`\> | `Monomitter` to subscribe to |
-| `initialVal` | `T` \| `undefined`                | initial state value          |
+| `emitter`    | `Monomitter`<`undefined` \| `T`\> | `Monomitter` to subscribe to |
+| `initialVal` | `undefined` \| `T`                | initial state value          |
 
 #### Returns
 

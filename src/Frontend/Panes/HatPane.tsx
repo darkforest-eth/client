@@ -1,16 +1,12 @@
 import { weiToEth } from '@darkforest_eth/network';
+import { getHatSizeName, getPlanetCosmetic } from '@darkforest_eth/procedural';
+import { isUnconfirmedBuyHatTx } from '@darkforest_eth/serde';
 import { LocationId, Planet } from '@darkforest_eth/types';
 import { BigNumber } from 'ethers';
 import React from 'react';
 import styled from 'styled-components';
-import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import { Btn } from '../Components/Btn';
-import {
-  CenterBackgroundSubtext,
-  EmSpacer,
-  Link,
-  PaddedRecommendedModalWidth,
-} from '../Components/CoreUI';
+import { CenterBackgroundSubtext, EmSpacer, Link } from '../Components/CoreUI';
 import { Sub } from '../Components/Text';
 import { useAccount, usePlanet, useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';
@@ -38,12 +34,6 @@ const getHatCostEth = (planet: Planet) => {
   return 2 ** planet.hatLevel;
 };
 
-const hatUpgradePending = (planet: Planet): boolean => {
-  if (!planet) return true;
-  if (!planet.unconfirmedBuyHats) return false;
-  return planet.unconfirmedBuyHats.length > 0;
-};
-
 export function HatPane({
   initialPlanetId,
   modal: _modal,
@@ -60,20 +50,20 @@ export function HatPane({
     useEmitterValue(uiManager.getEthConnection().myBalance$, BigNumber.from('0'))
   );
   const enabled = (planet: Planet): boolean =>
-    !hatUpgradePending(planet) && planet?.owner === account && balanceEth > getHatCostEth(planet);
-
-  let content;
+    !planet.transactions?.hasTransaction(isUnconfirmedBuyHatTx) &&
+    planet?.owner === account &&
+    balanceEth > getHatCostEth(planet);
 
   if (planet && planet.owner === account) {
-    content = (
+    return (
       <StyledHatPane>
         <div>
           <Sub>HAT</Sub>
-          <span>{ProcgenUtils.getPlanetCosmetic(planet).hatType}</span>
+          <span>{getPlanetCosmetic(planet).hatType}</span>
         </div>
         <div>
           <Sub>HAT Level</Sub>
-          <span>{ProcgenUtils.getHatSizeName(planet)}</span>
+          <span>{getHatSizeName(planet)}</span>
         </div>
         <div className='margin-top'>
           <Sub>Next Level Cost</Sub>
@@ -102,12 +92,10 @@ export function HatPane({
       </StyledHatPane>
     );
   } else {
-    content = (
+    return (
       <CenterBackgroundSubtext width='100%' height='75px'>
         Select a Planet <br /> You Own
       </CenterBackgroundSubtext>
     );
   }
-
-  return <PaddedRecommendedModalWidth>{content}</PaddedRecommendedModalWidth>;
 }

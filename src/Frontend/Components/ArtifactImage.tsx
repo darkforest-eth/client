@@ -1,7 +1,7 @@
+import { ArtifactFileColor, artifactFileName, isSpaceShip } from '@darkforest_eth/gamelogic';
 import { Artifact } from '@darkforest_eth/types';
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { ArtifactFileColor, artifactFileName } from '../../Backend/GameLogic/ArtifactUtils';
 import dfstyles from '../Styles/dfstyles';
 
 export const ARTIFACT_URL = 'https://d2wspbczt15cqu.cloudfront.net/v0.6.0-artifacts/';
@@ -23,14 +23,18 @@ export function ArtifactImage({
   thumb?: boolean;
   bgColor?: ArtifactFileColor;
 }) {
+  const url = getArtifactUrl(thumb || false, artifact, bgColor || ArtifactFileColor.BLUE);
+  const image = isSpaceShip(artifact.artifactType) ? (
+    <img width={size} height={size} src={url} />
+  ) : (
+    <video width={size} height={size} loop autoPlay key={artifact.id}>
+      <source src={url} type={'video/webm'} />
+    </video>
+  );
+
   return (
     <Container width={size} height={size}>
-      <video width={size} height={size} loop autoPlay key={artifact.id}>
-        <source
-          src={getArtifactUrl(thumb || false, artifact, bgColor || ArtifactFileColor.BLUE)}
-          type={'video/webm'}
-        />
-      </video>
+      {image}
     </Container>
   );
 }

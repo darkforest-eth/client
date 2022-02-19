@@ -10,24 +10,16 @@
 
 ### ArtifactActions
 
-▸ **ArtifactActions**(`__namedParameters`): `Element`
+▸ **ArtifactActions**(`__namedParameters`): `null` \| `Element`
 
 #### Parameters
 
-| Name                                    | Type       |
-| :-------------------------------------- | :--------- |
-| `__namedParameters`                     | `Object`   |
-| `__namedParameters.anyArtifactActive`   | `boolean`  |
-| `__namedParameters.artifact`            | `Artifact` |
-| `__namedParameters.planetIsTradingPost` | `boolean`  |
-| `__namedParameters.planetLevel`         | `number`   |
-| `__namedParameters.planetOwnedByPlayer` | `boolean`  |
-| `__namedParameters.viewingDepositList`  | `boolean`  |
-| `__namedParameters.activate`            |            |
-| `__namedParameters.deactivate`          |            |
-| `__namedParameters.deposit`             |            |
-| `__namedParameters.withdraw`            |            |
+| Name                           | Type         |
+| :----------------------------- | :----------- |
+| `__namedParameters`            | `Object`     |
+| `__namedParameters.artifactId` | `ArtifactId` |
+| `__namedParameters.depositOn?` | `LocationId` |
 
 #### Returns
 
-`Element`
+`null` \| `Element`

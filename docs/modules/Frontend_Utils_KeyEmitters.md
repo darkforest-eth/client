@@ -4,7 +4,6 @@
 
 ### Variables
 
-- [SpecialKey](Frontend_Utils_KeyEmitters.md#specialkey)
 - [keyDown$](Frontend_Utils_KeyEmitters.md#keydown$)
 - [keyUp$](Frontend_Utils_KeyEmitters.md#keyup$)
 
@@ -17,31 +16,15 @@
 
 ## Variables
 
-### SpecialKey
-
-• `Const` **SpecialKey**: `Object`
-
-#### Type declaration
-
-| Name      | Type        |
-| :-------- | :---------- |
-| `Control` | `"Control"` |
-| `Escape`  | `"Escape"`  |
-| `Shift`   | `"Shift"`   |
-| `Space`   | `" "`       |
-| `Tab`     | `"Tab"`     |
-
----
-
 ### keyDown$
 
-• `Const` **keyDown$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
+• **keyDown$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
 
 ---
 
 ### keyUp$
 
-• `Const` **keyUp$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
+• **keyUp$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
 
 ## Functions
 
@@ -83,14 +66,15 @@
 
 ### useOnUp
 
-▸ **useOnUp**(`key?`, `onUp?`): `void`
+▸ **useOnUp**(`key`, `onUp`, `deps?`): `void`
 
 #### Parameters
 
-| Name    | Type         |
-| :------ | :----------- |
-| `key?`  | `string`     |
-| `onUp?` | () => `void` |
+| Name   | Type             | Default value |
+| :----- | :--------------- | :------------ |
+| `key`  | `string`         | `undefined`   |
+| `onUp` | () => `void`     | `undefined`   |
+| `deps` | `DependencyList` | `[]`          |
 
 #### Returns
 

@@ -1,7 +1,8 @@
 import { Monomitter, monomitter } from '@darkforest_eth/events';
+import { PluginId } from '@darkforest_eth/types';
 import { EmbeddedPlugin, getEmbeddedPlugins } from '../Plugins/EmbeddedPluginLoader';
 import { PluginProcess } from '../Plugins/PluginProcess';
-import { PluginId, SerializedPlugin } from '../Plugins/SerializedPlugin';
+import { SerializedPlugin } from '../Plugins/SerializedPlugin';
 import GameManager from './GameManager';
 
 /**
@@ -36,11 +37,10 @@ export class PluginManager {
   private pluginLibrary: SerializedPlugin[];
 
   /**
-   * Plugins that are currently loaded into the game, and are rendering into a
-   * window. `PluginsManager` makes sure that when a plugin starts executing, it
-   * is added into `pluginInstances`, and that once a plugin is unloaded, its
-   * `.destroy()` method is called, and that the plugin is removed from
-   * `pluginInstances`.
+   * Plugins that are currently loaded into the game, and are rendering into a modal.
+   * `PluginsManager` makes sure that when a plugin starts executing, it is added into
+   * `pluginInstances`, and that once a plugin is unloaded, its `.destroy()` method is called, and
+   * that the plugin is removed from `pluginInstances`.
    */
   private pluginProcesses: Record<string, PluginProcess>;
 
@@ -89,10 +89,10 @@ export class PluginManager {
    * plugins into the player's library if the default plugins have never been
    * added before. Effectively idempotent after the first time you call it.
    */
-  public async load(): Promise<void> {
+  public async load(isAdmin: boolean): Promise<void> {
     this.pluginLibrary = await this.gameManager.loadPlugins();
 
-    this.onNewEmbeddedPlugins(getEmbeddedPlugins());
+    this.onNewEmbeddedPlugins(getEmbeddedPlugins(isAdmin));
 
     this.notifyPluginLibraryUpdated();
   }

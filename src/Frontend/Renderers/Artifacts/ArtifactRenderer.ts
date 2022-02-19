@@ -1,9 +1,8 @@
 import { MAX_BIOME, MIN_BIOME } from '@darkforest_eth/constants';
+import { SpriteRenderer, WebGLManager } from '@darkforest_eth/renderer';
 import { Artifact, ArtifactRarity, ArtifactType, Biome } from '@darkforest_eth/types';
 import autoBind from 'auto-bind';
 import { ARTIFACT_ROW_H } from '../../Styles/dfstyles';
-import { SpriteRenderer } from '../GameRenderer/Entities/SpriteRenderer';
-import { WebGLManager } from '../GameRenderer/WebGL/WebGLManager';
 
 const NUM_BIOMES = MAX_BIOME;
 

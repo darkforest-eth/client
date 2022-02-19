@@ -1,26 +1,29 @@
 import { EthConnection } from '@darkforest_eth/network';
-import { AutoGasSetting } from '@darkforest_eth/types';
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { AutoGasSetting, Chunk, ModalName, Setting } from '@darkforest_eth/types';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TutorialManager from '../../Backend/GameLogic/TutorialManager';
-import { Chunk } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
-import { Padded, Section, SectionHeader, Spacer } from '../Components/CoreUI';
-import { Input } from '../Components/Input';
+import { Section, SectionHeader, Spacer } from '../Components/CoreUI';
+import { DarkForestTextInput, TextInput } from '../Components/Input';
+import { Slider } from '../Components/Slider';
 import { Green, Red } from '../Components/Text';
 import Viewport, { getDefaultScroll } from '../Game/Viewport';
 import { useAccount, useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';
-import { BooleanSetting, MultiSelectSetting, NumberSetting, Setting } from '../Utils/SettingsHooks';
-import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
+import {
+  BooleanSetting,
+  ColorSetting,
+  MultiSelectSetting,
+  NumberSetting,
+} from '../Utils/SettingsHooks';
+import { ModalPane } from '../Views/ModalPane';
 
 const SCROLL_MIN = 0.0001 * 10000;
 const SCROLL_MAX = 0.01 * 10000;
 const DEFAULT_SCROLL = Math.round(10000 * (getDefaultScroll() - 1));
 
-const Range = styled.input``;
-
-const SettingsContent = styled(Padded)`
+const SettingsContent = styled.div`
   width: 500px;
   height: 500px;
   overflow-y: scroll;
@@ -41,20 +44,16 @@ const Row = styled.div`
   }
 `;
 
-const ScrollSpeedInput = styled(Input)`
-  padding: 2px 2px;
-  width: 8em;
-  height: min-content;
-`;
-
 export function SettingsPane({
   ethConnection,
-  hook,
-  privateHook,
+  visible,
+  onClose,
+  onOpenPrivate,
 }: {
   ethConnection: EthConnection;
-  hook: ModalHook;
-  privateHook: ModalHook;
+  visible: boolean;
+  onClose: () => void;
+  onOpenPrivate: () => void;
 }) {
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
@@ -153,19 +152,17 @@ export function SettingsPane({
   };
 
   const [clicks, setClicks] = useState<number>(8);
-  const [, setPrivateVisible] = privateHook;
-  const doPrivateClick = (_e: React.MouseEvent) => {
+  const doPrivateClick = () => {
     setClicks((x) => x - 1);
     if (clicks === 1) {
-      setPrivateVisible(true);
+      onOpenPrivate();
       setClicks(5);
     }
   };
 
-  const clipScroll = (v: number) => Math.max(Math.min(Math.round(v), SCROLL_MAX), SCROLL_MIN);
   const [scrollSpeed, setScrollSpeed] = useState<number>(DEFAULT_SCROLL);
-  const onScrollChange = (e: FormEvent) => {
-    const value = parseFloat((e.target as HTMLInputElement).value);
+  const onScrollChange = (e: Event & React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
     if (!isNaN(value)) setScrollSpeed(value);
   };
 
@@ -182,7 +179,7 @@ export function SettingsPane({
   }, [scrollSpeed]);
 
   return (
-    <ModalPane hook={hook} title={'Settings'} name={ModalName.Hats}>
+    <ModalPane id={ModalName.Settings} title='Settings' visible={visible} onClose={onClose}>
       <SettingsContent>
         <Section>
           <SectionHeader>Burner Wallet Info</SectionHeader>
@@ -240,7 +237,7 @@ export function SettingsPane({
           <Spacer height={16} />
           <Red>WARNING:</Red> Never ever send this to anyone!
           <Spacer height={8} />
-          <Btn wide onClick={doPrivateClick}>
+          <Btn size='stretch' variant='danger' onClick={doPrivateClick}>
             Click {clicks} times to view info
           </Btn>
         </Section>
@@ -264,28 +261,27 @@ export function SettingsPane({
           <Red>WARNING:</Red> Maps from others could be altered and are not guaranteed to be
           correct!
           <Spacer height={16} />
-          <Input
-            wide
+          <TextInput
             value={importMapByTextBoxValue}
             placeholder={'Paste map contents here'}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onChange={(e: Event & React.ChangeEvent<DarkForestTextInput>) =>
               setImportMapByTextBoxValue(e.target.value)
             }
           />
           <Spacer height={8} />
           <Btn
-            wide
+            size='stretch'
             onClick={onImportMapFromTextBox}
             disabled={importMapByTextBoxValue.length === 0}
           >
             Import Map From Above
           </Btn>
           <Spacer height={8} />
-          <Btn wide onClick={onExportMap}>
+          <Btn size='stretch' onClick={onExportMap}>
             Copy Map to Clipboard
           </Btn>
           <Spacer height={8} />
-          <Btn wide onClick={onImportMap}>
+          <Btn size='stretch' onClick={onImportMap}>
             Import Map from Clipboard
           </Btn>
           <Spacer height={8} />
@@ -298,9 +294,14 @@ export function SettingsPane({
           <Spacer height={8} />
           Current RPC Endpoint: {rpcUrl}
           <Spacer height={8} />
-          <Input wide value={rpcUrl} onChange={(e) => setRpcURL(e.target.value)} />
+          <TextInput
+            value={rpcUrl}
+            onChange={(e: Event & React.ChangeEvent<DarkForestTextInput>) =>
+              setRpcURL(e.target.value)
+            }
+          />
           <Spacer height={8} />
-          <Btn wide onClick={onChangeRpc}>
+          <Btn size='stretch' onClick={onChangeRpc}>
             Change RPC URL
           </Btn>
         </Section>
@@ -370,24 +371,22 @@ export function SettingsPane({
         <Section>
           <SectionHeader>Scroll speed</SectionHeader>
           <Spacer height={8} />
-          <ScrollContainer>
-            <Range
-              type='range'
-              value={clipScroll(scrollSpeed)}
-              min={SCROLL_MIN}
-              max={SCROLL_MAX}
-              step={SCROLL_MIN / 10}
-              onChange={onScrollChange}
-            />
-            <Spacer width={16} />
-            <ScrollSpeedInput value={scrollSpeed} onChange={onScrollChange} />
-          </ScrollContainer>
+          <Slider
+            variant='filled'
+            editable={true}
+            labelVisibility='none'
+            value={scrollSpeed}
+            min={SCROLL_MIN}
+            max={SCROLL_MAX}
+            step={SCROLL_MIN / 10}
+            onChange={onScrollChange}
+          />
         </Section>
 
         <Section>
           <SectionHeader>Reset Tutorial</SectionHeader>
           <Spacer height={8} />
-          <Btn wide onClick={() => TutorialManager.getInstance().reset(uiManager.getAccount())}>
+          <Btn size='stretch' onClick={() => TutorialManager.getInstance(uiManager).reset()}>
             Reset Tutorial
           </Btn>
         </Section>
@@ -414,14 +413,44 @@ export function SettingsPane({
             settingDescription='toggle expeirmental features'
           />
         </Section>
+
+        <Section>
+          <SectionHeader>Renderer Settings</SectionHeader>
+          Some options for the default renderer which is included with the game.
+          <Spacer height={8} />
+          <BooleanSetting
+            uiManager={uiManager}
+            setting={Setting.DisableFancySpaceEffect}
+            settingDescription='disable fancy space shaders'
+          />
+          <Spacer height={8} />
+          <ColorSetting
+            uiManager={uiManager}
+            setting={Setting.RendererColorInnerNebula}
+            settingDescription='inner nebula color'
+          />
+          <ColorSetting
+            uiManager={uiManager}
+            setting={Setting.RendererColorNebula}
+            settingDescription='nebula color'
+          />
+          <ColorSetting
+            uiManager={uiManager}
+            setting={Setting.RendererColorSpace}
+            settingDescription='space color'
+          />
+          <ColorSetting
+            uiManager={uiManager}
+            setting={Setting.RendererColorDeepSpace}
+            settingDescription='deep space color'
+          />
+          <ColorSetting
+            uiManager={uiManager}
+            setting={Setting.RendererColorDeadSpace}
+            settingDescription='dead space color'
+          />
+        </Section>
       </SettingsContent>
     </ModalPane>
   );
 }
-
-const ScrollContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-`;

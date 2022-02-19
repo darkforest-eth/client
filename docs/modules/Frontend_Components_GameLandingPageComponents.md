@@ -2,6 +2,10 @@
 
 ## Table of contents
 
+### Enumerations
+
+- [InitRenderState](../enums/Frontend_Components_GameLandingPageComponents.InitRenderState.md)
+
 ### Variables
 
 - [Hidden](Frontend_Components_GameLandingPageComponents.md#hidden)
@@ -17,7 +21,7 @@
 
 ### Hidden
 
-• `Const` **Hidden**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• **Hidden**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ## Functions
 

@@ -51,7 +51,7 @@ class Readme implements DFPlugin {
     const secondTextDiv = document.createElement('div');
     secondTextDiv.innerText = '... Or, click the button below to get a free artifact!';
 
-    const myButton = document.createElement('button');
+    const myButton = document.createElement('df-button');
     myButton.innerText = 'give me an artifact';
     myButton.addEventListener('click', async () => {
       await confetti.create(this.canvas)({

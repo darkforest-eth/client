@@ -1,9 +1,8 @@
-import { Upgrade } from '@darkforest_eth/types';
+import { TooltipName, Upgrade } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
 import { CenterRow, Spacer } from '../../Components/CoreUI';
 import { Icon, IconType } from '../../Components/Icons';
-import { TooltipName } from '../../Game/WindowManager';
 import dfstyles from '../../Styles/dfstyles';
 import { TooltipTrigger } from '../Tooltip';
 

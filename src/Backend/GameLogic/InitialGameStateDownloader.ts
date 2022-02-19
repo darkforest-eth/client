@@ -24,8 +24,6 @@ export interface InitialGameState {
   contractConstants: ContractConstants;
   players: Map<string, Player>;
   worldRadius: number;
-  gptCreditPriceEther: number;
-  myGPTCredits: number;
   allTouchedPlanetIds: LocationId[];
   allRevealedCoords: RevealedCoords[];
   allClaimedCoords?: ClaimedCoords[];
@@ -40,6 +38,7 @@ export interface InitialGameState {
   planetVoyageIdMap: Map<LocationId, VoyageId[]>;
   arrivals: Map<VoyageId, QueuedArrival>;
   twitters: AddressTwitterMap;
+  paused: boolean;
 }
 
 export class InitialGameStateDownloader {
@@ -85,8 +84,6 @@ export class InitialGameStateDownloader {
 
     const contractConstants = contractsAPI.getConstants();
     const worldRadius = contractsAPI.getWorldRadius();
-    const gptCreditPriceEther = contractsAPI.getGPTCreditPriceEther();
-    const myGPTCredits = contractsAPI.getGPTCreditBalance(contractsAPI.getAccount());
 
     const players = contractsAPI.getPlayers(playersLoadingBar);
 
@@ -168,18 +165,17 @@ export class InitialGameStateDownloader {
       artifactsOnPlanetsLoadingBar
     );
     const myArtifacts = contractsAPI.getPlayerArtifacts(
-      contractsAPI.getAccount(),
+      contractsAPI.getAddress(),
       yourArtifactsLoadingBar
     );
 
     const twitters = await tryGetAllTwitters();
+    const paused = contractsAPI.getIsPaused();
 
     const initialState: InitialGameState = {
       contractConstants: await contractConstants,
       players: await players,
       worldRadius: await worldRadius,
-      gptCreditPriceEther: await gptCreditPriceEther,
-      myGPTCredits: await myGPTCredits,
       allTouchedPlanetIds,
       allRevealedCoords,
       pendingMoves,
@@ -193,6 +189,7 @@ export class InitialGameStateDownloader {
       planetVoyageIdMap,
       arrivals,
       twitters,
+      paused: await paused,
     };
 
     return initialState;

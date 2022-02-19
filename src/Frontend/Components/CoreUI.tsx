@@ -1,13 +1,8 @@
-import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
 import colors from 'color';
 import React, { ChangeEvent, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 import dfstyles from '../Styles/dfstyles';
-import { useUIManager } from '../Utils/AppHooks';
-import { GameWindowZIndex } from '../Utils/constants';
-import { useIsDown } from '../Utils/KeyEmitters';
-import { Setting, useBooleanSetting } from '../Utils/SettingsHooks';
-import { Btn, BtnProps } from './Btn';
+import { DFZIndex } from '../Utils/constants';
 
 export const InlineBlock = styled.div`
   display: inline-block;
@@ -56,18 +51,11 @@ export const Padded = styled.div`
   `}
 `;
 
-export const PaddedRecommendedModalWidth = styled(Padded)`
-  width: ${RECOMMENDED_MODAL_WIDTH};
-`;
-
-export const RecommendedModalWidth = styled.div`
-  width: ${RECOMMENDED_MODAL_WIDTH};
-`;
-
 export const BorderlessPane = styled.div`
-  transition: '200ms';
-  display: inline-block;
-  z-index: ${GameWindowZIndex.MenuBar};
+  transition: 200ms;
+  display: flex;
+  flex-direction: column;
+  z-index: ${DFZIndex.MenuBar};
   margin: 8px;
   padding: 8px;
   border-radius: ${dfstyles.borderRadius};
@@ -127,28 +115,24 @@ export const VerticalSplit = function ({
   children: [React.ReactNode, React.ReactNode];
 }) {
   return (
-    <FullWidth>
+    <VerticalSplitRow>
       <VerticalSplitChild>{children[0]}</VerticalSplitChild>
       <VerticalSplitChild>{children[1]}</VerticalSplitChild>
-    </FullWidth>
+    </VerticalSplitRow>
   );
 };
 
-const VerticalSplitChild = styled.div`
-  width: 50%;
-  flex-grow: 1;
-  display: inline-block;
+const VerticalSplitRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
 `;
 
-export const FullWidth = styled.div`
-  ${({ padding }: { padding?: string }) =>
-    css`
-      ${padding && `padding: ${padding};`}
-      width: 100%;
-      display: flex;
-      box-sizing: border-box;
-      flex-direction: row;
-    `}
+const VerticalSplitChild = styled.div`
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 export const FullHeight = styled.div`
@@ -261,6 +245,11 @@ export const Truncate = styled.div`
   `}
 `;
 
+export const Title = styled(Truncate)`
+  flex-grow: 1;
+  text-align: left;
+`;
+
 /**
  * The container element into which a plugin renders its html elements.
  * Contains styles for child elements so that plugins can use UI
@@ -270,7 +259,6 @@ export const Truncate = styled.div`
  */
 export const PluginElements = styled.div`
   color: ${dfstyles.colors.text};
-  padding: 8px;
   width: 400px;
   min-height: 100px;
   max-height: 600px;
@@ -394,104 +382,6 @@ export const CenterBackgroundSubtext = styled.div`
     text-align: center;
   `}
 `;
-
-/**
- * A button that also displays a {@code KeyboardBtn} directly next to it, which shows the user
- * whether or not the given shortcut key is down. In the case that now {@code shortcutKey} was
- * provided, this is just a normal button.
- */
-export function ShortcutButton(
-  props: {
-    children: React.ReactNode;
-    shortcutKey?: string;
-    shortcutText?: string;
-    shortcutDisabled?: boolean;
-  } & BtnProps
-) {
-  const [disableDefaultShortcuts] = useBooleanSetting(
-    useUIManager(),
-    Setting.DisableDefaultShortcuts
-  );
-
-  return (
-    <Expand style={{ display: 'flex' }}>
-      <AlignCenterHorizontally style={{ flexGrow: 1 }}>
-        <Btn {...props} />
-        {props.shortcutKey && !disableDefaultShortcuts && (
-          <>
-            <EmSpacer width={0.5} />
-            <ShortcutKeyDown
-              shortcutKey={props.shortcutKey}
-              text={props.shortcutText}
-              disabled={props.shortcutDisabled}
-            />
-          </>
-        )}
-      </AlignCenterHorizontally>
-    </Expand>
-  );
-}
-
-// Styling from https://www.npmjs.com/package/keyboard-css
-export const KeyboardBtn = styled.kbd`
-  ${({ active }: { active?: boolean }) => css`
-    font-size: 0.7rem;
-    line-height: 1.4;
-    padding: 0.1rem 0.45rem;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    border: 1px solid ${dfstyles.colors.border};
-    border-radius: 0.25rem;
-    display: inline-block;
-    font-weight: 400;
-    text-align: left;
-    transform: ${active ? 'translate3d(0, 2px, 0)' : 'translateZ(5px)'};
-    transform-style: preserve-3d;
-    transition: all 0.25s cubic-bezier(0.2, 1, 0.2, 1);
-    box-shadow: ${active
-      ? '0 0 1px 1px #929292'
-      : '0 0 #6b6b6b, 0 0 #6b6b6b, 0 1px #6d6d6d, 0 2px #6d6d6d, 2px 1px 4px #adb5bd, 0 -1px 1px #adb5bd'};
-    background-color: ${active ? dfstyles.colors.text : '#343a40'};
-    color: ${active ? dfstyles.colors.background : dfstyles.colors.text};
-    &:after {
-      border-radius: 0.375rem;
-      border-width: 0.0625rem;
-      bottom: -6px;
-      left: -0.25rem;
-      right: -0.25rem;
-      top: -2px;
-      transform: ${active ? 'translate3d(0, -2px, 0)' : 'translateZ(-2px)'};
-      border-style: solid;
-      box-sizing: content-box;
-      content: '';
-      display: block;
-      position: absolute;
-      transform-style: preserve-3d;
-      transition: all 0.25s cubic-bezier(0.2, 1, 0.2, 1);
-      border-color: ${dfstyles.colors.borderDarker};
-      background: ${active ? 'transparent' : dfstyles.colors.background};
-    }
-  `}
-`;
-
-export const CenteredText = styled.span`
-  margin: auto;
-  text-align: center;
-`;
-
-export function ShortcutKeyDown({
-  shortcutKey,
-  text,
-  disabled,
-}: {
-  shortcutKey?: string;
-  text?: string;
-  disabled?: boolean;
-}) {
-  const isDown = useIsDown(shortcutKey) && !disabled;
-
-  return <KeyboardBtn active={isDown}>{text === undefined ? shortcutKey : text}</KeyboardBtn>;
-}
 
 /**
  * Expands to fit the width of container. Is itself a flex box that spreads out its children

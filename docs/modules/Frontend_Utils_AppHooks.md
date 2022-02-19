@@ -2,6 +2,10 @@
 
 ## Table of contents
 
+### Type aliases
+
+- [TransactionRecord](Frontend_Utils_AppHooks.md#transactionrecord)
+
 ### Variables
 
 - [TopLevelDivProvider](Frontend_Utils_AppHooks.md#topleveldivprovider)
@@ -12,12 +16,14 @@
 - [useAccount](Frontend_Utils_AppHooks.md#useaccount)
 - [useActiveArtifact](Frontend_Utils_AppHooks.md#useactiveartifact)
 - [useArtifact](Frontend_Utils_AppHooks.md#useartifact)
+- [useHoverArtifact](Frontend_Utils_AppHooks.md#usehoverartifact)
+- [useHoverArtifactId](Frontend_Utils_AppHooks.md#usehoverartifactid)
 - [useHoverPlanet](Frontend_Utils_AppHooks.md#usehoverplanet)
 - [useLeaderboard](Frontend_Utils_AppHooks.md#useleaderboard)
 - [useMyArtifacts](Frontend_Utils_AppHooks.md#usemyartifacts)
 - [useMyArtifactsList](Frontend_Utils_AppHooks.md#usemyartifactslist)
-- [useOnSendCompleted](Frontend_Utils_AppHooks.md#useonsendcompleted)
 - [useOverlayContainer](Frontend_Utils_AppHooks.md#useoverlaycontainer)
+- [usePaused](Frontend_Utils_AppHooks.md#usepaused)
 - [usePlanet](Frontend_Utils_AppHooks.md#useplanet)
 - [usePlanetArtifacts](Frontend_Utils_AppHooks.md#useplanetartifacts)
 - [usePlanetInactiveArtifacts](Frontend_Utils_AppHooks.md#useplanetinactiveartifacts)
@@ -27,7 +33,14 @@
 - [useSelectedPlanet](Frontend_Utils_AppHooks.md#useselectedplanet)
 - [useSelectedPlanetId](Frontend_Utils_AppHooks.md#useselectedplanetid)
 - [useTopLevelDiv](Frontend_Utils_AppHooks.md#usetopleveldiv)
+- [useTransactionLog](Frontend_Utils_AppHooks.md#usetransactionlog)
 - [useUIManager](Frontend_Utils_AppHooks.md#useuimanager)
+
+## Type aliases
+
+### TransactionRecord
+
+Ƭ **TransactionRecord**: `Record`<`TransactionId`, `Transaction`\>
 
 ## Variables
 
@@ -69,7 +82,7 @@ Get the currently used account on the client.
 
 | Name        | Type                                                                               |
 | :---------- | :--------------------------------------------------------------------------------- |
-| `planet`    | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\> |
+| `planet`    | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\> |
 | `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md)                 |
 
 #### Returns
@@ -92,6 +105,38 @@ Get the currently used account on the client.
 #### Returns
 
 [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Artifact`\>
+
+---
+
+### useHoverArtifact
+
+▸ **useHoverArtifact**(`uiManager`): [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Artifact` \| `undefined`\>
+
+#### Parameters
+
+| Name        | Type                                                               |
+| :---------- | :----------------------------------------------------------------- |
+| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+
+#### Returns
+
+[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Artifact` \| `undefined`\>
+
+---
+
+### useHoverArtifactId
+
+▸ **useHoverArtifactId**(`uiManager`): [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`ArtifactId` \| `undefined`\>
+
+#### Parameters
+
+| Name        | Type                                                               |
+| :---------- | :----------------------------------------------------------------- |
+| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
+
+#### Returns
+
+[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`ArtifactId` \| `undefined`\>
 
 ---
 
@@ -121,9 +166,9 @@ Loads the leaderboard
 
 #### Parameters
 
-| Name   | Type                    |
-| :----- | :---------------------- |
-| `poll` | `number` \| `undefined` |
+| Name   | Type                    | Default value |
+| :----- | :---------------------- | :------------ |
+| `poll` | `undefined` \| `number` | `undefined`   |
 
 #### Returns
 
@@ -168,24 +213,6 @@ Loads the leaderboard
 
 ---
 
-### useOnSendCompleted
-
-▸ **useOnSendCompleted**(`onCompleted`): `void`
-
-Calls {@code onCompleted} when the user sends a move via the ui.
-
-#### Parameters
-
-| Name          | Type         |
-| :------------ | :----------- |
-| `onCompleted` | () => `void` |
-
-#### Returns
-
-`void`
-
----
-
 ### useOverlayContainer
 
 ▸ **useOverlayContainer**(): `HTMLDivElement` \| `null`
@@ -193,6 +220,16 @@ Calls {@code onCompleted} when the user sends a move via the ui.
 #### Returns
 
 `HTMLDivElement` \| `null`
+
+---
+
+### usePaused
+
+▸ **usePaused**(): `boolean`
+
+#### Returns
+
+`boolean`
 
 ---
 
@@ -205,7 +242,7 @@ Calls {@code onCompleted} when the user sends a move via the ui.
 | Name         | Type                                                               |
 | :----------- | :----------------------------------------------------------------- |
 | `uiManager`  | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
-| `locationId` | `LocationId` \| `undefined`                                        |
+| `locationId` | `undefined` \| `LocationId`                                        |
 
 #### Returns
 
@@ -221,7 +258,7 @@ Calls {@code onCompleted} when the user sends a move via the ui.
 
 | Name        | Type                                                                               |
 | :---------- | :--------------------------------------------------------------------------------- |
-| `planet`    | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\> |
+| `planet`    | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\> |
 | `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md)                 |
 
 #### Returns
@@ -238,7 +275,7 @@ Calls {@code onCompleted} when the user sends a move via the ui.
 
 | Name        | Type                                                                               |
 | :---------- | :--------------------------------------------------------------------------------- |
-| `planet`    | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Planet` \| `undefined`\> |
+| `planet`    | [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`undefined` \| `Planet`\> |
 | `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md)                 |
 
 #### Returns
@@ -275,7 +312,7 @@ Hook which gets you the player, and updates whenever that player's twitter or sc
 | Name         | Type                                                                   |
 | :----------- | :--------------------------------------------------------------------- |
 | `modal`      | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
-| `startingId` | `LocationId` \| `undefined`                                            |
+| `startingId` | `undefined` \| `LocationId`                                            |
 
 #### Returns
 
@@ -343,6 +380,19 @@ Create a subscription to the currently selected planet.
 #### Returns
 
 `HTMLDivElement`
+
+---
+
+### useTransactionLog
+
+▸ **useTransactionLog**(): [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<[`TransactionRecord`](Frontend_Utils_AppHooks.md#transactionrecord)\>
+
+Creates subscriptions to all contract transaction events to keep an up to date
+list of all transactions and their states.
+
+#### Returns
+
+[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<[`TransactionRecord`](Frontend_Utils_AppHooks.md#transactionrecord)\>
 
 ---
 

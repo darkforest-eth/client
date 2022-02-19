@@ -1,23 +1,9 @@
-import {
-  EmojiFlagBody,
-  LocatablePlanet,
-  LocationId,
-  Planet,
-  PlanetMessage,
-  PlanetMessageType,
-  WorldCoords,
-  WorldLocation,
-} from '@darkforest_eth/types';
+import { Rectangle } from '@darkforest_eth/types';
 import { Dispatch, SetStateAction } from 'react';
 import GameManager from '../../Backend/GameLogic/GameManager';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 
 export type Hook<T> = [T, Dispatch<SetStateAction<T>>];
-
-export type Wormhole = {
-  from: LocationId;
-  to: LocationId;
-};
 
 declare global {
   interface Window {
@@ -38,6 +24,7 @@ export type HashConfig = {
   perlinLengthScale: number; // power of two up to 8192
   perlinMirrorX: boolean;
   perlinMirrorY: boolean;
+  planetRarity: number; // only for fakeHash (DISABLE_ZK_CHECKS on)
 };
 
 export const enum StatIdx {
@@ -46,35 +33,7 @@ export const enum StatIdx {
   Range = 2,
   Speed = 3,
   Defense = 4,
-}
-
-export function isLocatable(planet: Planet): planet is LocatablePlanet {
-  return (planet as LocatablePlanet).location !== undefined;
-}
-
-export function isEmojiFlagMessage(
-  planetMessage: PlanetMessage<unknown>
-): planetMessage is PlanetMessage<EmojiFlagBody> {
-  return planetMessage.body !== undefined && planetMessage.type === PlanetMessageType.EmojiFlag;
-}
-
-/**
- * Ok, this is gonna sound weird, but all rectangles are squares. Also, we only permit side lengths
- * that are powers of two, and ALSO!! The side lengths must be between {@link MIN_CHUNK_SIZE} and
- * {@link MAX_CHUNK_SIZE}.
- */
-export interface Rectangle {
-  bottomLeft: WorldCoords;
-  sideLength: number;
-}
-
-/**
- * Represents a fully mined aligned square.
- */
-export class Chunk {
-  chunkFootprint: Rectangle;
-  planetLocations: WorldLocation[];
-  perlin: number; // approximate avg perlin value. used for rendering
+  SpaceJunk = 5,
 }
 
 export interface MinerWorkerMessage {

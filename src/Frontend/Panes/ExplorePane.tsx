@@ -1,4 +1,10 @@
-import { WorldCoords } from '@darkforest_eth/types';
+import {
+  CursorState,
+  ModalManagerEvent,
+  Setting,
+  TooltipName,
+  WorldCoords,
+} from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
@@ -9,14 +15,14 @@ import {
   TowardsCenterPattern,
   TowardsCenterPatternV2,
 } from '../../Backend/Miner/MiningPatterns';
-import { EmSpacer, SelectFrom, ShortcutButton } from '../Components/CoreUI';
+import { EmSpacer, SelectFrom } from '../Components/CoreUI';
 import { Icon, IconType } from '../Components/Icons';
+import { MaybeShortcutButton } from '../Components/MaybeShortcutButton';
 import { Coords, Sub } from '../Components/Text';
-import WindowManager, { CursorState, TooltipName, WindowManagerEvent } from '../Game/WindowManager';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
 import { MIN_CHUNK_SIZE } from '../Utils/constants';
-import { MultiSelectSetting, Setting, useBooleanSetting } from '../Utils/SettingsHooks';
+import { MultiSelectSetting, useBooleanSetting } from '../Utils/SettingsHooks';
 import { TOGGLE_EXPLORE, TOGGLE_TARGETTING } from '../Utils/ShortcutConstants';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 import { TooltipTrigger } from './Tooltip';
@@ -102,7 +108,7 @@ function HashesPerSec() {
 
 export function ExplorePane() {
   const uiManager = useUIManager();
-  const windowManager = WindowManager.getInstance();
+  const modalManager = uiManager.getModalManager();
   const uiEmitter = UIEmitter.getInstance();
   const [pattern, setPattern] = useState<string>(MiningPatternType.Spiral.toString());
   const [mining] = useBooleanSetting(uiManager, Setting.IsMining);
@@ -111,8 +117,8 @@ export function ExplorePane() {
 
   useEffect(() => {
     const doMouseDown = (worldCoords: WorldCoords) => {
-      if (windowManager.getCursorState() === CursorState.TargetingExplorer) {
-        windowManager.acceptInputForTarget({
+      if (modalManager.getCursorState() === CursorState.TargetingExplorer) {
+        modalManager.acceptInputForTarget({
           x: Math.floor(worldCoords.x),
           y: Math.floor(worldCoords.y),
         });
@@ -125,7 +131,7 @@ export function ExplorePane() {
       uiManager?.setMiningPattern(newpattern);
       setCoords(worldCoords);
 
-      const tutorialManager = TutorialManager.getInstance();
+      const tutorialManager = TutorialManager.getInstance(uiManager);
       tutorialManager.acceptInput(TutorialState.MinerMove);
     };
     const cursorStateChanged = (state: CursorState) => {
@@ -133,14 +139,14 @@ export function ExplorePane() {
     };
 
     uiEmitter.on(UIEmitterEvent.WorldMouseDown, doMouseDown);
-    windowManager.on(WindowManagerEvent.MiningCoordsUpdate, updateCoords);
-    uiEmitter.on(WindowManagerEvent.StateChanged, cursorStateChanged);
+    modalManager.on(ModalManagerEvent.MiningCoordsUpdate, updateCoords);
+    uiEmitter.on(ModalManagerEvent.StateChanged, cursorStateChanged);
     return () => {
       uiEmitter.removeListener(UIEmitterEvent.WorldMouseDown, doMouseDown);
-      windowManager.removeListener(WindowManagerEvent.MiningCoordsUpdate, updateCoords);
-      uiEmitter.removeListener(WindowManagerEvent.StateChanged, cursorStateChanged);
+      modalManager.removeListener(ModalManagerEvent.MiningCoordsUpdate, updateCoords);
+      uiEmitter.removeListener(ModalManagerEvent.StateChanged, cursorStateChanged);
     };
-  }, [uiEmitter, windowManager, uiManager, pattern]);
+  }, [uiEmitter, modalManager, uiManager, pattern]);
 
   const updatePattern = (pattern: string) => {
     setPattern(pattern);
@@ -149,32 +155,41 @@ export function ExplorePane() {
     uiManager.setMiningPattern(newpattern);
   };
 
-  const doTarget = (_e: React.MouseEvent) => {
+  const doTarget = () => {
     uiManager.toggleTargettingExplorer();
+  };
+
+  const doExplore = () => {
+    uiManager.toggleExplore();
   };
 
   return (
     <StyledExplorePane>
       {/* button which allows player to preposition the center of their miner */}
       <TooltipTrigger style={{ display: 'inline-block' }} name={TooltipName.MiningTarget}>
-        <ShortcutButton onClick={doTarget} shortcutKey={TOGGLE_TARGETTING}>
+        <MaybeShortcutButton
+          onClick={doTarget}
+          onShortcutPressed={doTarget}
+          shortcutKey={TOGGLE_TARGETTING}
+          shortcutText={TOGGLE_TARGETTING}
+        >
           {targetting ? 'Moving...' : 'Move'}
           <EmSpacer width={1} />
           <Icon type={IconType.Target} />
-        </ShortcutButton>
+        </MaybeShortcutButton>
       </TooltipTrigger>
       <EmSpacer width={0.5} />
       {/* button which toggles whether or not the game is mining. this persists between refreshes */}
       <TooltipTrigger style={{ display: 'inline-block' }} name={TooltipName.MiningPause}>
-        <ShortcutButton
-          style={{ width: '110px' }}
-          onClick={uiManager.toggleExplore.bind(uiManager)}
+        <MaybeShortcutButton
+          onClick={doExplore}
+          onShortcutPressed={doExplore}
           shortcutKey={TOGGLE_EXPLORE}
           shortcutText={'space'}
         >
           {mining ? 'Pause' : 'Explore!'} <EmSpacer width={1} />{' '}
           {mining ? <Icon type={IconType.Pause} /> : <Icon type={IconType.Play} />}
-        </ShortcutButton>
+        </MaybeShortcutButton>
       </TooltipTrigger>
 
       {mining && (

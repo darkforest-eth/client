@@ -1,8 +1,9 @@
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
+import { formatNumber } from '@darkforest_eth/gamelogic';
+import { getPlayerColor } from '@darkforest_eth/procedural';
 import { Planet, PlanetType, PlanetTypeNames } from '@darkforest_eth/types';
 import React from 'react';
-import { ProcgenUtils } from '../../../Backend/Procedural/ProcgenUtils';
-import { formatNumber, getPlanetRank } from '../../../Backend/Utils/Utils';
+import { getPlanetRank } from '../../../Backend/Utils/Utils';
 import dfstyles from '../../Styles/dfstyles';
 import { useAccount, usePlayer, useUIManager } from '../../Utils/AppHooks';
 import { EmSpacer } from '../CoreUI';
@@ -21,12 +22,44 @@ export function StatText({
   planet,
   getStat,
   style,
+  buff,
+}: {
+  planet: Planet | undefined;
+  getStat: (p: Planet) => number;
+  style?: React.CSSProperties;
+  buff?: number;
+}) {
+  const textStyle = {
+    ...style,
+    color: buff ? dfstyles.colors.dforange : undefined,
+  };
+
+  let content;
+  if (planet) {
+    let stat = getStat(planet);
+    if (buff) {
+      stat *= buff;
+    }
+    content = formatNumber(stat, 2);
+  } else {
+    content = 'n/a';
+  }
+  return <span style={textStyle}>{content}</span>;
+}
+
+export function GrowthText({
+  planet,
+  getStat,
+  style,
 }: {
   planet: Planet | undefined;
   getStat: (p: Planet) => number;
   style?: React.CSSProperties;
 }) {
-  return <span style={style}>{planet ? formatNumber(getStat(planet), 2) : 'n/a'}</span>;
+  const paused = planet && planet.pausers > 0;
+  const statStyle = { ...style, textDecoration: paused ? 'line-through' : 'none' };
+
+  return <StatText style={statStyle} planet={planet} getStat={getStat} />;
 }
 
 const getSilver = (p: Planet) => p.silver;
@@ -71,23 +104,28 @@ export const DefenseText = ({ planet }: { planet: Planet | undefined }) => (
 );
 
 const getRange = (p: Planet) => p.range;
-export const RangeText = ({ planet }: { planet: Planet | undefined }) => (
-  <StatText planet={planet} getStat={getRange} />
+export const RangeText = ({ planet, buff }: { planet: Planet | undefined; buff?: number }) => (
+  <StatText planet={planet} getStat={getRange} buff={buff} />
+);
+
+const getJunk = (p: Planet) => p.spaceJunk;
+export const JunkText = ({ planet }: { planet: Planet | undefined }) => (
+  <StatText planet={planet} getStat={getJunk} />
 );
 
 const getSpeed = (p: Planet) => p.speed;
-export const SpeedText = ({ planet }: { planet: Planet | undefined }) => (
-  <StatText planet={planet} getStat={getSpeed} />
+export const SpeedText = ({ planet, buff }: { planet: Planet | undefined; buff?: number }) => (
+  <StatText planet={planet} getStat={getSpeed} buff={buff} />
 );
 
 const getEnergyGrowth = (p: Planet) => p.energyGrowth;
 export const EnergyGrowthText = ({ planet }: { planet: Planet | undefined }) => (
-  <StatText planet={planet} getStat={getEnergyGrowth} />
+  <GrowthText planet={planet} getStat={getEnergyGrowth} />
 );
 
 const getSilverGrowth = (p: Planet) => p.silverGrowth;
 export const SilverGrowthText = ({ planet }: { planet: Planet | undefined }) => (
-  <StatText planet={planet} getStat={getSilverGrowth} />
+  <GrowthText planet={planet} getStat={getSilverGrowth} />
 );
 
 // level and rank stuff
@@ -197,7 +235,7 @@ export function PlanetOwnerLabel({
     return <Colored color={dfstyles.colors.dfgreen}>yours!</Colored>;
   }
 
-  const color = colorWithOwnerColor ? defaultColor : ProcgenUtils.getPlayerColor(planet.owner);
+  const color = colorWithOwnerColor ? defaultColor : getPlayerColor(planet.owner);
   if (planet.owner && owner.value?.twitter) {
     return <TwitterLink color={color} twitter={owner.value.twitter} />;
   }

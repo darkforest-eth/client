@@ -19,7 +19,6 @@ Representation of the objects which exist in the world.
 - [claimedLocations](Backend_GameLogic_GameObjects.GameObjects.md#claimedlocations)
 - [contractConstants](Backend_GameLogic_GameObjects.GameObjects.md#contractconstants)
 - [coordsToLocation](Backend_GameLogic_GameObjects.GameObjects.md#coordstolocation)
-- [isBuyingCredits$](Backend_GameLogic_GameObjects.GameObjects.md#isbuyingcredits$)
 - [layeredMap](Backend_GameLogic_GameObjects.GameObjects.md#layeredmap)
 - [myArtifacts](Backend_GameLogic_GameObjects.GameObjects.md#myartifacts)
 - [myArtifactsUpdated$](Backend_GameLogic_GameObjects.GameObjects.md#myartifactsupdated$)
@@ -31,28 +30,22 @@ Representation of the objects which exist in the world.
 - [planets](Backend_GameLogic_GameObjects.GameObjects.md#planets)
 - [revealedLocations](Backend_GameLogic_GameObjects.GameObjects.md#revealedlocations)
 - [touchedPlanetIds](Backend_GameLogic_GameObjects.GameObjects.md#touchedplanetids)
-- [unconfirmedBuyGPTCredits](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedbuygptcredits)
-- [unconfirmedBuyHats](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedbuyhats)
-- [unconfirmedClaim](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedclaim)
-- [unconfirmedMoves](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedmoves)
-- [unconfirmedPlanetTransfers](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedplanettransfers)
-- [unconfirmedReveal](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedreveal)
-- [unconfirmedUpgrades](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedupgrades)
-- [unconfirmedWormholeActivations](Backend_GameLogic_GameObjects.GameObjects.md#unconfirmedwormholeactivations)
+- [transactions](Backend_GameLogic_GameObjects.GameObjects.md#transactions)
 - [wormholes](Backend_GameLogic_GameObjects.GameObjects.md#wormholes)
 
 ### Methods
 
 - [addPlanetLocation](Backend_GameLogic_GameObjects.GameObjects.md#addplanetlocation)
-- [calculateSilverSpent](Backend_GameLogic_GameObjects.GameObjects.md#calculatesilverspent)
 - [clearOldArrivals](Backend_GameLogic_GameObjects.GameObjects.md#clearoldarrivals)
 - [clearUnconfirmedTxIntent](Backend_GameLogic_GameObjects.GameObjects.md#clearunconfirmedtxintent)
 - [defaultPlanetFromLocation](Backend_GameLogic_GameObjects.GameObjects.md#defaultplanetfromlocation)
 - [emitArrivalNotifications](Backend_GameLogic_GameObjects.GameObjects.md#emitarrivalnotifications)
+- [forceTick](Backend_GameLogic_GameObjects.GameObjects.md#forcetick)
 - [getAllOwnedPlanets](Backend_GameLogic_GameObjects.GameObjects.md#getallownedplanets)
 - [getAllPlanets](Backend_GameLogic_GameObjects.GameObjects.md#getallplanets)
 - [getAllPlanetsMap](Backend_GameLogic_GameObjects.GameObjects.md#getallplanetsmap)
 - [getAllVoyages](Backend_GameLogic_GameObjects.GameObjects.md#getallvoyages)
+- [getArrivalIdsForLocation](Backend_GameLogic_GameObjects.GameObjects.md#getarrivalidsforlocation)
 - [getArtifactById](Backend_GameLogic_GameObjects.GameObjects.md#getartifactbyid)
 - [getArtifactController](Backend_GameLogic_GameObjects.GameObjects.md#getartifactcontroller)
 - [getArtifactMap](Backend_GameLogic_GameObjects.GameObjects.md#getartifactmap)
@@ -61,7 +54,6 @@ Representation of the objects which exist in the world.
 - [getBiome](Backend_GameLogic_GameObjects.GameObjects.md#getbiome)
 - [getClaimedLocations](Backend_GameLogic_GameObjects.GameObjects.md#getclaimedlocations)
 - [getEnergyCurveAtPercent](Backend_GameLogic_GameObjects.GameObjects.md#getenergycurveatpercent)
-- [getIsBuyingCreditsEmitter](Backend_GameLogic_GameObjects.GameObjects.md#getisbuyingcreditsemitter)
 - [getLocationOfPlanet](Backend_GameLogic_GameObjects.GameObjects.md#getlocationofplanet)
 - [getMyArtifactMap](Backend_GameLogic_GameObjects.GameObjects.md#getmyartifactmap)
 - [getMyPlanetMap](Backend_GameLogic_GameObjects.GameObjects.md#getmyplanetmap)
@@ -77,19 +69,15 @@ Representation of the objects which exist in the world.
 - [getPlanetsWithIds](Backend_GameLogic_GameObjects.GameObjects.md#getplanetswithids)
 - [getRevealedLocations](Backend_GameLogic_GameObjects.GameObjects.md#getrevealedlocations)
 - [getSilverCurveAtPercent](Backend_GameLogic_GameObjects.GameObjects.md#getsilvercurveatpercent)
-- [getUnconfirmedBuyGPTCredits](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedbuygptcredits)
-- [getUnconfirmedClaim](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedclaim)
-- [getUnconfirmedMoves](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedmoves)
-- [getUnconfirmedReveal](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedreveal)
-- [getUnconfirmedUpgrades](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedupgrades)
-- [getUnconfirmedWormholeActivations](Backend_GameLogic_GameObjects.GameObjects.md#getunconfirmedwormholeactivations)
 - [getWormholes](Backend_GameLogic_GameObjects.GameObjects.md#getwormholes)
+- [isGettingSpaceships](Backend_GameLogic_GameObjects.GameObjects.md#isgettingspaceships)
 - [isPlanetInContract](Backend_GameLogic_GameObjects.GameObjects.md#isplanetincontract)
 - [markLocationRevealed](Backend_GameLogic_GameObjects.GameObjects.md#marklocationrevealed)
 - [onTxIntent](Backend_GameLogic_GameObjects.GameObjects.md#ontxintent)
 - [planetLevelFromHexPerlin](Backend_GameLogic_GameObjects.GameObjects.md#planetlevelfromhexperlin)
 - [planetTypeFromHexPerlin](Backend_GameLogic_GameObjects.GameObjects.md#planettypefromhexperlin)
 - [processArrivalsForPlanet](Backend_GameLogic_GameObjects.GameObjects.md#processarrivalsforplanet)
+- [removeArrival](Backend_GameLogic_GameObjects.GameObjects.md#removearrival)
 - [replaceArtifactFromContractData](Backend_GameLogic_GameObjects.GameObjects.md#replaceartifactfromcontractdata)
 - [replaceArtifactsFromContractData](Backend_GameLogic_GameObjects.GameObjects.md#replaceartifactsfromcontractdata)
 - [replacePlanetFromContractData](Backend_GameLogic_GameObjects.GameObjects.md#replaceplanetfromcontractdata)
@@ -97,9 +85,9 @@ Representation of the objects which exist in the world.
 - [setClaimedLocation](Backend_GameLogic_GameObjects.GameObjects.md#setclaimedlocation)
 - [setPlanet](Backend_GameLogic_GameObjects.GameObjects.md#setplanet)
 - [spaceTypeFromPerlin](Backend_GameLogic_GameObjects.GameObjects.md#spacetypefromperlin)
+- [updateArtifact](Backend_GameLogic_GameObjects.GameObjects.md#updateartifact)
 - [updatePlanet](Backend_GameLogic_GameObjects.GameObjects.md#updateplanet)
 - [updatePlanetIfStale](Backend_GameLogic_GameObjects.GameObjects.md#updateplanetifstale)
-- [updateScore](Backend_GameLogic_GameObjects.GameObjects.md#updatescore)
 - [getSilverNeeded](Backend_GameLogic_GameObjects.GameObjects.md#getsilverneeded)
 - [planetCanUpgrade](Backend_GameLogic_GameObjects.GameObjects.md#planetcanupgrade)
 
@@ -111,19 +99,19 @@ Representation of the objects which exist in the world.
 
 #### Parameters
 
-| Name                          | Type                                                                                              |
-| :---------------------------- | :------------------------------------------------------------------------------------------------ |
-| `address`                     | `undefined` \| `EthAddress`                                                                       |
-| `touchedPlanets`              | `Map`<`LocationId`, `Planet`\>                                                                    |
-| `allTouchedPlanetIds`         | `Set`<`LocationId`\>                                                                              |
-| `revealedLocations`           | `Map`<`LocationId`, `RevealedLocation`\>                                                          |
-| `claimedLocations`            | `Map`<`LocationId`, `ClaimedLocation`\>                                                           |
-| `artifacts`                   | `Map`<`ArtifactId`, `Artifact`\>                                                                  |
-| `allChunks`                   | `Iterable`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>                                        |
-| `unprocessedArrivals`         | `Map`<`VoyageId`, `QueuedArrival`\>                                                               |
-| `unprocessedPlanetArrivalIds` | `Map`<`LocationId`, `VoyageId`[]\>                                                                |
-| `contractConstants`           | [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md) |
-| `worldRadius`                 | `number`                                                                                          |
+| Name                          | Type                                                                                             |
+| :---------------------------- | :----------------------------------------------------------------------------------------------- |
+| `address`                     | `undefined` \| `EthAddress`                                                                      |
+| `touchedPlanets`              | `Map`<`LocationId`, `Planet`\>                                                                   |
+| `allTouchedPlanetIds`         | `Set`<`LocationId`\>                                                                             |
+| `revealedLocations`           | `Map`<`LocationId`, `RevealedLocation`\>                                                         |
+| `claimedLocations`            | `Map`<`LocationId`, `ClaimedLocation`\>                                                          |
+| `artifacts`                   | `Map`<`ArtifactId`, `Artifact`\>                                                                 |
+| `allChunks`                   | `Iterable`<`Chunk`\>                                                                             |
+| `unprocessedArrivals`         | `Map`<`VoyageId`, `QueuedArrival`\>                                                              |
+| `unprocessedPlanetArrivalIds` | `Map`<`LocationId`, `VoyageId`[]\>                                                               |
+| `contractConstants`           | [`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md) |
+| `worldRadius`                 | `number`                                                                                         |
 
 ## Properties
 
@@ -177,7 +165,7 @@ revealing of this planet.
 
 ### contractConstants
 
-• `Private` `Readonly` **contractConstants**: [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md)
+• `Private` `Readonly` **contractConstants**: [`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md)
 
 Some of the game's parameters are downloaded from the blockchain. This allows the client to be
 flexible, and connect to any compatible set of Dark Forest contracts, download the parameters,
@@ -192,17 +180,6 @@ contracts.
 
 Map from a stringified representation of an x-y coordinate to an object that contains some more
 information about the world at that location.
-
----
-
-### isBuyingCredits$
-
-• `Readonly` **isBuyingCredits$**: `Monomitter`<`boolean`\>
-
-Event emitter which publishes whenever the player begins and finishes (whether with a success
-or an error) buying gpt credits.
-
-**`todo`** move into `PlayerInfo`
 
 ---
 
@@ -323,70 +300,17 @@ Set of all planet ids that we know have been interacted-with on-chain.
 
 ---
 
-### unconfirmedBuyGPTCredits
+### transactions
 
-• `Private` `Optional` **unconfirmedBuyGPTCredits**: `UnconfirmedBuyGPTCredits`
+• `Readonly` **transactions**: `TransactionCollection`
 
----
-
-### unconfirmedBuyHats
-
-• `Private` `Readonly` **unconfirmedBuyHats**: `Record`<`string`, `UnconfirmedBuyHat`\>
-
----
-
-### unconfirmedClaim
-
-• `Private` `Optional` **unconfirmedClaim**: `UnconfirmedClaim`
-
----
-
-### unconfirmedMoves
-
-• `Private` `Readonly` **unconfirmedMoves**: `Record`<`string`, `UnconfirmedMove`\>
-
----
-
-### unconfirmedPlanetTransfers
-
-• `Private` `Readonly` **unconfirmedPlanetTransfers**: `Record`<`string`, `UnconfirmedPlanetTransfer`\>
-
----
-
-### unconfirmedReveal
-
-• `Private` `Optional` **unconfirmedReveal**: `UnconfirmedReveal`
-
-The following set of fields represent actions which the user has initiated on the blockchain,
-and have not yet completed. The nature of the blockchain is that transactions could take up to
-several minutes to confirm (depending on network congestion). This means that we need to make
-it clear to players that the action that they have initiated is indeed in progress, and that
-something is actually happening. See `Prospect.tsx` for example.
-
-The storage and retrieval of unconfirmed transactions could, and
-probablu should be abstracted into some sort of class which keeps in sync both _these_ fields
-and each of these fields counterparts in their corresponding entity objects (Planet, Artifact,
-etc.)
-
-**`todo`** these are good candidates for being in the `PlayerInfo` class.
-
----
-
-### unconfirmedUpgrades
-
-• `Private` `Readonly` **unconfirmedUpgrades**: `Record`<`string`, `UnconfirmedUpgrade`\>
-
----
-
-### unconfirmedWormholeActivations
-
-• `Private` `Readonly` **unconfirmedWormholeActivations**: `UnconfirmedActivateArtifact`[]
+Transactions that are currently in flight.
 
 ---
 
 ### wormholes
 
-• `Private` `Readonly` **wormholes**: `Map`<`ArtifactId`, [`Wormhole`](../modules/_types_global_GlobalTypes.md#wormhole)\>
+• `Private` `Readonly` **wormholes**: `Map`<`ArtifactId`, `Wormhole`\>
 
 Map from artifact ids to wormholes.
 
@@ -415,22 +339,6 @@ IMPORTANT: Idempotent
 
 ---
 
-### calculateSilverSpent
-
-▸ `Private` **calculateSilverSpent**(`planet`): `number`
-
-#### Parameters
-
-| Name     | Type     |
-| :------- | :------- |
-| `planet` | `Planet` |
-
-#### Returns
-
-`number`
-
----
-
 ### clearOldArrivals
 
 ▸ `Private` **clearOldArrivals**(`planet`): `void`
@@ -449,7 +357,7 @@ IMPORTANT: Idempotent
 
 ### clearUnconfirmedTxIntent
 
-▸ **clearUnconfirmedTxIntent**(`txIntent`): `void`
+▸ **clearUnconfirmedTxIntent**(`tx`): `void`
 
 Whenever a transaction that the user initiated either succeeds or fails, we need to clear the
 fact that it was in progress from the event's corresponding entities. For example, whenever a
@@ -462,9 +370,9 @@ Making sure that we never miss something here is very tedious.
 
 #### Parameters
 
-| Name       | Type       |
-| :--------- | :--------- |
-| `txIntent` | `TxIntent` |
+| Name | Type                       |
+| :--- | :------------------------- |
+| `tx` | `Transaction`<`TxIntent`\> |
 
 #### Returns
 
@@ -503,6 +411,22 @@ Emit notifications based on a planet's state change
 | Name                | Type                                                                       |
 | :------------------ | :------------------------------------------------------------------------- |
 | `__namedParameters` | [`PlanetDiff`](../interfaces/Backend_GameLogic_ArrivalUtils.PlanetDiff.md) |
+
+#### Returns
+
+`void`
+
+---
+
+### forceTick
+
+▸ **forceTick**(`locationId`): `void`
+
+#### Parameters
+
+| Name         | Type         |
+| :----------- | :----------- |
+| `locationId` | `LocationId` |
 
 #### Returns
 
@@ -575,15 +499,33 @@ Returns all voyages that are scheduled to arrive at some point in the future.
 
 ---
 
-### getArtifactById
+### getArrivalIdsForLocation
 
-▸ **getArtifactById**(`artifactId`): `undefined` \| `Artifact`
+▸ **getArrivalIdsForLocation**(`location`): `undefined` \| `VoyageId`[]
+
+Get all of the incoming voyages for a given location.
 
 #### Parameters
 
-| Name         | Type         |
-| :----------- | :----------- |
-| `artifactId` | `ArtifactId` |
+| Name       | Type                        |
+| :--------- | :-------------------------- |
+| `location` | `undefined` \| `LocationId` |
+
+#### Returns
+
+`undefined` \| `VoyageId`[]
+
+---
+
+### getArtifactById
+
+▸ **getArtifactById**(`artifactId?`): `undefined` \| `Artifact`
+
+#### Parameters
+
+| Name          | Type         |
+| :------------ | :----------- |
+| `artifactId?` | `ArtifactId` |
 
 #### Returns
 
@@ -697,16 +639,6 @@ time may be in the past
 #### Returns
 
 `number`
-
----
-
-### getIsBuyingCreditsEmitter
-
-▸ **getIsBuyingCreditsEmitter**(): `Monomitter`<`boolean`\>
-
-#### Returns
-
-`Monomitter`<`boolean`\>
 
 ---
 
@@ -843,9 +775,9 @@ time may be in the past
 
 #### Parameters
 
-| Name       | Type            |
-| :--------- | :-------------- |
-| `location` | `WorldLocation` |
+| Name       | Type                           |
+| :--------- | :----------------------------- |
+| `location` | `undefined` \| `WorldLocation` |
 
 #### Returns
 
@@ -883,15 +815,15 @@ the `planetLevels` parameter. Fast because it uses [LayeredMap](Backend_GameLogi
 
 #### Parameters
 
-| Name                 | Type                                                                                   | Default value |
-| :------------------- | :------------------------------------------------------------------------------------- | :------------ |
-| `worldX`             | `number`                                                                               | `undefined`   |
-| `worldY`             | `number`                                                                               | `undefined`   |
-| `worldWidth`         | `number`                                                                               | `undefined`   |
-| `worldHeight`        | `number`                                                                               | `undefined`   |
-| `levels`             | `number`[]                                                                             | `undefined`   |
-| `planetLevelToRadii` | `Map`<`number`, [`Radii`](../interfaces/Backend_GameLogic_ViewportEntities.Radii.md)\> | `undefined`   |
-| `updateIfStale`      | `boolean`                                                                              | `true`        |
+| Name                 | Type                      | Default value |
+| :------------------- | :------------------------ | :------------ |
+| `worldX`             | `number`                  | `undefined`   |
+| `worldY`             | `number`                  | `undefined`   |
+| `worldWidth`         | `number`                  | `undefined`   |
+| `worldHeight`        | `number`                  | `undefined`   |
+| `levels`             | `number`[]                | `undefined`   |
+| `planetLevelToRadii` | `Map`<`number`, `Radii`\> | `undefined`   |
+| `updateIfStale`      | `boolean`                 | `true`        |
 
 #### Returns
 
@@ -949,73 +881,25 @@ returns undefined
 
 ---
 
-### getUnconfirmedBuyGPTCredits
-
-▸ **getUnconfirmedBuyGPTCredits**(): `undefined` \| `UnconfirmedBuyGPTCredits`
-
-#### Returns
-
-`undefined` \| `UnconfirmedBuyGPTCredits`
-
----
-
-### getUnconfirmedClaim
-
-▸ **getUnconfirmedClaim**(): `undefined` \| `UnconfirmedClaim`
-
-#### Returns
-
-`undefined` \| `UnconfirmedClaim`
-
----
-
-### getUnconfirmedMoves
-
-▸ **getUnconfirmedMoves**(): `UnconfirmedMove`[]
-
-#### Returns
-
-`UnconfirmedMove`[]
-
----
-
-### getUnconfirmedReveal
-
-▸ **getUnconfirmedReveal**(): `undefined` \| `UnconfirmedReveal`
-
-#### Returns
-
-`undefined` \| `UnconfirmedReveal`
-
----
-
-### getUnconfirmedUpgrades
-
-▸ **getUnconfirmedUpgrades**(): `UnconfirmedUpgrade`[]
-
-#### Returns
-
-`UnconfirmedUpgrade`[]
-
----
-
-### getUnconfirmedWormholeActivations
-
-▸ **getUnconfirmedWormholeActivations**(): `UnconfirmedActivateArtifact`[]
-
-#### Returns
-
-`UnconfirmedActivateArtifact`[]
-
----
-
 ### getWormholes
 
-▸ **getWormholes**(): `Iterable`<[`Wormhole`](../modules/_types_global_GlobalTypes.md#wormhole)\>
+▸ **getWormholes**(): `Iterable`<`Wormhole`\>
 
 #### Returns
 
-`Iterable`<[`Wormhole`](../modules/_types_global_GlobalTypes.md#wormhole)\>
+`Iterable`<`Wormhole`\>
+
+---
+
+### isGettingSpaceships
+
+▸ **isGettingSpaceships**(): `boolean`
+
+Whether or not we're already asking the game to give us spaceships.
+
+#### Returns
+
+`boolean`
 
 ---
 
@@ -1053,7 +937,7 @@ returns undefined
 
 ### onTxIntent
 
-▸ **onTxIntent**(`txIntent`): `void`
+▸ **onTxIntent**(`tx`): `void`
 
 We call this function whenever the user requests that we send a transaction to the blockchain
 with their localstorage wallet. You can think of it as one of the hubs which connects
@@ -1072,11 +956,14 @@ display a dashed line between the two planets in their new voyage.
 Whenever we update an entity, we must do it via that entity's type's corresponding
 `set<EntityType>` function, in order for us to publish these events.
 
+**`todo:`** this entire function could be automated by implementing a new interface called
+{@code TxFilter}.
+
 #### Parameters
 
-| Name       | Type       |
-| :--------- | :--------- |
-| `txIntent` | `TxIntent` |
+| Name | Type                       |
+| :--- | :------------------------- |
+| `tx` | `Transaction`<`TxIntent`\> |
 
 #### Returns
 
@@ -1132,6 +1019,23 @@ Whenever we update an entity, we must do it via that entity's type's correspondi
 #### Returns
 
 `ArrivalWithTimer`[]
+
+---
+
+### removeArrival
+
+▸ `Private` **removeArrival**(`planetId`, `arrivalId`): `void`
+
+#### Parameters
+
+| Name        | Type         |
+| :---------- | :----------- |
+| `planetId`  | `LocationId` |
+| `arrivalId` | `VoyageId`   |
+
+#### Returns
+
+`void`
 
 ---
 
@@ -1263,6 +1167,26 @@ This function also handles managing planet update messages and indexing the map 
 
 ---
 
+### updateArtifact
+
+▸ **updateArtifact**(`id`, `updateFn`): `void`
+
+Given a planet id, update the state of the given planet by calling the given update function.
+If the planet was updated, then also publish the appropriate event.
+
+#### Parameters
+
+| Name       | Type                        |
+| :--------- | :-------------------------- |
+| `id`       | `undefined` \| `ArtifactId` |
+| `updateFn` | (`p`: `Artifact`) => `void` |
+
+#### Returns
+
+`void`
+
+---
+
 ### updatePlanet
 
 ▸ **updatePlanet**(`id`, `updateFn`): `void`
@@ -1292,22 +1216,6 @@ If the planet was updated, then also publish the appropriate event.
 | Name     | Type     |
 | :------- | :------- |
 | `planet` | `Planet` |
-
-#### Returns
-
-`void`
-
----
-
-### updateScore
-
-▸ `Private` **updateScore**(`planetId`): `void`
-
-#### Parameters
-
-| Name       | Type         |
-| :--------- | :----------- |
-| `planetId` | `LocationId` |
 
 #### Returns
 

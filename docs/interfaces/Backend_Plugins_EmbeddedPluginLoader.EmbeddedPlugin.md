@@ -22,7 +22,7 @@ This interface represents an embedded plugin, which is stored in `embedded_plugi
 
 ### id
 
-• **id**: [`PluginId`](../modules/Backend_Plugins_SerializedPlugin.md#pluginid)
+• **id**: `PluginId`
 
 ---
 

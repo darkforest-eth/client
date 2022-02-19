@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { LongDash } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { GameWindowZIndex } from '../Utils/constants';
+import { DFZIndex } from '../Utils/constants';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 
 const StyledZoomPane = styled.div`
-  z-index: ${GameWindowZIndex.MenuBar};
+  z-index: ${DFZIndex.MenuBar};
   padding-left: 0.75em;
   padding-top: 0.1em;
   margin-top: 0;

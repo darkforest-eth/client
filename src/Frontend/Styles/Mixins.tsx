@@ -1,6 +1,6 @@
+import { isLocatable } from '@darkforest_eth/gamelogic';
 import { Planet, PlanetType } from '@darkforest_eth/types';
 import { css, keyframes } from 'styled-components';
-import { isLocatable } from '../../_types/global/GlobalTypes';
 import { BiomeBackgroundColors } from './Colors';
 
 const scrolling = keyframes`

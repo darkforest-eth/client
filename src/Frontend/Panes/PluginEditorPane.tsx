@@ -1,3 +1,4 @@
+import { PluginId } from '@darkforest_eth/types';
 import * as Prism from 'prismjs';
 import * as React from 'react';
 import { useState } from 'react';
@@ -5,10 +6,9 @@ import Editor from 'react-simple-code-editor';
 import styled from 'styled-components';
 import { PluginManager } from '../../Backend/GameLogic/PluginManager';
 import { PLUGIN_TEMPLATE } from '../../Backend/Plugins/PluginTemplate';
-import { PluginId } from '../../Backend/Plugins/SerializedPlugin';
 import { Btn } from '../Components/Btn';
-import { Padded, Spacer } from '../Components/CoreUI';
-import { Input } from '../Components/Input';
+import { Spacer } from '../Components/CoreUI';
+import { DarkForestTextInput, TextInput } from '../Components/Input';
 import dfstyles from '../Styles/dfstyles';
 require('prismjs/themes/prism-dark.css');
 
@@ -51,17 +51,17 @@ export function PluginEditorPane({
   const [code, setCode] = useState(plugin?.code || PLUGIN_TEMPLATE);
 
   function onSaveClick() {
-    overwrite(name || 'no name', code || '', pluginId);
+    overwrite(name || 'Unnamed', code || '', pluginId);
     setIsOpen(false);
   }
 
-  function onNameInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function onNameInputChange(e: Event & React.ChangeEvent<DarkForestTextInput>) {
     setName(e.target.value);
   }
 
   return (
-    <Padded>
-      <Input wide placeholder='no name' value={name} onChange={onNameInputChange} />
+    <>
+      <TextInput placeholder='Unnamed' value={name ?? ''} onChange={onNameInputChange} />
       <Spacer height={8} />
       <EditorContainer>
         <Editor
@@ -74,12 +74,14 @@ export function PluginEditorPane({
             fontFamily: '"Fira code", "Fira Mono", monospace',
             fontSize: 12,
           }}
+          onKeyDown={(e) => e.stopPropagation()}
+          onKeyUp={(e) => e.stopPropagation()}
         />
       </EditorContainer>
       <Spacer height={8} />
-      <Btn wide onClick={onSaveClick} style={{ height: '3em' }}>
+      <Btn size='stretch' onClick={onSaveClick}>
         Save
       </Btn>
-    </Padded>
+    </>
   );
 }

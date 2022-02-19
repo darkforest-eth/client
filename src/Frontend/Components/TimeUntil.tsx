@@ -14,14 +14,7 @@ export function TimeUntil({ timestamp, ifPassed }: { timestamp: number; ifPassed
       if (msWait <= 0) {
         setValue(ifPassed);
       } else {
-        const hoursWait = Math.floor(msWait / 1000 / 60 / 60);
-        const minutes = Math.floor((msWait - hoursWait * 60 * 60 * 1000) / 1000 / 60);
-        const seconds = Math.floor(
-          (msWait - hoursWait * 60 * 60 * 1000 - minutes * 60 * 1000) / 1000
-        );
-        const str =
-          hoursWait + ':' + (minutes + '').padStart(2, '0') + ':' + (seconds + '').padStart(2, '0');
-        setValue(str);
+        setValue(formatDuration(msWait));
       }
     };
 
@@ -34,4 +27,15 @@ export function TimeUntil({ timestamp, ifPassed }: { timestamp: number; ifPassed
   }, [timestamp, ifPassed]);
 
   return <span>{value}</span>;
+}
+
+export function formatDuration(msDuration: number): string {
+  const hoursWait = Math.floor(msDuration / 1000 / 60 / 60);
+  const minutes = Math.floor((msDuration - hoursWait * 60 * 60 * 1000) / 1000 / 60);
+  const seconds = Math.floor(
+    (msDuration - hoursWait * 60 * 60 * 1000 - minutes * 60 * 1000) / 1000
+  );
+  const str =
+    hoursWait + ':' + (minutes + '').padStart(2, '0') + ':' + (seconds + '').padStart(2, '0');
+  return str;
 }

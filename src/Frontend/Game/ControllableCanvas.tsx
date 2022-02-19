@@ -1,10 +1,10 @@
+import { Renderer } from '@darkforest_eth/renderer';
+import { CursorState, ModalManagerEvent, Setting } from '@darkforest_eth/types';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import Renderer from '../Renderers/GameRenderer/Renderer';
 import { useUIManager } from '../Utils/AppHooks';
 import UIEmitter, { UIEmitterEvent } from '../Utils/UIEmitter';
 import Viewport from './Viewport';
-import WindowManager, { CursorState, WindowManagerEvent } from './WindowManager';
 
 const CanvasWrapper = styled.div`
   width: 100%;
@@ -47,18 +47,18 @@ export default function ControllableCanvas() {
 
   const gameUIManager = useUIManager();
 
-  const windowManager = WindowManager.getInstance();
+  const modalManager = gameUIManager.getModalManager();
   const [targeting, setTargeting] = useState<boolean>(false);
 
   useEffect(() => {
     const updateTargeting = (newstate: CursorState) => {
       setTargeting(newstate === CursorState.TargetingExplorer);
     };
-    windowManager.on(WindowManagerEvent.StateChanged, updateTargeting);
+    modalManager.on(ModalManagerEvent.StateChanged, updateTargeting);
     return () => {
-      windowManager.removeListener(WindowManagerEvent.StateChanged, updateTargeting);
+      modalManager.removeListener(ModalManagerEvent.StateChanged, updateTargeting);
     };
-  }, [windowManager]);
+  }, [modalManager]);
 
   const doResize = useCallback(() => {
     const uiEmitter: UIEmitter = UIEmitter.getInstance();
@@ -105,7 +105,22 @@ export default function ControllableCanvas() {
     // TODO: Store this as it changes and re-initialize to that if stored
     const defaultWorldUnits = 4;
     Viewport.initialize(gameUIManager, defaultWorldUnits, canvas);
-    Renderer.initialize(canvasRef.current, glRef.current, bufferRef.current, gameUIManager);
+    Renderer.initialize(
+      canvasRef.current,
+      glRef.current,
+      bufferRef.current,
+      Viewport.getInstance(),
+      gameUIManager,
+      {
+        spaceColors: {
+          innerNebulaColor: gameUIManager.getStringSetting(Setting.RendererColorInnerNebula),
+          nebulaColor: gameUIManager.getStringSetting(Setting.RendererColorNebula),
+          spaceColor: gameUIManager.getStringSetting(Setting.RendererColorSpace),
+          deepSpaceColor: gameUIManager.getStringSetting(Setting.RendererColorDeepSpace),
+          deadSpaceColor: gameUIManager.getStringSetting(Setting.RendererColorDeadSpace),
+        },
+      }
+    );
     // We can't attach the wheel event onto the canvas due to:
     // https://www.chromestatus.com/features/6662647093133312
     canvas.addEventListener('wheel', onWheel);

@@ -1,3 +1,4 @@
+import { isAncient } from '@darkforest_eth/gamelogic';
 import {
   Artifact,
   ArtifactRarity,
@@ -7,7 +8,6 @@ import {
 } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
-import { isAncient } from '../../../Backend/GameLogic/ArtifactUtils';
 import { RarityColors } from '../../Styles/Colors';
 import { LegendaryLabel } from './LegendaryLabel';
 import { MythicLabel } from './MythicLabel';

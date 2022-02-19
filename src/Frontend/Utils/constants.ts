@@ -20,28 +20,7 @@ const LOCATION_ID_UB = bigInt(
 
 export { MIN_CHUNK_SIZE, MAX_CHUNK_SIZE, LOCATION_ID_UB };
 
-export const HAT_SIZES = [
-  'None',
-  'Tiny HAT',
-  'Small HAT',
-  'Medium HAT',
-  'Large HAT',
-  'Huge HAT',
-  'Mega HAT',
-  'Enormous HAT',
-  'Titanic HAT',
-  'Legendary HAT',
-  'Almighty HAT',
-  'Cosmic HAT',
-  'Celestial HAT',
-  'Empyrean HAT',
-  'Ethereal HAT',
-  'Transcendental HAT',
-  'haaaat',
-  'HAAAAT',
-];
-
-export const enum GameWindowZIndex {
+export const enum DFZIndex {
   MenuBar = 4,
   HoverPlanet = 1001,
   Modal = 1001,

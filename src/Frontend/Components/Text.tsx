@@ -1,10 +1,16 @@
 import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
-import { Artifact, ArtifactId, Planet, SubmittedTx, WorldCoords } from '@darkforest_eth/types';
+import { isLocatable } from '@darkforest_eth/gamelogic';
+import { artifactName, getPlanetName } from '@darkforest_eth/procedural';
+import {
+  Artifact,
+  ArtifactId,
+  Chunk,
+  Planet,
+  Transaction,
+  WorldCoords,
+} from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { artifactName } from '../../Backend/Procedural/ArtifactProcgen';
-import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
-import { Chunk, isLocatable } from '../../_types/global/GlobalTypes';
 import Viewport from '../Game/Viewport';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
@@ -69,17 +75,20 @@ export const HideSmall = styled.span`
   }
 `;
 
-export function TxLink({ tx }: { tx: SubmittedTx }) {
-  return (
-    <>
-      <u>
-        <a onClick={() => window.open(`${BLOCK_EXPLORER_URL}/${tx.txHash}`)}>
-          View {tx.txHash.substring(0, 7)} on block explorer
-        </a>
-      </u>
-      .
-    </>
-  );
+export function TxLink({ tx }: { tx: Transaction }) {
+  if (tx.hash) {
+    return (
+      <>
+        <u>
+          <Link onClick={() => window.open(`${BLOCK_EXPLORER_URL}/${tx.hash}`)}>
+            {tx.hash.substring(0, 7)}
+          </Link>
+        </u>
+      </>
+    );
+  }
+
+  return <Sub>-</Sub>;
 }
 
 export function CenterPlanetLink({
@@ -117,7 +126,7 @@ export function ArtifactNameLink({ id }: { id: ArtifactId }) {
 }
 
 export function PlanetNameLink({ planet }: { planet: Planet }) {
-  return <CenterPlanetLink planet={planet}>{ProcgenUtils.getPlanetName(planet)}</CenterPlanetLink>;
+  return <CenterPlanetLink planet={planet}>{getPlanetName(planet)}</CenterPlanetLink>;
 }
 
 export function CenterChunkLink({ chunk, children }: { chunk: Chunk; children: React.ReactNode }) {

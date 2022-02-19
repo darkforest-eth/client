@@ -14,10 +14,10 @@
 
 #### Parameters
 
-| Name                         | Type              |
-| :--------------------------- | :---------------- |
-| `__namedParameters`          | `Object`          |
-| `__namedParameters.children` | `React.ReactNode` |
+| Name                         | Type        |
+| :--------------------------- | :---------- |
+| `__namedParameters`          | `Object`    |
+| `__namedParameters.children` | `ReactNode` |
 
 #### Returns
 

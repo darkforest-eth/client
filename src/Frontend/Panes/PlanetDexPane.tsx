@@ -1,22 +1,21 @@
 import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
-import { Planet, PlanetType } from '@darkforest_eth/types';
+import { formatNumber } from '@darkforest_eth/gamelogic';
+import {
+  getPlanetClass,
+  getPlanetCosmetic,
+  getPlanetName,
+  rgbStr,
+} from '@darkforest_eth/procedural';
+import { engineConsts } from '@darkforest_eth/renderer';
+import { ModalName, Planet, PlanetType, RGBVec } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import {
-  blocksLeftToProspectExpiration,
-  isFindable,
-  isProspectable,
-} from '../../Backend/GameLogic/ArrivalUtils';
-import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
-import { formatNumber, getPlanetRank } from '../../Backend/Utils/Utils';
-import { CenterBackgroundSubtext, Padded, Spacer } from '../Components/CoreUI';
+import { getPlanetRank } from '../../Backend/Utils/Utils';
+import { CenterBackgroundSubtext, Spacer } from '../Components/CoreUI';
 import { Icon, IconType } from '../Components/Icons';
-import { Green, Sub } from '../Components/Text';
-import { engineConsts } from '../Renderers/GameRenderer/EngineConsts';
-import { RGBVec } from '../Renderers/GameRenderer/EngineTypes';
+import { Sub } from '../Components/Text';
 import { useUIManager } from '../Utils/AppHooks';
-import { useEmitterValue } from '../Utils/EmitterHooks';
-import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
+import { ModalPane } from '../Views/ModalPane';
 import { PlanetLink } from '../Views/PlanetLink';
 import { SortableTable } from '../Views/SortableTable';
 
@@ -25,7 +24,7 @@ const StyledPlanetThumb = styled.div<{ iconColor?: string }>`
   height: 20px;
   position: relative;
   line-height: 0;
-  z-index: -1;
+  z-index: 1;
 
   /* Set the Icon color if specified on the outer component */
   --df-icon-color: ${({ iconColor }) => iconColor};
@@ -51,8 +50,6 @@ const PlanetName = styled.span`
 `;
 
 const TableContainer = styled.div`
-  max-height: 300px;
-  height: 300px;
   overflow-y: scroll;
 `;
 
@@ -60,12 +57,12 @@ export function PlanetThumb({ planet }: { planet: Planet }) {
   const radius = 5 + 2 * planet.planetLevel;
   // const radius = 5 + 3 * PlanetLevel.MAX;
   const { speed, range, defense } = engineConsts.colors.belt;
-  const { baseStr } = ProcgenUtils.getPlanetCosmetic(planet);
+  const { baseStr } = getPlanetCosmetic(planet);
 
   const ringColor = (): string => {
-    const myClass = ProcgenUtils.getPlanetClass(planet);
+    const myClass = getPlanetClass(planet);
     const myColor: RGBVec = [defense, range, speed][myClass];
-    return ProcgenUtils.rgbStr(myColor);
+    return rgbStr(myColor);
   };
 
   const ringW = radius * 1.5;
@@ -123,31 +120,6 @@ export function PlanetThumb({ planet }: { planet: Planet }) {
   );
 }
 
-function DexEntryProspectable({ planet }: { planet: Planet }) {
-  return <span>{isProspectable(planet) ? <Green>yes</Green> : <Sub>no</Sub>}</span>;
-}
-
-function DexEntryProspectExpires({ planet }: { planet: Planet }) {
-  const uiManager = useUIManager();
-  const currentBlockNumber = useEmitterValue(uiManager.getEthConnection().blockNumber$, undefined);
-
-  if (
-    planet.prospectedBlockNumber === undefined ||
-    currentBlockNumber === undefined ||
-    !isFindable(planet, currentBlockNumber)
-  ) {
-    return <Sub>n/a</Sub>;
-  }
-
-  return (
-    <span>{blocksLeftToProspectExpiration(currentBlockNumber, planet.prospectedBlockNumber)}</span>
-  );
-}
-
-function boolToNum(b: boolean) {
-  return b ? 1 : 0;
-}
-
 function HelpContent() {
   return (
     <div>
@@ -163,10 +135,8 @@ function HelpContent() {
   );
 }
 
-export function PlanetDexPane({ hook }: { hook: ModalHook }) {
+export function PlanetDexPane({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const uiManager = useUIManager();
-  const currentBlockNumber = useEmitterValue(uiManager.getEthConnection().blockNumber$, undefined);
-  const [visible, _setVisible] = hook;
   const [planets, setPlanets] = useState<Planet[]>([]);
 
   // update planet list on open / close
@@ -200,22 +170,20 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
     };
   }, [visible, uiManager]);
 
-  const headers = ['', 'Planet Name', 'Level', 'Energy', 'Silver', 'Artifacts', 'Prospect', 'Find'];
-  const alignments: Array<'r' | 'c' | 'l'> = ['r', 'l', 'r', 'r', 'r', 'r', 'r', 'r'];
+  const headers = ['', 'Planet Name', 'Level', 'Energy', 'Silver', 'Inventory'];
+  const alignments: Array<'r' | 'c' | 'l'> = ['r', 'l', 'r', 'r', 'r', 'r'];
 
   const columns = [
     (planet: Planet) => <PlanetThumb planet={planet} />,
     (planet: Planet) => (
       <PlanetLink planet={planet}>
-        <PlanetName>{ProcgenUtils.getPlanetName(planet)}</PlanetName>
+        <PlanetName>{getPlanetName(planet)}</PlanetName>
       </PlanetLink>
     ),
     (planet: Planet) => <Sub>{planet.planetLevel}</Sub>,
     (planet: Planet) => <Sub>{formatNumber(planet.energy)}</Sub>,
     (planet: Planet) => <Sub>{formatNumber(planet.silver)}</Sub>,
     (planet: Planet) => <Sub>{formatNumber(planet.heldArtifactIds.length)}</Sub>,
-    (planet: Planet) => <DexEntryProspectable planet={planet} />,
-    (planet: Planet) => <DexEntryProspectExpires planet={planet} />,
   ];
 
   const sortingFunctions = [
@@ -223,7 +191,7 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
     (_a: Planet, _b: Planet): number => 0,
     // name
     (a: Planet, b: Planet): number => {
-      const [nameA, nameB] = [ProcgenUtils.getPlanetName(a), ProcgenUtils.getPlanetName(b)];
+      const [nameA, nameB] = [getPlanetName(a), getPlanetName(b)];
       return nameA.localeCompare(nameB);
     },
     // level
@@ -236,18 +204,6 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
     (a: Planet, b: Planet): number => {
       const [numArtifacts, scoreB] = [a.heldArtifactIds.length, b.heldArtifactIds.length];
       return scoreB - numArtifacts;
-    },
-    // prospectable
-    (a: Planet, b: Planet): number => {
-      return boolToNum(isProspectable(b)) - boolToNum(isProspectable(a));
-    },
-    // findable
-    (a: Planet, b: Planet): number => {
-      if (currentBlockNumber === undefined) return 0;
-      return (
-        blocksLeftToProspectExpiration(currentBlockNumber, b.prospectedBlockNumber) -
-        blocksLeftToProspectExpiration(currentBlockNumber, a.prospectedBlockNumber)
-      );
     },
   ];
 
@@ -263,6 +219,7 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
     content = (
       <TableContainer>
         <SortableTable
+          paginated={true}
           rows={planets}
           headers={headers}
           columns={columns}
@@ -275,13 +232,13 @@ export function PlanetDexPane({ hook }: { hook: ModalHook }) {
 
   return (
     <ModalPane
-      hook={hook}
+      visible={visible}
+      onClose={onClose}
+      id={ModalName.PlanetDex}
       title='Planet Dex'
-      name={ModalName.PlanetDex}
-      width='unset'
       helpContent={HelpContent}
     >
-      <Padded>{content}</Padded>
+      {content}
     </ModalPane>
   );
 }

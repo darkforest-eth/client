@@ -36,18 +36,13 @@
 - [foundTradingPost](Frontend_Game_NotificationManager.default.md#foundtradingpost)
 - [getIcon](Frontend_Game_NotificationManager.default.md#geticon)
 - [notify](Frontend_Game_NotificationManager.default.md#notify)
-- [notifyTx](Frontend_Game_NotificationManager.default.md#notifytx)
 - [planetAttacked](Frontend_Game_NotificationManager.default.md#planetattacked)
 - [planetCanUpgrade](Frontend_Game_NotificationManager.default.md#planetcanupgrade)
 - [planetConquered](Frontend_Game_NotificationManager.default.md#planetconquered)
 - [planetLost](Frontend_Game_NotificationManager.default.md#planetlost)
 - [reallyLongNotification](Frontend_Game_NotificationManager.default.md#reallylongnotification)
 - [receivedPlanet](Frontend_Game_NotificationManager.default.md#receivedplanet)
-- [txConfirm](Frontend_Game_NotificationManager.default.md#txconfirm)
-- [txInit](Frontend_Game_NotificationManager.default.md#txinit)
-- [txRevert](Frontend_Game_NotificationManager.default.md#txrevert)
-- [txSubmit](Frontend_Game_NotificationManager.default.md#txsubmit)
-- [unsubmittedTxFail](Frontend_Game_NotificationManager.default.md#unsubmittedtxfail)
+- [txInitError](Frontend_Game_NotificationManager.default.md#txiniterror)
 - [welcomePlayer](Frontend_Game_NotificationManager.default.md#welcomeplayer)
 - [getInstance](Frontend_Game_NotificationManager.default.md#getinstance)
 
@@ -166,9 +161,9 @@ EventEmitter.constructor
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type    |
+| :------ | :------ |
+| `chunk` | `Chunk` |
 
 #### Returns
 
@@ -182,9 +177,9 @@ EventEmitter.constructor
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type    |
+| :------ | :------ |
+| `chunk` | `Chunk` |
 
 #### Returns
 
@@ -262,9 +257,9 @@ EventEmitter.constructor
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type    |
+| :------ | :------ |
+| `chunk` | `Chunk` |
 
 #### Returns
 
@@ -290,18 +285,17 @@ EventEmitter.constructor
 
 ### getIcon
 
-▸ `Private` **getIcon**(`type`, `txStatus?`): `undefined` \| `Element`
+▸ `Private` **getIcon**(`type`): `Element`
 
 #### Parameters
 
-| Name        | Type                                                                                 |
-| :---------- | :----------------------------------------------------------------------------------- |
-| `type`      | [`NotificationType`](../enums/Frontend_Game_NotificationManager.NotificationType.md) |
-| `txStatus?` | `EthTxStatus`                                                                        |
+| Name   | Type                                                                                 |
+| :----- | :----------------------------------------------------------------------------------- |
+| `type` | [`NotificationType`](../enums/Frontend_Game_NotificationManager.NotificationType.md) |
 
 #### Returns
 
-`undefined` \| `Element`
+`Element`
 
 ---
 
@@ -315,24 +309,6 @@ EventEmitter.constructor
 | :-------- | :----------------------------------------------------------------------------------- |
 | `type`    | [`NotificationType`](../enums/Frontend_Game_NotificationManager.NotificationType.md) |
 | `message` | `ReactNode`                                                                          |
-
-#### Returns
-
-`void`
-
----
-
-### notifyTx
-
-▸ **notifyTx**(`txData`, `message`, `txStatus`): `void`
-
-#### Parameters
-
-| Name       | Type          |
-| :--------- | :------------ |
-| `txData`   | `TxIntent`    |
-| `message`  | `ReactNode`   |
-| `txStatus` | `EthTxStatus` |
 
 #### Returns
 
@@ -430,80 +406,16 @@ EventEmitter.constructor
 
 ---
 
-### txConfirm
+### txInitError
 
-▸ **txConfirm**(`tx`): `void`
-
-#### Parameters
-
-| Name | Type          |
-| :--- | :------------ |
-| `tx` | `SubmittedTx` |
-
-#### Returns
-
-`void`
-
----
-
-### txInit
-
-▸ **txInit**(`txIntent`): `void`
+▸ **txInitError**(`methodName`, `failureReason`): `void`
 
 #### Parameters
 
-| Name       | Type       |
-| :--------- | :--------- |
-| `txIntent` | `TxIntent` |
-
-#### Returns
-
-`void`
-
----
-
-### txRevert
-
-▸ **txRevert**(`tx`): `void`
-
-#### Parameters
-
-| Name | Type          |
-| :--- | :------------ |
-| `tx` | `SubmittedTx` |
-
-#### Returns
-
-`void`
-
----
-
-### txSubmit
-
-▸ **txSubmit**(`tx`): `void`
-
-#### Parameters
-
-| Name | Type          |
-| :--- | :------------ |
-| `tx` | `SubmittedTx` |
-
-#### Returns
-
-`void`
-
----
-
-### unsubmittedTxFail
-
-▸ **unsubmittedTxFail**(`txIntent`, `_e`): `void`
-
-#### Parameters
-
-| Name       | Type       |
-| :--------- | :--------- |
-| `txIntent` | `TxIntent` |
-| `_e`       | `Error`    |
+| Name            | Type                 |
+| :-------------- | :------------------- |
+| `methodName`    | `ContractMethodName` |
+| `failureReason` | `string`             |
 
 #### Returns
 

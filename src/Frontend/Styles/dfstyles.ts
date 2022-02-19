@@ -26,6 +26,7 @@ const backgroundlighter = color(backgroundlight).lighten(0.3).hex();
 const border = '#777';
 const borderDark = color(border).darken(0.2).hex();
 const borderDarker = color(borderDark).darken(0.2).hex();
+const borderDarkest = color(borderDarker).darken(0.5).hex();
 
 const blueBackground = '#0a0a23';
 
@@ -37,6 +38,7 @@ const dfred = '#FF6492';
 const dfyellow = '#e8e228';
 const dfpurple = '#9189d9';
 const dfwhite = '#ffffff';
+const dforange = 'rgb(196, 101, 0)';
 
 const dfstyles = {
   colors: {
@@ -55,6 +57,7 @@ const dfstyles = {
     border,
     borderDark,
     borderDarker,
+    borderDarkest,
 
     dfgreen,
     dfgreendark,
@@ -63,6 +66,7 @@ const dfstyles = {
     dfyellow,
     dfpurple,
     dfwhite,
+    dforange,
 
     artifactBackground: 'rgb(21, 17, 71)',
 
@@ -104,6 +108,7 @@ const dfstyles = {
       energyCap: 'hsl(360, 73%, 70%)',
       speed: 'hsl(290, 73%, 70%)',
       def: 'hsl(231, 73%, 70%)',
+      spaceJunk: 'hsl(43, 33%, 29%)',
       energyGro: 'hsl(136, 73%, 70%)',
       range: 'hsl(50, 73%, 70%)',
     },
@@ -149,6 +154,13 @@ export const snips = {
     left: 0;
   `,
   pane: ``,
+  // It is unclear where this should go in this file
+  destroyedBackground: {
+    backgroundImage: 'url("/public/img/destroyedbg.png")',
+    backgroundSize: '150px',
+    backgroundPosition: 'right bottom',
+    backgroundRepeat: 'no-repeat',
+  } as CSSStyleDeclaration & React.CSSProperties,
 };
 
 export default dfstyles;

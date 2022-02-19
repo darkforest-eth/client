@@ -14,10 +14,11 @@
 
 #### Parameters
 
-| Name                              | Type                                                    |
-| :-------------------------------- | :------------------------------------------------------ |
-| `__namedParameters`               | `Object`                                                |
-| `__namedParameters.newPlayerHook` | [`Hook`](_types_global_GlobalTypes.md#hook)<`boolean`\> |
+| Name                        | Type         |
+| :-------------------------- | :----------- |
+| `__namedParameters`         | `Object`     |
+| `__namedParameters.visible` | `boolean`    |
+| `__namedParameters.onClose` | () => `void` |
 
 #### Returns
 

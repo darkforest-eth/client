@@ -7,10 +7,23 @@ import { Wrapper } from '../../Backend/Utils/Wrapper';
  * @param emitter `Monomitter` to subscribe to
  * @param callback callback to subscribe
  */
-export function useEmitterSubscribe<T>(emitter: Monomitter<T>, callback: Callback<T>) {
-  useEffect(() => {
-    return emitter.subscribe(callback).unsubscribe;
-  }, [emitter, callback]);
+export function useEmitterSubscribe<T>(
+  emitter: Monomitter<T>,
+  callback: Callback<T>,
+  deps: React.DependencyList
+) {
+  useEffect(
+    () => {
+      return emitter.subscribe(callback).unsubscribe;
+    },
+    // Disable exhaustive because we don't change if the callback changes, only deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      emitter,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      ...deps,
+    ]
+  );
 }
 
 /**

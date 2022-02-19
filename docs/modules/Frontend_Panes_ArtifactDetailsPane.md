@@ -17,12 +17,14 @@
 
 #### Parameters
 
-| Name                                  | Type                                                                                              |
-| :------------------------------------ | :------------------------------------------------------------------------------------------------ |
-| `__namedParameters`                   | `Object`                                                                                          |
-| `__namedParameters.artifactId`        | `ArtifactId`                                                                                      |
-| `__namedParameters.contractConstants` | [`ContractConstants`](../interfaces/_types_darkforest_api_ContractsAPITypes.ContractConstants.md) |
-| `__namedParameters.modal`             | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md)                            |
+| Name                                  | Type                                                                                             |
+| :------------------------------------ | :----------------------------------------------------------------------------------------------- |
+| `__namedParameters`                   | `Object`                                                                                         |
+| `__namedParameters.artifactId`        | `ArtifactId`                                                                                     |
+| `__namedParameters.contractConstants` | [`ContractConstants`](../interfaces/types_darkforest_api_ContractsAPITypes.ContractConstants.md) |
+| `__namedParameters.depositOn?`        | `LocationId`                                                                                     |
+| `__namedParameters.modal?`            | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md)                           |
+| `__namedParameters.noActions?`        | `boolean`                                                                                        |
 
 #### Returns
 
@@ -50,6 +52,7 @@
 | :----------------------------- | :--------------------------------------------------------------------- |
 | `__namedParameters`            | `Object`                                                               |
 | `__namedParameters.artifactId` | `ArtifactId`                                                           |
+| `__namedParameters.depositOn?` | `LocationId`                                                           |
 | `__namedParameters.modal`      | [`ModalHandle`](../interfaces/Frontend_Views_ModalPane.ModalHandle.md) |
 
 #### Returns
@@ -64,11 +67,11 @@
 
 #### Parameters
 
-| Name                         | Type                                                       |
-| :--------------------------- | :--------------------------------------------------------- |
-| `__namedParameters`          | `Object`                                                   |
-| `__namedParameters.stat`     | [`StatIdx`](../enums/_types_global_GlobalTypes.StatIdx.md) |
-| `__namedParameters.upgrades` | (`Upgrade` \| `undefined`)[]                               |
+| Name                         | Type                                                      |
+| :--------------------------- | :-------------------------------------------------------- |
+| `__namedParameters`          | `Object`                                                  |
+| `__namedParameters.stat`     | [`StatIdx`](../enums/types_global_GlobalTypes.StatIdx.md) |
+| `__namedParameters.upgrades` | (`undefined` \| `Upgrade`)[]                              |
 
 #### Returns
 

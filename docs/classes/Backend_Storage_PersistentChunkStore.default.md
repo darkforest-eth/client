@@ -4,7 +4,7 @@
 
 ## Implements
 
-- [`ChunkStore`](../interfaces/_types_darkforest_api_ChunkStoreTypes.ChunkStore.md)
+- [`ChunkStore`](../interfaces/types_darkforest_api_ChunkStoreTypes.ChunkStore.md)
 
 ## Table of contents
 
@@ -17,6 +17,7 @@
 - [account](Backend_Storage_PersistentChunkStore.default.md#account)
 - [chunkMap](Backend_Storage_PersistentChunkStore.default.md#chunkmap)
 - [confirmedTxHashes](Backend_Storage_PersistentChunkStore.default.md#confirmedtxhashes)
+- [contractAddress](Backend_Storage_PersistentChunkStore.default.md#contractaddress)
 - [db](Backend_Storage_PersistentChunkStore.default.md#db)
 - [diagnosticUpdater](Backend_Storage_PersistentChunkStore.default.md#diagnosticupdater)
 - [nUpdatesLastTwoMins](Backend_Storage_PersistentChunkStore.default.md#nupdateslasttwomins)
@@ -42,6 +43,7 @@
 - [getUnconfirmedSubmittedEthTxs](Backend_Storage_PersistentChunkStore.default.md#getunconfirmedsubmittedethtxs)
 - [hasMinedChunk](Backend_Storage_PersistentChunkStore.default.md#hasminedchunk)
 - [loadChunks](Backend_Storage_PersistentChunkStore.default.md#loadchunks)
+- [loadModalPositions](Backend_Storage_PersistentChunkStore.default.md#loadmodalpositions)
 - [loadPlugins](Backend_Storage_PersistentChunkStore.default.md#loadplugins)
 - [onEthTxComplete](Backend_Storage_PersistentChunkStore.default.md#onethtxcomplete)
 - [onEthTxSubmit](Backend_Storage_PersistentChunkStore.default.md#onethtxsubmit)
@@ -49,6 +51,7 @@
 - [recomputeSaveThrottleAfterUpdate](Backend_Storage_PersistentChunkStore.default.md#recomputesavethrottleafterupdate)
 - [removeKey](Backend_Storage_PersistentChunkStore.default.md#removekey)
 - [saveClaimedCoords](Backend_Storage_PersistentChunkStore.default.md#saveclaimedcoords)
+- [saveModalPositions](Backend_Storage_PersistentChunkStore.default.md#savemodalpositions)
 - [savePlugins](Backend_Storage_PersistentChunkStore.default.md#saveplugins)
 - [saveRevealedCoords](Backend_Storage_PersistentChunkStore.default.md#saverevealedcoords)
 - [saveTouchedPlanetIds](Backend_Storage_PersistentChunkStore.default.md#savetouchedplanetids)
@@ -60,14 +63,13 @@
 
 ### constructor
 
-• **new default**(`db`, `account`)
+• **new default**(`__namedParameters`)
 
 #### Parameters
 
-| Name      | Type                       |
-| :-------- | :------------------------- |
-| `db`      | `IDBPDatabase`<`unknown`\> |
-| `account` | `EthAddress`               |
+| Name                | Type                         |
+| :------------------ | :--------------------------- |
+| `__namedParameters` | `PersistentChunkStoreConfig` |
 
 ## Properties
 
@@ -79,13 +81,19 @@
 
 ### chunkMap
 
-• `Private` **chunkMap**: `Map`<[`ChunkId`](../modules/_types_darkforest_api_ChunkStoreTypes.md#chunkid), [`Chunk`](_types_global_GlobalTypes.Chunk.md)\>
+• `Private` **chunkMap**: `Map`<[`ChunkId`](../modules/types_darkforest_api_ChunkStoreTypes.md#chunkid), `Chunk`\>
 
 ---
 
 ### confirmedTxHashes
 
 • `Private` **confirmedTxHashes**: `Set`<`string`\>
+
+---
+
+### contractAddress
+
+• `Private` **contractAddress**: `EthAddress`
 
 ---
 
@@ -131,10 +139,10 @@ i.e. it already exists in persistent storage.
 
 #### Parameters
 
-| Name           | Type                                          | Default value |
-| :------------- | :-------------------------------------------- | :------------ |
-| `chunk`        | [`Chunk`](_types_global_GlobalTypes.Chunk.md) | `undefined`   |
-| `persistChunk` | `boolean`                                     | `true`        |
+| Name           | Type      | Default value |
+| :------------- | :-------- | :------------ |
+| `chunk`        | `Chunk`   | `undefined`   |
+| `persistChunk` | `boolean` | `true`        |
 
 #### Returns
 
@@ -160,11 +168,11 @@ i.e. it already exists in persistent storage.
 
 ### allChunks
 
-▸ **allChunks**(): `Iterable`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>
+▸ **allChunks**(): `Iterable`<`Chunk`\>
 
 #### Returns
 
-`Iterable`<[`Chunk`](_types_global_GlobalTypes.Chunk.md)\>
+`Iterable`<`Chunk`\>
 
 ---
 
@@ -213,7 +221,7 @@ i.e. it already exists in persistent storage.
 
 ### getChunkByFootprint
 
-▸ **getChunkByFootprint**(`chunkLoc`): `undefined` \| [`Chunk`](_types_global_GlobalTypes.Chunk.md)
+▸ **getChunkByFootprint**(`chunkLoc`): `undefined` \| `Chunk`
 
 Returns the explored chunk data for the given rectangle if that chunk has been mined. If this
 chunk is entirely contained within another bigger chunk that has been mined, return that chunk.
@@ -222,29 +230,29 @@ function.
 
 #### Parameters
 
-| Name       | Type                                                                |
-| :--------- | :------------------------------------------------------------------ |
-| `chunkLoc` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
+| Name       | Type        |
+| :--------- | :---------- |
+| `chunkLoc` | `Rectangle` |
 
 #### Returns
 
-`undefined` \| [`Chunk`](_types_global_GlobalTypes.Chunk.md)
+`undefined` \| `Chunk`
 
 ---
 
 ### getChunkById
 
-▸ `Private` **getChunkById**(`chunkId`): `undefined` \| [`Chunk`](_types_global_GlobalTypes.Chunk.md)
+▸ `Private` **getChunkById**(`chunkId`): `undefined` \| `Chunk`
 
 #### Parameters
 
-| Name      | Type                                                                     |
-| :-------- | :----------------------------------------------------------------------- |
-| `chunkId` | [`ChunkId`](../modules/_types_darkforest_api_ChunkStoreTypes.md#chunkid) |
+| Name      | Type                                                                    |
+| :-------- | :---------------------------------------------------------------------- |
+| `chunkId` | [`ChunkId`](../modules/types_darkforest_api_ChunkStoreTypes.md#chunkid) |
 
 #### Returns
 
-`undefined` \| [`Chunk`](_types_global_GlobalTypes.Chunk.md)
+`undefined` \| `Chunk`
 
 ---
 
@@ -274,10 +282,10 @@ current configuration of the client.
 
 #### Parameters
 
-| Name       | Type          |
-| :--------- | :------------ |
-| `key`      | `string`      |
-| `objStore` | `ObjectStore` |
+| Name       | Type          | Default value         |
+| :--------- | :------------ | :-------------------- |
+| `key`      | `string`      | `undefined`           |
+| `objStore` | `ObjectStore` | `ObjectStore.DEFAULT` |
 
 #### Returns
 
@@ -287,7 +295,7 @@ current configuration of the client.
 
 ### getMinedSubChunks
 
-▸ `Private` **getMinedSubChunks**(`chunk`): [`Chunk`](_types_global_GlobalTypes.Chunk.md)[]
+▸ `Private` **getMinedSubChunks**(`chunk`): `Chunk`[]
 
 Returns all the mined chunks with smaller sidelength strictly contained in the chunk.
 
@@ -296,13 +304,13 @@ the function named `addToChunkMap`.
 
 #### Parameters
 
-| Name    | Type                                          |
-| :------ | :-------------------------------------------- |
-| `chunk` | [`Chunk`](_types_global_GlobalTypes.Chunk.md) |
+| Name    | Type    |
+| :------ | :------ |
+| `chunk` | `Chunk` |
 
 #### Returns
 
-[`Chunk`](_types_global_GlobalTypes.Chunk.md)[]
+`Chunk`[]
 
 ---
 
@@ -338,11 +346,11 @@ the function named `addToChunkMap`.
 
 ### getUnconfirmedSubmittedEthTxs
 
-▸ **getUnconfirmedSubmittedEthTxs**(): `Promise`<`SubmittedTx`[]\>
+▸ **getUnconfirmedSubmittedEthTxs**(): `Promise`<`PersistedTransaction`<`TxIntent`\>[]\>
 
 #### Returns
 
-`Promise`<`SubmittedTx`[]\>
+`Promise`<`PersistedTransaction`<`TxIntent`\>[]\>
 
 ---
 
@@ -352,9 +360,9 @@ the function named `addToChunkMap`.
 
 #### Parameters
 
-| Name       | Type                                                                |
-| :--------- | :------------------------------------------------------------------ |
-| `chunkLoc` | [`Rectangle`](../interfaces/_types_global_GlobalTypes.Rectangle.md) |
+| Name       | Type        |
+| :--------- | :---------- |
+| `chunkLoc` | `Rectangle` |
 
 #### Returns
 
@@ -362,7 +370,7 @@ the function named `addToChunkMap`.
 
 #### Implementation of
 
-[ChunkStore](../interfaces/_types_darkforest_api_ChunkStoreTypes.ChunkStore.md).[hasMinedChunk](../interfaces/_types_darkforest_api_ChunkStoreTypes.ChunkStore.md#hasminedchunk)
+[ChunkStore](../interfaces/types_darkforest_api_ChunkStoreTypes.ChunkStore.md).[hasMinedChunk](../interfaces/types_darkforest_api_ChunkStoreTypes.ChunkStore.md#hasminedchunk)
 
 ---
 
@@ -375,6 +383,16 @@ This function loads all chunks persisted in the user's storage into the game.
 #### Returns
 
 `Promise`<`void`\>
+
+---
+
+### loadModalPositions
+
+▸ **loadModalPositions**(): `Promise`<`Map`<`ModalId`, `ModalPosition`\>\>
+
+#### Returns
+
+`Promise`<`Map`<`ModalId`, `ModalPosition`\>\>
 
 ---
 
@@ -392,6 +410,8 @@ This function loads all chunks persisted in the user's storage into the game.
 
 ▸ **onEthTxComplete**(`txHash`): `Promise`<`void`\>
 
+Partner function to {@link PersistentChunkStore#onEthTxSubmit}
+
 #### Parameters
 
 | Name     | Type     |
@@ -408,11 +428,16 @@ This function loads all chunks persisted in the user's storage into the game.
 
 ▸ **onEthTxSubmit**(`tx`): `Promise`<`void`\>
 
+Whenever a transaction is submitted, it is persisted. When the transaction either fails or
+succeeds, it is un-persisted. The reason we persist submitted transactions is to be able to
+wait for them upon a fresh start of the game if you close the game before a transaction
+confirms.
+
 #### Parameters
 
-| Name | Type          |
-| :--- | :------------ |
-| `tx` | `SubmittedTx` |
+| Name | Type                       |
+| :--- | :------------------------- |
+| `tx` | `Transaction`<`TxIntent`\> |
 
 #### Returns
 
@@ -450,10 +475,10 @@ indexed db.
 
 #### Parameters
 
-| Name       | Type          |
-| :--------- | :------------ |
-| `key`      | `string`      |
-| `objStore` | `ObjectStore` |
+| Name       | Type          | Default value         |
+| :--------- | :------------ | :-------------------- |
+| `key`      | `string`      | `undefined`           |
+| `objStore` | `ObjectStore` | `ObjectStore.DEFAULT` |
 
 #### Returns
 
@@ -470,6 +495,22 @@ indexed db.
 | Name                | Type              |
 | :------------------ | :---------------- |
 | `claimedCoordTupps` | `ClaimedCoords`[] |
+
+#### Returns
+
+`Promise`<`void`\>
+
+---
+
+### saveModalPositions
+
+▸ **saveModalPositions**(`modalPositions`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name             | Type                               |
+| :--------------- | :--------------------------------- |
+| `modalPositions` | `Map`<`ModalId`, `ModalPosition`\> |
 
 #### Returns
 
@@ -552,11 +593,11 @@ current configuration of the client.
 
 #### Parameters
 
-| Name       | Type          |
-| :--------- | :------------ |
-| `key`      | `string`      |
-| `value`    | `string`      |
-| `objStore` | `ObjectStore` |
+| Name       | Type          | Default value         |
+| :--------- | :------------ | :-------------------- |
+| `key`      | `string`      | `undefined`           |
+| `value`    | `string`      | `undefined`           |
+| `objStore` | `ObjectStore` | `ObjectStore.DEFAULT` |
 
 #### Returns
 
@@ -566,13 +607,18 @@ current configuration of the client.
 
 ### create
 
-▸ `Static` **create**(`account`): `Promise`<[`default`](Backend_Storage_PersistentChunkStore.default.md)\>
+▸ `Static` **create**(`__namedParameters`): `Promise`<[`default`](Backend_Storage_PersistentChunkStore.default.md)\>
+
+NOTE! if you're creating a new object store, it will not be _added_ to existing dark forest
+accounts. This creation code runs once per account. Therefore, if you're adding a new object
+store, and need to test it out, you must either clear the indexed db databse for this account,
+or create a brand new account.
 
 #### Parameters
 
-| Name      | Type         |
-| :-------- | :----------- |
-| `account` | `EthAddress` |
+| Name                | Type                                          |
+| :------------------ | :-------------------------------------------- |
+| `__namedParameters` | `Omit`<`PersistentChunkStoreConfig`, `"db"`\> |
 
 #### Returns
 

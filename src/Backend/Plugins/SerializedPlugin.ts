@@ -1,6 +1,4 @@
-export type PluginId = string & {
-  __nothing__: never;
-};
+import { PluginId } from '@darkforest_eth/types';
 
 /**
  * Represents a plugin that the user has added to their game. Used

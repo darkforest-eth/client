@@ -1,7 +1,6 @@
 import { fakeHash, perlin, seededRandom } from '@darkforest_eth/hashing';
 import { locationIdFromBigInt } from '@darkforest_eth/serde';
-import { WorldCoords, WorldLocation } from '@darkforest_eth/types';
-import { Rectangle } from '../../_types/global/GlobalTypes';
+import { Rectangle, WorldCoords, WorldLocation } from '@darkforest_eth/types';
 
 type IdxWithRand = {
   idx: number;
@@ -78,7 +77,7 @@ export const getPlanetLocations =
     const [mPrime, nPrime] = sigma(m, n);
     const postImages: [number, number][] = [];
     for (let i = 0; i < SIZE / planetRarity; i += 1) {
-      postImages.push([0, i]);
+      postImages.push([Math.floor(i / 256), i % 256]);
     }
     const preImages: [number, number][] = [];
     for (const postImage of postImages) {
@@ -99,7 +98,7 @@ export const getPlanetLocations =
       )
       .map((coords) => ({
         coords,
-        hash: locationIdFromBigInt(fakeHash(coords.x, coords.y)),
+        hash: locationIdFromBigInt(fakeHash(planetRarity)(coords.x, coords.y)),
         perlin: perlin(coords, {
           key: spaceTypeKey,
           scale: perlinLengthScale,

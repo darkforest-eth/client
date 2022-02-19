@@ -10,4 +10,4 @@
 
 ### SpacetimeRipLabel
 
-• `Const` **SpacetimeRipLabel**: `MemoExoticComponent`<`fn`\>
+• **SpacetimeRipLabel**: `MemoExoticComponent`<`fn`\>

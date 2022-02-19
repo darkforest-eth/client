@@ -1,8 +1,10 @@
+import { ModalName } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Sub } from '../Components/Text';
+import { TextPreview } from '../Components/TextPreview';
 import { useUIManager } from '../Utils/AppHooks';
-import { ModalHook, ModalName, ModalPane } from '../Views/ModalPane';
+import { ModalPane } from '../Views/ModalPane';
 
 const StyledPrivatePane = styled.div`
   width: 36em;
@@ -13,7 +15,7 @@ const StyledPrivatePane = styled.div`
     justify-content: space-between;
   }
 `;
-export function PrivatePane({ hook }: { hook: ModalHook }) {
+export function PrivatePane({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const uiManager = useUIManager();
 
   const [sKey, setSKey] = useState<string | undefined>(undefined);
@@ -25,14 +27,21 @@ export function PrivatePane({ hook }: { hook: ModalHook }) {
     setHome(coords ? `(${coords.x}, ${coords.y})` : '');
   }, [uiManager]);
   return (
-    <ModalPane hook={hook} title={'View Secret Key and Home Coords'} name={ModalName.Private}>
+    <ModalPane
+      id={ModalName.Private}
+      title='View Secret Key and Home Coords'
+      visible={visible}
+      onClose={onClose}
+    >
       <StyledPrivatePane>
         <p>
           <Sub>
             <u>secret key</u>
           </Sub>
         </p>
-        <p>{sKey}</p>
+        <p>
+          <TextPreview text={sKey} focusedWidth={'150px'} unFocusedWidth={'150px'} />
+        </p>
         <br />
         <p>
           <Sub>

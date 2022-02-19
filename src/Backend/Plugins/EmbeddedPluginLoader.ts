@@ -1,4 +1,4 @@
-import { PluginId } from './SerializedPlugin';
+import { PluginId } from '@darkforest_eth/types';
 
 /**
  * This interface represents an embedded plugin, which is stored in `embedded_plugins/`.
@@ -22,12 +22,21 @@ function cleanFilename(filename: string) {
     .replace(/\.[jt]sx?$/, '');
 }
 
-export function getEmbeddedPlugins() {
-  return pluginsContext.keys().map((filename) => {
-    return {
-      id: filename as PluginId,
-      name: cleanFilename(filename),
-      code: pluginsContext<{ default: string }>(filename).default,
-    };
-  });
+export function getEmbeddedPlugins(isAdmin: boolean) {
+  return pluginsContext
+    .keys()
+    .filter((filename) => {
+      if (isAdmin) {
+        return true;
+      } else {
+        return !filename.startsWith('./Admin-Controls');
+      }
+    })
+    .map((filename) => {
+      return {
+        id: filename as PluginId,
+        name: cleanFilename(filename),
+        code: pluginsContext<{ default: string }>(filename).default,
+      };
+    });
 }

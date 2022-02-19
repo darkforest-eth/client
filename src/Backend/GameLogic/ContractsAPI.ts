@@ -1,26 +1,11 @@
-import { CONTRACT_PRECISION, EMPTY_LOCATION_ID } from '@darkforest_eth/constants';
-import {
-  CORE_CONTRACT_ADDRESS,
-  GETTERS_CONTRACT_ADDRESS,
-  GPT_CREDIT_CONTRACT_ADDRESS,
-  SCORING_CONTRACT_ADDRESS,
-  TOKENS_CONTRACT_ADDRESS,
-  WHITELIST_CONTRACT_ADDRESS,
-} from '@darkforest_eth/contracts';
-import type {
-  DarkForestCore,
-  DarkForestGetters,
-  DarkForestGPTCredit,
-  DarkForestScoringRound3,
-  DarkForestTokens,
-  Whitelist,
-} from '@darkforest_eth/contracts/typechain';
+import { EMPTY_LOCATION_ID } from '@darkforest_eth/constants';
+import { DarkForest } from '@darkforest_eth/contracts/typechain';
 import {
   aggregateBulkGetter,
   ContractCaller,
   EthConnection,
   ethToWei,
-  QueuedTransaction,
+  TxCollection,
   TxExecutor,
 } from '@darkforest_eth/network';
 import {
@@ -30,27 +15,18 @@ import {
   decodeArrival,
   decodeArtifact,
   decodeArtifactPointValues,
-  decodeClaimedCoords,
   decodePlanet,
   decodePlanetDefaults,
   decodePlayer,
   decodeRevealedCoords,
   decodeUpgradeBranches,
-  locationIdFromDecStr,
   locationIdFromEthersBN,
   locationIdToDecStr,
 } from '@darkforest_eth/serde';
-import type {
-  BiomebaseSnarkContractCallArgs,
-  InitSnarkContractCallArgs,
-  MoveSnarkContractCallArgs,
-  RevealSnarkContractCallArgs,
-} from '@darkforest_eth/snarks';
 import {
   Artifact,
   ArtifactId,
   AutoGasSetting,
-  ClaimedCoords,
   ContractMethodName,
   DiagnosticUpdater,
   EthAddress,
@@ -59,62 +35,31 @@ import {
   Player,
   QueuedArrival,
   RevealedCoords,
-  SubmittedActivateArtifact,
-  SubmittedBuyGPTCredits,
-  SubmittedBuyHat,
-  SubmittedClaim,
-  SubmittedDeactivateArtifact,
-  SubmittedDepositArtifact,
-  SubmittedFindArtifact,
-  SubmittedInit,
-  SubmittedMove,
-  SubmittedPlanetTransfer,
-  SubmittedProspectPlanet,
-  SubmittedReveal,
-  SubmittedTx,
-  SubmittedUpgrade,
-  SubmittedWithdrawArtifact,
-  SubmittedWithdrawSilver,
-  UnconfirmedActivateArtifact,
-  UnconfirmedClaim,
-  UnconfirmedDeactivateArtifact,
-  UnconfirmedDepositArtifact,
-  UnconfirmedInit,
-  UnconfirmedReveal,
-  UnconfirmedWithdrawArtifact,
-  UnconfirmedWithdrawSilver,
+  Setting,
+  Transaction,
+  TransactionId,
+  TxIntent,
   VoyageId,
-  WorldLocation,
 } from '@darkforest_eth/types';
-import bigInt from 'big-integer';
-import { BigNumber as EthersBN, ContractFunction, ethers, Event, providers } from 'ethers';
+import { BigNumber as EthersBN, ContractFunction, Event, providers } from 'ethers';
 import { EventEmitter } from 'events';
 import _ from 'lodash';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import { openConfirmationWindowForTransaction } from '../../Frontend/Game/Popups';
-import { getSetting, Setting } from '../../Frontend/Utils/SettingsHooks';
+import { getSetting } from '../../Frontend/Utils/SettingsHooks';
 import {
-  ClaimArgs,
   ContractConstants,
   ContractEvent,
   ContractsAPIEvent,
-  DepositArtifactArgs,
-  MoveArgIdxs,
-  MoveArgs,
   PlanetTypeWeightsBySpaceType,
-  UpgradeArgIdxs,
-  UpgradeArgs,
-  WithdrawArtifactArgs,
-  ZKArgIdx,
 } from '../../_types/darkforest/api/ContractsAPITypes';
-import {
-  loadCoreContract,
-  loadGettersContract,
-  loadGptCreditContract,
-  loadTokensContract,
-  loadWhitelistContract,
-} from '../Network/Blockchain';
+import { loadDiamondContract } from '../Network/Blockchain';
 import { eventLogger, EventType } from '../Network/EventLogger';
+
+interface ContractsApiConfig {
+  connection: EthConnection;
+  contractAddress: EthAddress;
+}
 
 /**
  * Roughly contains methods that map 1:1 with functions that live in the contract. Responsible for
@@ -136,46 +81,32 @@ export class ContractsAPI extends EventEmitter {
   /**
    * Instrumented {@link ThrottledConcurrentQueue} for blockchain writes.
    */
-  private readonly txExecutor: TxExecutor | undefined;
+  public readonly txExecutor: TxExecutor;
 
   /**
    * Our connection to the blockchain. In charge of low level networking, and also of the burner
    * wallet.
    */
-  private ethConnection: EthConnection;
+  public readonly ethConnection: EthConnection;
 
-  get coreContract() {
-    return this.ethConnection.getContract<DarkForestCore>(CORE_CONTRACT_ADDRESS);
+  /**
+   * The contract address is saved on the object upon construction
+   */
+  private contractAddress: EthAddress;
+
+  get contract() {
+    return this.ethConnection.getContract<DarkForest>(this.contractAddress);
   }
 
-  get tokensContract() {
-    return this.ethConnection.getContract<DarkForestTokens>(TOKENS_CONTRACT_ADDRESS);
-  }
-
-  get scoreContract() {
-    throw new Error('attempting to get scoring contract when none is used for this game mode');
-    return this.ethConnection.getContract<DarkForestScoringRound3>(SCORING_CONTRACT_ADDRESS);
-  }
-
-  get gettersContract() {
-    return this.ethConnection.getContract<DarkForestGetters>(GETTERS_CONTRACT_ADDRESS);
-  }
-
-  get whitelistContract() {
-    return this.ethConnection.getContract<Whitelist>(WHITELIST_CONTRACT_ADDRESS);
-  }
-
-  get gptCreditContract() {
-    return this.ethConnection.getContract<DarkForestGPTCredit>(GPT_CREDIT_CONTRACT_ADDRESS);
-  }
-
-  public constructor(ethConnection: EthConnection) {
+  public constructor({ connection, contractAddress }: ContractsApiConfig) {
     super();
     this.contractCaller = new ContractCaller();
-    this.ethConnection = ethConnection;
+    this.ethConnection = connection;
+    this.contractAddress = contractAddress;
     this.txExecutor = new TxExecutor(
-      ethConnection,
+      connection,
       this.getGasFeeForTransaction.bind(this),
+      this.beforeQueued.bind(this),
       this.beforeTransaction.bind(this),
       this.afterTransaction.bind(this)
     );
@@ -188,23 +119,34 @@ export class ContractsAPI extends EventEmitter {
    * given transaction. The result is either a number, measured in gwei, represented as a string, or
    * a string representing that we want to use an auto gas setting.
    */
-  private getGasFeeForTransaction(tx: QueuedTransaction): AutoGasSetting | string {
+  private getGasFeeForTransaction(tx: Transaction): AutoGasSetting | string {
     if (
-      tx.methodName === ContractMethodName.INIT &&
-      tx.contract.address === this.coreContract.address
+      tx.intent.methodName === ContractMethodName.INIT &&
+      tx.intent.contract.address === this.contract.address
     ) {
-      return '10';
+      return '50';
     }
 
-    return getSetting(this.ethConnection.getAddress(), Setting.GasFeeGwei);
+    const config = {
+      contractAddress: this.contractAddress,
+      account: this.ethConnection.getAddress(),
+    };
+
+    return getSetting(config, Setting.GasFeeGwei);
   }
 
   /**
-   * This function is called by {@link TxExecutor} before each transaction. It gives the client an
-   * opportunity to prevent a transaction from going through based on business logic or user
-   * interaction. To prevent the queued transaction from being submitted, throw an Error.
+   * This function is called by {@link TxExecutor} before a transaction is queued.
+   * It gives the client an opportunity to prevent a transaction from being queued based
+   * on business logic or user interaction.
+   *
+   * Reject the promise to prevent the queued transaction from being queued.
    */
-  private async beforeTransaction(txRequest: QueuedTransaction): Promise<void> {
+  private async beforeQueued(
+    id: TransactionId,
+    intent: TxIntent,
+    overrides?: providers.TransactionRequest
+  ): Promise<void> {
     const address = this.ethConnection.getAddress();
     if (!address) throw new Error("can't send a transaction, no signer");
 
@@ -216,12 +158,29 @@ export class ContractsAPI extends EventEmitter {
       throw new Error('xDAI balance too low!');
     }
 
-    const gasFeeGwei = EthersBN.from(txRequest.overrides.gasPrice || '1000000000');
+    const gasFeeGwei = EthersBN.from(overrides?.gasPrice || '1000000000');
 
-    await openConfirmationWindowForTransaction(this.ethConnection, txRequest, address, gasFeeGwei);
+    await openConfirmationWindowForTransaction({
+      contractAddress: this.contractAddress,
+      connection: this.ethConnection,
+      id,
+      intent,
+      overrides,
+      from: address,
+      gasFeeGwei,
+    });
   }
 
-  private async afterTransaction(_txRequest: QueuedTransaction, txDiagnosticInfo: unknown) {
+  /**
+   * This function is called by {@link TxExecutor} before each transaction. It gives the client an
+   * opportunity to prevent a transaction from going through based on business logic or user
+   * interaction. To prevent the queued transaction from being submitted, throw an Error.
+   */
+  private async beforeTransaction(tx: Transaction): Promise<void> {
+    this.emit(ContractsAPIEvent.TxProcessing, tx);
+  }
+
+  private async afterTransaction(_txRequest: Transaction, txDiagnosticInfo: unknown) {
     eventLogger.logEvent(EventType.Transaction, txDiagnosticInfo);
   }
 
@@ -234,30 +193,40 @@ export class ContractsAPI extends EventEmitter {
   }
 
   public async setupEventListeners(): Promise<void> {
-    const { coreContract } = this;
+    const { contract } = this;
 
     const filter = {
-      address: coreContract.address,
+      address: contract.address,
       topics: [
         [
-          coreContract.filters.ArrivalQueued(null, null, null, null, null).topics,
-          coreContract.filters.ArtifactActivated(null, null, null).topics,
-          coreContract.filters.ArtifactDeactivated(null, null, null).topics,
-          coreContract.filters.ArtifactDeposited(null, null, null).topics,
-          coreContract.filters.ArtifactFound(null, null, null).topics,
-          coreContract.filters.ArtifactWithdrawn(null, null, null).topics,
-          coreContract.filters.LocationRevealed(null, null, null, null).topics,
-          coreContract.filters.PlanetHatBought(null, null, null).topics,
-          coreContract.filters.PlanetProspected(null, null).topics,
-          coreContract.filters.PlanetSilverWithdrawn(null, null, null).topics,
-          coreContract.filters.PlanetTransferred(null, null, null).topics,
-          coreContract.filters.PlanetUpgraded(null, null, null, null).topics,
-          coreContract.filters.PlayerInitialized(null, null).topics,
+          contract.filters.ArrivalQueued(null, null, null, null, null).topics,
+          contract.filters.ArtifactActivated(null, null, null).topics,
+          contract.filters.ArtifactDeactivated(null, null, null).topics,
+          contract.filters.ArtifactDeposited(null, null, null).topics,
+          contract.filters.ArtifactFound(null, null, null).topics,
+          contract.filters.ArtifactWithdrawn(null, null, null).topics,
+          contract.filters.LocationRevealed(null, null, null, null).topics,
+          contract.filters.PlanetHatBought(null, null, null).topics,
+          contract.filters.PlanetProspected(null, null).topics,
+          contract.filters.PlanetSilverWithdrawn(null, null, null).topics,
+          contract.filters.PlanetTransferred(null, null, null).topics,
+          contract.filters.PlanetInvaded(null, null).topics,
+          contract.filters.PlanetCaptured(null, null).topics,
+          contract.filters.PlayerInitialized(null, null).topics,
+          contract.filters.AdminOwnershipChanged(null, null).topics,
+          contract.filters.PauseStateChanged(null).topics,
+          contract.filters.LobbyCreated(null, null).topics,
         ].map((topicsOrUndefined) => (topicsOrUndefined || [])[0]),
       ] as Array<string | Array<string>>,
     };
 
     const eventHandlers = {
+      [ContractEvent.PauseStateChanged]: (paused: boolean) => {
+        this.emit(ContractsAPIEvent.PauseStateChanged, paused);
+      },
+      [ContractEvent.AdminOwnershipChanged]: (location: EthersBN, _newOwner: string) => {
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
+      },
       [ContractEvent.ArtifactFound]: (
         _playerAddr: string,
         rawArtifactId: EthersBN,
@@ -317,11 +286,11 @@ export class ContractsAPI extends EventEmitter {
         this.emit(
           ContractsAPIEvent.PlanetTransferred,
           locationIdFromEthersBN(planetId),
-          receiverAddress.toLowerCase() as EthAddress
+          address(receiverAddress)
         );
       },
       [ContractEvent.ArrivalQueued]: async (
-        _playerAddr: string,
+        playerAddr: string,
         arrivalId: EthersBN,
         fromLocRaw: EthersBN,
         toLocRaw: EthersBN,
@@ -334,6 +303,7 @@ export class ContractsAPI extends EventEmitter {
           locationIdFromEthersBN(fromLocRaw),
           locationIdFromEthersBN(toLocRaw)
         );
+        this.emit(ContractsAPIEvent.PlayerUpdate, address(playerAddr));
         this.emit(ContractsAPIEvent.RadiusUpdated);
       },
       [ContractEvent.PlanetUpgraded]: async (
@@ -345,6 +315,12 @@ export class ContractsAPI extends EventEmitter {
       ) => {
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
       },
+      [ContractEvent.PlanetInvaded]: async (_playerAddr: string, location: EthersBN, _: Event) => {
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
+      },
+      [ContractEvent.PlanetCaptured]: async (_playerAddr: string, location: EthersBN, _: Event) => {
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
+      },
       [ContractEvent.PlanetHatBought]: async (
         _playerAddress: string,
         location: EthersBN,
@@ -353,6 +329,8 @@ export class ContractsAPI extends EventEmitter {
       [ContractEvent.LocationRevealed]: async (
         revealerAddr: string,
         location: EthersBN,
+        _x: EthersBN,
+        _y: EthersBN,
         _: Event
       ) => {
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
@@ -372,512 +350,35 @@ export class ContractsAPI extends EventEmitter {
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
         this.emit(ContractsAPIEvent.PlayerUpdate, address(player));
       },
+      [ContractEvent.LobbyCreated]: (ownerAddr: string, lobbyAddr: string) => {
+        this.emit(ContractsAPIEvent.LobbyCreated, address(ownerAddr), address(lobbyAddr));
+      },
     };
 
-    this.ethConnection.subscribeToContractEvents(coreContract, eventHandlers, filter);
+    this.ethConnection.subscribeToContractEvents(contract, eventHandlers, filter);
   }
 
   public removeEventListeners(): void {
-    const { coreContract } = this;
+    const { contract } = this;
 
-    coreContract.removeAllListeners(ContractEvent.PlayerInitialized);
-    coreContract.removeAllListeners(ContractEvent.ArrivalQueued);
-    coreContract.removeAllListeners(ContractEvent.PlanetUpgraded);
-    coreContract.removeAllListeners(ContractEvent.PlanetHatBought);
-    coreContract.removeAllListeners(ContractEvent.PlanetTransferred);
-    coreContract.removeAllListeners(ContractEvent.ArtifactFound);
-    coreContract.removeAllListeners(ContractEvent.ArtifactDeposited);
-    coreContract.removeAllListeners(ContractEvent.ArtifactWithdrawn);
-    coreContract.removeAllListeners(ContractEvent.ArtifactActivated);
-    coreContract.removeAllListeners(ContractEvent.ArtifactDeactivated);
-    coreContract.removeAllListeners(ContractEvent.LocationRevealed);
-    coreContract.removeAllListeners(ContractEvent.PlanetSilverWithdrawn);
+    contract.removeAllListeners(ContractEvent.PlayerInitialized);
+    contract.removeAllListeners(ContractEvent.ArrivalQueued);
+    contract.removeAllListeners(ContractEvent.PlanetUpgraded);
+    contract.removeAllListeners(ContractEvent.PlanetHatBought);
+    contract.removeAllListeners(ContractEvent.PlanetTransferred);
+    contract.removeAllListeners(ContractEvent.ArtifactFound);
+    contract.removeAllListeners(ContractEvent.ArtifactDeposited);
+    contract.removeAllListeners(ContractEvent.ArtifactWithdrawn);
+    contract.removeAllListeners(ContractEvent.ArtifactActivated);
+    contract.removeAllListeners(ContractEvent.ArtifactDeactivated);
+    contract.removeAllListeners(ContractEvent.LocationRevealed);
+    contract.removeAllListeners(ContractEvent.PlanetSilverWithdrawn);
+    contract.removeAllListeners(ContractEvent.PlanetInvaded);
+    contract.removeAllListeners(ContractEvent.PlanetCaptured);
   }
 
   public getContractAddress(): EthAddress {
-    return address(this.coreContract.address);
-  }
-
-  /**
-   * Given an unconfirmed (but submitted) transaction, emits the appropriate
-   * [[ContractsAPIEvent]].
-   */
-  public waitFor(
-    submitted: SubmittedTx,
-    receiptPromise: Promise<providers.TransactionReceipt>
-  ): Promise<void | providers.TransactionReceipt> {
-    this.emit(ContractsAPIEvent.TxSubmitted, submitted);
-
-    return receiptPromise
-      .then((receipt) => {
-        this.emit(ContractsAPIEvent.TxConfirmed, submitted);
-        return receipt;
-      })
-      .catch((_err) => {
-        this.emit(ContractsAPIEvent.TxReverted, submitted);
-      });
-  }
-
-  async reveal(
-    args: RevealSnarkContractCallArgs,
-    action: UnconfirmedReveal
-  ): Promise<void | providers.TransactionReceipt> {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-
-    const tx = this.txExecutor.queueTransaction(
-      action.actionId,
-      this.coreContract,
-      ContractMethodName.REVEAL_LOCATION,
-      args
-    );
-    const unminedRevealTx: SubmittedReveal = {
-      ...action,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-    };
-
-    return this.waitFor(unminedRevealTx, tx.confirmed);
-  }
-
-  /**
-   * DISABLED for round 4
-   * @todo migrate to claim to first-party plugin architecture
-   */
-  async claim(
-    args: ClaimArgs,
-    action: UnconfirmedClaim
-  ): Promise<void | providers.TransactionReceipt> {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-    throw new Error('attempting to claim outside of the "Race" Game_Mode');
-
-    // @ts-expect-error
-    const tx = this.txExecutor.queueTransaction(
-      action.actionId,
-      this.scoreContract,
-      ContractMethodName.CLAIM_LOCATION,
-      args
-    );
-    const unminedClaimTx: SubmittedClaim = {
-      ...action,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-    };
-
-    return this.waitFor(unminedClaimTx, tx.confirmed);
-  }
-
-  async initializePlayer(
-    args: InitSnarkContractCallArgs,
-    action: UnconfirmedInit
-  ): Promise<void | providers.TransactionReceipt> {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-    const tx = this.txExecutor.queueTransaction(
-      action.actionId,
-      this.coreContract,
-      ContractMethodName.INIT,
-      args
-    );
-
-    const unminedInitTx: SubmittedInit = {
-      ...action,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-    };
-
-    return this.waitFor(unminedInitTx, tx.confirmed);
-  }
-
-  async transferOwnership(
-    planetId: LocationId,
-    newOwner: EthAddress,
-    actionId: string
-  ): Promise<void | providers.TransactionReceipt> {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-    const tx = this.txExecutor.queueTransaction(
-      actionId,
-      this.coreContract,
-      ContractMethodName.PLANET_TRANSFER,
-      [locationIdToDecStr(planetId), newOwner]
-    );
-
-    const unminedTransferTx: SubmittedPlanetTransfer = {
-      actionId,
-      methodName: ContractMethodName.PLANET_TRANSFER,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-      planetId,
-      newOwner,
-    };
-
-    return this.waitFor(unminedTransferTx, tx.confirmed);
-  }
-
-  // throws if tx initialization fails
-  // otherwise, returns a promise of a submtited (unmined) tx receipt
-  async upgradePlanet(
-    args: UpgradeArgs,
-    actionId: string
-  ): Promise<void | providers.TransactionReceipt> {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-    const tx = this.txExecutor.queueTransaction(
-      actionId,
-      this.coreContract,
-      ContractMethodName.UPGRADE,
-      args
-    );
-
-    const unminedUpgradeTx: SubmittedUpgrade = {
-      actionId,
-      methodName: ContractMethodName.UPGRADE,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-      locationId: locationIdFromDecStr(args[UpgradeArgIdxs.LOCATION_ID]),
-      upgradeBranch: parseInt(args[UpgradeArgIdxs.UPGRADE_BRANCH]),
-    };
-
-    return this.waitFor(unminedUpgradeTx, tx.confirmed);
-  }
-
-  async prospectPlanet(planetId: LocationId, actionId: string) {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-
-    const args = [locationIdToDecStr(planetId)];
-
-    const tx = this.txExecutor.queueTransaction(
-      actionId,
-      this.coreContract,
-      ContractMethodName.PROSPECT_PLANET,
-      args
-    );
-
-    const unminedFindArtifact: SubmittedProspectPlanet = {
-      actionId,
-      methodName: ContractMethodName.PROSPECT_PLANET,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-      planetId,
-    };
-
-    return this.waitFor(unminedFindArtifact, tx.confirmed);
-  }
-
-  // throws if tx initialization fails
-  // otherwise, returns a promise of a submtited (unmined) tx receipt
-  async findArtifact(
-    location: WorldLocation,
-    biomeSnarkArgs: BiomebaseSnarkContractCallArgs,
-    actionId: string
-  ): Promise<void | providers.TransactionReceipt> {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-    const tx = this.txExecutor.queueTransaction(
-      actionId,
-      this.coreContract,
-      ContractMethodName.FIND_ARTIFACT,
-      biomeSnarkArgs
-    );
-
-    const unminedFindArtifact: SubmittedFindArtifact = {
-      actionId,
-      methodName: ContractMethodName.FIND_ARTIFACT,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-      planetId: location.hash,
-    };
-
-    return this.waitFor(unminedFindArtifact, tx.confirmed);
-  }
-
-  async depositArtifact(
-    action: UnconfirmedDepositArtifact
-  ): Promise<void | providers.TransactionReceipt> {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-    const args: DepositArtifactArgs = [
-      locationIdToDecStr(action.locationId),
-      artifactIdToDecStr(action.artifactId),
-    ];
-
-    const tx = this.txExecutor.queueTransaction(
-      action.actionId,
-      this.coreContract,
-      ContractMethodName.DEPOSIT_ARTIFACT,
-      args
-    );
-
-    const submittedTx: SubmittedDepositArtifact = {
-      ...action,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-    };
-
-    return this.waitFor(submittedTx, tx.confirmed);
-  }
-
-  // throws if tx initialization fails
-  // otherwise, returns a promise of a submtited (unmined) tx receipt
-  async withdrawArtifact(
-    action: UnconfirmedWithdrawArtifact
-  ): Promise<void | providers.TransactionReceipt> {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-    const args: WithdrawArtifactArgs = [
-      locationIdToDecStr(action.locationId),
-      artifactIdToDecStr(action.artifactId),
-    ];
-
-    const tx = this.txExecutor.queueTransaction(
-      action.actionId,
-      this.coreContract,
-      ContractMethodName.WITHDRAW_ARTIFACT,
-      args
-    );
-
-    const submittedTx: SubmittedWithdrawArtifact = {
-      ...action,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-    };
-
-    return this.waitFor(submittedTx, tx.confirmed);
-  }
-
-  async activateArtifact(action: UnconfirmedActivateArtifact) {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-
-    const args = [
-      locationIdToDecStr(action.locationId),
-      artifactIdToDecStr(action.artifactId),
-      action.wormholeTo ? locationIdToDecStr(action.wormholeTo) : '0',
-    ];
-
-    const tx = this.txExecutor.queueTransaction(
-      action.actionId,
-      this.coreContract,
-      ContractMethodName.ACTIVATE_ARTIFACT,
-      args
-    );
-
-    const submittedTx: SubmittedActivateArtifact = {
-      ...action,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-    };
-
-    return this.waitFor(submittedTx, tx.confirmed);
-  }
-
-  async deactivateArtifact(action: UnconfirmedDeactivateArtifact) {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-
-    const args = [locationIdToDecStr(action.locationId)];
-
-    const tx = this.txExecutor.queueTransaction(
-      action.actionId,
-      this.coreContract,
-      ContractMethodName.DEACTIVATE_ARTIFACT,
-      args
-    );
-
-    const submittedTx: SubmittedDeactivateArtifact = {
-      ...action,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-    };
-
-    return this.waitFor(submittedTx, tx.confirmed);
-  }
-
-  // throws if tx initialization fails
-  // otherwise, returns a promise of a submtited (unmined) tx receipt
-  async move(
-    actionId: string,
-    snarkArgs: MoveSnarkContractCallArgs,
-    shipsMoved: number,
-    silverMoved: number,
-    artifactMoved?: ArtifactId
-  ): Promise<void | providers.TransactionReceipt> {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-    const args = [
-      snarkArgs[ZKArgIdx.PROOF_A],
-      snarkArgs[ZKArgIdx.PROOF_B],
-      snarkArgs[ZKArgIdx.PROOF_C],
-      [
-        ...snarkArgs[ZKArgIdx.DATA],
-        (shipsMoved * CONTRACT_PRECISION).toString(),
-        (silverMoved * CONTRACT_PRECISION).toString(),
-        '0',
-      ],
-    ] as MoveArgs;
-
-    if (artifactMoved) {
-      args[ZKArgIdx.DATA][MoveArgIdxs.ARTIFACT_SENT] = artifactIdToDecStr(artifactMoved);
-    }
-
-    const tx = this.txExecutor.queueTransaction(
-      actionId,
-      this.coreContract,
-      ContractMethodName.MOVE,
-      args
-    );
-
-    const forcesFloat = parseFloat(args[ZKArgIdx.DATA][MoveArgIdxs.SHIPS_SENT]);
-    const silverFloat = parseFloat(args[ZKArgIdx.DATA][MoveArgIdxs.SILVER_SENT]);
-
-    const unminedMoveTx: SubmittedMove = {
-      actionId,
-      methodName: ContractMethodName.MOVE,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-      from: locationIdFromDecStr(args[ZKArgIdx.DATA][MoveArgIdxs.FROM_ID]),
-      to: locationIdFromDecStr(args[ZKArgIdx.DATA][MoveArgIdxs.TO_ID]),
-      forces: forcesFloat / CONTRACT_PRECISION,
-      silver: silverFloat / CONTRACT_PRECISION,
-    };
-
-    if (artifactMoved) unminedMoveTx.artifact = artifactMoved;
-
-    return this.waitFor(unminedMoveTx, tx.confirmed);
-  }
-
-  async buyHat(planetIdDecStr: string, currentHatLevel: number, actionId: string) {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-    const overrides: providers.TransactionRequest = {
-      gasLimit: 500000,
-      value: bigInt(1000000000000000000)
-        .multiply(2 ** currentHatLevel)
-        .toString(),
-    };
-
-    const tx = this.txExecutor.queueTransaction(
-      actionId,
-      this.coreContract,
-      ContractMethodName.BUY_HAT,
-      [planetIdDecStr],
-      overrides
-    );
-
-    const unminedBuyHatTx: SubmittedBuyHat = {
-      actionId,
-      methodName: ContractMethodName.BUY_HAT,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-      locationId: locationIdFromDecStr(planetIdDecStr),
-    };
-
-    return this.waitFor(unminedBuyHatTx, tx.confirmed);
-  }
-
-  async withdrawSilver(
-    action: UnconfirmedWithdrawSilver
-  ): Promise<void | providers.TransactionReceipt> {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-
-    const args = [locationIdToDecStr(action.locationId), action.amount * CONTRACT_PRECISION];
-    const tx = this.txExecutor.queueTransaction(
-      action.actionId,
-      this.coreContract,
-      ContractMethodName.WITHDRAW_SILVER,
-      args
-    );
-    const unminedWithdrawSilverTx: SubmittedWithdrawSilver = {
-      ...action,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-    };
-
-    return this.waitFor(unminedWithdrawSilverTx, tx.confirmed);
-  }
-
-  async buyGPTCredits(amount: number, actionId: string) {
-    if (!this.txExecutor) {
-      throw new Error('no signer, cannot execute tx');
-    }
-    const costPerCreditStr = (
-      await this.makeCall<EthersBN>(this.gptCreditContract.creditPrice)
-    ).toString();
-    const overrides: providers.TransactionRequest = {
-      value: bigInt(costPerCreditStr).multiply(amount).toString(),
-    };
-
-    const tx = this.txExecutor.queueTransaction(
-      actionId,
-      this.gptCreditContract,
-      ContractMethodName.BUY_GPT_CREDITS,
-      [amount],
-      overrides
-    );
-
-    const unminedBuyGPTCreditsTx: SubmittedBuyGPTCredits = {
-      actionId,
-      methodName: ContractMethodName.BUY_GPT_CREDITS,
-      txHash: (await tx.submitted).hash,
-      sentAtTimestamp: Math.floor(Date.now() / 1000),
-      amount,
-    };
-
-    return this.waitFor(unminedBuyGPTCreditsTx, tx.confirmed);
-  }
-
-  async getGPTCreditPriceEther(): Promise<number> {
-    // price in ether
-    const costPerCreditWeiStr = (
-      await this.makeCall<EthersBN>(this.gptCreditContract.creditPrice)
-    ).toString();
-    const costPerCredit = ethers.utils.formatEther(costPerCreditWeiStr);
-    return parseFloat(costPerCredit);
-  }
-
-  public async getGPTCreditBalance(address: EthAddress | undefined): Promise<number> {
-    if (address === undefined) return 0;
-
-    const gptCreditsBalance = await this.makeCall<EthersBN>(this.gptCreditContract.credits, [
-      address,
-    ]);
-    return gptCreditsBalance.toNumber();
-  }
-
-  /**
-   * If this player has a claimed planet, their score is the distance between the claimed planet and
-   * the center. If this player does not have a claimed planet, then the score is undefined.
-   */
-  async getScoreV3(address: EthAddress | undefined): Promise<number | undefined> {
-    if (address === undefined) return undefined;
-
-    const score = await this.makeCall<EthersBN>(this.scoreContract.getScore, [address]);
-
-    if (
-      score.eq(EthersBN.from('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'))
-    ) {
-      return undefined;
-    }
-
-    return score.toNumber();
+    return this.contractAddress;
   }
 
   async getConstants(): Promise<ContractConstants> {
@@ -889,8 +390,11 @@ export class ContractsAPI extends EventEmitter {
       PERLIN_LENGTH_SCALE,
       PERLIN_MIRROR_X,
       PERLIN_MIRROR_Y,
-    } = await this.makeCall(this.coreContract.snarkConstants);
+    } = await this.makeCall(this.contract.getSnarkConstants);
     const {
+      ADMIN_CAN_ADD_PLANETS,
+      WORLD_RADIUS_LOCKED,
+      WORLD_RADIUS_MIN,
       MAX_NATURAL_PLANET_LEVEL,
       TIME_FACTOR_HUNDREDTHS,
       PERLIN_THRESHOLD_1,
@@ -901,36 +405,57 @@ export class ContractsAPI extends EventEmitter {
       SPAWN_RIM_AREA,
       BIOME_THRESHOLD_1,
       BIOME_THRESHOLD_2,
+      SILVER_SCORE_VALUE,
+      PLANET_LEVEL_THRESHOLDS,
       PLANET_RARITY,
+      PLANET_TRANSFER_ENABLED,
       PHOTOID_ACTIVATION_DELAY,
       LOCATION_REVEAL_COOLDOWN,
-    } = await this.makeCall(this.coreContract.gameConstants);
+      SPACE_JUNK_ENABLED,
+      SPACE_JUNK_LIMIT,
+      PLANET_LEVEL_JUNK,
+      ABANDON_SPEED_CHANGE_PERCENT,
+      ABANDON_RANGE_CHANGE_PERCENT,
+      // Capture Zones
+      GAME_START_BLOCK,
+      CAPTURE_ZONES_ENABLED,
+      CAPTURE_ZONE_COUNT,
+      CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL,
+      CAPTURE_ZONE_RADIUS,
+      CAPTURE_ZONE_PLANET_LEVEL_SCORE,
+      CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED,
+      CAPTURE_ZONES_PER_5000_WORLD_RADIUS,
+    } = await this.makeCall(this.contract.getGameConstants);
 
     const TOKEN_MINT_END_SECONDS = (
-      await this.makeCall(this.coreContract.TOKEN_MINT_END_TIMESTAMP)
+      await this.makeCall(this.contract.TOKEN_MINT_END_TIMESTAMP)
     ).toNumber();
 
-    const upgrades = decodeUpgradeBranches(await this.makeCall(this.coreContract.getUpgrades));
+    const adminAddress = address(await this.makeCall(this.contract.adminAddress));
+
+    const upgrades = decodeUpgradeBranches(await this.makeCall(this.contract.getUpgrades));
 
     const PLANET_TYPE_WEIGHTS: PlanetTypeWeightsBySpaceType =
-      await this.makeCall<PlanetTypeWeightsBySpaceType>(this.coreContract.getTypeWeights);
+      await this.makeCall<PlanetTypeWeightsBySpaceType>(this.contract.getTypeWeights);
 
-    const rawPointValues = await this.makeCall(this.coreContract.getArtifactPointValues);
+    const rawPointValues = await this.makeCall(this.contract.getArtifactPointValues);
     const ARTIFACT_POINT_VALUES = decodeArtifactPointValues(rawPointValues);
 
-    const planetDefaults = decodePlanetDefaults(
-      await this.makeCall(this.coreContract.getDefaultStats)
-    );
+    const planetDefaults = decodePlanetDefaults(await this.makeCall(this.contract.getDefaultStats));
 
     const planetLevelThresholds = (
-      await this.makeCall<EthersBN[]>(this.coreContract.getPlanetLevelThresholds)
+      await this.makeCall<EthersBN[]>(this.contract.getPlanetLevelThresholds)
     ).map((x: EthersBN) => x.toNumber());
 
     const planetCumulativeRarities = (
-      await this.makeCall<EthersBN[]>(this.coreContract.getCumulativeRarities)
+      await this.makeCall<EthersBN[]>(this.contract.getCumulativeRarities)
     ).map((x: EthersBN) => x.toNumber());
 
     const constants: ContractConstants = {
+      ADMIN_CAN_ADD_PLANETS,
+      WORLD_RADIUS_LOCKED,
+      WORLD_RADIUS_MIN: WORLD_RADIUS_MIN.toNumber(),
+
       DISABLE_ZK_CHECKS,
 
       PLANETHASH_KEY: PLANETHASH_KEY.toNumber(),
@@ -950,9 +475,40 @@ export class ContractsAPI extends EventEmitter {
       INIT_PERLIN_MAX: INIT_PERLIN_MAX.toNumber(),
       BIOME_THRESHOLD_1: BIOME_THRESHOLD_1.toNumber(),
       BIOME_THRESHOLD_2: BIOME_THRESHOLD_2.toNumber(),
+      SILVER_SCORE_VALUE: SILVER_SCORE_VALUE.toNumber(),
+      PLANET_LEVEL_THRESHOLDS: [
+        PLANET_LEVEL_THRESHOLDS[0].toNumber(),
+        PLANET_LEVEL_THRESHOLDS[1].toNumber(),
+        PLANET_LEVEL_THRESHOLDS[2].toNumber(),
+        PLANET_LEVEL_THRESHOLDS[3].toNumber(),
+        PLANET_LEVEL_THRESHOLDS[4].toNumber(),
+        PLANET_LEVEL_THRESHOLDS[5].toNumber(),
+        PLANET_LEVEL_THRESHOLDS[6].toNumber(),
+        PLANET_LEVEL_THRESHOLDS[7].toNumber(),
+        PLANET_LEVEL_THRESHOLDS[8].toNumber(),
+        PLANET_LEVEL_THRESHOLDS[9].toNumber(),
+      ],
       PLANET_RARITY: PLANET_RARITY.toNumber(),
+      PLANET_TRANSFER_ENABLED,
       PLANET_TYPE_WEIGHTS,
       ARTIFACT_POINT_VALUES,
+
+      SPACE_JUNK_ENABLED,
+      SPACE_JUNK_LIMIT: SPACE_JUNK_LIMIT.toNumber(),
+      PLANET_LEVEL_JUNK: [
+        PLANET_LEVEL_JUNK[0].toNumber(),
+        PLANET_LEVEL_JUNK[1].toNumber(),
+        PLANET_LEVEL_JUNK[2].toNumber(),
+        PLANET_LEVEL_JUNK[3].toNumber(),
+        PLANET_LEVEL_JUNK[4].toNumber(),
+        PLANET_LEVEL_JUNK[5].toNumber(),
+        PLANET_LEVEL_JUNK[6].toNumber(),
+        PLANET_LEVEL_JUNK[7].toNumber(),
+        PLANET_LEVEL_JUNK[8].toNumber(),
+        PLANET_LEVEL_JUNK[9].toNumber(),
+      ],
+      ABANDON_SPEED_CHANGE_PERCENT: ABANDON_RANGE_CHANGE_PERCENT.toNumber(),
+      ABANDON_RANGE_CHANGE_PERCENT: ABANDON_SPEED_CHANGE_PERCENT.toNumber(),
 
       PHOTOID_ACTIVATION_DELAY: PHOTOID_ACTIVATION_DELAY.toNumber(),
       SPAWN_RIM_AREA: SPAWN_RIM_AREA.toNumber(),
@@ -969,6 +525,28 @@ export class ContractsAPI extends EventEmitter {
       planetLevelThresholds,
       planetCumulativeRarities,
       upgrades,
+
+      adminAddress,
+      // Capture Zones
+      GAME_START_BLOCK: GAME_START_BLOCK.toNumber(),
+      CAPTURE_ZONES_ENABLED,
+      CAPTURE_ZONE_COUNT: CAPTURE_ZONE_COUNT.toNumber(),
+      CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL: CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL.toNumber(),
+      CAPTURE_ZONE_RADIUS: CAPTURE_ZONE_RADIUS.toNumber(),
+      CAPTURE_ZONE_PLANET_LEVEL_SCORE: [
+        CAPTURE_ZONE_PLANET_LEVEL_SCORE[0].toNumber(),
+        CAPTURE_ZONE_PLANET_LEVEL_SCORE[1].toNumber(),
+        CAPTURE_ZONE_PLANET_LEVEL_SCORE[2].toNumber(),
+        CAPTURE_ZONE_PLANET_LEVEL_SCORE[3].toNumber(),
+        CAPTURE_ZONE_PLANET_LEVEL_SCORE[4].toNumber(),
+        CAPTURE_ZONE_PLANET_LEVEL_SCORE[5].toNumber(),
+        CAPTURE_ZONE_PLANET_LEVEL_SCORE[6].toNumber(),
+        CAPTURE_ZONE_PLANET_LEVEL_SCORE[7].toNumber(),
+        CAPTURE_ZONE_PLANET_LEVEL_SCORE[8].toNumber(),
+        CAPTURE_ZONE_PLANET_LEVEL_SCORE[9].toNumber(),
+      ],
+      CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED: CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED.toNumber(),
+      CAPTURE_ZONES_PER_5000_WORLD_RADIUS: CAPTURE_ZONES_PER_5000_WORLD_RADIUS.toNumber(),
     };
 
     return constants;
@@ -977,15 +555,13 @@ export class ContractsAPI extends EventEmitter {
   public async getPlayers(
     onProgress?: (fractionCompleted: number) => void
   ): Promise<Map<string, Player>> {
-    const nPlayers: number = (
-      await this.makeCall<EthersBN>(this.coreContract.getNPlayers)
-    ).toNumber();
+    const nPlayers: number = (await this.makeCall<EthersBN>(this.contract.getNPlayers)).toNumber();
 
     const players = await aggregateBulkGetter<Player>(
       nPlayers,
       200,
       async (start, end) =>
-        (await this.makeCall(this.gettersContract.bulkGetPlayers, [start, end])).map(decodePlayer),
+        (await this.makeCall(this.contract.bulkGetPlayers, [start, end])).map(decodePlayer),
       onProgress
     );
 
@@ -997,7 +573,7 @@ export class ContractsAPI extends EventEmitter {
   }
 
   public async getPlayerById(playerId: EthAddress): Promise<Player | undefined> {
-    const rawPlayer = await this.makeCall(this.coreContract.players, [playerId]);
+    const rawPlayer = await this.makeCall(this.contract.players, [playerId]);
     if (!rawPlayer.isInitialized) return undefined;
     const player = decodePlayer(rawPlayer);
 
@@ -1005,26 +581,26 @@ export class ContractsAPI extends EventEmitter {
   }
 
   public async getWorldRadius(): Promise<number> {
-    const radius = (await this.makeCall<EthersBN>(this.coreContract.worldRadius)).toNumber();
+    const radius = (await this.makeCall<EthersBN>(this.contract.worldRadius)).toNumber();
     return radius;
   }
 
   // timestamp since epoch (in seconds)
   public async getTokenMintEndTimestamp(): Promise<number> {
     const timestamp = (
-      await this.makeCall<EthersBN>(this.coreContract.TOKEN_MINT_END_TIMESTAMP)
+      await this.makeCall<EthersBN>(this.contract.TOKEN_MINT_END_TIMESTAMP)
     ).toNumber();
     return timestamp;
   }
 
   public async getArrival(arrivalId: number): Promise<QueuedArrival | undefined> {
-    const rawArrival = await this.makeCall(this.coreContract.planetArrivals, [arrivalId]);
+    const rawArrival = await this.makeCall(this.contract.planetArrivals, [arrivalId]);
     return decodeArrival(rawArrival);
   }
 
   public async getArrivalsForPlanet(planetId: LocationId): Promise<QueuedArrival[]> {
     const events = (
-      await this.makeCall(this.gettersContract.getPlanetArrivals, [locationIdToDecStr(planetId)])
+      await this.makeCall(this.contract.getPlanetArrivals, [locationIdToDecStr(planetId)])
     ).map(decodeArrival);
 
     return events;
@@ -1039,7 +615,7 @@ export class ContractsAPI extends EventEmitter {
       200,
       async (start, end) => {
         return (
-          await this.makeCall(this.gettersContract.bulkGetPlanetArrivalsByIds, [
+          await this.makeCall(this.contract.bulkGetPlanetArrivalsByIds, [
             planetsToLoad.slice(start, end).map(locationIdToDecStr),
           ])
         ).map((arrivals) => arrivals.map(decodeArrival));
@@ -1054,18 +630,13 @@ export class ContractsAPI extends EventEmitter {
     startingAt: number,
     onProgress?: (fractionCompleted: number) => void
   ): Promise<LocationId[]> {
-    const nPlanets: number = (
-      await this.makeCall<EthersBN>(this.coreContract.getNPlanets)
-    ).toNumber();
+    const nPlanets: number = (await this.makeCall<EthersBN>(this.contract.getNPlanets)).toNumber();
 
     const planetIds = await aggregateBulkGetter<EthersBN>(
       nPlanets - startingAt,
       1000,
       async (start, end) =>
-        await this.makeCall(this.gettersContract.bulkGetPlanetIds, [
-          start + startingAt,
-          end + startingAt,
-        ]),
+        await this.makeCall(this.contract.bulkGetPlanetIds, [start + startingAt, end + startingAt]),
       onProgress
     );
     return planetIds.map(locationIdFromEthersBN);
@@ -1075,12 +646,16 @@ export class ContractsAPI extends EventEmitter {
     planetId: LocationId
   ): Promise<RevealedCoords | undefined> {
     const decStrId = locationIdToDecStr(planetId);
-    const rawRevealedCoords = await this.makeCall(this.coreContract.revealedCoords, [decStrId]);
+    const rawRevealedCoords = await this.makeCall(this.contract.revealedCoords, [decStrId]);
     const ret = decodeRevealedCoords(rawRevealedCoords);
     if (ret.hash === EMPTY_LOCATION_ID) {
       return undefined;
     }
     return ret;
+  }
+
+  public async getIsPaused(): Promise<boolean> {
+    return this.makeCall(this.contract.paused);
   }
 
   public async getRevealedPlanetsCoords(
@@ -1089,14 +664,14 @@ export class ContractsAPI extends EventEmitter {
     onProgressCoords?: (fractionCompleted: number) => void
   ): Promise<RevealedCoords[]> {
     const nRevealedPlanets: number = (
-      await this.makeCall<EthersBN>(this.coreContract.getNRevealedPlanets)
+      await this.makeCall<EthersBN>(this.contract.getNRevealedPlanets)
     ).toNumber();
 
     const rawRevealedPlanetIds = await aggregateBulkGetter<EthersBN>(
       nRevealedPlanets - startingAt,
       500,
       async (start, end) =>
-        await this.makeCall(this.gettersContract.bulkGetRevealedPlanetIds, [
+        await this.makeCall(this.contract.bulkGetRevealedPlanetIds, [
           start + startingAt,
           end + startingAt,
         ]),
@@ -1107,58 +682,13 @@ export class ContractsAPI extends EventEmitter {
       rawRevealedPlanetIds.length,
       500,
       async (start, end) =>
-        await this.makeCall(this.gettersContract.bulkGetRevealedCoordsByIds, [
+        await this.makeCall(this.contract.bulkGetRevealedCoordsByIds, [
           rawRevealedPlanetIds.slice(start, end),
         ]),
       onProgressCoords
     );
 
     return rawRevealedCoords.map(decodeRevealedCoords);
-  }
-
-  public async getClaimedCoordsByIdIfExists(
-    planetId: LocationId
-  ): Promise<ClaimedCoords | undefined> {
-    const decStrId = locationIdToDecStr(planetId);
-    const rawClaimedCoords = await this.makeCall(this.scoreContract.getClaimedCoords, [decStrId]);
-    const ret = decodeClaimedCoords(rawClaimedCoords);
-    if (ret.hash === EMPTY_LOCATION_ID) {
-      return undefined;
-    }
-    return ret;
-  }
-
-  public async getClaimedPlanetsCoords(
-    startingAt: number,
-    onProgressIds?: (fractionCompleted: number) => void,
-    onProgressCoords?: (fractionCompleted: number) => void
-  ): Promise<ClaimedCoords[]> {
-    const nRevealedPlanets: number = (
-      await this.makeCall<EthersBN>(this.scoreContract.getNClaimedPlanets)
-    ).toNumber();
-
-    const rawRevealedPlanetIds = await aggregateBulkGetter<EthersBN>(
-      nRevealedPlanets - startingAt,
-      500,
-      async (start, end) =>
-        await this.makeCall(this.scoreContract.bulkGetClaimedPlanetIds, [
-          start + startingAt,
-          end + startingAt,
-        ]),
-      onProgressIds
-    );
-
-    const rawClaimedCoords = await aggregateBulkGetter(
-      rawRevealedPlanetIds.length,
-      500,
-      async (start, end) =>
-        await this.makeCall(this.scoreContract.bulkGetClaimedCoordsByIds, [
-          rawRevealedPlanetIds.slice(start, end),
-        ]),
-      onProgressCoords
-    );
-
-    return rawClaimedCoords.map(decodeClaimedCoords);
   }
 
   public async bulkGetPlanets(
@@ -1170,7 +700,7 @@ export class ContractsAPI extends EventEmitter {
       toLoadPlanets.length,
       200,
       async (start, end) =>
-        await this.makeCall(this.gettersContract.bulkGetPlanetsByIds, [
+        await this.makeCall(this.contract.bulkGetPlanetsByIds, [
           toLoadPlanets.slice(start, end).map(locationIdToDecStr),
         ]),
       onProgressPlanet
@@ -1180,7 +710,17 @@ export class ContractsAPI extends EventEmitter {
       toLoadPlanets.length,
       200,
       async (start, end) =>
-        await this.makeCall(this.gettersContract.bulkGetPlanetsExtendedInfoByIds, [
+        await this.makeCall(this.contract.bulkGetPlanetsExtendedInfoByIds, [
+          toLoadPlanets.slice(start, end).map(locationIdToDecStr),
+        ]),
+      onProgressMetadata
+    );
+
+    const rawPlanetsExtendedInfo2 = await aggregateBulkGetter(
+      toLoadPlanets.length,
+      200,
+      async (start, end) =>
+        await this.makeCall(this.contract.bulkGetPlanetsExtendedInfo2ByIds, [
           toLoadPlanets.slice(start, end).map(locationIdToDecStr),
         ]),
       onProgressMetadata
@@ -1193,8 +733,10 @@ export class ContractsAPI extends EventEmitter {
         const planet = decodePlanet(
           locationIdToDecStr(toLoadPlanets[i]),
           rawPlanets[i],
-          rawPlanetsExtendedInfo[i]
+          rawPlanetsExtendedInfo[i],
+          rawPlanetsExtendedInfo2[i]
         );
+        planet.transactions = new TxCollection();
         planets.set(planet.locationId, planet);
       }
     }
@@ -1203,22 +745,27 @@ export class ContractsAPI extends EventEmitter {
 
   public async getPlanetById(planetId: LocationId): Promise<Planet | undefined> {
     const decStrId = locationIdToDecStr(planetId);
-    const rawExtendedInfo = await this.makeCall(this.coreContract.planetsExtendedInfo, [decStrId]);
+    const rawExtendedInfo = await this.makeCall(this.contract.planetsExtendedInfo, [decStrId]);
+    const rawExtendedInfo2 = await this.makeCall(this.contract.planetsExtendedInfo2, [decStrId]);
+
     if (!rawExtendedInfo[0]) return undefined; // planetExtendedInfo.isInitialized is false
-    const rawPlanet = await this.makeCall(this.coreContract.planets, [decStrId]);
-    return decodePlanet(decStrId, rawPlanet, rawExtendedInfo);
+    if (!rawExtendedInfo2[0]) return undefined; // planetExtendedInfo.isInitialized is false
+    const rawPlanet = await this.makeCall(this.contract.planets, [decStrId]);
+    return decodePlanet(decStrId, rawPlanet, rawExtendedInfo, rawExtendedInfo2);
   }
 
   public async getArtifactById(artifactId: ArtifactId): Promise<Artifact | undefined> {
-    const exists = await this.makeCall<boolean>(this.gettersContract.doesArtifactExist, [
+    const exists = await this.makeCall<boolean>(this.contract.doesArtifactExist, [
       artifactIdToDecStr(artifactId),
     ]);
     if (!exists) return undefined;
-    const rawArtifact = await this.makeCall(this.gettersContract.getArtifactById, [
+    const rawArtifact = await this.makeCall(this.contract.getArtifactById, [
       artifactIdToDecStr(artifactId),
     ]);
 
-    return decodeArtifact(rawArtifact);
+    const artifact = decodeArtifact(rawArtifact);
+    artifact.transactions = new TxCollection();
+    return artifact;
   }
 
   public async bulkGetArtifactsOnPlanets(
@@ -1229,7 +776,7 @@ export class ContractsAPI extends EventEmitter {
       locationIds.length,
       200,
       async (start, end) =>
-        await this.makeCall(this.gettersContract.bulkGetPlanetArtifacts, [
+        await this.makeCall(this.contract.bulkGetPlanetArtifacts, [
           locationIds.slice(start, end).map(locationIdToDecStr),
         ]),
       onProgress
@@ -1248,13 +795,14 @@ export class ContractsAPI extends EventEmitter {
       artifactIds.length,
       200,
       async (start, end) =>
-        await this.makeCall(this.gettersContract.bulkGetArtifactsByIds, [
+        await this.makeCall(this.contract.bulkGetArtifactsByIds, [
           artifactIds.slice(start, end).map(artifactIdToDecStr),
         ]),
       onProgress
     );
 
     const ret: Artifact[] = rawArtifacts.map(decodeArtifact);
+    ret.forEach((a) => (a.transactions = new TxCollection()));
 
     return ret;
   }
@@ -1265,18 +813,10 @@ export class ContractsAPI extends EventEmitter {
   ): Promise<Artifact[]> {
     if (playerId === undefined) return [];
 
-    const myArtifactIds = (
-      await this.makeCall(this.gettersContract.getPlayerArtifactIds, [playerId])
-    ).map(artifactIdFromEthersBN);
+    const myArtifactIds = (await this.makeCall(this.contract.getPlayerArtifactIds, [playerId])).map(
+      artifactIdFromEthersBN
+    );
     return this.bulkGetArtifacts(myArtifactIds, onProgress);
-  }
-
-  public hasAccount(): boolean {
-    return this.ethConnection.hasSigner();
-  }
-
-  public getAccount(): EthAddress | undefined {
-    return this.ethConnection.getAddress();
   }
 
   public setDiagnosticUpdater(diagnosticUpdater?: DiagnosticUpdater) {
@@ -1284,15 +824,69 @@ export class ContractsAPI extends EventEmitter {
     this.txExecutor?.setDiagnosticUpdater(diagnosticUpdater);
     this.ethConnection.setDiagnosticUpdater(diagnosticUpdater);
   }
+
+  public async submitTransaction<T extends TxIntent>(
+    txIntent: T,
+    overrides?: providers.TransactionRequest
+  ): Promise<Transaction<T>> {
+    const queuedTx = await this.txExecutor.queueTransaction(txIntent, overrides);
+
+    this.emit(ContractsAPIEvent.TxQueued, queuedTx);
+    // TODO: Why is this setTimeout here? Can it be removed?
+    setTimeout(() => this.emitTransactionEvents(queuedTx), 0);
+
+    return queuedTx;
+  }
+
+  /**
+   * Remove a transaction from the queue.
+   */
+  public cancelTransaction(tx: Transaction): void {
+    this.txExecutor.dequeueTransction(tx);
+    this.emit(ContractsAPIEvent.TxCancelled, tx);
+  }
+
+  /**
+   * Make sure this transaction is the next to be executed.
+   */
+  public prioritizeTransaction(tx: Transaction): void {
+    this.txExecutor.prioritizeTransaction(tx);
+    this.emit(ContractsAPIEvent.TxPrioritized, tx);
+  }
+
+  /**
+   * This is a strange interface between the transaction queue system and the rest of the game. The
+   * strange thing about it is that introduces another way by which transactions are pushed into the
+   * game - these {@code ContractsAPIEvent} events.
+   */
+  public emitTransactionEvents(tx: Transaction): void {
+    tx.submittedPromise
+      .then(() => {
+        this.emit(ContractsAPIEvent.TxSubmitted, tx);
+      })
+      .catch(() => {
+        this.emit(ContractsAPIEvent.TxErrored, tx);
+      });
+
+    tx.confirmedPromise
+      .then(() => {
+        this.emit(ContractsAPIEvent.TxConfirmed, tx);
+      })
+      .catch(() => {
+        this.emit(ContractsAPIEvent.TxErrored, tx);
+      });
+  }
+
+  public getAddress() {
+    return this.ethConnection.getAddress();
+  }
 }
 
-export async function makeContractsAPI(ethConnection: EthConnection): Promise<ContractsAPI> {
-  // Could turn this into an array and iterate, but I like the explicitness
-  await ethConnection.loadContract(CORE_CONTRACT_ADDRESS, loadCoreContract);
-  await ethConnection.loadContract(GETTERS_CONTRACT_ADDRESS, loadGettersContract);
-  await ethConnection.loadContract(WHITELIST_CONTRACT_ADDRESS, loadWhitelistContract);
-  await ethConnection.loadContract(GPT_CREDIT_CONTRACT_ADDRESS, loadGptCreditContract);
-  await ethConnection.loadContract(TOKENS_CONTRACT_ADDRESS, loadTokensContract);
+export async function makeContractsAPI({
+  connection,
+  contractAddress,
+}: ContractsApiConfig): Promise<ContractsAPI> {
+  await connection.loadContract(contractAddress, loadDiamondContract);
 
-  return new ContractsAPI(ethConnection);
+  return new ContractsAPI({ connection, contractAddress });
 }

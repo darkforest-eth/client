@@ -1,18 +1,18 @@
+import { ModalName } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import { Icon, IconType } from '../Components/Icons';
 import { Green, Red, White } from '../Components/Text';
+import { TextPreview } from '../Components/TextPreview';
 import dfstyles from '../Styles/dfstyles';
 import { useAccount, useUIManager } from '../Utils/AppHooks';
-import { ModalName, ModalPane } from '../Views/ModalPane';
+import { ModalPane } from '../Views/ModalPane';
 
 const StyledOnboardingContent = styled.div`
   width: 36em;
   height: 32em;
   position: relative;
-  padding: 8px;
   color: ${dfstyles.colors.text};
 
   .btn {
@@ -141,7 +141,7 @@ function OnboardKeys({ advance }: { advance: () => void }) {
     <StyledOnboardingContent>
       <p>
         Your private key is: <br />
-        <White>{sKey}</White>
+        <TextPreview text={sKey} focusedWidth={'150px'} unFocusedWidth={'150px'} />
       </p>
       <p>
         Your home coordinates are: <br />
@@ -195,25 +195,30 @@ function OnboardFinished({ advance }: { advance: () => void }) {
   );
 }
 
-export default function OnboardingPane({ newPlayerHook }: { newPlayerHook: Hook<boolean> }) {
-  const [, setNewPlayer] = newPlayerHook;
-
+export default function OnboardingPane({
+  visible,
+  onClose,
+}: {
+  visible: boolean;
+  onClose: () => void;
+}) {
   const [onboardState, setOnboardState] = useState<OnboardState>(OnboardState.Money);
 
   const advance = () => setOnboardState((x) => x + 1);
 
   useEffect(() => {
     if (onboardState === OnboardState.Finished + 1) {
-      setNewPlayer(false);
+      onClose();
     }
-  }, [onboardState, setNewPlayer]);
+  }, [onboardState, onClose]);
 
   return (
     <ModalPane
+      id={ModalName.Onboarding}
       title={'Welcome to Dark Forest'}
       hideClose
-      hook={newPlayerHook}
-      name={ModalName.Onboarding}
+      visible={visible}
+      onClose={onClose}
     >
       {onboardState === OnboardState.Money && <OnboardMoney advance={advance} />}
       {onboardState === OnboardState.Storage && <OnboardStorage advance={advance} />}

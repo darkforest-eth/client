@@ -1,10 +1,13 @@
-import { EthAddress, SignedMessage } from '@darkforest_eth/types';
+import {
+  EthAddress,
+  RegisterResponse,
+  SignedMessage,
+  WhitelistStatusResponse,
+} from '@darkforest_eth/types';
 import * as EmailValidator from 'email-validator';
 import timeout from 'p-timeout';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
-
-export const WEBSERVER_URL = process.env.WEBSERVER_URL as string;
 
 export const enum EmailResponse {
   Success,
@@ -13,10 +16,14 @@ export const enum EmailResponse {
 }
 
 export const submitInterestedEmail = async (email: string): Promise<EmailResponse> => {
+  if (!process.env.DF_WEBSERVER_URL) {
+    return EmailResponse.ServerError;
+  }
+
   if (!EmailValidator.validate(email)) {
     return EmailResponse.Invalid;
   }
-  const { success } = await fetch(`${WEBSERVER_URL}/email/interested`, {
+  const { success } = await fetch(`${process.env.DF_WEBSERVER_URL}/email/interested`, {
     method: 'POST',
     body: JSON.stringify({ email }),
     headers: {
@@ -28,10 +35,14 @@ export const submitInterestedEmail = async (email: string): Promise<EmailRespons
 };
 
 export const submitUnsubscribeEmail = async (email: string): Promise<EmailResponse> => {
+  if (!process.env.DF_WEBSERVER_URL) {
+    return EmailResponse.ServerError;
+  }
+
   if (!EmailValidator.validate(email)) {
     return EmailResponse.Invalid;
   }
-  const { success } = await fetch(`${WEBSERVER_URL}/email/unsubscribe`, {
+  const { success } = await fetch(`${process.env.DF_WEBSERVER_URL}/email/unsubscribe`, {
     method: 'POST',
     body: JSON.stringify({ email }),
     headers: {
@@ -45,11 +56,15 @@ export const submitUnsubscribeEmail = async (email: string): Promise<EmailRespon
 export const submitPlayerEmail = async (
   request?: SignedMessage<{ email: string }>
 ): Promise<EmailResponse> => {
+  if (!process.env.DF_WEBSERVER_URL) {
+    return EmailResponse.ServerError;
+  }
+
   if (!request || !EmailValidator.validate(request.message.email)) {
     return EmailResponse.Invalid;
   }
 
-  const { success } = await fetch(`${WEBSERVER_URL}/email/playing`, {
+  const { success } = await fetch(`${process.env.DF_WEBSERVER_URL}/email/playing`, {
     method: 'POST',
     body: JSON.stringify(request),
     headers: {
@@ -60,49 +75,103 @@ export const submitPlayerEmail = async (
   return success ? EmailResponse.Success : EmailResponse.ServerError;
 };
 
-type RegisterResponse = { inProgress: boolean; success?: boolean; txHash: string; error?: string };
-
 async function sleep(timeoutMs: number) {
   return new Promise<void>((resolve) => {
     setTimeout(() => resolve(), timeoutMs);
   });
 }
 
+export type RegisterConfirmationResponse = {
+  /**
+   * If the whitelist registration is successful,
+   * this is populated with the hash of the
+   * transaction.
+   */
+  txHash?: string;
+  /**
+   * If the whitelist registration is unsuccessful,
+   * this is populated with the error message explaining
+   * why.
+   */
+  errorMessage?: string;
+  /**
+   * If the whitelist registration is unsuccessful, this
+   * is true if the client is able to retry registration.
+   */
+  canRetry?: boolean;
+};
+
 /**
- * Attempts to register the given player into the game.
- *
- * - if the key is invalid, returns `undefined`
- * - if there is an error submitting the whitelist key, indicated by a null response, or if the
- *   response is not successful, tries again, until it succeeds.
+ * Starts the registration process for the user then
+ * polls for success.
  */
-export async function callRegisterUntilWhitelisted(
+export async function callRegisterAndWaitForConfirmation(
   key: string,
   address: EthAddress,
   terminal: React.MutableRefObject<TerminalHandle | undefined>
-): Promise<string | undefined> {
+): Promise<RegisterConfirmationResponse> {
+  if (!process.env.DF_WEBSERVER_URL) {
+    return { errorMessage: 'Cannot connect to server.', canRetry: false };
+  }
+
+  const response = await submitWhitelistKey(key, address);
+
+  if (response?.error) {
+    return { errorMessage: response.error, canRetry: false };
+  }
+
   while (true) {
-    const response = await submitWhitelistKey(key, address);
-    if (response?.error) {
-      // returning undefined here indicates to the ui that the key was invalid
-      return undefined;
-    } else if (response !== null && response.success) {
-      return response.txHash ?? 'unknown';
+    const statusResponse = await whitelistStatus(address);
+    if (!statusResponse) return { errorMessage: 'Cannot connect to server.', canRetry: false };
+
+    terminal.current?.newline();
+    if (statusResponse.failedAt) {
+      return { errorMessage: 'Transaction failed.', canRetry: true };
+    } else if (statusResponse.txHash) {
+      return { txHash: statusResponse.txHash };
+    } else if (statusResponse.position) {
+      if (statusResponse.position !== '0') {
+        terminal.current?.print('Position in queue: ' + statusResponse.position + '\n');
+      } else {
+        terminal.current?.print('Position in queue: You are up next!');
+      }
     } else {
-      terminal.current?.print('.');
-      await sleep(3000);
+      terminal.current?.print('Entering queue...');
     }
+
+    await sleep(3000);
   }
 }
 
+export const whitelistStatus = async (
+  address: EthAddress
+): Promise<WhitelistStatusResponse | null> => {
+  if (!process.env.DF_WEBSERVER_URL) {
+    return null;
+  }
+
+  return await fetch(`${process.env.DF_WEBSERVER_URL}/whitelist/address/${address}/isWhitelisted`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
+};
+
 /**
- * Submits a whitelist key to register the given player to the game.
+ * Submits a whitelist key to register the given player to the game. Returns null if there was an
+ * error.
  */
 export const submitWhitelistKey = async (
   key: string,
   address: EthAddress
 ): Promise<RegisterResponse | null> => {
+  if (!process.env.DF_WEBSERVER_URL) {
+    return null;
+  }
+
   try {
-    return await fetch(`${WEBSERVER_URL}/whitelist/register`, {
+    return await fetch(`${process.env.DF_WEBSERVER_URL}/whitelist/register`, {
       method: 'POST',
       body: JSON.stringify({
         key,
@@ -119,12 +188,17 @@ export const submitWhitelistKey = async (
 };
 
 export const requestDevFaucet = async (address: EthAddress): Promise<boolean> => {
+  if (!process.env.DF_WEBSERVER_URL) {
+    return false;
+  }
+
   // TODO: Provide own env variable for this feature
   if (process.env.NODE_ENV === 'production') {
     return false;
   }
+
   try {
-    const { success } = await fetch(`${WEBSERVER_URL}/whitelist/faucet`, {
+    const { success } = await fetch(`${process.env.DF_WEBSERVER_URL}/whitelist/faucet`, {
       method: 'POST',
       body: JSON.stringify({
         address,
@@ -154,9 +228,9 @@ export const tryGetAllTwitters = async (): Promise<AddressTwitterMap> => {
 
 export const getAllTwitters = async (): Promise<AddressTwitterMap> => {
   try {
-    const twitterMap: AddressTwitterMap = await fetch(`${WEBSERVER_URL}/twitter/all-twitters`).then(
-      (x) => x.json()
-    );
+    const twitterMap: AddressTwitterMap = await fetch(
+      `${process.env.DF_WEBSERVER_URL}/twitter/all-twitters`
+    ).then((x) => x.json());
     return twitterMap;
   } catch (e) {
     return {};
@@ -167,7 +241,7 @@ export const verifyTwitterHandle = async (
   verifyMessage: SignedMessage<{ twitter: string }>
 ): Promise<boolean> => {
   try {
-    const res = await fetch(`${WEBSERVER_URL}/twitter/verify-twitter`, {
+    const res = await fetch(`${process.env.DF_WEBSERVER_URL}/twitter/verify-twitter`, {
       method: 'POST',
       body: JSON.stringify({
         verifyMessage,
@@ -188,7 +262,7 @@ export const disconnectTwitter = async (
   disconnectMessage: SignedMessage<{ twitter: string }>
 ): Promise<boolean> => {
   try {
-    const res = await fetch(`${WEBSERVER_URL}/twitter/disconnect`, {
+    const res = await fetch(`${process.env.DF_WEBSERVER_URL}/twitter/disconnect`, {
       method: 'POST',
       body: JSON.stringify({
         disconnectMessage,

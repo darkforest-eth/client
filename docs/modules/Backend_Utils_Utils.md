@@ -8,7 +8,6 @@
 
 ### Functions
 
-- [formatNumber](Backend_Utils_Utils.md#formatnumber)
 - [getFormatProp](Backend_Utils_Utils.md#getformatprop)
 - [getOwnerColor](Backend_Utils_Utils.md#getownercolor)
 - [getPlanetMaxRank](Backend_Utils_Utils.md#getplanetmaxrank)
@@ -18,7 +17,6 @@
 - [getPlayerShortHash](Backend_Utils_Utils.md#getplayershorthash)
 - [getRandomActionId](Backend_Utils_Utils.md#getrandomactionid)
 - [getUpgradeStat](Backend_Utils_Utils.md#getupgradestat)
-- [hasOwner](Backend_Utils_Utils.md#hasowner)
 - [hexifyBigIntNestedArray](Backend_Utils_Utils.md#hexifybigintnestedarray)
 - [hslStr](Backend_Utils_Utils.md#hslstr)
 - [isFullRank](Backend_Utils_Utils.md#isfullrank)
@@ -29,26 +27,9 @@
 
 ### ONE_DAY
 
-• `Const` **ONE_DAY**: `number`
+• **ONE_DAY**: `number`
 
 ## Functions
-
-### formatNumber
-
-▸ `Const` **formatNumber**(`num`, `smallDec?`): `string`
-
-#### Parameters
-
-| Name       | Type     | Default value |
-| :--------- | :------- | :------------ |
-| `num`      | `number` | `undefined`   |
-| `smallDec` | `number` | `0`           |
-
-#### Returns
-
-`string`
-
----
 
 ### getFormatProp
 
@@ -179,30 +160,14 @@
 
 #### Parameters
 
-| Name      | Type                                                       |
-| :-------- | :--------------------------------------------------------- |
-| `upgrade` | `Upgrade`                                                  |
-| `stat`    | [`StatIdx`](../enums/_types_global_GlobalTypes.StatIdx.md) |
+| Name      | Type                                                      |
+| :-------- | :-------------------------------------------------------- |
+| `upgrade` | `Upgrade`                                                 |
+| `stat`    | [`StatIdx`](../enums/types_global_GlobalTypes.StatIdx.md) |
 
 #### Returns
 
 `number`
-
----
-
-### hasOwner
-
-▸ `Const` **hasOwner**(`planet`): `boolean`
-
-#### Parameters
-
-| Name     | Type     |
-| :------- | :------- |
-| `planet` | `Planet` |
-
-#### Returns
-
-`boolean`
 
 ---
 

@@ -1,11 +1,4 @@
-import {
-  fakeHash,
-  mimcHash,
-  modPBigInt,
-  modPBigIntNative,
-  perlin,
-  PerlinConfig,
-} from '@darkforest_eth/hashing';
+import { fakeHash, mimcHash, modPBigInt, modPBigIntNative, perlin } from '@darkforest_eth/hashing';
 import {
   BiomebaseSnarkContractCallArgs,
   BiomebaseSnarkInput,
@@ -27,6 +20,7 @@ import moveCircuitPath from '@darkforest_eth/snarks/move.wasm';
 import moveZkeyPath from '@darkforest_eth/snarks/move.zkey';
 import revealCircuitPath from '@darkforest_eth/snarks/reveal.wasm';
 import revealZkeyPath from '@darkforest_eth/snarks/reveal.zkey';
+import { PerlinConfig } from '@darkforest_eth/types';
 import * as bigInt from 'big-integer';
 import { BigInteger } from 'big-integer';
 import FastQueue from 'fastq';
@@ -120,7 +114,9 @@ class SnarkArgsHelper {
     this.terminal = terminal;
     this.snarkProverQueue = new SnarkProverQueue();
     this.hashConfig = hashConfig;
-    this.planetHashMimc = useMockHash ? fakeHash : mimcHash(hashConfig.planetHashKey);
+    this.planetHashMimc = useMockHash
+      ? fakeHash(hashConfig.planetRarity)
+      : mimcHash(hashConfig.planetHashKey);
     this.spaceTypePerlinOpts = {
       key: hashConfig.spaceTypeKey,
       scale: hashConfig.perlinLengthScale,
@@ -354,8 +350,8 @@ class SnarkArgsHelper {
     r: number,
     distMax: number
   ) {
-    const hash1 = this.useMockHash ? fakeHash(x1, y1) : this.planetHashMimc(x1, y1);
-    const hash2 = this.useMockHash ? fakeHash(x2, y2) : this.planetHashMimc(x2, y2);
+    const hash1 = this.planetHashMimc(x1, y1);
+    const hash2 = this.planetHashMimc(x2, y2);
     const perl2 = perlin({ x: x2, y: y2 }, this.spaceTypePerlinOpts);
     const publicSignals: BigInteger[] = [
       hash1,

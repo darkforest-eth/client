@@ -1,6 +1,37 @@
 import { EMPTY_ADDRESS, MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
 import { Monomitter, monomitter } from '@darkforest_eth/events';
+import { hasOwner, isActivated, isLocatable } from '@darkforest_eth/gamelogic';
 import { bonusFromHex, getBytesFromHex } from '@darkforest_eth/hexgen';
+import { TxCollection } from '@darkforest_eth/network';
+import {
+  isUnconfirmedActivateArtifact,
+  isUnconfirmedActivateArtifactTx,
+  isUnconfirmedBuyHat,
+  isUnconfirmedBuyHatTx,
+  isUnconfirmedCapturePlanetTx,
+  isUnconfirmedDeactivateArtifact,
+  isUnconfirmedDeactivateArtifactTx,
+  isUnconfirmedDepositArtifact,
+  isUnconfirmedDepositArtifactTx,
+  isUnconfirmedFindArtifact,
+  isUnconfirmedFindArtifactTx,
+  isUnconfirmedGetShipsTx,
+  isUnconfirmedInvadePlanetTx,
+  isUnconfirmedMove,
+  isUnconfirmedMoveTx,
+  isUnconfirmedProspectPlanet,
+  isUnconfirmedProspectPlanetTx,
+  isUnconfirmedReveal,
+  isUnconfirmedRevealTx,
+  isUnconfirmedTransfer,
+  isUnconfirmedTransferTx,
+  isUnconfirmedUpgrade,
+  isUnconfirmedUpgradeTx,
+  isUnconfirmedWithdrawArtifact,
+  isUnconfirmedWithdrawArtifactTx,
+  isUnconfirmedWithdrawSilver,
+  isUnconfirmedWithdrawSilverTx,
+} from '@darkforest_eth/serde';
 import {
   Abstract,
   ArrivalWithTimer,
@@ -8,6 +39,7 @@ import {
   ArtifactId,
   ArtifactType,
   Biome,
+  Chunk,
   ClaimedLocation,
   EthAddress,
   LocatablePlanet,
@@ -16,24 +48,20 @@ import {
   PlanetLevel,
   PlanetType,
   QueuedArrival,
+  Radii,
   RevealedLocation,
   SpaceType,
-  TxIntent,
-  UnconfirmedActivateArtifact,
-  UnconfirmedBuyGPTCredits,
-  UnconfirmedBuyHat,
-  UnconfirmedClaim,
-  UnconfirmedMove,
-  UnconfirmedPlanetTransfer,
-  UnconfirmedReveal,
-  UnconfirmedUpgrade,
+  Transaction,
+  TransactionCollection,
   VoyageId,
   WorldCoords,
   WorldLocation,
+  Wormhole,
 } from '@darkforest_eth/types';
 import autoBind from 'auto-bind';
 import bigInt from 'big-integer';
 import { ethers } from 'ethers';
+import _ from 'lodash';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import {
   getArtifactId,
@@ -43,28 +71,8 @@ import {
   setObjectSyncState,
 } from '../../Frontend/Utils/EmitterUtils';
 import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
-import { Chunk, isLocatable, Wormhole } from '../../_types/global/GlobalTypes';
-import {
-  isUnconfirmedActivateArtifact,
-  isUnconfirmedBuyGPTCredits,
-  isUnconfirmedBuyHat,
-  isUnconfirmedClaim,
-  isUnconfirmedDeactivateArtifact,
-  isUnconfirmedDepositArtifact,
-  isUnconfirmedFindArtifact,
-  isUnconfirmedMove,
-  isUnconfirmedProspectPlanet,
-  isUnconfirmedReveal,
-  isUnconfirmedTransfer,
-  isUnconfirmedUpgrade,
-  isUnconfirmedWithdrawArtifact,
-  isUnconfirmedWithdrawSilver,
-} from '../Utils/TypeAssertions';
-import { hasOwner } from '../Utils/Utils';
 import { arrive, PlanetDiff, updatePlanetToTime } from './ArrivalUtils';
-import { isActivated } from './ArtifactUtils';
 import { LayeredMap } from './LayeredMap';
-import { Radii } from './ViewportEntities';
 
 type CoordsString = Abstract<string, 'CoordString'>;
 
@@ -187,28 +195,9 @@ export class GameObjects {
   private readonly coordsToLocation: Map<CoordsString, WorldLocation>;
 
   /**
-   * The following set of fields represent actions which the user has initiated on the blockchain,
-   * and have not yet completed. The nature of the blockchain is that transactions could take up to
-   * several minutes to confirm (depending on network congestion). This means that we need to make
-   * it clear to players that the action that they have initiated is indeed in progress, and that
-   * something is actually happening. See `Prospect.tsx` for example.
-   *
-   * The storage and retrieval of unconfirmed transactions could, and
-   * probablu should be abstracted into some sort of class which keeps in sync both *these* fields
-   * and each of these fields counterparts in their corresponding entity objects (Planet, Artifact,
-   * etc.)
-   *
-   * @todo these are good candidates for being in the `PlayerInfo` class.
+   * Transactions that are currently in flight.
    */
-
-  private unconfirmedReveal?: UnconfirmedReveal; // at most one at a time
-  private unconfirmedBuyGPTCredits?: UnconfirmedBuyGPTCredits; // at most one at a time
-  private unconfirmedClaim?: UnconfirmedClaim; // at most one at a time
-  private readonly unconfirmedMoves: Record<string, UnconfirmedMove>;
-  private readonly unconfirmedUpgrades: Record<string, UnconfirmedUpgrade>;
-  private readonly unconfirmedBuyHats: Record<string, UnconfirmedBuyHat>;
-  private readonly unconfirmedPlanetTransfers: Record<string, UnconfirmedPlanetTransfer>;
-  private readonly unconfirmedWormholeActivations: UnconfirmedActivateArtifact[];
+  public readonly transactions: TransactionCollection;
 
   /**
    * Event emitter which publishes whenever a planet is updated.
@@ -234,14 +223,6 @@ export class GameObjects {
    * {@link GameObjects.myPlanetsUpdated$} for more info.
    */
   public readonly myArtifactsUpdated$: Monomitter<Map<ArtifactId, Artifact>>;
-
-  /**
-   * Event emitter which publishes whenever the player begins and finishes (whether with a success
-   * or an error) buying gpt credits.
-   *
-   * @todo move into `PlayerInfo`
-   */
-  public readonly isBuyingCredits$: Monomitter<boolean>;
 
   constructor(
     address: EthAddress | undefined,
@@ -271,7 +252,7 @@ export class GameObjects {
     this.planetLocationMap = new Map();
     const planetArrivalIds = new Map();
     const arrivals = new Map();
-    this.unconfirmedWormholeActivations = [];
+    this.transactions = new TxCollection();
     this.wormholes = new Map();
     this.layeredMap = new LayeredMap(worldRadius);
 
@@ -279,7 +260,6 @@ export class GameObjects {
     this.artifactUpdated$ = monomitter();
     this.myArtifactsUpdated$ = monomitter();
     this.myPlanetsUpdated$ = monomitter();
-    this.isBuyingCredits$ = monomitter(true);
 
     for (const chunk of allChunks) {
       for (const planetLocation of chunk.planetLocations) {
@@ -328,19 +308,11 @@ export class GameObjects {
         }
 
         this.setPlanet(planet);
-        this.updateScore(planetId as LocationId);
       }
     });
 
     this.arrivals = arrivals;
     this.planetArrivalIds = planetArrivalIds;
-    this.unconfirmedBuyGPTCredits = undefined;
-    this.isBuyingCredits$.publish(false);
-    this.unconfirmedReveal = undefined;
-    this.unconfirmedMoves = {};
-    this.unconfirmedUpgrades = {};
-    this.unconfirmedBuyHats = {};
-    this.unconfirmedPlanetTransfers = {};
 
     for (const [_locId, claimedLoc] of claimedLocations) {
       this.updatePlanet(claimedLoc.hash, (p) => {
@@ -364,18 +336,18 @@ export class GameObjects {
     }, 120 * 1000);
   }
 
-  public getIsBuyingCreditsEmitter() {
-    return this.isBuyingCredits$;
+  public getWormholes(): Iterable<Wormhole> {
+    return this.wormholes.values();
   }
 
-  public getArtifactById(artifactId: ArtifactId): Artifact | undefined {
-    return this.artifacts.get(artifactId);
+  public getArtifactById(artifactId?: ArtifactId): Artifact | undefined {
+    return artifactId ? this.artifacts.get(artifactId) : undefined;
   }
 
   public getArtifactsOwnedBy(addr: EthAddress): Artifact[] {
     const ret: Artifact[] = [];
     this.artifacts.forEach((artifact) => {
-      if (artifact.currentOwner === addr) {
+      if (artifact.currentOwner === addr || artifact.controller === addr) {
         ret.push(artifact);
       }
     });
@@ -445,22 +417,11 @@ export class GameObjects {
    */
   public replaceArtifactFromContractData(artifact: Artifact): void {
     const localArtifact = this.artifacts.get(artifact.id);
-    // does not modify unconfirmed txs
-    // that is handled by onTxConfirm
     if (localArtifact) {
-      const {
-        unconfirmedDepositArtifact,
-        unconfirmedWithdrawArtifact,
-        unconfirmedActivateArtifact,
-        unconfirmedDeactivateArtifact,
-        unconfirmedMove,
-      } = localArtifact;
-      artifact.unconfirmedDepositArtifact = unconfirmedDepositArtifact;
-      artifact.unconfirmedWithdrawArtifact = unconfirmedWithdrawArtifact;
-      artifact.unconfirmedActivateArtifact = unconfirmedActivateArtifact;
-      artifact.unconfirmedDeactivateArtifact = unconfirmedDeactivateArtifact;
-      artifact.unconfirmedMove = unconfirmedMove;
+      artifact.transactions = localArtifact.transactions;
+      artifact.onPlanetId = localArtifact.onPlanetId;
     }
+
     this.setArtifact(artifact);
   }
 
@@ -484,6 +445,19 @@ export class GameObjects {
   }
 
   /**
+   * Given a planet id, update the state of the given planet by calling the given update function.
+   * If the planet was updated, then also publish the appropriate event.
+   */
+  public updateArtifact(id: ArtifactId | undefined, updateFn: (p: Artifact) => void) {
+    const artifact = this.getArtifactById(id);
+
+    if (artifact !== undefined) {
+      updateFn(artifact);
+      this.setArtifact(artifact);
+    }
+  }
+
+  /**
    * received some planet data from the contract. update our stores
    */
   public replacePlanetFromContractData(
@@ -499,18 +473,7 @@ export class GameObjects {
     const localPlanet = this.planets.get(planet.locationId);
     if (localPlanet) {
       const {
-        unconfirmedReveal,
-        unconfirmedDepartures,
-        unconfirmedUpgrades,
-        unconfirmedBuyHats,
-        unconfirmedPlanetTransfers,
-        unconfirmedFindArtifact,
-        unconfirmedDepositArtifact,
-        unconfirmedWithdrawArtifact,
-        unconfirmedActivateArtifact,
-        unconfirmedDeactivateArtifact,
-        unconfirmedWithdrawSilver,
-        unconfirmedProspectPlanet,
+        transactions,
         loadingServerState,
         needsServerRefresh,
         lastLoadedServerState,
@@ -519,18 +482,7 @@ export class GameObjects {
         emojiZoopOutAnimation,
         messages,
       } = localPlanet;
-      planet.unconfirmedReveal = unconfirmedReveal;
-      planet.unconfirmedDepartures = unconfirmedDepartures;
-      planet.unconfirmedUpgrades = unconfirmedUpgrades;
-      planet.unconfirmedBuyHats = unconfirmedBuyHats;
-      planet.unconfirmedPlanetTransfers = unconfirmedPlanetTransfers;
-      planet.unconfirmedFindArtifact = unconfirmedFindArtifact;
-      planet.unconfirmedDepositArtifact = unconfirmedDepositArtifact;
-      planet.unconfirmedWithdrawArtifact = unconfirmedWithdrawArtifact;
-      planet.unconfirmedActivateArtifact = unconfirmedActivateArtifact;
-      planet.unconfirmedDeactivateArtifact = unconfirmedDeactivateArtifact;
-      planet.unconfirmedWithdrawSilver = unconfirmedWithdrawSilver;
-      planet.unconfirmedProspectPlanet = unconfirmedProspectPlanet;
+      planet.transactions = transactions;
       planet.loadingServerState = loadingServerState;
       planet.needsServerRefresh = needsServerRefresh;
       planet.lastLoadedServerState = lastLoadedServerState;
@@ -578,7 +530,6 @@ export class GameObjects {
         }
       }
     }
-    this.updateScore(planet.locationId);
   }
 
   // returns an empty planet if planet is not in contract
@@ -597,7 +548,9 @@ export class GameObjects {
   // - returns an empty planet if planet is not in contract
   // - returns undefined if this isn't a planet, according to hash and coords
   // - if this planet hasn't been initialized in the client yet, initializes it
-  public getPlanetWithLocation(location: WorldLocation): Planet | undefined {
+  public getPlanetWithLocation(location: WorldLocation | undefined): Planet | undefined {
+    if (!location) return undefined;
+
     const planet = this.planets.get(location.hash);
     if (planet) {
       this.updatePlanetIfStale(planet);
@@ -717,128 +670,124 @@ export class GameObjects {
    *
    * Whenever we update an entity, we must do it via that entity's type's corresponding
    * `set<EntityType>` function, in order for us to publish these events.
+   *
+   * @todo: this entire function could be automated by implementing a new interface called
+   * {@code TxFilter}.
    */
-  public onTxIntent(txIntent: TxIntent) {
-    const notifManager = NotificationManager.getInstance();
-    notifManager.txInit(txIntent);
+  public onTxIntent(tx: Transaction) {
+    this.transactions.addTransaction(tx);
 
-    if (isUnconfirmedClaim(txIntent)) {
-      this.unconfirmedClaim = txIntent;
-      const planet = this.getPlanetWithId(txIntent.locationId);
+    if (isUnconfirmedRevealTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
       if (planet) {
-        planet.unconfirmedClaim = txIntent;
+        planet.transactions?.addTransaction(tx);
         this.setPlanet(planet);
       }
-    } else if (isUnconfirmedReveal(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
+    } else if (isUnconfirmedMoveTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.from);
       if (planet) {
-        planet.unconfirmedReveal = txIntent;
+        planet.transactions?.addTransaction(tx);
         this.setPlanet(planet);
       }
-      this.unconfirmedReveal = txIntent;
-    } else if (isUnconfirmedMove(txIntent)) {
-      this.unconfirmedMoves[txIntent.actionId] = txIntent;
-      const planet = this.getPlanetWithId(txIntent.from);
-      if (planet) {
-        planet.unconfirmedDepartures.push(txIntent);
-        this.setPlanet(planet);
-      }
-      if (txIntent.artifact) {
-        const artifact = this.getArtifactById(txIntent.artifact);
+      if (tx.intent.artifact) {
+        const artifact = this.getArtifactById(tx.intent.artifact);
         if (artifact) {
-          artifact.unconfirmedMove = txIntent;
+          artifact.transactions?.addTransaction(tx);
           this.setArtifact(artifact);
         }
       }
-    } else if (isUnconfirmedUpgrade(txIntent)) {
-      this.unconfirmedUpgrades[txIntent.actionId] = txIntent;
-      const planet = this.getPlanetWithId(txIntent.locationId);
+    } else if (isUnconfirmedUpgradeTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
       if (planet) {
-        planet.unconfirmedUpgrades.push(txIntent);
+        planet.transactions?.addTransaction(tx);
         this.setPlanet(planet);
       }
-    } else if (isUnconfirmedBuyHat(txIntent)) {
-      this.unconfirmedBuyHats[txIntent.actionId] = txIntent;
-      const planet = this.getPlanetWithId(txIntent.locationId);
+    } else if (isUnconfirmedBuyHatTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
       if (planet) {
-        planet.unconfirmedBuyHats.push(txIntent);
+        planet.transactions?.addTransaction(tx);
         this.setPlanet(planet);
       }
-    } else if (isUnconfirmedTransfer(txIntent)) {
-      this.unconfirmedPlanetTransfers[txIntent.actionId] = txIntent;
-      const planet = this.getPlanetWithId(txIntent.planetId);
+    } else if (isUnconfirmedTransferTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.planetId);
       if (planet) {
-        planet.unconfirmedPlanetTransfers.push(txIntent);
+        planet.transactions?.addTransaction(tx);
         this.setPlanet(planet);
       }
-    } else if (isUnconfirmedProspectPlanet(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.planetId);
+    } else if (isUnconfirmedProspectPlanetTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.planetId);
       if (planet) {
-        planet.unconfirmedProspectPlanet = txIntent;
+        planet.transactions?.addTransaction(tx);
         this.setPlanet(planet);
       }
-    } else if (isUnconfirmedFindArtifact(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.planetId);
+    } else if (isUnconfirmedFindArtifactTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.planetId);
       if (planet) {
-        planet.unconfirmedFindArtifact = txIntent;
+        planet.transactions?.addTransaction(tx);
         this.setPlanet(planet);
       }
-    } else if (isUnconfirmedDepositArtifact(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
-      const artifact = this.getArtifactById(txIntent.artifactId);
+    } else if (isUnconfirmedDepositArtifactTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
+      const artifact = this.getArtifactById(tx.intent.artifactId);
       if (planet) {
-        planet.unconfirmedDepositArtifact = txIntent;
+        planet.transactions?.addTransaction(tx);
         this.setPlanet(planet);
       }
       if (artifact) {
-        artifact.unconfirmedDepositArtifact = txIntent;
+        artifact.transactions?.addTransaction(tx);
         this.setArtifact(artifact);
       }
-    } else if (isUnconfirmedWithdrawArtifact(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
-      const artifact = this.getArtifactById(txIntent.artifactId);
+    } else if (isUnconfirmedWithdrawArtifactTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
+      const artifact = this.getArtifactById(tx.intent.artifactId);
       if (planet) {
-        planet.unconfirmedWithdrawArtifact = txIntent;
+        planet.transactions?.addTransaction(tx);
         this.setPlanet(planet);
       }
       if (artifact) {
-        artifact.unconfirmedWithdrawArtifact = txIntent;
+        artifact.transactions?.addTransaction(tx);
         this.setArtifact(artifact);
       }
-    } else if (isUnconfirmedActivateArtifact(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
-      const artifact = this.getArtifactById(txIntent.artifactId);
+    } else if (isUnconfirmedActivateArtifactTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
+      const artifact = this.getArtifactById(tx.intent.artifactId);
       if (planet) {
-        planet.unconfirmedActivateArtifact = txIntent;
+        planet.transactions?.addTransaction(tx);
         this.setPlanet(planet);
       }
       if (artifact) {
-        artifact.unconfirmedActivateArtifact = txIntent;
+        artifact.transactions?.addTransaction(tx);
         this.setArtifact(artifact);
       }
-      if (txIntent.wormholeTo) {
-        this.unconfirmedWormholeActivations.push(txIntent);
-      }
-    } else if (isUnconfirmedDeactivateArtifact(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
-      const artifact = this.getArtifactById(txIntent.artifactId);
+    } else if (isUnconfirmedDeactivateArtifactTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
+      const artifact = this.getArtifactById(tx.intent.artifactId);
       if (planet) {
-        planet.unconfirmedDeactivateArtifact = txIntent;
+        planet.transactions?.addTransaction(tx);
         this.setPlanet(planet);
       }
       if (artifact) {
-        artifact.unconfirmedDeactivateArtifact = txIntent;
+        artifact.transactions?.addTransaction(tx);
         this.setArtifact(artifact);
       }
-    } else if (isUnconfirmedWithdrawSilver(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
+    } else if (isUnconfirmedWithdrawSilverTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
       if (planet) {
-        planet.unconfirmedWithdrawSilver = txIntent;
+        planet.transactions?.addTransaction(tx);
         this.setPlanet(planet);
       }
-    } else if (isUnconfirmedBuyGPTCredits(txIntent)) {
-      this.isBuyingCredits$.publish(true);
-      this.unconfirmedBuyGPTCredits = txIntent;
+    } else if (isUnconfirmedCapturePlanetTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
+      if (planet) {
+        planet.transactions?.addTransaction(tx);
+        this.setPlanet(planet);
+      }
+    } else if (isUnconfirmedInvadePlanetTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
+      if (planet) {
+        planet.transactions?.addTransaction(tx);
+        this.setPlanet(planet);
+      }
     }
   }
 
@@ -852,213 +801,125 @@ export class GameObjects {
    *
    * @todo Make this less tedious.
    */
-  public clearUnconfirmedTxIntent(txIntent: TxIntent) {
-    if (isUnconfirmedClaim(txIntent)) {
-      this.unconfirmedClaim = undefined;
-      const planet = this.getPlanetWithId(txIntent.locationId);
-      if (planet) {
-        planet.unconfirmedClaim = undefined;
-        this.setPlanet(planet);
-      }
-    } else if (isUnconfirmedReveal(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
+  public clearUnconfirmedTxIntent(tx: Transaction) {
+    this.transactions.removeTransaction(tx);
+
+    if (isUnconfirmedReveal(tx.intent)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
 
       if (planet) {
-        planet.unconfirmedReveal = undefined;
+        planet.transactions?.removeTransaction(tx);
         this.setPlanet(planet);
       }
-
-      if (txIntent.actionId === this.unconfirmedReveal?.actionId) {
-        this.unconfirmedReveal = undefined;
-      } else {
-        console.error(
-          "unexpected error occurred: tried to clear an unconfirmed reveal that doesn't exist"
-        );
-      }
-    } else if (isUnconfirmedMove(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.from);
+    } else if (isUnconfirmedMove(tx.intent)) {
+      const planet = this.getPlanetWithId(tx.intent.from);
       if (planet) {
-        let removeIdx = -1;
-        for (let i = 0; i < planet.unconfirmedDepartures.length; i += 1) {
-          if (planet.unconfirmedDepartures[i].actionId === txIntent.actionId) {
-            removeIdx = i;
-            break;
-          }
-        }
-        if (removeIdx > -1) {
-          planet.unconfirmedDepartures.splice(removeIdx, 1);
-        }
+        planet.transactions?.removeTransaction(tx);
         this.setPlanet(planet);
       }
-      if (txIntent.artifact) {
-        const artifact = this.getArtifactById(txIntent.artifact);
+      if (tx.intent.artifact) {
+        const artifact = this.getArtifactById(tx.intent.artifact);
         if (artifact) {
-          delete artifact.unconfirmedMove;
+          artifact.transactions?.removeTransaction(tx);
           this.setArtifact(artifact);
         }
       }
-      delete this.unconfirmedMoves[txIntent.actionId];
-    } else if (isUnconfirmedUpgrade(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
+    } else if (isUnconfirmedUpgrade(tx.intent)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
       if (planet) {
-        let removeIdx = -1;
-        for (let i = 0; i < planet.unconfirmedUpgrades.length; i += 1) {
-          if (planet.unconfirmedUpgrades[i].actionId === txIntent.actionId) {
-            removeIdx = i;
-            break;
-          }
-        }
-        if (removeIdx > -1) {
-          planet.unconfirmedUpgrades.splice(removeIdx, 1);
-        }
+        planet.transactions?.removeTransaction(tx);
         this.setPlanet(planet);
       }
-      delete this.unconfirmedUpgrades[txIntent.actionId];
-    } else if (isUnconfirmedBuyHat(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
+    } else if (isUnconfirmedBuyHat(tx.intent)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
       if (planet) {
-        let removeIdx = -1;
-        for (let i = 0; i < planet.unconfirmedBuyHats.length; i += 1) {
-          if (planet.unconfirmedBuyHats[i].actionId === txIntent.actionId) {
-            removeIdx = i;
-            break;
-          }
-        }
-        if (removeIdx > -1) {
-          planet.unconfirmedBuyHats.splice(removeIdx, 1);
-        }
+        planet.transactions?.removeTransaction(tx);
         this.setPlanet(planet);
       }
-      delete this.unconfirmedBuyHats[txIntent.actionId];
-    } else if (isUnconfirmedFindArtifact(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.planetId);
+    } else if (isUnconfirmedFindArtifact(tx.intent)) {
+      const planet = this.getPlanetWithId(tx.intent.planetId);
 
       if (planet) {
-        planet.unconfirmedFindArtifact = undefined;
+        planet.transactions?.removeTransaction(tx);
         this.setPlanet(planet);
       }
-    } else if (isUnconfirmedDepositArtifact(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
-      const artifact = this.getArtifactById(txIntent.artifactId);
+    } else if (isUnconfirmedDepositArtifact(tx.intent)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
+      const artifact = this.getArtifactById(tx.intent.artifactId);
 
       if (planet) {
-        planet.unconfirmedDepositArtifact = undefined;
+        planet.transactions?.removeTransaction(tx);
         this.setPlanet(planet);
       }
       if (artifact) {
-        artifact.unconfirmedDepositArtifact = undefined;
+        artifact.transactions?.removeTransaction(tx);
         this.setArtifact(artifact);
       }
-    } else if (isUnconfirmedWithdrawArtifact(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
-      const artifact = this.getArtifactById(txIntent.artifactId);
+    } else if (isUnconfirmedWithdrawArtifact(tx.intent)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
+      const artifact = this.getArtifactById(tx.intent.artifactId);
 
       if (planet) {
-        planet.unconfirmedWithdrawArtifact = undefined;
+        planet.transactions?.removeTransaction(tx);
         this.setPlanet(planet);
       }
       if (artifact) {
-        artifact.unconfirmedWithdrawArtifact = undefined;
+        artifact.transactions?.removeTransaction(tx);
         this.setArtifact(artifact);
       }
-    } else if (isUnconfirmedTransfer(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.planetId);
+    } else if (isUnconfirmedTransfer(tx.intent)) {
+      const planet = this.getPlanetWithId(tx.intent.planetId);
       if (planet) {
-        let removeIdx = -1;
-        for (let i = 0; i < planet.unconfirmedPlanetTransfers.length; i += 1) {
-          if (planet.unconfirmedPlanetTransfers[i].actionId === txIntent.actionId) {
-            removeIdx = i;
-            break;
-          }
-        }
-        if (removeIdx > -1) {
-          planet.unconfirmedPlanetTransfers.splice(removeIdx, 1);
-        }
+        planet.transactions?.removeTransaction(tx);
         this.setPlanet(planet);
       }
-      delete this.unconfirmedPlanetTransfers[txIntent.actionId];
-    } else if (isUnconfirmedProspectPlanet(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.planetId);
+    } else if (isUnconfirmedProspectPlanet(tx.intent)) {
+      const planet = this.getPlanetWithId(tx.intent.planetId);
       if (planet) {
-        delete planet.unconfirmedProspectPlanet;
+        planet.transactions?.removeTransaction(tx);
         this.setPlanet(planet);
       }
-    } else if (isUnconfirmedActivateArtifact(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
-      const artifact = this.getArtifactById(txIntent.artifactId);
+    } else if (isUnconfirmedActivateArtifact(tx.intent)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
+      const artifact = this.getArtifactById(tx.intent.artifactId);
       if (planet) {
-        delete planet.unconfirmedActivateArtifact;
+        planet.transactions?.removeTransaction(tx);
         this.setPlanet(planet);
       }
       if (artifact) {
-        delete artifact.unconfirmedActivateArtifact;
+        artifact.transactions?.removeTransaction(tx);
         this.setArtifact(artifact);
       }
-
-      let removeIdx = -1;
-      for (let i = 0; i < this.unconfirmedWormholeActivations.length; i += 1) {
-        if (this.unconfirmedWormholeActivations[i].actionId === txIntent.actionId) {
-          removeIdx = i;
-          break;
-        }
-      }
-      if (removeIdx > -1) {
-        this.unconfirmedWormholeActivations.splice(removeIdx, 1);
-      }
-    } else if (isUnconfirmedDeactivateArtifact(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
-      const artifact = this.getArtifactById(txIntent.artifactId);
+    } else if (isUnconfirmedDeactivateArtifact(tx.intent)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
+      const artifact = this.getArtifactById(tx.intent.artifactId);
       if (planet) {
-        delete planet.unconfirmedDeactivateArtifact;
+        planet.transactions?.removeTransaction(tx);
         this.setPlanet(planet);
       }
       if (artifact) {
-        delete artifact.unconfirmedDeactivateArtifact;
+        artifact.transactions?.removeTransaction(tx);
         this.setArtifact(artifact);
       }
-    } else if (isUnconfirmedWithdrawSilver(txIntent)) {
-      const planet = this.getPlanetWithId(txIntent.locationId);
+    } else if (isUnconfirmedWithdrawSilver(tx.intent)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
       if (planet) {
-        delete planet.unconfirmedWithdrawSilver;
+        planet.transactions?.removeTransaction(tx);
         this.setPlanet(planet);
       }
-    } else if (isUnconfirmedBuyGPTCredits(txIntent)) {
-      if (txIntent.actionId === this.unconfirmedBuyGPTCredits?.actionId) {
-        this.isBuyingCredits$.publish(false);
-        this.unconfirmedBuyGPTCredits = undefined;
-      } else {
-        console.error(
-          "unexpected error occurred: tried to clear an unconfirmed GPT credit purchase that doesn't exist"
-        );
+    } else if (isUnconfirmedCapturePlanetTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
+      if (planet) {
+        planet.transactions?.removeTransaction(tx);
+        this.setPlanet(planet);
+      }
+    } else if (isUnconfirmedInvadePlanetTx(tx)) {
+      const planet = this.getPlanetWithId(tx.intent.locationId);
+      if (planet) {
+        planet.transactions?.removeTransaction(tx);
+        this.setPlanet(planet);
       }
     }
-  }
-
-  public getUnconfirmedMoves(): UnconfirmedMove[] {
-    return Object.values(this.unconfirmedMoves);
-  }
-
-  public getUnconfirmedWormholeActivations(): UnconfirmedActivateArtifact[] {
-    return this.unconfirmedWormholeActivations;
-  }
-
-  public getWormholes(): Iterable<Wormhole> {
-    return this.wormholes.values();
-  }
-
-  public getUnconfirmedUpgrades(): UnconfirmedUpgrade[] {
-    return Object.values(this.unconfirmedUpgrades);
-  }
-
-  public getUnconfirmedReveal(): UnconfirmedReveal | undefined {
-    return this.unconfirmedReveal;
-  }
-  public getUnconfirmedClaim(): UnconfirmedClaim | undefined {
-    return this.unconfirmedClaim;
-  }
-
-  public getUnconfirmedBuyGPTCredits(): UnconfirmedBuyGPTCredits | undefined {
-    return this.unconfirmedBuyGPTCredits;
   }
 
   public getPlanetMap(): Map<LocationId, Planet> {
@@ -1130,6 +991,13 @@ export class GameObjects {
       planetLevelToRadii
     );
     return this.getPlanetsWithIds(locationIds, updateIfStale) as LocatablePlanet[];
+  }
+
+  public forceTick(locationId: LocationId) {
+    const planet = this.getPlanetWithId(locationId);
+    if (planet) {
+      this.setPlanet(planet);
+    }
   }
 
   /**
@@ -1206,9 +1074,19 @@ export class GameObjects {
     if (previous.owner === this.address && current.owner !== this.address) {
       notifManager.planetLost(current as LocatablePlanet);
     }
-    if (arrival.player !== this.address && current.owner === this.address) {
+    if (
+      arrival.player !== this.address &&
+      current.owner === this.address &&
+      arrival.energyArriving !== 0
+    ) {
       notifManager.planetAttacked(current as LocatablePlanet);
     }
+  }
+
+  private removeArrival(planetId: LocationId, arrivalId: VoyageId) {
+    this.arrivals?.delete(arrivalId);
+    const planetArrivalIds = this.planetArrivalIds?.get(planetId) ?? [];
+    _.remove(planetArrivalIds, (id) => id === arrivalId);
   }
 
   private processArrivalsForPlanet(
@@ -1230,26 +1108,29 @@ export class GameObjects {
       try {
         if (nowInSeconds - arrival.arrivalTime > 0) {
           // if arrival happened in the past, run this arrival
-          this.emitArrivalNotifications(
-            arrive(
-              planet,
-              this.getPlanetArtifacts(planet.locationId),
-              arrival,
-              this.contractConstants
-            )
+          const update = arrive(
+            planet,
+            this.getPlanetArtifacts(planet.locationId),
+            arrival,
+            this.getArtifactById(arrival.artifactId),
+            this.contractConstants
           );
+
+          this.removeArrival(planetId, update.arrival.eventId);
+          this.emitArrivalNotifications(update);
         } else {
           // otherwise, set a timer to do this arrival in the future
           // and append it to arrivalsWithTimers
           const applyFutureArrival = setTimeout(() => {
-            this.emitArrivalNotifications(
-              arrive(
-                planet,
-                this.getPlanetArtifacts(planet.locationId),
-                arrival,
-                this.contractConstants
-              )
+            const update = arrive(
+              planet,
+              this.getPlanetArtifacts(planet.locationId),
+              arrival,
+              this.getArtifactById(arrival.artifactId),
+              this.contractConstants
             );
+            this.emitArrivalNotifications(update);
+            this.removeArrival(planetId, update.arrival.eventId);
           }, arrival.arrivalTime * 1000 - Date.now());
 
           const arrivalWithTimer = {
@@ -1262,7 +1143,6 @@ export class GameObjects {
         console.error(`error occurred processing arrival for updated planet ${planetId}: ${e}`);
       }
     }
-    this.updateScore(planetId);
     return arrivalsWithTimers;
   }
 
@@ -1390,7 +1270,8 @@ export class GameObjects {
     const planetType = this.planetTypeFromHexPerlin(hex, perlin);
     const spaceType = this.spaceTypeFromPerlin(perlin);
 
-    const [energyCapBonus, energyGroBonus, rangeBonus, speedBonus, defBonus] = bonusFromHex(hex);
+    const [energyCapBonus, energyGroBonus, rangeBonus, speedBonus, defBonus, spaceJunkBonus] =
+      bonusFromHex(hex);
 
     let energyCap = this.contractConstants.defaultPopulationCap[planetLevel];
     let energyGro = this.contractConstants.defaultPopulationGrowth[planetLevel];
@@ -1398,6 +1279,7 @@ export class GameObjects {
     let speed = this.contractConstants.defaultSpeed[planetLevel];
     let defense = this.contractConstants.defaultDefense[planetLevel];
     let silCap = this.contractConstants.defaultSilverCap[planetLevel];
+    let spaceJunk = this.contractConstants.PLANET_LEVEL_JUNK[planetLevel];
 
     let silGro = 0;
     if (planetType === PlanetType.SILVER_MINE) {
@@ -1409,6 +1291,7 @@ export class GameObjects {
     range *= rangeBonus ? 2 : 1;
     speed *= speedBonus ? 2 : 1;
     defense *= defBonus ? 2 : 1;
+    spaceJunk = Math.floor(spaceJunk / (spaceJunkBonus ? 2 : 1));
 
     if (spaceType === SpaceType.DEAD_SPACE) {
       range *= 2;
@@ -1460,6 +1343,8 @@ export class GameObjects {
     else if (spaceType === SpaceType.DEEP_SPACE) pirates *= 10;
     else if (spaceType === SpaceType.SPACE) pirates *= 4;
 
+    if (planetType === PlanetType.SILVER_BANK) pirates /= 2;
+
     const silver = planetType === PlanetType.SILVER_MINE ? silCap / 2 : 0;
 
     speed *= this.contractConstants.TIME_FACTOR_HUNDREDTHS / 100;
@@ -1493,14 +1378,13 @@ export class GameObjects {
       energy: pirates,
       silver,
 
+      spaceJunk,
+
       lastUpdated: Math.floor(Date.now() / 1000),
 
       upgradeState: [0, 0, 0],
 
-      unconfirmedDepartures: [],
-      unconfirmedUpgrades: [],
-      unconfirmedBuyHats: [],
-      unconfirmedPlanetTransfers: [],
+      transactions: new TxCollection(),
       unconfirmedClearEmoji: false,
       unconfirmedAddEmoji: false,
       loadingServerState: false,
@@ -1517,6 +1401,10 @@ export class GameObjects {
       biome,
       hasTriedFindingArtifact: false,
       messages: undefined,
+      pausers: 0,
+
+      invader: EMPTY_ADDRESS,
+      capturer: EMPTY_ADDRESS,
     };
   }
 
@@ -1594,24 +1482,19 @@ export class GameObjects {
     }
   }
 
-  private calculateSilverSpent(planet: Planet): number {
-    const upgradeCosts = [20, 40, 60, 80, 100];
-    let totalUpgrades = 0;
-    for (let i = 0; i < planet.upgradeState.length; i++) {
-      totalUpgrades += planet.upgradeState[i];
-    }
-    let totalUpgradeCostPercent = 0;
-    for (let i = 0; i < totalUpgrades; i++) {
-      totalUpgradeCostPercent += upgradeCosts[i];
-    }
-    return (totalUpgradeCostPercent / 100) * planet.silverCap;
+  /**
+   * Get all of the incoming voyages for a given location.
+   */
+  public getArrivalIdsForLocation(location: LocationId | undefined): VoyageId[] | undefined {
+    if (!location) return [];
+
+    return this.planetArrivalIds.get(location);
   }
 
-  private updateScore(planetId: LocationId) {
-    const planet = this.planets.get(planetId);
-    if (!planet) {
-      return;
-    }
-    planet.silverSpent = this.calculateSilverSpent(planet);
+  /**
+   * Whether or not we're already asking the game to give us spaceships.
+   */
+  public isGettingSpaceships(): boolean {
+    return this.transactions.hasTransaction(isUnconfirmedGetShipsTx);
   }
 }

@@ -1,4 +1,5 @@
 import { CONTRACT_PRECISION } from '@darkforest_eth/constants';
+import { hasOwner, isActivated, isEmojiFlagMessage } from '@darkforest_eth/gamelogic';
 import {
   Artifact,
   ArtifactType,
@@ -11,9 +12,6 @@ import {
 } from '@darkforest_eth/types';
 import _ from 'lodash';
 import { ContractConstants } from '../../_types/darkforest/api/ContractsAPITypes';
-import { isEmojiFlagMessage } from '../../_types/global/GlobalTypes';
-import { hasOwner } from '../Utils/Utils';
-import { isActivated } from './ArtifactUtils';
 
 // TODO: planet class, cmon, let's go
 export const blocksLeftToProspectExpiration = (
@@ -40,10 +38,6 @@ export const isFindable = (planet: Planet, currentBlockNumber?: number): boolean
 
 export const isProspectable = (planet: Planet): boolean => {
   return planet.planetType === PlanetType.RUINS && planet.prospectedBlockNumber === undefined;
-};
-
-export const enoughEnergyToProspect = (p: Planet): boolean => {
-  return p.energy / p.energyCap > 0.955;
 };
 
 const getSilverOverTime = (
@@ -96,8 +90,11 @@ export const updatePlanetToTime = (
     return;
   }
 
-  planet.silver = getSilverOverTime(planet, planet.lastUpdated * 1000, atTimeMillis);
-  planet.energy = getEnergyAtTime(planet, atTimeMillis);
+  if (planet.pausers === 0) {
+    planet.silver = getSilverOverTime(planet, planet.lastUpdated * 1000, atTimeMillis);
+    planet.energy = getEnergyAtTime(planet, atTimeMillis);
+  }
+
   planet.lastUpdated = atTimeMillis / 1000;
 
   const photoidActivationTime = contractConstants.PHOTOID_ACTIVATION_DELAY * 1000;
@@ -147,6 +144,7 @@ export const arrive = (
   toPlanet: Planet,
   artifactsOnPlanet: Artifact[],
   arrival: QueuedArrival,
+  arrivingArtifact: Artifact | undefined,
   contractConstants: ContractConstants
 ): PlanetDiff => {
   // this function optimistically simulates an arrival
@@ -189,7 +187,7 @@ export const arrive = (
     toPlanet.energy += energyArriving;
   }
 
-  if (toPlanet.planetType === PlanetType.SILVER_BANK) {
+  if (toPlanet.planetType === PlanetType.SILVER_BANK || toPlanet.pausers !== 0) {
     if (toPlanet.energy > toPlanet.energyCap) {
       toPlanet.energy = toPlanet.energyCap;
     }
@@ -206,6 +204,18 @@ export const arrive = (
   if (arrival.artifactId) {
     toPlanet.heldArtifactIds.push(arrival.artifactId);
   }
+
+  if (arrivingArtifact) {
+    if (arrivingArtifact.artifactType === ArtifactType.ShipMothership) {
+      toPlanet.energyGrowth *= 2;
+    } else if (arrivingArtifact.artifactType === ArtifactType.ShipWhale) {
+      toPlanet.silverGrowth *= 2;
+    } else if (arrivingArtifact.artifactType === ArtifactType.ShipTitan) {
+      toPlanet.pausers++;
+    }
+    arrivingArtifact.onPlanetId = toPlanet.locationId;
+  }
+
   return { arrival, current: toPlanet, previous: prevPlanet };
 };
 
@@ -221,8 +231,10 @@ export function getEmojiMessage(
 
 /**
  * @todo - planet class
+ * @param rangeBoost A multiplier to be applied to the resulting range.
+ * Currently used for calculating boost associated with abandoning a planet.
  */
-export function getRange(planet: Planet, percentEnergySending = 100): number {
+export function getRange(planet: Planet, percentEnergySending = 100, rangeBoost = 1): number {
   if (percentEnergySending === 0) return 0;
-  return Math.max(Math.log2(percentEnergySending / 5), 0) * planet.range;
+  return Math.max(Math.log2(percentEnergySending / 5), 0) * planet.range * rangeBoost;
 }

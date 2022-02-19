@@ -1,12 +1,8 @@
 import { EMPTY_ARTIFACT_ID } from '@darkforest_eth/constants';
+import { ArtifactFileColor, artifactFileName, setForceAncient } from '@darkforest_eth/gamelogic';
 import { ArtifactRarity, ArtifactType, Biome } from '@darkforest_eth/types';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import {
-  ArtifactFileColor,
-  artifactFileName,
-  setForceAncient,
-} from '../../Backend/GameLogic/ArtifactUtils';
 import { ARTIFACT_URL } from '../Components/ArtifactImage';
 
 const Container = styled.div`
@@ -76,6 +72,7 @@ export function TestArtifactImages() {
   useEffect(() => {
     setForceAncient(false);
   }, []);
+
   return (
     <Container>
       <h1>Artifacts</h1>

@@ -9,6 +9,7 @@
 - [BonusEnergyCapTooltipPane](Frontend_Panes_TooltipPanes.md#bonusenergycaptooltippane)
 - [BonusEnergyGroTooltipPane](Frontend_Panes_TooltipPanes.md#bonusenergygrotooltippane)
 - [BonusRangeTooltipPane](Frontend_Panes_TooltipPanes.md#bonusrangetooltippane)
+- [BonusSpaceJunkTooltipPane](Frontend_Panes_TooltipPanes.md#bonusspacejunktooltippane)
 - [BonusSpeedTooltipPane](Frontend_Panes_TooltipPanes.md#bonusspeedtooltippane)
 - [BonusTooltipPane](Frontend_Panes_TooltipPanes.md#bonustooltippane)
 - [ClowntownTooltipPane](Frontend_Panes_TooltipPanes.md#clowntowntooltippane)
@@ -98,6 +99,16 @@
 ### BonusRangeTooltipPane
 
 ▸ **BonusRangeTooltipPane**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
+
+### BonusSpaceJunkTooltipPane
+
+▸ **BonusSpaceJunkTooltipPane**(): `Element`
 
 #### Returns
 
@@ -491,10 +502,10 @@
 
 #### Parameters
 
-| Name                     | Type                                                                                |
-| :----------------------- | :---------------------------------------------------------------------------------- |
-| `__namedParameters`      | `Object`                                                                            |
-| `__namedParameters.name` | [`TooltipName`](../enums/Frontend_Game_WindowManager.TooltipName.md) \| `undefined` |
+| Name                     | Type                         |
+| :----------------------- | :--------------------------- |
+| `__namedParameters`      | `Object`                     |
+| `__namedParameters.name` | `undefined` \| `TooltipName` |
 
 #### Returns
 

@@ -4,32 +4,25 @@
 
 ### Enumerations
 
-- [GameWindowZIndex](../enums/Frontend_Utils_constants.GameWindowZIndex.md)
+- [DFZIndex](../enums/Frontend_Utils_constants.DFZIndex.md)
 
 ### Variables
 
-- [HAT_SIZES](Frontend_Utils_constants.md#hat_sizes)
 - [LOCATION_ID_UB](Frontend_Utils_constants.md#location_id_ub)
 - [MAX_CHUNK_SIZE](Frontend_Utils_constants.md#max_chunk_size)
 - [MIN_CHUNK_SIZE](Frontend_Utils_constants.md#min_chunk_size)
 
 ## Variables
 
-### HAT_SIZES
-
-• `Const` **HAT_SIZES**: `string`[]
-
----
-
 ### LOCATION_ID_UB
 
-• `Const` **LOCATION_ID_UB**: `BigInteger`
+• **LOCATION_ID_UB**: `BigInteger`
 
 ---
 
 ### MAX_CHUNK_SIZE
 
-• `Const` **MAX_CHUNK_SIZE**: `number`
+• **MAX_CHUNK_SIZE**: `number`
 
 **`tutorial`** to speed up the game's background rendering code, it is possible to set this value to
 be a higher power of two. This means that smaller chunks will be merged into larger chunks via
@@ -41,4 +34,4 @@ the algorithms implemented in {@link ChunkUtils}.
 
 ### MIN_CHUNK_SIZE
 
-• `Const` **MIN_CHUNK_SIZE**: `16`
+• **MIN_CHUNK_SIZE**: `16`

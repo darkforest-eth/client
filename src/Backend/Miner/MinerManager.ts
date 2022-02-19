@@ -1,14 +1,20 @@
-import { perlin, PerlinConfig } from '@darkforest_eth/hashing';
+import { perlin } from '@darkforest_eth/hashing';
+import { Chunk, PerlinConfig, Rectangle } from '@darkforest_eth/types';
 import { EventEmitter } from 'events';
 import _ from 'lodash';
-import Worker from 'worker-loader!./miner.worker';
 import { ChunkStore } from '../../_types/darkforest/api/ChunkStoreTypes';
-import { Chunk, HashConfig, MinerWorkerMessage, Rectangle } from '../../_types/global/GlobalTypes';
+import { HashConfig, MinerWorkerMessage } from '../../_types/global/GlobalTypes';
 import { getChunkKey } from './ChunkUtils';
 import { MiningPattern } from './MiningPatterns';
 
 export const enum MinerManagerEvent {
   DiscoveredNewChunk = 'DiscoveredNewChunk',
+}
+
+export type workerFactory = () => Worker;
+
+function defaultWorker() {
+  return new Worker(new URL('./miner.worker.ts', import.meta.url));
 }
 
 export class HomePlanetMinerChunkStore implements ChunkStore {
@@ -65,7 +71,7 @@ class MinerManager extends EventEmitter {
   private useMockHash: boolean;
   private perlinOptions: PerlinConfig;
   private hashConfig: HashConfig;
-  private WorkerCtor: typeof Worker;
+  private workerFactory: workerFactory;
 
   private constructor(
     minedChunksStore: ChunkStore,
@@ -74,7 +80,7 @@ class MinerManager extends EventEmitter {
     planetRarity: number,
     hashConfig: HashConfig,
     useMockHash: boolean,
-    WorkerCtor: typeof Worker
+    workerFactory: workerFactory
   ) {
     super();
     this.minedChunksStore = minedChunksStore;
@@ -90,7 +96,7 @@ class MinerManager extends EventEmitter {
       mirrorY: hashConfig.perlinMirrorY,
       floor: false,
     };
-    this.WorkerCtor = WorkerCtor;
+    this.workerFactory = workerFactory;
     this.useMockHash = useMockHash;
   }
 
@@ -118,7 +124,7 @@ class MinerManager extends EventEmitter {
     planetRarity: number,
     hashConfig: HashConfig,
     useMockHash = false,
-    WorkerCtor: typeof Worker = Worker
+    workerFactory: workerFactory = defaultWorker
   ): MinerManager {
     const minerManager = new MinerManager(
       chunkStore,
@@ -127,7 +133,7 @@ class MinerManager extends EventEmitter {
       planetRarity,
       hashConfig,
       useMockHash,
-      WorkerCtor
+      workerFactory
     );
     _.range(minerManager.cores).forEach((i) => minerManager.initWorker(i));
 
@@ -135,7 +141,7 @@ class MinerManager extends EventEmitter {
   }
 
   private initWorker(index: number): void {
-    this.workers[index] = new this.WorkerCtor();
+    this.workers[index] = this.workerFactory();
     this.workers[index].onmessage = (e: MessageEvent) => {
       // worker explored a slice of a chunk
       const [exploredChunk, jobId] = JSON.parse(e.data) as [Chunk, number];
@@ -294,7 +300,6 @@ class MinerManager extends EventEmitter {
         chunkFootprint: chunkToExplore,
         workerIndex,
         totalWorkers: this.workers.length,
-        planetRarity: this.planetRarity,
         jobId,
         useMockHash: this.useMockHash,
         ...this.hashConfig,

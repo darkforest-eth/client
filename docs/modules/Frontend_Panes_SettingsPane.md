@@ -14,12 +14,13 @@
 
 #### Parameters
 
-| Name                              | Type                                                 |
-| :-------------------------------- | :--------------------------------------------------- |
-| `__namedParameters`               | `Object`                                             |
-| `__namedParameters.ethConnection` | `EthConnection`                                      |
-| `__namedParameters.hook`          | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
-| `__namedParameters.privateHook`   | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                              | Type            |
+| :-------------------------------- | :-------------- |
+| `__namedParameters`               | `Object`        |
+| `__namedParameters.ethConnection` | `EthConnection` |
+| `__namedParameters.visible`       | `boolean`       |
+| `__namedParameters.onClose`       | () => `void`    |
+| `__namedParameters.onOpenPrivate` | () => `void`    |
 
 #### Returns
 

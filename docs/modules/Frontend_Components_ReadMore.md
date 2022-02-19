@@ -14,13 +14,13 @@
 
 #### Parameters
 
-| Name                                    | Type                                     |
-| :-------------------------------------- | :--------------------------------------- |
-| `__namedParameters`                     | `Object`                                 |
-| `__namedParameters.children`            | `React.ReactNode`[] \| `React.ReactNode` |
-| `__namedParameters.height?`             | `string`                                 |
-| `__namedParameters.text?`               | `string`                                 |
-| `__namedParameters.toggleButtonMargin?` | `string`                                 |
+| Name                                    | Type                         |
+| :-------------------------------------- | :--------------------------- |
+| `__namedParameters`                     | `Object`                     |
+| `__namedParameters.children`            | `ReactNode` \| `ReactNode`[] |
+| `__namedParameters.height?`             | `string`                     |
+| `__namedParameters.text?`               | `string`                     |
+| `__namedParameters.toggleButtonMargin?` | `string`                     |
 
 #### Returns
 

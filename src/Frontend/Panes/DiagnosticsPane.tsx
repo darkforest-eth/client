@@ -1,20 +1,16 @@
-import { Diagnostics } from '@darkforest_eth/types';
+import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
+import { Diagnostics, ModalName, Setting } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
-import {
-  EmSpacer,
-  PaddedRecommendedModalWidth,
-  Separator,
-  SpreadApart,
-} from '../Components/CoreUI';
+import { EmSpacer, Separator, SpreadApart } from '../Components/CoreUI';
 import { DisplayGasPrices } from '../Components/DisplayGasPrices';
 import { TextPreview } from '../Components/TextPreview';
 import { useUIManager } from '../Utils/AppHooks';
-import { BooleanSetting, Setting } from '../Utils/SettingsHooks';
-import { ModalHook, ModalPane } from '../Views/ModalPane';
+import { BooleanSetting } from '../Utils/SettingsHooks';
+import { ModalPane } from '../Views/ModalPane';
 import { TabbedView } from '../Views/TabbedView';
 
-export function DiagnosticsPane({ hook }: { hook: ModalHook }) {
+export function DiagnosticsPane({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const uiManager = useUIManager();
   const [currentDiagnostics, setCurrentDiagnostics] = useState(
     new Wrapper(uiManager.getDiagnostics())
@@ -29,10 +25,14 @@ export function DiagnosticsPane({ hook }: { hook: ModalHook }) {
   }, [uiManager]);
 
   return (
-    <ModalPane hook={hook} title={'Diagnostics'}>
-      <PaddedRecommendedModalWidth>
-        <DiagnosticsTabs diagnostics={currentDiagnostics} />
-      </PaddedRecommendedModalWidth>
+    <ModalPane
+      id={ModalName.Diagnostics}
+      title={'Diagnostics'}
+      visible={visible}
+      onClose={onClose}
+      width={RECOMMENDED_MODAL_WIDTH}
+    >
+      <DiagnosticsTabs diagnostics={currentDiagnostics} />
     </ModalPane>
   );
 }
@@ -105,9 +105,9 @@ function RenderingTab({ diagnostics }: { diagnostics: Wrapper<Diagnostics> }) {
       <SpreadApart>
         <span>viewport</span>
         <span>
-          <span>{diagnostics.value.width.toLocaleString()}</span>
+          <span>{diagnostics.value.width?.toLocaleString()}</span>
           <span> x </span>
-          <span>{diagnostics.value.height.toLocaleString()}</span>
+          <span>{diagnostics.value.height?.toLocaleString()}</span>
         </span>
       </SpreadApart>
       <Separator />

@@ -14,10 +14,10 @@
 
 #### Parameters
 
-| Name                                  | Type                                                 |
-| :------------------------------------ | :--------------------------------------------------- |
-| `__namedParameters`                   | `Object`                                             |
-| `__namedParameters.twitterVerifyHook` | [`ModalHook`](Frontend_Views_ModalPane.md#modalhook) |
+| Name                                  | Type                                                   |
+| :------------------------------------ | :----------------------------------------------------- |
+| `__namedParameters`                   | `Object`                                               |
+| `__namedParameters.twitterVerifyHook` | [`Hook`](types_global_GlobalTypes.md#hook)<`boolean`\> |
 
 #### Returns
 

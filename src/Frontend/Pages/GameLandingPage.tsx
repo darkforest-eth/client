@@ -1,24 +1,26 @@
 import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
-import { WHITELIST_CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
+import { DarkForest } from '@darkforest_eth/contracts/typechain';
 import { EthConnection, neverResolves, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
 import { utils, Wallet } from 'ethers';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import GameManager from '../../Backend/GameLogic/GameManager';
-import GameUIManager, { GameUIManagerEvent } from '../../Backend/GameLogic/GameUIManager';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
+import GameManager, { GameManagerEvent } from '../../Backend/GameLogic/GameManager';
+import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
 import { addAccount, getAccounts } from '../../Backend/Network/AccountManager';
-import { getEthConnection, loadWhitelistContract } from '../../Backend/Network/Blockchain';
+import { getEthConnection, loadDiamondContract } from '../../Backend/Network/Blockchain';
 import {
-  callRegisterUntilWhitelisted,
+  callRegisterAndWaitForConfirmation,
   EmailResponse,
+  RegisterConfirmationResponse,
   requestDevFaucet,
   submitInterestedEmail,
   submitPlayerEmail,
 } from '../../Backend/Network/UtilityServerAPI';
 import {
   GameWindowWrapper,
+  InitRenderState,
   TerminalToggler,
   TerminalWrapper,
   Wrapper,
@@ -54,13 +56,7 @@ const enum TerminalPromptStep {
   ERROR,
 }
 
-export const enum InitRenderState {
-  NONE,
-  LOADING,
-  COMPLETE,
-}
-
-export function GameLandingPage() {
+export function GameLandingPage({ match }: RouteComponentProps<{ contract: string }>) {
   const history = useHistory();
   const terminalHandle = useRef<TerminalHandle>();
   const gameUIManagerRef = useRef<GameUIManager | undefined>();
@@ -71,6 +67,8 @@ export function GameLandingPage() {
   const [initRenderState, setInitRenderState] = useState(InitRenderState.NONE);
   const [ethConnection, setEthConnection] = useState<EthConnection | undefined>();
   const [step, setStep] = useState(TerminalPromptStep.NONE);
+
+  const contractAddress = address(match.params.contract);
 
   useEffect(() => {
     getEthConnection()
@@ -216,6 +214,17 @@ export function GameLandingPage() {
 
       terminal.current?.print('    v0.6 r4    ', TerminalTextStyle.Text);
       terminal.current?.print('10/01/2021        ', TerminalTextStyle.Text);
+      terminal.current?.printLink(
+        '@orden_gg',
+        () => {
+          window.open('https://twitter.com/orden_gg');
+        },
+        TerminalTextStyle.Text
+      );
+      terminal.current?.newline();
+
+      terminal.current?.print('    v0.6 r5    ', TerminalTextStyle.Text);
+      terminal.current?.print('02/18/2022        ', TerminalTextStyle.Text);
       terminal.current?.print('t.b.d');
       terminal.current?.newline();
       terminal.current?.newline();
@@ -360,9 +369,9 @@ export function GameLandingPage() {
         const address = ethConnection?.getAddress();
         if (!address || !ethConnection) throw new Error('not logged in');
 
-        const whitelist = await ethConnection.loadContract(
-          WHITELIST_CONTRACT_ADDRESS,
-          loadWhitelistContract
+        const whitelist = await ethConnection.loadContract<DarkForest>(
+          contractAddress,
+          loadDiamondContract
         );
         const isWhitelisted = await whitelist.isWhitelisted(address);
 
@@ -394,7 +403,7 @@ export function GameLandingPage() {
         setStep(TerminalPromptStep.TERMINATED);
       }
     },
-    [ethConnection, isProd]
+    [ethConnection, isProd, contractAddress]
   );
 
   const advanceStateFromAskHasWhitelistKey = useCallback(
@@ -427,12 +436,35 @@ export function GameLandingPage() {
       const key = (await terminal.current?.getInput()) || '';
 
       terminal.current?.print('Processing key... (this may take up to 30s)');
-      const txHash = await callRegisterUntilWhitelisted(key, address, terminal);
       terminal.current?.newline();
 
-      if (!txHash) {
-        terminal.current?.println('ERROR: Not a valid key.', TerminalTextStyle.Red);
-        setStep(TerminalPromptStep.ASKING_WAITLIST_EMAIL);
+      let registerConfirmationResponse = {} as RegisterConfirmationResponse;
+      try {
+        registerConfirmationResponse = await callRegisterAndWaitForConfirmation(
+          key,
+          address,
+          terminal
+        );
+      } catch (e) {
+        registerConfirmationResponse = {
+          canRetry: true,
+          errorMessage:
+            'There was an error connecting to the whitelist server. Please try again later.',
+        };
+      }
+
+      if (!registerConfirmationResponse.txHash) {
+        terminal.current?.println(
+          'ERROR: ' + registerConfirmationResponse.errorMessage,
+          TerminalTextStyle.Red
+        );
+        if (registerConfirmationResponse.canRetry) {
+          terminal.current?.println('Press any key to try again.');
+          await terminal.current?.getInput();
+          advanceStateFromAskWhitelistKey(terminal);
+        } else {
+          setStep(TerminalPromptStep.ASKING_WAITLIST_EMAIL);
+        }
       } else {
         terminal.current?.print('Successfully joined game. ', TerminalTextStyle.Green);
         terminal.current?.print(`Welcome, player `);
@@ -441,7 +473,7 @@ export function GameLandingPage() {
         terminal.current?.printLink(
           '(View Transaction)',
           () => {
-            window.open(`${BLOCK_EXPLORER_URL}/${txHash}`);
+            window.open(`${BLOCK_EXPLORER_URL}/${registerConfirmationResponse.txHash}`);
           },
           TerminalTextStyle.Blue
         );
@@ -515,7 +547,11 @@ export function GameLandingPage() {
       try {
         if (!ethConnection) throw new Error('no eth connection');
 
-        newGameManager = await GameManager.create(ethConnection, terminal);
+        newGameManager = await GameManager.create({
+          connection: ethConnection,
+          terminal,
+          contractAddress,
+        });
       } catch (e) {
         console.error(e);
 
@@ -567,7 +603,7 @@ export function GameLandingPage() {
         setStep(TerminalPromptStep.ALL_CHECKS_PASS);
       }
     },
-    [ethConnection]
+    [ethConnection, contractAddress]
   );
 
   const advanceStateFromAskAddAccount = useCallback(
@@ -659,36 +695,32 @@ export function GameLandingPage() {
 
       await terminal.current?.getInput();
 
-      const success = await new Promise(async (resolve) => {
-        gameUIManager
-          // TODO: remove beforeRetry: (e: Error) => Promise<boolean>
-          .joinGame(async (e) => {
-            console.error(e);
-
-            terminal.current?.println('Error Joining Game:');
-            terminal.current?.println('');
-            terminal.current?.println(e.message, TerminalTextStyle.Red);
-            terminal.current?.println('');
-            terminal.current?.println('Press Enter to Try Again:');
-
-            await terminal.current?.getInput();
-            return true;
-          })
-          .once(GameUIManagerEvent.InitializedPlayer, () => {
-            resolve(true);
-          })
-          .once(GameUIManagerEvent.InitializedPlayerError, (error: Error) => {
-            terminal.current?.println(
-              `[ERROR] An error occurred: ${error.toString().slice(0, 10000)}`,
-              TerminalTextStyle.Red
-            );
-          });
+      gameUIManager.getGameManager().on(GameManagerEvent.InitializedPlayer, () => {
+        setTimeout(() => {
+          terminal.current?.println('Initializing game...');
+          setStep(TerminalPromptStep.ALL_CHECKS_PASS);
+        });
       });
 
-      if (success) {
-        terminal.current?.println('Initializing game...');
-        setStep(TerminalPromptStep.ALL_CHECKS_PASS);
-      }
+      gameUIManager
+        .joinGame(async (e) => {
+          console.error(e);
+
+          terminal.current?.println('Error Joining Game:');
+          terminal.current?.println('');
+          terminal.current?.println(e.message, TerminalTextStyle.Red);
+          terminal.current?.println('');
+          terminal.current?.println('Press Enter to Try Again:');
+
+          await terminal.current?.getInput();
+          return true;
+        })
+        .catch((error: Error) => {
+          terminal.current?.println(
+            `[ERROR] An error occurred: ${error.toString().slice(0, 10000)}`,
+            TerminalTextStyle.Red
+          );
+        });
     },
     []
   );
@@ -696,8 +728,16 @@ export function GameLandingPage() {
   const advanceStateFromAllChecksPass = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
       terminal.current?.println('');
-      terminal.current?.println('Press ENTER to begin:');
-      await terminal.current?.getInput();
+      terminal.current?.println('Press ENTER to begin');
+      terminal.current?.println("Press 's' then ENTER to begin in SAFE MODE - plugins disabled");
+
+      const input = await terminal.current?.getInput();
+
+      if (input === 's') {
+        const gameUIManager = gameUIManagerRef.current;
+        gameUIManager?.getGameManager()?.setSafeMode(true);
+      }
+
       setStep(TerminalPromptStep.COMPLETE);
       setInitRenderState(InitRenderState.COMPLETE);
       terminal.current?.clear();
@@ -804,8 +844,9 @@ export function GameLandingPage() {
   }, [initRenderState]);
 
   useEffect(() => {
-    if (!terminalVisible) {
-      const tutorialManager = TutorialManager.getInstance();
+    const gameUiManager = gameUIManagerRef.current;
+    if (!terminalVisible && gameUiManager) {
+      const tutorialManager = TutorialManager.getInstance(gameUiManager);
       tutorialManager.acceptInput(TutorialState.Terminal);
     }
   }, [terminalVisible]);

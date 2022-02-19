@@ -1,3 +1,4 @@
+import { getActivatedArtifact, isActivated } from '@darkforest_eth/gamelogic';
 import {
   Artifact,
   ArtifactId,
@@ -6,17 +7,18 @@ import {
   LocationId,
   Planet,
   Player,
+  Transaction,
+  TransactionId,
 } from '@darkforest_eth/types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { getActivatedArtifact, isActivated } from '../../Backend/GameLogic/ArtifactUtils';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { loadLeaderboard } from '../../Backend/Network/LeaderboardApi';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
+import { ContractsAPIEvent } from '../../_types/darkforest/api/ContractsAPITypes';
 import { ModalHandle } from '../Views/ModalPane';
 import { createDefinedContext } from './createDefinedContext';
-import { useEmitterSubscribe, useWrappedEmitter } from './EmitterHooks';
+import { useEmitterSubscribe, useEmitterValue, useWrappedEmitter } from './EmitterHooks';
 import { usePoll } from './Hooks';
-import UIEmitter, { UIEmitterEvent } from './UIEmitter';
 
 export const { useDefinedContext: useUIManager, provider: UIManagerProvider } =
   createDefinedContext<GameUIManager>();
@@ -25,7 +27,7 @@ export const { useDefinedContext: useTopLevelDiv, provider: TopLevelDivProvider 
   createDefinedContext<HTMLDivElement>();
 
 export function useOverlayContainer(): HTMLDivElement | null {
-  return useUIManager()?.getOverlayContainer()?.current ?? null;
+  return useUIManager()?.getOverlayContainer() ?? null;
 }
 
 /**
@@ -49,11 +51,13 @@ export function usePlayer(
     () => new Wrapper(uiManager.getPlayer(ethAddress))
   );
 
-  const onUpdate = useCallback(() => {
-    setPlayer(new Wrapper(uiManager.getPlayer(ethAddress)));
-  }, [uiManager, ethAddress]);
-
-  useEmitterSubscribe(uiManager.getGameManager().playersUpdated$, onUpdate);
+  useEmitterSubscribe(
+    uiManager.getGameManager().playersUpdated$,
+    () => {
+      setPlayer(new Wrapper(uiManager.getPlayer(ethAddress)));
+    },
+    [uiManager, setPlayer, ethAddress]
+  );
 
   return player;
 }
@@ -63,7 +67,8 @@ export function usePlayer(
  * @param uiManager instance of GameUIManager
  */
 export function useSelectedPlanet(uiManager: GameUIManager): Wrapper<Planet | undefined> {
-  return useWrappedEmitter<Planet>(uiManager.selectedPlanet$, undefined);
+  const selectedPlanetId = useWrappedEmitter<LocationId>(uiManager.selectedPlanetId$, undefined);
+  return usePlanet(uiManager, selectedPlanetId.value);
 }
 
 export function useSelectedPlanetId(uiManager: GameUIManager, defaultId?: LocationId) {
@@ -78,16 +83,19 @@ export function usePlanet(
     () => new Wrapper(uiManager.getPlanetWithId(locationId))
   );
 
-  const callback = useCallback(
+  useEffect(() => {
+    setPlanet(new Wrapper(uiManager.getPlanetWithId(locationId)));
+  }, [uiManager, locationId]);
+
+  useEmitterSubscribe(
+    uiManager.getGameManager().getGameObjects().planetUpdated$,
     (id: LocationId) => {
       if (id === locationId) {
         setPlanet(new Wrapper(uiManager.getPlanetWithId(locationId)));
       }
     },
-    [uiManager, locationId]
+    [uiManager, setPlanet, locationId]
   );
-
-  useEmitterSubscribe(uiManager.getGameManager().getGameObjects().planetUpdated$, callback);
 
   return planet;
 }
@@ -98,6 +106,14 @@ export function usePlanet(
  */
 export function useHoverPlanet(uiManager: GameUIManager): Wrapper<Planet | undefined> {
   return useWrappedEmitter<Planet>(uiManager.hoverPlanet$, undefined);
+}
+
+export function useHoverArtifact(uiManager: GameUIManager): Wrapper<Artifact | undefined> {
+  return useWrappedEmitter<Artifact>(uiManager.hoverArtifact$, undefined);
+}
+
+export function useHoverArtifactId(uiManager: GameUIManager): Wrapper<ArtifactId | undefined> {
+  return useWrappedEmitter<ArtifactId>(uiManager.hoverArtifactId$, undefined);
 }
 
 export function useMyArtifacts(uiManager: GameUIManager): Wrapper<Artifact[]> {
@@ -154,7 +170,7 @@ export function useActiveArtifact(
  * @param uiManager instance of GameUIManager
  */
 export function useSelectedArtifact(uiManager: GameUIManager): Wrapper<Artifact | undefined> {
-  return useWrappedEmitter<Artifact>(uiManager.selectedArtifact$, undefined);
+  return useWrappedEmitter<Artifact>(uiManager.hoverArtifact$, undefined);
 }
 
 export function useArtifact(uiManager: GameUIManager, artifactId: ArtifactId) {
@@ -162,13 +178,19 @@ export function useArtifact(uiManager: GameUIManager, artifactId: ArtifactId) {
     new Wrapper(uiManager.getArtifactWithId(artifactId))
   );
 
-  // @todo: actually hook this into the eventing system that we have in the game.
+  useEmitterSubscribe(
+    uiManager.getGameManager().getGameObjects().artifactUpdated$,
+    (id: ArtifactId) => {
+      if (id === artifactId) {
+        setArtifact(new Wrapper(uiManager.getArtifactWithId(artifactId)));
+      }
+    },
+    [uiManager, setArtifact, artifactId]
+  );
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setArtifact(new Wrapper(uiManager.getArtifactWithId(artifactId)));
-    }, 1000);
-    return () => clearInterval(interval);
-  });
+    setArtifact(new Wrapper(uiManager.getArtifactWithId(artifactId)));
+  }, [uiManager, artifactId]);
 
   return artifact;
 }
@@ -210,15 +232,59 @@ export function usePopAllOnSelectedPlanetChanged(
   }, [selected, modal, startingId]);
 }
 
+export type TransactionRecord = Record<TransactionId, Transaction>;
+
 /**
- * Calls {@code onCompleted} when the user sends a move via the ui.
+ * Creates subscriptions to all contract transaction events to keep an up to date
+ * list of all transactions and their states.
  */
-export function useOnSendCompleted(onCompleted: () => void) {
+export function useTransactionLog() {
+  const uiManager = useUIManager();
+  const [transactions, setTransactions] = useState<Wrapper<TransactionRecord>>(new Wrapper({}));
+
+  /**
+   * Update the matching transaction in the {@link TransactionRecord}
+   * with data from the contract lifecycle events. A {@link Wrapper}
+   * around the {@link TransactionRecord} needs to be used to avoid
+   * force a React state change and re-render.
+   */
+  const updateTransaction = useCallback((tx: Transaction) => {
+    setTransactions((txs) => {
+      const txWrapper = new Wrapper(txs.value);
+      txWrapper.value[tx.id] = {
+        ...tx,
+      };
+      return txWrapper;
+    });
+  }, []);
+
   useEffect(() => {
-    const uiEmitter = UIEmitter.getInstance();
-    uiEmitter.on(UIEmitterEvent.SendCompleted, onCompleted);
+    const gameManager = uiManager.getGameManager();
+    const contractEventEmitter = gameManager.getContractAPI();
+
+    contractEventEmitter.on(ContractsAPIEvent.TxQueued, updateTransaction);
+    contractEventEmitter.on(ContractsAPIEvent.TxPrioritized, updateTransaction);
+    contractEventEmitter.on(ContractsAPIEvent.TxProcessing, updateTransaction);
+    contractEventEmitter.on(ContractsAPIEvent.TxSubmitted, updateTransaction);
+    contractEventEmitter.on(ContractsAPIEvent.TxConfirmed, updateTransaction);
+    contractEventEmitter.on(ContractsAPIEvent.TxErrored, updateTransaction);
+    contractEventEmitter.on(ContractsAPIEvent.TxCancelled, updateTransaction);
+
     return () => {
-      uiEmitter.removeListener(UIEmitterEvent.SendCompleted, onCompleted);
+      contractEventEmitter.off(ContractsAPIEvent.TxQueued, updateTransaction);
+      contractEventEmitter.off(ContractsAPIEvent.TxPrioritized, updateTransaction);
+      contractEventEmitter.off(ContractsAPIEvent.TxProcessing, updateTransaction);
+      contractEventEmitter.off(ContractsAPIEvent.TxSubmitted, updateTransaction);
+      contractEventEmitter.off(ContractsAPIEvent.TxConfirmed, updateTransaction);
+      contractEventEmitter.off(ContractsAPIEvent.TxErrored, updateTransaction);
+      contractEventEmitter.off(ContractsAPIEvent.TxCancelled, updateTransaction);
     };
-  }, [onCompleted]);
+  }, [uiManager, updateTransaction]);
+
+  return transactions;
+}
+
+export function usePaused() {
+  const ui = useUIManager();
+  return useEmitterValue(ui.getPaused$(), ui.getPaused());
 }

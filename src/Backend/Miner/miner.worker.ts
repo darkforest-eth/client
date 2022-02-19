@@ -1,10 +1,10 @@
-import { mimcHash, perlin, PerlinConfig } from '@darkforest_eth/hashing';
+import { mimcHash, perlin } from '@darkforest_eth/hashing';
 import { locationIdFromBigInt } from '@darkforest_eth/serde';
-import { WorldLocation } from '@darkforest_eth/types';
+import { Chunk, PerlinConfig, Rectangle, WorldLocation } from '@darkforest_eth/types';
 import * as bigInt from 'big-integer';
 import { BigInteger } from 'big-integer';
 import { LOCATION_ID_UB } from '../../Frontend/Utils/constants';
-import { Chunk, MinerWorkerMessage, Rectangle } from '../../_types/global/GlobalTypes';
+import { MinerWorkerMessage } from '../../_types/global/GlobalTypes';
 import { getPlanetLocations } from './permutation';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

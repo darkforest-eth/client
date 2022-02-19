@@ -14,8 +14,14 @@
 
 ### getEmbeddedPlugins
 
-▸ **getEmbeddedPlugins**(): { `code`: `string` ; `id`: [`PluginId`](Backend_Plugins_SerializedPlugin.md#pluginid) ; `name`: `string` }[]
+▸ **getEmbeddedPlugins**(`isAdmin`): { `code`: `string` ; `id`: `PluginId` ; `name`: `string` }[]
+
+#### Parameters
+
+| Name      | Type      |
+| :-------- | :-------- |
+| `isAdmin` | `boolean` |
 
 #### Returns
 
-{ `code`: `string` ; `id`: [`PluginId`](Backend_Plugins_SerializedPlugin.md#pluginid) ; `name`: `string` }[]
+{ `code`: `string` ; `id`: `PluginId` ; `name`: `string` }[]

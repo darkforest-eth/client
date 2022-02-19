@@ -1,3 +1,4 @@
+import { Setting } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TutorialManager, {
@@ -11,11 +12,11 @@ import { Icon, IconType } from '../Components/Icons';
 import { White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
-import { Setting, useBooleanSetting } from '../Utils/SettingsHooks';
+import { useBooleanSetting } from '../Utils/SettingsHooks';
 
 function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }) {
   const uiManager = useUIManager();
-  const tutorialManager = TutorialManager.getInstance();
+  const tutorialManager = TutorialManager.getInstance(uiManager);
 
   if (tutorialState === TutorialState.None) {
     return (
@@ -25,7 +26,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
           <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.None)}>
             Yes
           </Btn>
-          <Btn className='btn' onClick={() => tutorialManager.complete(uiManager)}>
+          <Btn className='btn' onClick={() => tutorialManager.complete()}>
             No
           </Btn>
         </div>
@@ -49,6 +50,32 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         <br />
         <White>Try sending energy to another planet.</White> You can click and drag to look for
         other planets.
+      </div>
+    );
+  } else if (tutorialState === TutorialState.SpaceJunk) {
+    return (
+      <div>
+        When you sent energy to a planet you accumulated some <White>Space Junk</White>. Sending
+        energy to planets that no one has moved to yet will give you junk. You are not allowed to
+        take on more junk than your maximum limit and will be unable to make moves.
+        <br />
+        <br />
+        Take a look at the top of the screen to see you current and maximum{' '}
+        <White>Space Junk</White>.
+        <div>
+          <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.SpaceJunk)}>
+            Next
+          </Btn>
+        </div>
+      </div>
+    );
+  } else if (tutorialState === TutorialState.Spaceship) {
+    return (
+      <div>
+        You also control several space ships - check your home planet! You can move spaceships
+        between any two planets, even if you don't own the source or destination planets. Space
+        ships can move any distance!{' '}
+        <White>Try moving a spaceship you own to another planet now!</White>
       </div>
     );
   } else if (tutorialState === TutorialState.Deselect) {
@@ -112,7 +139,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   } else if (tutorialState === TutorialState.HowToGetScore) {
     return (
       <div className='tutzoom'>
-        <White>It's a Lightning Round!</White> <br />
+        <White>It's a Junk War!</White> <br />
         <br />
         Have the highest score at the end of the round to win!
         <br />
@@ -130,7 +157,9 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
     return (
       <div className='tutzoom'>
         You can increase your score by withdrawing silver via space time rips, and by finding
-        artifacts. The rarer the artifact, the more points it gives you!
+        artifacts. The rarer the artifact, the more points it gives you! You can also increase your
+        score via Capture Zones. Hover over the 'Capture Zone' section in the top bar for more info
+        about capture zones.
         <div>
           <Btn
             className='btn'
@@ -164,7 +193,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         <br />
         We hope you enjoy Dark Forest!
         <div>
-          <Btn className='btn' onClick={() => tutorialManager.complete(uiManager)}>
+          <Btn className='btn' onClick={() => tutorialManager.complete()}>
             Finish
           </Btn>
         </div>
@@ -214,7 +243,7 @@ const StyledTutorialPane = styled.div<{ visible: boolean }>`
 
 export function TutorialPane({ tutorialHook }: { tutorialHook: Hook<boolean> }) {
   const uiManager = useUIManager();
-  const tutorialManager = TutorialManager.getInstance();
+  const tutorialManager = TutorialManager.getInstance(uiManager);
 
   const [tutorialState, setTutorialState] = useState<TutorialState>(TutorialState.None);
   const [tutorialOpen] = tutorialHook;

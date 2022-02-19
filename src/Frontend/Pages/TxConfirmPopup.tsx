@@ -1,14 +1,16 @@
 import { weiToGwei } from '@darkforest_eth/network';
-import { EthAddress } from '@darkforest_eth/types';
+import { address } from '@darkforest_eth/serde';
+import { Setting } from '@darkforest_eth/types';
 import { BigNumber as EthersBN } from 'ethers';
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled, { css, keyframes } from 'styled-components';
 import { ONE_DAY } from '../../Backend/Utils/Utils';
 import Button from '../Components/Button';
-import { Spacer } from '../Components/CoreUI';
+import { Checkbox, DarkForestCheckbox } from '../Components/Input';
+import { Row } from '../Components/Row';
 import dfstyles from '../Styles/dfstyles';
-import { setBooleanSetting, Setting } from '../Utils/SettingsHooks';
+import { setBooleanSetting } from '../Utils/SettingsHooks';
 
 const StyledTxConfirmPopup = styled.div`
   width: 100%;
@@ -37,59 +39,49 @@ const StyledTxConfirmPopup = styled.div`
     font-weight: 700;
   }
 
-  & > div {
-    border-bottom: 1px solid gray;
+  .mtop {
+    margin-top: 1em;
+  }
+
+  button {
+    flex-grow: 1;
+    padding: 1em;
+    border-radius: 8px;
+
+    transition: filter 0.1s;
+    &:hover {
+      filter: brightness(1.1);
+    }
+    &:active {
+      filter: brightness(0.9);
+    }
+
+    &:first-child {
+      margin-right: 0.5em;
+      background: #e3e3e3;
+      border: 2px solid #444;
+    }
+    &:last-child {
+      color: white;
+      background: #00aed9;
+      border: 2px solid #00708b;
+    }
+  }
+
+  .network {
+    color: ${dfstyles.colors.subtext};
+  }
+
+  .section {
     padding: 0.5em;
+
+    &:not(:last-of-type) {
+      border-bottom: 1px solid gray;
+    }
 
     & > h2 {
       font-size: 1.5em;
       font-weight: 300;
-    }
-
-    & > div {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-
-      &.mtop {
-        margin-top: 1em;
-      }
-
-      & > button {
-        flex-grow: 1;
-        padding: 1em;
-        border-radius: 8px;
-
-        transition: filter 0.1s;
-        &:hover {
-          filter: brightness(1.1);
-        }
-        &:active {
-          filter: brightness(0.9);
-        }
-
-        &:first-child {
-          margin-right: 0.5em;
-          background: #e3e3e3;
-          border: 2px solid #444;
-        }
-        &:last-child {
-          color: white;
-          background: #00aed9;
-          border: 2px solid #00708b;
-        }
-      }
-    }
-    &:last-of-type {
-      border-bottom: none;
-      color: #888;
-
-      & > span:first-child {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-      }
     }
   }
 `;
@@ -117,31 +109,40 @@ const ConfirmIcon = styled.span`
   ${anim};
 `;
 
-export function TxConfirmPopup({ match }: RouteComponentProps) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { addr, actionId, balance, method } = match.params as {
-    addr: string;
-    actionId: string;
-    balance: string;
-    method: string;
-  };
+export function TxConfirmPopup({
+  match,
+}: RouteComponentProps<{
+  contract: string;
+  addr: string;
+  actionId: string;
+  balance: string;
+  method: string;
+}>) {
+  const { contract, addr, actionId, balance, method } = match.params;
+
+  const contractAddress = address(contract);
+  const account = address(addr);
 
   const doReject = () => {
-    localStorage.setItem(`tx-approved-${addr}-${actionId}`, 'false');
+    localStorage.setItem(`tx-approved-${account}-${actionId}`, 'false');
     window.close();
   };
 
   const [autoApproveChecked, setAutoApprovedChecked] = useState<boolean>(false);
 
   const approve = () => {
-    localStorage.setItem(`tx-approved-${addr}-${actionId}`, 'true');
+    localStorage.setItem(`tx-approved-${account}-${actionId}`, 'true');
     window.close();
   };
 
   const setAutoApproveSetting = () => {
-    localStorage.setItem(`tx-approved-${addr}-${actionId}`, 'true');
-    localStorage.setItem(`wallet-enabled-${addr}`, (Date.now() + ONE_DAY).toString());
-    setBooleanSetting(addr as EthAddress, Setting.AutoApproveNonPurchaseTransactions, true);
+    localStorage.setItem(`tx-approved-${account}-${actionId}`, 'true');
+    localStorage.setItem(`wallet-enabled-${account}`, (Date.now() + ONE_DAY).toString());
+    const config = {
+      contractAddress,
+      account,
+    };
+    setBooleanSetting(config, Setting.AutoApproveNonPurchaseTransactions, true);
     window.close();
   };
 
@@ -150,207 +151,185 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
     else approve();
   };
 
-  const gasFee = EthersBN.from(localStorage.getItem(`${addr}-gasFeeGwei`) || '');
+  const gasFee = EthersBN.from(localStorage.getItem(`${account}-gasFeeGwei`) || '');
 
-  const fromPlanet = localStorage.getItem(`${addr.toLowerCase()}-fromPlanet`);
-  const toPlanet = localStorage.getItem(`${addr.toLowerCase()}-toPlanet`);
+  const fromPlanet = localStorage.getItem(`${account}-fromPlanet`);
+  const toPlanet = localStorage.getItem(`${account}-toPlanet`);
 
-  const hatPlanet = localStorage.getItem(`${addr.toLowerCase()}-hatPlanet`);
-  const hatLevel = localStorage.getItem(`${addr.toLowerCase()}-hatLevel`);
+  const hatPlanet = localStorage.getItem(`${account}-hatPlanet`);
+  const hatLevel = localStorage.getItem(`${account}-hatLevel`);
   const hatCost: number = method === 'buyHat' && hatLevel ? 2 ** parseInt(hatLevel) : 0;
-  const gptCost: number = method === 'buyCredits' ? 0.5 : 0;
 
-  const txCost: number = hatCost + gptCost + 0.002 * weiToGwei(gasFee);
+  const txCost: number = hatCost + 0.002 * weiToGwei(gasFee);
 
-  const upPlanet = localStorage.getItem(`${addr.toLowerCase()}-upPlanet`);
-  const branch = localStorage.getItem(`${addr.toLowerCase()}-branch`);
+  const upPlanet = localStorage.getItem(`${account}-upPlanet`);
+  const branch = localStorage.getItem(`${account}-branch`);
 
-  const planetToTransfer = localStorage.getItem(`${addr.toLowerCase()}-transferPlanet`);
-  const transferTo = localStorage.getItem(`${addr.toLowerCase()}-transferOwner`);
+  const planetToTransfer = localStorage.getItem(`${account}-transferPlanet`);
+  const transferTo = localStorage.getItem(`${account}-transferOwner`);
 
-  const findArtifactPlanet = localStorage.getItem(`${addr.toLowerCase()}-findArtifactOnPlanet`);
+  const findArtifactPlanet = localStorage.getItem(`${account}-findArtifactOnPlanet`);
 
-  const depositPlanet = localStorage.getItem(`${addr.toLowerCase()}-depositPlanet`);
-  const depositArtifact = localStorage.getItem(`${addr.toLowerCase()}-depositArtifact`);
+  const depositPlanet = localStorage.getItem(`${account}-depositPlanet`);
+  const depositArtifact = localStorage.getItem(`${account}-depositArtifact`);
 
-  const withdrawPlanet = localStorage.getItem(`${addr.toLowerCase()}-withdrawPlanet`);
-  const withdrawArtifact = localStorage.getItem(`${addr.toLowerCase()}-withdrawArtifact`);
+  const withdrawPlanet = localStorage.getItem(`${account}-withdrawPlanet`);
+  const withdrawArtifact = localStorage.getItem(`${account}-withdrawArtifact`);
 
-  const activatePlanet = localStorage.getItem(`${addr.toLowerCase()}-activatePlanet`);
-  const activateArtifact = localStorage.getItem(`${addr.toLowerCase()}-activateArtifact`);
+  const activatePlanet = localStorage.getItem(`${account}-activatePlanet`);
+  const activateArtifact = localStorage.getItem(`${account}-activateArtifact`);
 
-  const deactivatePlanet = localStorage.getItem(`${addr.toLowerCase()}-deactivatePlanet`);
-  const deactivateArtifact = localStorage.getItem(`${addr.toLowerCase()}-deactivateArtifact`);
+  const deactivatePlanet = localStorage.getItem(`${account}-deactivatePlanet`);
+  const deactivateArtifact = localStorage.getItem(`${account}-deactivateArtifact`);
 
-  const withdrawSilverPlanet = localStorage.getItem(`${addr.toLowerCase()}-withdrawSilverPlanet`);
+  const withdrawSilverPlanet = localStorage.getItem(`${account}-withdrawSilverPlanet`);
 
-  const revealPlanet = localStorage.getItem(`${addr.toLowerCase()}-revealLocationId`);
-
-  const buyGPTCreditsAmount = localStorage.getItem(`${addr.toLowerCase()}-buyGPTCreditAmount`);
-  const buyGPTCreditsCost = localStorage.getItem(`${addr.toLowerCase()}-buyGPTCreditCost`);
+  const revealPlanet = localStorage.getItem(`${account}-revealLocationId`);
 
   return (
     <StyledTxConfirmPopup>
-      <div>
+      <div className='section'>
         <h2>Confirm Transaction</h2>
       </div>
 
-      <div>
-        <div>
+      <div className='section'>
+        <Row>
           <b>Contract Action</b>
           <span>{method.toUpperCase()}</span>
-        </div>
+        </Row>
         {method === 'revealLocation' && (
-          <>
-            <div>
-              <b>Planet ID</b>
-              <span className='mono'>{revealPlanet}</span>
-            </div>
-          </>
+          <Row>
+            <b>Planet ID</b>
+            <span className='mono'>{revealPlanet}</span>
+          </Row>
         )}
         {method === 'buyHat' && (
           <>
-            <div>
+            <Row>
               <b>On</b>
               <span className='mono'>{hatPlanet}</span>
-            </div>
-            <div>
+            </Row>
+            <Row>
               <b>HAT Level</b>
               <span>
                 {hatLevel} ({hatCost} xDAI)
               </span>
-            </div>
+            </Row>
           </>
         )}
         {method === 'move' && (
           <>
-            <div>
+            <Row>
               <b>From</b>
               <span className='mono'>{fromPlanet}</span>
-            </div>
-            <div>
+            </Row>
+            <Row>
               <b>To</b>
               <span className='mono'>{toPlanet}</span>
-            </div>
+            </Row>
           </>
         )}
         {method === 'upgradePlanet' && (
           <>
-            <div>
+            <Row>
               <b>On</b>
               <span className='mono'>{upPlanet}</span>
-            </div>
-            <div>
+            </Row>
+            <Row>
               <b>Branch</b>
               <span>{branch}</span>
-            </div>
+            </Row>
           </>
         )}
-        {method === 'transferOwnership' && (
+        {method === 'transferPlanet' && (
           <>
-            <div>
+            <Row>
               <b>Planet ID</b>
               <span className='mono'>{planetToTransfer}</span>
-            </div>
-            <div>
+            </Row>
+            <Row>
               <b>Transfer to</b>
               <span>{transferTo}</span>
-            </div>
+            </Row>
           </>
         )}
         {method === 'findArtifact' && (
-          <>
-            <div>
-              <b>Planet ID</b>
-              <span className='mono'>{findArtifactPlanet}</span>
-            </div>
-          </>
+          <Row>
+            <b>Planet ID</b>
+            <span className='mono'>{findArtifactPlanet}</span>
+          </Row>
         )}
         {method === 'depositArtifact' && (
           <>
-            <div>
+            <Row>
               <b>Planet ID</b>
               <span className='mono'>{depositPlanet}</span>
-            </div>
-            <div>
+            </Row>
+            <Row>
               <b>Artifact ID</b>
               <span className='mono'>{depositArtifact}</span>
-            </div>
+            </Row>
           </>
         )}
         {method === 'withdrawArtifact' && (
           <>
-            <div>
+            <Row>
               <b>Planet ID</b>
               <span className='mono'>{withdrawPlanet}</span>
-            </div>
-            <div>
+            </Row>
+            <Row>
               <b>Artifact ID</b>
               <span className='mono'>{withdrawArtifact}</span>
-            </div>
+            </Row>
           </>
         )}
         {method === 'activateArtifact' && (
           <>
-            <div>
+            <Row>
               <b>Planet ID</b>
               <span className='mono'>{activatePlanet}</span>
-            </div>
-            <div>
+            </Row>
+            <Row>
               <b>Artifact ID</b>
               <span className='mono'>{activateArtifact}</span>
-            </div>
+            </Row>
           </>
         )}
         {method === 'deactivateArtifact' && (
           <>
-            <div>
+            <Row>
               <b>Planet ID</b>
               <span className='mono'>{deactivatePlanet}</span>
-            </div>
-            <div>
+            </Row>
+            <Row>
               <b>Artifact ID</b>
               <span className='mono'>{deactivateArtifact}</span>
-            </div>
+            </Row>
           </>
         )}
         {method === 'withdrawSilver' && (
-          <>
-            <div>
-              <b>Planet ID</b>
-              <span className='mono'>{withdrawSilverPlanet}</span>
-            </div>
-          </>
-        )}
-        {method === 'buyCredits' && (
-          <>
-            <div>
-              <b>Amount</b>
-              <span className='mono'>{buyGPTCreditsAmount}</span>
-            </div>
-            <div>
-              <b>Cost</b>
-              <span>{buyGPTCreditsCost} xDAI</span>
-            </div>
-          </>
+          <Row>
+            <b>Planet ID</b>
+            <span className='mono'>{withdrawSilverPlanet}</span>
+          </Row>
         )}
       </div>
 
-      <div>
-        <div>
+      <div className='section'>
+        <Row>
           <b>Gas Fee</b>
           <span>{weiToGwei(gasFee)} gwei</span>
-        </div>
-        <div>
+        </Row>
+        <Row>
           <b>Gas Limit</b>
           <span>2000000</span>
-        </div>
-        <div>
+        </Row>
+        <Row>
           <b>Total Transaction Cost</b>
           <span>{txCost.toFixed(8)} xDAI</span>
-        </div>
+        </Row>
         {method === 'buyHat' && hatLevel && +hatLevel > 6 && (
-          <div>
+          <Row>
             <b
               style={{
                 color: 'red',
@@ -359,13 +338,13 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
               WARNING: You are buying a very expensive HAT! Check the price and make sure you intend
               to do this!
             </b>
-          </div>
+          </Row>
         )}
-        <div className='mtop'>
+        <Row className='mtop'>
           <b>Account Balance</b>
           <span>{parseFloat(balance).toFixed(8)} xDAI</span>
-        </div>
-        <div className='mtop'>
+        </Row>
+        <Row className='mtop'>
           <Button onClick={doReject}>
             <span>{'Reject'}</span>
           </Button>
@@ -373,24 +352,24 @@ export function TxConfirmPopup({ match }: RouteComponentProps) {
           <Button onClick={doApprove}>
             <span>{'Approve'}</span>
           </Button>
-        </div>
+        </Row>
       </div>
 
-      <div>
-        <div>
-          <span>
+      <div className='section'>
+        <Row className='network'>
+          <div>
             <ConfirmIcon /> DF connected to xDAI
-          </span>
-          <span>
-            Auto-confirm all transactions except purchases. Currently, you can only purchase GPT
-            Credits, and Hats, as well as anything 3rd party plugins offer. <Spacer width={8} />
-            <input
-              type='checkbox'
-              checked={autoApproveChecked}
-              onChange={(e) => setAutoApprovedChecked(e.target.checked)}
-            />
-          </span>
-        </div>
+          </div>
+        </Row>
+        <Row className='mtop'>
+          <Checkbox
+            label='Auto-confirm all transactions except purchases. Currently, you can only purchase Hats, or anything 3rd party plugins offer.'
+            checked={autoApproveChecked}
+            onChange={(e: Event & React.ChangeEvent<DarkForestCheckbox>) =>
+              setAutoApprovedChecked(e.target.checked)
+            }
+          />
+        </Row>
       </div>
     </StyledTxConfirmPopup>
   );

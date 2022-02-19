@@ -2,10 +2,6 @@
 
 ## Table of contents
 
-### Enumerations
-
-- [InitRenderState](../enums/Frontend_Pages_GameLandingPage.InitRenderState.md)
-
 ### Functions
 
 - [GameLandingPage](Frontend_Pages_GameLandingPage.md#gamelandingpage)
@@ -14,7 +10,13 @@
 
 ### GameLandingPage
 
-▸ **GameLandingPage**(): `Element`
+▸ **GameLandingPage**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                | Type                                                         |
+| :------------------ | :----------------------------------------------------------- |
+| `__namedParameters` | `RouteComponentProps`<`Object`, `StaticContext`, `unknown`\> |
 
 #### Returns
 

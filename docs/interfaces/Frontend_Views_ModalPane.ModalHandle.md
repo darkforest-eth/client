@@ -2,7 +2,7 @@
 
 [Frontend/Views/ModalPane](../modules/Frontend_Views_ModalPane.md).ModalHandle
 
-**`todo`** Add things like open, close, set position, etc. Get rid of {@code ModalHook}.
+**`todo`** Add things like open, close, set position, etc.
 
 ## Table of contents
 

@@ -1,4 +1,4 @@
-import { Artifact, Planet } from '@darkforest_eth/types';
+import { Artifact, Planet, TooltipName } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
 import {
@@ -7,27 +7,10 @@ import {
   ArtifactTypeText,
 } from '../Components/Labels/ArtifactLabels';
 import { Sub, White } from '../Components/Text';
-import { TooltipName } from '../Game/WindowManager';
 import { TooltipTrigger } from '../Panes/Tooltip';
 import dfstyles from '../Styles/dfstyles';
 
-/**
- * Displayed in {@link PlanetContextPane} when a planet is {@code destroyed}.
- */
-export const DestroyedMarker = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  height: 100%;
-  width: 100%;
-
-  background-image: url('/public/img/destroyedbg.png');
-  background-size: 100px 100px;
-  background-position: right bottom;
-  background-repeat: no-repeat;
-`;
-
-const StyledTimesTwo = styled.span`
+const BonusStyle = styled.span`
   color: ${dfstyles.colors.dfgreen};
   font-size: 0.8em;
   vertical-align: center;
@@ -35,7 +18,8 @@ const StyledTimesTwo = styled.span`
   margin-left: 8px;
 `;
 
-export const TimesTwo = () => <StyledTimesTwo>x2</StyledTimesTwo>;
+export const TimesTwo = () => <BonusStyle>x2</BonusStyle>;
+export const Halved = () => <BonusStyle>%2</BonusStyle>;
 
 export const RowTip = ({ name, children }: { name: TooltipName; children: React.ReactNode }) => (
   <TooltipTrigger

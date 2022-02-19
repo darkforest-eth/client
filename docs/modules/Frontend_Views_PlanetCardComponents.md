@@ -4,30 +4,32 @@
 
 ### Variables
 
-- [DestroyedMarker](Frontend_Views_PlanetCardComponents.md#destroyedmarker)
 - [TitleBar](Frontend_Views_PlanetCardComponents.md#titlebar)
 
 ### Functions
 
+- [Halved](Frontend_Views_PlanetCardComponents.md#halved)
 - [PlanetActiveArtifact](Frontend_Views_PlanetCardComponents.md#planetactiveartifact)
 - [RowTip](Frontend_Views_PlanetCardComponents.md#rowtip)
 - [TimesTwo](Frontend_Views_PlanetCardComponents.md#timestwo)
 
 ## Variables
 
-### DestroyedMarker
-
-• `Const` **DestroyedMarker**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
-
-Displayed in [PlanetContextPane](Frontend_Panes_PlanetContextPane.md#planetcontextpane) when a planet is {@code destroyed}.
-
----
-
 ### TitleBar
 
-• `Const` **TitleBar**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• **TitleBar**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
 
 ## Functions
+
+### Halved
+
+▸ `Const` **Halved**(): `Element`
+
+#### Returns
+
+`Element`
+
+---
 
 ### PlanetActiveArtifact
 
@@ -39,7 +41,7 @@ Displayed in [PlanetContextPane](Frontend_Panes_PlanetContextPane.md#planetconte
 | :--------------------------- | :---------------------- |
 | `__namedParameters`          | `Object`                |
 | `__namedParameters.artifact` | `Artifact`              |
-| `__namedParameters.planet`   | `Planet` \| `undefined` |
+| `__namedParameters.planet`   | `undefined` \| `Planet` |
 
 #### Returns
 
@@ -53,11 +55,11 @@ Displayed in [PlanetContextPane](Frontend_Panes_PlanetContextPane.md#planetconte
 
 #### Parameters
 
-| Name                         | Type                                                                 |
-| :--------------------------- | :------------------------------------------------------------------- |
-| `__namedParameters`          | `Object`                                                             |
-| `__namedParameters.children` | `ReactNode`                                                          |
-| `__namedParameters.name`     | [`TooltipName`](../enums/Frontend_Game_WindowManager.TooltipName.md) |
+| Name                         | Type          |
+| :--------------------------- | :------------ |
+| `__namedParameters`          | `Object`      |
+| `__namedParameters.children` | `ReactNode`   |
+| `__namedParameters.name`     | `TooltipName` |
 
 #### Returns
 

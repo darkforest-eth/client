@@ -9,8 +9,4 @@ export class Wrapper<T> {
   public constructor(value: T) {
     this.value = value;
   }
-
-  public or(wrapper: Wrapper<T>) {
-    return new Wrapper(this.value || wrapper.value);
-  }
 }

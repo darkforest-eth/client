@@ -1,6 +1,6 @@
+import { isLocatable } from '@darkforest_eth/gamelogic';
 import { Planet } from '@darkforest_eth/types';
 import React from 'react';
-import { isLocatable } from '../../_types/global/GlobalTypes';
 import { Link } from '../Components/CoreUI';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
@@ -18,6 +18,12 @@ export function PlanetLink({ planet, children }: { planet: Planet; children: Rea
           uiManager?.setSelectedPlanet(planet);
           uiEmitter.emit(UIEmitterEvent.CenterPlanet, planet);
         }
+      }}
+      onMouseEnter={() => {
+        if (isLocatable(planet)) uiManager?.setHoveringOverPlanet(planet, false);
+      }}
+      onMouseLeave={() => {
+        uiManager?.setHoveringOverPlanet(undefined, false);
       }}
     >
       {children}

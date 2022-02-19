@@ -127,6 +127,7 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
   );
 
   const onKeyUp = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    e.stopPropagation();
     if (e.keyCode === ENTER_KEY_CODE && !e.shiftKey) {
       e.preventDefault();
       print(promptCharacter + ' ', TerminalTextStyle.Green);
@@ -143,6 +144,7 @@ function TerminalImpl({ promptCharacter }: TerminalProps, ref: React.Ref<Termina
   };
 
   const preventEnterDefault = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
+    e.stopPropagation();
     if (e.keyCode === ENTER_KEY_CODE && !e.shiftKey) {
       e.preventDefault();
     }

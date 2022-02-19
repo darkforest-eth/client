@@ -7,8 +7,6 @@
 ### Enumeration members
 
 - [CanAddEmoji](Frontend_Views_PlanetNotifications.PlanetNotifType.md#canaddemoji)
-- [CanFindArtifact](Frontend_Views_PlanetNotifications.PlanetNotifType.md#canfindartifact)
-- [CanProspect](Frontend_Views_PlanetNotifications.PlanetNotifType.md#canprospect)
 - [Claimed](Frontend_Views_PlanetNotifications.PlanetNotifType.md#claimed)
 - [DistanceFromCenter](Frontend_Views_PlanetNotifications.PlanetNotifType.md#distancefromcenter)
 - [PlanetCanUpgrade](Frontend_Views_PlanetNotifications.PlanetNotifType.md#planetcanupgrade)
@@ -17,31 +15,19 @@
 
 ### CanAddEmoji
 
-• **CanAddEmoji** = `5`
-
----
-
-### CanFindArtifact
-
-• **CanFindArtifact** = `2`
-
----
-
-### CanProspect
-
-• **CanProspect** = `1`
+• **CanAddEmoji** = `3`
 
 ---
 
 ### Claimed
 
-• **Claimed** = `3`
+• **Claimed** = `1`
 
 ---
 
 ### DistanceFromCenter
 
-• **DistanceFromCenter** = `4`
+• **DistanceFromCenter** = `2`
 
 ---
 

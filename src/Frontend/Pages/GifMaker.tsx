@@ -1,6 +1,6 @@
+import { ArtifactFileColor } from '@darkforest_eth/gamelogic';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { ArtifactFileColor } from '../../Backend/GameLogic/ArtifactUtils';
 import { GifRenderer } from '../Renderers/GifRenderer';
 
 const IS_THUMB = true;

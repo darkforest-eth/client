@@ -1,4 +1,4 @@
-import { ContractMethodName } from '@darkforest_eth/types';
+import { ContractMethodName, Setting } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -9,8 +9,7 @@ import NotificationManager, {
 } from '../Game/NotificationManager';
 import dfstyles, { snips } from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
-import { GameWindowZIndex } from '../Utils/constants';
-import { Setting } from '../Utils/SettingsHooks';
+import { DFZIndex } from '../Utils/constants';
 
 /**
  * React component which represents a single notification. Can be hovered over for more info, or
@@ -125,7 +124,7 @@ const StyledNotification = styled.div`
   flex-direction: row-reverse;
   justify-content: flex-start;
   &:hover {
-    z-index: ${GameWindowZIndex.Tooltip};
+    z-index: ${DFZIndex.Tooltip};
   }
 `;
 
@@ -167,7 +166,7 @@ const NotificationContent = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  z-index: ${GameWindowZIndex.Tooltip};
+  z-index: ${DFZIndex.Tooltip};
 `;
 
 /**
@@ -177,5 +176,5 @@ const NotificationsContainer = styled.div`
   position: absolute;
   top: 0;
   right: 0;
-  z-index: ${GameWindowZIndex.Notification};
+  z-index: ${DFZIndex.Notification};
 `;

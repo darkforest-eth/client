@@ -1,14 +1,12 @@
+import { isLocatable } from '@darkforest_eth/gamelogic';
+import { getPlanetBlurb, getPlanetName, getPlanetTagline } from '@darkforest_eth/procedural';
 import { LocationId, Planet } from '@darkforest_eth/types';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
-import { ProcgenUtils } from '../../Backend/Procedural/ProcgenUtils';
 import ReaderDataStore from '../../Backend/Storage/ReaderDataStore';
 import { getPlanetShortHash } from '../../Backend/Utils/Utils';
-import { Wrapper } from '../../Backend/Utils/Wrapper';
-import { isLocatable } from '../../_types/global/GlobalTypes';
 import { Sub } from '../Components/Text';
-import { PlanetScape } from '../Renderers/PlanetscapeRenderer/PlanetScape';
 import dfstyles from '../Styles/dfstyles';
 import { Share } from '../Views/Share';
 
@@ -66,16 +64,13 @@ export function SharePlanet({ match }: RouteComponentProps<{ locationId: Locatio
         return (
           <PlanetCard>
             <div>
-              {getPlanetShortHash(data.planet)} {ProcgenUtils.getPlanetName(data.planet)}
-            </div>
-            <div>
-              <PlanetScape wrapper={new Wrapper<Planet>(data.planet)} />
+              {getPlanetShortHash(data.planet)} {getPlanetName(data.planet)}
             </div>
             <div>
               <p>
-                <em>{ProcgenUtils.getPlanetTagline(data.planet)}...</em>
+                <em>{getPlanetTagline(data.planet)}...</em>
                 <span>
-                  <Sub>{ProcgenUtils.getPlanetBlurb(data.planet)}</Sub>
+                  <Sub>{getPlanetBlurb(data.planet)}</Sub>
                 </span>
               </p>
               <p>{`Owner: ${data.ownerTwitter || data.planet.owner}`}</p>

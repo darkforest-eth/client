@@ -1,11 +1,13 @@
+import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
+import { address } from '@darkforest_eth/serde';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Btn } from '../Components/Btn';
-import { EmSpacer, Link, Spacer } from '../Components/CoreUI';
+import { EmSpacer, Link, Spacer, Title } from '../Components/CoreUI';
 import { EmailCTA, EmailCTAMode } from '../Components/Email';
+import { Modal } from '../Components/Modal';
 import { HideSmall, Sub, Text, White } from '../Components/Text';
-import LandingPageCanvas from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
 import { LandingPageRoundArt } from '../Views/LandingPageRoundArt';
 import { LeadboardDisplay } from '../Views/Leaderboard';
@@ -24,13 +26,22 @@ const links = {
   github: 'https://github.com/darkforest-eth',
 };
 
+const defaultAddress = address(CONTRACT_ADDRESS);
+
+const ButtonWrapper = styled.div`
+  --df-button-color: ${dfstyles.colors.dfgreen};
+  --df-button-border: 1px solid ${dfstyles.colors.dfgreen};
+  --df-button-hover-background: ${dfstyles.colors.dfgreen};
+  --df-button-hover-border: 1px solid ${dfstyles.colors.dfgreen};
+`;
+
 export default function LandingPage() {
   const history = useHistory();
 
   return (
     <>
-      <LandingPageCanvas />
       <PrettyOverlayGradient />
+      <Hiring />
 
       <Page>
         <Spacer height={150} />
@@ -38,27 +49,21 @@ export default function LandingPage() {
         <MainContentContainer>
           <Header>
             <LandingPageRoundArt />
-            <EmSpacer height={1.5} />
 
             <p>
-              <White>Dark Forest</White>
+              <White>Dark Forest</White> <Text>zkSNARK space warfare</Text>
               <br />
-              <Text>zkSNARK space warfare</Text>
-              <br />
-              <Text>Round 4: Society Eggnog - Lightning Round</Text>
+              <Text>Round 5: </Text>
+              <White>The Junk Wars</White>
             </p>
 
             <Spacer height={16} />
 
-            <Btn
-              style={{ borderRadius: '8px', padding: '4px 8px' }}
-              color={dfstyles.colors.dfgreen}
-              onClick={() => {
-                history.push('/play');
-              }}
-            >
-              Enter
-            </Btn>
+            <ButtonWrapper>
+              <Btn size='large' onClick={() => history.push(`/play/${defaultAddress}`)}>
+                Enter
+              </Btn>
+            </ButtonWrapper>
           </Header>
 
           <EmSpacer height={3} />
@@ -159,6 +164,17 @@ export default function LandingPage() {
                   <td>
                     10/01/<HideSmall>20</HideSmall>21
                   </td>
+                  <td>
+                    <Link to='https://twitter.com/orden_gg'>@orden_gg</Link>
+                  </td>
+                </TRow>
+                <TRow>
+                  <td>
+                    <HideSmall>v</HideSmall>0.6 round 5
+                  </td>
+                  <td>
+                    02/18/<HideSmall>20</HideSmall>22
+                  </td>
                   <td>t.b.d</td>
                 </TRow>
               </tbody>
@@ -222,12 +238,13 @@ const VariousLinksContainer = styled.div`
 const PrettyOverlayGradient = styled.div`
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to left top, rgba(219, 10, 20, 0.2), rgba(1, 255, 22, 0.2)) fixed;
+  background: linear-gradient(to left top, rgba(73, 10, 219, 0.2), rgba(1, 255, 1, 0.2)) fixed;
   background-position: 50%, 50%;
   display: inline-block;
   position: fixed;
   top: 0;
   left: 0;
+  z-index: -1;
 `;
 
 const Header = styled.div`
@@ -315,3 +332,30 @@ const HallOfFameTitle = styled.div`
   border-bottom: 1px solid ${dfstyles.colors.subtext};
   line-height: 1em;
 `;
+
+function Hiring() {
+  return (
+    <Modal contain={['top', 'left', 'right']} initialX={50} initialY={50}>
+      <Title slot='title'>Dark Forest is Hiring!</Title>
+      <div style={{ maxWidth: '300px', textAlign: 'justify' }}>
+        We are looking for experienced full stack and solidity developers to join our team! If you
+        like what you see,{' '}
+        <Link to='https://docs.google.com/forms/d/e/1FAIpQLSdaWvjxX4TrDDLidPXtgk6UW3rC082rpvi3AIPkCPxAahg_rg/viewform?usp=sf_link'>
+          consider applying
+        </Link>
+        . If you know someone who you think would be a great fit for our team,{' '}
+        <Link to='https://docs.google.com/forms/d/e/1FAIpQLScku_bQDbkPqpHrwBzOBfQ4SV6Nw6Tgxi6zWQL8Bb0olyBE3w/viewform?usp=sf_link'>
+          please refer them here
+        </Link>
+        .
+        <br />
+        <br />
+        Learn more about the role{' '}
+        <Link to='https://ivanchub.notion.site/Dark-Forest-is-Hiring-ad1f0cbe816640fb9b4c663dacaaca04'>
+          here
+        </Link>
+        .
+      </div>
+    </Modal>
+  );
+}

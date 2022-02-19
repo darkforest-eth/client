@@ -1,8 +1,7 @@
+import { isAncient, isLocatable } from '@darkforest_eth/gamelogic';
 import { Artifact, Biome, BiomeNames, LocatablePlanet, Planet } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
-import { isAncient } from '../../../Backend/GameLogic/ArtifactUtils';
-import { isLocatable } from '../../../_types/global/GlobalTypes';
 import { BiomeTextColors } from '../../Styles/Colors';
 import { AncientLabel, AncientLabelAnim } from '../AncientLabel';
 import { icyAnim, shakeAnim } from '../BiomeAnims';

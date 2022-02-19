@@ -19,14 +19,10 @@ yarn-error.log*
 # local image files for testing
 public/img/artifacts
 
-# compiled contracts
-public/contracts/*.json
-!public/contracts/DarkForestCore.json
-!public/contracts/DarkForestGetters.json
-!public/contracts/Whitelist.json
-!public/contracts/DarkForestGPTCredit.json
-
 declarations
 
 # Local Netlify folder
 .netlify
+
+# Environment variables
+.env
