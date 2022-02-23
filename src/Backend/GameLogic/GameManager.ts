@@ -1811,8 +1811,8 @@ class GameManager extends EventEmitter {
         throw new Error("you can't invade destroyed planets");
       }
 
-      if (planet.capturer !== EMPTY_ADDRESS) {
-        throw new Error("you can't invade planets that have already been captured");
+      if (planet.invader !== EMPTY_ADDRESS) {
+        throw new Error("you can't invade planets that have already been invaded");
       }
 
       if (planet.owner !== this.account) {
