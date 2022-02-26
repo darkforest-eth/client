@@ -1,17 +1,18 @@
 /** This file contains some common utilities used by the Lobbies UI */
-import { Initializers } from '@darkforest_eth/settings';
 import React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import { ShortcutBtn } from '../../Components/Btn';
+import { Initializers } from '../../../../../packages/settings/dist';
+import { EthAddress } from '../../../../../packages/types/dist';
+import { Btn, ShortcutBtn } from '../../Components/Btn';
 import { Title } from '../../Components/CoreUI';
 import { Row } from '../../Components/Row';
-
-export const SAFE_UPPER_BOUNDS = Number.MAX_SAFE_INTEGER - 1;
+import { Red } from '../../Components/Text';
+import { LobbyConfigAction, LobbyConfigState, toInitializers } from './Reducer';
 
 export interface LobbiesPaneProps {
-  config: Initializers;
-  onUpdate: (change: Partial<Initializers>) => void;
+  config: LobbyConfigState;
+  onUpdate: (change: LobbyConfigAction) => void;
 }
 
 export const ButtonRow = styled(Row)`
@@ -72,5 +73,97 @@ export function NavigationTitle({ children }: React.PropsWithChildren<unknown>) 
       </ShortcutBtn>
       <Title slot='title'>{children}</Title>
     </>
+  );
+}
+
+export function Warning({ children }: React.PropsWithChildren<unknown>) {
+  if (!children) {
+    return null;
+  } else {
+    return (
+      <div style={{ margin: 'auto', maxWidth: '80%', textAlign: 'center' }}>
+        <Red>Error:</Red> {children}
+      </div>
+    );
+  }
+}
+
+export function ConfigDownload({
+  onError,
+  address,
+  config,
+}: {
+  onError: (msg: string) => void;
+  address: EthAddress | undefined;
+  config: LobbyConfigState;
+}) {
+  function doDownload() {
+    try {
+      const initializers = toInitializers(config);
+      const blob = new Blob([JSON.stringify(initializers, null, 2)], { type: 'application/json' });
+      const name = address
+        ? `${address.substring(0, 6)}-lobbies-config.json`
+        : 'lobbies-config.json';
+      const blobAsUrl = (window.webkitURL || window.URL).createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = blobAsUrl;
+      anchor.download = name;
+      anchor.click();
+    } catch (err) {
+      console.error(err);
+      onError('Unable to download config file');
+    }
+  }
+
+  return (
+    <Btn slot='title' size='small' onClick={doDownload}>
+      Download
+    </Btn>
+  );
+}
+
+export function ConfigUpload({
+  onError,
+  onUpload,
+}: {
+  onError: (msg: string) => void;
+  onUpload: (initializers: Initializers) => void;
+}) {
+  function doUpload() {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        try {
+          onUpload(JSON.parse(reader.result));
+        } catch (err) {
+          onError('Cannot process uploaded JSON');
+        }
+      } else {
+        onError('Could not read uploaded file');
+      }
+    };
+    const inputFile = document.createElement('input');
+    inputFile.type = 'file';
+    inputFile.onchange = () => {
+      try {
+        const file = inputFile.files?.item(0);
+
+        if (file) {
+          reader.readAsText(file);
+        } else {
+          onError('Could not find a file to upload');
+        }
+      } catch (err) {
+        console.error(err);
+        onError('Upload failed');
+      }
+    };
+    inputFile.click();
+  }
+
+  return (
+    <Btn slot='title' size='small' onClick={doUpload}>
+      Upload
+    </Btn>
   );
 }

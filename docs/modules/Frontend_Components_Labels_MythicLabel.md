@@ -24,10 +24,11 @@
 
 #### Parameters
 
-| Name                     | Type     |
-| :----------------------- | :------- |
-| `__namedParameters`      | `Object` |
-| `__namedParameters.text` | `string` |
+| Name                       | Type            |
+| :------------------------- | :-------------- |
+| `__namedParameters`        | `Object`        |
+| `__namedParameters.style?` | `CSSProperties` |
+| `__namedParameters.text`   | `string`        |
 
 #### Returns
 

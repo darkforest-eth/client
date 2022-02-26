@@ -11,53 +11,24 @@ import {
   UnconfirmedCreateLobby,
 } from '@darkforest_eth/types';
 import { Contract } from 'ethers';
-import React, { useCallback, useEffect, useState } from 'react';
+import _ from 'lodash';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { ContractsAPI, makeContractsAPI } from '../../Backend/GameLogic/ContractsAPI';
 import { ContractsAPIEvent } from '../../_types/darkforest/api/ContractsAPITypes';
-import { Link, Title } from '../Components/CoreUI';
 import { InitRenderState, Wrapper } from '../Components/GameLandingPageComponents';
-import { Modal } from '../Components/Modal';
-import { Row } from '../Components/Row';
 import { ConfigurationPane } from '../Panes/Lobbies/ConfigurationPane';
+import { Minimap } from '../Panes/Lobbies/MinimapPane';
+import { MinimapConfig } from '../Panes/Lobbies/MinimapUtils';
 import { listenForKeyboardEvents, unlinkKeyboardEvents } from '../Utils/KeyEmitters';
 import { CadetWormhole } from '../Views/CadetWormhole';
 import { LobbyLandingPage } from './LobbyLandingPage';
 
-// TODO: handle the nested arrays
-function coerceConfig(obj: Partial<Initializers>) {
-  const filtered: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(obj)) {
-    // No nullish values - I hate not having `!=` due to the linter
-    if (value !== null && value !== undefined) {
-      if ((key as keyof Initializers) === 'SPAWN_RIM_AREA') {
-        // Floor this so we don't underflow solidity
-        filtered[key] = Math.floor(value as Initializers['SPAWN_RIM_AREA']);
-      } else {
-        filtered[key] = value;
-      }
-    }
-  }
-  return filtered;
-}
-
-// TODO: Put this in the configure modal
-function LobbyLaunch({ address }: { address: EthAddress }) {
-  const url = `http://localhost:8081/play/${address}`;
-  return (
-    <Modal>
-      <Title slot='title'>Lobby</Title>
-      <Row>
-        <span>Your lobby is ready! Follow the link below:</span>
-      </Row>
-      <Row>
-        <Link to={url}>Launch your lobby</Link>
-      </Row>
-    </Modal>
-  );
-}
-
-type ErrorState = 'invalidAddress' | 'contractLoad' | 'invalidContract' | 'invalidCreate';
+type ErrorState =
+  | { type: 'invalidAddress' }
+  | { type: 'contractLoad' }
+  | { type: 'invalidContract' }
+  | { type: 'invalidCreate' };
 
 export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>) {
   const [connection, setConnection] = useState<EthConnection | undefined>();
@@ -65,6 +36,11 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
   const [contract, setContract] = useState<ContractsAPI | undefined>();
   const [startingConfig, setStartingConfig] = useState<Initializers | undefined>();
   const [lobbyAddress, setLobbyAddress] = useState<EthAddress | undefined>();
+  const [minimapConfig, setMinimapConfig] = useState<MinimapConfig | undefined>();
+
+  const onMapChange = useMemo(() => {
+    return _.debounce((config: MinimapConfig) => setMinimapConfig(config), 500);
+  }, [setMinimapConfig]);
 
   let contractAddress: EthAddress | undefined;
   try {
@@ -74,7 +50,7 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
   }
 
   const [errorState, setErrorState] = useState<ErrorState | undefined>(
-    contractAddress ? undefined : 'invalidAddress'
+    contractAddress ? undefined : { type: 'invalidAddress' }
   );
 
   useEffect(() => {
@@ -97,7 +73,7 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
         .then((contract) => setContract(contract))
         .catch((e) => {
           console.log(e);
-          setErrorState('contractLoad');
+          setErrorState({ type: 'contractLoad' });
         });
     }
   }, [connection, contractAddress]);
@@ -167,18 +143,18 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
         })
         .catch((e) => {
           console.log(e);
-          setErrorState('invalidContract');
+          setErrorState({ type: 'invalidContract' });
         });
     }
   }, [contract]);
 
-  async function createLobby(config: Partial<Initializers>) {
+  async function createLobby(config: Initializers) {
     if (!contract) {
-      setErrorState('invalidCreate');
+      setErrorState({ type: 'invalidCreate' });
       return;
     }
 
-    const initializers = { ...startingConfig, ...coerceConfig(config) };
+    const initializers = { ...startingConfig, ...config };
 
     console.log(initializers);
     const InitABI = await fetch(initContractAbiUrl).then((r) => r.json());
@@ -203,16 +179,15 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
       }
     });
 
-    const res = await contract.submitTransaction(txIntent, {
+    const tx = await contract.submitTransaction(txIntent, {
+      // The createLobby function costs somewhere around 12mil gas
       gasLimit: '16777215',
-      // gasPrice: '11_978_516'
     });
-
-    console.log(res);
+    await tx.confirmedPromise;
   }
 
   if (errorState) {
-    switch (errorState) {
+    switch (errorState.type) {
       case 'contractLoad':
         return <CadetWormhole imgUrl='/public/img/wrong-text.png' />;
       case 'invalidAddress':
@@ -220,14 +195,27 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
         return <CadetWormhole imgUrl='/public/img/no-contract-text.png' />;
       case 'invalidCreate':
         return <CadetWormhole imgUrl='/public/img/wrong-text.png' />;
+      default:
+        // https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking
+        const _exhaustive: never = errorState;
+        return _exhaustive;
     }
   }
-
   let content;
-  if (lobbyAddress) {
-    content = <LobbyLaunch address={lobbyAddress} />;
-  } else if (startingConfig) {
-    content = <ConfigurationPane startingConfig={startingConfig} onCreate={createLobby} />;
+  if (startingConfig) {
+    content = (
+      <>
+        <ConfigurationPane
+          modalIndex={2}
+          lobbyAddress={lobbyAddress}
+          startingConfig={startingConfig}
+          onMapChange={onMapChange}
+          onCreate={createLobby}
+        />
+        {/* Minimap uses modalIndex=1 so it is always underneath the configuration pane */}
+        <Minimap modalIndex={1} config={minimapConfig} />
+      </>
+    );
   } else {
     content = <LobbyLandingPage onReady={onReady} />;
   }

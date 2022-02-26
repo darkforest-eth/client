@@ -24,9 +24,9 @@ const Anim = styled.span`
   color: ${RarityColors[ArtifactRarity.Mythic]};
 `;
 
-export function MythicLabelText({ text }: { text: string }) {
+export function MythicLabelText({ text, style }: { text: string; style?: React.CSSProperties }) {
   return (
-    <Anim>
+    <Anim style={style}>
       {text.split('').map((c, i) => (
         <AnimDelay i={i} key={i}>
           {c === ' ' ? <>&nbsp;</> : c}

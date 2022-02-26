@@ -8,30 +8,21 @@ import {
 } from '../../Components/Input';
 import { Row } from '../../Components/Row';
 import { DarkForestSlider, Slider } from '../../Components/Slider';
-import { LobbiesPaneProps, SAFE_UPPER_BOUNDS } from './LobbiesUtils';
+import { LobbiesPaneProps, Warning } from './LobbiesUtils';
 
-function JunkPerLevel({ config, idx, onUpdate }: LobbiesPaneProps & { idx: number }) {
+function JunkPerLevel({
+  value,
+  index,
+  onUpdate,
+}: LobbiesPaneProps & { index: number; value: number | undefined }) {
   return (
     <div>
-      <span>Level {idx}</span>
+      <span>Level {index}</span>
       <NumberInput
         format='integer'
-        value={config.PLANET_LEVEL_JUNK[idx]}
+        value={value}
         onChange={(e: Event & React.ChangeEvent<DarkForestNumberInput>) => {
-          const junk: typeof config.PLANET_LEVEL_JUNK = [...config.PLANET_LEVEL_JUNK];
-          let { value } = e.target;
-
-          if (typeof value === 'number') {
-            value = Math.max(value, 0);
-            value = Math.min(value, SAFE_UPPER_BOUNDS);
-            // TODO: Validate this against the SPACE_JUNK_LIMIT and present the user with a warning/error
-            junk[idx] = value;
-          } else {
-            // @ts-expect-error Because we can't nest Partial on these tuples
-            junk[idx] = undefined;
-          }
-
-          onUpdate({ PLANET_LEVEL_JUNK: junk });
+          onUpdate({ type: 'PLANET_LEVEL_JUNK', index, value: e.target.value });
         }}
       />
     </div>
@@ -43,38 +34,38 @@ const junkRowStyle = { gap: '8px' } as CSSStyleDeclaration & React.CSSProperties
 
 export function SpaceJunkPane({ config, onUpdate }: LobbiesPaneProps) {
   let spaceJunkOptions = null;
-  if (config.SPACE_JUNK_ENABLED) {
-    const junk = _.chunk(config.PLANET_LEVEL_JUNK, rowChunkSize).map((items, rowIdx) => {
-      return (
-        <Row key={`junk-row-${rowIdx}`} style={junkRowStyle}>
-          {items.map((_, idx) => (
-            <JunkPerLevel
-              key={`junk-lvl-${idx}`}
-              config={config}
-              idx={rowIdx * rowChunkSize + idx}
-              onUpdate={onUpdate}
-            />
-          ))}
-        </Row>
-      );
-    });
+  if (config.SPACE_JUNK_ENABLED.currentValue === true) {
+    const junk = _.chunk(config.PLANET_LEVEL_JUNK.displayValue, rowChunkSize).map(
+      (items, rowIdx) => {
+        return (
+          <Row key={`junk-row-${rowIdx}`} style={junkRowStyle}>
+            {items.map((displayValue, idx) => (
+              <JunkPerLevel
+                key={`junk-lvl-${idx}`}
+                config={config}
+                value={displayValue}
+                index={rowIdx * rowChunkSize + idx}
+                onUpdate={onUpdate}
+              />
+            ))}
+          </Row>
+        );
+      }
+    );
     spaceJunkOptions = (
       <>
         <Row>
           <span>Player space junk maximum</span>
           <NumberInput
             format='integer'
-            value={config.SPACE_JUNK_LIMIT}
+            value={config.SPACE_JUNK_LIMIT.displayValue}
             onChange={(e: Event & React.ChangeEvent<DarkForestNumberInput>) => {
-              let { value } = e.target;
-              if (typeof value === 'number') {
-                // TODO: Validate this against the PLANET_LEVEL_JUNK and present the user with a warning/error
-                value = Math.max(value, 0);
-                value = Math.min(value, SAFE_UPPER_BOUNDS);
-              }
-              onUpdate({ SPACE_JUNK_LIMIT: value });
+              onUpdate({ type: 'SPACE_JUNK_LIMIT', value: e.target.value });
             }}
           />
+        </Row>
+        <Row>
+          <Warning>{config.SPACE_JUNK_LIMIT.warning}</Warning>
         </Row>
         <Row>
           <Slider
@@ -82,13 +73,16 @@ export function SpaceJunkPane({ config, onUpdate }: LobbiesPaneProps) {
             variant='filled'
             min={1}
             max={11}
-            value={config.ABANDON_SPEED_CHANGE_PERCENT / 100}
+            value={config.ABANDON_SPEED_CHANGE_PERCENT.displayValue}
             step={0.1}
             formatOptions={{ style: 'unit', unit: 'x' }}
             onChange={(e: Event & React.ChangeEvent<DarkForestSlider>) => {
-              onUpdate({ ABANDON_SPEED_CHANGE_PERCENT: e.target.value * 100 });
+              onUpdate({ type: 'ABANDON_SPEED_CHANGE_PERCENT', value: e.target.value });
             }}
           />
+        </Row>
+        <Row>
+          <Warning>{config.ABANDON_SPEED_CHANGE_PERCENT.warning}</Warning>
         </Row>
         <Row>
           <Slider
@@ -96,18 +90,24 @@ export function SpaceJunkPane({ config, onUpdate }: LobbiesPaneProps) {
             variant='filled'
             min={1}
             max={11}
-            value={config.ABANDON_RANGE_CHANGE_PERCENT / 100}
+            value={config.ABANDON_RANGE_CHANGE_PERCENT.displayValue}
             step={0.1}
             formatOptions={{ style: 'unit', unit: 'x' }}
             onChange={(e: Event & React.ChangeEvent<DarkForestSlider>) => {
-              onUpdate({ ABANDON_RANGE_CHANGE_PERCENT: e.target.value * 100 });
+              onUpdate({ type: 'ABANDON_RANGE_CHANGE_PERCENT', value: e.target.value });
             }}
           />
+        </Row>
+        <Row>
+          <Warning>{config.ABANDON_RANGE_CHANGE_PERCENT.warning}</Warning>
         </Row>
         <Row>
           <span>Default junk for each planet level</span>
         </Row>
         {junk}
+        <Row>
+          <Warning>{config.PLANET_LEVEL_JUNK.warning}</Warning>
+        </Row>
       </>
     );
   }
@@ -116,11 +116,14 @@ export function SpaceJunkPane({ config, onUpdate }: LobbiesPaneProps) {
       <Row>
         <Checkbox
           label='Space junk enabled?'
-          checked={config.SPACE_JUNK_ENABLED}
+          checked={config.SPACE_JUNK_ENABLED.displayValue}
           onChange={(e: Event & React.ChangeEvent<DarkForestCheckbox>) => {
-            onUpdate({ SPACE_JUNK_ENABLED: e.target.checked });
+            onUpdate({ type: 'SPACE_JUNK_ENABLED', value: e.target.checked });
           }}
         />
+      </Row>
+      <Row>
+        <Warning>{config.SPACE_JUNK_ENABLED.warning}</Warning>
       </Row>
       {spaceJunkOptions}
     </>

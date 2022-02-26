@@ -1,7 +1,6 @@
 import { MAX_PLANET_LEVEL, MIN_PLANET_LEVEL } from '@darkforest_eth/constants';
 import { LocationId, Radii, WorldCoords, WorldLocation } from '@darkforest_eth/types';
 import { Box, Circle, Point, QuadTree } from 'js-quadtree';
-import { QuadTreeConfig } from 'js-quadtree/dist/types';
 
 /**
  * For every point in each of the planet quadtrees, we store a pointer to the planet.
@@ -29,7 +28,7 @@ export class LayeredMap {
     this.insertedLocations = new Set();
 
     for (let i = MIN_PLANET_LEVEL; i <= MAX_PLANET_LEVEL; i++) {
-      const config: QuadTreeConfig = {
+      const config = {
         maximumDepth: 10,
         removeEmptyNodes: true,
       };

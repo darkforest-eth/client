@@ -228,13 +228,3 @@ export function getEmojiMessage(
 ): PlanetMessage<EmojiFlagBody> | undefined {
   return planet?.messages?.find(isEmojiFlagMessage);
 }
-
-/**
- * @todo - planet class
- * @param rangeBoost A multiplier to be applied to the resulting range.
- * Currently used for calculating boost associated with abandoning a planet.
- */
-export function getRange(planet: Planet, percentEnergySending = 100, rangeBoost = 1): number {
-  if (percentEnergySending === 0) return 0;
-  return Math.max(Math.log2(percentEnergySending / 5), 0) * planet.range * rangeBoost;
-}

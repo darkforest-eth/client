@@ -3,35 +3,27 @@ import React from 'react';
 import { DarkForestNumberInput, NumberInput } from '../../Components/Input';
 import { ArtifactRarityLabel } from '../../Components/Labels/ArtifactLabels';
 import { Row } from '../../Components/Row';
-import { LobbiesPaneProps, SAFE_UPPER_BOUNDS } from './LobbiesUtils';
+import { LobbiesPaneProps, Warning } from './LobbiesUtils';
 
-function ArtifactPointsPerRarity({ config, idx, onUpdate }: LobbiesPaneProps & { idx: number }) {
+function ArtifactPointsPerRarity({
+  value,
+  index,
+  onUpdate,
+}: LobbiesPaneProps & { value: number | undefined; index: number }) {
   // We can skip Unknown
-  if (idx === 0) {
+  if (index === 0) {
     return null;
   }
 
   return (
     <div>
       {/* TODO: We should have a utility that converts an integer into an ArtifactRarity safely  */}
-      <ArtifactRarityLabel rarity={idx as ArtifactRarity} />
+      <ArtifactRarityLabel rarity={index as ArtifactRarity} />
       <NumberInput
         format='integer'
-        value={config.ARTIFACT_POINT_VALUES[idx]}
+        value={value}
         onChange={(e: Event & React.ChangeEvent<DarkForestNumberInput>) => {
-          const points: typeof config.ARTIFACT_POINT_VALUES = [...config.ARTIFACT_POINT_VALUES];
-          let { value } = e.target;
-
-          if (typeof value === 'number') {
-            value = Math.max(value, 0);
-            value = Math.min(value, SAFE_UPPER_BOUNDS);
-            points[idx] = value;
-          } else {
-            // @ts-expect-error Because we can't nest Partial on these tuples
-            points[idx] = undefined;
-          }
-
-          onUpdate({ ARTIFACT_POINT_VALUES: points });
+          onUpdate({ type: 'ARTIFACT_POINT_VALUES', value: e.target.value, index });
         }}
       />
     </div>
@@ -46,29 +38,31 @@ export function ArtifactSettingsPane({ config, onUpdate }: LobbiesPaneProps) {
       <Row>
         <span>Photoid Cannon activation delay (in seconds)</span>
         <NumberInput
-          value={config.PHOTOID_ACTIVATION_DELAY}
+          value={config.PHOTOID_ACTIVATION_DELAY.displayValue}
           onChange={(e: Event & React.ChangeEvent<DarkForestNumberInput>) => {
-            let { value } = e.target;
-            if (typeof value === 'number') {
-              value = Math.max(value, 0);
-              value = Math.min(value, SAFE_UPPER_BOUNDS);
-            }
-            onUpdate({ PHOTOID_ACTIVATION_DELAY: value });
+            onUpdate({ type: 'PHOTOID_ACTIVATION_DELAY', value: e.target.value });
           }}
         />
       </Row>
-      <Row style={pointsRowStyle}>
-        <span>Artifact point values by rarity</span>
+      <Row>
+        <Warning>{config.PHOTOID_ACTIVATION_DELAY.warning}</Warning>
       </Row>
       <Row>
-        {config.ARTIFACT_POINT_VALUES.map((_, idx) => (
+        <span>Artifact point values by rarity</span>
+      </Row>
+      <Row style={pointsRowStyle}>
+        {(config.ARTIFACT_POINT_VALUES.displayValue ?? []).map((displayValue, idx) => (
           <ArtifactPointsPerRarity
             key={`artifact-points-row-${idx}`}
             config={config}
-            idx={idx}
+            value={displayValue}
+            index={idx}
             onUpdate={onUpdate}
           />
         ))}
+      </Row>
+      <Row>
+        <Warning>{config.ARTIFACT_POINT_VALUES.warning}</Warning>
       </Row>
     </>
   );

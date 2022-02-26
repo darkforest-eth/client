@@ -1215,7 +1215,7 @@ in seconds from the epoch.
 
 ### getEnergyArrivingForMove
 
-▸ **getEnergyArrivingForMove**(`fromId`, `toId`, `distance`, `sentEnergy`, `abandoning?`): `number`
+▸ **getEnergyArrivingForMove**(`fromId`, `toId`, `distance`, `sentEnergy`, `abandoning`): `number`
 
 Gets the amount of energy that would arrive if a voyage with the given parameters
 was to occur. The toPlanet is optional, in case you want an estimate that doesn't include
@@ -1223,13 +1223,13 @@ wormhole speedups.
 
 #### Parameters
 
-| Name         | Type                        | Default value |
-| :----------- | :-------------------------- | :------------ |
-| `fromId`     | `LocationId`                | `undefined`   |
-| `toId`       | `undefined` \| `LocationId` | `undefined`   |
-| `distance`   | `undefined` \| `number`     | `undefined`   |
-| `sentEnergy` | `number`                    | `undefined`   |
-| `abandoning` | `boolean`                   | `false`       |
+| Name         | Type                        |
+| :----------- | :-------------------------- |
+| `fromId`     | `LocationId`                |
+| `toId`       | `undefined` \| `LocationId` |
+| `distance`   | `undefined` \| `number`     |
+| `sentEnergy` | `number`                    |
+| `abandoning` | `boolean`                   |
 
 #### Returns
 
@@ -1403,7 +1403,7 @@ which means this function is fast.
 
 ### getMaxMoveDist
 
-▸ **getMaxMoveDist**(`planetId`, `sendingPercent`): `number`
+▸ **getMaxMoveDist**(`planetId`, `sendingPercent`, `abandoning`): `number`
 
 Gets the maximuim distance that you can send your energy from the given planet,
 using the given percentage of that planet's current silver.
@@ -1414,6 +1414,7 @@ using the given percentage of that planet's current silver.
 | :--------------- | :----------- |
 | `planetId`       | `LocationId` |
 | `sendingPercent` | `number`     |
+| `abandoning`     | `boolean`    |
 
 #### Returns
 
@@ -1725,7 +1726,7 @@ passed since we last updated the planet), then updates that planet first.
 
 ### getPlanetsInRange
 
-▸ **getPlanetsInRange**(`planetId`, `sendingPercent`): `Planet`[]
+▸ **getPlanetsInRange**(`planetId`, `sendingPercent`, `abandoning`): `Planet`[]
 
 Gets all the planets that you can reach with at least 1 energy from
 the given planet. Does not take into account wormholes.
@@ -1736,6 +1737,7 @@ the given planet. Does not take into account wormholes.
 | :--------------- | :----------- |
 | `planetId`       | `LocationId` |
 | `sendingPercent` | `number`     |
+| `abandoning`     | `boolean`    |
 
 #### Returns
 

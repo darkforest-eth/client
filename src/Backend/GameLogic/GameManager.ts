@@ -1811,8 +1811,8 @@ class GameManager extends EventEmitter {
         throw new Error("you can't invade destroyed planets");
       }
 
-      if (planet.capturer !== EMPTY_ADDRESS) {
-        throw new Error("you can't invade planets that have already been captured");
+      if (planet.invader !== EMPTY_ADDRESS) {
+        throw new Error("you can't invade planets that have already been invaded");
       }
 
       if (planet.owner !== this.account) {
@@ -3018,10 +3018,10 @@ class GameManager extends EventEmitter {
    * Gets the maximuim distance that you can send your energy from the given planet,
    * using the given percentage of that planet's current silver.
    */
-  getMaxMoveDist(planetId: LocationId, sendingPercent: number): number {
+  getMaxMoveDist(planetId: LocationId, sendingPercent: number, abandoning: boolean): number {
     const planet = this.getPlanetWithId(planetId);
     if (!planet) throw new Error('origin planet unknown');
-    return getRange(planet, sendingPercent);
+    return getRange(planet, sendingPercent, this.getRangeBuff(abandoning));
   }
 
   /**
@@ -3059,7 +3059,7 @@ class GameManager extends EventEmitter {
    * Gets all the planets that you can reach with at least 1 energy from
    * the given planet. Does not take into account wormholes.
    */
-  getPlanetsInRange(planetId: LocationId, sendingPercent: number): Planet[] {
+  getPlanetsInRange(planetId: LocationId, sendingPercent: number, abandoning: boolean): Planet[] {
     const planet = this.entityStore.getPlanetWithId(planetId);
     if (!planet) throw new Error('planet unknown');
     if (!isLocatable(planet)) throw new Error('planet location unknown');
@@ -3068,7 +3068,7 @@ class GameManager extends EventEmitter {
     // at https://github.com/darkforest-eth/client/issues/15
     // Improved by using `planetMap` by [@phated](https://github.com/phated)
     const result = [];
-    const range = getRange(planet, sendingPercent);
+    const range = getRange(planet, sendingPercent, this.getRangeBuff(abandoning));
     for (const p of this.getPlanetMap().values()) {
       if (isLocatable(p)) {
         if (this.getDistCoords(planet.location.coords, p.location.coords) < range) {
@@ -3111,7 +3111,7 @@ class GameManager extends EventEmitter {
     toId: LocationId | undefined,
     distance: number | undefined,
     sentEnergy: number,
-    abandoning = false
+    abandoning: boolean
   ) {
     const from = this.getPlanetWithId(fromId);
     const to = this.getPlanetWithId(toId);

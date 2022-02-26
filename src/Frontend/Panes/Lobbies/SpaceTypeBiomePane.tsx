@@ -7,7 +7,7 @@ import {
   Slider,
   SliderHandle,
 } from '../../Components/Slider';
-import { LobbiesPaneProps } from './LobbiesUtils';
+import { LobbiesPaneProps, Warning } from './LobbiesUtils';
 
 export function SpaceTypeBiomePane({ config, onUpdate }: LobbiesPaneProps) {
   return (
@@ -15,20 +15,26 @@ export function SpaceTypeBiomePane({ config, onUpdate }: LobbiesPaneProps) {
       <Row>
         <Checkbox
           label='Mirror space type and biome on x-axis?'
-          checked={config.PERLIN_MIRROR_X}
+          checked={config.PERLIN_MIRROR_X.displayValue}
           onChange={(e: Event & React.ChangeEvent<DarkForestCheckbox>) =>
-            onUpdate({ PERLIN_MIRROR_X: e.target.checked })
+            onUpdate({ type: 'PERLIN_MIRROR_X', value: e.target.checked })
           }
         />
       </Row>
       <Row>
+        <Warning>{config.PERLIN_MIRROR_X.warning}</Warning>
+      </Row>
+      <Row>
         <Checkbox
           label='Mirror space type and biome on y-axis?'
-          checked={config.PERLIN_MIRROR_Y}
+          checked={config.PERLIN_MIRROR_Y.displayValue}
           onChange={(e: Event & React.ChangeEvent<DarkForestCheckbox>) =>
-            onUpdate({ PERLIN_MIRROR_Y: e.target.checked })
+            onUpdate({ type: 'PERLIN_MIRROR_Y', value: e.target.checked })
           }
         />
+      </Row>
+      <Row>
+        <Warning>{config.PERLIN_MIRROR_Y.warning}</Warning>
       </Row>
       <Row>
         <Slider
@@ -37,12 +43,15 @@ export function SpaceTypeBiomePane({ config, onUpdate }: LobbiesPaneProps) {
           variant='filled'
           min={5}
           max={14}
-          value={Math.log2(config.PERLIN_LENGTH_SCALE)}
+          value={config.PERLIN_LENGTH_SCALE.displayValue}
           step={1}
           onChange={(e: Event & React.ChangeEvent<DarkForestSlider>) =>
-            onUpdate({ PERLIN_LENGTH_SCALE: 2 ** e.target.value })
+            onUpdate({ type: 'PERLIN_LENGTH_SCALE', value: e.target.value })
           }
         />
+      </Row>
+      <Row>
+        <Warning>{config.PERLIN_LENGTH_SCALE.warning}</Warning>
       </Row>
       <Row>
         <Slider min={0} max={32} step={1} variant='range' label='Space type thresholds'>
@@ -50,57 +59,44 @@ export function SpaceTypeBiomePane({ config, onUpdate }: LobbiesPaneProps) {
             slot='handle'
             name='space'
             label='Space'
-            value={config.PERLIN_THRESHOLD_1}
+            value={config.PERLIN_THRESHOLD_1.displayValue}
+            step={1}
             max='next'
             onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
-              let { value } = e.target;
-              if (value === config.PERLIN_THRESHOLD_2) {
-                value = value - 1;
-                // To keep the underlying component in sync with our reset
-                e.target.value = value;
-              }
-              onUpdate({ PERLIN_THRESHOLD_1: value });
+              onUpdate({ type: 'PERLIN_THRESHOLD_1', value: e.target.value });
             }}
           />
           <SliderHandle
             slot='handle'
             name='deep-space'
             label='Deep Space'
-            value={config.PERLIN_THRESHOLD_2}
+            value={config.PERLIN_THRESHOLD_2.displayValue}
+            step={1}
             min='previous'
             max='next'
             onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
-              let { value } = e.target;
-              if (value === config.PERLIN_THRESHOLD_1) {
-                value = value + 1;
-                // To keep the underlying component in sync with our reset
-                e.target.value = value;
-              }
-              if (value === config.PERLIN_THRESHOLD_3) {
-                value = value - 1;
-                // To keep the underlying component in sync with our reset
-                e.target.value = value;
-              }
-              onUpdate({ PERLIN_THRESHOLD_2: value });
+              onUpdate({ type: 'PERLIN_THRESHOLD_2', value: e.target.value });
             }}
           />
           <SliderHandle
             slot='handle'
             name='dead-space'
             label='Dead Space'
-            value={config.PERLIN_THRESHOLD_3}
+            value={config.PERLIN_THRESHOLD_3.displayValue}
+            step={1}
             min='previous'
             onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
-              let { value } = e.target;
-              if (value === config.PERLIN_THRESHOLD_2) {
-                value = value + 1;
-                // To keep the underlying component in sync with our reset
-                e.target.value = value;
-              }
-              onUpdate({ PERLIN_THRESHOLD_3: value });
+              onUpdate({ type: 'PERLIN_THRESHOLD_3', value: e.target.value });
             }}
           />
         </Slider>
+      </Row>
+      <Row>
+        <Warning>
+          {config.PERLIN_THRESHOLD_1.warning ||
+            config.PERLIN_THRESHOLD_2.warning ||
+            config.PERLIN_THRESHOLD_3.warning}
+        </Warning>
       </Row>
       <Row>
         <Slider min={0} max={32} step={1} variant='range' label='Biome thresholds'>
@@ -108,35 +104,28 @@ export function SpaceTypeBiomePane({ config, onUpdate }: LobbiesPaneProps) {
             slot='handle'
             name='biome-threshold-1'
             label='Biome threshold 1'
-            value={config.BIOME_THRESHOLD_1}
+            value={config.BIOME_THRESHOLD_1.displayValue}
+            step={1}
             max='next'
             onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
-              let { value } = e.target;
-              if (value === config.BIOME_THRESHOLD_2) {
-                value = value - 1;
-                // To keep the underlying component in sync with our reset
-                e.target.value = value;
-              }
-              onUpdate({ BIOME_THRESHOLD_1: value });
+              onUpdate({ type: 'BIOME_THRESHOLD_1', value: e.target.value });
             }}
           />
           <SliderHandle
             slot='handle'
             name='biome-threshold-2'
             label='Biome threshold 2'
-            value={config.BIOME_THRESHOLD_2}
+            value={config.BIOME_THRESHOLD_2.displayValue}
+            step={1}
             min='previous'
             onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
-              let { value } = e.target;
-              if (value === config.BIOME_THRESHOLD_1) {
-                value = value + 1;
-                // To keep the underlying component in sync with our reset
-                e.target.value = value;
-              }
-              onUpdate({ BIOME_THRESHOLD_2: value });
+              onUpdate({ type: 'BIOME_THRESHOLD_2', value: e.target.value });
             }}
           />
         </Slider>
+      </Row>
+      <Row>
+        <Warning>{config.BIOME_THRESHOLD_1.warning || config.BIOME_THRESHOLD_2.warning}</Warning>
       </Row>
     </>
   );

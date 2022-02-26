@@ -444,7 +444,7 @@ class GameUIManager extends EventEmitter {
     dist: number | undefined,
     energy: number
   ) {
-    return this.gameManager.getEnergyArrivingForMove(from, to, dist, energy);
+    return this.gameManager.getEnergyArrivingForMove(from, to, dist, energy, this.abandoning);
   }
 
   getIsChoosingTargetPlanet() {
@@ -533,7 +533,8 @@ class GameUIManager extends EventEmitter {
           from.locationId,
           to.locationId,
           dist,
-          forces
+          forces,
+          this.abandoning
         );
 
         let effPercentSilver = this.getSilverSending(from.locationId);

@@ -1,0 +1,577 @@
+# Module: Frontend/Panes/Lobbies/Reducer
+
+## Table of contents
+
+### Classes
+
+- [InvalidConfigError](../classes/Frontend_Panes_Lobbies_Reducer.InvalidConfigError.md)
+
+### Type aliases
+
+- [LobbyAction](Frontend_Panes_Lobbies_Reducer.md#lobbyaction)
+- [LobbyConfigAction](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigaction)
+- [LobbyConfigState](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate)
+
+### Variables
+
+- [SAFE_UPPER_BOUNDS](Frontend_Panes_Lobbies_Reducer.md#safe_upper_bounds)
+
+### Functions
+
+- [lobbyConfigInit](Frontend_Panes_Lobbies_Reducer.md#lobbyconfiginit)
+- [lobbyConfigReducer](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigreducer)
+- [ofAny](Frontend_Panes_Lobbies_Reducer.md#ofany)
+- [ofArtifactPointValues](Frontend_Panes_Lobbies_Reducer.md#ofartifactpointvalues)
+- [ofBoolean](Frontend_Panes_Lobbies_Reducer.md#ofboolean)
+- [ofCaptureZoneChangeBlockInterval](Frontend_Panes_Lobbies_Reducer.md#ofcapturezonechangeblockinterval)
+- [ofCaptureZonePlanetLevelScore](Frontend_Panes_Lobbies_Reducer.md#ofcapturezoneplanetlevelscore)
+- [ofCaptureZoneRadius](Frontend_Panes_Lobbies_Reducer.md#ofcapturezoneradius)
+- [ofCaptureZonesPer5000WorldRadius](Frontend_Panes_Lobbies_Reducer.md#ofcapturezonesper5000worldradius)
+- [ofMaxNaturalPlanetLevel](Frontend_Panes_Lobbies_Reducer.md#ofmaxnaturalplanetlevel)
+- [ofNoop](Frontend_Panes_Lobbies_Reducer.md#ofnoop)
+- [ofPerlinLengthScale](Frontend_Panes_Lobbies_Reducer.md#ofperlinlengthscale)
+- [ofPlanetLevelJunk](Frontend_Panes_Lobbies_Reducer.md#ofplanetleveljunk)
+- [ofPlanetLevelThresholds](Frontend_Panes_Lobbies_Reducer.md#ofplanetlevelthresholds)
+- [ofPlanetRarity](Frontend_Panes_Lobbies_Reducer.md#ofplanetrarity)
+- [ofPositiveFloat](Frontend_Panes_Lobbies_Reducer.md#ofpositivefloat)
+- [ofPositiveInteger](Frontend_Panes_Lobbies_Reducer.md#ofpositiveinteger)
+- [ofPositivePercent](Frontend_Panes_Lobbies_Reducer.md#ofpositivepercent)
+- [ofSpaceJunkLimit](Frontend_Panes_Lobbies_Reducer.md#ofspacejunklimit)
+- [ofSpawnRimArea](Frontend_Panes_Lobbies_Reducer.md#ofspawnrimarea)
+- [ofTimeFactorHundredths](Frontend_Panes_Lobbies_Reducer.md#oftimefactorhundredths)
+- [ofWorldRadiusMin](Frontend_Panes_Lobbies_Reducer.md#ofworldradiusmin)
+- [toInitializers](Frontend_Panes_Lobbies_Reducer.md#toinitializers)
+
+## Type aliases
+
+### LobbyAction
+
+Ƭ **LobbyAction**: { `type`: `"RESET"` ; `value`: [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) } \| [`LobbyConfigAction`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigaction)
+
+---
+
+### LobbyConfigAction
+
+Ƭ **LobbyConfigAction**: { `type`: `"START_PAUSED"` ; `value`: `Initializers`[``"START_PAUSED"``] \| `undefined` } \| { `type`: `"ADMIN_CAN_ADD_PLANETS"` ; `value`: `Initializers`[``"ADMIN_CAN_ADD_PLANETS"``] \| `undefined` } \| { `type`: `"TOKEN_MINT_END_TIMESTAMP"` ; `value`: `Initializers`[``"TOKEN_MINT_END_TIMESTAMP"``] \| `undefined` } \| { `type`: `"WORLD_RADIUS_LOCKED"` ; `value`: `Initializers`[``"WORLD_RADIUS_LOCKED"``] \| `undefined` } \| { `type`: `"WORLD_RADIUS_MIN"` ; `value`: `Initializers`[``"WORLD_RADIUS_MIN"``] \| `undefined` } \| { `type`: `"DISABLE_ZK_CHECKS"` ; `value`: `Initializers`[``"DISABLE_ZK_CHECKS"``] \| `undefined` } \| { `type`: `"PLANETHASH_KEY"` ; `value`: `Initializers`[``"PLANETHASH_KEY"``] \| `undefined` } \| { `type`: `"SPACETYPE_KEY"` ; `value`: `Initializers`[``"SPACETYPE_KEY"``] \| `undefined` } \| { `type`: `"BIOMEBASE_KEY"` ; `value`: `Initializers`[``"BIOMEBASE_KEY"``] \| `undefined` } \| { `type`: `"PERLIN_MIRROR_X"` ; `value`: `Initializers`[``"PERLIN_MIRROR_X"``] \| `undefined` } \| { `type`: `"PERLIN_MIRROR_Y"` ; `value`: `Initializers`[``"PERLIN_MIRROR_Y"``] \| `undefined` } \| { `type`: `"PERLIN_LENGTH_SCALE"` ; `value`: `Initializers`[``"PERLIN_LENGTH_SCALE"``] \| `undefined` } \| { `type`: `"MAX_NATURAL_PLANET_LEVEL"` ; `value`: `Initializers`[``"MAX_NATURAL_PLANET_LEVEL"``] \| `undefined` } \| { `type`: `"TIME_FACTOR_HUNDREDTHS"` ; `value`: `Initializers`[``"TIME_FACTOR_HUNDREDTHS"``] \| `undefined` } \| { `type`: `"PERLIN_THRESHOLD_1"` ; `value`: `Initializers`[``"PERLIN_THRESHOLD_1"``] \| `undefined` } \| { `type`: `"PERLIN_THRESHOLD_2"` ; `value`: `Initializers`[``"PERLIN_THRESHOLD_2"``] \| `undefined` } \| { `type`: `"PERLIN_THRESHOLD_3"` ; `value`: `Initializers`[``"PERLIN_THRESHOLD_3"``] \| `undefined` } \| { `type`: `"INIT_PERLIN_MIN"` ; `value`: `Initializers`[``"INIT_PERLIN_MIN"``] \| `undefined` } \| { `type`: `"INIT_PERLIN_MAX"` ; `value`: `Initializers`[``"INIT_PERLIN_MAX"``] \| `undefined` } \| { `type`: `"BIOME_THRESHOLD_1"` ; `value`: `Initializers`[``"BIOME_THRESHOLD_1"``] \| `undefined` } \| { `type`: `"BIOME_THRESHOLD_2"` ; `value`: `Initializers`[``"BIOME_THRESHOLD_2"``] \| `undefined` } \| { `index`: `number` ; `type`: `"PLANET_LEVEL_THRESHOLDS"` ; `value`: `number` \| `undefined` } \| { `type`: `"PLANET_RARITY"` ; `value`: `Initializers`[``"PLANET_RARITY"``] \| `undefined` } \| { `type`: `"PLANET_TRANSFER_ENABLED"` ; `value`: `Initializers`[``"PLANET_TRANSFER_ENABLED"``] \| `undefined` } \| { `type`: `"PHOTOID_ACTIVATION_DELAY"` ; `value`: `Initializers`[``"PHOTOID_ACTIVATION_DELAY"``] \| `undefined` } \| { `type`: `"SPAWN_RIM_AREA"` ; `value`: `Initializers`[``"SPAWN_RIM_AREA"``] \| `undefined` } \| { `type`: `"LOCATION_REVEAL_COOLDOWN"` ; `value`: `Initializers`[``"LOCATION_REVEAL_COOLDOWN"``] \| `undefined` } \| { `type`: `"PLANET_TYPE_WEIGHTS"` ; `value`: `Initializers`[``"PLANET_TYPE_WEIGHTS"``] \| `undefined` } \| { `type`: `"SILVER_SCORE_VALUE"` ; `value`: `Initializers`[``"SILVER_SCORE_VALUE"``] \| `undefined` } \| { `index`: `number` ; `type`: `"ARTIFACT_POINT_VALUES"` ; `value`: `number` \| `undefined` } \| { `type`: `"SPACE_JUNK_ENABLED"` ; `value`: `Initializers`[``"SPACE_JUNK_ENABLED"``] \| `undefined` } \| { `type`: `"SPACE_JUNK_LIMIT"` ; `value`: `Initializers`[``"SPACE_JUNK_LIMIT"``] \| `undefined` } \| { `index`: `number` ; `type`: `"PLANET_LEVEL_JUNK"` ; `value`: `number` \| `undefined` } \| { `type`: `"ABANDON_SPEED_CHANGE_PERCENT"` ; `value`: `Initializers`[``"ABANDON_SPEED_CHANGE_PERCENT"``] \| `undefined` } \| { `type`: `"ABANDON_RANGE_CHANGE_PERCENT"` ; `value`: `Initializers`[``"ABANDON_RANGE_CHANGE_PERCENT"``] \| `undefined` } \| { `type`: `"CAPTURE_ZONES_ENABLED"` ; `value`: `Initializers`[``"CAPTURE_ZONES_ENABLED"``] \| `undefined` } \| { `type`: `"CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL"` ; `value`: `Initializers`[``"CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL"``] \| `undefined` } \| { `type`: `"CAPTURE_ZONE_RADIUS"` ; `value`: `Initializers`[``"CAPTURE_ZONE_RADIUS"``] \| `undefined` } \| { `index`: `number` ; `type`: `"CAPTURE_ZONE_PLANET_LEVEL_SCORE"` ; `value`: `number` \| `undefined` } \| { `type`: `"CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED"` ; `value`: `Initializers`[``"CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED"``] \| `undefined` } \| { `type`: `"CAPTURE_ZONES_PER_5000_WORLD_RADIUS"` ; `value`: `Initializers`[``"CAPTURE_ZONES_PER_5000_WORLD_RADIUS"``] \| `undefined` }
+
+---
+
+### LobbyConfigState
+
+Ƭ **LobbyConfigState**: { [key in keyof Initializers]: Object }
+
+## Variables
+
+### SAFE_UPPER_BOUNDS
+
+• **SAFE_UPPER_BOUNDS**: `number`
+
+## Functions
+
+### lobbyConfigInit
+
+▸ **lobbyConfigInit**(`startingConfig`): [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate)
+
+#### Parameters
+
+| Name                                                 | Type                      |
+| :--------------------------------------------------- | :------------------------ |
+| `startingConfig`                                     | `Object`                  |
+| `startingConfig.ABANDON_RANGE_CHANGE_PERCENT`        | `number`                  |
+| `startingConfig.ABANDON_SPEED_CHANGE_PERCENT`        | `number`                  |
+| `startingConfig.ADMIN_CAN_ADD_PLANETS`               | `boolean`                 |
+| `startingConfig.ARTIFACT_POINT_VALUES`               | `Tuple6`<`number`\>       |
+| `startingConfig.BIOMEBASE_KEY`                       | `number`                  |
+| `startingConfig.BIOME_THRESHOLD_1`                   | `number`                  |
+| `startingConfig.BIOME_THRESHOLD_2`                   | `number`                  |
+| `startingConfig.CAPTURE_ZONES_ENABLED`               | `boolean`                 |
+| `startingConfig.CAPTURE_ZONES_PER_5000_WORLD_RADIUS` | `number`                  |
+| `startingConfig.CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL`  | `number`                  |
+| `startingConfig.CAPTURE_ZONE_COUNT`                  | `number`                  |
+| `startingConfig.CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED`   | `number`                  |
+| `startingConfig.CAPTURE_ZONE_PLANET_LEVEL_SCORE`     | `ExactArray10`<`number`\> |
+| `startingConfig.CAPTURE_ZONE_RADIUS`                 | `number`                  |
+| `startingConfig.CLAIM_PLANET_COOLDOWN`               | `number`                  |
+| `startingConfig.DISABLE_ZK_CHECKS`                   | `boolean`                 |
+| `startingConfig.INIT_PERLIN_MAX`                     | `number`                  |
+| `startingConfig.INIT_PERLIN_MIN`                     | `number`                  |
+| `startingConfig.LOCATION_REVEAL_COOLDOWN`            | `number`                  |
+| `startingConfig.MAX_NATURAL_PLANET_LEVEL`            | `number`                  |
+| `startingConfig.PERLIN_LENGTH_SCALE`                 | `number`                  |
+| `startingConfig.PERLIN_MIRROR_X`                     | `boolean`                 |
+| `startingConfig.PERLIN_MIRROR_Y`                     | `boolean`                 |
+| `startingConfig.PERLIN_THRESHOLD_1`                  | `number`                  |
+| `startingConfig.PERLIN_THRESHOLD_2`                  | `number`                  |
+| `startingConfig.PERLIN_THRESHOLD_3`                  | `number`                  |
+| `startingConfig.PHOTOID_ACTIVATION_DELAY`            | `number`                  |
+| `startingConfig.PLANETHASH_KEY`                      | `number`                  |
+| `startingConfig.PLANET_LEVEL_JUNK`                   | `ExactArray10`<`number`\> |
+| `startingConfig.PLANET_LEVEL_THRESHOLDS`             | `ExactArray10`<`number`\> |
+| `startingConfig.PLANET_RARITY`                       | `number`                  |
+| `startingConfig.PLANET_TRANSFER_ENABLED`             | `boolean`                 |
+| `startingConfig.PLANET_TYPE_WEIGHTS`                 | `PlanetTypeWeights`       |
+| `startingConfig.SILVER_SCORE_VALUE`                  | `number`                  |
+| `startingConfig.SPACETYPE_KEY`                       | `number`                  |
+| `startingConfig.SPACE_JUNK_ENABLED`                  | `boolean`                 |
+| `startingConfig.SPACE_JUNK_LIMIT`                    | `number`                  |
+| `startingConfig.SPAWN_RIM_AREA`                      | `number`                  |
+| `startingConfig.START_PAUSED`                        | `boolean`                 |
+| `startingConfig.TIME_FACTOR_HUNDREDTHS`              | `number`                  |
+| `startingConfig.TOKEN_MINT_END_TIMESTAMP`            | `number`                  |
+| `startingConfig.WORLD_RADIUS_LOCKED`                 | `boolean`                 |
+| `startingConfig.WORLD_RADIUS_MIN`                    | `number`                  |
+
+#### Returns
+
+[`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate)
+
+---
+
+### lobbyConfigReducer
+
+▸ **lobbyConfigReducer**(`state`, `action`): [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate)
+
+#### Parameters
+
+| Name     | Type                                                                     |
+| :------- | :----------------------------------------------------------------------- |
+| `state`  | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+| `action` | [`LobbyAction`](Frontend_Panes_Lobbies_Reducer.md#lobbyaction)           |
+
+#### Returns
+
+[`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate)
+
+---
+
+### ofAny
+
+▸ **ofAny**(`__namedParameters`, `state`): { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `PlanetTypeWeights` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                | Type                                                                       |
+| :------------------ | :------------------------------------------------------------------------- |
+| `__namedParameters` | [`LobbyConfigAction`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigaction) |
+| `state`             | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate)   |
+
+#### Returns
+
+{ `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `PlanetTypeWeights` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` \| `boolean` \| `PlanetTypeWeights` = value; `warning`: `undefined` = undefined }
+
+---
+
+### ofArtifactPointValues
+
+▸ **ofArtifactPointValues**(`__namedParameters`, `state`): { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?] ; `warning`: `string` } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` = undefined } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `string` } \| { `currentValue`: `number`[] ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.index` | `number`                                                                 |
+| `__namedParameters.type`  | `"ARTIFACT_POINT_VALUES"`                                                |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?] ; `warning`: `string` } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` = undefined } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `string` } \| { `currentValue`: `number`[] ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `undefined` = undefined }
+
+---
+
+### ofBoolean
+
+▸ **ofBoolean**(`__namedParameters`, `state`): { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `boolean` = value; `defaultValue`: `boolean` ; `displayValue`: `boolean` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| :------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `__namedParameters` | { `type`: `"START_PAUSED"` ; `value`: `undefined` \| `boolean` } \| { `type`: `"ADMIN_CAN_ADD_PLANETS"` ; `value`: `undefined` \| `boolean` } \| { `type`: `"WORLD_RADIUS_LOCKED"` ; `value`: `undefined` \| `boolean` } \| { `type`: `"DISABLE_ZK_CHECKS"` ; `value`: `undefined` \| `boolean` } \| { `type`: `"PERLIN_MIRROR_X"` ; `value`: `undefined` \| `boolean` } \| { `type`: `"PERLIN_MIRROR_Y"` ; `value`: `undefined` \| `boolean` } \| { `type`: `"PLANET_TRANSFER_ENABLED"` ; `value`: `undefined` \| `boolean` } \| { `type`: `"SPACE_JUNK_ENABLED"` ; `value`: `undefined` \| `boolean` } \| { `type`: `"CAPTURE_ZONES_ENABLED"` ; `value`: `undefined` \| `boolean` } |
+| `state`             | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+
+#### Returns
+
+{ `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `boolean` = value; `defaultValue`: `boolean` ; `displayValue`: `boolean` = value; `warning`: `undefined` = undefined }
+
+---
+
+### ofCaptureZoneChangeBlockInterval
+
+▸ **ofCaptureZoneChangeBlockInterval**(`__namedParameters`, `state`): { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.type`  | `"CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL"`                                   |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+---
+
+### ofCaptureZonePlanetLevelScore
+
+▸ **ofCaptureZonePlanetLevelScore**(`__namedParameters`, `state`): { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `string` } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` = undefined } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `string` } \| { `currentValue`: `number`[] ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.index` | `number`                                                                 |
+| `__namedParameters.type`  | `"CAPTURE_ZONE_PLANET_LEVEL_SCORE"`                                      |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `string` } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` = undefined } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `string` } \| { `currentValue`: `number`[] ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `undefined` = undefined }
+
+---
+
+### ofCaptureZoneRadius
+
+▸ **ofCaptureZoneRadius**(`__namedParameters`, `state`): { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.type`  | `"CAPTURE_ZONE_RADIUS"`                                                  |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+---
+
+### ofCaptureZonesPer5000WorldRadius
+
+▸ **ofCaptureZonesPer5000WorldRadius**(`__namedParameters`, `state`): { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.type`  | `"CAPTURE_ZONES_PER_5000_WORLD_RADIUS"`                                  |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+---
+
+### ofMaxNaturalPlanetLevel
+
+▸ **ofMaxNaturalPlanetLevel**(`__namedParameters`, `state`): { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.type`  | `"MAX_NATURAL_PLANET_LEVEL"`                                             |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+---
+
+### ofNoop
+
+▸ **ofNoop**(`__namedParameters`, `state`): { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` \| `string` } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `PlanetTypeWeights` ; `defaultValue`: `PlanetTypeWeights` ; `displayValue`: `undefined` \| [ExactArray10<ExactArray5<number\>\>?, ExactArray10<ExactArray5<number\>\>?, ExactArray10<ExactArray5<number\>\>?, ExactArray10<ExactArray5<number\>\>?] ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` }
+
+#### Parameters
+
+| Name                | Type                                                                       |
+| :------------------ | :------------------------------------------------------------------------- |
+| `__namedParameters` | [`LobbyConfigAction`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigaction) |
+| `state`             | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate)   |
+
+#### Returns
+
+{ `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` \| `string` } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `PlanetTypeWeights` ; `defaultValue`: `PlanetTypeWeights` ; `displayValue`: `undefined` \| [ExactArray10<ExactArray5<number\>\>?, ExactArray10<ExactArray5<number\>\>?, ExactArray10<ExactArray5<number\>\>?, ExactArray10<ExactArray5<number\>\>?] ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `boolean` ; `defaultValue`: `boolean` ; `displayValue`: `undefined` \| `Partial`<`boolean`\> ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` \| `number` ; `warning`: `undefined` \| `string` }
+
+---
+
+### ofPerlinLengthScale
+
+▸ **ofPerlinLengthScale**(`__namedParameters`, `state`): { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `never` = value; `warning`: `string` = 'Value must be a number' } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.type`  | `"PERLIN_LENGTH_SCALE"`                                                  |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `never` = value; `warning`: `string` = 'Value must be a number' } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+---
+
+### ofPlanetLevelJunk
+
+▸ **ofPlanetLevelJunk**(`__namedParameters`, `state`): { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `string` } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` = undefined } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `string` } \| { `currentValue`: `number`[] ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `string` } \| { `currentValue`: `number`[] ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.index` | `number`                                                                 |
+| `__namedParameters.type`  | `"PLANET_LEVEL_JUNK"`                                                    |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `string` } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` = undefined } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `string` } \| { `currentValue`: `number`[] ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `string` } \| { `currentValue`: `number`[] ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `undefined` = undefined }
+
+---
+
+### ofPlanetLevelThresholds
+
+▸ **ofPlanetLevelThresholds**(`__namedParameters`, `state`): { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `string` } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` = undefined } \| { `currentValue`: `number`[] ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `undefined` = undefined } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `string` } \| { `currentValue`: `number`[] ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `string` }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.index` | `number`                                                                 |
+| `__namedParameters.type`  | `"PLANET_LEVEL_THRESHOLDS"`                                              |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `string` } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` \| [number?, number?, number?, number?, number?, number?, number?, number?, number?, number?] ; `warning`: `undefined` = undefined } \| { `currentValue`: `number`[] ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `undefined` = undefined } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `string` } \| { `currentValue`: `number`[] ; `displayValue`: (`undefined` \| `number`)[] ; `warning`: `string` }
+
+---
+
+### ofPlanetRarity
+
+▸ **ofPlanetRarity**(`__namedParameters`, `state`): { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.type`  | `"PLANET_RARITY"`                                                        |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+---
+
+### ofPositiveFloat
+
+▸ **ofPositiveFloat**(`__namedParameters`, `state`): { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `number` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` = value; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| :------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `__namedParameters` | { `type`: `"TOKEN_MINT_END_TIMESTAMP"` ; `value`: `undefined` \| `number` } \| { `type`: `"WORLD_RADIUS_MIN"` ; `value`: `undefined` \| `number` } \| { `type`: `"PLANETHASH_KEY"` ; `value`: `undefined` \| `number` } \| { `type`: `"SPACETYPE_KEY"` ; `value`: `undefined` \| `number` } \| { `type`: `"BIOMEBASE_KEY"` ; `value`: `undefined` \| `number` } \| { `type`: `"PERLIN_LENGTH_SCALE"` ; `value`: `undefined` \| `number` } \| { `type`: `"MAX_NATURAL_PLANET_LEVEL"` ; `value`: `undefined` \| `number` } \| { `type`: `"TIME_FACTOR_HUNDREDTHS"` ; `value`: `undefined` \| `number` } \| { `type`: `"PERLIN_THRESHOLD_1"` ; `value`: `undefined` \| `number` } \| { `type`: `"PERLIN_THRESHOLD_2"` ; `value`: `undefined` \| `number` } \| { `type`: `"PERLIN_THRESHOLD_3"` ; `value`: `undefined` \| `number` } \| { `type`: `"INIT_PERLIN_MIN"` ; `value`: `undefined` \| `number` } \| { `type`: `"INIT_PERLIN_MAX"` ; `value`: `undefined` \| `number` } \| { `type`: `"BIOME_THRESHOLD_1"` ; `value`: `undefined` \| `number` } \| { `type`: `"BIOME_THRESHOLD_2"` ; `value`: `undefined` \| `number` } \| { `index`: `number` ; `type`: `"PLANET_LEVEL_THRESHOLDS"` ; `value`: `undefined` \| `number` } \| { `type`: `"PLANET_RARITY"` ; `value`: `undefined` \| `number` } \| { `type`: `"PHOTOID_ACTIVATION_DELAY"` ; `value`: `undefined` \| `number` } \| { `type`: `"SPAWN_RIM_AREA"` ; `value`: `undefined` \| `number` } \| { `type`: `"LOCATION_REVEAL_COOLDOWN"` ; `value`: `undefined` \| `number` } \| { `type`: `"SILVER_SCORE_VALUE"` ; `value`: `undefined` \| `number` } \| { `index`: `number` ; `type`: `"ARTIFACT_POINT_VALUES"` ; `value`: `undefined` \| `number` } \| { `type`: `"SPACE_JUNK_LIMIT"` ; `value`: `undefined` \| `number` } \| { `index`: `number` ; `type`: `"PLANET_LEVEL_JUNK"` ; `value`: `undefined` \| `number` } \| { `type`: `"ABANDON_SPEED_CHANGE_PERCENT"` ; `value`: `undefined` \| `number` } \| { `type`: `"ABANDON_RANGE_CHANGE_PERCENT"` ; `value`: `undefined` \| `number` } \| { `type`: `"CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL"` ; `value`: `undefined` \| `number` } \| { `type`: `"CAPTURE_ZONE_RADIUS"` ; `value`: `undefined` \| `number` } \| { `index`: `number` ; `type`: `"CAPTURE_ZONE_PLANET_LEVEL_SCORE"` ; `value`: `undefined` \| `number` } \| { `type`: `"CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED"` ; `value`: `undefined` \| `number` } \| { `type`: `"CAPTURE_ZONES_PER_5000_WORLD_RADIUS"` ; `value`: `undefined` \| `number` } |
+| `state`             | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+
+#### Returns
+
+{ `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `number` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` = value; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+---
+
+### ofPositiveInteger
+
+▸ **ofPositiveInteger**(`__namedParameters`, `state`): { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `number` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` = value; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| :------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `__namedParameters` | { `type`: `"TOKEN_MINT_END_TIMESTAMP"` ; `value`: `undefined` \| `number` } \| { `type`: `"WORLD_RADIUS_MIN"` ; `value`: `undefined` \| `number` } \| { `type`: `"PLANETHASH_KEY"` ; `value`: `undefined` \| `number` } \| { `type`: `"SPACETYPE_KEY"` ; `value`: `undefined` \| `number` } \| { `type`: `"BIOMEBASE_KEY"` ; `value`: `undefined` \| `number` } \| { `type`: `"PERLIN_LENGTH_SCALE"` ; `value`: `undefined` \| `number` } \| { `type`: `"MAX_NATURAL_PLANET_LEVEL"` ; `value`: `undefined` \| `number` } \| { `type`: `"TIME_FACTOR_HUNDREDTHS"` ; `value`: `undefined` \| `number` } \| { `type`: `"PERLIN_THRESHOLD_1"` ; `value`: `undefined` \| `number` } \| { `type`: `"PERLIN_THRESHOLD_2"` ; `value`: `undefined` \| `number` } \| { `type`: `"PERLIN_THRESHOLD_3"` ; `value`: `undefined` \| `number` } \| { `type`: `"INIT_PERLIN_MIN"` ; `value`: `undefined` \| `number` } \| { `type`: `"INIT_PERLIN_MAX"` ; `value`: `undefined` \| `number` } \| { `type`: `"BIOME_THRESHOLD_1"` ; `value`: `undefined` \| `number` } \| { `type`: `"BIOME_THRESHOLD_2"` ; `value`: `undefined` \| `number` } \| { `index`: `number` ; `type`: `"PLANET_LEVEL_THRESHOLDS"` ; `value`: `undefined` \| `number` } \| { `type`: `"PLANET_RARITY"` ; `value`: `undefined` \| `number` } \| { `type`: `"PHOTOID_ACTIVATION_DELAY"` ; `value`: `undefined` \| `number` } \| { `type`: `"SPAWN_RIM_AREA"` ; `value`: `undefined` \| `number` } \| { `type`: `"LOCATION_REVEAL_COOLDOWN"` ; `value`: `undefined` \| `number` } \| { `type`: `"SILVER_SCORE_VALUE"` ; `value`: `undefined` \| `number` } \| { `index`: `number` ; `type`: `"ARTIFACT_POINT_VALUES"` ; `value`: `undefined` \| `number` } \| { `type`: `"SPACE_JUNK_LIMIT"` ; `value`: `undefined` \| `number` } \| { `index`: `number` ; `type`: `"PLANET_LEVEL_JUNK"` ; `value`: `undefined` \| `number` } \| { `type`: `"ABANDON_SPEED_CHANGE_PERCENT"` ; `value`: `undefined` \| `number` } \| { `type`: `"ABANDON_RANGE_CHANGE_PERCENT"` ; `value`: `undefined` \| `number` } \| { `type`: `"CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL"` ; `value`: `undefined` \| `number` } \| { `type`: `"CAPTURE_ZONE_RADIUS"` ; `value`: `undefined` \| `number` } \| { `index`: `number` ; `type`: `"CAPTURE_ZONE_PLANET_LEVEL_SCORE"` ; `value`: `undefined` \| `number` } \| { `type`: `"CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED"` ; `value`: `undefined` \| `number` } \| { `type`: `"CAPTURE_ZONES_PER_5000_WORLD_RADIUS"` ; `value`: `undefined` \| `number` } |
+| `state`             | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+
+#### Returns
+
+{ `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `number` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` = value; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+---
+
+### ofPositivePercent
+
+▸ **ofPositivePercent**(`__namedParameters`, `state`): { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| :------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `__namedParameters` | { `type`: `"TOKEN_MINT_END_TIMESTAMP"` ; `value`: `undefined` \| `number` } \| { `type`: `"WORLD_RADIUS_MIN"` ; `value`: `undefined` \| `number` } \| { `type`: `"PLANETHASH_KEY"` ; `value`: `undefined` \| `number` } \| { `type`: `"SPACETYPE_KEY"` ; `value`: `undefined` \| `number` } \| { `type`: `"BIOMEBASE_KEY"` ; `value`: `undefined` \| `number` } \| { `type`: `"PERLIN_LENGTH_SCALE"` ; `value`: `undefined` \| `number` } \| { `type`: `"MAX_NATURAL_PLANET_LEVEL"` ; `value`: `undefined` \| `number` } \| { `type`: `"TIME_FACTOR_HUNDREDTHS"` ; `value`: `undefined` \| `number` } \| { `type`: `"PERLIN_THRESHOLD_1"` ; `value`: `undefined` \| `number` } \| { `type`: `"PERLIN_THRESHOLD_2"` ; `value`: `undefined` \| `number` } \| { `type`: `"PERLIN_THRESHOLD_3"` ; `value`: `undefined` \| `number` } \| { `type`: `"INIT_PERLIN_MIN"` ; `value`: `undefined` \| `number` } \| { `type`: `"INIT_PERLIN_MAX"` ; `value`: `undefined` \| `number` } \| { `type`: `"BIOME_THRESHOLD_1"` ; `value`: `undefined` \| `number` } \| { `type`: `"BIOME_THRESHOLD_2"` ; `value`: `undefined` \| `number` } \| { `index`: `number` ; `type`: `"PLANET_LEVEL_THRESHOLDS"` ; `value`: `undefined` \| `number` } \| { `type`: `"PLANET_RARITY"` ; `value`: `undefined` \| `number` } \| { `type`: `"PHOTOID_ACTIVATION_DELAY"` ; `value`: `undefined` \| `number` } \| { `type`: `"SPAWN_RIM_AREA"` ; `value`: `undefined` \| `number` } \| { `type`: `"LOCATION_REVEAL_COOLDOWN"` ; `value`: `undefined` \| `number` } \| { `type`: `"SILVER_SCORE_VALUE"` ; `value`: `undefined` \| `number` } \| { `index`: `number` ; `type`: `"ARTIFACT_POINT_VALUES"` ; `value`: `undefined` \| `number` } \| { `type`: `"SPACE_JUNK_LIMIT"` ; `value`: `undefined` \| `number` } \| { `index`: `number` ; `type`: `"PLANET_LEVEL_JUNK"` ; `value`: `undefined` \| `number` } \| { `type`: `"ABANDON_SPEED_CHANGE_PERCENT"` ; `value`: `undefined` \| `number` } \| { `type`: `"ABANDON_RANGE_CHANGE_PERCENT"` ; `value`: `undefined` \| `number` } \| { `type`: `"CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL"` ; `value`: `undefined` \| `number` } \| { `type`: `"CAPTURE_ZONE_RADIUS"` ; `value`: `undefined` \| `number` } \| { `index`: `number` ; `type`: `"CAPTURE_ZONE_PLANET_LEVEL_SCORE"` ; `value`: `undefined` \| `number` } \| { `type`: `"CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED"` ; `value`: `undefined` \| `number` } \| { `type`: `"CAPTURE_ZONES_PER_5000_WORLD_RADIUS"` ; `value`: `undefined` \| `number` } |
+| `state`             | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+
+#### Returns
+
+{ `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `ExactArray10`<`number`\> ; `defaultValue`: `ExactArray10`<`number`\> ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `Tuple6`<`number`\> ; `defaultValue`: `Tuple6`<`number`\> ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+---
+
+### ofSpaceJunkLimit
+
+▸ **ofSpaceJunkLimit**(`__namedParameters`, `state`): { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.type`  | `"SPACE_JUNK_LIMIT"`                                                     |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+---
+
+### ofSpawnRimArea
+
+▸ **ofSpawnRimArea**(`__namedParameters`, `state`): { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` = 'Spawnable area must be larger' }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.type`  | `"SPAWN_RIM_AREA"`                                                       |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` = 'Spawnable area must be larger' }
+
+---
+
+### ofTimeFactorHundredths
+
+▸ **ofTimeFactorHundredths**(`__namedParameters`, `state`): { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.type`  | `"TIME_FACTOR_HUNDREDTHS"`                                               |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+---
+
+### ofWorldRadiusMin
+
+▸ **ofWorldRadiusMin**(`__namedParameters`, `state`): { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+#### Parameters
+
+| Name                      | Type                                                                     |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `__namedParameters`       | `Object`                                                                 |
+| `__namedParameters.type`  | `"WORLD_RADIUS_MIN"`                                                     |
+| `__namedParameters.value` | `undefined` \| `number`                                                  |
+| `state`                   | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+{ `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `undefined` = value; `warning`: `undefined` = undefined } \| { `currentValue`: `number` ; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `string` } \| { `currentValue`: `number` = value; `defaultValue`: `number` ; `displayValue`: `number` = value; `warning`: `undefined` = undefined }
+
+---
+
+### toInitializers
+
+▸ **toInitializers**(`obj`): `Object`
+
+#### Parameters
+
+| Name  | Type                                                                     |
+| :---- | :----------------------------------------------------------------------- |
+| `obj` | [`LobbyConfigState`](Frontend_Panes_Lobbies_Reducer.md#lobbyconfigstate) |
+
+#### Returns
+
+`Object`
+
+| Name                                  | Type                      |
+| :------------------------------------ | :------------------------ |
+| `ABANDON_RANGE_CHANGE_PERCENT`        | `number`                  |
+| `ABANDON_SPEED_CHANGE_PERCENT`        | `number`                  |
+| `ADMIN_CAN_ADD_PLANETS`               | `boolean`                 |
+| `ARTIFACT_POINT_VALUES`               | `Tuple6`<`number`\>       |
+| `BIOMEBASE_KEY`                       | `number`                  |
+| `BIOME_THRESHOLD_1`                   | `number`                  |
+| `BIOME_THRESHOLD_2`                   | `number`                  |
+| `CAPTURE_ZONES_ENABLED`               | `boolean`                 |
+| `CAPTURE_ZONES_PER_5000_WORLD_RADIUS` | `number`                  |
+| `CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL`  | `number`                  |
+| `CAPTURE_ZONE_COUNT`                  | `number`                  |
+| `CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED`   | `number`                  |
+| `CAPTURE_ZONE_PLANET_LEVEL_SCORE`     | `ExactArray10`<`number`\> |
+| `CAPTURE_ZONE_RADIUS`                 | `number`                  |
+| `CLAIM_PLANET_COOLDOWN`               | `number`                  |
+| `DISABLE_ZK_CHECKS`                   | `boolean`                 |
+| `INIT_PERLIN_MAX`                     | `number`                  |
+| `INIT_PERLIN_MIN`                     | `number`                  |
+| `LOCATION_REVEAL_COOLDOWN`            | `number`                  |
+| `MAX_NATURAL_PLANET_LEVEL`            | `number`                  |
+| `PERLIN_LENGTH_SCALE`                 | `number`                  |
+| `PERLIN_MIRROR_X`                     | `boolean`                 |
+| `PERLIN_MIRROR_Y`                     | `boolean`                 |
+| `PERLIN_THRESHOLD_1`                  | `number`                  |
+| `PERLIN_THRESHOLD_2`                  | `number`                  |
+| `PERLIN_THRESHOLD_3`                  | `number`                  |
+| `PHOTOID_ACTIVATION_DELAY`            | `number`                  |
+| `PLANETHASH_KEY`                      | `number`                  |
+| `PLANET_LEVEL_JUNK`                   | `ExactArray10`<`number`\> |
+| `PLANET_LEVEL_THRESHOLDS`             | `ExactArray10`<`number`\> |
+| `PLANET_RARITY`                       | `number`                  |
+| `PLANET_TRANSFER_ENABLED`             | `boolean`                 |
+| `PLANET_TYPE_WEIGHTS`                 | `PlanetTypeWeights`       |
+| `SILVER_SCORE_VALUE`                  | `number`                  |
+| `SPACETYPE_KEY`                       | `number`                  |
+| `SPACE_JUNK_ENABLED`                  | `boolean`                 |
+| `SPACE_JUNK_LIMIT`                    | `number`                  |
+| `SPAWN_RIM_AREA`                      | `number`                  |
+| `START_PAUSED`                        | `boolean`                 |
+| `TIME_FACTOR_HUNDREDTHS`              | `number`                  |
+| `TOKEN_MINT_END_TIMESTAMP`            | `number`                  |
+| `WORLD_RADIUS_LOCKED`                 | `boolean`                 |
+| `WORLD_RADIUS_MIN`                    | `number`                  |
