@@ -324,7 +324,9 @@ function App() {
           onInput=${(e: InputEvent) => setPlanetAccount((e.target as HTMLInputElement).value)}
           placeholder="Address receiving planet"
         ></df-text-input>
-        <df-button onClick=${() => takeOwnership(selectedPlanet, account)}> Give Planet </df-button>
+        <df-button onClick=${() => takeOwnership(selectedPlanet, planetAccount)}>
+          Give Planet
+        </df-button>
       </div>
 
       <${Heading} title="Give Spaceships" />
@@ -387,7 +389,9 @@ function App() {
           placeholder="Address receiving artifact"
         ></df-text-input>
 
-        <df-button onClick=${() => createArtifact(account, selectedArtifact, artifactRarity)}>
+        <df-button
+          onClick=${() => createArtifact(artifactAccount, selectedArtifact, artifactRarity)}
+        >
           Give Artifact
         </df-button>
       </div>
