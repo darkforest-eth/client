@@ -53,6 +53,38 @@ export function PlanetIcons({ planet }: { planet: Planet | undefined }) {
   const bonuses = bonusFromHex(planet.locationId);
   const rank = getPlanetRank(planet);
 
+  let captureZoneIcons = null;
+  if (uiManager.captureZonesEnabled) {
+    const captureZoneGenerator = uiManager.getCaptureZoneGenerator();
+    if (captureZoneGenerator) {
+      captureZoneIcons = (
+        <>
+          {captureZoneGenerator.isInZone(planet.locationId) &&
+            uiManager.potentialCaptureScore(planet.planetLevel) > 0 &&
+            planet.invader === EMPTY_ADDRESS &&
+            planet.capturer === EMPTY_ADDRESS && (
+              <TooltipTrigger name={TooltipName.Invadable}>
+                <Icon type={IconType.Invadable} />
+              </TooltipTrigger>
+            )}
+          {planet.invader !== EMPTY_ADDRESS && planet.capturer === EMPTY_ADDRESS && (
+            <TooltipTrigger name={TooltipName.Capturable}>
+              <Icon type={IconType.Capturable} />
+            </TooltipTrigger>
+          )}
+          {planet.capturer !== EMPTY_ADDRESS && (
+            <TooltipTrigger
+              name={TooltipName.Empty}
+              extraContent={<>This planet has been captured by {planet.capturer}</>}
+            >
+              <Icon type={IconType.Capturable} />
+            </TooltipTrigger>
+          )}
+        </>
+      );
+    }
+  }
+
   return (
     <StyledPlanetIcons>
       {planet.owner === EMPTY_ADDRESS && planet.energy > 0 && (
@@ -117,27 +149,7 @@ export function PlanetIcons({ planet }: { planet: Planet | undefined }) {
             <Icon type={IconType.Artifact} />
           </TooltipTrigger>
         )}
-      {uiManager.getCaptureZoneGenerator().isInZone(planet.locationId) &&
-        uiManager.potentialCaptureScore(planet.planetLevel) > 0 &&
-        planet.invader === EMPTY_ADDRESS &&
-        planet.capturer === EMPTY_ADDRESS && (
-          <TooltipTrigger name={TooltipName.Invadable}>
-            <Icon type={IconType.Invadable} />
-          </TooltipTrigger>
-        )}
-      {planet.invader !== EMPTY_ADDRESS && planet.capturer === EMPTY_ADDRESS && (
-        <TooltipTrigger name={TooltipName.Capturable}>
-          <Icon type={IconType.Capturable} />
-        </TooltipTrigger>
-      )}
-      {planet.capturer !== EMPTY_ADDRESS && (
-        <TooltipTrigger
-          name={TooltipName.Empty}
-          extraContent={<>This planet has been captured by {planet.capturer}</>}
-        >
-          <Icon type={IconType.Capturable} />
-        </TooltipTrigger>
-      )}
+      {captureZoneIcons}
       {planet.destroyed && (
         <TooltipTrigger
           name={TooltipName.Empty}

@@ -27,7 +27,7 @@ export function toInitializers(obj: LobbyConfigState) {
     }
     filtered[key] = currentValue;
   }
-  return filtered as Initializers;
+  return filtered as LobbyInitializers;
 }
 
 // Actions aren't 1-to-1 with Initializers because we sometimes need to update into arrays
@@ -111,13 +111,17 @@ export type LobbyConfigAction =
   | {
       type: 'CAPTURE_ZONES_PER_5000_WORLD_RADIUS';
       value: Initializers['CAPTURE_ZONES_PER_5000_WORLD_RADIUS'] | undefined;
-    };
+    }
+  | { type: 'WHITELIST_ENABLED'; value: boolean | undefined };
+
+// TODO(#2328): WHITELIST_ENABLED should just be on Initializers
+export type LobbyInitializers = Initializers & { WHITELIST_ENABLED: boolean | undefined };
 
 export type LobbyConfigState = {
-  [key in keyof Initializers]: {
-    currentValue: Initializers[key];
-    displayValue: Partial<Initializers[key]> | undefined;
-    defaultValue: Initializers[key];
+  [key in keyof LobbyInitializers]: {
+    currentValue: LobbyInitializers[key];
+    displayValue: Partial<LobbyInitializers[key]> | undefined;
+    defaultValue: LobbyInitializers[key];
     warning: string | undefined;
   };
 };
@@ -303,12 +307,17 @@ export function lobbyConfigReducer(state: LobbyConfigState, action: LobbyAction)
       update = ofCaptureZonesPer5000WorldRadius(action, state);
       break;
     }
-    case 'RESET':
+    case 'WHITELIST_ENABLED': {
+      update = ofBoolean(action, state);
+      break;
+    }
+    case 'RESET': {
       // Hard reset all values that were available in the JSON
       return {
         ...state,
         ...action.value,
       };
+    }
     default: {
       // https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking
       const _exhaustive: never = action;
@@ -322,9 +331,9 @@ export function lobbyConfigReducer(state: LobbyConfigState, action: LobbyAction)
   };
 }
 
-export function lobbyConfigInit(startingConfig: Initializers) {
+export function lobbyConfigInit(startingConfig: LobbyInitializers) {
   const state: Partial<LobbyConfigState> = {};
-  for (const key of Object.keys(startingConfig) as [keyof Initializers]) {
+  for (const key of Object.keys(startingConfig) as [keyof LobbyInitializers]) {
     switch (key) {
       case 'START_PAUSED': {
         const defaultValue = startingConfig[key];
@@ -749,6 +758,17 @@ export function lobbyConfigInit(startingConfig: Initializers) {
       }
       case 'CAPTURE_ZONES_PER_5000_WORLD_RADIUS': {
         const defaultValue = startingConfig[key];
+        state[key] = {
+          currentValue: defaultValue,
+          displayValue: defaultValue,
+          defaultValue,
+          warning: undefined,
+        };
+        break;
+      }
+      case 'WHITELIST_ENABLED': {
+        // Default this to false if we don't have it
+        const defaultValue = startingConfig[key] || false;
         state[key] = {
           currentValue: defaultValue,
           displayValue: defaultValue,

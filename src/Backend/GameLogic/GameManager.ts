@@ -46,6 +46,7 @@ import {
   ArtifactId,
   ArtifactRarity,
   ArtifactType,
+  CaptureZone,
   Chunk,
   ClaimedCoords,
   ClaimedLocation,
@@ -141,7 +142,7 @@ import { easeInAnimation, emojiEaseOutAnimation } from '../Utils/Animation';
 import SnarkArgsHelper from '../Utils/SnarkArgsHelper';
 import { hexifyBigIntNestedArray } from '../Utils/Utils';
 import { getEmojiMessage } from './ArrivalUtils';
-import { CaptureZoneGenerator } from './CaptureZoneGenerator';
+import { CaptureZoneGenerator, CaptureZonesGeneratedEvent } from './CaptureZoneGenerator';
 import { ContractsAPI, makeContractsAPI } from './ContractsAPI';
 import { GameObjects } from './GameObjects';
 import { InitialGameStateDownloader } from './InitialGameStateDownloader';
@@ -352,7 +353,7 @@ class GameManager extends EventEmitter {
   /**
    * Generates capture zones.
    */
-  private captureZoneGenerator: CaptureZoneGenerator;
+  private captureZoneGenerator: CaptureZoneGenerator | undefined;
 
   private constructor(
     terminal: React.MutableRefObject<TerminalHandle | undefined>,
@@ -967,7 +968,7 @@ class GameManager extends EventEmitter {
     }
   }
 
-  private async hardRefreshArtifact(artifactId: ArtifactId): Promise<void> {
+  public async hardRefreshArtifact(artifactId: ArtifactId): Promise<void> {
     const artifact = await this.contractsAPI.getArtifactById(artifactId);
     if (!artifact) return;
     this.entityStore.replaceArtifactFromContractData(artifact);
@@ -1719,8 +1720,8 @@ class GameManager extends EventEmitter {
     return (myLastClaimTimestamp + this.contractConstants.CLAIM_PLANET_COOLDOWN) * 1000;
   }
 
-  public getCaptureZones() {
-    return this.captureZoneGenerator.getZones();
+  public getCaptureZones(): Set<CaptureZone> {
+    return this.captureZoneGenerator?.getZones() || new Set();
   }
 
   /**
@@ -1801,6 +1802,10 @@ class GameManager extends EventEmitter {
 
   public async invadePlanet(locationId: LocationId) {
     try {
+      if (!this.captureZoneGenerator) {
+        throw new Error('Capture zones are not enabled in this game');
+      }
+
       const planet = this.entityStore.getPlanetWithId(locationId);
 
       if (!planet || !isLocatable(planet)) {
@@ -3291,8 +3296,8 @@ class GameManager extends EventEmitter {
   /**
    * Emits when new capture zones are generated.
    */
-  public get captureZoneGeneratedEmitter() {
-    return this.captureZoneGenerator.generated$;
+  public get captureZoneGeneratedEmitter(): Monomitter<CaptureZonesGeneratedEvent> | undefined {
+    return this.captureZoneGenerator?.generated$;
   }
 
   public getNotificationsManager() {

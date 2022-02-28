@@ -1,4 +1,3 @@
-import { Initializers } from '@darkforest_eth/settings';
 import { EthAddress } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React, { useEffect, useReducer, useState } from 'react';
@@ -31,6 +30,7 @@ import {
   LobbyConfigAction,
   lobbyConfigInit,
   lobbyConfigReducer,
+  LobbyInitializers,
   toInitializers,
 } from './Reducer';
 import { SnarkPane } from './SnarkPane';
@@ -205,9 +205,9 @@ export function ConfigurationPane({
 }: {
   modalIndex: number;
   lobbyAddress: EthAddress | undefined;
-  startingConfig: Initializers;
+  startingConfig: LobbyInitializers;
   onMapChange: (props: MinimapConfig) => void;
-  onCreate: (config: Initializers) => Promise<void>;
+  onCreate: (config: LobbyInitializers) => Promise<void>;
 }) {
   const { path: root } = useRouteMatch();
   const [error, setError] = useState<string | undefined>();
@@ -274,7 +274,7 @@ export function ConfigurationPane({
     }
   }
 
-  function configUploadSuccess(initializers: Initializers) {
+  function configUploadSuccess(initializers: LobbyInitializers) {
     updateConfig({ type: 'RESET', value: lobbyConfigInit(initializers) });
   }
 

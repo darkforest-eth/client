@@ -1,7 +1,9 @@
+import { Monomitter } from '@darkforest_eth/events';
 import { weiToEth } from '@darkforest_eth/network';
 import { EthAddress, ModalName, TooltipName } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { CaptureZonesGeneratedEvent } from '../../Backend/GameLogic/CaptureZoneGenerator';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { AlignCenterHorizontally } from '../Components/CoreUI';
 import { AccountLabel } from '../Components/Labels/Labels';
@@ -132,20 +134,25 @@ function CaptureZoneExplanation() {
   );
 }
 
-function CaptureZones() {
+function CaptureZones({
+  emitter,
+  nextChangeBlock,
+}: {
+  emitter: Monomitter<CaptureZonesGeneratedEvent>;
+  nextChangeBlock: number;
+}) {
   const uiManager = useUIManager();
-  const gameManager = uiManager.getGameManager();
   const currentBlockNumber = useEmitterValue(uiManager.getEthConnection().blockNumber$, undefined);
   const [nextGenerationBlock, setNextGenerationBlock] = useState(
     Math.max(
       uiManager.contractConstants.GAME_START_BLOCK +
         uiManager.contractConstants.CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL,
-      gameManager.getCaptureZoneGenerator().getNextChangeBlock()
+      nextChangeBlock
     )
   );
 
   useEmitterSubscribe(
-    gameManager.captureZoneGeneratedEmitter,
+    emitter,
     (zoneGeneration) => {
       setNextGenerationBlock(zoneGeneration.nextChangeBlock);
     },
@@ -167,6 +174,16 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: Hook<boolean>
   const account = player.value?.address;
   const twitter = player.value?.twitter;
   const balance = useEmitterValue(uiManager.getMyBalance$(), uiManager.getMyBalanceBn());
+
+  let captureZones = null;
+  if (uiManager.captureZonesEnabled) {
+    const captureZoneGenerator = uiManager.getCaptureZoneGenerator();
+    if (captureZoneGenerator) {
+      const emitter = captureZoneGenerator.generated$;
+      const nextChangeBlock = captureZoneGenerator.getNextChangeBlock();
+      captureZones = <CaptureZones emitter={emitter} nextChangeBlock={nextChangeBlock} />;
+    }
+  }
 
   return (
     <TopBarContainer>
@@ -206,11 +223,7 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: Hook<boolean>
         <BoardPlacement account={account} />
       </AlignCenterHorizontally>
       <AlignCenterHorizontally style={{ justifyContent: 'space-around', width: '100%' }}>
-        {uiManager.contractConstants.CAPTURE_ZONES_ENABLED && (
-          <>
-            <CaptureZones />
-          </>
-        )}
+        {captureZones}
         {uiManager.getSpaceJunkEnabled() && (
           <>
             <SpaceJunk account={account} />

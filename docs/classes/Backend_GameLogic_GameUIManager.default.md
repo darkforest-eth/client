@@ -967,11 +967,11 @@ choose to render themselves into this overlay container using React Portals.
 
 ### getCaptureZoneGenerator
 
-▸ **getCaptureZoneGenerator**(): [`CaptureZoneGenerator`](Backend_GameLogic_CaptureZoneGenerator.CaptureZoneGenerator.md)
+▸ **getCaptureZoneGenerator**(): `undefined` \| [`CaptureZoneGenerator`](Backend_GameLogic_CaptureZoneGenerator.CaptureZoneGenerator.md)
 
 #### Returns
 
-[`CaptureZoneGenerator`](Backend_GameLogic_CaptureZoneGenerator.CaptureZoneGenerator.md)
+`undefined` \| [`CaptureZoneGenerator`](Backend_GameLogic_CaptureZoneGenerator.CaptureZoneGenerator.md)
 
 ---
 

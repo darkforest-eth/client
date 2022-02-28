@@ -20,7 +20,6 @@
 - [useHoverArtifactId](Frontend_Utils_AppHooks.md#usehoverartifactid)
 - [useHoverPlanet](Frontend_Utils_AppHooks.md#usehoverplanet)
 - [useLeaderboard](Frontend_Utils_AppHooks.md#useleaderboard)
-- [useMyArtifacts](Frontend_Utils_AppHooks.md#usemyartifacts)
 - [useMyArtifactsList](Frontend_Utils_AppHooks.md#usemyartifactslist)
 - [useOverlayContainer](Frontend_Utils_AppHooks.md#useoverlaycontainer)
 - [usePaused](Frontend_Utils_AppHooks.md#usepaused)
@@ -178,22 +177,6 @@ Loads the leaderboard
 | :------------ | :--------------------------- |
 | `error`       | `Error` \| `undefined`       |
 | `leaderboard` | `Leaderboard` \| `undefined` |
-
----
-
-### useMyArtifacts
-
-▸ **useMyArtifacts**(`uiManager`): [`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Artifact`[]\>
-
-#### Parameters
-
-| Name        | Type                                                               |
-| :---------- | :----------------------------------------------------------------- |
-| `uiManager` | [`default`](../classes/Backend_GameLogic_GameUIManager.default.md) |
-
-#### Returns
-
-[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`Artifact`[]\>
 
 ---
 

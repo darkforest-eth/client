@@ -18,6 +18,18 @@ export function AdminPermissionsPane({ config, onUpdate }: LobbiesPaneProps) {
       <Row>
         <Warning>{config.ADMIN_CAN_ADD_PLANETS.warning}</Warning>
       </Row>
+      <Row>
+        <Checkbox
+          label='Is whitelist enabled?'
+          checked={config.WHITELIST_ENABLED.displayValue}
+          onChange={(e: Event & React.ChangeEvent<DarkForestCheckbox>) =>
+            onUpdate({ type: 'WHITELIST_ENABLED', value: e.target.checked })
+          }
+        />
+      </Row>
+      <Row>
+        <Warning>{config.WHITELIST_ENABLED.warning}</Warning>
+      </Row>
     </>
   );
 }

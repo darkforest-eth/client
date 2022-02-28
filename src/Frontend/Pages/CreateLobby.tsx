@@ -3,7 +3,6 @@ import { INIT_ADDRESS } from '@darkforest_eth/contracts';
 import initContractAbiUrl from '@darkforest_eth/contracts/abis/DFInitialize.json';
 import { EthConnection } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
-import { Initializers } from '@darkforest_eth/settings';
 import {
   ArtifactRarity,
   ContractMethodName,
@@ -20,6 +19,7 @@ import { InitRenderState, Wrapper } from '../Components/GameLandingPageComponent
 import { ConfigurationPane } from '../Panes/Lobbies/ConfigurationPane';
 import { Minimap } from '../Panes/Lobbies/MinimapPane';
 import { MinimapConfig } from '../Panes/Lobbies/MinimapUtils';
+import { LobbyInitializers } from '../Panes/Lobbies/Reducer';
 import { listenForKeyboardEvents, unlinkKeyboardEvents } from '../Utils/KeyEmitters';
 import { CadetWormhole } from '../Views/CadetWormhole';
 import { LobbyLandingPage } from './LobbyLandingPage';
@@ -34,7 +34,7 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
   const [connection, setConnection] = useState<EthConnection | undefined>();
   const [ownerAddress, setOwnerAddress] = useState<EthAddress | undefined>();
   const [contract, setContract] = useState<ContractsAPI | undefined>();
-  const [startingConfig, setStartingConfig] = useState<Initializers | undefined>();
+  const [startingConfig, setStartingConfig] = useState<LobbyInitializers | undefined>();
   const [lobbyAddress, setLobbyAddress] = useState<EthAddress | undefined>();
   const [minimapConfig, setMinimapConfig] = useState<MinimapConfig | undefined>();
 
@@ -84,6 +84,8 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
         .getConstants()
         .then((config) => {
           setStartingConfig({
+            // Explicitly defaulting this to false
+            WHITELIST_ENABLED: false,
             // TODO: Figure out if we should expose this from contract
             START_PAUSED: false,
             ADMIN_CAN_ADD_PLANETS: config.ADMIN_CAN_ADD_PLANETS,
@@ -148,7 +150,7 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
     }
   }, [contract]);
 
-  async function createLobby(config: Initializers) {
+  async function createLobby(config: LobbyInitializers) {
     if (!contract) {
       setErrorState({ type: 'invalidCreate' });
       return;
@@ -158,12 +160,11 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
 
     console.log(initializers);
     const InitABI = await fetch(initContractAbiUrl).then((r) => r.json());
-    const whitelistEnabled = false;
     const artifactBaseURI = '';
     const initInterface = Contract.getInterface(InitABI);
     const initAddress = INIT_ADDRESS;
     const initFunctionCall = initInterface.encodeFunctionData('init', [
-      whitelistEnabled,
+      initializers.WHITELIST_ENABLED,
       artifactBaseURI,
       initializers,
     ]);

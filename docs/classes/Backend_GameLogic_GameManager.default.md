@@ -269,7 +269,7 @@ contract and view it without be able to make any moves.
 
 ### captureZoneGenerator
 
-• `Private` **captureZoneGenerator**: [`CaptureZoneGenerator`](Backend_GameLogic_CaptureZoneGenerator.CaptureZoneGenerator.md)
+• `Private` **captureZoneGenerator**: `undefined` \| [`CaptureZoneGenerator`](Backend_GameLogic_CaptureZoneGenerator.CaptureZoneGenerator.md)
 
 Generates capture zones.
 
@@ -556,13 +556,13 @@ Sometimes the universe gets bigger... Sometimes it doesn't.
 
 ### captureZoneGeneratedEmitter
 
-• `get` **captureZoneGeneratedEmitter**(): `Monomitter`<[`CaptureZonesGeneratedEvent`](../modules/Backend_GameLogic_CaptureZoneGenerator.md#capturezonesgeneratedevent)\>
+• `get` **captureZoneGeneratedEmitter**(): `undefined` \| `Monomitter`<[`CaptureZonesGeneratedEvent`](../modules/Backend_GameLogic_CaptureZoneGenerator.md#capturezonesgeneratedevent)\>
 
 Emits when new capture zones are generated.
 
 #### Returns
 
-`Monomitter`<[`CaptureZonesGeneratedEvent`](../modules/Backend_GameLogic_CaptureZoneGenerator.md#capturezonesgeneratedevent)\>
+`undefined` \| `Monomitter`<[`CaptureZonesGeneratedEvent`](../modules/Backend_GameLogic_CaptureZoneGenerator.md#capturezonesgeneratedevent)\>
 
 ---
 
@@ -1000,11 +1000,11 @@ represented by `undefined`.
 
 ### getCaptureZoneGenerator
 
-▸ **getCaptureZoneGenerator**(): [`CaptureZoneGenerator`](Backend_GameLogic_CaptureZoneGenerator.CaptureZoneGenerator.md)
+▸ **getCaptureZoneGenerator**(): `undefined` \| [`CaptureZoneGenerator`](Backend_GameLogic_CaptureZoneGenerator.CaptureZoneGenerator.md)
 
 #### Returns
 
-[`CaptureZoneGenerator`](Backend_GameLogic_CaptureZoneGenerator.CaptureZoneGenerator.md)
+`undefined` \| [`CaptureZoneGenerator`](Backend_GameLogic_CaptureZoneGenerator.CaptureZoneGenerator.md)
 
 ---
 
@@ -2230,7 +2230,7 @@ represent a multiplier.
 
 ### hardRefreshArtifact
 
-▸ `Private` **hardRefreshArtifact**(`artifactId`): `Promise`<`void`\>
+▸ **hardRefreshArtifact**(`artifactId`): `Promise`<`void`\>
 
 #### Parameters
 

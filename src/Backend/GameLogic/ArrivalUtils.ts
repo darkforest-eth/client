@@ -1,6 +1,7 @@
 import { CONTRACT_PRECISION } from '@darkforest_eth/constants';
 import { hasOwner, isActivated, isEmojiFlagMessage } from '@darkforest_eth/gamelogic';
 import {
+  ArrivalType,
   Artifact,
   ArtifactType,
   EmojiFlagBody,
@@ -164,8 +165,12 @@ export const arrive = (
   const { energyArriving } = arrival;
 
   if (arrival.player !== toPlanet.owner) {
+    if (arrival.arrivalType === ArrivalType.Wormhole) {
+      // if this is a wormhole arrival to a planet that isn't owned by the initiator of
+      // the move, then don't move any energy
+    }
     // attacking enemy - includes emptyAddress
-    if (
+    else if (
       toPlanet.energy >
       Math.floor((energyArriving * CONTRACT_PRECISION * 100) / toPlanet.defense) /
         CONTRACT_PRECISION

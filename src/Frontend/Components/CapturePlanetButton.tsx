@@ -31,6 +31,7 @@ export function CapturePlanetButton({
   const gameManager = uiManager.getGameManager();
   const currentBlockNumber = useEmitterValue(uiManager.getEthConnection().blockNumber$, undefined);
   const owned = planetWrapper.value?.owner === account;
+  const captureZoneGenerator = uiManager.getCaptureZoneGenerator();
 
   const canGiveScore = useMemo(() => {
     if (!planetWrapper.value) return;
@@ -47,10 +48,10 @@ export function CapturePlanetButton({
   const shouldShowInvade = useMemo(() => {
     if (!planetWrapper.value) return false;
     const planet = planetWrapper.value;
-    const inZone = uiManager.getCaptureZoneGenerator().isInZone(planet.locationId);
+    const inZone = captureZoneGenerator?.isInZone(planet.locationId);
 
     return owned && inZone && planet.invader === EMPTY_ADDRESS && planet.capturer === EMPTY_ADDRESS;
-  }, [owned, planetWrapper, uiManager]);
+  }, [owned, planetWrapper, captureZoneGenerator]);
 
   const planetHasEnoughEnergy = useMemo(() => {
     if (!planetWrapper.value) return false;

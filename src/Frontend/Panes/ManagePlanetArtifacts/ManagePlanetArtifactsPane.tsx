@@ -2,7 +2,7 @@ import { isLocatable } from '@darkforest_eth/gamelogic';
 import { LocationId } from '@darkforest_eth/types';
 import React from 'react';
 import { CenterBackgroundSubtext, Underline } from '../../Components/CoreUI';
-import { useAccount, useMyArtifacts, usePlanet, useUIManager } from '../../Utils/AppHooks';
+import { useAccount, useMyArtifactsList, usePlanet, useUIManager } from '../../Utils/AppHooks';
 import { useEmitterValue } from '../../Utils/EmitterHooks';
 import { ModalHandle } from '../../Views/ModalPane';
 import { ManageArtifactsPane } from './ManageArtifacts';
@@ -49,17 +49,17 @@ export function ManagePlanetArtifactsPane({
   const account = useAccount(uiManager);
   const planetId = useEmitterValue(uiManager.selectedPlanetId$, initialPlanetId);
   const planet = usePlanet(uiManager, planetId).value;
-  const myArtifacts = useMyArtifacts(uiManager);
+  const myArtifacts = useMyArtifactsList(uiManager);
   const onPlanet = uiManager.getArtifactsWithIds(planet?.heldArtifactIds || []);
 
   const artifactsInWallet = [];
-  for (const a of myArtifacts.value.values()) {
+  for (const a of myArtifacts) {
     if (!a.onPlanetId) {
       artifactsInWallet.push(a);
     }
   }
 
-  if (planet && myArtifacts.value && isLocatable(planet) && account) {
+  if (planet && myArtifacts && isLocatable(planet) && account) {
     return (
       <ManageArtifactsPane
         artifactsInWallet={artifactsInWallet}

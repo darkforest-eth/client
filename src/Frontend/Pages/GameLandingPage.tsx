@@ -366,28 +366,31 @@ export function GameLandingPage({ match }: RouteComponentProps<{ contract: strin
   const advanceStateFromAccountSet = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
       try {
-        const address = ethConnection?.getAddress();
-        if (!address || !ethConnection) throw new Error('not logged in');
+        const playerAddress = ethConnection?.getAddress();
+        if (!playerAddress || !ethConnection) throw new Error('not logged in');
 
         const whitelist = await ethConnection.loadContract<DarkForest>(
           contractAddress,
           loadDiamondContract
         );
-        const isWhitelisted = await whitelist.isWhitelisted(address);
+        const isWhitelisted = await whitelist.isWhitelisted(playerAddress);
+        // TODO(#2329): isWhitelisted should just check the contractOwner
+        const adminAddress = address(await whitelist.adminAddress());
 
         terminal.current?.println('');
         terminal.current?.print('Checking if whitelisted... ');
 
-        if (isWhitelisted) {
+        // TODO(#2329): isWhitelisted should just check the contractOwner
+        if (isWhitelisted || playerAddress === adminAddress) {
           terminal.current?.println('Player whitelisted.');
           terminal.current?.println('');
-          terminal.current?.println(`Welcome, player ${address}.`);
+          terminal.current?.println(`Welcome, player ${playerAddress}.`);
           // TODO: Provide own env variable for this feature
           if (!isProd) {
             // in development, automatically get some ether from faucet
-            const balance = weiToEth(await ethConnection?.loadBalance(address));
+            const balance = weiToEth(await ethConnection?.loadBalance(playerAddress));
             if (balance === 0) {
-              await requestDevFaucet(address);
+              await requestDevFaucet(playerAddress);
             }
           }
           setStep(TerminalPromptStep.FETCHING_ETH_DATA);
