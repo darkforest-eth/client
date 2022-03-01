@@ -1,4 +1,4 @@
-import { EthConnection } from '@darkforest_eth/network';
+import { EthConnection, ThrottledConcurrentQueue, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
 import { EthAddress } from '@darkforest_eth/types';
 import { utils, Wallet } from 'ethers';
@@ -6,14 +6,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { addAccount, getAccounts } from '../../Backend/Network/AccountManager';
 import { getEthConnection } from '../../Backend/Network/Blockchain';
 import { InitRenderState, TerminalWrapper } from '../Components/GameLandingPageComponents';
+import { MythicLabelText } from '../Components/Labels/MythicLabel';
 import { TextPreview } from '../Components/TextPreview';
 import { TerminalTextStyle } from '../Utils/TerminalTypes';
+import { DarkForestTips } from '../Views/DarkForestTips';
 import { Terminal, TerminalHandle } from '../Views/Terminal';
 
 class LobbyPageTerminal {
   private ethConnection: EthConnection;
   private terminal: TerminalHandle;
   private accountSet: (account: EthAddress) => void;
+  private balancesEth: number[];
 
   public constructor(
     ethConnection: EthConnection,
@@ -25,10 +28,44 @@ class LobbyPageTerminal {
     this.accountSet = accountSet;
   }
 
+  private async loadBalances(addresses: EthAddress[]) {
+    const queue = new ThrottledConcurrentQueue({
+      invocationIntervalMs: 1000,
+      maxInvocationsPerIntervalMs: 25,
+    });
+
+    const balances = await Promise.all(
+      addresses.map((address) => queue.add(() => this.ethConnection.loadBalance(address)))
+    );
+
+    this.balancesEth = balances.map(weiToEth);
+  }
+
   public async chooseAccount() {
+    this.terminal.printElement(<MythicLabelText text='                  Create a Lobby' />);
+    this.terminal.newline();
+    this.terminal.newline();
+    this.terminal.printElement(<DarkForestTips tips={lobbyTips} title='Lobby Tips' />);
+    this.terminal.newline();
+
     const accounts = getAccounts();
-    this.terminal.println(`Found ${accounts.length} accounts on this device.`);
-    this.terminal.println(``);
+    this.terminal.println(`Found ${accounts.length} accounts on this device. Loading balances...`);
+    this.terminal.newline();
+
+    try {
+      await this.loadBalances(accounts.map((a) => a.address));
+    } catch (e) {
+      console.log(e);
+      this.terminal.println(
+        `Error loading balances. Reload the page to try again.`,
+        TerminalTextStyle.Red
+      );
+      return;
+    }
+
+    this.terminal.println(`Log in to create a lobby. We recommend using an account`);
+    this.terminal.println(`which owns at least 0.25 xDAI.`);
+    this.terminal.newline();
 
     if (accounts.length > 0) {
       this.terminal.print('(a) ', TerminalTextStyle.Sub);
@@ -61,7 +98,13 @@ class LobbyPageTerminal {
     const accounts = getAccounts();
     for (let i = 0; i < accounts.length; i += 1) {
       this.terminal.print(`(${i + 1}): `, TerminalTextStyle.Sub);
-      this.terminal.println(`${accounts[i].address}`);
+      this.terminal.print(`${accounts[i].address} `);
+
+      if (this.balancesEth[i] < 0.25) {
+        this.terminal.println(this.balancesEth[i].toFixed(2) + ' xDAI', TerminalTextStyle.Red);
+      } else {
+        this.terminal.println(this.balancesEth[i].toFixed(2) + ' xDAI', TerminalTextStyle.Green);
+      }
     }
     this.terminal.println(``);
     this.terminal.println(`Select an account:`, TerminalTextStyle.Text);
@@ -69,6 +112,9 @@ class LobbyPageTerminal {
     const selection = +((await this.terminal.getInput()) || '');
     if (isNaN(selection) || selection > accounts.length) {
       this.terminal.println('Unrecognized input. Please try again.', TerminalTextStyle.Red);
+      await this.displayAccounts();
+    } else if (this.balancesEth[selection - 1] < 0.25) {
+      this.terminal.println('Not enough xDAI. Select another account.', TerminalTextStyle.Red);
       await this.displayAccounts();
     } else {
       const account = accounts[selection - 1];
@@ -187,3 +233,20 @@ export function LobbyLandingPage({ onReady }: { onReady: (connection: EthConnect
     </TerminalWrapper>
   );
 }
+
+const lobbyTips = [
+  'A lobby is a Dark Forest universe which is under the control of the account that created it.',
+  'You can customize most aspects of Dark Forest when you create a lobby.',
+  'Mirror the X or Y space type for credibly neutral maps.',
+  'Fixed world radius can be used for a 1v1 battle.',
+  'Try increasing game speed for a quick round.',
+  'Use the Admin Controls plugin for god-mode control over your lobby.',
+  'You can spawn in any space type by adjusting the player spawn perlin range',
+  'Disable ZK to make mining the unverse super fast. WARNING: insecure.',
+  "Don't like Space Junk? Disable it!",
+  "Don't like Capture Zones? Disable them!",
+  'Change the Planet Hash Key to change where planets are. Think of it as the seed for planet generation.',
+  'Change the Space Type Key to vary the space type zones in your lobby.',
+  // TODO: link to the blog post
+  // TODO: link to Jordan's video
+];

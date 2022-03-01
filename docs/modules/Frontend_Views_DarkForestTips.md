@@ -11,7 +11,15 @@
 
 ### DarkForestTips
 
-▸ **DarkForestTips**(): `Element`
+▸ **DarkForestTips**(`__namedParameters`): `Element`
+
+#### Parameters
+
+| Name                       | Type                      |
+| :------------------------- | :------------------------ |
+| `__namedParameters`        | `Object`                  |
+| `__namedParameters.tips`   | (`string` \| `Element`)[] |
+| `__namedParameters.title?` | `string`                  |
 
 #### Returns
 
@@ -21,7 +29,13 @@
 
 ### MakeDarkForestTips
 
-▸ **MakeDarkForestTips**(): `Element`
+▸ **MakeDarkForestTips**(`tips`): `Element`
+
+#### Parameters
+
+| Name   | Type       |
+| :----- | :--------- |
+| `tips` | `string`[] |
 
 #### Returns
 

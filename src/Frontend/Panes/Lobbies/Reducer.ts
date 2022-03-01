@@ -630,7 +630,7 @@ export function lobbyConfigInit(startingConfig: LobbyInitializers) {
         const defaultValue = startingConfig[key];
         state[key] = {
           currentValue: defaultValue,
-          displayValue: Math.floor(defaultValue / 100),
+          displayValue: defaultValue / 100,
           defaultValue,
           warning: undefined,
         };
@@ -680,7 +680,7 @@ export function lobbyConfigInit(startingConfig: LobbyInitializers) {
         const defaultValue = startingConfig[key];
         state[key] = {
           currentValue: defaultValue,
-          displayValue: Math.floor(defaultValue / 100),
+          displayValue: defaultValue / 100,
           defaultValue,
           warning: undefined,
         };
@@ -690,7 +690,7 @@ export function lobbyConfigInit(startingConfig: LobbyInitializers) {
         const defaultValue = startingConfig[key];
         state[key] = {
           currentValue: defaultValue,
-          displayValue: Math.floor(defaultValue / 100),
+          displayValue: defaultValue / 100,
           defaultValue,
           warning: undefined,
         };

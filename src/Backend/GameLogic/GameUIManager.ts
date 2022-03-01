@@ -1427,6 +1427,10 @@ class GameUIManager extends EventEmitter {
   public getCaptureZonePointValues() {
     return this.contractConstants.CAPTURE_ZONE_PLANET_LEVEL_SCORE;
   }
+
+  public getArtifactUpdated$() {
+    return this.gameManager.getArtifactUpdated$();
+  }
 }
 
 export default GameUIManager;

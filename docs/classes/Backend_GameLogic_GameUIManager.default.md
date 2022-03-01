@@ -85,6 +85,7 @@
 - [getArtifactPlanet](Backend_GameLogic_GameUIManager.default.md#getartifactplanet)
 - [getArtifactPointValues](Backend_GameLogic_GameUIManager.default.md#getartifactpointvalues)
 - [getArtifactSending](Backend_GameLogic_GameUIManager.default.md#getartifactsending)
+- [getArtifactUpdated$](Backend_GameLogic_GameUIManager.default.md#getartifactupdated$)
 - [getArtifactWithId](Backend_GameLogic_GameUIManager.default.md#getartifactwithid)
 - [getArtifactsWithIds](Backend_GameLogic_GameUIManager.default.md#getartifactswithids)
 - [getBiomeKey](Backend_GameLogic_GameUIManager.default.md#getbiomekey)
@@ -881,6 +882,16 @@ choose to render themselves into this overlay container using React Portals.
 #### Returns
 
 `undefined` \| `Artifact`
+
+---
+
+### getArtifactUpdated$
+
+▸ **getArtifactUpdated$**(): `Monomitter`<`ArtifactId`\>
+
+#### Returns
+
+`Monomitter`<`ArtifactId`\>
 
 ---
 

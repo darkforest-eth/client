@@ -117,8 +117,15 @@ export function useHoverArtifactId(uiManager: GameUIManager): Wrapper<ArtifactId
 }
 
 export function useMyArtifactsList(uiManager: GameUIManager) {
-  const myArtifactsMap = useEmitterValue(uiManager.myArtifacts$, uiManager.getMyArtifactMap());
-  return Array.from(myArtifactsMap.values());
+  const [myArtifacts, setMyArtifacts] = useState(uiManager.getMyArtifacts());
+  useEmitterSubscribe(
+    uiManager.getArtifactUpdated$(),
+    () => {
+      setMyArtifacts(uiManager.getMyArtifacts());
+    },
+    [uiManager, setMyArtifacts]
+  );
+  return myArtifacts;
 }
 
 // note that this is going to throw an error if the pointer to `artifacts` changes but not to `planet`
