@@ -6,6 +6,7 @@
 
 ### Enumeration members
 
+- [AdminGiveSpaceship](types_darkforest_api_ContractsAPITypes.ContractEvent.md#admingivespaceship)
 - [AdminOwnershipChanged](types_darkforest_api_ContractsAPITypes.ContractEvent.md#adminownershipchanged)
 - [ArrivalQueued](types_darkforest_api_ContractsAPITypes.ContractEvent.md#arrivalqueued)
 - [ArtifactActivated](types_darkforest_api_ContractsAPITypes.ContractEvent.md#artifactactivated)
@@ -25,6 +26,12 @@
 - [PlayerInitialized](types_darkforest_api_ContractsAPITypes.ContractEvent.md#playerinitialized)
 
 ## Enumeration members
+
+### AdminGiveSpaceship
+
+• **AdminGiveSpaceship** = `"AdminGiveSpaceship"`
+
+---
 
 ### AdminOwnershipChanged
 

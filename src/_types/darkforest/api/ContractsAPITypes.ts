@@ -56,6 +56,7 @@ export const enum ContractEvent {
   ArtifactDeactivated = 'ArtifactDeactivated',
   PlanetSilverWithdrawn = 'PlanetSilverWithdrawn',
   AdminOwnershipChanged = 'AdminOwnershipChanged',
+  AdminGiveSpaceship = 'AdminGiveSpaceship',
   PauseStateChanged = 'PauseStateChanged',
   LobbyCreated = 'LobbyCreated',
 }

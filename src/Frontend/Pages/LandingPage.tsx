@@ -29,6 +29,10 @@ const links = {
 const defaultAddress = address(CONTRACT_ADDRESS);
 
 const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+
   --df-button-color: ${dfstyles.colors.dfgreen};
   --df-button-border: 1px solid ${dfstyles.colors.dfgreen};
   --df-button-hover-background: ${dfstyles.colors.dfgreen};
@@ -60,8 +64,11 @@ export default function LandingPage() {
             <Spacer height={16} />
 
             <ButtonWrapper>
+              <Btn size='large' onClick={() => history.push(`/lobby/${defaultAddress}`)}>
+                Create Lobby
+              </Btn>
               <Btn size='large' onClick={() => history.push(`/play/${defaultAddress}`)}>
-                Enter
+                Enter Round 5
               </Btn>
             </ButtonWrapper>
           </Header>
@@ -175,7 +182,11 @@ export default function LandingPage() {
                   <td>
                     02/18/<HideSmall>20</HideSmall>22
                   </td>
-                  <td>t.b.d</td>
+                  <td>
+                    <Link to='https://twitter.com/d_fdao'>@d_fdao</Link>
+                    {' + '}
+                    <Link to='https://twitter.com/orden_gg'>@orden_gg</Link>
+                  </td>
                 </TRow>
               </tbody>
             </table>

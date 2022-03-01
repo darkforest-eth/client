@@ -77,6 +77,22 @@ async function createArtifact(owner: EthAddress, type: ArtifactType, rarity = '1
   return tx;
 }
 
+async function initPlanet(planet: LocatablePlanet) {
+  if (planet.isInContract) return;
+
+  const args = Promise.resolve([locationIdToDecStr(planet.locationId), planet.perlin]);
+
+  const tx = await df.submitTransaction({
+    args,
+    contract: df.getContract(),
+    methodName: 'adminInitializePlanet' as ContractMethodName,
+  });
+
+  await tx.confirmedPromise;
+
+  return tx;
+}
+
 async function spawnSpaceship(
   planet: LocatablePlanet | undefined,
   owner: EthAddress | undefined,
@@ -91,10 +107,9 @@ async function spawnSpaceship(
     alert('no selected planet');
     return;
   }
-  if (!planet.isInContract) {
-    alert('planet is not initialized');
-    return;
-  }
+
+  await initPlanet(planet);
+
   const args = Promise.resolve([locationIdToDecStr(planet.locationId), owner, shipType]);
 
   const tx = await df.submitTransaction({
@@ -352,11 +367,7 @@ function App() {
       <div style=${{ ...rowStyle, justifyContent: 'space-between' }}>
         <span>
           ${'On planet: '}
-          ${selectedPlanet
-            ? selectedPlanet.isInContract
-              ? html`<${PlanetLink} planetId=${(selectedPlanet as Planet)?.locationId} />`
-              : '(not initialized)'
-            : '(none selected)'}
+          <${PlanetLink} planetId=${(selectedPlanet as Planet)?.locationId} />
         </span>
 
         <df-button onClick=${() => spawnSpaceship(selectedPlanet, shipAccount, selectedShip)}>

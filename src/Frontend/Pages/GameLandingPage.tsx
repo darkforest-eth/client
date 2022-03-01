@@ -235,7 +235,21 @@ export function GameLandingPage({ match }: RouteComponentProps<{ contract: strin
 
         terminal.current?.print('    v0.6 r5    ', TerminalTextStyle.Text);
         terminal.current?.print('02/18/2022        ', TerminalTextStyle.Text);
-        terminal.current?.print('t.b.d');
+        terminal.current?.printLink(
+          '@d_fdao',
+          () => {
+            window.open('https://twitter.com/d_fdao');
+          },
+          TerminalTextStyle.Text
+        );
+        terminal.current?.print(' + ');
+        terminal.current?.printLink(
+          '@orden_gg',
+          () => {
+            window.open('https://twitter.com/orden_gg');
+          },
+          TerminalTextStyle.Text
+        );
         terminal.current?.newline();
         terminal.current?.newline();
       }

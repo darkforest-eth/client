@@ -26,6 +26,7 @@ import {
 import {
   Artifact,
   ArtifactId,
+  ArtifactType,
   AutoGasSetting,
   ContractMethodName,
   DiagnosticUpdater,
@@ -215,6 +216,7 @@ export class ContractsAPI extends EventEmitter {
           contract.filters.PlanetCaptured(null, null).topics,
           contract.filters.PlayerInitialized(null, null).topics,
           contract.filters.AdminOwnershipChanged(null, null).topics,
+          contract.filters.AdminGiveSpaceship(null, null).topics,
           contract.filters.PauseStateChanged(null).topics,
           contract.filters.LobbyCreated(null, null).topics,
         ].map((topicsOrUndefined) => (topicsOrUndefined || [])[0]),
@@ -226,6 +228,13 @@ export class ContractsAPI extends EventEmitter {
         this.emit(ContractsAPIEvent.PauseStateChanged, paused);
       },
       [ContractEvent.AdminOwnershipChanged]: (location: EthersBN, _newOwner: string) => {
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
+      },
+      [ContractEvent.AdminGiveSpaceship]: (
+        location: EthersBN,
+        _newOwner: string,
+        _type: ArtifactType
+      ) => {
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
       },
       [ContractEvent.ArtifactFound]: (
