@@ -69,11 +69,13 @@
 - [deactivateArtifact](Backend_GameLogic_GameUIManager.default.md#deactivateartifact)
 - [depositArtifact](Backend_GameLogic_GameUIManager.default.md#depositartifact)
 - [destroy](Backend_GameLogic_GameUIManager.default.md#destroy)
+- [disableCustomRenderer](Backend_GameLogic_GameUIManager.default.md#disablecustomrenderer)
 - [disconnectTwitter](Backend_GameLogic_GameUIManager.default.md#disconnecttwitter)
 - [discoverBiome](Backend_GameLogic_GameUIManager.default.md#discoverbiome)
 - [drawAllRunningPlugins](Backend_GameLogic_GameUIManager.default.md#drawallrunningplugins)
 - [findArtifact](Backend_GameLogic_GameUIManager.default.md#findartifact)
 - [generateVerificationTweet](Backend_GameLogic_GameUIManager.default.md#generateverificationtweet)
+- [get2dRenderer](Backend_GameLogic_GameUIManager.default.md#get2drenderer)
 - [getAbandonRangeChangePercent](Backend_GameLogic_GameUIManager.default.md#getabandonrangechangepercent)
 - [getAbandonSpeedChangePercent](Backend_GameLogic_GameUIManager.default.md#getabandonspeedchangepercent)
 - [getAccount](Backend_GameLogic_GameUIManager.default.md#getaccount)
@@ -109,6 +111,7 @@
 - [getForcesSending](Backend_GameLogic_GameUIManager.default.md#getforcessending)
 - [getGameManager](Backend_GameLogic_GameUIManager.default.md#getgamemanager)
 - [getGameObjects](Backend_GameLogic_GameUIManager.default.md#getgameobjects)
+- [getGlManager](Backend_GameLogic_GameUIManager.default.md#getglmanager)
 - [getHashConfig](Backend_GameLogic_GameUIManager.default.md#gethashconfig)
 - [getHashesPerSec](Backend_GameLogic_GameUIManager.default.md#gethashespersec)
 - [getHomeCoords](Backend_GameLogic_GameUIManager.default.md#gethomecoords)
@@ -165,6 +168,7 @@
 - [getStringSetting](Backend_GameLogic_GameUIManager.default.md#getstringsetting)
 - [getTerminal](Backend_GameLogic_GameUIManager.default.md#getterminal)
 - [getTwitter](Backend_GameLogic_GameUIManager.default.md#gettwitter)
+- [getUIEmitter](Backend_GameLogic_GameUIManager.default.md#getuiemitter)
 - [getUnconfirmedMoves](Backend_GameLogic_GameUIManager.default.md#getunconfirmedmoves)
 - [getUnconfirmedUpgrades](Backend_GameLogic_GameUIManager.default.md#getunconfirmedupgrades)
 - [getUnconfirmedWormholeActivations](Backend_GameLogic_GameUIManager.default.md#getunconfirmedwormholeactivations)
@@ -202,6 +206,7 @@
 - [revealLocation](Backend_GameLogic_GameUIManager.default.md#reveallocation)
 - [setAbandoning](Backend_GameLogic_GameUIManager.default.md#setabandoning)
 - [setArtifactSending](Backend_GameLogic_GameUIManager.default.md#setartifactsending)
+- [setCustomRenderer](Backend_GameLogic_GameUIManager.default.md#setcustomrenderer)
 - [setExtraMinerLocation](Backend_GameLogic_GameUIManager.default.md#setextraminerlocation)
 - [setForcesSending](Backend_GameLogic_GameUIManager.default.md#setforcessending)
 - [setHoveringOverArtifact](Backend_GameLogic_GameUIManager.default.md#sethoveringoverartifact)
@@ -683,6 +688,25 @@ choose to render themselves into this overlay container using React Portals.
 
 ---
 
+### disableCustomRenderer
+
+▸ **disableCustomRenderer**(`customRenderer`): `void`
+
+This function will remove the passed in renderer from the renderering stack. If the
+renderer is on top of the renderering stack the next renderer will be the one bellow it.
+
+#### Parameters
+
+| Name             | Type           | Description                                              |
+| :--------------- | :------------- | :------------------------------------------------------- |
+| `customRenderer` | `BaseRenderer` | a Renderer that follows one of the 23 renderer tempaltes |
+
+#### Returns
+
+`void`
+
+---
+
 ### disconnectTwitter
 
 ▸ **disconnectTwitter**(`twitter`): `Promise`<`void`\>
@@ -760,6 +784,18 @@ choose to render themselves into this overlay container using React Portals.
 #### Returns
 
 `Promise`<`string`\>
+
+---
+
+### get2dRenderer
+
+▸ **get2dRenderer**(): `null` \| `CanvasRenderingContext2D`
+
+#### Returns
+
+`null` \| `CanvasRenderingContext2D`
+
+the CanvasRenderingContext2D for the game canvas.
 
 ---
 
@@ -1212,6 +1248,18 @@ state in some way
 #### Returns
 
 [`GameObjects`](Backend_GameLogic_GameObjects.GameObjects.md)
+
+---
+
+### getGlManager
+
+▸ **getGlManager**(): `null` \| `GameGLManager`
+
+#### Returns
+
+`null` \| `GameGLManager`
+
+- A wrapper class for the WebGL2RenderingContext.
 
 ---
 
@@ -1874,6 +1922,16 @@ Percent from 0 to 100.
 
 ---
 
+### getUIEmitter
+
+▸ **getUIEmitter**(): [`default`](Frontend_Utils_UIEmitter.default.md)
+
+#### Returns
+
+[`default`](Frontend_Utils_UIEmitter.default.md)
+
+---
+
 ### getUnconfirmedMoves
 
 ▸ **getUnconfirmedMoves**(): `Transaction`<`UnconfirmedMove`\>[]
@@ -2366,6 +2424,26 @@ drill fields like this anymore.
 | :---------- | :----------- |
 | `planetId`  | `LocationId` |
 | `artifact?` | `Artifact`   |
+
+#### Returns
+
+`void`
+
+---
+
+### setCustomRenderer
+
+▸ **setCustomRenderer**(`customRenderer`): `void`
+
+Replaces the current renderer with the passed in custom renderer and adds the renderer
+to the rendering stack. The function will automatically determine which renderer it is
+by the rendererType and the methods in the renderer.
+
+#### Parameters
+
+| Name             | Type           | Description                                              |
+| :--------------- | :------------- | :------------------------------------------------------- |
+| `customRenderer` | `BaseRenderer` | a Renderer that follows one of the 23 renderer tempaltes |
 
 #### Returns
 

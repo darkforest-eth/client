@@ -3282,6 +3282,10 @@ class GameManager extends EventEmitter {
     });
   }
 
+  public locationBigIntFromCoords(coords: WorldCoords): BigInteger {
+    return this.planetHashMimc(coords.x, coords.y);
+  }
+
   /**
    * Helpful for listening to user input events.
    */

@@ -180,6 +180,7 @@
 - [listenForNewBlock](Backend_GameLogic_GameManager.default.md#listenfornewblock)
 - [loadContract](Backend_GameLogic_GameManager.default.md#loadcontract)
 - [loadPlugins](Backend_GameLogic_GameManager.default.md#loadplugins)
+- [locationBigIntFromCoords](Backend_GameLogic_GameManager.default.md#locationbigintfromcoords)
 - [locationFromCoords](Backend_GameLogic_GameManager.default.md#locationfromcoords)
 - [move](Backend_GameLogic_GameManager.default.md#move)
 - [onTxCancelled](Backend_GameLogic_GameManager.default.md#ontxcancelled)
@@ -2458,6 +2459,22 @@ Load the serialized versions of all the plugins that this player has.
 #### Returns
 
 `Promise`<[`SerializedPlugin`](../interfaces/Backend_Plugins_SerializedPlugin.SerializedPlugin.md)[]\>
+
+---
+
+### locationBigIntFromCoords
+
+▸ **locationBigIntFromCoords**(`coords`): `BigInteger`
+
+#### Parameters
+
+| Name     | Type          |
+| :------- | :------------ |
+| `coords` | `WorldCoords` |
+
+#### Returns
+
+`BigInteger`
 
 ---
 

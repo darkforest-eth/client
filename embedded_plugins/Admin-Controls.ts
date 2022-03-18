@@ -12,6 +12,8 @@ import {
   MIN_ARTIFACT_RARITY,
   MIN_ARTIFACT_TYPE,
   MIN_SPACESHIP_TYPE,
+  MIN_BIOME,
+  MAX_BIOME,
   //@ts-ignore
 } from 'https://cdn.skypack.dev/@darkforest_eth/constants';
 //@ts-ignore
@@ -19,12 +21,18 @@ import { getPlanetNameHash } from 'https://cdn.skypack.dev/@darkforest_eth/proce
 import {
   locationIdToDecStr,
   artifactIdFromHexStr,
+  locationIdFromDecStr,
   //@ts-ignore
 } from 'https://cdn.skypack.dev/@darkforest_eth/serde';
 import {
   ArtifactRarityNames,
   ArtifactType,
   ArtifactTypeNames,
+  BiomeNames,
+  Player,
+  PlanetType,
+  PlanetTypeNames,
+  WorldCoords,
   //@ts-ignore
 } from 'https://cdn.skypack.dev/@darkforest_eth/types';
 import {
@@ -32,6 +40,7 @@ import {
   render,
   useEffect,
   useState,
+  useCallback,
   //@ts-ignore
 } from 'https://unpkg.com/htm/preact/standalone.module.js';
 
@@ -44,7 +53,13 @@ function random256Id() {
   return result;
 }
 
-async function createArtifact(owner: EthAddress, type: ArtifactType, rarity = '1') {
+async function createArtifact(
+  owner: EthAddress,
+  type: ArtifactType,
+  planet: Planet,
+  rarity: string,
+  biome: string
+) {
   if (!owner) {
     alert('no account');
     return;
@@ -56,9 +71,9 @@ async function createArtifact(owner: EthAddress, type: ArtifactType, rarity = '1
     {
       tokenId,
       discoverer: owner,
-      planetId: '0',
+      planetId: locationIdToDecStr(planet.locationId),
       rarity,
-      biome: '1',
+      biome,
       artifactType: type,
       owner: owner,
       controller: '0x0000000000000000000000000000000000000000',
@@ -68,10 +83,11 @@ async function createArtifact(owner: EthAddress, type: ArtifactType, rarity = '1
   const tx = await df.submitTransaction({
     args,
     contract: df.getContract(),
-    methodName: 'createArtifact' as ContractMethodName,
+    methodName: 'adminGiveArtifact' as ContractMethodName,
   });
   tx.confirmedPromise.then(() => {
     df.hardRefreshArtifact(artifactIdFromHexStr(tokenId.slice(2)));
+    df.hardRefreshPlanet(planet.locationId);
   });
 
   return tx;
@@ -190,6 +206,45 @@ async function addAddressToWhitelist(address: EthAddress) {
   return tx;
 }
 
+async function createPlanet(coords: WorldCoords, level: number, type: PlanetType) {
+  coords.x = Math.round(coords.x);
+  coords.y = Math.round(coords.y);
+
+  const location = df.locationBigIntFromCoords(coords).toString();
+  const perlinValue = df.biomebasePerlin(coords, true);
+
+  const args = Promise.resolve([
+    {
+      x: coords.x,
+      y: coords.y,
+      level,
+      planetType: type,
+      requireValidLocationId: false,
+      location: location,
+      perlin: perlinValue,
+    },
+  ]);
+
+  const tx = await df.submitTransaction({
+    args,
+    contract: df.getContract(),
+    methodName: 'createPlanet' as ContractMethodName,
+  });
+
+  await tx.confirmedPromise;
+
+  const revealArgs = df.getSnarkHelper().getRevealArgs(coords.x, coords.y);
+  const revealTx = await df.submitTransaction({
+    args: revealArgs,
+    contract: df.getContract(),
+    methodName: 'revealLocation' as ContractMethodName,
+  });
+
+  await revealTx.confirmedPromise;
+
+  await df.hardRefreshPlanet(locationIdFromDecStr(location));
+}
+
 function PlanetLink({ planetId }: { planetId?: LocationId }) {
   if (planetId) {
     return html`<a
@@ -227,6 +282,30 @@ function artifactRarityOptions() {
   const options = [] as HTMLOptionElement[];
   for (let i = MIN_ARTIFACT_RARITY; i <= MAX_ARTIFACT_RARITY; i++) {
     options.push(html`<option value=${i}>${ArtifactRarityNames[i]}</option>`);
+  }
+  return options;
+}
+
+function artifactBiomeOptions() {
+  const options = [] as HTMLOptionElement[];
+  for (let i = MIN_BIOME; i <= MAX_BIOME; i++) {
+    options.push(html`<option value=${i}>${BiomeNames[i]}</option>`);
+  }
+  return options;
+}
+
+function accountOptions(players: Player[]) {
+  const options = [] as HTMLOptionElement[];
+  for (const player of players) {
+    options.push(
+      html`<option value=${player.address}>${player.twitter || player.address}</option>`
+    );
+  }
+}
+function planetTypeOptions() {
+  const options = [] as HTMLOptionElement[];
+  for (let i = 0; i <= Object.values(PlanetType).length - 1; i++) {
+    options.push(html`<option value=${i}>${PlanetTypeNames[i]}</option>`);
   }
   return options;
 }
@@ -275,23 +354,112 @@ const rowStyle = {
   alignItems: 'center',
 };
 
+function PlanetCreator() {
+  const uiEmitter = ui.getUIEmitter();
+
+  const [level, setLevel] = useState(0);
+  const [planetType, setPlanetType] = useState(PlanetType.PLANET);
+  const [choosingLocation, setChoosingLocation] = useState(false);
+  const [planetCoords, setPlanetCoords] = useState(null);
+
+  const placePlanet = useCallback(
+    (coords: WorldCoords) => {
+      createPlanet(coords, parseInt(level), planetType);
+      setChoosingLocation(false);
+    },
+    [level, planetType, setChoosingLocation]
+  );
+
+  const updatePlanetCoords = useCallback(
+    (coords: WorldCoords) => {
+      setPlanetCoords(coords);
+    },
+    [setPlanetCoords]
+  );
+
+  useEffect(() => {
+    if (choosingLocation) {
+      uiEmitter.on('WorldMouseClick', placePlanet);
+      uiEmitter.on('WorldMouseMove', updatePlanetCoords);
+
+      return () => {
+        uiEmitter.off('WorldMouseClick', placePlanet);
+        uiEmitter.off('WorldMouseMove', updatePlanetCoords);
+      };
+    }
+
+    return () => {};
+  }, [uiEmitter, choosingLocation, placePlanet, updatePlanetCoords]);
+
+  return html`
+    <div style=${{ width: '100%' }}>
+      <h2>Create Planet</h2>
+      <div style=${rowStyle}>
+        <df-slider
+          label="Planet Level"
+          value=${level}
+          onChange=${(e: InputEvent) => setLevel((e.target as HTMLInputElement).value)}
+          max=${9}
+        ></df-slider>
+        <div>
+          <label for="planet-type-selector">Planet Type</label>
+          <${Select}
+            id="planet-type-selector"
+            value=${planetType}
+            onChange=${(e: InputEvent) => setPlanetType((e.target as HTMLSelectElement).value)}
+            items=${planetTypeOptions()}
+          />
+        </div>
+      </div>
+      <div style=${{ ...rowStyle, justifyContent: 'space-between' }}>
+        ${!choosingLocation &&
+        html`
+          <df-button
+            onClick=${() => {
+              setChoosingLocation(true);
+            }}
+          >
+            Choose Planet Location
+          </df-button>
+        `}
+        ${choosingLocation &&
+        html` <p>
+          Creating planet on coords <br />
+          (${Math.round(planetCoords?.x)}, ${Math.round(planetCoords?.y)})
+        </p>`}
+        ${choosingLocation &&
+        html`<df-button onClick=${() => setChoosingLocation(false)}> Cancel Creation</df-button>`}
+      </div>
+    </div>
+  `;
+}
+
 function App() {
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const [selectedShip, setSelectedShip] = useState(MIN_SPACESHIP_TYPE);
   const [selectedArtifact, setSelectedArtifact] = useState(MIN_ARTIFACT_TYPE);
   const [artifactRarity, setArtifactRarity] = useState('1');
+  const [artifactBiome, setArtifactBiome] = useState(MIN_BIOME.toString());
   const [whitelistAddress, setWhitelistAddress] = useState(null);
   const [account, setAccount] = useState(null);
-  const [shipAccount, setShipAccount] = useState(null);
-  const [planetAccount, setPlanetAccount] = useState(null);
-  const [artifactAccount, setArtifactAccount] = useState(null);
+  const [targetAccount, setTargetAccount] = useState(null);
+  const [allPlayers, setAllPlayers] = useState([]);
 
   useEffect(() => {
     const account = df.getAccount();
     setAccount(account);
-    setShipAccount(account);
-    setPlanetAccount(account);
-    setArtifactAccount(account);
+    setTargetAccount(account);
+  }, []);
+
+  useEffect(() => {
+    const refreshPlayers = () => {
+      setAllPlayers(df.getAllPlayers());
+    };
+
+    const sub = df.playersUpdated$.subscribe(refreshPlayers);
+    refreshPlayers();
+
+    return () => sub.unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -333,13 +501,13 @@ function App() {
       <div style=${rowStyle}>
         <span> Planet: <${PlanetLink} planetId=${(selectedPlanet as Planet)?.locationId} /> </span>
         <span> to </span>
-        <df-text-input
+        <${Select}
           style=${{ flex: '1' }}
-          value=${planetAccount}
-          onInput=${(e: InputEvent) => setPlanetAccount((e.target as HTMLInputElement).value)}
-          placeholder="Address receiving planet"
-        ></df-text-input>
-        <df-button onClick=${() => takeOwnership(selectedPlanet, planetAccount)}>
+          value=${targetAccount}
+          onChange=${(e: InputEvent) => setTargetAccount((e.target as HTMLSelectElement).value)}
+          items=${accountOptions(allPlayers)}
+        />
+        <df-button onClick=${() => takeOwnership(selectedPlanet, targetAccount)}>
           Give Planet
         </df-button>
       </div>
@@ -356,12 +524,12 @@ function App() {
 
         <span> to </span>
 
-        <df-text-input
+        <${Select}
           style=${{ flex: '1' }}
-          value=${shipAccount}
-          onInput=${(e: InputEvent) => setShipAccount((e.target as HTMLInputElement).value)}
-          placeholder="Address receiving ship"
-        ></df-text-input>
+          value=${targetAccount}
+          onChange=${(e: InputEvent) => setTargetAccount((e.target as HTMLSelectElement).value)}
+          items=${accountOptions(allPlayers)}
+        />
       </div>
 
       <div style=${{ ...rowStyle, justifyContent: 'space-between' }}>
@@ -370,7 +538,7 @@ function App() {
           <${PlanetLink} planetId=${(selectedPlanet as Planet)?.locationId} />
         </span>
 
-        <df-button onClick=${() => spawnSpaceship(selectedPlanet, shipAccount, selectedShip)}>
+        <df-button onClick=${() => spawnSpaceship(selectedPlanet, targetAccount, selectedShip)}>
           Spawn Spaceship
         </df-button>
       </div>
@@ -387,6 +555,13 @@ function App() {
 
         <${Select}
           style=${{ flex: '1' }}
+          value=${artifactBiome}
+          onChange=${(e: InputEvent) => setArtifactBiome((e.target as HTMLSelectElement).value)}
+          items=${artifactBiomeOptions()}
+        />
+
+        <${Select}
+          style=${{ flex: '1' }}
           value=${selectedArtifact}
           onChange=${(e: InputEvent) => setSelectedArtifact((e.target as HTMLSelectElement).value)}
           items=${artifactOptions()}
@@ -394,17 +569,36 @@ function App() {
 
         <span> to </span>
 
-        <df-text-input
-          value=${artifactAccount}
-          onInput=${(e: InputEvent) => setArtifactAccount((e.target as HTMLInputElement).value)}
-          placeholder="Address receiving artifact"
-        ></df-text-input>
+        <${Select}
+          style=${{ flex: '1' }}
+          value=${targetAccount}
+          onChange=${(e: InputEvent) => setTargetAccount((e.target as HTMLSelectElement).value)}
+          items=${accountOptions(allPlayers)}
+        />
+      </div>
+
+      <div style=${{ ...rowStyle, justifyContent: 'space-between' }}>
+        <span>
+          ${'On planet: '}
+          <${PlanetLink} planetId=${(selectedPlanet as Planet)?.locationId} />
+        </span>
 
         <df-button
-          onClick=${() => createArtifact(artifactAccount, selectedArtifact, artifactRarity)}
+          onClick=${() =>
+            createArtifact(
+              targetAccount,
+              selectedArtifact,
+              selectedPlanet,
+              artifactRarity,
+              artifactBiome
+            )}
         >
           Give Artifact
         </df-button>
+      </div>
+
+      <div style=${rowStyle}>
+        <${PlanetCreator} />
       </div>
     </div>
   `;

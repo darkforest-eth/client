@@ -259,7 +259,7 @@ If this process has been started, gets its info
 
 ### load
 
-▸ **load**(`isAdmin`): `Promise`<`void`\>
+▸ **load**(`isAdmin`, `overwriteEmbeddedPlugins`): `Promise`<`void`\>
 
 Load all plugins from this disk into `pluginLibrary`. Insert the default
 plugins into the player's library if the default plugins have never been
@@ -267,9 +267,10 @@ added before. Effectively idempotent after the first time you call it.
 
 #### Parameters
 
-| Name      | Type      |
-| :-------- | :-------- |
-| `isAdmin` | `boolean` |
+| Name                       | Type      | Description                                                                               |
+| :------------------------- | :-------- | :---------------------------------------------------------------------------------------- |
+| `isAdmin`                  | `boolean` | Is an admin loading the plugins.                                                          |
+| `overwriteEmbeddedPlugins` | `boolean` | Reload all embedded plugins even if a local copy is found. Useful for plugin development. |
 
 #### Returns
 
@@ -289,13 +290,14 @@ added before. Effectively idempotent after the first time you call it.
 
 ### onNewEmbeddedPlugins
 
-▸ `Private` **onNewEmbeddedPlugins**(`newPlugins`): `void`
+▸ `Private` **onNewEmbeddedPlugins**(`newPlugins`, `overwriteEmbeddedPlugins`): `void`
 
 #### Parameters
 
-| Name         | Type                                                                                       |
-| :----------- | :----------------------------------------------------------------------------------------- |
-| `newPlugins` | [`EmbeddedPlugin`](../interfaces/Backend_Plugins_EmbeddedPluginLoader.EmbeddedPlugin.md)[] |
+| Name                       | Type                                                                                       |
+| :------------------------- | :----------------------------------------------------------------------------------------- |
+| `newPlugins`               | [`EmbeddedPlugin`](../interfaces/Backend_Plugins_EmbeddedPluginLoader.EmbeddedPlugin.md)[] |
+| `overwriteEmbeddedPlugins` | `boolean`                                                                                  |
 
 #### Returns
 
