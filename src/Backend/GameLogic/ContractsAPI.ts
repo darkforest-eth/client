@@ -121,7 +121,7 @@ export class ContractsAPI extends EventEmitter {
    */
   private getGasFeeForTransaction(tx: Transaction): AutoGasSetting | string {
     if (
-      (tx.intent.methodName === 'move' || tx.intent.methodName === 'getSpaceShips') &&
+      (tx.intent.methodName === 'initializePlayer' || tx.intent.methodName === 'getSpaceShips') &&
       tx.intent.contract.address === this.contract.address
     ) {
       return '50';
