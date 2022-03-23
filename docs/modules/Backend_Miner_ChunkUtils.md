@@ -115,7 +115,7 @@ it does not contain points which are on its right or top edges.
 
 ### getSiblingLocations
 
-▸ `Const` **getSiblingLocations**(`chunkLoc`): [`Rectangle`, `Rectangle`, `Rectangle`]
+▸ **getSiblingLocations**(`chunkLoc`): [`Rectangle`, `Rectangle`, `Rectangle`]
 
 An aligned chunk is one whose corner's coordinates are multiples of its side length, and its side
 length is a power of two between [MIN_CHUNK_SIZE](Frontend_Utils_constants.md#min_chunk_size) and [MAX_CHUNK_SIZE](Frontend_Utils_constants.md#max_chunk_size) inclusive.
@@ -146,7 +146,7 @@ the given chunk.
 
 ### toExploredChunk
 
-▸ `Const` **toExploredChunk**(`chunk`): `Chunk`
+▸ **toExploredChunk**(`chunk`): `Chunk`
 
 Converts from the persisted representation of a chunk to the in-game representation of a chunk.
 

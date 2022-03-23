@@ -142,22 +142,22 @@ The `shortcutText` indicates the key should be displayed and with what text
 
 #### Type declaration
 
-| Name                     | Type                 |
-| :----------------------- | :------------------- |
-| `_shortcutPressed`       | `Object`             |
-| `_shortcutPressed.state` | `boolean`            |
-| `active`                 | `Object`             |
-| `active.type`            | `BooleanConstructor` |
-| `disabled`               | `Object`             |
-| `disabled.type`          | `BooleanConstructor` |
-| `shortcutKey`            | `Object`             |
-| `shortcutKey.type`       | `StringConstructor`  |
-| `shortcutText`           | `Object`             |
-| `shortcutText.type`      | `StringConstructor`  |
-| `size`                   | `Object`             |
-| `size.type`              | `StringConstructor`  |
-| `variant`                | `Object`             |
-| `variant.type`           | `StringConstructor`  |
+| Name                     | Type                             |
+| :----------------------- | :------------------------------- |
+| `_shortcutPressed`       | { `state`: `boolean` }           |
+| `_shortcutPressed.state` | `boolean`                        |
+| `active`                 | { `type`: `BooleanConstructor` } |
+| `active.type`            | `BooleanConstructor`             |
+| `disabled`               | { `type`: `BooleanConstructor` } |
+| `disabled.type`          | `BooleanConstructor`             |
+| `shortcutKey`            | { `type`: `StringConstructor` }  |
+| `shortcutKey.type`       | `StringConstructor`              |
+| `shortcutText`           | { `type`: `StringConstructor` }  |
+| `shortcutText.type`      | `StringConstructor`              |
+| `size`                   | { `type`: `StringConstructor` }  |
+| `size.type`              | `StringConstructor`              |
+| `variant`                | { `type`: `StringConstructor` }  |
+| `variant.type`           | `StringConstructor`              |
 
 #### Overrides
 

@@ -17,7 +17,7 @@
 
 ### DistanceFromCenterRow
 
-▸ `Const` **DistanceFromCenterRow**(`__namedParameters`): `Element`
+▸ **DistanceFromCenterRow**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -34,7 +34,7 @@
 
 ### PlanetClaimedRow
 
-▸ `Const` **PlanetClaimedRow**(`__namedParameters`): `Element`
+▸ **PlanetClaimedRow**(`__namedParameters`): `Element`
 
 #### Parameters
 

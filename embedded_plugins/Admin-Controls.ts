@@ -1,11 +1,5 @@
 // organize-imports-ignore
-import type {
-  ContractMethodName,
-  EthAddress,
-  LocatablePlanet,
-  LocationId,
-  Planet,
-} from '@darkforest_eth/types';
+import type { EthAddress, LocatablePlanet, LocationId, Planet } from '@darkforest_eth/types';
 import {
   MAX_ARTIFACT_RARITY,
   MAX_SPACESHIP_TYPE,
@@ -83,7 +77,7 @@ async function createArtifact(
   const tx = await df.submitTransaction({
     args,
     contract: df.getContract(),
-    methodName: 'adminGiveArtifact' as ContractMethodName,
+    methodName: 'adminGiveArtifact',
   });
   tx.confirmedPromise.then(() => {
     df.hardRefreshArtifact(artifactIdFromHexStr(tokenId.slice(2)));
@@ -101,7 +95,7 @@ async function initPlanet(planet: LocatablePlanet) {
   const tx = await df.submitTransaction({
     args,
     contract: df.getContract(),
-    methodName: 'adminInitializePlanet' as ContractMethodName,
+    methodName: 'adminInitializePlanet',
   });
 
   await tx.confirmedPromise;
@@ -131,7 +125,7 @@ async function spawnSpaceship(
   const tx = await df.submitTransaction({
     args,
     contract: df.getContract(),
-    methodName: 'adminGiveSpaceShip' as ContractMethodName,
+    methodName: 'adminGiveSpaceShip',
   });
 
   tx.confirmedPromise.then(() => df.hardRefreshPlanet(planet.locationId));
@@ -166,7 +160,7 @@ async function takeOwnership(
     newOwner,
     args,
     contract: df.getContract(),
-    methodName: 'safeSetOwner' as ContractMethodName,
+    methodName: 'safeSetOwner',
   });
 
   tx.confirmedPromise.then(() => df.hardRefreshPlanet(planet.locationId));
@@ -178,7 +172,7 @@ async function pauseGame() {
   const tx = await df.submitTransaction({
     args: Promise.resolve([]),
     contract: df.getContract(),
-    methodName: 'pause' as ContractMethodName,
+    methodName: 'pause',
   });
 
   return tx;
@@ -188,7 +182,7 @@ async function unpauseGame() {
   const tx = await df.submitTransaction({
     args: Promise.resolve([]),
     contract: df.getContract(),
-    methodName: 'unpause' as ContractMethodName,
+    methodName: 'unpause',
   });
 
   return tx;
@@ -200,7 +194,7 @@ async function addAddressToWhitelist(address: EthAddress) {
   const tx = await df.submitTransaction({
     args,
     contract: df.getContract(),
-    methodName: 'addToWhitelist' as ContractMethodName,
+    methodName: 'addToWhitelist',
   });
 
   return tx;
@@ -228,7 +222,7 @@ async function createPlanet(coords: WorldCoords, level: number, type: PlanetType
   const tx = await df.submitTransaction({
     args,
     contract: df.getContract(),
-    methodName: 'createPlanet' as ContractMethodName,
+    methodName: 'createPlanet',
   });
 
   await tx.confirmedPromise;
@@ -237,7 +231,7 @@ async function createPlanet(coords: WorldCoords, level: number, type: PlanetType
   const revealTx = await df.submitTransaction({
     args: revealArgs,
     contract: df.getContract(),
-    methodName: 'revealLocation' as ContractMethodName,
+    methodName: 'revealLocation',
   });
 
   await revealTx.confirmedPromise;
@@ -301,6 +295,7 @@ function accountOptions(players: Player[]) {
       html`<option value=${player.address}>${player.twitter || player.address}</option>`
     );
   }
+  return options;
 }
 function planetTypeOptions() {
   const options = [] as HTMLOptionElement[];

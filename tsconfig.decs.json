@@ -1,0 +1,13 @@
+// This file exists because the base tsconfig uses `noEmit`, but we still
+// want to generate the declaration files upon mirroring the project
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationDir": "./declarations"
+  }
+}

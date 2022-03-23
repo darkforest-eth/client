@@ -33,73 +33,73 @@
 
 ### Blue
 
-• **Blue**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Blue**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ---
 
 ### Colored
 
-• **Colored**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Colored**: `StyledComponent`<`"span"`, `any`, { `color`: `string` }, `never`\>
 
 ---
 
 ### Gold
 
-• **Gold**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Gold**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ---
 
 ### Green
 
-• **Green**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Green**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ---
 
 ### HideSmall
 
-• **HideSmall**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **HideSmall**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ---
 
 ### Invisible
 
-• **Invisible**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Invisible**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ---
 
 ### Red
 
-• **Red**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Red**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ---
 
 ### Smaller
 
-• **Smaller**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Smaller**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ---
 
 ### Sub
 
-• **Sub**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Sub**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ---
 
 ### Subber
 
-• **Subber**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Subber**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ---
 
 ### Text
 
-• **Text**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Text**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ---
 
 ### White
 
-• **White**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **White**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ## Functions
 
@@ -168,7 +168,7 @@
 
 ### Coords
 
-▸ `Const` **Coords**(`__namedParameters`): `Element`
+▸ **Coords**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -202,7 +202,7 @@
 
 ### LongDash
 
-▸ `Const` **LongDash**(): `Element`
+▸ **LongDash**(): `Element`
 
 #### Returns
 

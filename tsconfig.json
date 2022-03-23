@@ -1,8 +1,15 @@
 {
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "embedded_plugins/**/*.ts",
+    "embedded_plugins/**/*.tsx",
+    "plugins/**/*.ts",
+    "plugins/**/*.tsx"
+  ],
   "compilerOptions": {
     "module": "esnext",
     "target": "es2020",
-    "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -11,10 +18,9 @@
     "allowJs": true, // allow a partial TypeScript and JavaScript codebase
     "moduleResolution": "Node",
     "lib": ["es2020", "dom"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noEmit": true
   },
-  "include": ["src/**/*", "embedded_plugins/*", "plugins/*"],
-  "exclude": ["./node_modules", "./dist", "./declarations"],
   "typedocOptions": {
     "entryPointStrategy": "expand",
     "entryPoints": ["src"],

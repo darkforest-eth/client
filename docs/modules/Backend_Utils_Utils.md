@@ -27,13 +27,13 @@
 
 ### ONE_DAY
 
-• **ONE_DAY**: `number`
+• `Const` **ONE_DAY**: `number`
 
 ## Functions
 
 ### getFormatProp
 
-▸ `Const` **getFormatProp**(`planet`, `prop`): `string`
+▸ **getFormatProp**(`planet`, `prop`): `string`
 
 #### Parameters
 
@@ -50,7 +50,7 @@
 
 ### getOwnerColor
 
-▸ `Const` **getOwnerColor**(`planet`): `string`
+▸ **getOwnerColor**(`planet`): `string`
 
 #### Parameters
 
@@ -66,7 +66,7 @@
 
 ### getPlanetMaxRank
 
-▸ `Const` **getPlanetMaxRank**(`planet`): `number`
+▸ **getPlanetMaxRank**(`planet`): `number`
 
 #### Parameters
 
@@ -82,7 +82,7 @@
 
 ### getPlanetRank
 
-▸ `Const` **getPlanetRank**(`planet`): `number`
+▸ **getPlanetRank**(`planet`): `number`
 
 #### Parameters
 
@@ -98,7 +98,7 @@
 
 ### getPlanetShortHash
 
-▸ `Const` **getPlanetShortHash**(`planet`): `string`
+▸ **getPlanetShortHash**(`planet`): `string`
 
 #### Parameters
 
@@ -114,7 +114,7 @@
 
 ### getPlayerColor
 
-▸ `Const` **getPlayerColor**(`player`): `string`
+▸ **getPlayerColor**(`player`): `string`
 
 #### Parameters
 
@@ -130,7 +130,7 @@
 
 ### getPlayerShortHash
 
-▸ `Const` **getPlayerShortHash**(`address`): `string`
+▸ **getPlayerShortHash**(`address`): `string`
 
 #### Parameters
 
@@ -146,7 +146,7 @@
 
 ### getRandomActionId
 
-▸ `Const` **getRandomActionId**(): `string`
+▸ **getRandomActionId**(): `string`
 
 #### Returns
 
@@ -156,7 +156,7 @@
 
 ### getUpgradeStat
 
-▸ `Const` **getUpgradeStat**(`upgrade`, `stat`): `number`
+▸ **getUpgradeStat**(`upgrade`, `stat`): `number`
 
 #### Parameters
 
@@ -173,7 +173,7 @@
 
 ### hexifyBigIntNestedArray
 
-▸ `Const` **hexifyBigIntNestedArray**(`arr`): `NestedStringArray`
+▸ **hexifyBigIntNestedArray**(`arr`): `NestedStringArray`
 
 #### Parameters
 
@@ -189,7 +189,7 @@
 
 ### hslStr
 
-▸ `Const` **hslStr**(`h`, `s`, `l`): `string`
+▸ **hslStr**(`h`, `s`, `l`): `string`
 
 #### Parameters
 
@@ -207,7 +207,7 @@
 
 ### isFullRank
 
-▸ `Const` **isFullRank**(`planet`): `boolean`
+▸ **isFullRank**(`planet`): `boolean`
 
 #### Parameters
 
@@ -223,7 +223,7 @@
 
 ### titleCase
 
-▸ `Const` **titleCase**(`title`): `string`
+▸ **titleCase**(`title`): `string`
 
 #### Parameters
 
@@ -239,7 +239,7 @@
 
 ### upgradeName
 
-▸ `Const` **upgradeName**(`branchName`): `string`
+▸ **upgradeName**(`branchName`): `string`
 
 #### Parameters
 

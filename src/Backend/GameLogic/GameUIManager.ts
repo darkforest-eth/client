@@ -615,11 +615,15 @@ class GameUIManager extends EventEmitter {
   }
 
   public setForcesSending(planetId: LocationId, percentage: number) {
+    if (percentage < 0) percentage = 0;
+    if (percentage > 100) percentage = 100;
     this.forcesSending[planetId] = percentage;
     this.gameManager.getGameObjects().forceTick(planetId);
   }
 
   public setSilverSending(planetId: LocationId, percentage: number) {
+    if (percentage < 0) percentage = 0;
+    if (percentage > 100) percentage = 100;
     this.silverSending[planetId] = percentage;
     this.gameManager.getGameObjects().forceTick(planetId);
   }

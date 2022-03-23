@@ -71,7 +71,7 @@
 
 ### SAFE_UPPER_BOUNDS
 
-• **SAFE_UPPER_BOUNDS**: `number`
+• `Const` **SAFE_UPPER_BOUNDS**: `number`
 
 ## Functions
 

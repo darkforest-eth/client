@@ -21,7 +21,7 @@
 
 ### Hidden
 
-• **Hidden**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Hidden**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ## Functions
 

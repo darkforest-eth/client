@@ -123,7 +123,7 @@
 
 ### throttledSaveChunkCacheToDisk
 
-• `Private` **throttledSaveChunkCacheToDisk**: `DebouncedFunc`<`fn`\>
+• `Private` **throttledSaveChunkCacheToDisk**: `DebouncedFunc`<() => `Promise`<`void`\>\>
 
 ## Methods
 

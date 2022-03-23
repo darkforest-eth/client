@@ -45,7 +45,7 @@ Wraps an existing emitter and emits an event with the current and previous value
 
 ### getArtifactId
 
-▸ `Const` **getArtifactId**(`a`): `ArtifactId`
+▸ **getArtifactId**(`a`): `ArtifactId`
 
 #### Parameters
 
@@ -61,7 +61,7 @@ Wraps an existing emitter and emits an event with the current and previous value
 
 ### getArtifactOwner
 
-▸ `Const` **getArtifactOwner**(`a`): `EthAddress`
+▸ **getArtifactOwner**(`a`): `EthAddress`
 
 #### Parameters
 
@@ -131,7 +131,7 @@ Create a monomitter to emit objects with a given id from a cached map of ids to 
 
 ### getPlanetId
 
-▸ `Const` **getPlanetId**(`p`): `LocationId`
+▸ **getPlanetId**(`p`): `LocationId`
 
 #### Parameters
 
@@ -147,7 +147,7 @@ Create a monomitter to emit objects with a given id from a cached map of ids to 
 
 ### getPlanetOwner
 
-▸ `Const` **getPlanetOwner**(`p`): `EthAddress`
+▸ **getPlanetOwner**(`p`): `EthAddress`
 
 #### Parameters
 

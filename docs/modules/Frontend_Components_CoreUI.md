@@ -45,7 +45,7 @@
 
 ### AlignCenterHorizontally
 
-• **AlignCenterHorizontally**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **AlignCenterHorizontally**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 Fills parent width, aligns children horizontally in the center.
 
@@ -53,25 +53,25 @@ Fills parent width, aligns children horizontally in the center.
 
 ### AlignCenterVertically
 
-• **AlignCenterVertically**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **AlignCenterVertically**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ---
 
 ### BorderlessPane
 
-• **BorderlessPane**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **BorderlessPane**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ---
 
 ### Bottom
 
-• **Bottom**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Bottom**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ---
 
 ### CenterBackgroundSubtext
 
-• **CenterBackgroundSubtext**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **CenterBackgroundSubtext**: `StyledComponent`<`"div"`, `any`, { `height`: `string` ; `width`: `string` }, `never`\>
 
 A box which centers some darkened text. Useful for displaying
 _somthing_ instead of empty space, if there isn't something to
@@ -81,19 +81,19 @@ be displayed. Think of it as a placeholder.
 
 ### CenterRow
 
-• **CenterRow**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **CenterRow**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ---
 
 ### Display
 
-• **Display**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Display**: `StyledComponent`<`"div"`, `any`, { `visible?`: `boolean` }, `never`\>
 
 ---
 
 ### DontShrink
 
-• **DontShrink**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **DontShrink**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 Don't shrink in a flexbox.
 
@@ -101,7 +101,7 @@ Don't shrink in a flexbox.
 
 ### EmSpacer
 
-• **EmSpacer**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **EmSpacer**: `StyledComponent`<`"div"`, `any`, { `height?`: `number` ; `width?`: `number` }, `never`\>
 
 Inline block rectangle, measured in ems, default 1em by 1em.
 
@@ -109,13 +109,13 @@ Inline block rectangle, measured in ems, default 1em by 1em.
 
 ### Emphasized
 
-• **Emphasized**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Emphasized**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ---
 
 ### Expand
 
-• **Expand**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Expand**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 Expands to fill space in a flexbox.
 
@@ -123,49 +123,49 @@ Expands to fill space in a flexbox.
 
 ### FloatRight
 
-• **FloatRight**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **FloatRight**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ---
 
 ### FullHeight
 
-• **FullHeight**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **FullHeight**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ---
 
 ### HeaderText
 
-• **HeaderText**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **HeaderText**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ---
 
 ### Hidden
 
-• **Hidden**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Hidden**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ---
 
 ### InlineBlock
 
-• **InlineBlock**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **InlineBlock**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ---
 
 ### MaxWidth
 
-• **MaxWidth**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **MaxWidth**: `StyledComponent`<`"div"`, `any`, { `width`: `string` }, `never`\>
 
 ---
 
 ### Padded
 
-• **Padded**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Padded**: `StyledComponent`<`"div"`, `any`, { `bottom?`: `string` ; `left?`: `string` ; `right?`: `string` ; `top?`: `string` }, `never`\>
 
 ---
 
 ### PluginElements
 
-• **PluginElements**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **PluginElements**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 The container element into which a plugin renders its html elements.
 Contains styles for child elements so that plugins can use UI
@@ -177,37 +177,37 @@ way to do this.
 
 ### Section
 
-• **Section**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Section**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ---
 
 ### SectionHeader
 
-• **SectionHeader**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **SectionHeader**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ---
 
 ### Select
 
-• **Select**: `StyledComponent`<`"select"`, `any`, `Object`, `never`\>
+• `Const` **Select**: `StyledComponent`<`"select"`, `any`, { `wide?`: `boolean` }, `never`\>
 
 ---
 
 ### Separator
 
-• **Separator**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Separator**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ---
 
 ### Spacer
 
-• **Spacer**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Spacer**: `StyledComponent`<`"div"`, `any`, { `height?`: `number` ; `width?`: `number` }, `never`\>
 
 ---
 
 ### Spread
 
-• **Spread**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Spread**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 Expands to fit the width of container. Is itself a flex box that spreads out its children
 horizontally.
@@ -216,7 +216,7 @@ horizontally.
 
 ### SpreadApart
 
-• **SpreadApart**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **SpreadApart**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 Expands to fit the width of container. Is itself a flex box that spreads out its children
 horizontally.
@@ -225,25 +225,25 @@ horizontally.
 
 ### TextButton
 
-• **TextButton**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **TextButton**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ---
 
 ### Title
 
-• **Title**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Title**: `StyledComponent`<`"div"`, `any`, { `maxWidth?`: `string` }, `never`\>
 
 ---
 
 ### Truncate
 
-• **Truncate**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **Truncate**: `StyledComponent`<`"div"`, `any`, { `maxWidth?`: `string` }, `never`\>
 
 ---
 
 ### Underline
 
-• **Underline**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **Underline**: `StyledComponent`<`"span"`, `any`, {}, `never`\>
 
 ## Functions
 
@@ -292,7 +292,7 @@ given string values.
 
 ### VerticalSplit
 
-▸ `Const` **VerticalSplit**(`__namedParameters`): `Element`
+▸ **VerticalSplit**(`__namedParameters`): `Element`
 
 #### Parameters
 

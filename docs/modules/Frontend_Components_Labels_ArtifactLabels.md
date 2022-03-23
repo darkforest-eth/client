@@ -19,13 +19,13 @@
 
 ### StyledArtifactRarityLabel
 
-• **StyledArtifactRarityLabel**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **StyledArtifactRarityLabel**: `StyledComponent`<`"span"`, `any`, { `rarity`: `ArtifactRarity` }, `never`\>
 
 ## Functions
 
 ### ArtifactBiomeText
 
-▸ `Const` **ArtifactBiomeText**(`__namedParameters`): `Element`
+▸ **ArtifactBiomeText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -42,7 +42,7 @@
 
 ### ArtifactRarityBiomeTypeText
 
-▸ `Const` **ArtifactRarityBiomeTypeText**(`__namedParameters`): `Element`
+▸ **ArtifactRarityBiomeTypeText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -59,7 +59,7 @@
 
 ### ArtifactRarityLabel
 
-▸ `Const` **ArtifactRarityLabel**(`__namedParameters`): `Element`
+▸ **ArtifactRarityLabel**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -76,7 +76,7 @@
 
 ### ArtifactRarityLabelAnim
 
-▸ `Const` **ArtifactRarityLabelAnim**(`__namedParameters`): `Element`
+▸ **ArtifactRarityLabelAnim**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -93,7 +93,7 @@
 
 ### ArtifactRarityText
 
-▸ `Const` **ArtifactRarityText**(`__namedParameters`): `Element`
+▸ **ArtifactRarityText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -110,7 +110,7 @@
 
 ### ArtifactTypeText
 
-▸ `Const` **ArtifactTypeText**(`__namedParameters`): `Element`
+▸ **ArtifactTypeText**(`__namedParameters`): `Element`
 
 #### Parameters
 

@@ -32,7 +32,7 @@
 
 ### DefenseText
 
-▸ `Const` **DefenseText**(`__namedParameters`): `Element`
+▸ **DefenseText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -49,7 +49,7 @@
 
 ### EnergyCapText
 
-▸ `Const` **EnergyCapText**(`__namedParameters`): `Element`
+▸ **EnergyCapText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -66,7 +66,7 @@
 
 ### EnergyGrowthText
 
-▸ `Const` **EnergyGrowthText**(`__namedParameters`): `Element`
+▸ **EnergyGrowthText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -83,7 +83,7 @@
 
 ### EnergyText
 
-▸ `Const` **EnergyText**(`__namedParameters`): `Element`
+▸ **EnergyText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -119,7 +119,7 @@
 
 ### JunkText
 
-▸ `Const` **JunkText**(`__namedParameters`): `Element`
+▸ **JunkText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -136,7 +136,7 @@
 
 ### LevelRankText
 
-▸ `Const` **LevelRankText**(`__namedParameters`): `Element`
+▸ **LevelRankText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -154,7 +154,7 @@
 
 ### LevelRankTextEm
 
-▸ `Const` **LevelRankTextEm**(`__namedParameters`): `Element`
+▸ **LevelRankTextEm**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -172,7 +172,7 @@
 
 ### PlanetBiomeTypeLabelAnim
 
-▸ `Const` **PlanetBiomeTypeLabelAnim**(`__namedParameters`): `Element`
+▸ **PlanetBiomeTypeLabelAnim**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -206,7 +206,7 @@
 
 ### PlanetLevel
 
-▸ `Const` **PlanetLevel**(`__namedParameters`): `Element`
+▸ **PlanetLevel**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -223,7 +223,7 @@
 
 ### PlanetLevelText
 
-▸ `Const` **PlanetLevelText**(`__namedParameters`): `Element`
+▸ **PlanetLevelText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -261,7 +261,7 @@ Either 'yours' in green text,
 
 ### PlanetRank
 
-▸ `Const` **PlanetRank**(`__namedParameters`): `Element`
+▸ **PlanetRank**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -278,7 +278,7 @@ Either 'yours' in green text,
 
 ### PlanetRankText
 
-▸ `Const` **PlanetRankText**(`__namedParameters`): `Element`
+▸ **PlanetRankText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -312,7 +312,7 @@ Either 'yours' in green text,
 
 ### PlanetTypeLabelAnim
 
-▸ `Const` **PlanetTypeLabelAnim**(`__namedParameters`): `Element`
+▸ **PlanetTypeLabelAnim**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -329,7 +329,7 @@ Either 'yours' in green text,
 
 ### RangeText
 
-▸ `Const` **RangeText**(`__namedParameters`): `Element`
+▸ **RangeText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -347,7 +347,7 @@ Either 'yours' in green text,
 
 ### SilverCapText
 
-▸ `Const` **SilverCapText**(`__namedParameters`): `Element`
+▸ **SilverCapText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -364,7 +364,7 @@ Either 'yours' in green text,
 
 ### SilverGrowthText
 
-▸ `Const` **SilverGrowthText**(`__namedParameters`): `Element`
+▸ **SilverGrowthText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -381,7 +381,7 @@ Either 'yours' in green text,
 
 ### SilverText
 
-▸ `Const` **SilverText**(`__namedParameters`): `Element`
+▸ **SilverText**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -398,7 +398,7 @@ Either 'yours' in green text,
 
 ### SpeedText
 
-▸ `Const` **SpeedText**(`__namedParameters`): `Element`
+▸ **SpeedText**(`__namedParameters`): `Element`
 
 #### Parameters
 

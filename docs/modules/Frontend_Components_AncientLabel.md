@@ -15,13 +15,13 @@
 
 ### ancientAnim
 
-• **ancientAnim**: `FlattenSimpleInterpolation`
+• `Const` **ancientAnim**: `FlattenSimpleInterpolation`
 
 ## Functions
 
 ### AncientLabel
 
-▸ `Const` **AncientLabel**(): `Element`
+▸ **AncientLabel**(): `Element`
 
 #### Returns
 
@@ -31,7 +31,7 @@
 
 ### AncientLabelAnim
 
-▸ `Const` **AncientLabelAnim**(): `Element`
+▸ **AncientLabelAnim**(): `Element`
 
 #### Returns
 

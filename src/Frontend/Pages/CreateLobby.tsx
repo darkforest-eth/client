@@ -3,12 +3,7 @@ import { INIT_ADDRESS } from '@darkforest_eth/contracts';
 import initContractAbiUrl from '@darkforest_eth/contracts/abis/DFInitialize.json';
 import { EthConnection } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
-import {
-  ArtifactRarity,
-  ContractMethodName,
-  EthAddress,
-  UnconfirmedCreateLobby,
-} from '@darkforest_eth/types';
+import { ArtifactRarity, EthAddress, UnconfirmedCreateLobby } from '@darkforest_eth/types';
 import { Contract } from 'ethers';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -169,7 +164,7 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
       initializers,
     ]);
     const txIntent: UnconfirmedCreateLobby = {
-      methodName: ContractMethodName.CREATE_LOBBY,
+      methodName: 'createLobby',
       contract: contract.contract,
       args: Promise.resolve([initAddress, initFunctionCall]),
     };

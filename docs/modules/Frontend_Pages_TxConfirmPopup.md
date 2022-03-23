@@ -14,9 +14,9 @@
 
 #### Parameters
 
-| Name                | Type                                                         |
-| :------------------ | :----------------------------------------------------------- |
-| `__namedParameters` | `RouteComponentProps`<`Object`, `StaticContext`, `unknown`\> |
+| Name                | Type                                                                                                                                                              |
+| :------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `__namedParameters` | `RouteComponentProps`<{ `actionId`: `string` ; `addr`: `string` ; `balance`: `string` ; `contract`: `string` ; `method`: `string` }, `StaticContext`, `unknown`\> |
 
 #### Returns
 

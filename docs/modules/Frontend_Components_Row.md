@@ -10,4 +10,4 @@
 
 ### Row
 
-• **Row**: `ForwardRefExoticComponent`<`Partial`<`Omit`<`DarkForestRow`, `"children"`\>\> & `Events`<`unknown`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
+• `Const` **Row**: `ForwardRefExoticComponent`<`Partial`<`Omit`<`DarkForestRow`, `"children"`\>\> & `Events`<`unknown`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>

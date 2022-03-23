@@ -14,7 +14,7 @@
 
 ### EmailCTA
 
-▸ `Const` **EmailCTA**(`__namedParameters`): `Element`
+▸ **EmailCTA**(`__namedParameters`): `Element`
 
 #### Parameters
 

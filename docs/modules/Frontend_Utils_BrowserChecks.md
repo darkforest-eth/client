@@ -19,7 +19,7 @@
 
 ### hasTouchscreen
 
-▸ `Const` **hasTouchscreen**(): `boolean`
+▸ **hasTouchscreen**(): `boolean`
 
 #### Returns
 
@@ -29,7 +29,7 @@
 
 ### isBrave
 
-▸ `Const` **isBrave**(): `Promise`<`boolean`\>
+▸ **isBrave**(): `Promise`<`boolean`\>
 
 #### Returns
 
@@ -39,7 +39,7 @@
 
 ### isChrome
 
-▸ `Const` **isChrome**(): `boolean`
+▸ **isChrome**(): `boolean`
 
 #### Returns
 
@@ -49,7 +49,7 @@
 
 ### isFirefox
 
-▸ `Const` **isFirefox**(): `boolean`
+▸ **isFirefox**(): `boolean`
 
 #### Returns
 
@@ -59,7 +59,7 @@
 
 ### isMobileOrTablet
 
-▸ `Const` **isMobileOrTablet**(): `boolean`
+▸ **isMobileOrTablet**(): `boolean`
 
 #### Returns
 
@@ -69,7 +69,7 @@
 
 ### unsupportedFeatures
 
-▸ `Const` **unsupportedFeatures**(): `Promise`<[`Incompatibility`](../enums/Frontend_Utils_BrowserChecks.Incompatibility.md)[]\>
+▸ **unsupportedFeatures**(): `Promise`<[`Incompatibility`](../enums/Frontend_Utils_BrowserChecks.Incompatibility.md)[]\>
 
 #### Returns
 

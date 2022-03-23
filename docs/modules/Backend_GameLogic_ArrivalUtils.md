@@ -21,7 +21,7 @@
 
 ### applyUpgrade
 
-▸ `Const` **applyUpgrade**(`planet`, `upgrade`, `unApply?`): `void`
+▸ **applyUpgrade**(`planet`, `upgrade`, `unApply?`): `void`
 
 #### Parameters
 
@@ -39,7 +39,7 @@
 
 ### arrive
 
-▸ `Const` **arrive**(`toPlanet`, `artifactsOnPlanet`, `arrival`, `arrivingArtifact`, `contractConstants`): [`PlanetDiff`](../interfaces/Backend_GameLogic_ArrivalUtils.PlanetDiff.md)
+▸ **arrive**(`toPlanet`, `artifactsOnPlanet`, `arrival`, `arrivingArtifact`, `contractConstants`): [`PlanetDiff`](../interfaces/Backend_GameLogic_ArrivalUtils.PlanetDiff.md)
 
 #### Parameters
 
@@ -59,7 +59,7 @@
 
 ### blocksLeftToProspectExpiration
 
-▸ `Const` **blocksLeftToProspectExpiration**(`currentBlockNumber`, `prospectedBlockNumber?`): `number`
+▸ **blocksLeftToProspectExpiration**(`currentBlockNumber`, `prospectedBlockNumber?`): `number`
 
 #### Parameters
 
@@ -95,7 +95,7 @@
 
 ### isFindable
 
-▸ `Const` **isFindable**(`planet`, `currentBlockNumber?`): `boolean`
+▸ **isFindable**(`planet`, `currentBlockNumber?`): `boolean`
 
 #### Parameters
 
@@ -112,7 +112,7 @@
 
 ### isProspectable
 
-▸ `Const` **isProspectable**(`planet`): `boolean`
+▸ **isProspectable**(`planet`): `boolean`
 
 #### Parameters
 
@@ -128,7 +128,7 @@
 
 ### prospectExpired
 
-▸ `Const` **prospectExpired**(`currentBlockNumber`, `prospectedBlockNumber`): `boolean`
+▸ **prospectExpired**(`currentBlockNumber`, `prospectedBlockNumber`): `boolean`
 
 #### Parameters
 
@@ -145,7 +145,7 @@
 
 ### updatePlanetToTime
 
-▸ `Const` **updatePlanetToTime**(`planet`, `planetArtifacts`, `atTimeMillis`, `contractConstants`, `setPlanet?`): `void`
+▸ **updatePlanetToTime**(`planet`, `planetArtifacts`, `atTimeMillis`, `contractConstants`, `setPlanet?`): `void`
 
 #### Parameters
 

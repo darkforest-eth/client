@@ -4,7 +4,7 @@
 
 ## Hierarchy
 
-- `Component`<`GenericErrorBoundaryProps`, `Object`\>
+- `Component`<`GenericErrorBoundaryProps`, { `hasError`: `boolean` }\>
 
   ↳ **`GenericErrorBoundary`**
 

@@ -14,4 +14,4 @@
 
 ### MODAL_POSITIONS_KEY
 
-• **MODAL_POSITIONS_KEY**: `"modal_positions"`
+• `Const` **MODAL_POSITIONS_KEY**: `"modal_positions"`

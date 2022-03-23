@@ -18,7 +18,7 @@
 
 ### BiomeLabel
 
-• **BiomeLabel**: `StyledComponent`<`"span"`, `any`, `Object`, `never`\>
+• `Const` **BiomeLabel**: `StyledComponent`<`"span"`, `any`, { `biome`: `Biome` }, `never`\>
 
 Renders colored text corresponding to a biome
 
@@ -26,7 +26,7 @@ Renders colored text corresponding to a biome
 
 ### ArtifactBiomeLabel
 
-▸ `Const` **ArtifactBiomeLabel**(`__namedParameters`): `Element`
+▸ **ArtifactBiomeLabel**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Renders colored text corresponding to a biome
 
 ### ArtifactBiomeLabelAnim
 
-▸ `Const` **ArtifactBiomeLabelAnim**(`__namedParameters`): `Element`
+▸ **ArtifactBiomeLabelAnim**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -60,7 +60,7 @@ Renders colored text corresponding to a biome
 
 ### BiomeLabelAnim
 
-▸ `Const` **BiomeLabelAnim**(`__namedParameters`): `Element`
+▸ **BiomeLabelAnim**(`__namedParameters`): `Element`
 
 Renders animated colored text corresponding to a biome
 
@@ -79,7 +79,7 @@ Renders animated colored text corresponding to a biome
 
 ### OptionalPlanetBiomeLabelAnim
 
-▸ `Const` **OptionalPlanetBiomeLabelAnim**(`__namedParameters`): `Element`
+▸ **OptionalPlanetBiomeLabelAnim**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -96,7 +96,7 @@ Renders animated colored text corresponding to a biome
 
 ### PlanetBiomeLabelAnim
 
-▸ `Const` **PlanetBiomeLabelAnim**(`__namedParameters`): `Element`
+▸ **PlanetBiomeLabelAnim**(`__namedParameters`): `Element`
 
 #### Parameters
 

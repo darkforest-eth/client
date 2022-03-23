@@ -63,13 +63,13 @@ polls for success.
 
 ### disconnectTwitter
 
-▸ `Const` **disconnectTwitter**(`disconnectMessage`): `Promise`<`boolean`\>
+▸ **disconnectTwitter**(`disconnectMessage`): `Promise`<`boolean`\>
 
 #### Parameters
 
-| Name                | Type                       |
-| :------------------ | :------------------------- |
-| `disconnectMessage` | `SignedMessage`<`Object`\> |
+| Name                | Type                                      |
+| :------------------ | :---------------------------------------- |
+| `disconnectMessage` | `SignedMessage`<{ `twitter`: `string` }\> |
 
 #### Returns
 
@@ -79,7 +79,7 @@ polls for success.
 
 ### getAllTwitters
 
-▸ `Const` **getAllTwitters**(): `Promise`<[`AddressTwitterMap`](types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
+▸ **getAllTwitters**(): `Promise`<[`AddressTwitterMap`](types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
 
 #### Returns
 
@@ -89,7 +89,7 @@ polls for success.
 
 ### requestDevFaucet
 
-▸ `Const` **requestDevFaucet**(`address`): `Promise`<`boolean`\>
+▸ **requestDevFaucet**(`address`): `Promise`<`boolean`\>
 
 #### Parameters
 
@@ -105,7 +105,7 @@ polls for success.
 
 ### submitInterestedEmail
 
-▸ `Const` **submitInterestedEmail**(`email`): `Promise`<[`EmailResponse`](../enums/Backend_Network_UtilityServerAPI.EmailResponse.md)\>
+▸ **submitInterestedEmail**(`email`): `Promise`<[`EmailResponse`](../enums/Backend_Network_UtilityServerAPI.EmailResponse.md)\>
 
 #### Parameters
 
@@ -121,13 +121,13 @@ polls for success.
 
 ### submitPlayerEmail
 
-▸ `Const` **submitPlayerEmail**(`request?`): `Promise`<[`EmailResponse`](../enums/Backend_Network_UtilityServerAPI.EmailResponse.md)\>
+▸ **submitPlayerEmail**(`request?`): `Promise`<[`EmailResponse`](../enums/Backend_Network_UtilityServerAPI.EmailResponse.md)\>
 
 #### Parameters
 
-| Name       | Type                       |
-| :--------- | :------------------------- |
-| `request?` | `SignedMessage`<`Object`\> |
+| Name       | Type                                    |
+| :--------- | :-------------------------------------- |
+| `request?` | `SignedMessage`<{ `email`: `string` }\> |
 
 #### Returns
 
@@ -137,7 +137,7 @@ polls for success.
 
 ### submitUnsubscribeEmail
 
-▸ `Const` **submitUnsubscribeEmail**(`email`): `Promise`<[`EmailResponse`](../enums/Backend_Network_UtilityServerAPI.EmailResponse.md)\>
+▸ **submitUnsubscribeEmail**(`email`): `Promise`<[`EmailResponse`](../enums/Backend_Network_UtilityServerAPI.EmailResponse.md)\>
 
 #### Parameters
 
@@ -153,7 +153,7 @@ polls for success.
 
 ### submitWhitelistKey
 
-▸ `Const` **submitWhitelistKey**(`key`, `address`): `Promise`<`null` \| `RegisterResponse`\>
+▸ **submitWhitelistKey**(`key`, `address`): `Promise`<`null` \| `RegisterResponse`\>
 
 Submits a whitelist key to register the given player to the game. Returns null if there was an
 error.
@@ -173,7 +173,7 @@ error.
 
 ### tryGetAllTwitters
 
-▸ `Const` **tryGetAllTwitters**(): `Promise`<[`AddressTwitterMap`](types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
+▸ **tryGetAllTwitters**(): `Promise`<[`AddressTwitterMap`](types_darkforest_api_UtilityServerAPITypes.md#addresstwittermap)\>
 
 Swallows all errors. Either loads the address to twitter map from the webserver in 5 seconds, or
 returan empty map.
@@ -186,13 +186,13 @@ returan empty map.
 
 ### verifyTwitterHandle
 
-▸ `Const` **verifyTwitterHandle**(`verifyMessage`): `Promise`<`boolean`\>
+▸ **verifyTwitterHandle**(`verifyMessage`): `Promise`<`boolean`\>
 
 #### Parameters
 
-| Name            | Type                       |
-| :-------------- | :------------------------- |
-| `verifyMessage` | `SignedMessage`<`Object`\> |
+| Name            | Type                                      |
+| :-------------- | :---------------------------------------- |
+| `verifyMessage` | `SignedMessage`<{ `twitter`: `string` }\> |
 
 #### Returns
 
@@ -202,7 +202,7 @@ returan empty map.
 
 ### whitelistStatus
 
-▸ `Const` **whitelistStatus**(`address`): `Promise`<`null` \| `WhitelistStatusResponse`\>
+▸ **whitelistStatus**(`address`): `Promise`<`null` \| `WhitelistStatusResponse`\>
 
 #### Parameters
 

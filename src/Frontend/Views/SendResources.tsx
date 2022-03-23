@@ -1,8 +1,7 @@
 import { formatNumber, isSpaceShip } from '@darkforest_eth/gamelogic';
 import { isUnconfirmedMoveTx, isUnconfirmedReleaseTx } from '@darkforest_eth/serde';
 import { Artifact, artifactNameFromArtifact, Planet, TooltipName } from '@darkforest_eth/types';
-import _ from 'lodash';
-import React, { Dispatch, SetStateAction, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { StatIdx } from '../../_types/global/GlobalTypes';
@@ -50,21 +49,15 @@ const StyledShowPercent = styled.div`
     }
   }
 `;
-function ShowPercent({
-  value,
-  setValue,
-}: {
-  value: number;
-  setValue: Dispatch<SetStateAction<number>>;
-}) {
+function ShowPercent({ value, setValue }: { value: number; setValue: (x: number) => void }) {
   return (
     <StyledShowPercent>
       <span>{value}%</span>
       <span>
-        <span onClick={() => setValue((x) => x - 1)}>
+        <span onClick={() => setValue(value - 1)}>
           <LongDash />
         </span>
-        <span onClick={() => setValue((x) => x + 1)}>+</span>
+        <span onClick={() => setValue(value + 1)}>+</span>
       </span>
     </StyledShowPercent>
   );
@@ -268,28 +261,28 @@ export function SendResources({
   useOnUp(
     '-',
     () => {
-      updateEnergySending(_.clamp(uiManager.getForcesSending(locationId) - 10, 0, 100));
+      updateEnergySending(uiManager.getForcesSending(locationId) - 10);
     },
     [uiManager, locationId, updateEnergySending]
   );
   useOnUp(
     '=',
     () => {
-      updateEnergySending(_.clamp(uiManager.getForcesSending(locationId) + 10, 0, 100));
+      updateEnergySending(uiManager.getForcesSending(locationId) + 10);
     },
     [uiManager, locationId, updateEnergySending]
   );
   useOnUp(
     '_',
     () => {
-      updateSilverSending(_.clamp(uiManager.getSilverSending(locationId) - 10, 0, 100));
+      updateSilverSending(uiManager.getSilverSending(locationId) - 10);
     },
     [uiManager, locationId, updateSilverSending]
   );
   useOnUp(
     '+',
     () => {
-      updateSilverSending(_.clamp(uiManager.getSilverSending(locationId) + 10, 0, 100));
+      updateSilverSending(uiManager.getSilverSending(locationId) + 10);
     },
     [uiManager, locationId, updateSilverSending]
   );

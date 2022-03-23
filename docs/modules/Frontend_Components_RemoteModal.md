@@ -18,9 +18,9 @@ Useful for loading temporary modals from ANYWHERE in the UI, not just
 
 #### Parameters
 
-| Name                | Type                           |
-| :------------------ | :----------------------------- |
-| `__namedParameters` | `PropsWithChildren`<`Object`\> |
+| Name                | Type                                                                                                                                                         |
+| :------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `__namedParameters` | `PropsWithChildren`<{ `container`: `Element` ; `id`: `ModalId` ; `title`: `string` ; `visible`: `boolean` ; `width?`: `string` ; `onClose`: () => `void` }\> |
 
 #### Returns
 

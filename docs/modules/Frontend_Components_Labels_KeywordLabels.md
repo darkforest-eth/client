@@ -13,7 +13,7 @@
 
 ### ScoreLabel
 
-▸ `Const` **ScoreLabel**(): `Element`
+▸ **ScoreLabel**(): `Element`
 
 #### Returns
 
@@ -23,7 +23,7 @@
 
 ### ScoreLabelTip
 
-▸ `Const` **ScoreLabelTip**(): `Element`
+▸ **ScoreLabelTip**(): `Element`
 
 #### Returns
 
@@ -33,7 +33,7 @@
 
 ### SilverLabel
 
-▸ `Const` **SilverLabel**(): `Element`
+▸ **SilverLabel**(): `Element`
 
 #### Returns
 
@@ -43,7 +43,7 @@
 
 ### SilverLabelTip
 
-▸ `Const` **SilverLabelTip**(): `Element`
+▸ **SilverLabelTip**(): `Element`
 
 #### Returns
 
