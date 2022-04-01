@@ -434,6 +434,7 @@ export class ContractsAPI extends EventEmitter {
       CAPTURE_ZONE_PLANET_LEVEL_SCORE,
       CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED,
       CAPTURE_ZONES_PER_5000_WORLD_RADIUS,
+      SPACESHIPS,
     } = await this.makeCall(this.contract.getGameConstants);
 
     const TOKEN_MINT_END_SECONDS = (
@@ -556,6 +557,7 @@ export class ContractsAPI extends EventEmitter {
       ],
       CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED: CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED.toNumber(),
       CAPTURE_ZONES_PER_5000_WORLD_RADIUS: CAPTURE_ZONES_PER_5000_WORLD_RADIUS.toNumber(),
+      SPACESHIPS: SPACESHIPS,
     };
 
     return constants;
@@ -722,7 +724,10 @@ export class ContractsAPI extends EventEmitter {
         await this.makeCall(this.contract.bulkGetPlanetsExtendedInfoByIds, [
           toLoadPlanets.slice(start, end).map(locationIdToDecStr),
         ]),
-      onProgressMetadata
+      (fractionCompleted) => {
+        if (!onProgressMetadata) return;
+        onProgressMetadata(fractionCompleted / 2);
+      }
     );
 
     const rawPlanetsExtendedInfo2 = await aggregateBulkGetter(
@@ -732,7 +737,10 @@ export class ContractsAPI extends EventEmitter {
         await this.makeCall(this.contract.bulkGetPlanetsExtendedInfo2ByIds, [
           toLoadPlanets.slice(start, end).map(locationIdToDecStr),
         ]),
-      onProgressMetadata
+      (fractionCompleted) => {
+        if (!onProgressMetadata) return;
+        onProgressMetadata(0.5 + fractionCompleted / 2);
+      }
     );
 
     const planets: Map<LocationId, Planet> = new Map();

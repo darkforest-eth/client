@@ -4,6 +4,7 @@ import { DarkForest } from '@darkforest_eth/contracts/typechain';
 import { EthConnection, neverResolves, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
 import { utils, Wallet } from 'ethers';
+import { reverse } from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import GameManager, { GameManagerEvent } from '../../Backend/GameLogic/GameManager';
@@ -57,7 +58,7 @@ const enum TerminalPromptStep {
   ERROR,
 }
 
-export function GameLandingPage({ match }: RouteComponentProps<{ contract: string }>) {
+export function GameLandingPage({ match, location }: RouteComponentProps<{ contract: string }>) {
   const history = useHistory();
   const terminalHandle = useRef<TerminalHandle>();
   const gameUIManagerRef = useRef<GameUIManager | undefined>();
@@ -69,6 +70,8 @@ export function GameLandingPage({ match }: RouteComponentProps<{ contract: strin
   const [ethConnection, setEthConnection] = useState<EthConnection | undefined>();
   const [step, setStep] = useState(TerminalPromptStep.NONE);
 
+  const params = new URLSearchParams(location.search);
+  const selectedAddress = params.get('account');
   const contractAddress = address(match.params.contract);
   const isLobby = contractAddress !== address(CONTRACT_ADDRESS);
 
@@ -270,19 +273,44 @@ export function GameLandingPage({ match }: RouteComponentProps<{ contract: strin
       terminal.current?.println(``);
       terminal.current?.println(`Select an option:`, TerminalTextStyle.Text);
 
-      const userInput = await terminal.current?.getInput();
-      if (userInput === 'a' && accounts.length > 0) {
-        setStep(TerminalPromptStep.DISPLAY_ACCOUNTS);
-      } else if (userInput === 'n') {
-        setStep(TerminalPromptStep.GENERATE_ACCOUNT);
-      } else if (userInput === 'i') {
-        setStep(TerminalPromptStep.IMPORT_ACCOUNT);
+      if (selectedAddress !== null) {
+        terminal.current?.println(
+          `Selecting account ${selectedAddress} from url...`,
+          TerminalTextStyle.Green
+        );
+
+        // Search accounts backwards in case a player has used a private key more than once.
+        // In that case, we want to take the most recently created account.
+        const account = reverse(getAccounts()).find((a) => a.address === selectedAddress);
+        if (!account) {
+          terminal.current?.println('Unrecognized account found in url.', TerminalTextStyle.Red);
+          return;
+        }
+
+        try {
+          await ethConnection?.setAccount(account.privateKey);
+          setStep(TerminalPromptStep.ACCOUNT_SET);
+        } catch (e) {
+          terminal.current?.println(
+            'An unknown error occurred. please try again.',
+            TerminalTextStyle.Red
+          );
+        }
       } else {
-        terminal.current?.println('Unrecognized input. Please try again.');
-        await advanceStateFromCompatibilityPassed(terminal);
+        const userInput = await terminal.current?.getInput();
+        if (userInput === 'a' && accounts.length > 0) {
+          setStep(TerminalPromptStep.DISPLAY_ACCOUNTS);
+        } else if (userInput === 'n') {
+          setStep(TerminalPromptStep.GENERATE_ACCOUNT);
+        } else if (userInput === 'i') {
+          setStep(TerminalPromptStep.IMPORT_ACCOUNT);
+        } else {
+          terminal.current?.println('Unrecognized input. Please try again.');
+          await advanceStateFromCompatibilityPassed(terminal);
+        }
       }
     },
-    [isLobby]
+    [isLobby, ethConnection, selectedAddress]
   );
 
   const advanceStateFromDisplayAccounts = useCallback(

@@ -32,6 +32,7 @@ export function toInitializers(obj: LobbyConfigState) {
 
 // Actions aren't 1-to-1 with Initializers because we sometimes need to update into arrays
 export type LobbyConfigAction =
+  | { type: 'SPACESHIPS'; value: Initializers['SPACESHIPS'] | undefined }
   | { type: 'START_PAUSED'; value: Initializers['START_PAUSED'] | undefined }
   | { type: 'ADMIN_CAN_ADD_PLANETS'; value: Initializers['ADMIN_CAN_ADD_PLANETS'] | undefined }
   | {
@@ -309,6 +310,10 @@ export function lobbyConfigReducer(state: LobbyConfigState, action: LobbyAction)
     }
     case 'WHITELIST_ENABLED': {
       update = ofBoolean(action, state);
+      break;
+    }
+    case 'SPACESHIPS': {
+      update = ofSpaceships(action, state);
       break;
     }
     case 'RESET': {
@@ -769,6 +774,16 @@ export function lobbyConfigInit(startingConfig: LobbyInitializers) {
       case 'WHITELIST_ENABLED': {
         // Default this to false if we don't have it
         const defaultValue = startingConfig[key] || false;
+        state[key] = {
+          currentValue: defaultValue,
+          displayValue: defaultValue,
+          defaultValue,
+          warning: undefined,
+        };
+        break;
+      }
+      case 'SPACESHIPS': {
+        const defaultValue = startingConfig[key];
         state[key] = {
           currentValue: defaultValue,
           displayValue: defaultValue,
@@ -1505,6 +1520,26 @@ export function ofCaptureZoneRadius(
       ...state[type],
       displayValue: value,
       warning: `Value must be an integer`,
+    };
+  }
+
+  return {
+    ...state[type],
+    currentValue: value,
+    displayValue: value,
+    warning: undefined,
+  };
+}
+
+export function ofSpaceships(
+  { type, value }: Extract<LobbyConfigAction, { type: 'SPACESHIPS' }>,
+  state: LobbyConfigState
+) {
+  if (value === undefined) {
+    return {
+      ...state[type],
+      displayValue: value,
+      warning: undefined,
     };
   }
 

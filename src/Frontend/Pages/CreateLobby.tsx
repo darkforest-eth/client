@@ -136,6 +136,7 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
             CAPTURE_ZONE_RADIUS: config.CAPTURE_ZONE_RADIUS,
             CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED: config.CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED,
             CAPTURE_ZONES_PER_5000_WORLD_RADIUS: config.CAPTURE_ZONES_PER_5000_WORLD_RADIUS,
+            SPACESHIPS: config.SPACESHIPS,
           });
         })
         .catch((e) => {
