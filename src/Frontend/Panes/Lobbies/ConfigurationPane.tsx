@@ -35,7 +35,6 @@ import {
 } from './Reducer';
 import { SnarkPane } from './SnarkPane';
 import { SpaceJunkPane } from './SpaceJunkPane';
-import { SpaceshipsPane } from './SpaceshipsPane';
 import { SpaceTypeBiomePane } from './SpaceTypeBiomePane';
 import { WorldSizePane } from './WorldSizePane';
 
@@ -106,12 +105,6 @@ const panes: ReadonlyArray<PaneConfig> = [
     shortcut: `0`,
     path: '/settings/snark',
     Pane: (props: LobbiesPaneProps) => <SnarkPane {...props} />,
-  },
-  {
-    title: 'Spaceships',
-    shortcut: `s`,
-    path: '/settings/spaceships',
-    Pane: (props: LobbiesPaneProps) => <SpaceshipsPane {...props} />,
   },
 ] as const;
 

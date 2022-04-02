@@ -307,13 +307,6 @@ export interface ContractConstants {
   ];
   CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED: number;
   CAPTURE_ZONES_PER_5000_WORLD_RADIUS: number;
-  SPACESHIPS: {
-    GEAR: boolean;
-    MOTHERSHIP: boolean;
-    TITAN: boolean;
-    CRESCENT: boolean;
-    WHALE: boolean;
-  };
 }
 
 export type ClientMockchainData =

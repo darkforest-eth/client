@@ -1993,10 +1993,6 @@ class GameManager extends EventEmitter {
 
   private async getSpaceships() {
     if (!this.account || !this.homeLocation?.hash) return;
-    if (!Object.values(this.contractConstants.SPACESHIPS).some((a) => a === true)) {
-      console.log('all spaceships disabled, not calling the tx');
-      return;
-    }
 
     const player = await this.contractsAPI.getPlayerById(this.account);
     if (player?.claimedShips) return;
