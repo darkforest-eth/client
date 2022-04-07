@@ -123,7 +123,6 @@
 - [Frontend/Panes/Lobbies/SnarkPane](modules/Frontend_Panes_Lobbies_SnarkPane.md)
 - [Frontend/Panes/Lobbies/SpaceJunkPane](modules/Frontend_Panes_Lobbies_SpaceJunkPane.md)
 - [Frontend/Panes/Lobbies/SpaceTypeBiomePane](modules/Frontend_Panes_Lobbies_SpaceTypeBiomePane.md)
-- [Frontend/Panes/Lobbies/SpaceshipsPane](modules/Frontend_Panes_Lobbies_SpaceshipsPane.md)
 - [Frontend/Panes/Lobbies/WorldSizePane](modules/Frontend_Panes_Lobbies_WorldSizePane.md)
 - [Frontend/Panes/ManagePlanetArtifacts/ArtifactActions](modules/Frontend_Panes_ManagePlanetArtifacts_ArtifactActions.md)
 - [Frontend/Panes/ManagePlanetArtifacts/ManageArtifacts](modules/Frontend_Panes_ManagePlanetArtifacts_ManageArtifacts.md)

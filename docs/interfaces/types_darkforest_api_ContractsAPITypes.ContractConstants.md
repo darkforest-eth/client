@@ -41,7 +41,6 @@
 - [PLANET_TRANSFER_ENABLED](types_darkforest_api_ContractsAPITypes.ContractConstants.md#planet_transfer_enabled)
 - [PLANET_TYPE_WEIGHTS](types_darkforest_api_ContractsAPITypes.ContractConstants.md#planet_type_weights)
 - [SILVER_SCORE_VALUE](types_darkforest_api_ContractsAPITypes.ContractConstants.md#silver_score_value)
-- [SPACESHIPS](types_darkforest_api_ContractsAPITypes.ContractConstants.md#spaceships)
 - [SPACETYPE_KEY](types_darkforest_api_ContractsAPITypes.ContractConstants.md#spacetype_key)
 - [SPACE_JUNK_ENABLED](types_darkforest_api_ContractsAPITypes.ContractConstants.md#space_junk_enabled)
 - [SPACE_JUNK_LIMIT](types_darkforest_api_ContractsAPITypes.ContractConstants.md#space_junk_limit)
@@ -297,22 +296,6 @@ when it spawns.
 How much score silver gives when withdrawing.
 Expressed as a percentage integer.
 (100 is 100%)
-
----
-
-### SPACESHIPS
-
-• `Optional` **SPACESHIPS**: `Object`
-
-#### Type declaration
-
-| Name         | Type      |
-| :----------- | :-------- |
-| `CRESCENT`   | `boolean` |
-| `GEAR`       | `boolean` |
-| `MOTHERSHIP` | `boolean` |
-| `TITAN`      | `boolean` |
-| `WHALE`      | `boolean` |
 
 ---
 

@@ -434,7 +434,6 @@ export class ContractsAPI extends EventEmitter {
       CAPTURE_ZONE_PLANET_LEVEL_SCORE,
       CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED,
       CAPTURE_ZONES_PER_5000_WORLD_RADIUS,
-      SPACESHIPS,
     } = await this.makeCall(this.contract.getGameConstants);
 
     const TOKEN_MINT_END_SECONDS = (
@@ -557,7 +556,6 @@ export class ContractsAPI extends EventEmitter {
       ],
       CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED: CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED.toNumber(),
       CAPTURE_ZONES_PER_5000_WORLD_RADIUS: CAPTURE_ZONES_PER_5000_WORLD_RADIUS.toNumber(),
-      SPACESHIPS: SPACESHIPS,
     };
 
     return constants;

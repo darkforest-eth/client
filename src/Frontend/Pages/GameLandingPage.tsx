@@ -822,7 +822,6 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
           return true;
         })
         .catch((error: Error) => {
-          console.log(error);
           terminal.current?.println(
             `[ERROR] An error occurred: ${error.toString().slice(0, 10000)}`,
             TerminalTextStyle.Red
