@@ -133,7 +133,9 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.3
+                    <Link to='https://blog.zkga.me/v3-rules'>
+                      <HideSmall>v</HideSmall>0.3
+                    </Link>
                   </td>
                   <td>
                     08/07/<HideSmall>20</HideSmall>20
@@ -144,7 +146,9 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.4
+                    <Link to='https://blog.zkga.me/v4-recap'>
+                      <HideSmall>v</HideSmall>0.4
+                    </Link>
                   </td>
                   <td>
                     10/02/<HideSmall>20</HideSmall>20
@@ -155,7 +159,9 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.5
+                    <Link to='https://blog.zkga.me/v5-winners'>
+                      <HideSmall>v</HideSmall>0.5
+                    </Link>
                   </td>
                   <td>
                     12/25/<HideSmall>20</HideSmall>20
@@ -164,7 +170,9 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.6 round 1
+                    <Link to='https://blog.zkga.me/v6-r1-wrapup'>
+                      <HideSmall>v</HideSmall>0.6 round 1
+                    </Link>
                   </td>
                   <td>
                     05/22/<HideSmall>20</HideSmall>21
@@ -175,7 +183,9 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.6 round 2
+                    <Link to='https://blog.zkga.me/v6-r2-wrapup'>
+                      <HideSmall>v</HideSmall>0.6 round 2
+                    </Link>
                   </td>
                   <td>
                     07/07/<HideSmall>20</HideSmall>21
@@ -186,7 +196,9 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.6 round 3
+                    <Link to='https://blog.zkga.me/v6-r3-wrapup'>
+                      <HideSmall>v</HideSmall>0.6 round 3
+                    </Link>
                   </td>
                   <td>
                     08/22/<HideSmall>20</HideSmall>21
@@ -197,7 +209,9 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.6 round 4
+                    <Link to='https://blog.zkga.me/v6-r4-wrapup'>
+                      <HideSmall>v</HideSmall>0.6 round 4
+                    </Link>
                   </td>
                   <td>
                     10/01/<HideSmall>20</HideSmall>21
@@ -208,7 +222,9 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.6 round 5
+                    <Link to='https://blog.zkga.me/v6-r5-wrapup'>
+                      <HideSmall>v</HideSmall>0.6 round 5
+                    </Link>
                   </td>
                   <td>
                     02/18/<HideSmall>20</HideSmall>22
