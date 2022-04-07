@@ -3,10 +3,12 @@ import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { DarkForest } from '@darkforest_eth/contracts/typechain';
 import { EthConnection, neverResolves, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
+import { bigIntFromKey } from '@darkforest_eth/whitelist';
 import { utils, Wallet } from 'ethers';
 import { reverse } from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { makeContractsAPI } from '../../Backend/GameLogic/ContractsAPI';
 import GameManager, { GameManagerEvent } from '../../Backend/GameLogic/GameManager';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
@@ -20,6 +22,8 @@ import {
   submitInterestedEmail,
   submitPlayerEmail,
 } from '../../Backend/Network/UtilityServerAPI';
+import { getWhitelistArgs } from '../../Backend/Utils/WhitelistSnarkArgsHelper';
+import { ZKArgIdx } from '../../_types/darkforest/api/ContractsAPITypes';
 import {
   GameWindowWrapper,
   InitRenderState,
@@ -71,6 +75,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
   const [step, setStep] = useState(TerminalPromptStep.NONE);
 
   const params = new URLSearchParams(location.search);
+  const useZkWhitelist = params.has('zkWhitelist');
   const selectedAddress = params.get('account');
   const contractAddress = address(match.params.contract);
   const isLobby = contractAddress !== address(CONTRACT_ADDRESS);
@@ -485,7 +490,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
       if (!address) throw new Error('not logged in');
 
       terminal.current?.println(
-        'Please enter your invite key. (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX)',
+        'Please enter your invite key (XXXXXX-XXXXXX-XXXXXX-XXXXXX):',
         TerminalTextStyle.Sub
       );
 
@@ -494,50 +499,95 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
       terminal.current?.print('Processing key... (this may take up to 30s)');
       terminal.current?.newline();
 
-      let registerConfirmationResponse = {} as RegisterConfirmationResponse;
-      try {
-        registerConfirmationResponse = await callRegisterAndWaitForConfirmation(
-          key,
-          address,
-          terminal
-        );
-      } catch (e) {
-        registerConfirmationResponse = {
-          canRetry: true,
-          errorMessage:
-            'There was an error connecting to the whitelist server. Please try again later.',
-        };
-      }
+      if (!useZkWhitelist) {
+        let registerConfirmationResponse = {} as RegisterConfirmationResponse;
+        try {
+          registerConfirmationResponse = await callRegisterAndWaitForConfirmation(
+            key,
+            address,
+            terminal
+          );
+        } catch (e) {
+          registerConfirmationResponse = {
+            canRetry: true,
+            errorMessage:
+              'There was an error connecting to the whitelist server. Please try again later.',
+          };
+        }
 
-      if (!registerConfirmationResponse.txHash) {
-        terminal.current?.println(
-          'ERROR: ' + registerConfirmationResponse.errorMessage,
-          TerminalTextStyle.Red
-        );
-        if (registerConfirmationResponse.canRetry) {
-          terminal.current?.println('Press any key to try again.');
-          await terminal.current?.getInput();
-          advanceStateFromAskWhitelistKey(terminal);
+        if (!registerConfirmationResponse.txHash) {
+          terminal.current?.println(
+            'ERROR: ' + registerConfirmationResponse.errorMessage,
+            TerminalTextStyle.Red
+          );
+          if (registerConfirmationResponse.canRetry) {
+            terminal.current?.println('Press any key to try again.');
+            await terminal.current?.getInput();
+            advanceStateFromAskWhitelistKey(terminal);
+          } else {
+            setStep(TerminalPromptStep.ASKING_WAITLIST_EMAIL);
+          }
         } else {
-          setStep(TerminalPromptStep.ASKING_WAITLIST_EMAIL);
+          terminal.current?.print('Successfully joined game. ', TerminalTextStyle.Green);
+          terminal.current?.print(`Welcome, player `);
+          terminal.current?.println(address, TerminalTextStyle.Text);
+          terminal.current?.print('Sent player $0.15 :) ', TerminalTextStyle.Blue);
+          terminal.current?.printLink(
+            '(View Transaction)',
+            () => {
+              window.open(`${BLOCK_EXPLORER_URL}/${registerConfirmationResponse.txHash}`);
+            },
+            TerminalTextStyle.Blue
+          );
+          terminal.current?.newline();
+          setStep(TerminalPromptStep.ASKING_PLAYER_EMAIL);
         }
       } else {
-        terminal.current?.print('Successfully joined game. ', TerminalTextStyle.Green);
-        terminal.current?.print(`Welcome, player `);
-        terminal.current?.println(address, TerminalTextStyle.Text);
-        terminal.current?.print('Sent player $0.15 :) ', TerminalTextStyle.Blue);
-        terminal.current?.printLink(
-          '(View Transaction)',
-          () => {
-            window.open(`${BLOCK_EXPLORER_URL}/${registerConfirmationResponse.txHash}`);
-          },
-          TerminalTextStyle.Blue
-        );
-        terminal.current?.newline();
-        setStep(TerminalPromptStep.ASKING_PLAYER_EMAIL);
+        if (!ethConnection) throw new Error('no eth connection');
+        const contractsAPI = await makeContractsAPI({ connection: ethConnection, contractAddress });
+
+        const keyBigInt = bigIntFromKey(key);
+        const snarkArgs = await getWhitelistArgs(keyBigInt, address, terminal);
+        try {
+          const ukReceipt = await contractsAPI.contract.useKey(
+            snarkArgs[ZKArgIdx.PROOF_A],
+            snarkArgs[ZKArgIdx.PROOF_B],
+            snarkArgs[ZKArgIdx.PROOF_C],
+            [...snarkArgs[ZKArgIdx.DATA]]
+          );
+          await ukReceipt.wait();
+          terminal.current?.print('Successfully joined game. ', TerminalTextStyle.Green);
+          terminal.current?.print(`Welcome, player `);
+          terminal.current?.println(address, TerminalTextStyle.Text);
+          terminal.current?.print('Sent player $0.15 :) ', TerminalTextStyle.Blue);
+          terminal.current?.printLink(
+            '(View Transaction)',
+            () => {
+              window.open(`${BLOCK_EXPLORER_URL}/${ukReceipt.hash}`);
+            },
+            TerminalTextStyle.Blue
+          );
+          terminal.current?.newline();
+          setStep(TerminalPromptStep.ASKING_PLAYER_EMAIL);
+        } catch (e) {
+          const error = e.error;
+          if (error instanceof Error) {
+            const invalidKey = error.message.includes('invalid key');
+            if (invalidKey) {
+              terminal.current?.println(`ERROR: Key ${key} is not valid.`, TerminalTextStyle.Red);
+              setStep(TerminalPromptStep.ASKING_WAITLIST_EMAIL);
+            } else {
+              terminal.current?.println(`ERROR: Something went wrong.`, TerminalTextStyle.Red);
+              terminal.current?.println('Press any key to try again.');
+              await terminal.current?.getInput();
+              advanceStateFromAskWhitelistKey(terminal);
+            }
+          }
+          console.error('Error whitelisting.');
+        }
       }
     },
-    [ethConnection]
+    [ethConnection, contractAddress, useZkWhitelist]
   );
 
   const advanceStateFromAskWaitlistEmail = useCallback(
@@ -772,6 +822,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
           return true;
         })
         .catch((error: Error) => {
+          console.log(error);
           terminal.current?.println(
             `[ERROR] An error occurred: ${error.toString().slice(0, 10000)}`,
             TerminalTextStyle.Red

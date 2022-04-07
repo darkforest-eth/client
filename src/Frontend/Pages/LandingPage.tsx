@@ -7,7 +7,7 @@ import { Btn } from '../Components/Btn';
 import { EmSpacer, Link, Spacer, Title } from '../Components/CoreUI';
 import { EmailCTA, EmailCTAMode } from '../Components/Email';
 import { Modal } from '../Components/Modal';
-import { HideSmall, Sub, Text, White } from '../Components/Text';
+import { HideSmall, Text, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { LandingPageRoundArt } from '../Views/LandingPageRoundArt';
 import { LeadboardDisplay } from '../Views/Leaderboard';
@@ -24,6 +24,8 @@ const links = {
   blog: 'https://blog.zkga.me/',
   discord: 'https://discord.gg/2u2TN6v8r6',
   github: 'https://github.com/darkforest-eth',
+  wiki: 'https://dfwiki.net/wiki/Main_Page',
+  plugins: 'https://plugins.zkga.me/',
 };
 
 const defaultAddress = address(CONTRACT_ADDRESS);
@@ -52,6 +54,32 @@ export default function LandingPage() {
 
         <MainContentContainer>
           <Header>
+            <LinkContainer>
+              <Link to={links.email}>email</Link>
+              <Spacer width={4} />
+              <Link to={links.blog}>blog</Link>
+              <Spacer width={4} />
+
+              <a className={'link-twitter'} href={links.twitter}>
+                <span className={'icon-twitter'}></span>
+              </a>
+              <Spacer width={4} />
+              <a className={'link-discord'} href={links.discord}>
+                <span className={'icon-discord'}></span>
+              </a>
+              <Spacer width={4} />
+              <a className={'link-github'} href={links.github}>
+                <span className={'icon-github'}></span>
+              </a>
+
+              <Spacer width={4} />
+              <Link to={links.plugins}>plugins</Link>
+              <Spacer width={4} />
+              <Link to={links.wiki}>wiki</Link>
+            </LinkContainer>
+
+            <Spacer height={16} />
+
             <LandingPageRoundArt />
 
             <p>
@@ -69,6 +97,9 @@ export default function LandingPage() {
               </Btn>
               <Btn size='large' onClick={() => history.push(`/play/${defaultAddress}`)}>
                 Enter Round 5
+              </Btn>
+              <Btn size='large' onClick={() => history.push(`/events`)}>
+                Events
               </Btn>
             </ButtonWrapper>
           </Header>
@@ -197,34 +228,6 @@ export default function LandingPage() {
           <EmailWrapper>
             <EmailCTA mode={EmailCTAMode.SUBSCRIBE} />
           </EmailWrapper>
-
-          <Spacer height={16} />
-
-          <VariousLinksContainer>
-            <TextLinks>
-              <a href={links.email}>email</a>
-              <Spacer width={4} />
-              <Sub>-</Sub>
-              <Spacer width={8} />
-              <a href={links.blog}>blog</a>
-            </TextLinks>
-
-            <Spacer width={8} />
-
-            <IconLinks>
-              <a className={'link-twitter'} href={links.twitter}>
-                <span className={'icon-twitter'}></span>
-              </a>
-              <Spacer width={8} />
-              <a className={'link-discord'} href={links.discord}>
-                <span className={'icon-discord'}></span>
-              </a>
-              <Spacer width={8} />
-              <a className={'link-github'} href={links.github}>
-                <span className={'icon-github'}></span>
-              </a>
-            </IconLinks>
-          </VariousLinksContainer>
         </MainContentContainer>
 
         <Spacer height={128} />
@@ -237,19 +240,10 @@ export default function LandingPage() {
   );
 }
 
-const VariousLinksContainer = styled.div`
-  position: absolute;
-  top: 32px;
-  right: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const PrettyOverlayGradient = styled.div`
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to left top, rgba(73, 10, 219, 0.2), rgba(1, 255, 1, 0.2)) fixed;
+  background: linear-gradient(to left top, rgba(74, 74, 74, 0.628), rgba(60, 1, 255, 0.2)) fixed;
   background-position: 50%, 50%;
   display: inline-block;
   position: fixed;
@@ -287,23 +281,37 @@ const MainContentContainer = styled.div`
   justify-content: space-between;
 `;
 
-const TextLinks = styled.span`
-  vertical-align: center;
-  & a {
-    transition: color 0.2s;
-
-    &:hover {
-      color: ${dfstyles.colors.dfblue};
-    }
-  }
+const Page = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  color: white;
+  font-size: ${dfstyles.fontSize};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: ${LandingPageZIndex.BasePage};
 `;
 
-const IconLinks = styled.span`
-  font-size: 18pt;
+const HallOfFameTitle = styled.div`
+  color: ${dfstyles.colors.subtext};
+  display: inline-block;
+  border-bottom: 1px solid ${dfstyles.colors.subtext};
+  line-height: 1em;
+`;
 
-  & a {
+export const LinkContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  a {
     margin: 0 6pt;
     transition: color 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     &:hover {
       cursor: pointer;
       &.link-twitter {
@@ -323,25 +331,6 @@ const IconLinks = styled.span`
       }
     }
   }
-`;
-
-const Page = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  color: white;
-  font-size: ${dfstyles.fontSize};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: ${LandingPageZIndex.BasePage};
-`;
-
-const HallOfFameTitle = styled.div`
-  color: ${dfstyles.colors.subtext};
-  display: inline-block;
-  border-bottom: 1px solid ${dfstyles.colors.subtext};
-  line-height: 1em;
 `;
 
 function Hiring() {

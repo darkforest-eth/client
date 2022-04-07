@@ -147,6 +147,7 @@ export type ClaimArgs = [
 
 export type DepositArtifactArgs = [string, string]; // locationId, artifactId
 export type WithdrawArtifactArgs = [string, string]; // locationId, artifactId
+export type WhitelistArgs = [string, string]; // hashed whitelist key, recipient address
 
 export type PlanetTypeWeights = [number, number, number, number, number]; // relative frequencies of the 5 planet types
 export type PlanetTypeWeightsByLevel = [
@@ -307,6 +308,13 @@ export interface ContractConstants {
   ];
   CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED: number;
   CAPTURE_ZONES_PER_5000_WORLD_RADIUS: number;
+  SPACESHIPS?: {
+    GEAR: boolean;
+    MOTHERSHIP: boolean;
+    TITAN: boolean;
+    CRESCENT: boolean;
+    WHALE: boolean;
+  };
 }
 
 export type ClientMockchainData =
