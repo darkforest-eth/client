@@ -14,6 +14,10 @@ declare global {
     // instead of global
     df?: GameManager;
     ui?: GameUIManager;
+
+    // injected into global scope via netlify snippets - this is a permalink
+    // to the deployment hosted on netlify.
+    DEPLOY_URL?: string;
   }
 }
 
