@@ -8,6 +8,11 @@
   to = "/index.html"
   status = 200
 
+[[redirects]]
+  from = "/archive/8d8a7d2a/*"
+  to = "https://6247dc3ca1de3b6ce0c8e184--df-prod.netlify.app/:splat"
+  status = 200
+
 ## (optional) Settings for Netlify Dev
 ## https://github.com/netlify/cli/blob/master/docs/netlify-dev.md#project-detection
 #[dev]
