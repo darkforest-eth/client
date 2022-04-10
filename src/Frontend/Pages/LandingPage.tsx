@@ -20,7 +20,7 @@ export const enum LandingPageZIndex {
 
 const links = {
   twitter: 'http://twitter.com/darkforest_eth',
-  email: 'mailto:contact@zkga.me',
+  email: 'mailto:ivan@0xparc.org',
   blog: 'https://blog.zkga.me/',
   discord: 'https://discord.gg/2u2TN6v8r6',
   github: 'https://github.com/darkforest-eth',

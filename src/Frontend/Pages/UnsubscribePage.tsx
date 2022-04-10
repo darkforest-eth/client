@@ -53,7 +53,7 @@ const styles: {
 
 const links = {
   twitter: 'http://twitter.com/darkforest_eth',
-  email: 'mailto:contact@zkga.me',
+  email: 'mailto:ivan@0xparc.org',
   blog: 'https://blog.zkga.me/',
   telegram: 'https://t.me/zk_forest',
   github: 'https://github.com/darkforest-eth',
