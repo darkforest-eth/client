@@ -34,6 +34,12 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
   gap: 8px;
+  flex-direction: row;
+
+  @media only screen and (max-device-width: 1000px) {
+    grid-template-columns: auto;
+    flex-direction: column;
+  }
 
   --df-button-color: ${dfstyles.colors.dfgreen};
   --df-button-border: 1px solid ${dfstyles.colors.dfgreen};
@@ -50,7 +56,12 @@ export default function LandingPage() {
       <Hiring />
 
       <Page>
-        <Spacer height={150} />
+        <OnlyMobile>
+          <Spacer height={8} />
+        </OnlyMobile>
+        <HideOnMobile>
+          <Spacer height={150} />
+        </HideOnMobile>
 
         <MainContentContainer>
           <Header>
@@ -78,7 +89,12 @@ export default function LandingPage() {
               <Link to={links.wiki}>wiki</Link>
             </LinkContainer>
 
-            <Spacer height={16} />
+            <OnlyMobile>
+              <Spacer height={4} />
+            </OnlyMobile>
+            <HideOnMobile>
+              <Spacer height={16} />
+            </HideOnMobile>
 
             <LandingPageRoundArt />
 
@@ -139,7 +155,7 @@ export default function LandingPage() {
             ></InvolvedItem>
           </Involved>
           <EmSpacer height={3} />
-          <div style={{ color: dfstyles.colors.text }}>
+          <HallOfFame style={{ color: dfstyles.colors.text }}>
             <HallOfFameTitle>Space Masters</HallOfFameTitle>
             <Spacer height={8} />
             <table>
@@ -270,7 +286,7 @@ export default function LandingPage() {
                 </TRow>
               </tbody>
             </table>
-          </div>
+          </HallOfFame>
           <Spacer height={32} />
           <EmailWrapper>
             <EmailCTA mode={EmailCTAMode.SUBSCRIBE} />
@@ -322,6 +338,7 @@ const TRow = styled.tr`
 `;
 
 const MainContentContainer = styled.div`
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -330,7 +347,8 @@ const MainContentContainer = styled.div`
 
 const Page = styled.div`
   position: absolute;
-  width: 100%;
+  width: 100vw;
+  max-width: 100vw;
   height: 100%;
   color: white;
   font-size: ${dfstyles.fontSize};
@@ -382,39 +400,57 @@ export const LinkContainer = styled.div`
 
 function Hiring() {
   return (
-    <Modal contain={['top', 'left', 'right']} initialX={50} initialY={50}>
-      <Title slot='title'>Dark Forest is Hiring!</Title>
-      <div style={{ maxWidth: '300px', textAlign: 'justify' }}>
-        We are looking for experienced full stack and solidity developers to join our team! If you
-        like what you see,{' '}
-        <Link to='https://docs.google.com/forms/d/e/1FAIpQLSdaWvjxX4TrDDLidPXtgk6UW3rC082rpvi3AIPkCPxAahg_rg/viewform?usp=sf_link'>
-          consider applying
-        </Link>
-        . If you know someone who you think would be a great fit for our team,{' '}
-        <Link to='https://docs.google.com/forms/d/e/1FAIpQLScku_bQDbkPqpHrwBzOBfQ4SV6Nw6Tgxi6zWQL8Bb0olyBE3w/viewform?usp=sf_link'>
-          please refer them here
-        </Link>
-        .
-        <br />
-        <br />
-        Learn more about the role{' '}
-        <Link to='https://ivanchub.notion.site/Dark-Forest-is-Hiring-ad1f0cbe816640fb9b4c663dacaaca04'>
-          here
-        </Link>
-        .
-      </div>
-    </Modal>
+    <HideOnMobile>
+      <Modal contain={['top', 'left', 'right']} initialX={50} initialY={50}>
+        <Title slot='title'>Dark Forest is Hiring!</Title>
+        <div style={{ maxWidth: '300px', textAlign: 'justify' }}>
+          We are looking for experienced full stack and solidity developers to join our team! If you
+          like what you see,{' '}
+          <Link to='https://docs.google.com/forms/d/e/1FAIpQLSdaWvjxX4TrDDLidPXtgk6UW3rC082rpvi3AIPkCPxAahg_rg/viewform?usp=sf_link'>
+            consider applying
+          </Link>
+          . If you know someone who you think would be a great fit for our team,{' '}
+          <Link to='https://docs.google.com/forms/d/e/1FAIpQLScku_bQDbkPqpHrwBzOBfQ4SV6Nw6Tgxi6zWQL8Bb0olyBE3w/viewform?usp=sf_link'>
+            please refer them here
+          </Link>
+          .
+          <br />
+          <br />
+          Learn more about the role{' '}
+          <Link to='https://ivanchub.notion.site/Dark-Forest-is-Hiring-ad1f0cbe816640fb9b4c663dacaaca04'>
+            here
+          </Link>
+          .
+        </div>
+      </Modal>
+    </HideOnMobile>
   );
 }
+
+const HideOnMobile = styled.div`
+  @media only screen and (max-device-width: 1000px) {
+    display: none;
+  }
+`;
+
+const OnlyMobile = styled.div`
+  @media only screen and (min-device-width: 1000px) {
+    display: none;
+  }
+`;
 
 const Involved = styled.div`
   width: 100%;
   padding-left: 16px;
   padding-right: 16px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: auto auto;
   gap: 10px;
   grid-auto-rows: minmax(100px, auto);
+
+  @media only screen and (max-device-width: 1000px) {
+    grid-template-columns: auto;
+  }
 `;
 
 const InvolvedItem = styled.a`
@@ -435,5 +471,11 @@ const InvolvedItem = styled.a`
   }
   &:hover:active {
     transform: scale(1.05);
+  }
+`;
+
+const HallOfFame = styled.div`
+  @media only screen and (max-device-width: 1000px) {
+    font-size: 70%;
   }
 `;

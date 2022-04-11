@@ -25,9 +25,15 @@ const Container = styled.div`
 const ImgContainer = styled.div`
   display: inline-block;
   text-align: right;
-`;
-
-const LandingPageRoundArtImg = styled.img`
   width: 750px;
   max-width: 80vw;
+
+  @media only screen and (max-device-width: 1000px) {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    font-size: 80%;
+  }
 `;
+
+const LandingPageRoundArtImg = styled.img``;
