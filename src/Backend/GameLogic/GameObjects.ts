@@ -1353,6 +1353,9 @@ export class GameObjects {
 
     const biome = this.getBiome(location);
 
+    const isTargetPlanet = false;
+    const isSpawnPlanet = false;
+
     return {
       locationId: hex,
       perlin,
@@ -1405,6 +1408,9 @@ export class GameObjects {
 
       invader: EMPTY_ADDRESS,
       capturer: EMPTY_ADDRESS,
+
+      isTargetPlanet,
+      isSpawnPlanet
     };
   }
 

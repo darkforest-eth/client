@@ -24,12 +24,14 @@ import {
 } from './LobbiesUtils';
 import { MinimapConfig } from './MinimapUtils';
 import { PlanetPane } from './PlanetPane';
+import { CreatePlanetPane } from './CreatePlanetPane';
 import { PlayerSpawnPane } from './PlayerSpawnPane';
 import {
   InvalidConfigError,
   LobbyConfigAction,
   lobbyConfigInit,
   lobbyConfigReducer,
+  LobbyConfigState,
   LobbyInitializers,
   toInitializers,
 } from './Reducer';
@@ -37,6 +39,8 @@ import { SnarkPane } from './SnarkPane';
 import { SpaceJunkPane } from './SpaceJunkPane';
 import { SpaceTypeBiomePane } from './SpaceTypeBiomePane';
 import { WorldSizePane } from './WorldSizePane';
+import { TargetPlanetPane } from './TargetPlanetPane';
+import { PlanetCreator } from '../../../Backend/Utils/PlanetCreator';
 
 interface PaneConfig {
   title: string;
@@ -106,6 +110,18 @@ const panes: ReadonlyArray<PaneConfig> = [
     path: '/settings/snark',
     Pane: (props: LobbiesPaneProps) => <SnarkPane {...props} />,
   },
+  {
+    title: 'Target planets',
+    shortcut: `-`,
+    path: '/settings/arena',
+    Pane: (props: LobbiesPaneProps) => <TargetPlanetPane {...props} />,
+  },
+  {
+    title: 'Admin planets',
+    shortcut: `+`,
+    path: '/settings/create',
+    Pane: (props: LobbiesPaneProps) => <CreatePlanetPane {...props} />,
+  },
 ] as const;
 
 type Status = 'creating' | 'created' | 'errored' | undefined;
@@ -114,12 +130,18 @@ function ConfigurationNavigation({
   error,
   lobbyAddress,
   status,
+  statusMessage,
   onCreate,
+  createPlanets,
+  config,
 }: {
   error: string | undefined;
   lobbyAddress: EthAddress | undefined;
   status: Status;
+  statusMessage: string;
   onCreate: () => Promise<void>;
+  createPlanets: () => Promise<void>;
+  config: LobbyConfigState;
 }) {
   const buttons = _.chunk(panes, 2).map(([fst, snd], idx) => {
     return (
@@ -145,6 +167,14 @@ function ConfigurationNavigation({
   if (status === 'created' && lobbyAddress) {
     lobbyContent = (
       <>
+        {config.ADMIN_PLANETS.currentValue.length > 0 && (
+          <>
+            <Btn size='stretch' onClick={createPlanets}>
+              Create Planets
+            </Btn>
+            <Row />
+          </>
+        )}
         <Btn size='stretch' onClick={() => window.open(url)}>
           Launch Lobby
         </Btn>
@@ -172,7 +202,7 @@ function ConfigurationNavigation({
 
   const createDisabled = status === 'creating' || status === 'created';
   const creating = status === 'creating' || (status === 'created' && !lobbyAddress);
-
+  const created = (status === 'created' && lobbyAddress);
   return (
     <>
       <Title slot='title'>Customize Lobby</Title>
@@ -185,9 +215,11 @@ function ConfigurationNavigation({
       </div>
       {buttons}
       <Spacer height={20} />
-      <Btn size='stretch' onClick={onCreate} disabled={createDisabled}>
-        {creating ? <LoadingSpinner initialText='Creating...' /> : 'Create Lobby'}
-      </Btn>
+      {!created && (
+        <Btn size='stretch' onClick={onCreate}>
+          {creating ? <LoadingSpinner initialText={statusMessage} /> : 'Create Lobby'}
+        </Btn>
+      )}
       <Row>
         <Warning>{error}</Warning>
       </Row>
@@ -202,16 +234,19 @@ export function ConfigurationPane({
   startingConfig,
   onMapChange,
   onCreate,
+  planetCreator,
 }: {
   modalIndex: number;
   lobbyAddress: EthAddress | undefined;
   startingConfig: LobbyInitializers;
   onMapChange: (props: MinimapConfig) => void;
   onCreate: (config: LobbyInitializers) => Promise<void>;
+  planetCreator: PlanetCreator | undefined;
 }) {
   const { path: root } = useRouteMatch();
   const [error, setError] = useState<string | undefined>();
   const [status, setStatus] = useState<Status>(undefined);
+  const [statusMessage, setStatusMessage] = useState<string>('');
   // Separated IO Errors from Download/Upload so they show on any pane of the modal
   const [ioErr, setIoErr] = useState<string | undefined>();
 
@@ -234,6 +269,7 @@ export function ConfigurationPane({
       perlinThreshold1: config.PERLIN_THRESHOLD_1.currentValue,
       perlinThreshold2: config.PERLIN_THRESHOLD_2.currentValue,
       perlinThreshold3: config.PERLIN_THRESHOLD_3.currentValue,
+      planets: config.ADMIN_PLANETS.currentValue || [],
     });
   }, [
     onMapChange,
@@ -245,6 +281,7 @@ export function ConfigurationPane({
     config.PERLIN_THRESHOLD_1.currentValue,
     config.PERLIN_THRESHOLD_2.currentValue,
     config.PERLIN_THRESHOLD_3.currentValue,
+    config.ADMIN_PLANETS.currentValue,
   ]);
 
   const routes = panes.map(({ title, path, Pane }, idx) => {
@@ -260,11 +297,46 @@ export function ConfigurationPane({
   async function validateAndCreateLobby() {
     try {
       setStatus('creating');
+      setStatusMessage('Creating...');
+
       const initializers = toInitializers(config);
       await onCreate(initializers);
       setStatus('created');
     } catch (err) {
       setStatus('errored');
+      setStatusMessage('Error');
+      console.error(err);
+      if (err instanceof InvalidConfigError) {
+        setError(`Invalid ${err.key} value ${err.value ?? ''} - ${err.message}`);
+      } else {
+        setError(err?.message || 'Something went wrong. Check your dev console.');
+      }
+    }
+  }
+
+  async function createAndRevealPlanets() {
+    try {
+      setStatus('creating');
+      setStatusMessage('Creating...');
+      const initializers = toInitializers(config);
+      if (!planetCreator) {
+        setError("You haven't created a lobby.");
+        return;
+      }
+      for (const planet of initializers.ADMIN_PLANETS) {
+        setStatusMessage(`Creating planet at (${planet.x}, ${planet.y})...`);
+
+        await planetCreator.createPlanet(planet, initializers);
+        if (planet.revealLocation) {
+          setStatusMessage(`Revealing planet at (${planet.x}, ${planet.y})...`);
+          await planetCreator.revealPlanet(planet, initializers);
+        }
+      }
+      setStatus('created');
+      setStatusMessage('Created');
+    } catch (err) {
+      setStatus('errored');
+      setStatusMessage('Errored');
       console.error(err);
       if (err instanceof InvalidConfigError) {
         setError(`Invalid ${err.key} value ${err.value ?? ''} - ${err.message}`);
@@ -286,7 +358,10 @@ export function ConfigurationPane({
             error={error}
             lobbyAddress={lobbyAddress}
             status={status}
+            statusMessage={statusMessage}
             onCreate={validateAndCreateLobby}
+            createPlanets={createAndRevealPlanets}
+            config={config}
           />
         </Route>
         {routes}

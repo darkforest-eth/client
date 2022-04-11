@@ -7,10 +7,9 @@ import { Btn } from '../Components/Btn';
 import { EmSpacer, Link, Spacer, Title } from '../Components/CoreUI';
 import { EmailCTA, EmailCTAMode } from '../Components/Email';
 import { Modal } from '../Components/Modal';
-import { HideSmall, Sub, Text, White } from '../Components/Text';
+import { HideSmall, Red, Sub, Text, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { LandingPageRoundArt } from '../Views/LandingPageRoundArt';
-import { LeadboardDisplay } from '../Views/Leaderboard';
 
 export const enum LandingPageZIndex {
   Background = 0,
@@ -45,7 +44,7 @@ export default function LandingPage() {
   return (
     <>
       <PrettyOverlayGradient />
-      <Hiring />
+      {/* <Hiring /> */}
 
       <Page>
         <Spacer height={150} />
@@ -57,18 +56,14 @@ export default function LandingPage() {
             <p>
               <White>Dark Forest</White> <Text>zkSNARK space warfare</Text>
               <br />
-              <Text>Round 5: </Text>
-              <White>The Junk Wars</White>
+              <Red>Battle Arena</Red>
             </p>
 
             <Spacer height={16} />
 
             <ButtonWrapper>
               <Btn size='large' onClick={() => history.push(`/lobby/${defaultAddress}`)}>
-                Create Lobby
-              </Btn>
-              <Btn size='large' onClick={() => history.push(`/play/${defaultAddress}`)}>
-                Enter Round 5
+                Create Arena
               </Btn>
             </ButtonWrapper>
           </Header>
@@ -229,7 +224,7 @@ export default function LandingPage() {
 
         <Spacer height={128} />
 
-        <LeadboardDisplay />
+        {/* <LeadboardDisplay /> */}
 
         <Spacer height={256} />
       </Page>
@@ -249,8 +244,7 @@ const VariousLinksContainer = styled.div`
 const PrettyOverlayGradient = styled.div`
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to left top, rgba(73, 10, 219, 0.2), rgba(1, 255, 1, 0.2)) fixed;
-  background-position: 50%, 50%;
+  background-image: linear-gradient(to right bottom, #511111, #5b0023, #5d003c, #510659, #262077);  background-position: 50%, 50%;
   display: inline-block;
   position: fixed;
   top: 0;

@@ -1,4 +1,5 @@
 import { Initializers } from '@darkforest_eth/settings';
+import { AdminPlanet } from '@darkforest_eth/types';
 
 export const SAFE_UPPER_BOUNDS = Number.MAX_SAFE_INTEGER - 1;
 
@@ -112,10 +113,26 @@ export type LobbyConfigAction =
       type: 'CAPTURE_ZONES_PER_5000_WORLD_RADIUS';
       value: Initializers['CAPTURE_ZONES_PER_5000_WORLD_RADIUS'] | undefined;
     }
-  | { type: 'WHITELIST_ENABLED'; value: boolean | undefined };
+  | { type: 'WHITELIST_ENABLED'; value: boolean | undefined }
+  | {
+    type: 'ADMIN_PLANETS';
+    value: AdminPlanet | undefined;
+    index: number;
+  }
+  | { type: 'MANUAL_SPAWN'; value: Initializers['MANUAL_SPAWN'] | undefined }
+  | {
+      type: 'TARGET_PLANETS';
+      value: Initializers['TARGET_PLANETS'] | undefined;
+    }
+  | {
+      type: 'TARGET_PLANET_HOLD_BLOCKS_REQUIRED';
+      value: Initializers['TARGET_PLANET_HOLD_BLOCKS_REQUIRED'] | undefined;
+    };
 
 // TODO(#2328): WHITELIST_ENABLED should just be on Initializers
-export type LobbyInitializers = Initializers & { WHITELIST_ENABLED: boolean | undefined };
+export type LobbyInitializers = Initializers & { WHITELIST_ENABLED: boolean | undefined } & {
+  ADMIN_PLANETS: AdminPlanet[];
+};
 
 export type LobbyConfigState = {
   [key in keyof LobbyInitializers]: {
@@ -309,6 +326,22 @@ export function lobbyConfigReducer(state: LobbyConfigState, action: LobbyAction)
     }
     case 'WHITELIST_ENABLED': {
       update = ofBoolean(action, state);
+      break;
+    }
+    case 'MANUAL_SPAWN': {
+      update = ofBoolean(action, state);
+      break;
+    }
+    case 'TARGET_PLANETS': {
+      update = ofBoolean(action, state);
+      break;
+    }
+    case 'TARGET_PLANET_HOLD_BLOCKS_REQUIRED': {
+      update = ofPositiveInteger(action, state);
+      break;
+    }
+    case 'ADMIN_PLANETS': {
+      update = ofAdminPlanets(action, state);
       break;
     }
     case 'RESET': {
@@ -769,6 +802,47 @@ export function lobbyConfigInit(startingConfig: LobbyInitializers) {
       case 'WHITELIST_ENABLED': {
         // Default this to false if we don't have it
         const defaultValue = startingConfig[key] || false;
+        state[key] = {
+          currentValue: defaultValue,
+          displayValue: defaultValue,
+          defaultValue,
+          warning: undefined,
+        };
+        break;
+      }
+      case 'ADMIN_PLANETS': {
+        // Default this to false if we don't have it
+        const defaultValue = startingConfig[key] || [];
+        state[key] = {
+          currentValue: defaultValue,
+          displayValue: defaultValue,
+          defaultValue,
+          warning: undefined,
+        };
+        break;
+      }
+      case 'MANUAL_SPAWN': {
+        const defaultValue = startingConfig[key];
+        state[key] = {
+          currentValue: defaultValue,
+          displayValue: defaultValue,
+          defaultValue,
+          warning: undefined,
+        };
+        break;
+      }
+      case 'TARGET_PLANETS': {
+        const defaultValue = startingConfig[key];
+        state[key] = {
+          currentValue: defaultValue,
+          displayValue: defaultValue,
+          defaultValue,
+          warning: undefined,
+        };
+        break;
+      }
+      case 'TARGET_PLANET_HOLD_BLOCKS_REQUIRED': {
+        const defaultValue = startingConfig[key];
         state[key] = {
           currentValue: defaultValue,
           displayValue: defaultValue,
@@ -1755,6 +1829,116 @@ export function ofPlanetLevelThresholds(
   }
 
   currentValue[index] = value;
+
+  return {
+    ...state[type],
+    currentValue,
+    displayValue,
+    warning: undefined,
+  };
+}
+
+export function ofAdminPlanets(
+  { type, index, value }: Extract<LobbyConfigAction, { type: 'ADMIN_PLANETS' }>,
+  state: LobbyConfigState
+) {
+  const prevCurrentValue = state[type].currentValue;
+  const prevDisplayValue = state[type].displayValue;
+
+  if (!prevDisplayValue) {
+    return {
+      ...state[type],
+      warning: `Failed to update ${type}`,
+    };
+  }
+
+  if (!prevCurrentValue) {
+    return {
+      ...state[type],
+      warning: `Failed to update ${type}`,
+    };
+  }
+
+  if (value === undefined) {
+    return {
+      ...state[type],
+      warning: undefined,
+    };
+  }
+
+  if (
+    value.x === undefined ||
+    value.y === undefined ||
+    value.level === undefined ||
+    value.planetType === undefined
+  ) {
+    return {
+      ...state[type],
+      warning: 'coords, level and planetType must be numbers',
+    };
+  }
+
+  const currentValue = [...prevCurrentValue];
+  const displayValue = [...prevDisplayValue];
+
+  if (currentValue[index]) {
+    currentValue.splice(index, 1);
+    displayValue.splice(index, 1);
+
+    return {
+      ...state[type],
+      currentValue,
+      displayValue,
+      warning: undefined,
+    };
+  }
+
+  const worldRadius = state.WORLD_RADIUS_MIN.currentValue;
+  const manualSpawn = state.MANUAL_SPAWN.currentValue;
+  const targetPlanet = state.TARGET_PLANETS.currentValue;
+
+  if (value.isSpawnPlanet && !manualSpawn) {
+    return {
+      ...state[type],
+      displayValue,
+      warning: `Cannot create spawn planets`,
+    };
+  }
+
+  if (value.isTargetPlanet && !targetPlanet) {
+    return {
+      ...state[type],
+      displayValue,
+      warning: `Cannot create target planets`,
+    };
+  }
+
+  if (Math.abs(value.x) >= worldRadius || Math.abs(value.y) > worldRadius) {
+    return {
+      ...state[type],
+      displayValue,
+      warning: `Coordinates must be within world radius`,
+    };
+  }
+
+  if (value.planetType > 4) {
+    return {
+      ...state[type],
+      displayValue,
+      warning: `Invalid planet type`,
+    };
+  }
+
+  if (value.level > 9) {
+    return {
+      ...state[type],
+      displayValue,
+      warning: `Invalid planet level`,
+    };
+  }
+
+  currentValue[index] = value;
+  displayValue[index] = value;
 
   return {
     ...state[type],

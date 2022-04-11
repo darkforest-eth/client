@@ -1308,6 +1308,14 @@ class GameUIManager extends EventEmitter {
     return this.contractConstants.CAPTURE_ZONES_ENABLED;
   }
 
+  public get manualSpawnEnabled(): boolean {
+    return this.contractConstants.MANUAL_SPAWN;
+  }
+  
+  public get targetPlanetsEnabled(): boolean {
+    return this.contractConstants.TARGET_PLANETS;
+  }
+
   public potentialCaptureScore(planetLevel: number): number {
     return this.contractConstants.CAPTURE_ZONE_PLANET_LEVEL_SCORE[planetLevel];
   }
@@ -1414,6 +1422,18 @@ class GameUIManager extends EventEmitter {
 
   getPaused$(): Monomitter<boolean> {
     return this.gameManager.getPaused$();
+  }
+
+  getGameover(): boolean {
+    return this.gameManager.getGameover();
+  }
+
+  getGameover$(): Monomitter<boolean> {
+    return this.gameManager.getGameover$();
+  }
+
+  public getWinners() : string[] {
+    return this.gameManager.getWinners();
   }
 
   public getSilverScoreValue(): number {

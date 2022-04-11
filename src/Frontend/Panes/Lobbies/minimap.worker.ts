@@ -38,6 +38,11 @@ function generate(config: MinimapConfig): DrawMessage {
     return false;
   };
 
+  const checkPlanet = (x: number, y: number) : boolean => {
+    let s = Math.round((step)/2);
+    return !!config.planets.find(planet => x - s <= planet.x && planet.x < x + s && y - s <= planet.y && planet.y < y + s)
+  }
+
   // generate x coordinates
   for (let i = radius * -1; i < radius; i += step) {
     // generate y coordinates
@@ -49,6 +54,7 @@ function generate(config: MinimapConfig): DrawMessage {
           x: i,
           y: j,
           type: spaceTypeFromPerlin(spaceTypePerlin({ x: i, y: j }, config), config),
+          planet: checkPlanet(i, j)
         });
       }
     }

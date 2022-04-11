@@ -429,6 +429,16 @@ class NotificationManager extends EventEmitter {
     );
   }
 
+  targetPlanetInvaded(planet: Planet) {
+    this.notify(
+      NotificationType.PlanetAttacked,
+      <span>
+        Someone just invaded a target planet: <PlanetNameLink planet={planet} />.{' '}
+        Don't let them win!
+      </span>
+    );
+  }
+
   txInitError(methodName: ContractMethodName, failureReason: string) {
     this.notify(
       NotificationType.TxInitError,

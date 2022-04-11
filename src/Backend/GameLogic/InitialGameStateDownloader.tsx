@@ -40,6 +40,8 @@ export interface InitialGameState {
   arrivals: Map<VoyageId, QueuedArrival>;
   twitters: AddressTwitterMap;
   paused: boolean;
+  gameover: boolean;
+  winners: string[];
 }
 
 export class InitialGameStateDownloader {
@@ -172,6 +174,8 @@ export class InitialGameStateDownloader {
 
     const twitters = await tryGetAllTwitters();
     const paused = contractsAPI.getIsPaused();
+    const gameover = contractsAPI.getGameover();
+    const winners = contractsAPI.getWinners();
 
     const initialState: InitialGameState = {
       contractConstants: await contractConstants,
@@ -191,6 +195,8 @@ export class InitialGameStateDownloader {
       arrivals,
       twitters,
       paused: await paused,
+      gameover : await gameover,
+      winners : await winners
     };
 
     return initialState;

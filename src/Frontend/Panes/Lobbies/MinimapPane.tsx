@@ -33,7 +33,9 @@ function drawOnCanvas(canvas: HTMLCanvasElement | null, msg: DrawMessage) {
   // draw mini-map
 
   for (let i = 0; i < data.length; i++) {
-    if (data[i].type === 0) {
+    if(data[i].planet) {
+      ctx.fillStyle = '#FF0000'; // planet
+    } else if (data[i].type === 0) {
       ctx.fillStyle = '#186469'; // inner nebula
     } else if (data[i].type === 1) {
       ctx.fillStyle = '#24247d'; // outer nebula

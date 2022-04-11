@@ -1,6 +1,6 @@
 import { INIT_ADDRESS } from '@darkforest_eth/contracts';
 // This is loaded as URL paths by a webpack loader
-import initContractAbiUrl from '@darkforest_eth/contracts/abis/DFInitialize.json';
+import initContractAbiUrl from '@darkforest_eth/contracts/abis/DFArenaInitialize.json';
 import { EthConnection } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
 import {
@@ -23,6 +23,7 @@ import { LobbyInitializers } from '../Panes/Lobbies/Reducer';
 import { listenForKeyboardEvents, unlinkKeyboardEvents } from '../Utils/KeyEmitters';
 import { CadetWormhole } from '../Views/CadetWormhole';
 import { LobbyLandingPage } from './LobbyLandingPage';
+import { PlanetCreator } from '../../Backend/Utils/PlanetCreator';
 
 type ErrorState =
   | { type: 'invalidAddress' }
@@ -37,7 +38,7 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
   const [startingConfig, setStartingConfig] = useState<LobbyInitializers | undefined>();
   const [lobbyAddress, setLobbyAddress] = useState<EthAddress | undefined>();
   const [minimapConfig, setMinimapConfig] = useState<MinimapConfig | undefined>();
-
+  const [planetCreator, setPlanetCreator] = useState<PlanetCreator>()
   const onMapChange = useMemo(() => {
     return _.debounce((config: MinimapConfig) => setMinimapConfig(config), 500);
   }, [setMinimapConfig]);
@@ -141,6 +142,10 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
             CAPTURE_ZONE_RADIUS: config.CAPTURE_ZONE_RADIUS,
             CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED: config.CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED,
             CAPTURE_ZONES_PER_5000_WORLD_RADIUS: config.CAPTURE_ZONES_PER_5000_WORLD_RADIUS,
+            TARGET_PLANETS: config.TARGET_PLANETS,
+            TARGET_PLANET_HOLD_BLOCKS_REQUIRED: config.TARGET_PLANET_HOLD_BLOCKS_REQUIRED,
+            MANUAL_SPAWN: config.MANUAL_SPAWN,
+            ADMIN_PLANETS: [],
           });
         })
         .catch((e) => {
@@ -157,8 +162,6 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
     }
 
     const initializers = { ...startingConfig, ...config };
-
-    console.log(initializers);
     const InitABI = await fetch(initContractAbiUrl).then((r) => r.json());
     const artifactBaseURI = '';
     const initInterface = Contract.getInterface(InitABI);
@@ -174,9 +177,14 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
       args: Promise.resolve([initAddress, initFunctionCall]),
     };
 
-    contract.once(ContractsAPIEvent.LobbyCreated, (owner: EthAddress, lobby: EthAddress) => {
+    contract.once(ContractsAPIEvent.LobbyCreated, async (owner: EthAddress, lobby: EthAddress) => {
       if (owner === ownerAddress) {
         setLobbyAddress(lobby);
+        if(!connection){
+          throw("error: no connection")
+        }
+        const planetCreator = await PlanetCreator.create(lobby, connection);
+        setPlanetCreator(planetCreator);
       }
     });
 
@@ -212,6 +220,7 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
           startingConfig={startingConfig}
           onMapChange={onMapChange}
           onCreate={createLobby}
+          planetCreator={planetCreator}
         />
         {/* Minimap uses modalIndex=1 so it is always underneath the configuration pane */}
         <Minimap modalIndex={1} config={minimapConfig} />

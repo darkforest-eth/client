@@ -59,6 +59,8 @@ export const enum ContractEvent {
   AdminGiveSpaceship = 'AdminGiveSpaceship',
   PauseStateChanged = 'PauseStateChanged',
   LobbyCreated = 'LobbyCreated',
+  TargetPlanetInvaded = 'TargetPlanetInvaded',
+  Gameover = 'Gameover'
 }
 
 export const enum ContractsAPIEvent {
@@ -104,8 +106,9 @@ export const enum ContractsAPIEvent {
    */
   TxCancelled = 'TxCancelled',
   PlanetTransferred = 'PlanetTransferred',
-  PlanetClaimed = 'PlanetClaimed',
   LobbyCreated = 'LobbyCreated',
+  TargetPlanetInvaded = 'TargetPlanetInvaded',
+  Gameover = "Gameover"
 }
 
 // planet locationID(BigInt), branch number
@@ -307,6 +310,10 @@ export interface ContractConstants {
   ];
   CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED: number;
   CAPTURE_ZONES_PER_5000_WORLD_RADIUS: number;
+
+  MANUAL_SPAWN: boolean;
+  TARGET_PLANETS: boolean;
+  TARGET_PLANET_HOLD_BLOCKS_REQUIRED: number;
 }
 
 export type ClientMockchainData =

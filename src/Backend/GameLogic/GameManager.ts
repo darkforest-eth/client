@@ -27,11 +27,13 @@ import {
   isUnconfirmedActivateArtifactTx,
   isUnconfirmedBuyHatTx,
   isUnconfirmedCapturePlanetTx,
+  isUnconfirmedClaimVictoryTx,
   isUnconfirmedDeactivateArtifactTx,
   isUnconfirmedDepositArtifactTx,
   isUnconfirmedFindArtifactTx,
   isUnconfirmedInitTx,
   isUnconfirmedInvadePlanetTx,
+  isUnconfirmedInvadeTargetPlanetTx,
   isUnconfirmedMoveTx,
   isUnconfirmedProspectPlanetTx,
   isUnconfirmedRevealTx,
@@ -74,11 +76,13 @@ import {
   UnconfirmedActivateArtifact,
   UnconfirmedBuyHat,
   UnconfirmedCapturePlanet,
+  UnconfirmedClaimVictory,
   UnconfirmedDeactivateArtifact,
   UnconfirmedDepositArtifact,
   UnconfirmedFindArtifact,
   UnconfirmedInit,
   UnconfirmedInvadePlanet,
+  UnconfirmedInvadeTargetPlanet,
   UnconfirmedMove,
   UnconfirmedPlanetTransfer,
   UnconfirmedProspectPlanet,
@@ -154,6 +158,8 @@ export enum GameManagerEvent {
   InitializedPlayerError = 'InitializedPlayerError',
   ArtifactUpdate = 'ArtifactUpdate',
   Moved = 'Moved',
+  TargetPlanetInvaded = 'TargetPlanetInvaded',
+  Gameover = 'Gameover',
 }
 
 class GameManager extends EventEmitter {
@@ -350,6 +356,12 @@ class GameManager extends EventEmitter {
     return this.contractConstants.PLANET_RARITY;
   }
 
+  private gameover: boolean;
+
+  public gameover$: Monomitter<boolean>;
+
+  private winners: string[];
+
   /**
    * Generates capture zones.
    */
@@ -374,7 +386,9 @@ class GameManager extends EventEmitter {
     useMockHash: boolean,
     artifacts: Map<ArtifactId, Artifact>,
     ethConnection: EthConnection,
-    paused: boolean
+    paused: boolean,
+    gameover: boolean,
+    winners: string[]
   ) {
     super();
 
@@ -400,6 +414,9 @@ class GameManager extends EventEmitter {
     this.networkHealth$ = monomitter(true);
     this.paused$ = monomitter(true);
     this.playersUpdated$ = monomitter();
+    this.gameover = gameover;
+    this.winners = winners;
+    this.gameover$ = monomitter(true);
 
     if (contractConstants.CAPTURE_ZONES_ENABLED) {
       this.captureZoneGenerator = new CaptureZoneGenerator(
@@ -672,7 +689,9 @@ class GameManager extends EventEmitter {
       useMockHash,
       knownArtifacts,
       connection,
-      initialState.paused
+      initialState.paused,
+      initialState.gameover,
+      initialState.winners
     );
 
     gameManager.setPlayerTwitters(initialState.twitters);
@@ -825,6 +844,16 @@ class GameManager extends EventEmitter {
             gameManager.hardRefreshPlayer(gameManager.getAccount()),
             gameManager.hardRefreshPlanet(tx.intent.locationId),
           ]);
+        } else if (isUnconfirmedClaimVictoryTx(tx)) {
+          await Promise.all([
+            gameManager.hardRefreshPlayer(gameManager.getAccount()),
+            gameManager.hardRefreshPlanet(tx.intent.locationId),
+          ]);
+        } else if (isUnconfirmedInvadeTargetPlanetTx(tx)) {
+          await Promise.all([
+            gameManager.hardRefreshPlayer(gameManager.getAccount()),
+            gameManager.hardRefreshPlanet(tx.intent.locationId),
+          ]);
         }
 
         gameManager.entityStore.clearUnconfirmedTxIntent(tx);
@@ -843,7 +872,16 @@ class GameManager extends EventEmitter {
       .on(ContractsAPIEvent.RadiusUpdated, async () => {
         const newRadius = await gameManager.contractsAPI.getWorldRadius();
         gameManager.setRadius(newRadius);
-      });
+      })
+      .on(ContractsAPIEvent.Gameover, async () => {
+        gameManager.setGameover(true);
+        gameManager.gameover$.publish(true);
+      })
+      .on(ContractsAPIEvent.TargetPlanetInvaded, async (player: EthAddress, planetId : LocationId) => {
+        const planet = gameManager.getPlanetWithId(planetId);
+        if(planet) NotificationManager.getInstance().targetPlanetInvaded(planet);
+      })
+      ;
 
     const unconfirmedTxs = await persistentChunkStore.getUnconfirmedSubmittedEthTxs();
     const confirmationQueue = new ThrottledConcurrentQueue({
@@ -1643,6 +1681,11 @@ class GameManager extends EventEmitter {
     }
   }
 
+  private async setGameover(gameover: boolean) {
+    this.gameover = gameover;
+    this.winners = await this.contractsAPI.getWinners();
+  }
+
   private async refreshTwitters(): Promise<void> {
     const addressTwitters = await getAllTwitters();
     this.setPlayerTwitters(addressTwitters);
@@ -1864,6 +1907,73 @@ class GameManager extends EventEmitter {
     }
   }
 
+  public async invadeTargetPlanet(locationId: LocationId) {
+    try {
+      if (!this.contractConstants.TARGET_PLANETS) {
+        throw new Error('Target planets are not enabled in this game');
+      }
+
+      const planet = this.entityStore.getPlanetWithId(locationId);
+
+      if (!planet || !isLocatable(planet)) {
+        throw new Error("you can't invade a planet you haven't discovered");
+      }
+
+      if (planet.destroyed) {
+        throw new Error("you can't invade destroyed planets");
+      }
+
+      if (planet.invader !== EMPTY_ADDRESS) {
+        throw new Error("you can't invade planets that have already been invaded");
+      }
+
+      if (planet.owner !== this.account) {
+        throw new Error('you can only invade planets you own');
+      }
+
+      if (!planet.isTargetPlanet) {
+        throw new Error('you can only invade target planets');
+      }
+
+      localStorage.setItem(`${this.getAccount()?.toLowerCase()}-invadeTargetPlanet`, locationId);
+
+      const getArgs = async () => {
+        const revealArgs = await this.snarkHelper.getRevealArgs(
+          planet.location.coords.x,
+          planet.location.coords.y
+        );
+
+        this.terminal.current?.println(
+          'REVEAL: calculated SNARK with args:',
+          TerminalTextStyle.Sub
+        );
+        this.terminal.current?.println(
+          JSON.stringify(hexifyBigIntNestedArray(revealArgs.slice(0, 3))),
+          TerminalTextStyle.Sub
+        );
+        this.terminal.current?.newline();
+
+        return revealArgs;
+      };
+
+      const txIntent: UnconfirmedInvadeTargetPlanet = {
+        methodName: ContractMethodName.INVADE_TARGET_PLANET,
+        contract: this.contractsAPI.contract,
+        locationId,
+        args: getArgs(),
+      };
+
+      const tx = await this.contractsAPI.submitTransaction(txIntent);
+      return tx;
+    } catch (e) {
+      this.getNotificationsManager().txInitError(
+        ContractMethodName.INVADE_TARGET_PLANET,
+        e.message
+      );
+      throw e;
+    }
+  }
+
   public async capturePlanet(locationId: LocationId) {
     try {
       const planet = this.entityStore.getPlanetWithId(locationId);
@@ -1915,16 +2025,106 @@ class GameManager extends EventEmitter {
     }
   }
 
+  public async claimVictory(locationId: LocationId) {
+    try {
+      const planet = this.entityStore.getPlanetWithId(locationId);
+
+      if (this.gameover) {
+        throw new Error('game is over');
+      }
+
+      if (!planet) {
+        throw new Error('planet is not loaded');
+      }
+
+      if (planet.destroyed) {
+        throw new Error("you can't capture destroyed planets");
+      }
+
+      if (planet.capturer !== EMPTY_ADDRESS) {
+        throw new Error("you can't claim victory on planets that have already been claimed");
+      }
+
+      if (planet.owner !== this.account) {
+        throw new Error('you can only capture planets you own');
+      }
+
+      if (!planet.isTargetPlanet) {
+        throw new Error('you can only capture target planets');
+      }
+
+      if (
+        !planet.invadeStartBlock ||
+        this.ethConnection.getCurrentBlockNumber() <
+          planet.invadeStartBlock + this.contractConstants.TARGET_PLANET_HOLD_BLOCKS_REQUIRED
+      ) {
+        throw new Error(
+          `you need to hold a planet for ${this.contractConstants.TARGET_PLANET_HOLD_BLOCKS_REQUIRED} blocks before capturing`
+        );
+      }
+
+      localStorage.setItem(`${this.getAccount()?.toLowerCase()}-claimVictory`, locationId);
+
+      const txIntent: UnconfirmedClaimVictory = {
+        methodName: ContractMethodName.CLAIM_VICTORY,
+        contract: this.contractsAPI.contract,
+        locationId,
+        args: Promise.resolve([locationIdToDecStr(locationId)]),
+      };
+
+      const tx = await this.contractsAPI.submitTransaction(txIntent);
+      return tx;
+    } catch (e) {
+      this.getNotificationsManager().txInitError(ContractMethodName.CLAIM_VICTORY, e.message);
+      throw e;
+    }
+  }
+
   /**
    * Attempts to join the game. Should not be called once you've already joined.
    */
-  public async joinGame(beforeRetry: (e: Error) => Promise<boolean>): Promise<void> {
+   public async joinGame(beforeRetry: (e: Error) => Promise<boolean>): Promise<void> {
     try {
       if (this.checkGameHasEnded()) {
         throw new Error('game has ended');
       }
+      
+      let planet : LocatablePlanet
+      if (this.contractConstants.MANUAL_SPAWN) {
+        this.terminal.current?.println(`Retrieving available manual planets`);
 
-      const planet = await this.findRandomHomePlanet();
+        const spawnPlanets = await this.contractsAPI.getSpawnPlanetIds(0);
+        console.log(`all manually created spawn planets: ${spawnPlanets}`);
+        const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000' as EthAddress;
+        const potentialHomeIds = spawnPlanets.filter(planetId => {
+          const planet = this.getGameObjects().getPlanetWithId(planetId);
+          if(!planet) {
+            console.log("not a planet")
+            return false;
+          }
+          console.log(`planet has owner: ${planet.owner}`);
+          if(planet.owner !== ZERO_ADDRESS) {
+            return false;
+          }
+          if(!isLocatable(planet)) {
+            console.log("planet not locatable");
+            return false;
+          }
+          return true;
+        })
+
+        if(potentialHomeIds.length == 0) {
+          throw new Error('no spawn locations available');
+        }
+        const potentialHomePlanets = potentialHomeIds.map(planetId => {
+          return this.getGameObjects().getPlanetWithId(planetId) as LocatablePlanet
+        })
+        planet = potentialHomePlanets[0];
+
+      } else {
+        planet = await this.findRandomHomePlanet();
+      }
+
       this.homeLocation = planet.location;
       this.terminal.current?.println('');
       this.terminal.current?.println(`Found Suitable Home Planet: ${getPlanetName(planet)} `);
@@ -1934,7 +2134,6 @@ class GameManager extends EventEmitter {
       this.terminal.current?.println('');
 
       await this.persistentChunkStore.addHomeLocation(planet.location);
-
       const getArgs = async () => {
         const args = await this.snarkHelper.getInitArgs(
           planet.location.coords.x,
@@ -3495,6 +3694,18 @@ class GameManager extends EventEmitter {
 
   public getPaused$(): Monomitter<boolean> {
     return this.paused$;
+  }
+
+  public getGameover(): boolean {
+    return this.gameover;
+  }
+
+  public getGameover$(): Monomitter<boolean> {
+    return this.gameover$;
+  }
+
+  public getWinners(): string[] {
+    return this.winners;
   }
 }
 

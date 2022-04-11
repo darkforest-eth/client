@@ -219,6 +219,8 @@ export class ContractsAPI extends EventEmitter {
           contract.filters.AdminGiveSpaceship(null, null).topics,
           contract.filters.PauseStateChanged(null).topics,
           contract.filters.LobbyCreated(null, null).topics,
+          contract.filters.TargetPlanetInvaded(null, null).topics,
+          contract.filters.Gameover(null).topics
         ].map((topicsOrUndefined) => (topicsOrUndefined || [])[0]),
       ] as Array<string | Array<string>>,
     };
@@ -363,6 +365,13 @@ export class ContractsAPI extends EventEmitter {
       [ContractEvent.LobbyCreated]: (ownerAddr: string, lobbyAddr: string) => {
         this.emit(ContractsAPIEvent.LobbyCreated, address(ownerAddr), address(lobbyAddr));
       },
+      [ContractEvent.TargetPlanetInvaded]: (player: string, location: EthersBN) => {
+        this.emit(ContractsAPIEvent.TargetPlanetInvaded, player, locationIdFromEthersBN(location));
+      },
+      [ContractEvent.Gameover]: (location: EthersBN) => {
+        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
+        this.emit(ContractsAPIEvent.Gameover);
+      }
     };
 
     this.ethConnection.subscribeToContractEvents(contract, eventHandlers, filter);
@@ -385,6 +394,8 @@ export class ContractsAPI extends EventEmitter {
     contract.removeAllListeners(ContractEvent.PlanetSilverWithdrawn);
     contract.removeAllListeners(ContractEvent.PlanetInvaded);
     contract.removeAllListeners(ContractEvent.PlanetCaptured);
+    contract.removeAllListeners(ContractEvent.TargetPlanetInvaded);
+    contract.removeAllListeners(ContractEvent.Gameover);
   }
 
   public getContractAddress(): EthAddress {
@@ -437,6 +448,13 @@ export class ContractsAPI extends EventEmitter {
       CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED,
       CAPTURE_ZONES_PER_5000_WORLD_RADIUS,
     } = await this.makeCall(this.contract.getGameConstants);
+
+    const {
+      MANUAL_SPAWN,
+      TARGET_PLANET_HOLD_BLOCKS_REQUIRED,
+      TARGET_PLANETS
+    } = await this.makeCall(this.contract.getArenaConstants);
+
 
     const TOKEN_MINT_END_SECONDS = (
       await this.makeCall(this.contract.TOKEN_MINT_END_TIMESTAMP)
@@ -558,6 +576,10 @@ export class ContractsAPI extends EventEmitter {
       ],
       CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED: CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED.toNumber(),
       CAPTURE_ZONES_PER_5000_WORLD_RADIUS: CAPTURE_ZONES_PER_5000_WORLD_RADIUS.toNumber(),
+
+      MANUAL_SPAWN: MANUAL_SPAWN,
+      TARGET_PLANETS: TARGET_PLANETS,
+      TARGET_PLANET_HOLD_BLOCKS_REQUIRED: TARGET_PLANET_HOLD_BLOCKS_REQUIRED.toNumber(),
     };
 
     return constants;
@@ -653,6 +675,38 @@ export class ContractsAPI extends EventEmitter {
     return planetIds.map(locationIdFromEthersBN);
   }
 
+  public async getTargetPlanetIds(
+    startingAt: number,
+    onProgress?: (fractionCompleted: number) => void
+  ): Promise<LocationId[]> {
+    const nPlanets: number = (await this.makeCall<EthersBN>(this.contract.getNTargetPlanets)).toNumber();
+
+    const planetIds = await aggregateBulkGetter<EthersBN>(
+      nPlanets - startingAt,
+      1000,
+      async (start, end) =>
+        await this.makeCall(this.contract.bulkGetTargetPlanetIds, [start + startingAt, end + startingAt]),
+      onProgress
+    );
+    return planetIds.map(locationIdFromEthersBN);
+  }
+
+  public async getSpawnPlanetIds(
+    startingAt: number,
+    onProgress?: (fractionCompleted: number) => void
+  ): Promise<LocationId[]> {
+    const nPlanets: number = (await this.makeCall<EthersBN>(this.contract.getNSpawnPlanets)).toNumber();
+
+    const planetIds = await aggregateBulkGetter<EthersBN>(
+      nPlanets - startingAt,
+      1000,
+      async (start, end) =>
+        await this.makeCall(this.contract.bulkGetSpawnPlanetIds, [start + startingAt, end + startingAt]),
+      onProgress
+    );
+    return planetIds.map(locationIdFromEthersBN);
+  }
+
   public async getRevealedCoordsByIdIfExists(
     planetId: LocationId
   ): Promise<RevealedCoords | undefined> {
@@ -667,6 +721,14 @@ export class ContractsAPI extends EventEmitter {
 
   public async getIsPaused(): Promise<boolean> {
     return this.makeCall(this.contract.paused);
+  }
+
+  public async getGameover(): Promise<boolean> {
+    return this.makeCall(this.contract.getGameover);
+  }
+
+  public async getWinners(): Promise<string[]> {
+    return this.makeCall(this.contract.getWinners);
   }
 
   public async getRevealedPlanetsCoords(
@@ -737,6 +799,16 @@ export class ContractsAPI extends EventEmitter {
       onProgressMetadata
     );
 
+    const rawPlanetsArenaInfo = await aggregateBulkGetter(
+      toLoadPlanets.length,
+      200,
+      async (start, end) =>
+        await this.makeCall(this.contract.bulkGetPlanetsArenaInfoByIds, [
+          toLoadPlanets.slice(start, end).map(locationIdToDecStr),
+        ]),
+      onProgressMetadata
+    );
+
     const planets: Map<LocationId, Planet> = new Map();
 
     for (let i = 0; i < toLoadPlanets.length; i += 1) {
@@ -745,7 +817,8 @@ export class ContractsAPI extends EventEmitter {
           locationIdToDecStr(toLoadPlanets[i]),
           rawPlanets[i],
           rawPlanetsExtendedInfo[i],
-          rawPlanetsExtendedInfo2[i]
+          rawPlanetsExtendedInfo2[i],
+          rawPlanetsArenaInfo[i]
         );
         planet.transactions = new TxCollection();
         planets.set(planet.locationId, planet);
@@ -758,11 +831,12 @@ export class ContractsAPI extends EventEmitter {
     const decStrId = locationIdToDecStr(planetId);
     const rawExtendedInfo = await this.makeCall(this.contract.planetsExtendedInfo, [decStrId]);
     const rawExtendedInfo2 = await this.makeCall(this.contract.planetsExtendedInfo2, [decStrId]);
+    const rawArenaInfo = await this.makeCall(this.contract.planetsArenaInfo, [decStrId]);
 
     if (!rawExtendedInfo[0]) return undefined; // planetExtendedInfo.isInitialized is false
     if (!rawExtendedInfo2[0]) return undefined; // planetExtendedInfo.isInitialized is false
     const rawPlanet = await this.makeCall(this.contract.planets, [decStrId]);
-    return decodePlanet(decStrId, rawPlanet, rawExtendedInfo, rawExtendedInfo2);
+    return decodePlanet(decStrId, rawPlanet, rawExtendedInfo, rawExtendedInfo2, rawArenaInfo);
   }
 
   public async getArtifactById(artifactId: ArtifactId): Promise<Artifact | undefined> {

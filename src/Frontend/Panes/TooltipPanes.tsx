@@ -481,6 +481,19 @@ const FindArtifact = () => (
   </>
 );
 
+export function TargetPlanet() {
+  return (
+    <>
+      This planet is a <Red>Target Planet!</Red> Invade and capture to win the game!
+    </>
+  );
+}
+
+export function SpawnPlanet() {
+  return <>This is a spawn planet!</>;
+}
+
+
 const ArtifactStored = () => <>This planet has a powerful artifact on it!</>;
 
 const HashesPerSec = () => <>hashes / sec</>;
@@ -552,5 +565,7 @@ export function TooltipContent({ name }: { name: TooltipName | undefined }) {
   if (name === TooltipName.PrioritizeTransaction) return <PrioritizeTransactionPane />;
   if (name === TooltipName.Invadable) return <InvadablePane />;
   if (name === TooltipName.Capturable) return <CapturablePane />;
+  if (name === TooltipName.TargetPlanet) return <TargetPlanet />;
+  if (name === TooltipName.SpawnPlanet) return <SpawnPlanet />;
   return <></>;
 }

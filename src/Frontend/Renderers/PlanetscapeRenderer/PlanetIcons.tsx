@@ -87,6 +87,16 @@ export function PlanetIcons({ planet }: { planet: Planet | undefined }) {
 
   return (
     <StyledPlanetIcons>
+        {planet.isTargetPlanet && (
+        <TooltipTrigger name={TooltipName.TargetPlanet}>
+          <Icon type={IconType.TargetPlanet} />
+        </TooltipTrigger>
+      )}
+        {planet.isSpawnPlanet && (
+        <TooltipTrigger name={TooltipName.SpawnPlanet}>
+          <Icon type={IconType.SpawnPlanet} />
+        </TooltipTrigger>
+      )}
       {planet.owner === EMPTY_ADDRESS && planet.energy > 0 && (
         <TooltipTrigger name={TooltipName.Pirates}>
           <Icon type={IconType.Pirates} />

@@ -15,6 +15,7 @@ import { useEmitterSubscribe, useEmitterValue } from '../Utils/EmitterHooks';
 import { ModalToggleButton } from './ModalIcon';
 import { NetworkHealth } from './NetworkHealth';
 import { Paused } from './Paused';
+import { Gameover } from './Gameover';
 
 const TopBarContainer = styled.div`
   z-index: ${DFZIndex.MenuBar};
@@ -231,6 +232,7 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: Hook<boolean>
         )}
       </AlignCenterHorizontally>
       <NetworkHealth />
+      <Gameover/>
       <Paused />
     </TopBarContainer>
   );

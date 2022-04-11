@@ -282,3 +282,8 @@ export function usePaused() {
   const ui = useUIManager();
   return useEmitterValue(ui.getPaused$(), ui.getPaused());
 }
+
+export function useGameover() {
+  const ui = useUIManager();
+  return useEmitterValue(ui.getGameover$(), ui.getGameover());
+}

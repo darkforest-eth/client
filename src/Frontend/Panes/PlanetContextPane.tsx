@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { CapturePlanetButton } from '../Components/CapturePlanetButton';
+import { TargetPlanetButton } from '../Components/TargetPlanetButton';
 import { VerticalSplit } from '../Components/CoreUI';
 import { MineArtifactButton } from '../Components/MineArtifactButton';
 import {
@@ -52,6 +53,11 @@ function PlanetContextPaneContent({
     captureRow = <CapturePlanetButton planetWrapper={planet} />;
   }
 
+  let captureTargetRow = null;
+  if (!p?.destroyed && uiManager.targetPlanetsEnabled) {
+    captureTargetRow = <TargetPlanetButton planetWrapper={planet} />;
+  }
+
   let upgradeRow = null;
   if (!p?.destroyed && owned) {
     upgradeRow = <OpenUpgradeDetailsPaneButton modal={modal} planetId={p?.locationId} />;
@@ -82,6 +88,7 @@ function PlanetContextPaneContent({
       />
       <MineArtifactButton planetWrapper={planet} />
       {captureRow}
+      {captureTargetRow}
 
       <VerticalSplit>
         <>
