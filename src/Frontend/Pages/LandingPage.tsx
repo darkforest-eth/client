@@ -103,9 +103,42 @@ export default function LandingPage() {
               </Btn>
             </ButtonWrapper>
           </Header>
-
           <EmSpacer height={3} />
-
+          Ways to get Involved
+          <EmSpacer height={1} />
+          <Involved>
+            <InvolvedItem
+              href='https://blog.zkga.me/hosting-a-dark-forest-community-round'
+              style={{
+                backgroundImage: "url('/public/get_involved/community_round.png')",
+              }}
+            ></InvolvedItem>
+            <InvolvedItem
+              href='https://github.com/darkforest-eth/plugins#adding-your-plugin'
+              style={{
+                backgroundImage: "url('/public/get_involved/write_plugin.png')",
+              }}
+            ></InvolvedItem>
+            <InvolvedItem
+              href='https://github.com/darkforest-eth/plugins#reviewer-guidelines'
+              style={{
+                backgroundImage: "url('/public/get_involved/reveiw_plugin.png')",
+              }}
+            ></InvolvedItem>
+            <InvolvedItem
+              href='https://blog.zkga.me/renderer-plugin-contest'
+              style={{
+                backgroundImage: "url('/public/get_involved/plugin_render.png')",
+              }}
+            ></InvolvedItem>
+            <InvolvedItem
+              href='https://blog.zkga.me/introducing-dark-forest-lobbies'
+              style={{
+                backgroundImage: "url('/public/get_involved/lobby.png')",
+              }}
+            ></InvolvedItem>
+          </Involved>
+          <EmSpacer height={3} />
           <div style={{ color: dfstyles.colors.text }}>
             <HallOfFameTitle>Space Masters</HallOfFameTitle>
             <Spacer height={8} />
@@ -238,9 +271,7 @@ export default function LandingPage() {
               </tbody>
             </table>
           </div>
-
           <Spacer height={32} />
-
           <EmailWrapper>
             <EmailCTA mode={EmailCTAMode.SUBSCRIBE} />
           </EmailWrapper>
@@ -375,3 +406,34 @@ function Hiring() {
     </Modal>
   );
 }
+
+const Involved = styled.div`
+  width: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+`;
+
+const InvolvedItem = styled.a`
+  height: 150px;
+  display: inline-block;
+  margin: 4px;
+  padding: 4px 8px;
+
+  background-color: ${dfstyles.colors.backgroundlighter};
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+
+  cursor: pointer;
+  transition: transform 200ms;
+  &:hover {
+    transform: scale(1.03);
+  }
+  &:hover:active {
+    transform: scale(1.05);
+  }
+`;
