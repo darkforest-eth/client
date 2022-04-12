@@ -98,7 +98,7 @@ import {
 } from '@darkforest_eth/types';
 import bigInt, { BigInteger } from 'big-integer';
 import delay from 'delay';
-import { BigNumber, Contract, ContractInterface, providers } from 'ethers';
+import { BigNumber, Contract, ContractInterface, constants, providers } from 'ethers';
 import { EventEmitter } from 'events';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
 import { MIN_CHUNK_SIZE } from '../../Frontend/Utils/constants';
@@ -362,6 +362,7 @@ class GameManager extends EventEmitter {
 
   private winners: string[];
 
+  private spectator : boolean;
   /**
    * Generates capture zones.
    */
@@ -388,7 +389,8 @@ class GameManager extends EventEmitter {
     ethConnection: EthConnection,
     paused: boolean,
     gameover: boolean,
-    winners: string[]
+    winners: string[],
+    spectator : boolean
   ) {
     super();
 
@@ -496,6 +498,7 @@ class GameManager extends EventEmitter {
     this.useMockHash = useMockHash;
     this.paused = paused;
 
+    this.spectator = spectator;
     this.ethConnection = ethConnection;
 
     this.diagnosticsInterval = setInterval(this.uploadDiagnostics.bind(this), 10_000);
@@ -525,7 +528,8 @@ class GameManager extends EventEmitter {
 
     this.refreshScoreboard();
     this.refreshNetworkHealth();
-    this.getSpaceships();
+
+    if(!spectator) this.getSpaceships();
 
     this.safeMode = false;
   }
@@ -586,15 +590,18 @@ class GameManager extends EventEmitter {
     connection,
     terminal,
     contractAddress,
+    spectator
   }: {
     connection: EthConnection;
     terminal: React.MutableRefObject<TerminalHandle | undefined>;
     contractAddress: EthAddress;
+    spectator: boolean;
   }): Promise<GameManager> {
     if (!terminal.current) {
       throw new Error('you must pass in a handle to a terminal');
     }
-
+    
+    
     const account = connection.getAddress();
 
     if (!account) {
@@ -613,7 +620,10 @@ class GameManager extends EventEmitter {
     terminal.current?.newline();
 
     const initialState = await gameStateDownloader.download(contractsAPI, persistentChunkStore);
-    const possibleHomes = await persistentChunkStore.getHomeLocations();
+
+    let possibleHomes = undefined;
+    if(!spectator)
+      possibleHomes = await persistentChunkStore.getHomeLocations();
 
     terminal.current?.println('');
     terminal.current?.println('Building Index...');
@@ -647,11 +657,13 @@ class GameManager extends EventEmitter {
 
     // figure out what's my home planet
     let homeLocation: WorldLocation | undefined = undefined;
-    for (const loc of possibleHomes) {
-      if (initialState.allTouchedPlanetIds.includes(loc.hash)) {
-        homeLocation = loc;
-        await persistentChunkStore.confirmHomeLocation(loc);
-        break;
+    if(possibleHomes) {
+      for (const loc of possibleHomes) {
+        if (initialState.allTouchedPlanetIds.includes(loc.hash)) {
+          homeLocation = loc;
+          await persistentChunkStore.confirmHomeLocation(loc);
+          break;
+        }
       }
     }
 
@@ -691,7 +703,8 @@ class GameManager extends EventEmitter {
       connection,
       initialState.paused,
       initialState.gameover,
-      initialState.winners
+      initialState.winners,
+      spectator
     );
 
     gameManager.setPlayerTwitters(initialState.twitters);
@@ -900,7 +913,9 @@ class GameManager extends EventEmitter {
 
     // we only want to initialize the mining manager if the player has already joined the game
     // if they haven't, we'll do this once the player has joined the game
-    if (!!homeLocation && initialState.players.has(account as string)) {
+    if(spectator) {
+      gameManager.initMiningManager({x: 0, y: 0} );
+    } else if (!!homeLocation && initialState.players.has(account as string)) {
       gameManager.initMiningManager(homeLocation.coords);
     }
 
@@ -2095,15 +2110,14 @@ class GameManager extends EventEmitter {
 
         const spawnPlanets = await this.contractsAPI.getSpawnPlanetIds(0);
         console.log(`all manually created spawn planets: ${spawnPlanets}`);
-        const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000' as EthAddress;
         const potentialHomeIds = spawnPlanets.filter(planetId => {
           const planet = this.getGameObjects().getPlanetWithId(planetId);
           if(!planet) {
             console.log("not a planet")
             return false;
           }
-          console.log(`planet has owner: ${planet.owner}`);
-          if(planet.owner !== ZERO_ADDRESS) {
+          console.log(`planet's owner: ${planet.owner}`);
+          if(planet.owner !== constants.AddressZero) {
             return false;
           }
           if(!isLocatable(planet)) {
@@ -3630,6 +3644,9 @@ class GameManager extends EventEmitter {
         }
       });
     });
+  }
+  public getIsSpecator() {
+    return this.spectator;
   }
 
   public getSafeMode() {

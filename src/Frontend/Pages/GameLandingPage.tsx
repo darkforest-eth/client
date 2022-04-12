@@ -42,6 +42,8 @@ const enum TerminalPromptStep {
   GENERATE_ACCOUNT,
   IMPORT_ACCOUNT,
   ACCOUNT_SET,
+  SPECTATING,
+  PLAYING,
   ASKING_HAS_WHITELIST_KEY,
   ASKING_WAITLIST_EMAIL,
   ASKING_WHITELIST_KEY,
@@ -387,8 +389,82 @@ export function GameLandingPage({ match }: RouteComponentProps<{ contract: strin
     },
     [ethConnection]
   );
-
+  
   const advanceStateFromAccountSet = useCallback(
+    async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
+      terminal.current?.println(``);
+      terminal.current?.println(`Would you like to play or spectate this game?`, TerminalTextStyle.Sub);
+
+      terminal.current?.print('(a) ', TerminalTextStyle.Sub);
+      terminal.current?.println(`Play.`);
+      terminal.current?.print('(s) ', TerminalTextStyle.Sub);
+      terminal.current?.println(`Spectate.`);
+      terminal.current?.println(``);
+      terminal.current?.println(`Select an option:`, TerminalTextStyle.Text);
+
+      const userInput = await terminal.current?.getInput();
+      if (userInput === 'a') {
+        setStep(TerminalPromptStep.PLAYING);
+      } else if (userInput === 's') {
+        setStep(TerminalPromptStep.SPECTATING);
+      } else {
+        terminal.current?.println('Unrecognized input. Please try again.');
+        await advanceStateFromAccountSet(terminal);
+      }
+    },[]);
+
+  const advanceStateFromSpectating = useCallback(
+    async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
+        let newGameManager: GameManager;
+        try {
+          const playerAddress = ethConnection?.getAddress();
+          if (!playerAddress || !ethConnection) throw new Error('not logged in');
+
+          newGameManager = await GameManager.create({
+            connection: ethConnection,
+            terminal,
+            contractAddress,
+            spectator : true
+          });
+        } catch (e) {
+          console.error(e);
+  
+          setStep(TerminalPromptStep.ERROR);
+  
+          terminal.current?.print(
+            'Network under heavy load. Please refresh the page, and check ',
+            TerminalTextStyle.Red
+          );
+  
+          terminal.current?.printLink(
+            'https://blockscout.com/poa/xdai/',
+            () => {
+              window.open('https://blockscout.com/poa/xdai/');
+            },
+            TerminalTextStyle.Red
+          );
+  
+          terminal.current?.println('');
+  
+          return;
+        }
+  
+        setGameManager(newGameManager);
+  
+        window.df = newGameManager;
+  
+        const newGameUIManager = await GameUIManager.create(newGameManager, terminal);
+  
+        window.ui = newGameUIManager;
+  
+        terminal.current?.newline();
+        terminal.current?.println('Connected to Dark Forest Contract');
+        gameUIManagerRef.current = newGameUIManager;
+        setStep(TerminalPromptStep.ALL_CHECKS_PASS);
+    },[ethConnection, isProd, contractAddress]
+  )
+
+  const advanceStateFromPlaying = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
       try {
         const playerAddress = ethConnection?.getAddress();
@@ -579,6 +655,7 @@ export function GameLandingPage({ match }: RouteComponentProps<{ contract: strin
           connection: ethConnection,
           terminal,
           contractAddress,
+          spectator : false
         });
       } catch (e) {
         console.error(e);
@@ -819,6 +896,10 @@ export function GameLandingPage({ match }: RouteComponentProps<{ contract: strin
         await advanceStateFromImportAccount(terminal);
       } else if (step === TerminalPromptStep.ACCOUNT_SET) {
         await advanceStateFromAccountSet(terminal);
+      } else if (step === TerminalPromptStep.SPECTATING) {
+        await advanceStateFromSpectating(terminal);
+      } else if (step === TerminalPromptStep.PLAYING) {
+        await advanceStateFromPlaying(terminal);
       } else if (step === TerminalPromptStep.ASKING_HAS_WHITELIST_KEY) {
         await advanceStateFromAskHasWhitelistKey(terminal);
       } else if (step === TerminalPromptStep.ASKING_WHITELIST_KEY) {
