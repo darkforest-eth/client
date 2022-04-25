@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Btn } from '../../Components/Btn';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Modal } from '../../Components/Modal';
 import { DrawMessage, MinimapConfig } from './MinimapUtils';
+import { LobbyConfigAction } from './Reducer';
 
 function getWorker() {
   return new Worker(new URL('./minimap.worker.ts', import.meta.url));
@@ -33,8 +35,10 @@ function drawOnCanvas(canvas: HTMLCanvasElement | null, msg: DrawMessage) {
   // draw mini-map
 
   for (let i = 0; i < data.length; i++) {
-    if(data[i].planet) {
-      ctx.fillStyle = '#FF0000'; // planet
+    if (data[i].planet == 'staged') {
+      ctx.fillStyle = '#FF0000'; // staged planet
+    } else if (data[i].planet == 'created') {
+      ctx.fillStyle = '#00FFFF'; // created planet
     } else if (data[i].type === 0) {
       ctx.fillStyle = '#186469'; // inner nebula
     } else if (data[i].type === 1) {
@@ -60,10 +64,14 @@ function drawOnCanvas(canvas: HTMLCanvasElement | null, msg: DrawMessage) {
 
 export function Minimap({
   modalIndex,
-  config,
+  minimapConfig,
+  onUpdate,
+  created,
 }: {
   modalIndex: number;
-  config: MinimapConfig | undefined;
+  minimapConfig: MinimapConfig | undefined;
+  onUpdate: (action: LobbyConfigAction) => void;
+  created: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -71,11 +79,11 @@ export function Minimap({
   const worker = useMemo(getWorker, []);
 
   useEffect(() => {
-    if (config) {
+    if (minimapConfig) {
       setRefreshing(true);
-      worker.postMessage(JSON.stringify(config));
+      worker.postMessage(JSON.stringify(minimapConfig));
     }
-  }, [worker, config, setRefreshing]);
+  }, [worker, minimapConfig, setRefreshing]);
 
   useEffect(() => {
     function onMessage(e: MessageEvent) {
@@ -90,6 +98,14 @@ export function Minimap({
     return () => worker.removeEventListener('message', onMessage);
   }, [worker, setRefreshing]);
 
+  const randomize = () => {
+    console.log('randomizing!!!');
+    const seed = Math.floor(Math.random() * 10000);
+    onUpdate({ type: 'PLANETHASH_KEY', value: seed });
+    onUpdate({ type: 'SPACETYPE_KEY', value: seed + 1 });
+    onUpdate({ type: 'BIOMEBASE_KEY', value: seed + 2 });
+  };
+
   return (
     <Modal width='416px' initialX={650} initialY={200} index={modalIndex}>
       <div slot='title'>World Minimap</div>
@@ -102,6 +118,9 @@ export function Minimap({
       <div style={{ textAlign: 'center', height: '24px' }}>
         {refreshing ? <LoadingSpinner initialText='Refreshing...' /> : null}
       </div>
+      <Btn size='stretch' onClick={randomize} disabled={refreshing || created}>
+        Randomize Map
+      </Btn>
     </Modal>
   );
 }

@@ -20,7 +20,7 @@ export function AdminPermissionsPane({ config, onUpdate }: LobbiesPaneProps) {
       </Row>
       <Row>
         <Checkbox
-          label='Is whitelist enabled?'
+          label='Is allowlist enabled?'
           checked={config.WHITELIST_ENABLED.displayValue}
           onChange={(e: Event & React.ChangeEvent<DarkForestCheckbox>) =>
             onUpdate({ type: 'WHITELIST_ENABLED', value: e.target.checked })

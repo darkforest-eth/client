@@ -5,9 +5,8 @@ import {
   fakeProof,
   RevealSnarkContractCallArgs,
   RevealSnarkInput,
-  SnarkJSProofAndSignals,
+  SnarkJSProofAndSignals
 } from '@darkforest_eth/snarks';
-
 import revealCircuitPath from '@darkforest_eth/snarks/reveal.wasm';
 import revealZkeyPath from '@darkforest_eth/snarks/reveal.zkey';
 import {
@@ -18,7 +17,7 @@ import {
   UnconfirmedCreateArenaPlanet,
   UnconfirmedReveal,
   WorldCoords,
-  WorldLocation,
+  WorldLocation
 } from '@darkforest_eth/types';
 import { BigNumberish } from 'ethers';
 import { LobbyInitializers } from '../../Frontend/Panes/Lobbies/Reducer';
@@ -34,23 +33,42 @@ export type CreatePlanetData = {
   biomeBase: number;
 };
 
-export class PlanetCreator {
+export type CreatedPlanet = {
+  x: number;
+  y: number;
+  level: number;
+  planetType: number;
+  requireValidLocationId: boolean;
+  revealLocation: boolean;
+  isTargetPlanet: boolean;
+  isSpawnPlanet: boolean;  createTx : string | undefined;
+  revealTx : string | undefined;
+}
+
+export class LobbyAdminTools {
   private readonly lobbyAddress: EthAddress;
   private readonly contract: ContractsAPI;
   private readonly connection: EthConnection;
+  private whitelistedAddresses: EthAddress[];
+  private createdPlanets: CreatedPlanet[];
 
   private constructor(lobbyAddress: EthAddress, contract: ContractsAPI, connection: EthConnection) {
     this.lobbyAddress = lobbyAddress;
     this.contract = contract;
     this.connection = connection;
+    this.whitelistedAddresses = [];
+    this.createdPlanets = [];
   }
 
-  static async create(lobbyAddress: EthAddress, connection: EthConnection): Promise<PlanetCreator> {
+  static async create(
+    lobbyAddress: EthAddress,
+    connection: EthConnection
+  ): Promise<LobbyAdminTools> {
     const contract = await makeContractsAPI({ connection, contractAddress: lobbyAddress });
-    const planetCreator = new PlanetCreator(lobbyAddress, contract, connection);
-    return planetCreator;
+    const lobbyAdminTools = new LobbyAdminTools(lobbyAddress, contract, connection);
+    return lobbyAdminTools;
   }
-  
+
   private generatePlanetData(planet: AdminPlanet, initializers: LobbyInitializers) {
     const location = initializers.DISABLE_ZK_CHECKS
       ? fakeHash(initializers.PLANET_RARITY)(planet.x, planet.y).toString()
@@ -112,12 +130,11 @@ export class PlanetCreator {
     });
 
     await tx.confirmedPromise;
+    this.createdPlanets.push({...planet, createTx : tx?.hash, revealTx : undefined});
+
   }
 
-  async revealPlanet(
-    planet: AdminPlanet,
-    initializers: LobbyInitializers,
-  ) {
+  async revealPlanet(planet: AdminPlanet, initializers: LobbyInitializers) {
     const planetData = this.generatePlanetData(planet, initializers);
     const getArgs = async () => {
       const revealArgs = await this.makeRevealProof(
@@ -155,6 +172,9 @@ export class PlanetCreator {
 
     await tx.confirmedPromise;
     console.log(`reveal tx accepted`);
+    const createdPlanet = this.createdPlanets.find(p => p.x == planet.x && p.y == planet.y);
+    if(!createdPlanet) throw("created planet not found");
+    createdPlanet.revealTx = tx?.hash;
   }
 
   private async makeRevealProof(
@@ -208,5 +228,33 @@ export class PlanetCreator {
 
       return buildContractCallArgs(proof, publicSignals) as RevealSnarkContractCallArgs;
     }
+  }
+
+  async whitelistPlayer(address: EthAddress) {
+    const args = Promise.resolve([address]);
+    const txIntent = {
+      methodName: 'addToWhitelist' as ContractMethodName,
+      contract: this.contract.contract,
+      args: args,
+    };
+
+    const tx = await this.contract.submitTransaction(txIntent, {
+      gasLimit: '15000000',
+    });
+
+    await tx.confirmedPromise;
+    this.whitelistedAddresses.push(address);
+  }
+
+  get planets() {
+    return this.createdPlanets;
+  }
+
+  get allAddresses() {
+    return this.whitelistedAddresses;
+  }
+
+  get address() {
+    return this.lobbyAddress;
   }
 }

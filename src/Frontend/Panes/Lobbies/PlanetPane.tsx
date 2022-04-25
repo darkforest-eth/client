@@ -3,7 +3,6 @@ import React from 'react';
 import { DarkForestNumberInput, NumberInput } from '../../Components/Input';
 import { Row } from '../../Components/Row';
 import { DarkForestSlider, Slider } from '../../Components/Slider';
-import { Sub } from '../../Components/Text';
 import { LobbiesPaneProps, Warning } from './LobbiesUtils';
 
 const rowChunkSize = 5;
@@ -16,30 +15,18 @@ function ThresholdByPlanetLevel({
   value,
   onUpdate,
 }: LobbiesPaneProps & { value: number | undefined; index: number }) {
-  // The level 0 value can never change
-  if (index === 0) {
-    return (
-      <div style={itemStyle}>
-        <span>Level 0</span>
-        <div>
-          <Sub>{value}</Sub>
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div style={itemStyle}>
-        <span>Level {index}</span>
-        <NumberInput
-          format='integer'
-          value={value}
-          onChange={(e: Event & React.ChangeEvent<DarkForestNumberInput>) => {
-            onUpdate({ type: 'PLANET_LEVEL_THRESHOLDS', index, value: e.target.value });
-          }}
-        />
-      </div>
-    );
-  }
+  return (
+    <div style={itemStyle}>
+      <span>Level {index}</span>
+      <NumberInput
+        format='integer'
+        value={value}
+        onChange={(e: Event & React.ChangeEvent<DarkForestNumberInput>) => {
+          onUpdate({ type: 'PLANET_LEVEL_THRESHOLDS', index, value: e.target.value });
+        }}
+      />
+    </div>
+  );
 }
 
 export function PlanetPane({ config, onUpdate }: LobbiesPaneProps) {

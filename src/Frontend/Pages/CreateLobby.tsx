@@ -7,23 +7,20 @@ import {
   ArtifactRarity,
   ContractMethodName,
   EthAddress,
-  UnconfirmedCreateLobby,
+  UnconfirmedCreateLobby
 } from '@darkforest_eth/types';
 import { Contract } from 'ethers';
-import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { ContractsAPI, makeContractsAPI } from '../../Backend/GameLogic/ContractsAPI';
+import { LobbyAdminTools } from '../../Backend/Utils/LobbyAdminTools';
 import { ContractsAPIEvent } from '../../_types/darkforest/api/ContractsAPITypes';
 import { InitRenderState, Wrapper } from '../Components/GameLandingPageComponents';
-import { ConfigurationPane } from '../Panes/Lobbies/ConfigurationPane';
-import { Minimap } from '../Panes/Lobbies/MinimapPane';
-import { MinimapConfig } from '../Panes/Lobbies/MinimapUtils';
 import { LobbyInitializers } from '../Panes/Lobbies/Reducer';
 import { listenForKeyboardEvents, unlinkKeyboardEvents } from '../Utils/KeyEmitters';
 import { CadetWormhole } from '../Views/CadetWormhole';
+import { LobbyConfigPage } from './LobbyConfigPage';
 import { LobbyLandingPage } from './LobbyLandingPage';
-import { PlanetCreator } from '../../Backend/Utils/PlanetCreator';
 
 type ErrorState =
   | { type: 'invalidAddress' }
@@ -36,13 +33,8 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
   const [ownerAddress, setOwnerAddress] = useState<EthAddress | undefined>();
   const [contract, setContract] = useState<ContractsAPI | undefined>();
   const [startingConfig, setStartingConfig] = useState<LobbyInitializers | undefined>();
-  const [lobbyAddress, setLobbyAddress] = useState<EthAddress | undefined>();
-  const [minimapConfig, setMinimapConfig] = useState<MinimapConfig | undefined>();
-  const [planetCreator, setPlanetCreator] = useState<PlanetCreator>()
-  const onMapChange = useMemo(() => {
-    return _.debounce((config: MinimapConfig) => setMinimapConfig(config), 500);
-  }, [setMinimapConfig]);
-
+  const [lobbyAdminTools, setLobbyAdminTools] = useState<LobbyAdminTools>();
+  const [lobbyTx, setLobbyTx] = useState<string | undefined>()
   let contractAddress: EthAddress | undefined;
   try {
     contractAddress = address(match.params.contract);
@@ -85,42 +77,12 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
         .getConstants()
         .then((config) => {
           setStartingConfig({
-            // Explicitly defaulting this to false
+            ...config,
             WHITELIST_ENABLED: false,
-            // TODO: Figure out if we should expose this from contract
-            START_PAUSED: false,
-            ADMIN_CAN_ADD_PLANETS: config.ADMIN_CAN_ADD_PLANETS,
-            WORLD_RADIUS_LOCKED: config.WORLD_RADIUS_LOCKED,
-            WORLD_RADIUS_MIN: config.WORLD_RADIUS_MIN,
-            DISABLE_ZK_CHECKS: config.DISABLE_ZK_CHECKS,
-            PLANETHASH_KEY: config.PLANETHASH_KEY,
-            SPACETYPE_KEY: config.SPACETYPE_KEY,
-            BIOMEBASE_KEY: config.BIOMEBASE_KEY,
-            PERLIN_MIRROR_X: config.PERLIN_MIRROR_X,
-            PERLIN_MIRROR_Y: config.PERLIN_MIRROR_Y,
-            PERLIN_LENGTH_SCALE: config.PERLIN_LENGTH_SCALE,
-            MAX_NATURAL_PLANET_LEVEL: config.MAX_NATURAL_PLANET_LEVEL,
-            TIME_FACTOR_HUNDREDTHS: config.TIME_FACTOR_HUNDREDTHS,
-            PERLIN_THRESHOLD_1: config.PERLIN_THRESHOLD_1,
-            PERLIN_THRESHOLD_2: config.PERLIN_THRESHOLD_2,
-            PERLIN_THRESHOLD_3: config.PERLIN_THRESHOLD_3,
-            INIT_PERLIN_MIN: config.INIT_PERLIN_MIN,
-            INIT_PERLIN_MAX: config.INIT_PERLIN_MAX,
-            SPAWN_RIM_AREA: config.SPAWN_RIM_AREA,
-            BIOME_THRESHOLD_1: config.BIOME_THRESHOLD_1,
-            BIOME_THRESHOLD_2: config.BIOME_THRESHOLD_2,
-            PLANET_LEVEL_THRESHOLDS: config.PLANET_LEVEL_THRESHOLDS,
-            PLANET_RARITY: config.PLANET_RARITY,
-            LOCATION_REVEAL_COOLDOWN: config.LOCATION_REVEAL_COOLDOWN,
-            // TODO: Implement when we add this scoring contract back
+            START_PAUSED: true,
             CLAIM_PLANET_COOLDOWN: 0,
-            // TODO: Need to think through this implementation a bit more, even if only toggling planet types
-            PLANET_TYPE_WEIGHTS: config.PLANET_TYPE_WEIGHTS,
-            // TODO: Rename in one of the places
-            // TODO: Implement... Needs a datetime input component (WIP)
-            TOKEN_MINT_END_TIMESTAMP: 1948939200, // new Date("2031-10-05T04:00:00.000Z").getTime() / 1000,
-            PHOTOID_ACTIVATION_DELAY: config.PHOTOID_ACTIVATION_DELAY,
-            SILVER_SCORE_VALUE: config.SILVER_SCORE_VALUE,
+            ADMIN_PLANETS: [],
+            TOKEN_MINT_END_TIMESTAMP: Date.now() + (1000 * 60 * 60 * 24 * 365), // one year from now
             ARTIFACT_POINT_VALUES: [
               config.ARTIFACT_POINT_VALUES[ArtifactRarity.Unknown],
               config.ARTIFACT_POINT_VALUES[ArtifactRarity.Common],
@@ -129,23 +91,7 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
               config.ARTIFACT_POINT_VALUES[ArtifactRarity.Legendary],
               config.ARTIFACT_POINT_VALUES[ArtifactRarity.Mythic],
             ],
-            PLANET_TRANSFER_ENABLED: config.PLANET_TRANSFER_ENABLED,
-            SPACE_JUNK_ENABLED: config.SPACE_JUNK_ENABLED,
-            SPACE_JUNK_LIMIT: config.SPACE_JUNK_LIMIT,
-            PLANET_LEVEL_JUNK: config.PLANET_LEVEL_JUNK,
-            ABANDON_SPEED_CHANGE_PERCENT: config.ABANDON_SPEED_CHANGE_PERCENT,
-            ABANDON_RANGE_CHANGE_PERCENT: config.ABANDON_RANGE_CHANGE_PERCENT,
-            CAPTURE_ZONES_ENABLED: config.CAPTURE_ZONES_ENABLED,
-            CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL: config.CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL,
-            CAPTURE_ZONE_COUNT: config.CAPTURE_ZONE_COUNT,
-            CAPTURE_ZONE_PLANET_LEVEL_SCORE: config.CAPTURE_ZONE_PLANET_LEVEL_SCORE,
-            CAPTURE_ZONE_RADIUS: config.CAPTURE_ZONE_RADIUS,
-            CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED: config.CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED,
-            CAPTURE_ZONES_PER_5000_WORLD_RADIUS: config.CAPTURE_ZONES_PER_5000_WORLD_RADIUS,
-            TARGET_PLANETS: config.TARGET_PLANETS,
-            TARGET_PLANET_HOLD_BLOCKS_REQUIRED: config.TARGET_PLANET_HOLD_BLOCKS_REQUIRED,
-            MANUAL_SPAWN: config.MANUAL_SPAWN,
-            ADMIN_PLANETS: [],
+            WHITELIST: []
           });
         })
         .catch((e) => {
@@ -179,20 +125,20 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
 
     contract.once(ContractsAPIEvent.LobbyCreated, async (owner: EthAddress, lobby: EthAddress) => {
       if (owner === ownerAddress) {
-        setLobbyAddress(lobby);
-        if(!connection){
-          throw("error: no connection")
+        if (!connection) {
+          throw 'error: no connection';
         }
-        const planetCreator = await PlanetCreator.create(lobby, connection);
-        setPlanetCreator(planetCreator);
+        const lobbyAdminTools = await LobbyAdminTools.create(lobby, connection);
+        setLobbyAdminTools(lobbyAdminTools);
       }
     });
 
     const tx = await contract.submitTransaction(txIntent, {
       // The createLobby function costs somewhere around 12mil gas
-      gasLimit: '16777215',
+      gasLimit: '15000000',
     });
     await tx.confirmedPromise;
+    setLobbyTx(tx?.hash)
   }
 
   if (errorState) {
@@ -210,25 +156,17 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
         return _exhaustive;
     }
   }
-  let content;
-  if (startingConfig) {
-    content = (
-      <>
-        <ConfigurationPane
-          modalIndex={2}
-          lobbyAddress={lobbyAddress}
-          startingConfig={startingConfig}
-          onMapChange={onMapChange}
-          onCreate={createLobby}
-          planetCreator={planetCreator}
-        />
-        {/* Minimap uses modalIndex=1 so it is always underneath the configuration pane */}
-        <Minimap modalIndex={1} config={minimapConfig} />
-      </>
-    );
-  } else {
-    content = <LobbyLandingPage onReady={onReady} />;
-  }
+
+  const content = startingConfig ? (
+    <LobbyConfigPage
+      startingConfig={startingConfig}
+      onCreate = {createLobby}
+      lobbyAdminTools={lobbyAdminTools}
+      lobbyTx = {lobbyTx}
+    />
+  ) : (
+    <LobbyLandingPage onReady={onReady} />
+  );
 
   return (
     <Wrapper initRender={InitRenderState.NONE} terminalEnabled={false}>

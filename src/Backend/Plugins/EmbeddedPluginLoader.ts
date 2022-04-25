@@ -29,7 +29,7 @@ export function getEmbeddedPlugins(isAdmin: boolean) {
       if (isAdmin) {
         return true;
       } else {
-        return !filename.startsWith('./Admin-Controls');
+        return !filename.startsWith('./Admin-Controls') || !filename.startsWith('./Metrics');
       }
     })
     .map((filename) => {

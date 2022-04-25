@@ -27,7 +27,8 @@ export function LinkButton({
   to,
   shortcut,
   children,
-}: React.PropsWithChildren<{ to: string; shortcut?: string }>) {
+  disabled = false
+}: React.PropsWithChildren<{ to: string; shortcut?: string; disabled?: boolean}>) {
   const { url } = useRouteMatch();
   const history = useHistory();
 
@@ -44,6 +45,7 @@ export function LinkButton({
       onShortcutPressed={navigate}
       shortcutKey={shortcut}
       shortcutText={shortcut}
+      disabled = {disabled}
     >
       {children}
     </ShortcutBtn>

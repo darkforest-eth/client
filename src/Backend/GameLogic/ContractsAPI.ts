@@ -1,4 +1,4 @@
-import { EMPTY_LOCATION_ID } from '@darkforest_eth/constants';
+import { EMPTY_LOCATION_ID, GNOSIS_CHAIN_ID, GNOSIS_OPTIMISM_CHAIN_ID, KOVAN_OPTIMISM_CHAIN_ID } from '@darkforest_eth/constants';
 import { DarkForest } from '@darkforest_eth/contracts/typechain';
 import {
   aggregateBulkGetter,
@@ -160,7 +160,13 @@ export class ContractsAPI extends EventEmitter {
       throw new Error('xDAI balance too low!');
     }
 
-    const gasFeeGwei = EthersBN.from(overrides?.gasPrice || '1000000000');
+    const chainId = (await this.ethConnection.getProvider().getNetwork()).chainId;
+
+    let defaultGas = '1000000000'; // GNOSIS_CHAIN_ID gas
+    if (chainId === GNOSIS_OPTIMISM_CHAIN_ID) defaultGas = '1';
+    if (chainId === KOVAN_OPTIMISM_CHAIN_ID) defaultGas = '100000';
+
+    const gasFeeGwei = EthersBN.from(overrides?.gasPrice || defaultGas);
 
     await openConfirmationWindowForTransaction({
       contractAddress: this.contractAddress,
@@ -220,7 +226,7 @@ export class ContractsAPI extends EventEmitter {
           contract.filters.PauseStateChanged(null).topics,
           contract.filters.LobbyCreated(null, null).topics,
           contract.filters.TargetPlanetInvaded(null, null).topics,
-          contract.filters.Gameover(null).topics
+          contract.filters.Gameover(null).topics,
         ].map((topicsOrUndefined) => (topicsOrUndefined || [])[0]),
       ] as Array<string | Array<string>>,
     };
@@ -371,7 +377,7 @@ export class ContractsAPI extends EventEmitter {
       [ContractEvent.Gameover]: (location: EthersBN) => {
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
         this.emit(ContractsAPIEvent.Gameover);
-      }
+      },
     };
 
     this.ethConnection.subscribeToContractEvents(contract, eventHandlers, filter);
@@ -452,9 +458,10 @@ export class ContractsAPI extends EventEmitter {
     const {
       MANUAL_SPAWN,
       TARGET_PLANET_HOLD_BLOCKS_REQUIRED,
-      TARGET_PLANETS
+      TARGET_PLANETS,
+      MODIFIERS,
+      SPACESHIPS,
     } = await this.makeCall(this.contract.getArenaConstants);
-
 
     const TOKEN_MINT_END_SECONDS = (
       await this.makeCall(this.contract.TOKEN_MINT_END_TIMESTAMP)
@@ -580,6 +587,17 @@ export class ContractsAPI extends EventEmitter {
       MANUAL_SPAWN: MANUAL_SPAWN,
       TARGET_PLANETS: TARGET_PLANETS,
       TARGET_PLANET_HOLD_BLOCKS_REQUIRED: TARGET_PLANET_HOLD_BLOCKS_REQUIRED.toNumber(),
+      MODIFIERS: [
+        MODIFIERS[0].toNumber(),
+        MODIFIERS[1].toNumber(),
+        MODIFIERS[2].toNumber(),
+        MODIFIERS[3].toNumber(),
+        MODIFIERS[4].toNumber(),
+        MODIFIERS[5].toNumber(),
+        MODIFIERS[6].toNumber(),
+        MODIFIERS[7].toNumber(),
+      ],
+      SPACESHIPS: [SPACESHIPS[0], SPACESHIPS[1], SPACESHIPS[2], SPACESHIPS[3], SPACESHIPS[4]],
     };
 
     return constants;
@@ -679,13 +697,18 @@ export class ContractsAPI extends EventEmitter {
     startingAt: number,
     onProgress?: (fractionCompleted: number) => void
   ): Promise<LocationId[]> {
-    const nPlanets: number = (await this.makeCall<EthersBN>(this.contract.getNTargetPlanets)).toNumber();
+    const nPlanets: number = (
+      await this.makeCall<EthersBN>(this.contract.getNTargetPlanets)
+    ).toNumber();
 
     const planetIds = await aggregateBulkGetter<EthersBN>(
       nPlanets - startingAt,
       1000,
       async (start, end) =>
-        await this.makeCall(this.contract.bulkGetTargetPlanetIds, [start + startingAt, end + startingAt]),
+        await this.makeCall(this.contract.bulkGetTargetPlanetIds, [
+          start + startingAt,
+          end + startingAt,
+        ]),
       onProgress
     );
     return planetIds.map(locationIdFromEthersBN);
@@ -695,13 +718,18 @@ export class ContractsAPI extends EventEmitter {
     startingAt: number,
     onProgress?: (fractionCompleted: number) => void
   ): Promise<LocationId[]> {
-    const nPlanets: number = (await this.makeCall<EthersBN>(this.contract.getNSpawnPlanets)).toNumber();
+    const nPlanets: number = (
+      await this.makeCall<EthersBN>(this.contract.getNSpawnPlanets)
+    ).toNumber();
 
     const planetIds = await aggregateBulkGetter<EthersBN>(
       nPlanets - startingAt,
       1000,
       async (start, end) =>
-        await this.makeCall(this.contract.bulkGetSpawnPlanetIds, [start + startingAt, end + startingAt]),
+        await this.makeCall(this.contract.bulkGetSpawnPlanetIds, [
+          start + startingAt,
+          end + startingAt,
+        ]),
       onProgress
     );
     return planetIds.map(locationIdFromEthersBN);

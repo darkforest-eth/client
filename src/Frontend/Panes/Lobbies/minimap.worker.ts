@@ -1,6 +1,6 @@
 import { perlin } from '@darkforest_eth/hashing';
 import { SpaceType, WorldCoords } from '@darkforest_eth/types';
-import { DrawMessage, MinimapConfig } from './MinimapUtils';
+import { DrawMessage, MinimapConfig, PlanetType } from './MinimapUtils';
 
 const ctx = self as unknown as Worker;
 
@@ -38,9 +38,12 @@ function generate(config: MinimapConfig): DrawMessage {
     return false;
   };
 
-  const checkPlanet = (x: number, y: number) : boolean => {
+  const checkStagedPlanet = (x: number, y: number) => {
     let s = Math.round((step)/2);
-    return !!config.planets.find(planet => x - s <= planet.x && planet.x < x + s && y - s <= planet.y && planet.y < y + s)
+    if(!!config.stagedPlanets.find(planet => x - s <= planet.x && planet.x < x + s && y - s <= planet.y && planet.y < y + s))
+      return 'staged' as PlanetType;
+      if(!!config.createdPlanets.find(planet => x - s <= planet.x && planet.x < x + s && y - s <= planet.y && planet.y < y + s))
+      return 'created' as PlanetType;
   }
 
   // generate x coordinates
@@ -54,7 +57,7 @@ function generate(config: MinimapConfig): DrawMessage {
           x: i,
           y: j,
           type: spaceTypeFromPerlin(spaceTypePerlin({ x: i, y: j }, config), config),
-          planet: checkPlanet(i, j)
+          planet: checkStagedPlanet(i, j)
         });
       }
     }

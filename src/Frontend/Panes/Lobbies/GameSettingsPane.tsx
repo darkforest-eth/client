@@ -1,15 +1,65 @@
 import React from 'react';
 import {
+  ModifierType,
+} from '@darkforest_eth/types';
+import {
   Checkbox,
   DarkForestCheckbox,
   DarkForestNumberInput,
   NumberInput,
 } from '../../Components/Input';
+import { ModifierText } from '../../Components/Labels/ModifierLabels';
 import { Row } from '../../Components/Row';
 import { DarkForestSlider, Slider } from '../../Components/Slider';
 import { LobbiesPaneProps, Warning } from './LobbiesUtils';
+import _ from 'lodash';
+import { Sub } from '../../Components/Text';
+
+const rowChunkSize = 4;
+const rowStyle = { gap: '8px' } as CSSStyleDeclaration & React.CSSProperties;
+const itemStyle = { flex: `1 1 ${Math.floor(100 / rowChunkSize)}%` };
+
+function Modifiers({
+  index,
+  value,
+  onUpdate,
+}: LobbiesPaneProps & {  index: number; value: number | undefined }) {
+  // The level 0 value can never change
+    return (
+      <div style={itemStyle}>
+        <ModifierText modifier = {index as ModifierType}/>
+        <span> (%)</span>
+        <NumberInput
+          format='integer'
+          value={value}
+          onChange={(e: Event & React.ChangeEvent<DarkForestNumberInput>) => {
+            onUpdate({ type: 'MODIFIERS', index, value: e.target.value });
+          }}
+        />
+      </div>
+    );
+}
 
 export function GameSettingsPane({ config, onUpdate }: LobbiesPaneProps) {
+
+  let modifiers =  _.chunk(config.MODIFIERS.displayValue, rowChunkSize).map(
+    (items, rowIdx) => {
+      return (
+        <Row key={`threshold-row-${rowIdx}`} style={rowStyle}>
+          {items.map((item, idx) => (
+            <Modifiers
+              key={`threshold-lvl-${idx}`}
+              config={config}
+              value={item}
+              index={rowIdx * rowChunkSize + idx}
+              onUpdate={onUpdate}
+            />
+          ))}
+        </Row>
+      );
+    }
+  );
+
   return (
     <>
       <Row>
@@ -28,6 +78,17 @@ export function GameSettingsPane({ config, onUpdate }: LobbiesPaneProps) {
       </Row>
       <Row>
         <Warning>{config.TIME_FACTOR_HUNDREDTHS.warning}</Warning>
+      </Row>
+      <Row>
+        <span>Advanced: Modify game constants</span> <br/>
+      </Row>
+      <Row>
+      <Sub>Input value is a percent of default (100 is normal)</Sub>
+      </Row>
+      
+      {modifiers}
+      <Row>
+        <Warning>{config.MODIFIERS.warning}</Warning>
       </Row>
       <Row>
         <Checkbox
@@ -67,6 +128,7 @@ export function GameSettingsPane({ config, onUpdate }: LobbiesPaneProps) {
       <Row>
         <Warning>{config.SILVER_SCORE_VALUE.warning}</Warning>
       </Row>
+
     </>
   );
 }

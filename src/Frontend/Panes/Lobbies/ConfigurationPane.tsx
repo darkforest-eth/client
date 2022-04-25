@@ -1,9 +1,9 @@
-import { EthAddress } from '@darkforest_eth/types';
 import _ from 'lodash';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { LobbyAdminTools } from '../../../Backend/Utils/LobbyAdminTools';
 import { Btn } from '../../Components/Btn';
-import { Spacer, Title } from '../../Components/CoreUI';
+import { Link, Spacer, Title } from '../../Components/CoreUI';
 import { MythicLabelText } from '../../Components/Labels/MythicLabel';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Modal } from '../../Components/Modal';
@@ -12,6 +12,7 @@ import { TextPreview } from '../../Components/TextPreview';
 import { AdminPermissionsPane } from './AdminPermissionsPane';
 import { ArtifactSettingsPane } from './ArtifactSettingsPane';
 import { CaptureZonesPane } from './CaptureZonesPane';
+import { ExtrasNavPane } from './ExtrasNavPane';
 import { GameSettingsPane } from './GameSettingsPane';
 import {
   ButtonRow,
@@ -20,27 +21,28 @@ import {
   LinkButton,
   LobbiesPaneProps,
   NavigationTitle,
-  Warning,
+  Warning
 } from './LobbiesUtils';
 import { MinimapConfig } from './MinimapUtils';
 import { PlanetPane } from './PlanetPane';
-import { CreatePlanetPane } from './CreatePlanetPane';
 import { PlayerSpawnPane } from './PlayerSpawnPane';
 import {
   InvalidConfigError,
+  LobbyAction,
   LobbyConfigAction,
   lobbyConfigInit,
-  lobbyConfigReducer,
   LobbyConfigState,
   LobbyInitializers,
-  toInitializers,
+  toInitializers
 } from './Reducer';
 import { SnarkPane } from './SnarkPane';
 import { SpaceJunkPane } from './SpaceJunkPane';
+import { SpaceshipsPane } from './SpaceshipsPane';
 import { SpaceTypeBiomePane } from './SpaceTypeBiomePane';
-import { WorldSizePane } from './WorldSizePane';
 import { TargetPlanetPane } from './TargetPlanetPane';
-import { PlanetCreator } from '../../../Backend/Utils/PlanetCreator';
+import { WorldSizePane } from './WorldSizePane';
+
+const jcFlexEnd = { justifyContent: 'flex-end' } as CSSStyleDeclaration & React.CSSProperties;
 
 interface PaneConfig {
   title: string;
@@ -53,210 +55,106 @@ const panes: ReadonlyArray<PaneConfig> = [
   {
     title: 'Game settings',
     shortcut: `1`,
-    path: '/settings/game',
+    path: '/game',
     Pane: (props: LobbiesPaneProps) => <GameSettingsPane {...props} />,
   },
   {
     title: 'World size',
     shortcut: `2`,
-    path: '/settings/world',
+    path: '/world',
     Pane: (props: LobbiesPaneProps) => <WorldSizePane {...props} />,
   },
   {
     title: 'Space type & Biome',
     shortcut: `3`,
-    path: '/settings/space',
+    path: '/space',
     Pane: (props: LobbiesPaneProps) => <SpaceTypeBiomePane {...props} />,
   },
   {
-    title: 'Planets',
+    title: 'Planet rarity',
     shortcut: `4`,
-    path: '/settings/planet',
+    path: '/planet',
     Pane: (props: LobbiesPaneProps) => <PlanetPane {...props} />,
   },
   {
     title: 'Player spawn',
     shortcut: `5`,
-    path: '/settings/spawn',
+    path: '/spawn',
     Pane: (props: LobbiesPaneProps) => <PlayerSpawnPane {...props} />,
   },
   {
     title: 'Space junk',
     shortcut: `6`,
-    path: '/settings/junk',
+    path: '/junk',
     Pane: (props: LobbiesPaneProps) => <SpaceJunkPane {...props} />,
   },
   {
     title: 'Capture zones',
     shortcut: `7`,
-    path: '/settings/zones',
+    path: '/zones',
     Pane: (props: LobbiesPaneProps) => <CaptureZonesPane {...props} />,
   },
   {
     title: 'Artifacts',
     shortcut: `8`,
-    path: '/settings/artifact',
+    path: '/artifact',
     Pane: (props: LobbiesPaneProps) => <ArtifactSettingsPane {...props} />,
   },
   {
     title: 'Admin permissions',
     shortcut: `9`,
-    path: '/settings/admin',
+    path: '/admin',
     Pane: (props: LobbiesPaneProps) => <AdminPermissionsPane {...props} />,
   },
   {
     title: 'Advanced: Snarks',
     shortcut: `0`,
-    path: '/settings/snark',
+    path: '/snark',
     Pane: (props: LobbiesPaneProps) => <SnarkPane {...props} />,
   },
   {
     title: 'Target planets',
     shortcut: `-`,
-    path: '/settings/arena',
+    path: '/arena',
     Pane: (props: LobbiesPaneProps) => <TargetPlanetPane {...props} />,
   },
   {
-    title: 'Admin planets',
+    title: 'Spaceships',
     shortcut: `+`,
-    path: '/settings/create',
-    Pane: (props: LobbiesPaneProps) => <CreatePlanetPane {...props} />,
+    path: '/spaceships',
+    Pane: (props: LobbiesPaneProps) => <SpaceshipsPane {...props} />,
   },
 ] as const;
 
 type Status = 'creating' | 'created' | 'errored' | undefined;
 
-function ConfigurationNavigation({
-  error,
-  lobbyAddress,
-  status,
-  statusMessage,
-  onCreate,
-  createPlanets,
-  config,
-}: {
-  error: string | undefined;
-  lobbyAddress: EthAddress | undefined;
-  status: Status;
-  statusMessage: string;
-  onCreate: () => Promise<void>;
-  createPlanets: () => Promise<void>;
-  config: LobbyConfigState;
-}) {
-  const buttons = _.chunk(panes, 2).map(([fst, snd], idx) => {
-    return (
-      // Index key is fine here because the array is stable
-      <ButtonRow key={idx}>
-        {fst && (
-          <LinkButton to={fst.path} shortcut={fst.shortcut}>
-            {fst.title}
-          </LinkButton>
-        )}
-        {snd && (
-          <LinkButton to={snd.path} shortcut={snd.shortcut}>
-            {snd.title}
-          </LinkButton>
-        )}
-      </ButtonRow>
-    );
-  });
-
-  const url = `${window.location.origin}/play/${lobbyAddress}`;
-
-  let lobbyContent;
-  if (status === 'created' && lobbyAddress) {
-    lobbyContent = (
-      <>
-        {config.ADMIN_PLANETS.currentValue.length > 0 && (
-          <>
-            <Btn size='stretch' onClick={createPlanets}>
-              Create Planets
-            </Btn>
-            <Row />
-          </>
-        )}
-        <Btn size='stretch' onClick={() => window.open(url)}>
-          Launch Lobby
-        </Btn>
-        <Row>
-          {/* Stealing MythicLabelText because it accepts variable text input */}
-          <MythicLabelText style={{ margin: 'auto' }} text='Your lobby is ready!' />
-        </Row>
-        <Row>
-          <span style={{ margin: 'auto' }}>
-            You can also share the direct url with your friends:
-          </span>
-        </Row>
-        {/* Didn't like the TextPreview jumping, so I'm setting the height */}
-        <Row style={{ height: '30px' } as CSSStyleDeclaration & React.CSSProperties}>
-          <TextPreview
-            style={{ margin: 'auto' }}
-            text={url}
-            unFocusedWidth='50%'
-            focusedWidth='100%'
-          />
-        </Row>
-      </>
-    );
-  }
-
-  const createDisabled = status === 'creating' || status === 'created';
-  const creating = status === 'creating' || (status === 'created' && !lobbyAddress);
-  const created = (status === 'created' && lobbyAddress);
-  return (
-    <>
-      <Title slot='title'>Customize Lobby</Title>
-      <div>
-        Welcome Cadet! You can launch a copy of Dark Forest from this UI. We call this a Lobby.
-        <Spacer height={12} />
-        All settings will be defaulted to the same configuration of the main contract you are
-        copying. However, you can change any of those settings through the buttons below!
-        <Spacer height={12} />
-      </div>
-      {buttons}
-      <Spacer height={20} />
-      {!created && (
-        <Btn size='stretch' onClick={onCreate}>
-          {creating ? <LoadingSpinner initialText={statusMessage} /> : 'Create Lobby'}
-        </Btn>
-      )}
-      <Row>
-        <Warning>{error}</Warning>
-      </Row>
-      {lobbyContent}
-    </>
-  );
-}
-
 export function ConfigurationPane({
   modalIndex,
-  lobbyAddress,
-  startingConfig,
+  config,
+  updateConfig,
   onMapChange,
   onCreate,
-  planetCreator,
+  lobbyAdminTools,
+  onUpdate,
+  lobbyTx,
 }: {
   modalIndex: number;
-  lobbyAddress: EthAddress | undefined;
-  startingConfig: LobbyInitializers;
+  config: LobbyConfigState;
+  updateConfig: React.Dispatch<LobbyAction>;
   onMapChange: (props: MinimapConfig) => void;
   onCreate: (config: LobbyInitializers) => Promise<void>;
-  planetCreator: PlanetCreator | undefined;
+  lobbyAdminTools: LobbyAdminTools | undefined;
+  onUpdate: (action: LobbyConfigAction) => void;
+  lobbyTx: string | undefined;
 }) {
-  const { path: root } = useRouteMatch();
   const [error, setError] = useState<string | undefined>();
   const [status, setStatus] = useState<Status>(undefined);
   const [statusMessage, setStatusMessage] = useState<string>('');
+  const createDisabled = status === 'creating' || status === 'created';
+  const creating = status === 'creating' || (status === 'created' && !lobbyAdminTools?.address);
+  const created = status === 'created' && lobbyAdminTools?.address;
   // Separated IO Errors from Download/Upload so they show on any pane of the modal
-  const [ioErr, setIoErr] = useState<string | undefined>();
-
-  const [config, updateConfig] = useReducer(lobbyConfigReducer, startingConfig, lobbyConfigInit);
-
-  function onUpdate(action: LobbyConfigAction) {
-    setError(undefined);
-    setIoErr(undefined);
-    updateConfig(action);
-  }
+  const { path: root } = useRouteMatch();
 
   // Minimap only changes on a subset of properties, so we only trigger when one of them changes value (and still debounce it)
   useEffect(() => {
@@ -269,7 +167,8 @@ export function ConfigurationPane({
       perlinThreshold1: config.PERLIN_THRESHOLD_1.currentValue,
       perlinThreshold2: config.PERLIN_THRESHOLD_2.currentValue,
       perlinThreshold3: config.PERLIN_THRESHOLD_3.currentValue,
-      planets: config.ADMIN_PLANETS.currentValue || [],
+      stagedPlanets: config.ADMIN_PLANETS.currentValue || [],
+      createdPlanets: lobbyAdminTools?.planets || [],
     });
   }, [
     onMapChange,
@@ -282,19 +181,14 @@ export function ConfigurationPane({
     config.PERLIN_THRESHOLD_2.currentValue,
     config.PERLIN_THRESHOLD_3.currentValue,
     config.ADMIN_PLANETS.currentValue,
+    lobbyAdminTools
   ]);
 
-  const routes = panes.map(({ title, path, Pane }, idx) => {
-    return (
-      // Index key is fine here because the array is stable
-      <Route key={idx} path={`${root}${path}`}>
-        <NavigationTitle>{title}</NavigationTitle>
-        <Pane config={config} onUpdate={onUpdate} />
-      </Route>
-    );
-  });
-
   async function validateAndCreateLobby() {
+    const confirmAlert = confirm(
+      `Are you sure? After lobby creation, you cannot modify world settings, but you can create planets and add players to the whitelist.`
+    );
+    if (!confirmAlert) return;
     try {
       setStatus('creating');
       setStatusMessage('Creating...');
@@ -314,62 +208,130 @@ export function ConfigurationPane({
     }
   }
 
-  async function createAndRevealPlanets() {
-    try {
-      setStatus('creating');
-      setStatusMessage('Creating...');
-      const initializers = toInitializers(config);
-      if (!planetCreator) {
-        setError("You haven't created a lobby.");
-        return;
-      }
-      for (const planet of initializers.ADMIN_PLANETS) {
-        setStatusMessage(`Creating planet at (${planet.x}, ${planet.y})...`);
-
-        await planetCreator.createPlanet(planet, initializers);
-        if (planet.revealLocation) {
-          setStatusMessage(`Revealing planet at (${planet.x}, ${planet.y})...`);
-          await planetCreator.revealPlanet(planet, initializers);
-        }
-      }
-      setStatus('created');
-      setStatusMessage('Created');
-    } catch (err) {
-      setStatus('errored');
-      setStatusMessage('Errored');
-      console.error(err);
-      if (err instanceof InvalidConfigError) {
-        setError(`Invalid ${err.key} value ${err.value ?? ''} - ${err.message}`);
-      } else {
-        setError(err?.message || 'Something went wrong. Check your dev console.');
-      }
-    }
-  }
-
   function configUploadSuccess(initializers: LobbyInitializers) {
     updateConfig({ type: 'RESET', value: lobbyConfigInit(initializers) });
   }
+
+  const buttons = _.chunk(panes, 2).map(([fst, snd], idx) => {
+    return (
+      // Index key is fine here because the array is stable
+      <ButtonRow key={idx}>
+        {fst && (
+          <LinkButton disabled={!!createDisabled} to={fst.path} shortcut={fst.shortcut}>
+            {fst.title}
+          </LinkButton>
+        )}
+        {snd && (
+          <LinkButton disabled={!!createDisabled} to={snd.path} shortcut={snd.shortcut}>
+            {snd.title}
+          </LinkButton>
+        )}
+      </ButtonRow>
+    );
+  });
+
+  const url = `${window.location.origin}/play/${lobbyAdminTools?.address}`;
+
+  const blockscoutURL = `https://blockscout.com/poa/xdai/tx/${lobbyTx}`;
+
+  let lobbyContent: JSX.Element | undefined;
+  if (status === 'created' && lobbyAdminTools?.address) {
+    lobbyContent = (
+      <>
+        <Row style = {{justifyContent: 'center'} as CSSStyleDeclaration & React.CSSProperties}>
+          <div>
+            <MythicLabelText
+              style={{ margin: 'auto' }}
+              text='Your universe has been created! '
+            ></MythicLabelText>
+            {lobbyTx && (
+              <Link to={blockscoutURL} style={{ margin: 'auto' }}>
+                <u>view tx</u>
+              </Link>
+            )}
+          </div>
+        </Row>
+        <Row>
+          <span style={{ margin: 'auto' }}>
+            You can also share the direct url with your friends:
+          </span>
+        </Row>
+        {/* Didn't like the TextPreview jumping, so I'm setting the height */}
+        <Row style={{ height: '30px' } as CSSStyleDeclaration & React.CSSProperties}>
+          <TextPreview
+            style={{ margin: 'auto' }}
+            text={url}
+            unFocusedWidth='50%'
+            focusedWidth='100%'
+          />
+        </Row>
+      </>
+    );
+  }
+
+  const routes = panes.map(({ title, path, Pane }, idx) => {
+    return (
+      // Index key is fine here because the array is stable
+
+      <Route key={idx} path={`${root}${path}`}>
+        <NavigationTitle>{title}</NavigationTitle>
+        <Pane config={config} onUpdate={onUpdate} />
+      </Route>
+    );
+  });
+
+  const content = () => {
+    return (
+      <>
+        <Title slot='title'>Customize Lobby</Title>
+        <div>
+          Welcome Cadet! Here, you can configure and launch a custom Dark Forest universe. We call
+          this a Lobby.
+          <Spacer height={12} />
+          First, customize the configuration of your world. Once you have created a lobby, add
+          custom planets and allowlisted players on the next pane.
+          <Spacer height={12} />
+        </div>
+        {buttons}
+        <Spacer height={20} />
+        <div>
+          {!created && (
+            <Btn size='stretch' disabled={createDisabled} onClick={validateAndCreateLobby}>
+              {creating ? <LoadingSpinner initialText={statusMessage} /> : 'Create Lobby'}
+            </Btn>
+          )}
+          <Row style={jcFlexEnd}>
+            <LinkButton to={`/extras`}>Add players/planets →</LinkButton>
+          </Row>
+          <Row>
+            <Warning>{error}</Warning>
+          </Row>
+          {lobbyContent}
+        </div>
+      </>
+    );
+  };
 
   return (
     <Modal width='500px' initialX={100} initialY={100} index={modalIndex}>
       <Switch>
         <Route path={root} exact={true}>
-          <ConfigurationNavigation
-            error={error}
-            lobbyAddress={lobbyAddress}
-            status={status}
-            statusMessage={statusMessage}
-            onCreate={validateAndCreateLobby}
-            createPlanets={createAndRevealPlanets}
-            config={config}
-          />
+          {content}
         </Route>
         {routes}
+        <Route path={`${root}/extras`}>
+          <ExtrasNavPane
+            lobbyAdminTools={lobbyAdminTools}
+            status={status}
+            config={config}
+            onUpdate={onUpdate}
+          />
+        </Route>
       </Switch>
+
       {/* Button this in the title slot but at the end moves it to the end of the title bar */}
-      <ConfigDownload onError={setIoErr} address={lobbyAddress} config={config} />
-      <ConfigUpload onError={setIoErr} onUpload={configUploadSuccess} />
-      <Warning>{ioErr}</Warning>
+      <ConfigDownload onError={setError} address={lobbyAdminTools?.address} config={config} />
+      <ConfigUpload onError={setError} onUpload={configUploadSuccess} />
     </Modal>
   );
 }
