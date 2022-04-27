@@ -6,6 +6,7 @@ import { BigInteger } from 'big-integer';
 import { LOCATION_ID_UB } from '../../Frontend/Utils/constants';
 import { MinerWorkerMessage } from '../../_types/global/GlobalTypes';
 import { getPlanetLocations } from './permutation';
+import { planetLevelBelowLevel0Threshold } from './PlanetUtils';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const ctx: Worker = self as any;
@@ -16,6 +17,7 @@ const exploreChunk = (
   workerIndex: number,
   totalWorkers: number,
   planetRarity: number,
+  planetLevelThresholds: number[],
   jobId: number,
   useFakeHash: boolean,
   planetHashKey: number,
@@ -52,7 +54,7 @@ const exploreChunk = (
             perlinLengthScale,
             perlinMirrorY,
             perlinMirrorY
-          )(chunkFootprint, planetRarity);
+          )(chunkFootprint, planetRarity, planetLevelThresholds);
   } else {
     const planetRarityBI: BigInteger = bigInt(planetRarity);
     let count = 0;
@@ -63,6 +65,10 @@ const exploreChunk = (
         if (count % totalWorkers === workerIndex) {
           const hash: BigInteger = planetHashFn(x, y);
           if (hash.lesser(LOCATION_ID_UB.divide(planetRarityBI))) {
+            // if planet bytes 4-6 are too high for planet threshold, don't render on client.
+            if (!planetLevelBelowLevel0Threshold(locationIdFromBigInt(hash), planetLevelThresholds))
+              continue;
+
             planetLocations.push({
               coords: { x, y },
               hash: locationIdFromBigInt(hash),
@@ -95,6 +101,7 @@ ctx.addEventListener('message', (e: MessageEvent) => {
     exploreMessage.workerIndex,
     exploreMessage.totalWorkers,
     exploreMessage.planetRarity,
+    exploreMessage.planetLevelThresholds,
     exploreMessage.jobId,
     exploreMessage.useMockHash,
     exploreMessage.planetHashKey,

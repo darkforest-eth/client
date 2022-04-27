@@ -56,6 +56,7 @@ export class HomePlanetMinerChunkStore implements ChunkStore {
 class MinerManager extends EventEmitter {
   private readonly minedChunksStore: ChunkStore;
   private readonly planetRarity: number;
+  private readonly planetLevelThresholds: number[];
 
   private isExploring = false;
   private miningPattern: MiningPattern;
@@ -78,6 +79,7 @@ class MinerManager extends EventEmitter {
     miningPattern: MiningPattern,
     worldRadius: number,
     planetRarity: number,
+    planetLevelThresholds: number[],
     hashConfig: HashConfig,
     useMockHash: boolean,
     workerFactory: workerFactory
@@ -87,6 +89,7 @@ class MinerManager extends EventEmitter {
     this.miningPattern = miningPattern;
     this.worldRadius = worldRadius;
     this.planetRarity = planetRarity;
+    this.planetLevelThresholds = planetLevelThresholds;
     this.workers = [];
     this.hashConfig = hashConfig;
     this.perlinOptions = {
@@ -122,6 +125,7 @@ class MinerManager extends EventEmitter {
     miningPattern: MiningPattern,
     worldRadius: number,
     planetRarity: number,
+    planetLevelThresholds: number[],
     hashConfig: HashConfig,
     useMockHash = false,
     workerFactory: workerFactory = defaultWorker
@@ -131,6 +135,7 @@ class MinerManager extends EventEmitter {
       miningPattern,
       worldRadius,
       planetRarity,
+      planetLevelThresholds,
       hashConfig,
       useMockHash,
       workerFactory

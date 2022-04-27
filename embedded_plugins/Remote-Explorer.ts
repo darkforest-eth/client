@@ -330,6 +330,7 @@ class RemoteExplorerPlugin implements DFPlugin {
       pattern,
       df.getWorldRadius(),
       df.planetRarity,
+      df.planetLevelThresholds,
       df.getHashConfig(),
       false,
       () => new RemoteWorker(url)

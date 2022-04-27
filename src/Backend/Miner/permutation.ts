@@ -1,6 +1,7 @@
 import { fakeHash, perlin, seededRandom } from '@darkforest_eth/hashing';
 import { locationIdFromBigInt } from '@darkforest_eth/serde';
 import { Rectangle, WorldCoords, WorldLocation } from '@darkforest_eth/types';
+import { planetLevelBelowLevel0Threshold } from './PlanetUtils';
 
 type IdxWithRand = {
   idx: number;
@@ -66,9 +67,9 @@ export const getPlanetLocations =
     biomebaseKey: number,
     perlinLengthScale: number,
     perlinMirrorX: boolean,
-    perlinMirrorY: boolean
+    perlinMirrorY: boolean,
   ) =>
-  (chunkFootprint: Rectangle, planetRarity: number) => {
+  (chunkFootprint: Rectangle, planetRarity: number, planetLevelThresholds: number[]) => {
     // assume that the chunkFootprint is entirely contained within a 256x256 grid square
     const { bottomLeft, sideLength } = chunkFootprint;
     const { x, y } = bottomLeft;
@@ -113,7 +114,10 @@ export const getPlanetLocations =
           mirrorY: perlinMirrorY,
           floor: true,
         }),
-      }));
+      }))
+      .filter(
+        (planetData) => planetLevelBelowLevel0Threshold(planetData.hash, planetLevelThresholds)
+      );
 
     return locs;
   };

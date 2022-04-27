@@ -25,6 +25,7 @@ export type HashConfig = {
   perlinMirrorX: boolean;
   perlinMirrorY: boolean;
   planetRarity: number; // only for fakeHash (DISABLE_ZK_CHECKS on)
+  planetLevelThresholds: number[];
 };
 
 export const enum StatIdx {
@@ -49,6 +50,7 @@ export interface MinerWorkerMessage {
   perlinLengthScale: number;
   perlinMirrorX: boolean;
   perlinMirrorY: boolean;
+  planetLevelThresholds: number[];
 }
 
 // info about when the player can next reveal coordinates

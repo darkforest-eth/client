@@ -356,13 +356,17 @@ class GameManager extends EventEmitter {
     return this.contractConstants.PLANET_RARITY;
   }
 
+  public get planetLevelThresholds(): number[] {
+    return this.contractConstants.PLANET_LEVEL_THRESHOLDS;
+  }
+
   private gameover: boolean;
 
   public gameover$: Monomitter<boolean>;
 
   private winners: string[];
 
-  private spectator : boolean;
+  private spectator: boolean;
   /**
    * Generates capture zones.
    */
@@ -390,7 +394,7 @@ class GameManager extends EventEmitter {
     paused: boolean,
     gameover: boolean,
     winners: string[],
-    spectator : boolean
+    spectator: boolean
   ) {
     super();
 
@@ -436,6 +440,7 @@ class GameManager extends EventEmitter {
       perlinMirrorX: contractConstants.PERLIN_MIRROR_X,
       perlinMirrorY: contractConstants.PERLIN_MIRROR_Y,
       planetRarity: contractConstants.PLANET_RARITY,
+      planetLevelThresholds: contractConstants.PLANET_LEVEL_THRESHOLDS,
     };
     this.planetHashMimc = useMockHash
       ? fakeHash(this.hashConfig.planetRarity)
@@ -529,7 +534,7 @@ class GameManager extends EventEmitter {
     this.refreshScoreboard();
     this.refreshNetworkHealth();
 
-    if(!spectator) this.getSpaceships();
+    if (!spectator) this.getSpaceships();
 
     this.safeMode = false;
   }
@@ -590,7 +595,7 @@ class GameManager extends EventEmitter {
     connection,
     terminal,
     contractAddress,
-    spectator
+    spectator,
   }: {
     connection: EthConnection;
     terminal: React.MutableRefObject<TerminalHandle | undefined>;
@@ -600,8 +605,7 @@ class GameManager extends EventEmitter {
     if (!terminal.current) {
       throw new Error('you must pass in a handle to a terminal');
     }
-    
-    
+
     const account = connection.getAddress();
 
     if (!account) {
@@ -622,8 +626,7 @@ class GameManager extends EventEmitter {
     const initialState = await gameStateDownloader.download(contractsAPI, persistentChunkStore);
 
     let possibleHomes = undefined;
-    if(!spectator)
-      possibleHomes = await persistentChunkStore.getHomeLocations();
+    if (!spectator) possibleHomes = await persistentChunkStore.getHomeLocations();
 
     terminal.current?.println('');
     terminal.current?.println('Building Index...');
@@ -657,7 +660,7 @@ class GameManager extends EventEmitter {
 
     // figure out what's my home planet
     let homeLocation: WorldLocation | undefined = undefined;
-    if(possibleHomes) {
+    if (possibleHomes) {
       for (const loc of possibleHomes) {
         if (initialState.allTouchedPlanetIds.includes(loc.hash)) {
           homeLocation = loc;
@@ -675,6 +678,7 @@ class GameManager extends EventEmitter {
       perlinMirrorX: initialState.contractConstants.PERLIN_MIRROR_X,
       perlinMirrorY: initialState.contractConstants.PERLIN_MIRROR_Y,
       planetRarity: initialState.contractConstants.PLANET_RARITY,
+      planetLevelThresholds: initialState.contractConstants.PLANET_LEVEL_THRESHOLDS,
     };
 
     const useMockHash = initialState.contractConstants.DISABLE_ZK_CHECKS;
@@ -890,11 +894,13 @@ class GameManager extends EventEmitter {
         gameManager.setGameover(true);
         gameManager.gameover$.publish(true);
       })
-      .on(ContractsAPIEvent.TargetPlanetInvaded, async (player: EthAddress, planetId : LocationId) => {
-        const planet = gameManager.getPlanetWithId(planetId);
-        if(planet) NotificationManager.getInstance().targetPlanetInvaded(planet);
-      })
-      ;
+      .on(
+        ContractsAPIEvent.TargetPlanetInvaded,
+        async (player: EthAddress, planetId: LocationId) => {
+          const planet = gameManager.getPlanetWithId(planetId);
+          if (planet) NotificationManager.getInstance().targetPlanetInvaded(planet);
+        }
+      );
 
     const unconfirmedTxs = await persistentChunkStore.getUnconfirmedSubmittedEthTxs();
     const confirmationQueue = new ThrottledConcurrentQueue({
@@ -913,8 +919,8 @@ class GameManager extends EventEmitter {
 
     // we only want to initialize the mining manager if the player has already joined the game
     // if they haven't, we'll do this once the player has joined the game
-    if(spectator) {
-      gameManager.initMiningManager({x: 0, y: 0} );
+    if (spectator) {
+      gameManager.initMiningManager({ x: 0, y: 0 });
     } else if (!!homeLocation && initialState.players.has(account as string)) {
       gameManager.initMiningManager(homeLocation.coords);
     }
@@ -1297,6 +1303,7 @@ class GameManager extends EventEmitter {
       myPattern,
       this.worldRadius,
       this.planetRarity,
+      this.planetLevelThresholds,
       this.hashConfig,
       this.useMockHash
     );
@@ -2098,43 +2105,42 @@ class GameManager extends EventEmitter {
   /**
    * Attempts to join the game. Should not be called once you've already joined.
    */
-   public async joinGame(beforeRetry: (e: Error) => Promise<boolean>): Promise<void> {
+  public async joinGame(beforeRetry: (e: Error) => Promise<boolean>): Promise<void> {
     try {
       if (this.checkGameHasEnded()) {
         throw new Error('game has ended');
       }
-      
-      let planet : LocatablePlanet
+
+      let planet: LocatablePlanet;
       if (this.contractConstants.MANUAL_SPAWN) {
         this.terminal.current?.println(`Retrieving available manual planets`);
 
         const spawnPlanets = await this.contractsAPI.getSpawnPlanetIds(0);
         console.log(`all manually created spawn planets: ${spawnPlanets}`);
-        const potentialHomeIds = spawnPlanets.filter(planetId => {
+        const potentialHomeIds = spawnPlanets.filter((planetId) => {
           const planet = this.getGameObjects().getPlanetWithId(planetId);
-          if(!planet) {
-            console.log("not a planet")
+          if (!planet) {
+            console.log('not a planet');
             return false;
           }
           console.log(`planet's owner: ${planet.owner}`);
-          if(planet.owner !== constants.AddressZero) {
+          if (planet.owner !== constants.AddressZero) {
             return false;
           }
-          if(!isLocatable(planet)) {
-            console.log("planet not locatable");
+          if (!isLocatable(planet)) {
+            console.log('planet not locatable');
             return false;
           }
           return true;
-        })
+        });
 
-        if(potentialHomeIds.length == 0) {
+        if (potentialHomeIds.length == 0) {
           throw new Error('no spawn locations available');
         }
-        const potentialHomePlanets = potentialHomeIds.map(planetId => {
-          return this.getGameObjects().getPlanetWithId(planetId) as LocatablePlanet
-        })
+        const potentialHomePlanets = potentialHomeIds.map((planetId) => {
+          return this.getGameObjects().getPlanetWithId(planetId) as LocatablePlanet;
+        });
         planet = potentialHomePlanets[0];
-
       } else {
         planet = await this.findRandomHomePlanet();
       }
@@ -2312,6 +2318,7 @@ class GameManager extends EventEmitter {
         pattern,
         this.worldRadius,
         this.planetRarity,
+        this.planetLevelThresholds,
         this.hashConfig,
         this.useMockHash
       );
