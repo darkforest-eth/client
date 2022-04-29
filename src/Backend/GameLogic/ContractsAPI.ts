@@ -942,6 +942,14 @@ export class ContractsAPI extends EventEmitter {
     txIntent: T,
     overrides?: providers.TransactionRequest
   ): Promise<Transaction<T>> {
+
+    /* Find a way to speed this up */
+    const chainId = (await this.ethConnection.getProvider().getNetwork()).chainId;
+    overrides = overrides ?? {};
+    
+    if (chainId === GNOSIS_OPTIMISM_CHAIN_ID) overrides.gasPrice = '1';
+    if (chainId === KOVAN_OPTIMISM_CHAIN_ID) overrides.gasPrice = '100000';
+
     const queuedTx = await this.txExecutor.queueTransaction(txIntent, overrides);
 
     this.emit(ContractsAPIEvent.TxQueued, queuedTx);
