@@ -1,14 +1,12 @@
-import _ from 'lodash';
 import React from 'react';
 import {
   Checkbox,
-  DarkForestCheckbox,
-  DarkForestNumberInput,
-  NumberInput,
+  DarkForestCheckbox
 } from '../../Components/Input';
 import { Row } from '../../Components/Row';
+import { DarkForestSlider, Slider } from '../../Components/Slider';
+import { LobbiesPaneProps } from './LobbiesUtils';
 
-import { LobbiesPaneProps, Warning } from './LobbiesUtils';
 
 export function TargetPlanetPane({ config: config, onUpdate: onUpdate }: LobbiesPaneProps) {
   return (
@@ -23,15 +21,20 @@ export function TargetPlanetPane({ config: config, onUpdate: onUpdate }: Lobbies
         />
       </Row>
       {config.TARGET_PLANETS.displayValue && (
-        <Row>
-          <span>Blocks between Invade & Claim Victory</span>
-          <NumberInput
-            value={config.TARGET_PLANET_HOLD_BLOCKS_REQUIRED.displayValue}
-            onChange={(e: Event & React.ChangeEvent<DarkForestNumberInput>) => {
-              onUpdate({ type: 'TARGET_PLANET_HOLD_BLOCKS_REQUIRED', value: e.target.value });
-            }}
-          />
-        </Row>
+         <Row>
+         <Slider
+           label='Percent energy needed to claim victory'
+           variant='filled'
+           min={1}
+           max={100}
+           value={config.CLAIM_VICTORY_ENERGY_PERCENT.displayValue}
+           step={1}
+           formatOptions={{ style: 'unit', unit: '%' }}
+           onChange={(e: Event & React.ChangeEvent<DarkForestSlider>) => {
+             onUpdate({ type: 'CLAIM_VICTORY_ENERGY_PERCENT', value: e.target.value });
+           }}
+         />
+       </Row>
       )}
     </>
   );

@@ -3,13 +3,12 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TutorialManager, {
   TutorialManagerEvent,
-  TutorialState,
+  TutorialState
 } from '../../Backend/GameLogic/TutorialManager';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
-import { Underline } from '../Components/CoreUI';
 import { Icon, IconType } from '../Components/Icons';
-import { White } from '../Components/Text';
+import { Red, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
 import { useBooleanSetting } from '../Utils/SettingsHooks';
@@ -21,7 +20,12 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   if (tutorialState === TutorialState.None) {
     return (
       <div className='tutintro'>
-        Welcome to the universe of <White>DARK FOREST</White>. Would you like to play the tutorial?
+        Welcome to the universe of <White>DARK FOREST: <Red>ARENA</Red></White>!. 
+        <br/>
+        We have designed this modified version of Dark Forest to be fast-paced and high-action.
+        We hope it will attract a new type of player who wants the fun of Dark Forest in casual and non-technical setting.
+        <br/> 
+        Would you like to play the tutorial?
         <div>
           <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.None)}>
             Yes
@@ -35,7 +39,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   } else if (tutorialState === TutorialState.HomePlanet) {
     return (
       <div>
-        Welcome to the universe. You've initialized with 50 energy on your home planet, in a NEBULA.
+        Welcome to the universe.
         <br />
         <br />
         <White>Click your home planet to learn more.</White>
@@ -139,9 +143,9 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   } else if (tutorialState === TutorialState.HowToGetScore) {
     return (
       <div className='tutzoom'>
-        <White>It's a Junk War!</White> <br />
+        <White>It's an Arena Battle!</White> <br />
         <br />
-        Have the highest score at the end of the round to win!
+        Capture the Target Planet (it has a big target floating above it) to win!
         <br />
         <div>
           <Btn
@@ -156,10 +160,8 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   } else if (tutorialState === TutorialState.ScoringDetails) {
     return (
       <div className='tutzoom'>
-        You can increase your score by withdrawing silver via space time rips, and by finding
-        artifacts. The rarer the artifact, the more points it gives you! You can also increase your
-        score via Capture Zones. Hover over the 'Capture Zone' section in the top bar for more info
-        about capture zones.
+        To win, take ownership of the target planet and fill its energy to {uiManager.getGameManager().getContractConstants().CLAIM_VICTORY_ENERGY_PERCENT}%. 
+        Then claim victory on that planet. If you capture the target planet first, you win!
         <div>
           <Btn
             className='btn'
@@ -173,11 +175,11 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   } else if (tutorialState === TutorialState.Valhalla) {
     return (
       <div className='tutalmost'>
-        Winners of each round of Dark Forest v0.6.x will receive a prize, and be added to the{' '}
-        <Underline>Valhalla</Underline> universe.
+        If you win an official round (one of the default worlds on the home page), you will improve your ELO and see your name on the leaderboard!
+        More details about rewards and competitive play will be released soon ;).
         <br />
         <br />
-        To win, have the highest score (^:
+        To win, capture the target planet (^:
         <div>
           <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.Valhalla)}>
             Next

@@ -125,8 +125,8 @@ export type LobbyConfigAction =
       value: Initializers['TARGET_PLANETS'] | undefined;
     }
   | {
-      type: 'TARGET_PLANET_HOLD_BLOCKS_REQUIRED';
-      value: Initializers['TARGET_PLANET_HOLD_BLOCKS_REQUIRED'] | undefined;
+      type: 'CLAIM_VICTORY_ENERGY_PERCENT';
+      value: Initializers['CLAIM_VICTORY_ENERGY_PERCENT'] | undefined;
     }
   | {
       type: 'MODIFIERS';
@@ -353,7 +353,7 @@ export function lobbyConfigReducer(state: LobbyConfigState, action: LobbyAction)
       update = ofBoolean(action, state);
       break;
     }
-    case 'TARGET_PLANET_HOLD_BLOCKS_REQUIRED': {
+    case 'CLAIM_VICTORY_ENERGY_PERCENT': {
       update = ofPositiveInteger(action, state);
       break;
     }
@@ -874,7 +874,7 @@ export function lobbyConfigInit(startingConfig: LobbyInitializers) {
         };
         break;
       }
-      case 'TARGET_PLANET_HOLD_BLOCKS_REQUIRED': {
+      case 'CLAIM_VICTORY_ENERGY_PERCENT': {
         const defaultValue = startingConfig[key];
         state[key] = {
           currentValue: defaultValue,

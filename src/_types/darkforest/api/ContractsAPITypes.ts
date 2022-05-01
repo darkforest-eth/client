@@ -59,7 +59,6 @@ export const enum ContractEvent {
   AdminGiveSpaceship = 'AdminGiveSpaceship',
   PauseStateChanged = 'PauseStateChanged',
   LobbyCreated = 'LobbyCreated',
-  TargetPlanetInvaded = 'TargetPlanetInvaded',
   Gameover = 'Gameover'
 }
 
@@ -107,7 +106,6 @@ export const enum ContractsAPIEvent {
   TxCancelled = 'TxCancelled',
   PlanetTransferred = 'PlanetTransferred',
   LobbyCreated = 'LobbyCreated',
-  TargetPlanetInvaded = 'TargetPlanetInvaded',
   Gameover = "Gameover"
 }
 
@@ -313,7 +311,7 @@ export interface ContractConstants {
 
   MANUAL_SPAWN: boolean;
   TARGET_PLANETS: boolean;
-  TARGET_PLANET_HOLD_BLOCKS_REQUIRED: number;
+  CLAIM_VICTORY_ENERGY_PERCENT: number;
   MODIFIERS : [
     number,
     number,
@@ -330,7 +328,8 @@ export interface ContractConstants {
     boolean,
     boolean,
     boolean
-  ]
+  ];
+  START_TIME: number;
 }
 
 export type ClientMockchainData =

@@ -225,7 +225,6 @@ export class ContractsAPI extends EventEmitter {
           contract.filters.AdminGiveSpaceship(null, null).topics,
           contract.filters.PauseStateChanged(null).topics,
           contract.filters.LobbyCreated(null, null).topics,
-          contract.filters.TargetPlanetInvaded(null, null).topics,
           contract.filters.Gameover(null).topics,
         ].map((topicsOrUndefined) => (topicsOrUndefined || [])[0]),
       ] as Array<string | Array<string>>,
@@ -371,9 +370,6 @@ export class ContractsAPI extends EventEmitter {
       [ContractEvent.LobbyCreated]: (ownerAddr: string, lobbyAddr: string) => {
         this.emit(ContractsAPIEvent.LobbyCreated, address(ownerAddr), address(lobbyAddr));
       },
-      [ContractEvent.TargetPlanetInvaded]: (player: string, location: EthersBN) => {
-        this.emit(ContractsAPIEvent.TargetPlanetInvaded, player, locationIdFromEthersBN(location));
-      },
       [ContractEvent.Gameover]: (location: EthersBN) => {
         this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
         this.emit(ContractsAPIEvent.Gameover);
@@ -400,7 +396,6 @@ export class ContractsAPI extends EventEmitter {
     contract.removeAllListeners(ContractEvent.PlanetSilverWithdrawn);
     contract.removeAllListeners(ContractEvent.PlanetInvaded);
     contract.removeAllListeners(ContractEvent.PlanetCaptured);
-    contract.removeAllListeners(ContractEvent.TargetPlanetInvaded);
     contract.removeAllListeners(ContractEvent.Gameover);
   }
 
@@ -457,8 +452,8 @@ export class ContractsAPI extends EventEmitter {
 
     const {
       MANUAL_SPAWN,
-      TARGET_PLANET_HOLD_BLOCKS_REQUIRED,
       TARGET_PLANETS,
+      CLAIM_VICTORY_ENERGY_PERCENT,
       MODIFIERS,
       SPACESHIPS,
     } = await this.makeCall(this.contract.getArenaConstants);
@@ -586,7 +581,7 @@ export class ContractsAPI extends EventEmitter {
 
       MANUAL_SPAWN: MANUAL_SPAWN,
       TARGET_PLANETS: TARGET_PLANETS,
-      TARGET_PLANET_HOLD_BLOCKS_REQUIRED: TARGET_PLANET_HOLD_BLOCKS_REQUIRED.toNumber(),
+      CLAIM_VICTORY_ENERGY_PERCENT: CLAIM_VICTORY_ENERGY_PERCENT.toNumber(),
       MODIFIERS: [
         MODIFIERS[0].toNumber(),
         MODIFIERS[1].toNumber(),
