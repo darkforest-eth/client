@@ -1,57 +1,135 @@
+import { INIT_ADDRESS } from '@darkforest_eth/contracts';
+import initContractAbiUrl from '@darkforest_eth/contracts/abis/DFArenaInitialize.json';
+import { EthConnection } from '@darkforest_eth/network';
+import { ContractMethodName, EthAddress, UnconfirmedCreateLobby } from '@darkforest_eth/types';
+import { Contract } from 'ethers';
 import _ from 'lodash';
-import React, { useMemo, useReducer, useState } from 'react';
+import React, { useEffect, useMemo, useReducer, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { ContractsAPI } from '../../Backend/GameLogic/ContractsAPI';
 import { LobbyAdminTools } from '../../Backend/Utils/LobbyAdminTools';
 import { ConfigurationPane } from '../Panes/Lobbies/ConfigurationPane';
-import { Minimap } from '../Panes/Lobbies/MinimapPane';
+import { MinimapPane } from '../Panes/Lobbies/MinimapPane';
 import { MinimapConfig } from '../Panes/Lobbies/MinimapUtils';
-import { LobbyConfigAction, lobbyConfigInit, lobbyConfigReducer, LobbyInitializers } from '../Panes/Lobbies/Reducer';
-
-type ErrorState =
-  | { type: 'invalidAddress' }
-  | { type: 'contractLoad' }
-  | { type: 'invalidContract' }
-  | { type: 'invalidCreate' };
-
-type Status = 'creating' | 'created' | 'errored' | undefined;
+import {
+  LobbyConfigAction,
+  lobbyConfigInit,
+  lobbyConfigReducer,
+  LobbyInitializers,
+} from '../Panes/Lobbies/Reducer';
+import { getLobbyCreatedEvent } from '../Utils/helpers';
 
 export function LobbyConfigPage({
+  contract,
+  connection,
+  ownerAddress,
   startingConfig,
-  onCreate,
-  lobbyAdminTools,
-  lobbyTx
+  root,
 }: {
+  contract: ContractsAPI;
+  connection: EthConnection;
+  ownerAddress: EthAddress;
   startingConfig: LobbyInitializers;
-  onCreate: (config: LobbyInitializers) => Promise<void>;
-  lobbyAdminTools: LobbyAdminTools | undefined;
-  lobbyTx: string | undefined;
+  root: string;
 }) {
   const [config, updateConfig] = useReducer(lobbyConfigReducer, startingConfig, lobbyConfigInit);
   const [minimapConfig, setMinimapConfig] = useState<MinimapConfig | undefined>();
-  const [error, setError] = useState<string | undefined>();
+  const [lobbyAdminTools, setLobbyAdminTools] = useState<LobbyAdminTools>();
+  const [lobbyTx, setLobbyTx] = useState<string | undefined>();
+
+  const history = useHistory();
+  async function createLobby(config: LobbyInitializers) {
+    const initializers = { ...startingConfig, ...config };
+    const InitABI = await fetch(initContractAbiUrl).then((r) => r.json());
+    const artifactBaseURI = '';
+    const initInterface = Contract.getInterface(InitABI);
+    const initAddress = INIT_ADDRESS;
+    const initFunctionCall = initInterface.encodeFunctionData('init', [
+      initializers.WHITELIST_ENABLED,
+      artifactBaseURI,
+      initializers,
+    ]);
+    const txIntent: UnconfirmedCreateLobby = {
+      methodName: ContractMethodName.CREATE_LOBBY,
+      contract: contract.contract,
+      args: Promise.resolve([initAddress, initFunctionCall]),
+    };
+
+    const tx = await contract.submitTransaction(txIntent, {
+      // The createLobby function costs somewhere around 12mil gas
+      gasLimit: '15000000',
+    });
+
+    const lobbyReceipt = await tx.confirmedPromise;
+    const { owner, lobby } = getLobbyCreatedEvent(lobbyReceipt, contract.contract);
+    setLobbyTx(tx?.hash);
+
+    if (owner === ownerAddress) {
+      if (!connection) {
+        throw 'error: no connection';
+      }
+      const lobbyAdminTools = await LobbyAdminTools.create(lobby, connection);
+      setLobbyAdminTools(lobbyAdminTools);
+      history.push(`${root}/extras`);
+    }
+  }
 
   const onMapChange = useMemo(() => {
     return _.debounce((config: MinimapConfig) => setMinimapConfig(config), 500);
   }, [setMinimapConfig]);
 
+  useEffect(() => {
+    onMapChange({
+      worldRadius: config.WORLD_RADIUS_MIN.currentValue,
+      key: config.SPACETYPE_KEY.currentValue,
+      scale: config.PERLIN_LENGTH_SCALE.currentValue,
+      mirrorX: config.PERLIN_MIRROR_X.currentValue,
+      mirrorY: config.PERLIN_MIRROR_Y.currentValue,
+      perlinThreshold1: config.PERLIN_THRESHOLD_1.currentValue,
+      perlinThreshold2: config.PERLIN_THRESHOLD_2.currentValue,
+      perlinThreshold3: config.PERLIN_THRESHOLD_3.currentValue,
+      stagedPlanets: config.ADMIN_PLANETS.currentValue || [],
+      createdPlanets: lobbyAdminTools?.planets || [],
+      dot: 4,
+    });
+  }, [
+    onMapChange,
+    config.WORLD_RADIUS_MIN.currentValue,
+    config.SPACETYPE_KEY.currentValue,
+    config.PERLIN_LENGTH_SCALE.currentValue,
+    config.PERLIN_MIRROR_X.currentValue,
+    config.PERLIN_MIRROR_Y.currentValue,
+    config.PERLIN_THRESHOLD_1.currentValue,
+    config.PERLIN_THRESHOLD_2.currentValue,
+    config.PERLIN_THRESHOLD_3.currentValue,
+    config.ADMIN_PLANETS.currentValue,
+    lobbyAdminTools,
+  ]);
+
   function onUpdate(action: LobbyConfigAction) {
-    setError(undefined);
     updateConfig(action);
   }
-  
+
   let content = (
     <>
       <ConfigurationPane
         modalIndex={2}
         config={config}
+        startingConfig={startingConfig}
         updateConfig={updateConfig}
-        onMapChange={onMapChange}
-        onCreate={onCreate}
+        onCreate={createLobby}
         lobbyAdminTools={lobbyAdminTools}
-        onUpdate = {onUpdate}
-        lobbyTx = {lobbyTx}
+        lobbyTx={lobbyTx}
+        ownerAddress={ownerAddress}
+        root={root}
       />
       {/* Minimap uses modalIndex=1 so it is always underneath the configuration pane */}
-      <Minimap modalIndex={1} minimapConfig={minimapConfig} onUpdate = {onUpdate} created = {!!lobbyAdminTools}/>
+      <MinimapPane
+        modalIndex={1}
+        minimapConfig={minimapConfig}
+        onUpdate={updateConfig}
+        created={!!lobbyAdminTools}
+      />
     </>
   );
 

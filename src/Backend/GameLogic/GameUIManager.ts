@@ -1311,7 +1311,7 @@ class GameUIManager extends EventEmitter {
   public get manualSpawnEnabled(): boolean {
     return this.contractConstants.MANUAL_SPAWN;
   }
-  
+
   public get targetPlanetsEnabled(): boolean {
     return this.contractConstants.TARGET_PLANETS;
   }
@@ -1432,8 +1432,15 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getGameover$();
   }
 
-  public getWinners() : string[] {
+  public getWinners(): string[] {
     return this.gameManager.getWinners();
+  }
+
+  public getGameDuration(): number {
+    return this.gameManager.gameDuration();
+  }
+  public getClaimVictoryPercentage(): number {
+    return this.gameManager.claimVictoryPercentage();
   }
 
   public getSilverScoreValue(): number {

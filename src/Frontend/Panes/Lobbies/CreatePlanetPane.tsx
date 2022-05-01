@@ -1,5 +1,4 @@
 import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
-import { AdminPlanet } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -16,46 +15,41 @@ import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Row } from '../../Components/Row';
 import { Green, Red, Sub } from '../../Components/Text';
 import { Table } from '../../Views/Table';
-import { LobbiesPaneProps, Warning } from './LobbiesUtils';
+import { LobbiesPaneProps, LobbyPlanet, Warning } from './LobbiesUtils';
 import { InvalidConfigError, toInitializers } from './Reducer';
 
 const jcFlexEnd = { display: 'flex', justifyContent: 'flex-end' } as CSSStyleDeclaration &
   React.CSSProperties;
-const jcSpaceEvenly = { display: 'flex', justifyContent: 'space-evenly' } as CSSStyleDeclaration &
-  React.CSSProperties;
-const rowChunkSize = 4;
+const rowChunkSize = 6;
 const rowStyle = { gap: '8px' } as CSSStyleDeclaration & React.CSSProperties;
 // Handling the non-input lvl 0 by calculating the items in the row
 const itemStyle = { flex: `1 1 ${Math.floor(100 / rowChunkSize)}%` };
+
+const CHUNK_SIZE = 5;
 
 const TableContainer = styled.div`
   overflow-y: scroll;
   width: 100%;
 `;
 
-const displayProperties = [
-  'x',
-  'y',
-  'Planet Level',
-  'Planet Type',
-  'Valid Location Id?', // not used, always set to false
-  'Reveal Planet?',
-  'Target Planet?',
-  'Spawn Planet?',
-];
+const StageContainer = styled.div`
+  background: #191919;
+  border-radius: 3px;
+  padding: 8px;
+`;
+
+const displayProperties = ['x', 'y', 'Level', 'Type', 'Target?', 'Spawn?'];
 type Status = 'creating' | 'created' | 'errored' | undefined;
 
 function formatBool(bool: boolean) {
   return bool ? <Green>Y</Green> : <Red>N</Red>;
 }
 
-const defaultPlanet: AdminPlanet = {
+const defaultPlanet: LobbyPlanet = {
   x: 0,
   y: 0,
   level: 0,
   planetType: 0,
-  requireValidLocationId: false,
-  revealLocation: true,
   isTargetPlanet: false,
   isSpawnPlanet: false,
 };
@@ -65,7 +59,7 @@ export function CreatePlanetPane({
   onUpdate: onUpdate,
   lobbyAdminTools,
 }: LobbiesPaneProps & { lobbyAdminTools: LobbyAdminTools | undefined }) {
-  const [planet, setPlanet] = useState<AdminPlanet>(defaultPlanet);
+  const [planet, setPlanet] = useState<LobbyPlanet>(defaultPlanet);
   const [createdPlanets, setCreatedPlanets] = useState<CreatedPlanet[] | undefined>();
   const [error, setError] = useState<string | undefined>();
   const [status, setStatus] = useState<Status>();
@@ -74,21 +68,20 @@ export function CreatePlanetPane({
     setCreatedPlanets(lobbyAdminTools?.planets);
   }, [lobbyAdminTools]);
 
-  const headers = ['Coords', 'Level', 'Type', 'Reveal', 'Target', 'Spawn', ''];
+  const headers = ['Coords', 'Level', 'Type', 'Target', 'Spawn', ''];
   const alignments: Array<'r' | 'c' | 'l'> = ['c', 'c', 'c', 'c', 'c', 'c', 'c', 'c'];
   const columns = [
-    (planet: AdminPlanet) => (
+    (planet: LobbyPlanet) => (
       <Sub>
         ({planet.x}, {planet.y})
       </Sub>
     ),
-    (planet: AdminPlanet) => <Sub>{planet.level}</Sub>,
-    (planet: AdminPlanet) => <Sub>{planet.planetType}</Sub>,
-    (planet: AdminPlanet) => formatBool(planet.revealLocation),
-    (planet: AdminPlanet) => formatBool(planet.isTargetPlanet),
-    (planet: AdminPlanet) => formatBool(planet.isSpawnPlanet),
-    (planet: AdminPlanet, i: number) => (
-      <div style={jcSpaceEvenly}>
+    (planet: LobbyPlanet) => <Sub>{planet.level}</Sub>,
+    (planet: LobbyPlanet) => <Sub>{planet.planetType}</Sub>,
+    (planet: LobbyPlanet) => formatBool(planet.isTargetPlanet),
+    (planet: LobbyPlanet) => formatBool(planet.isSpawnPlanet),
+    (planet: LobbyPlanet, i: number) => (
+      <div style={{ ...jcFlexEnd, ...rowStyle }}>
         <Btn disabled={!lobbyAdminTools} onClick={async () => await createAndRevealPlanet(i)}>
           ✓
         </Btn>
@@ -98,19 +91,29 @@ export function CreatePlanetPane({
   ];
 
   function StagedPlanets({ config }: LobbiesPaneProps) {
-    const adminPlanets = config.ADMIN_PLANETS.currentValue;
-    return adminPlanets && adminPlanets.length > 0 ? (
-      <TableContainer>
-        <Table
-          paginated={true}
-          rows={adminPlanets || []}
-          headers={headers}
-          columns={columns}
-          alignments={alignments}
-        />
-      </TableContainer>
+    const LobbyPlanets = config.ADMIN_PLANETS.currentValue;
+    return LobbyPlanets && LobbyPlanets.length > 0 ? (
+      <>
+        <Row>
+          <span>Staged Planets</span>
+        </Row>
+
+        <Row>
+          <TableContainer>
+            <Table
+              paginated={true}
+              rows={LobbyPlanets || []}
+              headers={headers}
+              columns={columns}
+              alignments={alignments}
+            />
+          </TableContainer>
+        </Row>
+      </>
     ) : (
-      <Sub>No planets staged</Sub>
+      <Row>
+        <Sub>No planets staged</Sub>
+      </Row>
     );
   }
 
@@ -118,7 +121,6 @@ export function CreatePlanetPane({
     'Coords',
     'Level',
     'Type',
-    'Reveal',
     'Target',
     'Spawn',
     'Create Tx',
@@ -133,7 +135,6 @@ export function CreatePlanetPane({
     ),
     (planet: CreatedPlanet) => <Sub>{planet.level}</Sub>,
     (planet: CreatedPlanet) => <Sub>{planet.planetType}</Sub>,
-    (planet: CreatedPlanet) => formatBool(planet.revealLocation),
     (planet: CreatedPlanet) => formatBool(planet.isTargetPlanet),
     (planet: CreatedPlanet) => formatBool(planet.isSpawnPlanet),
     (planet: CreatedPlanet) =>
@@ -154,17 +155,27 @@ export function CreatePlanetPane({
 
   function CreatedPlanets({ planets }: { planets: CreatedPlanet[] | undefined }) {
     return planets?.length ? (
-      <TableContainer>
-        <Table
-          paginated={true}
-          rows={planets || []}
-          headers={createdPlanetHeaders}
-          columns={createdPlanetColumns}
-          alignments={alignments}
-        />
-      </TableContainer>
+      <>
+        <Row>Created Planets</Row>
+        <Row>
+          <TableContainer>
+            <Table
+              paginated={true}
+              rows={planets || []}
+              headers={createdPlanetHeaders}
+              columns={createdPlanetColumns}
+              alignments={alignments}
+              itemsPerPage={5}
+            />
+          </TableContainer>
+        </Row>
+      </>
     ) : (
-      <Sub>No planets created</Sub>
+      <Row>
+        <Sub>
+          {lobbyAdminTools ? 'No planets created ' : 'Cannot create planets until world is created'}
+        </Sub>
+      </Row>
     );
   }
 
@@ -185,13 +196,9 @@ export function CreatePlanetPane({
       value: planet,
       index: config.ADMIN_PLANETS.displayValue?.length || 0,
     });
-    console.log(JSON.stringify(config.ADMIN_PLANETS.displayValue));
-    setPlanet(defaultPlanet);
   }
 
   function planetInput(value: string, index: number) {
-    // The level 0 value can never change
-    if (value == 'requireValidLocationId') return;
     return (
       <div style={itemStyle} key={index}>
         <span>{displayProperties[index]}</span>
@@ -215,13 +222,38 @@ export function CreatePlanetPane({
     );
   }
 
-  async function createAll() {
-    setError(undefined);
-    if (!config.ADMIN_PLANETS.displayValue) return;
 
-    for (let i = config.ADMIN_PLANETS.displayValue.length - 1; i >= 0; i--) {
-      await createAndRevealPlanet(i);
+  async function bulkCreateAndRevealPlanets() {
+
+    if (!lobbyAdminTools) {
+      setError("You haven't created a lobby.");
+      return;
     }
+    if (!config.ADMIN_PLANETS.currentValue) {
+      setError('no planets staged');
+      return;
+    }
+    let planets = config.ADMIN_PLANETS.currentValue;
+
+    setStatus('creating');
+
+    let i = 0;
+    while (i < planets.length) {
+      try {
+        const chunk = planets.slice(i, i + CHUNK_SIZE);
+        await lobbyAdminTools.bulkCreateAndReveal(chunk, toInitializers(config));
+        onUpdate({ type: 'ADMIN_PLANETS', value: planet, index: i, number: CHUNK_SIZE });
+        planets.splice(i, CHUNK_SIZE);
+      } catch (err) {
+        i += CHUNK_SIZE;
+        if (err instanceof InvalidConfigError) {
+          setError(`Invalid ${err.key} value ${err.value ?? ''} - ${err.message}`);
+        } else {
+          setError(err?.message || 'Something went wrong. Check your dev console.');
+        }
+      }
+    }
+    setStatus('created');
   }
 
   async function createAndRevealPlanet(index: number) {
@@ -242,9 +274,7 @@ export function CreatePlanetPane({
         return;
       }
       await lobbyAdminTools.createPlanet(elem, initializers);
-      if (elem.revealLocation) {
-        await lobbyAdminTools.revealPlanet(elem, initializers);
-      }
+      await lobbyAdminTools.revealPlanet(elem, initializers);
 
       onUpdate({ type: 'ADMIN_PLANETS', value: planet, index: index });
       setStatus('created');
@@ -259,9 +289,9 @@ export function CreatePlanetPane({
     }
   }
 
-  let adminPlanetElems;
+  let lobbyPlanetElems;
   if (config.ADMIN_CAN_ADD_PLANETS.displayValue) {
-    adminPlanetElems = _.chunk(Object.keys(planet), rowChunkSize).map((items, rowIdx) => {
+    lobbyPlanetElems = _.chunk(Object.keys(planet), rowChunkSize).map((items, rowIdx) => {
       return (
         <Row key={`admin-planet-elem-${rowIdx}`} style={rowStyle}>
           {items.map((value, idx) => planetInput(value, rowIdx * rowChunkSize + idx))}
@@ -273,49 +303,31 @@ export function CreatePlanetPane({
     <>
       {config.ADMIN_CAN_ADD_PLANETS.displayValue ? (
         <>
-          {!lobbyAdminTools && (
+          <StageContainer>
             <Row>
-              <Sub>
-                <Red>Warning:</Red> Cannot create planets until lobby is created
-              </Sub>
+              <span>Stage Custom Planets</span>
+              <Btn style={jcFlexEnd} onClick={stagePlanet}>
+                Stage Planet
+              </Btn>
             </Row>
-          )}
-          <Row>
-            <span>Stage Custom Planets</span>
-            <Btn style={jcFlexEnd} onClick={stagePlanet}>
-              Stage Planet
-            </Btn>
-          </Row>
-          {adminPlanetElems}
+            {lobbyPlanetElems}
+          </StageContainer>
+
           <Row>
             <Warning>{config.ADMIN_PLANETS.warning}</Warning>
-          </Row>
-          <Row>
             <Warning>{error}</Warning>
           </Row>
-          <br />
-          <Row>
-            <span>Staged Planets</span>
-          </Row>
-          <Row>
-            <StagedPlanets config={config} onUpdate={onUpdate} />
-          </Row>
-          {config.ADMIN_PLANETS.displayValue && config.ADMIN_PLANETS.displayValue.length > 0 && (
-            <Btn
-              style={jcFlexEnd}
-              disabled={status == 'creating' || !lobbyAdminTools}
-              onClick={createAll}
-            >
-              {' '}
-              {status == 'creating' ? <LoadingSpinner initialText='Adding...' /> : ` Add all `}
-            </Btn>
-          )}
-          <Row>
-            <span>Created Planets</span>
-          </Row>
-          <Row>
-            <CreatedPlanets planets={createdPlanets} />
-          </Row>
+          <StagedPlanets config={config} onUpdate={onUpdate} />
+            {config.ADMIN_PLANETS.displayValue && config.ADMIN_PLANETS.displayValue.length > 0 && (
+              <Btn
+                size='stretch'
+                disabled={status == 'creating' || !lobbyAdminTools}
+                onClick={bulkCreateAndRevealPlanets}
+              >
+                {status == 'creating' ? <LoadingSpinner initialText='Adding...' /> : `Add All`}
+              </Btn>
+            )}
+          <CreatedPlanets planets={createdPlanets} />
         </>
       ) : (
         <Sub>Enable admin planets (in admin permissions) to continue</Sub>

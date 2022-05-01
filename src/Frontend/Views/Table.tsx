@@ -45,6 +45,7 @@ export function Table<T>({
   alignments,
   headerStyle,
   paginated,
+  itemsPerPage = 10
 }: {
   rows: T[];
   headers: React.ReactNode[];
@@ -52,8 +53,8 @@ export function Table<T>({
   alignments?: Array<'r' | 'c' | 'l'>;
   headerStyle?: React.CSSProperties;
   paginated?: boolean;
+  itemsPerPage? : number;
 }) {
-  const itemsPerPage = 10;
   const [page, setPage] = useState(0);
   const visibleRows = paginated
     ? rows.slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)

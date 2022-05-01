@@ -42,7 +42,7 @@ import {
   TxIntent,
   VoyageId,
 } from '@darkforest_eth/types';
-import { BigNumber as EthersBN, ContractFunction, Event, providers } from 'ethers';
+import { BigNumber, BigNumber as EthersBN, ContractFunction, Event, providers } from 'ethers';
 import { EventEmitter } from 'events';
 import _ from 'lodash';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
@@ -456,6 +456,7 @@ export class ContractsAPI extends EventEmitter {
       CLAIM_VICTORY_ENERGY_PERCENT,
       MODIFIERS,
       SPACESHIPS,
+      START_TIME,
     } = await this.makeCall(this.contract.getArenaConstants);
 
     const TOKEN_MINT_END_SECONDS = (
@@ -593,6 +594,7 @@ export class ContractsAPI extends EventEmitter {
         MODIFIERS[7].toNumber(),
       ],
       SPACESHIPS: [SPACESHIPS[0], SPACESHIPS[1], SPACESHIPS[2], SPACESHIPS[3], SPACESHIPS[4]],
+      START_TIME: START_TIME.toNumber(),
     };
 
     return constants;
@@ -752,6 +754,10 @@ export class ContractsAPI extends EventEmitter {
 
   public async getWinners(): Promise<string[]> {
     return this.makeCall(this.contract.getWinners);
+  }
+
+  public async getEndTime(): Promise<BigNumber> {
+    return this.makeCall(this.contract.getEndTime);
   }
 
   public async getRevealedPlanetsCoords(

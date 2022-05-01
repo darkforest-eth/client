@@ -10,7 +10,6 @@ import {
 import revealCircuitPath from '@darkforest_eth/snarks/reveal.wasm';
 import revealZkeyPath from '@darkforest_eth/snarks/reveal.zkey';
 import {
-  AdminPlanet,
   ContractMethodName,
   EthAddress,
   LocationId,
@@ -20,6 +19,7 @@ import {
   WorldLocation
 } from '@darkforest_eth/types';
 import { BigNumberish } from 'ethers';
+import { LobbyPlanet } from '../../Frontend/Panes/Lobbies/LobbiesUtils';
 import { LobbyInitializers } from '../../Frontend/Panes/Lobbies/Reducer';
 import { ContractsAPI, makeContractsAPI } from '../GameLogic/ContractsAPI';
 
@@ -33,17 +33,10 @@ export type CreatePlanetData = {
   biomeBase: number;
 };
 
-export type CreatedPlanet = {
-  x: number;
-  y: number;
-  level: number;
-  planetType: number;
-  requireValidLocationId: boolean;
-  revealLocation: boolean;
-  isTargetPlanet: boolean;
-  isSpawnPlanet: boolean;  createTx : string | undefined;
-  revealTx : string | undefined;
-}
+export type CreatedPlanet = LobbyPlanet & {
+  createTx: string | undefined;
+  revealTx: string | undefined;
+};
 
 export class LobbyAdminTools {
   private readonly lobbyAddress: EthAddress;
@@ -69,7 +62,7 @@ export class LobbyAdminTools {
     return lobbyAdminTools;
   }
 
-  private generatePlanetData(planet: AdminPlanet, initializers: LobbyInitializers) {
+  private generatePlanetData(planet: LobbyPlanet, initializers: LobbyInitializers) {
     const location = initializers.DISABLE_ZK_CHECKS
       ? fakeHash(initializers.PLANET_RARITY)(planet.x, planet.y).toString()
       : mimcHash(initializers.PLANETHASH_KEY)(planet.x, planet.y).toString();
@@ -103,7 +96,7 @@ export class LobbyAdminTools {
     };
   }
 
-  async createPlanet(planet: AdminPlanet, initializers: LobbyInitializers) {
+  async createPlanet(planet: LobbyPlanet, initializers: LobbyInitializers) {
     const planetData = this.generatePlanetData(planet, initializers);
     const locNum = planetData.location as BigNumberish;
 
@@ -113,7 +106,7 @@ export class LobbyAdminTools {
         perlin: planetData.perlinValue,
         level: planet.level,
         planetType: planet.planetType,
-        requireValidLocationId: planet.requireValidLocationId,
+        requireValidLocationId: false,
         isTargetPlanet: planet.isTargetPlanet,
         isSpawnPlanet: planet.isSpawnPlanet,
       },
@@ -130,11 +123,10 @@ export class LobbyAdminTools {
     });
 
     await tx.confirmedPromise;
-    this.createdPlanets.push({...planet, createTx : tx?.hash, revealTx : undefined});
-
+    this.createdPlanets.push({ ...planet, createTx: tx?.hash, revealTx: undefined });
   }
 
-  async revealPlanet(planet: AdminPlanet, initializers: LobbyInitializers) {
+  async revealPlanet(planet: LobbyPlanet, initializers: LobbyInitializers) {
     const planetData = this.generatePlanetData(planet, initializers);
     const getArgs = async () => {
       const revealArgs = await this.makeRevealProof(
@@ -161,7 +153,7 @@ export class LobbyAdminTools {
     const txIntent: UnconfirmedReveal = {
       methodName: ContractMethodName.REVEAL_LOCATION,
       contract: this.contract.contract,
-      locationId: location.toString() as LocationId,
+      locationId: location.toString() as LocationId, 
       location: worldLocation,
       args: getArgs(),
     };
@@ -172,8 +164,8 @@ export class LobbyAdminTools {
 
     await tx.confirmedPromise;
     console.log(`reveal tx accepted`);
-    const createdPlanet = this.createdPlanets.find(p => p.x == planet.x && p.y == planet.y);
-    if(!createdPlanet) throw("created planet not found");
+    const createdPlanet = this.createdPlanets.find((p) => p.x == planet.x && p.y == planet.y);
+    if (!createdPlanet) throw new Error('created planet not found');
     createdPlanet.revealTx = tx?.hash;
   }
 
@@ -228,6 +220,61 @@ export class LobbyAdminTools {
 
       return buildContractCallArgs(proof, publicSignals) as RevealSnarkContractCallArgs;
     }
+  }
+
+  async bulkCreateAndReveal(planets: LobbyPlanet[], initializers: LobbyInitializers) {
+    console.log(`testing bulk create and reveal`);
+    // make create Planet args
+    const createData = planets.map((p) => {
+      const planetData = this.generatePlanetData(p, initializers);
+      return {
+        location: planetData.location,
+        perlin: planetData.perlinValue,
+        level: p.level,
+        planetType: p.planetType,
+        requireValidLocationId: false,
+        isTargetPlanet: p.isTargetPlanet,
+        isSpawnPlanet: p.isSpawnPlanet,
+      };
+    });
+
+    const revealData = await Promise.all(
+      planets.map(async (p) => {
+        const revealArgs = await this.makeRevealProof(
+          p.x,
+          p.y,
+          initializers.PLANETHASH_KEY,
+          initializers.SPACETYPE_KEY,
+          initializers.PERLIN_LENGTH_SCALE,
+          initializers.PERLIN_MIRROR_X,
+          initializers.PERLIN_MIRROR_Y,
+          initializers.DISABLE_ZK_CHECKS,
+          initializers.PLANET_RARITY
+        );
+
+        return {
+          _a: revealArgs[0],
+          _b: revealArgs[1],
+          _c: revealArgs[2],
+          _input: revealArgs[3],
+        };
+      })
+    );
+
+    const args = Promise.resolve([createData, revealData]);
+    const txIntent = {
+      methodName: 'bulkCreateAndReveal' as ContractMethodName,
+      contract: this.contract.contract,
+      args: args,
+    };
+
+    const tx = await this.contract.submitTransaction(txIntent, {
+      gasLimit: '15000000',
+    });
+
+    await tx.confirmedPromise;
+
+    planets.map((p) => this.createdPlanets.push({ ...p, createTx: tx?.hash, revealTx: tx?.hash }));
   }
 
   async whitelistPlayer(address: EthAddress) {

@@ -2,14 +2,14 @@ import {
   isUnconfirmedClaimVictoryTx
 } from '@darkforest_eth/serde';
 import { Planet, TooltipName } from '@darkforest_eth/types';
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { TooltipTrigger } from '../Panes/Tooltip';
 import { useAccount, useUIManager } from '../Utils/AppHooks';
 import { INVADE } from '../Utils/ShortcutConstants';
-import { ShortcutBtn } from './Btn';
 import { LoadingSpinner } from './LoadingSpinner';
+import { MaybeShortcutButton } from './MaybeShortcutButton';
 import { Row } from './Row';
 import { Green, White } from './Text';
 
@@ -29,9 +29,9 @@ export function TargetPlanetButton({
   const account = useAccount(uiManager);
   const gameManager = uiManager.getGameManager();
   const planet = planetWrapper.value;
-  if(!planet) return <></> ;
-  const owned = planet.owner === account;
-  const isTargetPlanet = planet.isTargetPlanet;
+  const owned = planet?.owner === account;
+  const isTargetPlanet = planet?.isTargetPlanet;
+  const gameOver = gameManager.isRoundOver();
 
   const shouldShow = useMemo(
     () => owned && isTargetPlanet,
@@ -39,7 +39,7 @@ export function TargetPlanetButton({
   );
 
   const energyLeftToClaimVictory = useMemo(() => {
-    if (!owned) {
+    if (!owned || !planet) {
       return undefined;
     }
     const energyRequired = gameManager.getContractConstants().CLAIM_VICTORY_ENERGY_PERCENT;
@@ -47,24 +47,25 @@ export function TargetPlanetButton({
     const percentNeeded =  Math.floor(energyRequired - planetEnergyPercent);
     const energyNeeded = Math.floor(percentNeeded / 100 * planet.energyCap);
     return {percentNeeded: percentNeeded, energyNeeded: energyNeeded}
-  }, [planet.energy]);
+  }, [planet?.energy]);
 
-  const claimable = useMemo(() => energyLeftToClaimVictory && energyLeftToClaimVictory.percentNeeded < 0, [energyLeftToClaimVictory]);
+  const claimable = useMemo(() => energyLeftToClaimVictory && energyLeftToClaimVictory.percentNeeded < 0 && !gameOver, [energyLeftToClaimVictory, gameManager]);
 
   const claimingVictory = useMemo(
-    () => planet.transactions?.hasTransaction(isUnconfirmedClaimVictoryTx),
+    () => planet?.transactions?.hasTransaction(isUnconfirmedClaimVictoryTx),
     [planet]
   );
 
-  const claimVictory = useCallback(() => {
+  const claimVictory = () => {
+    if(!planet || gameOver) return;
     gameManager.claimVictory(planet.locationId);
-  }, [gameManager, planet]);
+  };
 
   return (
     <StyledRow>
       {shouldShow && (
         <>
-            <ShortcutBtn
+            <MaybeShortcutButton
               className='button'
               size='stretch'
               active={claimingVictory}
@@ -80,12 +81,22 @@ export function TargetPlanetButton({
                 extraContent={
                   <>
                     <Green>
-                      Capture this planet to win the game!{' '}
+                      {gameOver && (
+                          <>
+                            The game is over!
+                          </>
+                      )}
+                      {!gameOver && (
+                          <>
+                            Capture this planet to win the game!
+                          </>
+                      )}
                       {!!energyLeftToClaimVictory && energyLeftToClaimVictory.percentNeeded >= 0 && (
                         <>
                           You need <White>{energyLeftToClaimVictory.energyNeeded}</White> ({energyLeftToClaimVictory.percentNeeded}%) more energy to claim victory with this planet.
                         </>
                       )}
+
                     </Green>
                   </>
                 }
@@ -96,7 +107,7 @@ export function TargetPlanetButton({
                   'Claim Victory!'
                 )}
               </TooltipTrigger>
-            </ShortcutBtn>
+            </MaybeShortcutButton>
         </>
       )}
     </StyledRow>

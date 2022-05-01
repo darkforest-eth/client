@@ -747,14 +747,14 @@ export function GameLandingPage({ match }: RouteComponentProps<{ contract: strin
             Math.abs(x) > 2 ** 32 ||
             Math.abs(y) > 2 ** 32
           ) {
-            throw 'Invalid home coordinates.';
+            throw new Error('Invalid home coordinates.');
           }
           if (await gameUIManager.addAccount({ x, y })) {
             terminal.current?.println('Successfully added account.');
             terminal.current?.println('Initializing game...');
             setStep(TerminalPromptStep.ALL_CHECKS_PASS);
           } else {
-            throw 'Invalid home coordinates.';
+            throw new Error('Invalid home coordinates.');
           }
         } catch (e) {
           terminal.current?.println(`ERROR: ${e}`, TerminalTextStyle.Red);

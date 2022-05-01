@@ -10,6 +10,15 @@ import { Row } from '../../Components/Row';
 import { Red } from '../../Components/Text';
 import { LobbyConfigAction, LobbyConfigState, toInitializers } from './Reducer';
 
+export declare type LobbyPlanet = {
+    x: number;
+    y: number;
+    level: number;
+    planetType: number;
+    isTargetPlanet: boolean;
+    isSpawnPlanet: boolean;
+}
+
 export interface LobbiesPaneProps {
   config: LobbyConfigState;
   onUpdate: (change: LobbyConfigAction) => void;
@@ -94,10 +103,12 @@ export function ConfigDownload({
   onError,
   address,
   config,
+  disabled = false
 }: {
   onError: (msg: string) => void;
   address: EthAddress | undefined;
   config: LobbyConfigState;
+  disabled? : boolean;
 }) {
   function doDownload() {
     try {
@@ -118,7 +129,7 @@ export function ConfigDownload({
   }
 
   return (
-    <Btn slot='title' size='small' onClick={doDownload}>
+    <Btn disabled = {disabled} slot='title' size='small' onClick={doDownload}>
       Download
     </Btn>
   );
@@ -127,9 +138,12 @@ export function ConfigDownload({
 export function ConfigUpload({
   onError,
   onUpload,
+  disabled = false
+
 }: {
   onError: (msg: string) => void;
   onUpload: (initializers: Initializers) => void;
+  disabled? : boolean;
 }) {
   function doUpload() {
     const reader = new FileReader();
@@ -164,7 +178,7 @@ export function ConfigUpload({
   }
 
   return (
-    <Btn slot='title' size='small' onClick={doUpload}>
+    <Btn disabled = {disabled} slot='title' size='small' onClick={doUpload}>
       Upload
     </Btn>
   );

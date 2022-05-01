@@ -99,6 +99,7 @@ module.exports = {
       DEFAULT_RPC: 'https://rpc-df.xdaichain.com/',
       // This must be null to indicate to webpack that this environment variable is optional
       DF_WEBSERVER_URL: null,
+      DF_TWITTER_URL: null
     }),
     new HtmlWebpackPlugin({
       template: './index.html',

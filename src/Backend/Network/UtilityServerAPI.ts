@@ -229,7 +229,7 @@ export const tryGetAllTwitters = async (): Promise<AddressTwitterMap> => {
 export const getAllTwitters = async (): Promise<AddressTwitterMap> => {
   try {
     const twitterMap: AddressTwitterMap = await fetch(
-      `${process.env.DF_WEBSERVER_URL}/twitter/all-twitters`
+      `${process.env.DF_TWITTER_URL}/twitter/all-twitters`
     ).then((x) => x.json());
     return twitterMap;
   } catch (e) {
@@ -241,7 +241,7 @@ export const verifyTwitterHandle = async (
   verifyMessage: SignedMessage<{ twitter: string }>
 ): Promise<boolean> => {
   try {
-    const res = await fetch(`${process.env.DF_WEBSERVER_URL}/twitter/verify-twitter`, {
+    const res = await fetch(`${process.env.DF_TWITTER_URL}/twitter/verify-twitter`, {
       method: 'POST',
       body: JSON.stringify({
         verifyMessage,
@@ -262,7 +262,7 @@ export const disconnectTwitter = async (
   disconnectMessage: SignedMessage<{ twitter: string }>
 ): Promise<boolean> => {
   try {
-    const res = await fetch(`${process.env.DF_WEBSERVER_URL}/twitter/disconnect`, {
+    const res = await fetch(`${process.env.DF_TWITTER_URL}/twitter/disconnect`, {
       method: 'POST',
       body: JSON.stringify({
         disconnectMessage,

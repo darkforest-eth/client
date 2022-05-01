@@ -30,7 +30,7 @@ export function TwitterVerifyPane({ visible, onClose }: { visible: boolean; onCl
   const onTweetClick = async () => {
     if (uiManager) {
       const tweetText = await uiManager.generateVerificationTweet(twitterHandleInputValue);
-      const str = `Verifying my @darkforest_eth v0.6 account (https://zkga.me): ${tweetText}`;
+      const str = `Verifying my @darkforest_eth @d_fdao arena account (https://arena.dfdao.xyz): ${tweetText}`;
       window.open(`https://twitter.com/intent/tweet?hashtags=darkforest&text=${encodeURI(str)}`);
     }
   };

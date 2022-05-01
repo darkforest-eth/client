@@ -482,9 +482,11 @@ const FindArtifact = () => (
 );
 
 export function TargetPlanet() {
+  const uiManager = useUIManager();
+  const claimPercentage = uiManager.getClaimVictoryPercentage()
   return (
     <>
-      This planet is a <Red>Target Planet!</Red> Invade and capture to win the game!
+      This planet is a <Red>Target Planet!</Red> Capture it and fill it with {claimPercentage}% energy to win!
     </>
   );
 }

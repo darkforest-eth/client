@@ -77,72 +77,34 @@ export default function LandingPage() {
               <tbody>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.1
+                    Arena Mode
                   </td>
                   <td>
-                    02/22/<HideSmall>20</HideSmall>20
+                    05/01/<HideSmall>20</HideSmall>22
                   </td>
                   <td>
-                    <a href='https://twitter.com/zoink'>Dylan Field</a>
-                  </td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.2
-                  </td>
-                  <td>
-                    06/24/<HideSmall>20</HideSmall>20
-                  </td>
-                  <td>Nate Foss</td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.3
-                  </td>
-                  <td>
-                    08/07/<HideSmall>20</HideSmall>20
-                  </td>
-                  <td>
-                    <Link to='https://twitter.com/hideandcleanse'>@hideandcleanse</Link>
+                    ?????
                   </td>
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.4
+                    <HideSmall>v</HideSmall>0.6 round 5
                   </td>
                   <td>
-                    10/02/<HideSmall>20</HideSmall>20
+                    02/18/<HideSmall>20</HideSmall>22
                   </td>
                   <td>
-                    <Link to='https://twitter.com/jacobrosenthal'>Jacob Rosenthal</Link>
-                  </td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.5
-                  </td>
-                  <td>
-                    12/25/<HideSmall>20</HideSmall>20
-                  </td>
-                  <td>0xb05d9542...</td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>v</HideSmall>0.6 round 1
-                  </td>
-                  <td>
-                    05/22/<HideSmall>20</HideSmall>21
-                  </td>
-                  <td>
-                    <Link to='https://twitter.com/adietrichs'>Ansgar Dietrichs</Link>
+                    <Link to='https://twitter.com/d_fdao'>@d_fdao</Link>
+                    {' + '}
+                    <Link to='https://twitter.com/orden_gg'>@orden_gg</Link>
                   </td>
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.6 round 2
+                    <HideSmall>v</HideSmall>0.6 round 4
                   </td>
                   <td>
-                    07/07/<HideSmall>20</HideSmall>21
+                    10/01/<HideSmall>20</HideSmall>21
                   </td>
                   <td>
                     <Link to='https://twitter.com/orden_gg'>@orden_gg</Link>
@@ -161,10 +123,10 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.6 round 4
+                    <HideSmall>v</HideSmall>0.6 round 2
                   </td>
                   <td>
-                    10/01/<HideSmall>20</HideSmall>21
+                    07/07/<HideSmall>20</HideSmall>21
                   </td>
                   <td>
                     <Link to='https://twitter.com/orden_gg'>@orden_gg</Link>
@@ -172,15 +134,64 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>v</HideSmall>0.6 round 5
+                    <HideSmall>v</HideSmall>0.6 round 1
                   </td>
                   <td>
-                    02/18/<HideSmall>20</HideSmall>22
+                    05/22/<HideSmall>20</HideSmall>21
                   </td>
                   <td>
-                    <Link to='https://twitter.com/d_fdao'>@d_fdao</Link>
-                    {' + '}
-                    <Link to='https://twitter.com/orden_gg'>@orden_gg</Link>
+                    <Link to='https://twitter.com/adietrichs'>Ansgar Dietrichs</Link>
+                  </td>
+                </TRow>
+                <TRow>
+                  <td>
+                    <HideSmall>v</HideSmall>0.5
+                  </td>
+                  <td>
+                    12/25/<HideSmall>20</HideSmall>20
+                  </td>
+                  <td>0xb05d9542...</td>
+                </TRow>
+                <TRow>
+                  <td>
+                    <HideSmall>v</HideSmall>0.4
+                  </td>
+                  <td>
+                    10/02/<HideSmall>20</HideSmall>20
+                  </td>
+                  <td>
+                    <Link to='https://twitter.com/jacobrosenthal'>Jacob Rosenthal</Link>
+                  </td>
+                </TRow>
+                <TRow>
+                  <td>
+                    <HideSmall>v</HideSmall>0.3
+                  </td>
+                  <td>
+                    08/07/<HideSmall>20</HideSmall>20
+                  </td>
+                  <td>
+                    <Link to='https://twitter.com/hideandcleanse'>@hideandcleanse</Link>
+                  </td>
+                </TRow>
+                <TRow>
+                  <td>
+                    <HideSmall>v</HideSmall>0.2
+                  </td>
+                  <td>
+                    06/24/<HideSmall>20</HideSmall>20
+                  </td>
+                  <td>Nate Foss</td>
+                </TRow>
+                <TRow>
+                  <td>
+                    <HideSmall>v</HideSmall>0.1
+                  </td>
+                  <td>
+                    02/22/<HideSmall>20</HideSmall>20
+                  </td>
+                  <td>
+                    <a href='https://twitter.com/zoink'>Dylan Field</a>
                   </td>
                 </TRow>
               </tbody>
@@ -244,7 +255,8 @@ const VariousLinksContainer = styled.div`
 const PrettyOverlayGradient = styled.div`
   width: 100vw;
   height: 100vh;
-  background-image: linear-gradient(to right bottom, #511111, #5b0023, #5d003c, #510659, #262077);  background-position: 50%, 50%;
+  background-image: linear-gradient(to right bottom, #511111, #5b0023, #5d003c, #510659, #262077);
+  background-position: 50%, 50%;
   display: inline-block;
   position: fixed;
   top: 0;

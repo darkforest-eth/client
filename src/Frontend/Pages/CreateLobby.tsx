@@ -1,20 +1,9 @@
-import { INIT_ADDRESS } from '@darkforest_eth/contracts';
-// This is loaded as URL paths by a webpack loader
-import initContractAbiUrl from '@darkforest_eth/contracts/abis/DFArenaInitialize.json';
 import { EthConnection } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
-import {
-  ArtifactRarity,
-  ContractMethodName,
-  EthAddress,
-  UnconfirmedCreateLobby
-} from '@darkforest_eth/types';
-import { Contract } from 'ethers';
+import { ArtifactRarity, EthAddress } from '@darkforest_eth/types';
 import React, { useCallback, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { ContractsAPI, makeContractsAPI } from '../../Backend/GameLogic/ContractsAPI';
-import { LobbyAdminTools } from '../../Backend/Utils/LobbyAdminTools';
-import { ContractsAPIEvent } from '../../_types/darkforest/api/ContractsAPITypes';
 import { InitRenderState, Wrapper } from '../Components/GameLandingPageComponents';
 import { LobbyInitializers } from '../Panes/Lobbies/Reducer';
 import { listenForKeyboardEvents, unlinkKeyboardEvents } from '../Utils/KeyEmitters';
@@ -25,16 +14,13 @@ import { LobbyLandingPage } from './LobbyLandingPage';
 type ErrorState =
   | { type: 'invalidAddress' }
   | { type: 'contractLoad' }
-  | { type: 'invalidContract' }
-  | { type: 'invalidCreate' };
+  | { type: 'invalidContract' };
 
 export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>) {
   const [connection, setConnection] = useState<EthConnection | undefined>();
   const [ownerAddress, setOwnerAddress] = useState<EthAddress | undefined>();
   const [contract, setContract] = useState<ContractsAPI | undefined>();
   const [startingConfig, setStartingConfig] = useState<LobbyInitializers | undefined>();
-  const [lobbyAdminTools, setLobbyAdminTools] = useState<LobbyAdminTools>();
-  const [lobbyTx, setLobbyTx] = useState<string | undefined>()
   let contractAddress: EthAddress | undefined;
   try {
     contractAddress = address(match.params.contract);
@@ -79,10 +65,10 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
           setStartingConfig({
             ...config,
             WHITELIST_ENABLED: false,
-            START_PAUSED: true,
+            START_PAUSED: false,
             CLAIM_PLANET_COOLDOWN: 0,
             ADMIN_PLANETS: [],
-            TOKEN_MINT_END_TIMESTAMP: Date.now() + (1000 * 60 * 60 * 24 * 365), // one year from now
+            TOKEN_MINT_END_TIMESTAMP: new Date(2100).getTime(), // one day someone will need to update this
             ARTIFACT_POINT_VALUES: [
               config.ARTIFACT_POINT_VALUES[ArtifactRarity.Unknown],
               config.ARTIFACT_POINT_VALUES[ArtifactRarity.Common],
@@ -101,46 +87,6 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
     }
   }, [contract]);
 
-  async function createLobby(config: LobbyInitializers) {
-    if (!contract) {
-      setErrorState({ type: 'invalidCreate' });
-      return;
-    }
-
-    const initializers = { ...startingConfig, ...config };
-    const InitABI = await fetch(initContractAbiUrl).then((r) => r.json());
-    const artifactBaseURI = '';
-    const initInterface = Contract.getInterface(InitABI);
-    const initAddress = INIT_ADDRESS;
-    const initFunctionCall = initInterface.encodeFunctionData('init', [
-      initializers.WHITELIST_ENABLED,
-      artifactBaseURI,
-      initializers,
-    ]);
-    const txIntent: UnconfirmedCreateLobby = {
-      methodName: ContractMethodName.CREATE_LOBBY,
-      contract: contract.contract,
-      args: Promise.resolve([initAddress, initFunctionCall]),
-    };
-
-    contract.once(ContractsAPIEvent.LobbyCreated, async (owner: EthAddress, lobby: EthAddress) => {
-      if (owner === ownerAddress) {
-        if (!connection) {
-          throw 'error: no connection';
-        }
-        const lobbyAdminTools = await LobbyAdminTools.create(lobby, connection);
-        setLobbyAdminTools(lobbyAdminTools);
-      }
-    });
-
-    const tx = await contract.submitTransaction(txIntent, {
-      // The createLobby function costs somewhere around 12mil gas
-      gasLimit: '15000000',
-    });
-    await tx.confirmedPromise;
-    setLobbyTx(tx?.hash)
-  }
-
   if (errorState) {
     switch (errorState.type) {
       case 'contractLoad':
@@ -148,8 +94,6 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
       case 'invalidAddress':
       case 'invalidContract':
         return <CadetWormhole imgUrl='/public/img/no-contract-text.png' />;
-      case 'invalidCreate':
-        return <CadetWormhole imgUrl='/public/img/wrong-text.png' />;
       default:
         // https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking
         const _exhaustive: never = errorState;
@@ -157,16 +101,18 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
     }
   }
 
-  const content = startingConfig ? (
-    <LobbyConfigPage
-      startingConfig={startingConfig}
-      onCreate = {createLobby}
-      lobbyAdminTools={lobbyAdminTools}
-      lobbyTx = {lobbyTx}
-    />
-  ) : (
-    <LobbyLandingPage onReady={onReady} />
-  );
+  const content =
+    contract && connection && ownerAddress && startingConfig ? (
+      <LobbyConfigPage
+        contract={contract}
+        connection={connection}
+        ownerAddress={ownerAddress}
+        startingConfig={startingConfig}
+        root={`/lobby/${contractAddress}`}
+      />
+    ) : (
+      <LobbyLandingPage onReady={onReady} />
+    );
 
   return (
     <Wrapper initRender={InitRenderState.NONE} terminalEnabled={false}>
