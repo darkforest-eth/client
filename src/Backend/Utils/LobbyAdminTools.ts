@@ -223,7 +223,6 @@ export class LobbyAdminTools {
   }
 
   async bulkCreateAndReveal(planets: LobbyPlanet[], initializers: LobbyInitializers) {
-    console.log(`testing bulk create and reveal`);
     // make create Planet args
     const createData = planets.map((p) => {
       const planetData = this.generatePlanetData(p, initializers);

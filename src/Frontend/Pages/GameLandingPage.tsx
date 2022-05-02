@@ -15,7 +15,7 @@ import {
   callRegisterAndWaitForConfirmation,
   EmailResponse,
   RegisterConfirmationResponse,
-  requestDevFaucet,
+  requestFaucet,
   submitInterestedEmail,
   submitPlayerEmail,
 } from '../../Backend/Network/UtilityServerAPI';
@@ -482,22 +482,47 @@ export function GameLandingPage({ match }: RouteComponentProps<{ contract: strin
         terminal.current?.print('Checking if whitelisted... ');
 
         // TODO(#2329): isWhitelisted should just check the contractOwner
-        if (isWhitelisted || playerAddress === adminAddress) {
-          terminal.current?.println('Player whitelisted.');
-          terminal.current?.println('');
-          terminal.current?.println(`Welcome, player ${playerAddress}.`);
-          // TODO: Provide own env variable for this feature
-          if (!isProd) {
-            // in development, automatically get some ether from faucet
-            const balance = weiToEth(await ethConnection?.loadBalance(playerAddress));
-            if (balance === 0) {
-              await requestDevFaucet(playerAddress);
-            }
-          }
-          setStep(TerminalPromptStep.FETCHING_ETH_DATA);
-        } else {
+        if (!isWhitelisted && playerAddress !== adminAddress) {
           setStep(TerminalPromptStep.ASKING_HAS_WHITELIST_KEY);
+          return;
         }
+        terminal.current?.println('Player whitelisted.');
+        terminal.current?.println('');
+        terminal.current?.println(`Welcome, player ${playerAddress}.`);
+
+        const currBalance = weiToEth(await ethConnection.loadBalance(playerAddress));
+        if (currBalance < 0.05) {
+          terminal.current?.println(`Getting xDAI from faucet...`, TerminalTextStyle.Blue);
+          const success = await requestFaucet(playerAddress);
+
+          if (success) {
+            const newBalance = weiToEth(await ethConnection.loadBalance(playerAddress));
+            terminal.current?.println(
+              `Your balance has increased by ${newBalance - currBalance}.`,
+              TerminalTextStyle.Green
+            );
+            await new Promise((r) => setTimeout(r, 1500));
+          } else {
+            terminal.current?.println(
+              'An error occurred in faucet. Try again with an account that has XDAI',
+              TerminalTextStyle.Red
+            );
+
+            terminal.current?.printLink(
+              'or click here to manually get Optimism xDAI\n',
+              () => {
+                window.open(
+                  'https://www.xdaichain.com/for-developers/optimism-optimistic-rollups-on-gc'
+                );
+              },
+              TerminalTextStyle.Blue
+            );
+            terminal.current?.println('');
+            return;
+          }
+        }
+
+        setStep(TerminalPromptStep.FETCHING_ETH_DATA);
       } catch (e) {
         console.error(`error connecting to whitelist: ${e}`);
         terminal.current?.println(

@@ -187,6 +187,32 @@ export const submitWhitelistKey = async (
   }
 };
 
+export const requestFaucet = async (address: EthAddress): Promise<boolean> => {
+  if (!process.env.FAUCET_URL) {
+    return false;
+  }
+
+  console.log(`sending faucet request for`, address);
+  // TODO: Provide own env variable for this feature
+  // if (process.env.NODE_ENV === 'production') {
+  //   return false;
+  // }
+
+  try {
+    const res = await fetch(`${process.env.FAUCET_URL}/drip/${address}`, {})
+    if(!res.ok) {
+      console.log('res', res);
+      const json = await res.json()
+      console.log(json)
+    }
+    return res.ok;
+  } catch (e) {
+    console.error(`error when requesting drip: ${e}`);
+    return false;
+  }
+};
+
+
 export const requestDevFaucet = async (address: EthAddress): Promise<boolean> => {
   if (!process.env.DF_WEBSERVER_URL) {
     return false;
