@@ -1,6 +1,6 @@
 import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
-import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
-import { DarkForest } from '@darkforest_eth/contracts/typechain';
+import { CONTRACT_ADDRESS, FAUCET_ADDRESS } from '@darkforest_eth/contracts';
+import { DarkForest, DFArenaFaucet } from '@darkforest_eth/contracts/typechain';
 import { EthConnection, neverResolves, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
 import { utils, Wallet } from 'ethers';
@@ -10,7 +10,7 @@ import GameManager, { GameManagerEvent } from '../../Backend/GameLogic/GameManag
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
 import { addAccount, getAccounts } from '../../Backend/Network/AccountManager';
-import { getEthConnection, loadDiamondContract } from '../../Backend/Network/Blockchain';
+import { getEthConnection, loadDiamondContract, loadFaucetContract } from '../../Backend/Network/Blockchain';
 import {
   callRegisterAndWaitForConfirmation,
   EmailResponse,
@@ -491,10 +491,16 @@ export function GameLandingPage({ match }: RouteComponentProps<{ contract: strin
         terminal.current?.println(`Welcome, player ${playerAddress}.`);
 
         const currBalance = weiToEth(await ethConnection.loadBalance(playerAddress));
-        if (currBalance < 0.05) {
+        const faucet = await ethConnection.loadContract<DFArenaFaucet>(
+          FAUCET_ADDRESS,
+          loadFaucetContract
+        );
+        const nextAccessTimeSeconds = (await faucet.getNextAccessTime(playerAddress)).toNumber();
+        const nowSeconds = Date.now() / 1000;
+        console.log(`You can receive another drip in ${Math.floor((nextAccessTimeSeconds - nowSeconds)/60/60)} hours`);
+        if (currBalance < 0.05 && nowSeconds > nextAccessTimeSeconds) {
           terminal.current?.println(`Getting xDAI from faucet...`, TerminalTextStyle.Blue);
           const success = await requestFaucet(playerAddress);
-
           if (success) {
             const newBalance = weiToEth(await ethConnection.loadBalance(playerAddress));
             terminal.current?.println(

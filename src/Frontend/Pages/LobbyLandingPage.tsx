@@ -1,10 +1,12 @@
+import { FAUCET_ADDRESS } from '@darkforest_eth/contracts';
+import { DFArenaFaucet } from '@darkforest_eth/contracts/typechain';
 import { EthConnection, ThrottledConcurrentQueue, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
 import { EthAddress } from '@darkforest_eth/types';
 import { utils, Wallet } from 'ethers';
 import React, { useEffect, useRef, useState } from 'react';
 import { addAccount, getAccounts } from '../../Backend/Network/AccountManager';
-import { getEthConnection } from '../../Backend/Network/Blockchain';
+import { getEthConnection, loadFaucetContract } from '../../Backend/Network/Blockchain';
 import { requestFaucet } from '../../Backend/Network/UtilityServerAPI';
 import { InitRenderState, TerminalWrapper } from '../Components/GameLandingPageComponents';
 import { MythicLabelText } from '../Components/Labels/MythicLabel';
@@ -101,7 +103,7 @@ class LobbyPageTerminal {
       this.terminal.print(`(${i + 1}): `, TerminalTextStyle.Sub);
       this.terminal.print(`${accounts[i].address} `);
 
-      if (this.balancesEth[i] < 0.05) {
+      if (this.balancesEth[i] < 0.01) {
         this.terminal.println(this.balancesEth[i].toFixed(2) + ' xDAI', TerminalTextStyle.Red);
       } else {
         this.terminal.println(this.balancesEth[i].toFixed(2) + ' xDAI', TerminalTextStyle.Green);
@@ -201,11 +203,14 @@ class LobbyPageTerminal {
     // If drip fails
     try {
       const currBalance = weiToEth(await this.ethConnection.loadBalance(address));
-      if (currBalance >= 0.05) {
-        // this.terminal.println(`You have enough xDAI $(${currBalance})`, TerminalTextStyle.Blue);
-        // await new Promise((r) => setTimeout(r, 1000));
-        this.accountSet(address);
-      } else {
+      const faucet = await this.ethConnection.loadContract<DFArenaFaucet>(
+        FAUCET_ADDRESS,
+        loadFaucetContract
+      );
+      const nextAccessTimeSeconds = (await faucet.getNextAccessTime(address)).toNumber();
+      const nowSeconds = Date.now() / 1000;
+      console.log(`You can receive another drip in ${Math.floor((nextAccessTimeSeconds - nowSeconds)/60/60)} hours`);
+      if (currBalance < 0.05 && nowSeconds > nextAccessTimeSeconds) {
         this.terminal.println(`Getting xDAI from faucet...`, TerminalTextStyle.Blue);
         const success = await requestFaucet(address);
 
@@ -236,6 +241,9 @@ class LobbyPageTerminal {
           return;
         }
       }
+      else {
+        this.accountSet(address);
+      } 
     } catch (e) {
       console.log(e);
       this.terminal.println('An unknown error occurred. please try again.', TerminalTextStyle.Red);

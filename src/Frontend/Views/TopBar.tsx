@@ -201,7 +201,7 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: Hook<boolean>
         >
           <Sub>({weiToEth(balance).toFixed(2)} xDAI)</Sub>
         </TooltipTrigger>
-        {process.env.DF_WEBSERVER_URL && (
+        {process.env.DF_TWITTER_URL && (
           <>
             <TooltipTrigger
               name={TooltipName.Empty}

@@ -1,6 +1,7 @@
 // These are loaded as URL paths by a webpack loader
 import { NETWORK } from '@darkforest_eth/contracts';
 import diamondContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForest.json';
+import faucetContractAbiUrl from '@darkforest_eth/contracts/abis/DFArenaFaucet.json';
 import { createContract, createEthConnection, EthConnection } from '@darkforest_eth/network';
 import type { Contract, providers, Wallet } from 'ethers';
 
@@ -13,6 +14,19 @@ export async function loadDiamondContract<T extends Contract>(
   signer?: Wallet
 ): Promise<T> {
   const abi = await fetch(diamondContractAbiUrl).then((r) => r.json());
+
+  return createContract<T>(address, abi, provider, signer);
+}
+
+/**
+ * Loads the faucet contract, which is responsible for dripping funds to players
+ */
+ export async function loadFaucetContract<T extends Contract>(
+  address: string,
+  provider: providers.JsonRpcProvider,
+  signer?: Wallet
+): Promise<T> {
+  const abi = await fetch(faucetContractAbiUrl).then((r) => r.json());
 
   return createContract<T>(address, abi, provider, signer);
 }
@@ -31,7 +45,9 @@ export function getEthConnection(): Promise<EthConnection> {
   console.log(`GAME METADATA:`);
   console.log(`rpc url: ${url}`);
   console.log(`is production network: ${isProdNetwork}`);
+  console.log(`client build: ${process.env.NODE_ENV}`);
   console.log(`webserver url: ${process.env.DF_WEBSERVER_URL}`);
+  console.log(`faucet url: ${process.env.FAUCET_URL}`);
 
   return createEthConnection(url);
 }

@@ -27,7 +27,7 @@ export function getEmbeddedPlugins(isAdmin: boolean) {
     .keys()
     .filter((filename) => {
       if (isAdmin) {
-        return true;
+        return !filename.startsWith('./Metrics');
       } else {
         return !filename.startsWith('./Admin-Controls') || !filename.startsWith('./Metrics');
       }

@@ -65,6 +65,16 @@ export default function LandingPage() {
               <Btn size='large' onClick={() => history.push(`/lobby/${defaultAddress}`)}>
                 Create Arena
               </Btn>
+              <Btn
+                size='large'
+                onClick={() =>
+                  window.open(
+                    `https://docs.google.com/forms/d/e/1FAIpQLSeYZJtgrw_er3xVzrD3O8bFR2NrhryTfR-ypJKFiR0WaEy8Ww/viewform`
+                  )
+                }
+              >
+                Give Feedback
+              </Btn>
             </ButtonWrapper>
           </Header>
 

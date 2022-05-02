@@ -195,10 +195,12 @@ export function SettingsPane({
 
         <Section>
           <SectionHeader>Gas Price</SectionHeader>
-          Your gas price setting determines the price you pay for each transaction. A higher gas
+          Your gas price setting determines the price you pay for each transaction. 
+          For now, gas price has been hard set to 1 wei. This is 100,000,000x cheaper than usual!
+          {/* A higher gas
           price means your transactions will be prioritized by the blockchain, making them confirm
           faster. We recommend using the auto average setting. All auto settings prices are pulled
-          from an oracle and are capped at 15 gwei.
+          from an oracle and are capped at 15 gwei. */}
           <Spacer height={16} />
           <MultiSelectSetting
             wide
@@ -206,25 +208,25 @@ export function SettingsPane({
             setting={Setting.GasFeeGwei}
             values={[
               '1',
-              '2',
-              '5',
-              '10',
-              '20',
-              '40',
-              AutoGasSetting.Slow,
-              AutoGasSetting.Average,
-              AutoGasSetting.Fast,
+              // '2',
+              // '5',
+              // '10',
+              // '20',
+              // '40',
+              // AutoGasSetting.Slow,
+              // AutoGasSetting.Average,
+              // AutoGasSetting.Fast,
             ]}
             labels={[
-              '1 gwei (default)',
-              '2 gwei (faster)',
-              '5 gwei (turbo)',
-              '10 gwei (mega turbo)',
-              '20 gwei (need4speed)',
-              '40 gwei (gigafast)',
-              `slow auto (~${gasPrices.slow} gwei)`,
-              `average auto (~${gasPrices.average} gwei)`,
-              `fast auto (~${gasPrices.fast} gwei)`,
+              '1 wei (default)',
+              // '2 gwei (faster)',
+              // '5 gwei (turbo)',
+              // '10 gwei (mega turbo)',
+              // '20 gwei (need4speed)',
+              // '40 gwei (gigafast)',
+              // `slow auto (~${gasPrices.slow} gwei)`,
+              // `average auto (~${gasPrices.average} gwei)`,
+              // `fast auto (~${gasPrices.fast} gwei)`,
             ]}
           />
         </Section>
