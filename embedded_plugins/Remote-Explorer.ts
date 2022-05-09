@@ -287,6 +287,7 @@ function App({
 
   return html`
     <div>
+      <p>Warning: mimc has been reduced to 5. \nUpdate your explorer!</p>
       ${miners.map(
         (miner: ExtendedMinerManager) => html`
           <${MinerUI} key=${miner.url} miner=${miner} onRemove=${remove} />

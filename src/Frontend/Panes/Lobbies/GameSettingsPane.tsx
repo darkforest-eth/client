@@ -62,6 +62,18 @@ export function GameSettingsPane({ config, onUpdate }: LobbiesPaneProps) {
 
   return (
     <>
+     <Row>
+        <Checkbox
+          label='Start game paused?'
+          checked={config.START_PAUSED.displayValue}
+          onChange={(e: Event & React.ChangeEvent<DarkForestCheckbox>) => {
+            onUpdate({ type: 'START_PAUSED', value: e.target.checked });
+          }}
+        />
+      </Row>
+      <Row>
+        <Warning>{config.START_PAUSED.warning}</Warning>
+      </Row>
       <Row>
         <Slider
           variant='filled'
