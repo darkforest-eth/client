@@ -106,6 +106,7 @@ export function CreatePlanetPane({
               headers={headers}
               columns={columns}
               alignments={alignments}
+              itemsPerPage = {5}
             />
           </TableContainer>
         </Row>

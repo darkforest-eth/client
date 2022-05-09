@@ -1,4 +1,4 @@
-import { EthAddress, TooltipName } from '@darkforest_eth/types';
+import { TooltipName } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
 import { AccountLabel } from '../Components/Labels/Labels';
@@ -20,9 +20,21 @@ export function Gameover() {
   const winners = uiManager.getWinners();
   const gameDuration = uiManager.getGameDuration();
   const gameover = useGameover();
-  if (!gameover) {
+  if (!gameover || winners.length == 0) {
     return <></>;
   }
+
+  let winnerslabel = (
+    <>
+      {winners.map((winner, idx) => (
+        <AccountLabel
+          key={idx}
+          includeAddressIfHasTwitter={true}
+          ethAddress={winner}
+        />
+      ))}
+    </>
+  );
 
   return (
     <>
@@ -30,21 +42,15 @@ export function Gameover() {
         <TooltipTrigger
           extraContent={
             <>
-              GAMEOVER! The winner{winners.length > 1 ? 's are' : ' is'} {winners[0]}
+              GAMEOVER! The winner{winners.length > 1 ? 's are' : ' is '} {winnerslabel}
             </>
           }
           name={TooltipName.Empty}
         >
           <Gold>GAMEOVER!</Gold>
           <br />
-          The winner{winners.length > 1 ? 's are' : ' is'}{' '}
-          {winners.map((winner, idx) => (
-            <AccountLabel
-              key={idx}
-              includeAddressIfHasTwitter={true}
-              ethAddress={winner as EthAddress}
-            />
-          ))}
+          The winner{winners.length > 1 ? 's are' : ' is '}
+          {winnerslabel}
         </TooltipTrigger>
       </GameoverContainer>
       <TimeContainer>Game length: {prettyTime(gameDuration)}</TimeContainer>

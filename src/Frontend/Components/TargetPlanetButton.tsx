@@ -43,21 +43,24 @@ export function TargetPlanetButton({
       return undefined;
     }
     const energyRequired = gameManager.getContractConstants().CLAIM_VICTORY_ENERGY_PERCENT;
-    const planetEnergyPercent = planet.energy * 100 / planet.energyCap;
-    const percentNeeded =  Math.floor(energyRequired - planetEnergyPercent);
-    const energyNeeded = Math.floor(percentNeeded / 100 * planet.energyCap);
-    return {percentNeeded: percentNeeded, energyNeeded: energyNeeded}
+    const planetEnergyPercent = Math.floor((planet.energy * 100) / planet.energyCap);
+    const percentNeeded = energyRequired - planetEnergyPercent;
+    const energyNeeded = Math.ceil((percentNeeded + 2) / 100 * planet.energyCap);
+    return { percentNeeded: percentNeeded, energyNeeded: energyNeeded };
   }, [planet?.energy]);
 
-  const claimable = useMemo(() => energyLeftToClaimVictory && energyLeftToClaimVictory.percentNeeded < 0 && !gameOver, [energyLeftToClaimVictory, gameManager]);
+  const claimable = useMemo(
+    () => energyLeftToClaimVictory && energyLeftToClaimVictory.percentNeeded <= 0 && !gameOver,
+    [energyLeftToClaimVictory?.percentNeeded, gameOver]
+  );
 
   const claimingVictory = useMemo(
     () => planet?.transactions?.hasTransaction(isUnconfirmedClaimVictoryTx),
-    [planet]
+    [planetWrapper]
   );
 
   const claimVictory = () => {
-    if(!planet || gameOver) return;
+    if (!planet || gameOver) return;
     gameManager.claimVictory(planet.locationId);
   };
 
@@ -65,49 +68,42 @@ export function TargetPlanetButton({
     <StyledRow>
       {shouldShow && (
         <>
-            <MaybeShortcutButton
-              className='button'
-              size='stretch'
-              active={claimingVictory}
-              disabled={!claimable || claimingVictory}
-              onClick={claimVictory}
-              onShortcutPressed={claimVictory}
-              shortcutKey={INVADE}
-              shortcutText={INVADE}
+          <MaybeShortcutButton
+            className='button'
+            size='stretch'
+            active={claimingVictory}
+            disabled={!claimable || claimingVictory}
+            onClick={claimVictory}
+            onShortcutPressed={claimVictory}
+            shortcutKey={INVADE}
+            shortcutText={INVADE}
+          >
+            <TooltipTrigger
+              style={{ width: '100%', textAlign: 'center' }}
+              name={TooltipName.Empty}
+              extraContent={
+                <>
+                  <Green>
+                    {gameOver && <>The game is over!</>}
+                    {!gameOver && <>Capture this planet to win the game!</>}
+                    {!!energyLeftToClaimVictory && energyLeftToClaimVictory.percentNeeded > 0 && (
+                      <>
+                        You need <White>{energyLeftToClaimVictory.energyNeeded}</White> (
+                        {energyLeftToClaimVictory.percentNeeded}%) more energy to claim victory with
+                        this planet.
+                      </>
+                    )}
+                  </Green>
+                </>
+              }
             >
-              <TooltipTrigger
-                style={{ width: '100%', textAlign: 'center' }}
-                name={TooltipName.Empty}
-                extraContent={
-                  <>
-                    <Green>
-                      {gameOver && (
-                          <>
-                            The game is over!
-                          </>
-                      )}
-                      {!gameOver && (
-                          <>
-                            Capture this planet to win the game!
-                          </>
-                      )}
-                      {!!energyLeftToClaimVictory && energyLeftToClaimVictory.percentNeeded >= 0 && (
-                        <>
-                          You need <White>{energyLeftToClaimVictory.energyNeeded}</White> ({energyLeftToClaimVictory.percentNeeded}%) more energy to claim victory with this planet.
-                        </>
-                      )}
-
-                    </Green>
-                  </>
-                }
-              >
-                {claimingVictory ? (
-                  <LoadingSpinner initialText={'Claiming Victory...'} />
-                ) : (
-                  'Claim Victory!'
-                )}
-              </TooltipTrigger>
-            </MaybeShortcutButton>
+              {claimingVictory ? (
+                <LoadingSpinner initialText={'Claiming Victory...'} />
+              ) : (
+                'Claim Victory!'
+              )}
+            </TooltipTrigger>
+          </MaybeShortcutButton>
         </>
       )}
     </StyledRow>

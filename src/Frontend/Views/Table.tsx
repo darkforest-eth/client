@@ -84,7 +84,7 @@ export function Table<T>({
                   key={colIdx}
                   style={(alignments && { textAlign: AlignmentOptions[alignments[colIdx]] }) || {}}
                 >
-                  {column(row, rowIdx)}
+                  {column(row, (rowIdx + page * itemsPerPage))}
                 </td>
               ))}
             </tr>

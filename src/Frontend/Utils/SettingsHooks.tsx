@@ -64,7 +64,7 @@ const defaultSettings: Record<Setting, string> = {
   [Setting.DisableHatRendering]: 'false',
   [Setting.AutoClearConfirmedTransactionsAfterSeconds]: '-1',
   [Setting.AutoClearRejectedTransactionsAfterSeconds]: '-1',
-  [Setting.DisableFancySpaceEffect]: 'false',
+  [Setting.DisableFancySpaceEffect]: 'true',
   [Setting.RendererColorInnerNebula]: '#186469',
   [Setting.RendererColorNebula]: '#0B2B5B',
   [Setting.RendererColorSpace]: '#0B0F34',

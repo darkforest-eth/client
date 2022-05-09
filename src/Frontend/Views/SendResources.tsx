@@ -61,10 +61,10 @@ function ShowPercent({
     <StyledShowPercent>
       <span>{value}%</span>
       <span>
-        <span onClick={() => setValue((x) => x - 1)}>
+        <span onClick={() => setValue(value - 1)}>
           <LongDash />
         </span>
-        <span onClick={() => setValue((x) => x + 1)}>+</span>
+        <span onClick={() => setValue(value + 1)}>+</span>
       </span>
     </StyledShowPercent>
   );
