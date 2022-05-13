@@ -1,0 +1,54 @@
+{
+  "extends": "./tsconfig.json",
+  "references": [
+    {
+      "path": "../packages/constants/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/contracts/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/events/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/gamelogic/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/hashing/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/hexgen/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/network/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/procedural/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/renderer/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/serde/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/settings/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/snarks/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/types/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/ui/tsconfig.ref.json"
+    },
+    {
+      "path": "../packages/whitelist/tsconfig.ref.json"
+    }
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "declarationMap": true
+  }
+}

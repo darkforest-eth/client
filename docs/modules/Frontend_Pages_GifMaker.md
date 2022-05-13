@@ -14,7 +14,7 @@
 
 ### GIF_ARTIFACT_COLOR
 
-• **GIF_ARTIFACT_COLOR**: `ArtifactFileColor` = `ArtifactFileColor.APP_BACKGROUND`
+• `Const` **GIF_ARTIFACT_COLOR**: `ArtifactFileColor` = `ArtifactFileColor.APP_BACKGROUND`
 
 ## Functions
 

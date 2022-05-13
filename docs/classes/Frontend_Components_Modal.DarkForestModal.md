@@ -165,26 +165,26 @@ LitElement.constructor
 
 #### Type declaration
 
-| Name                     | Type                 |
-| :----------------------- | :------------------- |
-| `_delCoords`             | `Object`             |
-| `_delCoords.state`       | `boolean`            |
-| `_dragging`              | `Object`             |
-| `_dragging.state`        | `boolean`            |
-| `_mousedownCoords`       | `Object`             |
-| `_mousedownCoords.state` | `boolean`            |
-| `contain`                | `Object`             |
-| `contain.type`           | `ArrayConstructor`   |
-| `index`                  | `Object`             |
-| `index.type`             | `NumberConstructor`  |
-| `initialX`               | `Object`             |
-| `initialX.type`          | `NumberConstructor`  |
-| `initialY`               | `Object`             |
-| `initialY.type`          | `NumberConstructor`  |
-| `minimized`              | `Object`             |
-| `minimized.type`         | `BooleanConstructor` |
-| `width`                  | `Object`             |
-| `width.type`             | `StringConstructor`  |
+| Name                     | Type                             |
+| :----------------------- | :------------------------------- |
+| `_delCoords`             | { `state`: `boolean` }           |
+| `_delCoords.state`       | `boolean`                        |
+| `_dragging`              | { `state`: `boolean` }           |
+| `_dragging.state`        | `boolean`                        |
+| `_mousedownCoords`       | { `state`: `boolean` }           |
+| `_mousedownCoords.state` | `boolean`                        |
+| `contain`                | { `type`: `ArrayConstructor` }   |
+| `contain.type`           | `ArrayConstructor`               |
+| `index`                  | { `type`: `NumberConstructor` }  |
+| `index.type`             | `NumberConstructor`              |
+| `initialX`               | { `type`: `NumberConstructor` }  |
+| `initialX.type`          | `NumberConstructor`              |
+| `initialY`               | { `type`: `NumberConstructor` }  |
+| `initialY.type`          | `NumberConstructor`              |
+| `minimized`              | { `type`: `BooleanConstructor` } |
+| `minimized.type`         | `BooleanConstructor`             |
+| `width`                  | { `type`: `StringConstructor` }  |
+| `width.type`             | `StringConstructor`              |
 
 #### Overrides
 

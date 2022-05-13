@@ -50,7 +50,7 @@ export function LobbyConfigPage({
       initializers,
     ]);
     const txIntent: UnconfirmedCreateLobby = {
-      methodName: ContractMethodName.CREATE_LOBBY,
+      methodName: 'createLobby',
       contract: contract.contract,
       args: Promise.resolve([initAddress, initFunctionCall]),
     };

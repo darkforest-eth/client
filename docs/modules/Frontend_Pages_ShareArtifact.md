@@ -14,9 +14,9 @@
 
 #### Parameters
 
-| Name                | Type                                                         |
-| :------------------ | :----------------------------------------------------------- |
-| `__namedParameters` | `RouteComponentProps`<`Object`, `StaticContext`, `unknown`\> |
+| Name                | Type                                                                               |
+| :------------------ | :--------------------------------------------------------------------------------- |
+| `__namedParameters` | `RouteComponentProps`<{ `artifactId`: `ArtifactId` }, `StaticContext`, `unknown`\> |
 
 #### Returns
 

@@ -14,7 +14,7 @@
 
 ### LavaLabel
 
-• **LavaLabel**: `MemoExoticComponent`<`fn`\>
+• `Const` **LavaLabel**: `MemoExoticComponent`<() => `Element`\>
 
 ## Functions
 

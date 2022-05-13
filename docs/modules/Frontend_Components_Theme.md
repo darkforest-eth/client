@@ -10,4 +10,4 @@
 
 ### Theme
 
-• **Theme**: `ForwardRefExoticComponent`<`Partial`<`Omit`<`DarkForestTheme`, `"children"`\>\> & `Events`<`unknown`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
+• `Const` **Theme**: `ForwardRefExoticComponent`<`Partial`<`Omit`<`DarkForestTheme`, `"children"`\>\> & `Events`<`unknown`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>

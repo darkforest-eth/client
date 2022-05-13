@@ -391,8 +391,11 @@ function ArtifactDescription({
       content = (
         <Text>
           When activated, shortens the distance between this planet and another one. All moves
-          between those two planets decay less energy, and complete faster. Because this one is{' '}
-          <White>{rarityName}</White>, it shrinks the distance by a factor of{' '}
+          between those two planets decay less energy, and complete faster.{' '}
+          <Red>
+            Energy sent through your wormhole to a planet you do not control does not arrive.
+          </Red>{' '}
+          Because this one is <White>{rarityName}</White>, it shrinks the distance by a factor of{' '}
           <White>{wormholeShrinkLevels[artifact.rarity]}</White>x.
         </Text>
       );

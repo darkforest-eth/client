@@ -3,11 +3,12 @@ import { Monomitter, monomitter } from '@darkforest_eth/events';
 import { biomeName, isLocatable, isSpaceShip } from '@darkforest_eth/gamelogic';
 import { planetHasBonus } from '@darkforest_eth/hexgen';
 import { EthConnection } from '@darkforest_eth/network';
-import { Renderer } from '@darkforest_eth/renderer';
+import { GameGLManager, Renderer } from '@darkforest_eth/renderer';
 import { isUnconfirmedMoveTx } from '@darkforest_eth/serde';
 import {
   Artifact,
   ArtifactId,
+  BaseRenderer,
   Biome,
   Chunk,
   CursorState,
@@ -614,11 +615,15 @@ class GameUIManager extends EventEmitter {
   }
 
   public setForcesSending(planetId: LocationId, percentage: number) {
+    if (percentage < 0) percentage = 0;
+    if (percentage > 100) percentage = 100;
     this.forcesSending[planetId] = percentage;
     this.gameManager.getGameObjects().forceTick(planetId);
   }
 
   public setSilverSending(planetId: LocationId, percentage: number) {
+    if (percentage < 0) percentage = 0;
+    if (percentage > 100) percentage = 100;
     this.silverSending[planetId] = percentage;
     this.gameManager.getGameObjects().forceTick(planetId);
   }
@@ -1457,6 +1462,49 @@ class GameUIManager extends EventEmitter {
 
   public getArtifactUpdated$() {
     return this.gameManager.getArtifactUpdated$();
+  }
+
+  public getUIEmitter() {
+    return UIEmitter.getInstance();
+  }
+
+  /**
+   * @returns - A wrapper class for the WebGL2RenderingContext.
+   */
+  public getGlManager(): GameGLManager | null {
+    const renderer = this.getRenderer();
+    if (renderer) return renderer.glManager;
+    return null;
+  }
+
+  /**
+   * @returns the CanvasRenderingContext2D for the game canvas.
+   */
+  public get2dRenderer(): CanvasRenderingContext2D | null {
+    const renderer = this.getRenderer();
+    if (renderer) return renderer.get2DRenderer();
+    return null;
+  }
+
+  /**
+   * Replaces the current renderer with the passed in custom renderer and adds the renderer
+   * to the rendering stack. The function will automatically determine which renderer it is
+   * by the rendererType and the methods in the renderer.
+   * @param customRenderer - a Renderer that follows one of the 23 renderer tempaltes
+   */
+  public setCustomRenderer(customRenderer: BaseRenderer) {
+    const renderer = this.getRenderer();
+    if (renderer) renderer.addCustomRenderer(customRenderer);
+  }
+
+  /**
+   * This function will remove the passed in renderer from the renderering stack. If the
+   * renderer is on top of the renderering stack the next renderer will be the one bellow it.
+   * @param customRenderer - a Renderer that follows one of the 23 renderer tempaltes
+   */
+  public disableCustomRenderer(customRenderer: BaseRenderer) {
+    const renderer = this.getRenderer();
+    if (renderer) renderer.removeCustomRenderer(customRenderer);
   }
 }
 

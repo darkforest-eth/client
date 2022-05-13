@@ -4,7 +4,7 @@
 
 ## Hierarchy
 
-- `Component`<`unknown`, `Object`\>
+- `Component`<`unknown`, { `hasError`: `boolean` }\>
 
   ↳ **`DFErrorBoundary`**
 

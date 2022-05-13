@@ -57,6 +57,7 @@ export function SettingsPane({
 }) {
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
+  const isDevelopment = process.env.NODE_ENV !== 'production';
   const gasPrices = useEmitterValue(ethConnection.gasPrices$, ethConnection.getAutoGasPrices());
 
   const [rpcUrl, setRpcURL] = useState<string>(ethConnection.getRpcEndpoint());
@@ -181,6 +182,17 @@ export function SettingsPane({
   return (
     <ModalPane id={ModalName.Settings} title='Settings' visible={visible} onClose={onClose}>
       <SettingsContent>
+        {isDevelopment && (
+          <Section>
+            <SectionHeader>Development</SectionHeader>
+            <BooleanSetting
+              uiManager={uiManager}
+              setting={Setting.ForceReloadEmbeddedPlugins}
+              settingDescription={'force reload embedded plugins'}
+            />
+          </Section>
+        )}
+
         <Section>
           <SectionHeader>Burner Wallet Info</SectionHeader>
           <Row>

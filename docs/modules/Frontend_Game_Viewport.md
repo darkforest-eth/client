@@ -14,7 +14,7 @@
 
 ### getDefaultScroll
 
-▸ `Const` **getDefaultScroll**(): `number`
+▸ **getDefaultScroll**(): `number`
 
 #### Returns
 

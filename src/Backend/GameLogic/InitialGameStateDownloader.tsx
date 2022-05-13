@@ -67,8 +67,16 @@ export class InitialGameStateDownloader {
     contractsAPI: ContractsAPI,
     persistentChunkStore: PersistentChunkStore
   ): Promise<InitialGameState> {
-    const storedTouchedPlanetIds = await persistentChunkStore.getSavedTouchedPlanetIds();
-    const storedRevealedCoords = await persistentChunkStore.getSavedRevealedCoords();
+    const isDev = process.env.NODE_ENV !== 'production';
+
+    /**
+     * In development we use the same contract address every time we deploy,
+     * so storage is polluted with the IDs of old universes.
+     */
+    const storedTouchedPlanetIds = isDev
+      ? []
+      : await persistentChunkStore.getSavedTouchedPlanetIds();
+    const storedRevealedCoords = isDev ? [] : await persistentChunkStore.getSavedRevealedCoords();
 
     this.terminal.printElement(<DarkForestTips tips={tips} />);
     this.terminal.newline();

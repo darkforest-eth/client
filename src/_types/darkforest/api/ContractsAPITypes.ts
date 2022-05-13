@@ -148,6 +148,7 @@ export type ClaimArgs = [
 
 export type DepositArtifactArgs = [string, string]; // locationId, artifactId
 export type WithdrawArtifactArgs = [string, string]; // locationId, artifactId
+export type WhitelistArgs = [string, string]; // hashed whitelist key, recipient address
 
 export type PlanetTypeWeights = [number, number, number, number, number]; // relative frequencies of the 5 planet types
 export type PlanetTypeWeightsByLevel = [

@@ -10,4 +10,4 @@
 
 ### LegendaryLabel
 
-• **LegendaryLabel**: `MemoExoticComponent`<`fn`\>
+• `Const` **LegendaryLabel**: `MemoExoticComponent`<() => `Element`\>

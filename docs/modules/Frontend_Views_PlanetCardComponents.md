@@ -17,13 +17,13 @@
 
 ### TitleBar
 
-• **TitleBar**: `StyledComponent`<`"div"`, `any`, `Object`, `never`\>
+• `Const` **TitleBar**: `StyledComponent`<`"div"`, `any`, {}, `never`\>
 
 ## Functions
 
 ### Halved
 
-▸ `Const` **Halved**(): `Element`
+▸ **Halved**(): `Element`
 
 #### Returns
 
@@ -51,7 +51,7 @@
 
 ### RowTip
 
-▸ `Const` **RowTip**(`__namedParameters`): `Element`
+▸ **RowTip**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -69,7 +69,7 @@
 
 ### TimesTwo
 
-▸ `Const` **TimesTwo**(): `Element`
+▸ **TimesTwo**(): `Element`
 
 #### Returns
 

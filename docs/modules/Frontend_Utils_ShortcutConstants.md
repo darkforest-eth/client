@@ -30,124 +30,124 @@
 
 ### CLOSE_MODAL
 
-• **CLOSE_MODAL**: `"t"`
+• `Const` **CLOSE_MODAL**: `"t"`
 
 ---
 
 ### EXIT_PANE
 
-• **EXIT_PANE**: `"Escape"`
+• `Const` **EXIT_PANE**: `"Escape"`
 
 ---
 
 ### INVADE
 
-• **INVADE**: `"y"`
+• `Const` **INVADE**: `"y"`
 
 ---
 
 ### MINE_ARTIFACT
 
-• **MINE_ARTIFACT**: `"f"`
+• `Const` **MINE_ARTIFACT**: `"f"`
 
 ---
 
 ### MODAL_BACK_SHORTCUT
 
-• **MODAL_BACK_SHORTCUT**: `"t"`
+• `Const` **MODAL_BACK_SHORTCUT**: `"t"`
 
 ---
 
 ### TOGGLE_ABANDON
 
-• **TOGGLE_ABANDON**: `"r"`
+• `Const` **TOGGLE_ABANDON**: `"r"`
 
 ---
 
 ### TOGGLE_BROADCAST_PANE
 
-• **TOGGLE_BROADCAST_PANE**: `"z"`
+• `Const` **TOGGLE_BROADCAST_PANE**: `"z"`
 
 ---
 
 ### TOGGLE_DIAGNOSTICS_PANE
 
-• **TOGGLE_DIAGNOSTICS_PANE**: `"i"`
+• `Const` **TOGGLE_DIAGNOSTICS_PANE**: `"i"`
 
 ---
 
 ### TOGGLE_EXPLORE
 
-• **TOGGLE_EXPLORE**: `" "`
+• `Const` **TOGGLE_EXPLORE**: `" "`
 
 ---
 
 ### TOGGLE_HAT_PANE
 
-• **TOGGLE_HAT_PANE**: `"x"`
+• `Const` **TOGGLE_HAT_PANE**: `"x"`
 
 ---
 
 ### TOGGLE_HELP_PANE
 
-• **TOGGLE_HELP_PANE**: `"j"`
+• `Const` **TOGGLE_HELP_PANE**: `"j"`
 
 ---
 
 ### TOGGLE_PLANET_ARTIFACTS_PANE
 
-• **TOGGLE_PLANET_ARTIFACTS_PANE**: `"s"`
+• `Const` **TOGGLE_PLANET_ARTIFACTS_PANE**: `"s"`
 
 ---
 
 ### TOGGLE_PLANET_INFO_PANE
 
-• **TOGGLE_PLANET_INFO_PANE**: `"c"`
+• `Const` **TOGGLE_PLANET_INFO_PANE**: `"c"`
 
 ---
 
 ### TOGGLE_PLUGINS_PANE
 
-• **TOGGLE_PLUGINS_PANE**: `"k"`
+• `Const` **TOGGLE_PLUGINS_PANE**: `"k"`
 
 ---
 
 ### TOGGLE_SEND
 
-• **TOGGLE_SEND**: `"q"`
+• `Const` **TOGGLE_SEND**: `"q"`
 
 ---
 
 ### TOGGLE_SETTINGS_PANE
 
-• **TOGGLE_SETTINGS_PANE**: `"h"`
+• `Const` **TOGGLE_SETTINGS_PANE**: `"h"`
 
 ---
 
 ### TOGGLE_TARGETTING
 
-• **TOGGLE_TARGETTING**: `` "`" ``
+• `Const` **TOGGLE_TARGETTING**: `` "`" ``
 
 ---
 
 ### TOGGLE_TRANSACTIONS_PANE
 
-• **TOGGLE_TRANSACTIONS_PANE**: `"'"`
+• `Const` **TOGGLE_TRANSACTIONS_PANE**: `"'"`
 
 ---
 
 ### TOGGLE_UPGRADES_PANE
 
-• **TOGGLE_UPGRADES_PANE**: `"a"`
+• `Const` **TOGGLE_UPGRADES_PANE**: `"a"`
 
 ---
 
 ### TOGGLE_YOUR_ARTIFACTS_PANE
 
-• **TOGGLE_YOUR_ARTIFACTS_PANE**: `"l"`
+• `Const` **TOGGLE_YOUR_ARTIFACTS_PANE**: `"l"`
 
 ---
 
 ### TOGGLE_YOUR_PLANETS_DEX_PANE
 
-• **TOGGLE_YOUR_PLANETS_DEX_PANE**: `";"`
+• `Const` **TOGGLE_YOUR_PLANETS_DEX_PANE**: `";"`

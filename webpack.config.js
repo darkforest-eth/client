@@ -3,13 +3,26 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+const resolvePackage = require('resolve-package-path');
 const { EnvironmentPlugin } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
-const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
-const styledComponentsTransformer = createStyledComponentsTransformer();
+// This code is used to lookup where the `@darkforest_eth` packages exist in the tree
+// whether they are in a monorepo or installed as packages
+function findScopeDirectory() {
+  // Just chose the most likely package to be here, it could really be anything
+  const pkg = '@darkforest_eth/contracts';
+  const contractsPackageJson = resolvePackage(pkg, __dirname);
+  if (!contractsPackageJson) {
+    throw new Error(`Unable to find the @darkforest_eth scope. Exiting...`);
+  }
+  const contractsDirectory = path.dirname(contractsPackageJson);
+  const scopeDirectory = path.dirname(contractsDirectory);
+
+  return scopeDirectory;
+}
 
 module.exports = {
   mode: 'production',
@@ -31,8 +44,10 @@ module.exports = {
   resolve: {
     // Add '.ts' and '.tsx' as resolvable extensions.
     extensions: ['.ts', '.tsx', '...'],
-    // Used to reference packages in the monorepo by their package name
-    symlinks: false,
+    // Adding an alias for the `@darkforest_eth` packages, whether in a monorepo or packages
+    alias: {
+      '@darkforest_eth': findScopeDirectory(),
+    },
   },
 
   module: {
@@ -41,19 +56,14 @@ module.exports = {
       // because otherwise the module can't be imported in PluginManager
       {
         test: /\.[jt]sx?$/,
-        include: /embedded_plugins/,
+        include: [path.join(__dirname, './embedded_plugins/')],
         type: 'javascript/auto',
-        use: ['raw-loader', 'ts-loader'],
+        use: ['raw-loader', 'babel-loader'],
       },
       {
         test: /\.ts(x?)$/,
-        exclude: /(node_modules|embedded_plugins|plugins)/,
-        loader: 'ts-loader',
-        options: {
-          getCustomTransformers: () => ({
-            before: [styledComponentsTransformer],
-          }),
-        },
+        include: [path.join(__dirname, './src/')],
+        use: ['babel-loader'],
       },
       {
         test: /\.css$/,
@@ -61,20 +71,18 @@ module.exports = {
       },
       {
         test: /\.(woff(2)?|ttf|eot|svg)$/,
+        include: [path.join(__dirname, './src/')],
         type: 'asset/resource',
         generator: {
           filename: 'fonts/[name][ext]',
         },
       },
-      // Any non-JS files from other packages in the monorepo should be loaded
-      // as a plain file so we `include` only the `@darkforest_eth` namespace here
+      // Any wasm, zkye, or json files from other packages should be loaded as a plain file
       {
         test: /\.(wasm|zkey|json)$/,
         type: 'asset/resource',
-        include: /@darkforest_eth/,
       },
-      // All output '.js' files will have any sourcemaps
-      // re-processed by 'source-map-loader'.
+      // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'
       {
         enforce: 'pre',
         test: /\.js$/,
@@ -93,6 +101,17 @@ module.exports = {
     ],
   },
   plugins: [
+    // We use ForkTsChecker plugin to run typechecking on `src/`
+    // in the background and report errors into the frontent UI
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        diagnosticOptions: {
+          semantic: true,
+          syntactic: true,
+        },
+        mode: 'readonly',
+      },
+    }),
     // The string values are fallbacks if the env variable is not set
     new EnvironmentPlugin({
       NODE_ENV: 'development',

@@ -30,13 +30,13 @@
 
 ### ALL_AUTO_GAS_SETTINGS
 
-• **ALL_AUTO_GAS_SETTINGS**: `AutoGasSetting`[]
+• `Const` **ALL_AUTO_GAS_SETTINGS**: `AutoGasSetting`[]
 
 ---
 
 ### settingChanged$
 
-• **settingChanged$**: `Monomitter`<`Setting`\>
+• `Const` **settingChanged$**: `Monomitter`<`Setting`\>
 
 Whenever a setting changes, we publish the setting's name to this event emitter.
 

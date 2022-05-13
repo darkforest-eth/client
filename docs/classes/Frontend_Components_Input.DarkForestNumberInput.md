@@ -119,20 +119,20 @@ LitElement.constructor
 
 #### Type declaration
 
-| Name            | Type                 |
-| :-------------- | :------------------- |
-| `_value`        | `Object`             |
-| `_value.state`  | `boolean`            |
-| `disabled`      | `Object`             |
-| `disabled.type` | `BooleanConstructor` |
-| `format`        | `Object`             |
-| `format.type`   | `StringConstructor`  |
-| `readonly`      | `Object`             |
-| `readonly.type` | `BooleanConstructor` |
-| `selected`      | `Object`             |
-| `selected.type` | `BooleanConstructor` |
-| `value`         | `Object`             |
-| `value.type`    | `NumberConstructor`  |
+| Name            | Type                             |
+| :-------------- | :------------------------------- |
+| `_value`        | { `state`: `boolean` }           |
+| `_value.state`  | `boolean`                        |
+| `disabled`      | { `type`: `BooleanConstructor` } |
+| `disabled.type` | `BooleanConstructor`             |
+| `format`        | { `type`: `StringConstructor` }  |
+| `format.type`   | `StringConstructor`              |
+| `readonly`      | { `type`: `BooleanConstructor` } |
+| `readonly.type` | `BooleanConstructor`             |
+| `selected`      | { `type`: `BooleanConstructor` } |
+| `selected.type` | `BooleanConstructor`             |
+| `value`         | { `type`: `NumberConstructor` }  |
+| `value.type`    | `NumberConstructor`              |
 
 #### Overrides
 

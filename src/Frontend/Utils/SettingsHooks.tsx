@@ -70,6 +70,7 @@ const defaultSettings: Record<Setting, string> = {
   [Setting.RendererColorSpace]: '#0B0F34',
   [Setting.RendererColorDeepSpace]: '#0B061F',
   [Setting.RendererColorDeadSpace]: '#11291b',
+  [Setting.ForceReloadEmbeddedPlugins]: 'false',
 };
 
 interface SettingStorageConfig {

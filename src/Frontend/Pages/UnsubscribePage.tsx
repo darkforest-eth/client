@@ -6,6 +6,7 @@ import { EmailCTA, EmailCTAMode } from '../Components/Email';
 import { BlinkCursor, HideSmall, Invisible, Sub, Text } from '../Components/Text';
 import LandingPageCanvas from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
+import { LinkContainer } from './LandingPage';
 
 export const enum LandingPageZIndex {
   Background = 0,
@@ -52,7 +53,7 @@ const styles: {
 
 const links = {
   twitter: 'http://twitter.com/darkforest_eth',
-  email: 'mailto:contact@zkga.me',
+  email: 'mailto:ivan@0xparc.org',
   blog: 'https://blog.zkga.me/',
   telegram: 'https://t.me/zk_forest',
   github: 'https://github.com/darkforest-eth',
@@ -81,7 +82,7 @@ const Footer = styled.div`
 const TextLinks = styled.div`
   & a {
     &:first-child {
-      margin-left 0;
+      margin-left: 0;
     }
     margin-left: 7pt;
     &:after {
@@ -96,33 +97,6 @@ const TextLinks = styled.div`
     transition: color 0.2s;
     &:hover {
       color: ${dfstyles.colors.dfblue};
-    }
-  }
-`;
-
-const IconLinks = styled.div`
-  font-size: 18pt;
-
-  & a {
-    margin: 0 6pt;
-    transition: color 0.2s;
-    &: hover {
-      cursor: pointer;
-      &.link-twitter {
-        color: ${dfstyles.colors.icons.twitter};
-      }
-      &.link-github {
-        color: ${dfstyles.colors.icons.github};
-      }
-      &.link-discord {
-        color: ${dfstyles.colors.icons.discord};
-      }
-      &.link-blog {
-        color: ${dfstyles.colors.icons.blog};
-      }
-      &.link-email {
-        color: ${dfstyles.colors.icons.email};
-      }
     }
   }
 `;
@@ -143,7 +117,7 @@ const Title = styled.div`
     position: absolute;
   }
   & h1:last-child {
-    &: before {
+    &:before {
       content: '>';
       position: absolute;
       top: 0;
@@ -202,7 +176,7 @@ export default function UnsubscribePage() {
             <a href={links.email}>email</a>
             <a href={links.blog}>blog</a>
           </TextLinks>
-          <IconLinks>
+          <LinkContainer>
             <a className={'link-twitter'} href={links.twitter}>
               <span className={'icon-twitter'}></span>
             </a>
@@ -212,7 +186,7 @@ export default function UnsubscribePage() {
             <a className={'link-github'} href={links.github}>
               <span className={'icon-github'}></span>
             </a>
-          </IconLinks>
+          </LinkContainer>
         </Footer>
       </div>
 

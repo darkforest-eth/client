@@ -10,7 +10,7 @@
 
 ### getPlanetLocations
 
-▸ `Const` **getPlanetLocations**(`spaceTypeKey`, `biomebaseKey`, `perlinLengthScale`, `perlinMirrorX`, `perlinMirrorY`): (`chunkFootprint`: `Rectangle`, `planetRarity`: `number`) => `WorldLocation`[]
+▸ **getPlanetLocations**(`spaceTypeKey`, `biomebaseKey`, `perlinLengthScale`, `perlinMirrorX`, `perlinMirrorY`): (`chunkFootprint`: `Rectangle`, `planetRarity`: `number`) => `WorldLocation`[]
 
 #### Parameters
 

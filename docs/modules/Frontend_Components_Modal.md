@@ -15,4 +15,4 @@
 
 ### Modal
 
-• **Modal**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestModal`](../classes/Frontend_Components_Modal.DarkForestModal.md), `"children"`\>\> & `Events`<`Object`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
+• `Const` **Modal**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestModal`](../classes/Frontend_Components_Modal.DarkForestModal.md), `"children"`\>\> & `Events`<{ `onMouseDown`: (`evt`: `Event` & `MouseEvent`<[`DarkForestModal`](../classes/Frontend_Components_Modal.DarkForestModal.md), `MouseEvent`\>) => `void` ; `onPositionChanged`: (`evt`: [`PositionChangedEvent`](../classes/Frontend_Components_Modal.PositionChangedEvent.md)) => `void` }\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>

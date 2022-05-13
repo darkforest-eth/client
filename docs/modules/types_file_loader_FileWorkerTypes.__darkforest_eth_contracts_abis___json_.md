@@ -12,4 +12,4 @@
 
 ### default
 
-• **default**: `string`
+• `Const` **default**: `string`

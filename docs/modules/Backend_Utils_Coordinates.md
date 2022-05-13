@@ -14,7 +14,7 @@
 
 ### coordsEqual
 
-▸ `Const` **coordsEqual**(`a`, `b`): `boolean`
+▸ **coordsEqual**(`a`, `b`): `boolean`
 
 #### Parameters
 
@@ -31,7 +31,7 @@
 
 ### distL2
 
-▸ `Const` **distL2**(`a`, `b`): `number`
+▸ **distL2**(`a`, `b`): `number`
 
 #### Parameters
 
@@ -48,7 +48,7 @@
 
 ### normalizeVector
 
-▸ `Const` **normalizeVector**(`a`): `WorldCoords`
+▸ **normalizeVector**(`a`): `WorldCoords`
 
 #### Parameters
 
@@ -64,7 +64,7 @@
 
 ### scaleVector
 
-▸ `Const` **scaleVector**(`a`, `k`): `Object`
+▸ **scaleVector**(`a`, `k`): `Object`
 
 #### Parameters
 
@@ -86,7 +86,7 @@
 
 ### vectorLength
 
-▸ `Const` **vectorLength**(`a`): `number`
+▸ **vectorLength**(`a`): `number`
 
 #### Parameters
 

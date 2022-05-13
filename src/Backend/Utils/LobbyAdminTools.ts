@@ -113,7 +113,7 @@ export class LobbyAdminTools {
     ]);
 
     const txIntent: UnconfirmedCreateArenaPlanet = {
-      methodName: ContractMethodName.CREATE_ARENA_PLANET,
+      methodName: 'createArenaPlanet',
       contract: this.contract.contract,
       args: args,
     };
@@ -151,7 +151,7 @@ export class LobbyAdminTools {
     } as WorldLocation;
 
     const txIntent: UnconfirmedReveal = {
-      methodName: ContractMethodName.REVEAL_LOCATION,
+      methodName: 'revealLocation',
       contract: this.contract.contract,
       locationId: location.toString() as LocationId, 
       location: worldLocation,

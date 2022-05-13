@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { TwitterLink } from '../Components/Labels/Labels';
 import { Smaller, Text } from '../Components/Text';
-import dfstyles from '../Styles/dfstyles';
 
 export function LandingPageRoundArt() {
   return (
@@ -23,11 +22,15 @@ const Container = styled.div`
 const ImgContainer = styled.div`
   display: inline-block;
   text-align: right;
-`;
-
-const LandingPageRoundArtImg = styled.img`
   width: 750px;
   max-width: 80vw;
-  border-radius: 8px;
-  border: 1px solid ${dfstyles.colors.borderDark};
+
+  @media only screen and (max-device-width: 1000px) {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    font-size: 80%;
+  }
 `;
+
+const LandingPageRoundArtImg = styled.img``;

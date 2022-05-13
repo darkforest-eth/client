@@ -18,13 +18,13 @@
 
 ### keyDown$
 
-• **keyDown$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
+• `Const` **keyDown$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
 
 ---
 
 ### keyUp$
 
-• **keyUp$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
+• `Const` **keyUp$**: `Monomitter`<[`Wrapper`](../classes/Backend_Utils_Wrapper.Wrapper.md)<`string`\>\>
 
 ## Functions
 

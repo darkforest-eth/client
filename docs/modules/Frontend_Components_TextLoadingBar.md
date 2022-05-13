@@ -18,7 +18,7 @@
 
 ### TextLoadingBar
 
-• **TextLoadingBar**: `ForwardRefExoticComponent`<`LoadingBarProps` & `RefAttributes`<`undefined` \| [`LoadingBarHandle`](../interfaces/Frontend_Components_TextLoadingBar.LoadingBarHandle.md)\>\>
+• `Const` **TextLoadingBar**: `ForwardRefExoticComponent`<`LoadingBarProps` & `RefAttributes`<`undefined` \| [`LoadingBarHandle`](../interfaces/Frontend_Components_TextLoadingBar.LoadingBarHandle.md)\>\>
 
 ## Functions
 

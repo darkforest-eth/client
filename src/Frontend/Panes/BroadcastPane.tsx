@@ -118,7 +118,8 @@ export function BroadcastPane({
       )}
       {isRevealed && (
         <p>
-          <Blue>INFO:</Blue> This planet's location is already, and can't be revealed again!
+          <Blue>INFO:</Blue> This planet's location is already revealed, and can't be revealed
+          again!
         </p>
       )}
       {!broadcastCooldownPassed && (

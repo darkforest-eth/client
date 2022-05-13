@@ -20,6 +20,7 @@ yarn-error.log*
 public/img/artifacts
 
 declarations
+tsconfig.ref.tsbuildinfo
 
 # Local Netlify folder
 .netlify

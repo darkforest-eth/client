@@ -14,9 +14,9 @@
 
 #### Parameters
 
-| Name                | Type                                                         |
-| :------------------ | :----------------------------------------------------------- |
-| `__namedParameters` | `RouteComponentProps`<`Object`, `StaticContext`, `unknown`\> |
+| Name                | Type                                                                               |
+| :------------------ | :--------------------------------------------------------------------------------- |
+| `__namedParameters` | `RouteComponentProps`<{ `locationId`: `LocationId` }, `StaticContext`, `unknown`\> |
 
 #### Returns
 

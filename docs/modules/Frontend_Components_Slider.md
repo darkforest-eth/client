@@ -16,10 +16,10 @@
 
 ### Slider
 
-• **Slider**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestSlider`](../classes/Frontend_Components_Slider.DarkForestSlider.md), `"children"`\>\> & `Events`<`Object`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
+• `Const` **Slider**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestSlider`](../classes/Frontend_Components_Slider.DarkForestSlider.md), `"children"`\>\> & `Events`<{ `onChange`: (`e`: `Event` & `ChangeEvent`<[`DarkForestSlider`](../classes/Frontend_Components_Slider.DarkForestSlider.md)\>) => `void` }\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
 
 ---
 
 ### SliderHandle
 
-• **SliderHandle**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestSliderHandle`](../classes/Frontend_Components_Slider.DarkForestSliderHandle.md), `"children"`\>\> & `Events`<`Object`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
+• `Const` **SliderHandle**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestSliderHandle`](../classes/Frontend_Components_Slider.DarkForestSliderHandle.md), `"children"`\>\> & `Events`<{ `onChange`: (`e`: `Event` & `ChangeEvent`<[`DarkForestSliderHandle`](../classes/Frontend_Components_Slider.DarkForestSliderHandle.md)\>) => `void` }\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>

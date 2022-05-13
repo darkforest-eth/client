@@ -22,7 +22,7 @@
 
 ### ButtonRow
 
-• **ButtonRow**: `StyledComponent`<`ForwardRefExoticComponent`<`Partial`<`Omit`<`DarkForestRow`, `"children"`\>\> & `Events`<`unknown`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>, `any`, `Object`, `never`\>
+• `Const` **ButtonRow**: `StyledComponent`<`ForwardRefExoticComponent`<`Partial`<`Omit`<`DarkForestRow`, `"children"`\>\> & `Events`<`unknown`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>, `any`, {}, `never`\>
 
 ## Functions
 
@@ -69,9 +69,9 @@
 
 #### Parameters
 
-| Name                | Type                           |
-| :------------------ | :----------------------------- |
-| `__namedParameters` | `PropsWithChildren`<`Object`\> |
+| Name                | Type                                                             |
+| :------------------ | :--------------------------------------------------------------- |
+| `__namedParameters` | `PropsWithChildren`<{ `shortcut?`: `string` ; `to`: `string` }\> |
 
 #### Returns
 

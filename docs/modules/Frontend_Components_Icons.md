@@ -57,7 +57,7 @@
 
 ### Icon
 
-• **Icon**: `ForwardRefExoticComponent`<`Partial`<`Omit`<`DarkForestIcon`, `"children"`\>\> & `Events`<`unknown`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
+• `Const` **Icon**: `ForwardRefExoticComponent`<`Partial`<`Omit`<`DarkForestIcon`, `"children"`\>\> & `Events`<`unknown`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
 
 ---
 
@@ -120,7 +120,7 @@
 
 ### ArtifactFound
 
-▸ `Const` **ArtifactFound**(`__namedParameters`): `Element`
+▸ **ArtifactFound**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -136,7 +136,7 @@
 
 ### ArtifactProspected
 
-▸ `Const` **ArtifactProspected**(`__namedParameters`): `Element`
+▸ **ArtifactProspected**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -152,7 +152,7 @@
 
 ### BranchIcon
 
-▸ `Const` **BranchIcon**(`__namedParameters`): `Element`
+▸ **BranchIcon**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -169,7 +169,7 @@
 
 ### FoundCorrupted
 
-▸ `Const` **FoundCorrupted**(`__namedParameters`): `Element`
+▸ **FoundCorrupted**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -185,7 +185,7 @@
 
 ### FoundDeadSpace
 
-▸ `Const` **FoundDeadSpace**(`__namedParameters`): `Element`
+▸ **FoundDeadSpace**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -201,7 +201,7 @@
 
 ### FoundDeepSpace
 
-▸ `Const` **FoundDeepSpace**(`__namedParameters`): `Element`
+▸ **FoundDeepSpace**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -217,7 +217,7 @@
 
 ### FoundDesert
 
-▸ `Const` **FoundDesert**(`__namedParameters`): `Element`
+▸ **FoundDesert**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -233,7 +233,7 @@
 
 ### FoundForest
 
-▸ `Const` **FoundForest**(`__namedParameters`): `Element`
+▸ **FoundForest**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -249,7 +249,7 @@
 
 ### FoundGrassland
 
-▸ `Const` **FoundGrassland**(`__namedParameters`): `Element`
+▸ **FoundGrassland**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -265,7 +265,7 @@
 
 ### FoundIce
 
-▸ `Const` **FoundIce**(`__namedParameters`): `Element`
+▸ **FoundIce**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -281,7 +281,7 @@
 
 ### FoundLava
 
-▸ `Const` **FoundLava**(`__namedParameters`): `Element`
+▸ **FoundLava**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -297,7 +297,7 @@
 
 ### FoundOcean
 
-▸ `Const` **FoundOcean**(`__namedParameters`): `Element`
+▸ **FoundOcean**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -313,7 +313,7 @@
 
 ### FoundPirates
 
-▸ `Const` **FoundPirates**(`__namedParameters`): `Element`
+▸ **FoundPirates**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -329,7 +329,7 @@
 
 ### FoundRuins
 
-▸ `Const` **FoundRuins**(`__namedParameters`): `Element`
+▸ **FoundRuins**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -345,7 +345,7 @@
 
 ### FoundSilver
 
-▸ `Const` **FoundSilver**(`__namedParameters`): `Element`
+▸ **FoundSilver**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -361,7 +361,7 @@
 
 ### FoundSpace
 
-▸ `Const` **FoundSpace**(`__namedParameters`): `Element`
+▸ **FoundSpace**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -377,7 +377,7 @@
 
 ### FoundSpacetimeRip
 
-▸ `Const` **FoundSpacetimeRip**(`__namedParameters`): `Element`
+▸ **FoundSpacetimeRip**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -393,7 +393,7 @@
 
 ### FoundSwamp
 
-▸ `Const` **FoundSwamp**(`__namedParameters`): `Element`
+▸ **FoundSwamp**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -409,7 +409,7 @@
 
 ### FoundTradingPost
 
-▸ `Const` **FoundTradingPost**(`__namedParameters`): `Element`
+▸ **FoundTradingPost**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -425,7 +425,7 @@
 
 ### FoundTundra
 
-▸ `Const` **FoundTundra**(`__namedParameters`): `Element`
+▸ **FoundTundra**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -441,7 +441,7 @@
 
 ### FoundWasteland
 
-▸ `Const` **FoundWasteland**(`__namedParameters`): `Element`
+▸ **FoundWasteland**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -457,7 +457,7 @@
 
 ### Generic
 
-▸ `Const` **Generic**(`__namedParameters`): `Element`
+▸ **Generic**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -473,7 +473,7 @@
 
 ### MetPlayer
 
-▸ `Const` **MetPlayer**(`__namedParameters`): `Element`
+▸ **MetPlayer**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -489,7 +489,7 @@
 
 ### PlanetAttacked
 
-▸ `Const` **PlanetAttacked**(`__namedParameters`): `Element`
+▸ **PlanetAttacked**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -505,7 +505,7 @@
 
 ### PlanetConquered
 
-▸ `Const` **PlanetConquered**(`__namedParameters`): `Element`
+▸ **PlanetConquered**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -521,7 +521,7 @@
 
 ### PlanetLost
 
-▸ `Const` **PlanetLost**(`__namedParameters`): `Element`
+▸ **PlanetLost**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -537,7 +537,7 @@
 
 ### Quasar
 
-▸ `Const` **Quasar**(`__namedParameters`): `Element`
+▸ **Quasar**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -553,7 +553,7 @@
 
 ### RankIcon
 
-▸ `Const` **RankIcon**(`__namedParameters`): `Element`
+▸ **RankIcon**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -570,7 +570,7 @@
 
 ### StatIcon
 
-▸ `Const` **StatIcon**(`__namedParameters`): `Element`
+▸ **StatIcon**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -587,7 +587,7 @@
 
 ### TxAccepted
 
-▸ `Const` **TxAccepted**(`__namedParameters`): `Element`
+▸ **TxAccepted**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -603,7 +603,7 @@
 
 ### TxConfirmed
 
-▸ `Const` **TxConfirmed**(`__namedParameters`): `Element`
+▸ **TxConfirmed**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -619,7 +619,7 @@
 
 ### TxDeclined
 
-▸ `Const` **TxDeclined**(`__namedParameters`): `Element`
+▸ **TxDeclined**(`__namedParameters`): `Element`
 
 #### Parameters
 
@@ -635,7 +635,7 @@
 
 ### TxInitialized
 
-▸ `Const` **TxInitialized**(`__namedParameters`): `Element`
+▸ **TxInitialized**(`__namedParameters`): `Element`
 
 #### Parameters
 

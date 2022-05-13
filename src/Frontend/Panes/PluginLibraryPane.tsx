@@ -13,7 +13,7 @@ import { RemoteModal } from '../Components/RemoteModal';
 import { Sub } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useEmitterValue } from '../Utils/EmitterHooks';
-import { getBooleanSetting, setSetting } from '../Utils/SettingsHooks';
+import { getBooleanSetting, setSetting, useBooleanSetting } from '../Utils/SettingsHooks';
 import { ModalPane } from '../Views/ModalPane';
 import { PluginEditorPane } from './PluginEditorPane';
 
@@ -83,6 +83,10 @@ export function PluginLibraryPane({
   const [editorIsOpen, setEditorIsOpen] = useState(false);
   const [warningIsOpen, setWarningIsOpen] = useState(false);
   const [clicksUntilHasPlugins, setClicksUntilHasPlugins] = useState(8);
+  const [forceReloadEmbeddedPlugins, _s] = useBooleanSetting(
+    gameUIManager,
+    Setting.ForceReloadEmbeddedPlugins
+  );
 
   /**
    * the id of the plugin that the user is currently editing.
@@ -150,8 +154,8 @@ export function PluginLibraryPane({
    * the plugins from disk.
    */
   useEffect(() => {
-    pluginManager.load(isAdmin);
-  }, [pluginManager, isAdmin]);
+    pluginManager.load(isAdmin, forceReloadEmbeddedPlugins);
+  }, [pluginManager, isAdmin, forceReloadEmbeddedPlugins]);
 
   function addPluginClicked(): void {
     openEditorForPlugin(undefined);

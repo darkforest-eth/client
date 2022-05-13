@@ -1,4 +1,4 @@
-import { ContractMethodName, Setting } from '@darkforest_eth/types';
+import { Setting } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -57,11 +57,7 @@ export function NotificationsPane() {
     const addNotif = (notif: NotificationInfo) => {
       const notifMove = uiManager.getBooleanSetting(Setting.MoveNotifications);
 
-      if (
-        !notifMove &&
-        notif.type === NotificationType.Tx &&
-        notif.txData?.methodName === ContractMethodName.MOVE
-      )
+      if (!notifMove && notif.type === NotificationType.Tx && notif.txData?.methodName === 'move')
         return;
 
       setNotifs((arr) => {

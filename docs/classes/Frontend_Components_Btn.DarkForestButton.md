@@ -73,16 +73,16 @@ LitElement.constructor
 
 #### Type declaration
 
-| Name            | Type                 |
-| :-------------- | :------------------- |
-| `active`        | `Object`             |
-| `active.type`   | `BooleanConstructor` |
-| `disabled`      | `Object`             |
-| `disabled.type` | `BooleanConstructor` |
-| `size`          | `Object`             |
-| `size.type`     | `StringConstructor`  |
-| `variant`       | `Object`             |
-| `variant.type`  | `StringConstructor`  |
+| Name            | Type                             |
+| :-------------- | :------------------------------- |
+| `active`        | { `type`: `BooleanConstructor` } |
+| `active.type`   | `BooleanConstructor`             |
+| `disabled`      | { `type`: `BooleanConstructor` } |
+| `disabled.type` | `BooleanConstructor`             |
+| `size`          | { `type`: `StringConstructor` }  |
+| `size.type`     | `StringConstructor`              |
+| `variant`       | { `type`: `StringConstructor` }  |
+| `variant.type`  | `StringConstructor`              |
 
 #### Overrides
 

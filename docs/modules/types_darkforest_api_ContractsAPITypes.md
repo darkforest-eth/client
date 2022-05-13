@@ -26,6 +26,7 @@
 - [PlanetTypeWeightsByLevel](types_darkforest_api_ContractsAPITypes.md#planettypeweightsbylevel)
 - [PlanetTypeWeightsBySpaceType](types_darkforest_api_ContractsAPITypes.md#planettypeweightsbyspacetype)
 - [UpgradeArgs](types_darkforest_api_ContractsAPITypes.md#upgradeargs)
+- [WhitelistArgs](types_darkforest_api_ContractsAPITypes.md#whitelistargs)
 - [WithdrawArtifactArgs](types_darkforest_api_ContractsAPITypes.md#withdrawartifactargs)
 
 ## Type aliases
@@ -75,6 +76,12 @@
 ### UpgradeArgs
 
 Ƭ **UpgradeArgs**: [`string`, `string`]
+
+---
+
+### WhitelistArgs
+
+Ƭ **WhitelistArgs**: [`string`, `string`]
 
 ---
 

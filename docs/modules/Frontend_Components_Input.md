@@ -20,22 +20,22 @@
 
 ### Checkbox
 
-• **Checkbox**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestCheckbox`](../classes/Frontend_Components_Input.DarkForestCheckbox.md), `"children"`\>\> & `Events`<`Object`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
+• `Const` **Checkbox**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestCheckbox`](../classes/Frontend_Components_Input.DarkForestCheckbox.md), `"children"`\>\> & `Events`<{ `onChange`: (`e`: `Event` & `ChangeEvent`<[`DarkForestCheckbox`](../classes/Frontend_Components_Input.DarkForestCheckbox.md)\>) => `void` }\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
 
 ---
 
 ### ColorInput
 
-• **ColorInput**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestColorInput`](../classes/Frontend_Components_Input.DarkForestColorInput.md), `"children"`\>\> & `Events`<`Object`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
+• `Const` **ColorInput**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestColorInput`](../classes/Frontend_Components_Input.DarkForestColorInput.md), `"children"`\>\> & `Events`<{ `onChange`: (`e`: `Event` & `ChangeEvent`<[`DarkForestColorInput`](../classes/Frontend_Components_Input.DarkForestColorInput.md)\>) => `void` }\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
 
 ---
 
 ### NumberInput
 
-• **NumberInput**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestNumberInput`](../classes/Frontend_Components_Input.DarkForestNumberInput.md), `"children"`\>\> & `Events`<`Object`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
+• `Const` **NumberInput**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestNumberInput`](../classes/Frontend_Components_Input.DarkForestNumberInput.md), `"children"`\>\> & `Events`<{ `onChange`: (`e`: `Event` & `ChangeEvent`<[`DarkForestNumberInput`](../classes/Frontend_Components_Input.DarkForestNumberInput.md)\>) => `void` }\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
 
 ---
 
 ### TextInput
 
-• **TextInput**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestTextInput`](../classes/Frontend_Components_Input.DarkForestTextInput.md), `"children"`\>\> & `Events`<`Object`\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>
+• `Const` **TextInput**: `ForwardRefExoticComponent`<`Partial`<`Omit`<[`DarkForestTextInput`](../classes/Frontend_Components_Input.DarkForestTextInput.md), `"children"`\>\> & `Events`<{ `onBlur`: (`e`: `Event`) => `void` ; `onChange`: (`e`: `Event` & `ChangeEvent`<[`DarkForestTextInput`](../classes/Frontend_Components_Input.DarkForestTextInput.md)\>) => `void` }\> & `HTMLAttributes`<`HTMLElement`\> & {} & `RefAttributes`<`unknown`\>\>

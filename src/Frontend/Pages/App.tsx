@@ -7,6 +7,7 @@ import { Theme } from '../Components/Theme';
 import { LandingPageBackground } from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
 import { CreateLobby } from './CreateLobby';
+import { EventsPage } from './EventsPage';
 import { GameLandingPage } from './GameLandingPage';
 import { GifMaker } from './GifMaker';
 import LandingPage from './LandingPage';
@@ -32,6 +33,7 @@ function App() {
           <Switch>
             <Redirect path='/play' to={`/play/${defaultAddress}`} push={true} exact={true} />
             <Route path='/play/:contract' component={GameLandingPage} />
+            <Route path='/events' component={EventsPage} />
             <Route path='/' exact component={LandingPage} />
             <Redirect path='/lobby' to={`/lobby/${defaultAddress}`} push={true} exact={true} />
             <Route path='/lobby/:contract' component={CreateLobby} />

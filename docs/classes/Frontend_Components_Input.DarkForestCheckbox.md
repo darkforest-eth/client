@@ -101,16 +101,16 @@ LitElement.constructor
 
 #### Type declaration
 
-| Name            | Type                 |
-| :-------------- | :------------------- |
-| `checked`       | `Object`             |
-| `checked.type`  | `BooleanConstructor` |
-| `disabled`      | `Object`             |
-| `disabled.type` | `BooleanConstructor` |
-| `label`         | `Object`             |
-| `label.type`    | `StringConstructor`  |
-| `selected`      | `Object`             |
-| `selected.type` | `BooleanConstructor` |
+| Name            | Type                             |
+| :-------------- | :------------------------------- |
+| `checked`       | { `type`: `BooleanConstructor` } |
+| `checked.type`  | `BooleanConstructor`             |
+| `disabled`      | { `type`: `BooleanConstructor` } |
+| `disabled.type` | `BooleanConstructor`             |
+| `label`         | { `type`: `StringConstructor` }  |
+| `label.type`    | `StringConstructor`              |
+| `selected`      | { `type`: `BooleanConstructor` } |
+| `selected.type` | `BooleanConstructor`             |
 
 #### Overrides
 
