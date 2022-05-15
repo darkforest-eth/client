@@ -16,7 +16,6 @@ const Header = styled(TableCell)`
     cursor: pointer;
     ${isActive && 'text-decoration: underline;'}
     ${isActive && 'font-weight: bold;'}
-    ${isReverse && 'transform: scaleY(-1);'}
 
     &:hover {
       text-decoration: underline;
@@ -79,7 +78,7 @@ export function SortableTable<T>({
     <Table
       paginated={paginated}
       headerStyle={{
-        backgroundColor: dfstyles.colors.background,
+        // backgroundColor: dfstyles.colors.background,
         position: 'sticky',
         top: 0,
       }}

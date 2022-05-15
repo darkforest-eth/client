@@ -1,16 +1,18 @@
 import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
+import { PlanetTypeNames } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { CreatedPlanet, LobbyAdminTools } from '../../../Backend/Utils/LobbyAdminTools';
 import { Btn } from '../../Components/Btn';
+import { Link, SelectFrom } from '../../Components/CoreUI';
 import Button from '../../Components/Button';
-import { Link } from '../../Components/CoreUI';
+
 import {
   Checkbox,
   DarkForestCheckbox,
   DarkForestNumberInput,
-  NumberInput
+  NumberInput,
 } from '../../Components/Input';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Row } from '../../Components/Row';
@@ -55,6 +57,8 @@ const defaultPlanet: LobbyPlanet = {
   isSpawnPlanet: false,
 };
 
+
+const planetTypeNames = ['Planet', 'Asteroid Field', 'Foundry', 'Spacetime Rip', 'Quasar'];
 export function CreatePlanetPane({
   config: config,
   onUpdate: onUpdate,
@@ -78,7 +82,7 @@ export function CreatePlanetPane({
       </Sub>
     ),
     (planet: LobbyPlanet) => <Sub>{planet.level}</Sub>,
-    (planet: LobbyPlanet) => <Sub>{planet.planetType}</Sub>,
+    (planet: LobbyPlanet) => <Sub>{planetTypeNames[planet.planetType]}</Sub>,
     (planet: LobbyPlanet) => formatBool(planet.isTargetPlanet),
     (planet: LobbyPlanet) => formatBool(planet.isSpawnPlanet),
     (planet: LobbyPlanet, i: number) => (
@@ -136,7 +140,7 @@ export function CreatePlanetPane({
       </Sub>
     ),
     (planet: CreatedPlanet) => <Sub>{planet.level}</Sub>,
-    (planet: CreatedPlanet) => <Sub>{planet.planetType}</Sub>,
+    (planet: CreatedPlanet) => <Sub>{planetTypeNames[planet.planetType]}</Sub>,
     (planet: CreatedPlanet) => formatBool(planet.isTargetPlanet),
     (planet: CreatedPlanet) => formatBool(planet.isSpawnPlanet),
     (planet: CreatedPlanet) =>
@@ -207,32 +211,48 @@ export function CreatePlanetPane({
   }
 
   function planetInput(value: string, index: number) {
+    let content = null;
+    if (value == 'x' || value == 'y' || value == 'level') {
+      content = (
+        <NumberInput
+          format='integer'
+          value={planet[value]}
+          onChange={(e: Event & React.ChangeEvent<DarkForestNumberInput>) => {
+            setPlanet({ ...planet, [value]: e.target.value });
+          }}
+        />
+      );
+    } else if (value == 'planetType') {
+      content = (
+        <SelectFrom
+          wide={false}
+          style = {{padding: '5px'}}
+          values={planetTypeNames}
+          labels={planetTypeNames}
+          value={planetTypeNames[planet.planetType]}
+          setValue={(value) => setPlanet({ ...planet, planetType: planetTypeNames.indexOf(value) })}
+        />
+      );
+    } else {
+      content = (
+        <Checkbox
+          checked={(planet as any)[value]}
+          onChange={(e: Event & React.ChangeEvent<DarkForestCheckbox>) => {
+            setPlanet({ ...planet, [value]: e.target.checked });
+          }}
+        />
+      );
+    }
+
     return (
       <div style={itemStyle} key={index}>
         <span>{displayProperties[index]}</span>
-        {value == 'x' || value == 'y' || value == 'level' || value == 'planetType' ? (
-          <NumberInput
-            format='integer'
-            value={planet[value]}
-            onChange={(e: Event & React.ChangeEvent<DarkForestNumberInput>) => {
-              setPlanet({ ...planet, [value]: e.target.value });
-            }}
-          />
-        ) : (
-          <Checkbox
-            checked={(planet as any)[value]}
-            onChange={(e: Event & React.ChangeEvent<DarkForestCheckbox>) => {
-              setPlanet({ ...planet, [value]: e.target.checked });
-            }}
-          />
-        )}
+        {content}
       </div>
     );
   }
 
-
   async function bulkCreateAndRevealPlanets() {
-
     if (!lobbyAdminTools) {
       setError("You haven't created a lobby.");
       return;

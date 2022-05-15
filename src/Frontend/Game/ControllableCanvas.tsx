@@ -103,7 +103,12 @@ export default function ControllableCanvas() {
 
     // This zooms your home world in really close to show the awesome details
     // TODO: Store this as it changes and re-initialize to that if stored
-    const defaultWorldUnits = 4;
+    const homePlanet = gameUIManager.getHomePlanet();
+    let defaultWorldUnits = 1000;
+    if(homePlanet) {
+      const radius = gameUIManager.getRadiusOfPlanetLevel(homePlanet.planetLevel)
+      defaultWorldUnits = radius *10;
+    }
     Viewport.initialize(gameUIManager, defaultWorldUnits, canvas);
     Renderer.initialize(
       canvasRef.current,
