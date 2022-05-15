@@ -9,6 +9,7 @@ import { EmailCTA, EmailCTAMode } from '../Components/Email';
 import { Modal } from '../Components/Modal';
 import { HideSmall, Red, Text, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
+import { ArenaLeaderboardElt } from '../Views/ArenaLeaderboard';
 import { LandingPageRoundArt } from '../Views/LandingPageRoundArt';
 
 export const enum LandingPageZIndex {
@@ -129,9 +130,10 @@ export default function LandingPage() {
           </EmailWrapper>
         </MainContentContainer>
 
-        <Spacer height={128} />
+        <Spacer height={28} />
 
         {/* <LeadboardDisplay /> */}
+        <ArenaLeaderboardElt/>
 
         <Spacer height={256} />
       </Page>
