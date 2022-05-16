@@ -21,8 +21,7 @@
 //  notice 3: Your planets can still be attacked by other's small planets which you can't see.
 // 
 //  When writing this plugin, we learn a lot from the plugin named map export,
-//  Thanks to the authors of map export !
-//
+//  Thanks to the authors of map export https://github.com/darkforest-eth/plugins/blob/master/content/utilities/map-export/plugin.js!
 
 
 import { PlanetLevel, PlanetType, SpaceType } from
@@ -294,31 +293,47 @@ function mapFilterExport() {
     let chunksAsArray = Array.from(chunks);
 
     let planetsCount = 0;
+
+   
     
+    let res = [];
+
     for (let i = 0; i < chunksAsArray.length; i++) {
       const chunk = chunksAsArray[i];
-      let planetLocations = chunk.planetLocations;
-    
-      planetLocations = planetLocations.filter(item=>{
+      const planetLocations = chunk.planetLocations;
+      let planetLocationsWithMark = [];
+      let newChunk = {};
+      newChunk.chunkFootprint = {};
+      newChunk.chunkFootprint.bottomLeft = chunk.chunkFootprint.bottomLeft;
+      newChunk.chunkFootprint.sideLength = chunk.chunkFootprint.sideLength;
+      newChunk.perlin = chunk.perlin;
+
+
+      planetLocations.forEach(item=>{
         const coords = item.coords;
         let plt = df.getPlanetWithCoords(coords);
-        if(judgeLevel(plt)===false) return false;
-        if(judgePlanetType(plt)===false) return false;
-        if(judgeSpaceType(plt)===false) return false;
-        if(judgeOwner(plt)===false) return false;
-        if(destroyedFilter(plt)===false) return false;
-        return true;
+        let flag = true;
+        if(judgeLevel(plt)===false) flag =  false;
+        if(judgePlanetType(plt)===false) flag =  false;
+        if(judgeSpaceType(plt)===false) flag = false;
+        if(judgeOwner(plt)===false) flag =  false;
+        if(destroyedFilter(plt)===false) flag = false;
+        if(flag){
+          planetLocationsWithMark.push(item);
+
+        }
       });
       
-      chunksAsArray[i].planetLocations = planetLocations;
-      planetsCount+=planetLocations.length;
+      newChunk.planetLocations = planetLocationsWithMark;
+      res.push(newChunk);
+      planetsCount+=planetLocationsWithMark.length;
     }
 
     let newInfo = html`<div>
       <div style=${{ color: '#FFFF00' }}> export ${planetsCount} planets </div>
     </div>`;
     setInfo(newInfo);
-    return chunksAsArray;
+    return res;
   }
 
   let onDownloadWithBackground = async () => {
@@ -579,5 +594,4 @@ class Plugin {
 }
 
 export default Plugin;
-
 
