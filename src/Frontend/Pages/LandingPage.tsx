@@ -107,7 +107,7 @@ export default function LandingPage() {
             <Spacer height={16} />
 
             <ButtonWrapper>
-              <Btn size='large' onClick={() => history.push(`/lobby/${defaultAddress}`)}>
+              <Btn size='large' onClick={() => history.push(`/arena/${defaultAddress}`)}>
                 Create Arena
               </Btn>
               <Btn

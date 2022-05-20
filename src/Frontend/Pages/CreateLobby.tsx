@@ -108,7 +108,7 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
         connection={connection}
         ownerAddress={ownerAddress}
         startingConfig={startingConfig}
-        root={`/lobby/${contractAddress}`}
+        root={`/arena/${contractAddress}`}
       />
     ) : (
       <LobbyLandingPage onReady={onReady} />

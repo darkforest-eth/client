@@ -88,7 +88,7 @@ export function GameWindowLayout({
     setModalsContainer(node);
   }, []);
   const [onboardingVisible, setOnboardingVisible] = useBooleanSetting(uiManager, Setting.NewPlayer);
-  const tutorialHook = useBooleanSetting(uiManager, Setting.TutorialOpen);
+  const [tutorialVisible, setTutorialVisible] = useBooleanSetting(uiManager, Setting.TutorialOpen);
   const selected = useSelectedPlanet(uiManager).value;
   const [selectedPlanetVisible, setSelectedPlanetVisible] = useState<boolean>(!!selected);
 
@@ -172,7 +172,13 @@ export function GameWindowLayout({
         )}
       </div>
 
-      <OnboardingPane visible={onboardingVisible} onClose={() => setOnboardingVisible(false)} />
+      <OnboardingPane
+        visible={onboardingVisible}
+        onClose={(openTutorial: boolean) => {
+          setOnboardingVisible(false);
+          openTutorial && setTutorialVisible(true);
+        }}
+      />
 
       <MainWindow>
         <CanvasContainer>
@@ -198,7 +204,7 @@ export function GameWindowLayout({
           <HoverPlanetPane />
           <ArtifactHoverPane />
 
-          <TutorialPane tutorialHook={tutorialHook} />
+          <TutorialPane tutorialHook={tutorialVisible} />
         </CanvasContainer>
       </MainWindow>
     </WindowWrapper>

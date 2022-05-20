@@ -18,7 +18,8 @@ const StyledOnboardingContent = styled.div`
   .btn {
     position: absolute;
     right: 0.5em;
-    bottom: 0.5em;
+    bottom: 0em;
+    gap: 8px;
   }
 
   .indent {
@@ -54,17 +55,17 @@ function OnboardMoney({ advance }: { advance: () => void }) {
         Welcome to <Green>Dark Forest Arena</Green>!
       </p>
       <p>
-        We have initialized a {' '}
+        We have initialized a{' '}
         <a onClick={() => window.open('https://github.com/austintgriffith/burner-wallet')}>
           burner wallet:
         </a>{' '}
-        </p>
-        <div>
+      </p>
+      <div>
         <Blue>
           <a onClick={() => window.open(explorerAddressLink)}>({account})</a>
         </Blue>
-        </div>
-        <p>
+      </div>
+      <p>
         for you and dripped 5c to it, courtesy of dfdao and Gnosis Chain.{' '}
         <White>Please enable popups</White> so that all transactions may be confirmed by you.
         <Icon type={IconType.Settings} />
@@ -79,7 +80,13 @@ function OnboardMoney({ advance }: { advance: () => void }) {
   );
 }
 
-function OnboardKeys({ advance }: { advance: () => void }) {
+function OnboardKeys({
+  advance,
+  setOpenTutorial,
+}: {
+  advance: () => void;
+  setOpenTutorial: (open: boolean) => void;
+}) {
   const uiManager = useUIManager();
   const [sKey, setSKey] = useState<string | undefined>(undefined);
   const [viewPrivateKey, setViewPrivateKey] = useState<boolean>(false);
@@ -104,26 +111,54 @@ function OnboardKeys({ advance }: { advance: () => void }) {
         are your password, and <Red>should never be viewed by anyone else.</Red>
       </p>
       <p>
-        <Btn onClick = {() => {setViewPrivateKey(!viewPrivateKey)}}>{viewPrivateKey ? 'Hide' : 'View'} private key</Btn> <br />
+        <Btn
+          onClick={() => {
+            setViewPrivateKey(!viewPrivateKey);
+          }}
+        >
+          {viewPrivateKey ? 'Hide' : 'View'} private key
+        </Btn>{' '}
+        <br />
         Your private key is:{' '}
-        <TextPreview text={viewPrivateKey ? sKey : 'hidden'} focusedWidth={'150px'} unFocusedWidth={'150px'} />
+        <TextPreview
+          text={viewPrivateKey ? sKey : 'hidden'}
+          focusedWidth={'150px'}
+          unFocusedWidth={'150px'}
+        />
       </p>
       <p>
-      <Btn onClick = {() => {setViewHomeCoords(!viewHomeCoords)}}>{viewHomeCoords ? 'Hide' : 'View'}  home coords</Btn> <br />
+        <Btn
+          onClick={() => {
+            setViewHomeCoords(!viewHomeCoords);
+          }}
+        >
+          {viewHomeCoords ? 'Hide' : 'View'} home coords
+        </Btn>{' '}
+        <br />
         Your private key is:{' '}
-        <TextPreview text={viewHomeCoords ? home : "hidden"} focusedWidth={'150px'} unFocusedWidth={'150px'} />
+        <TextPreview
+          text={viewHomeCoords ? home : 'hidden'}
+          focusedWidth={'150px'}
+          unFocusedWidth={'150px'}
+        />
       </p>
 
       <p>We recommend you back this information up.</p>
       <p>
-        That's all! Click <White>Proceed</White> to join the world of <White>DARK FOREST...</White>
+        If you are new to Dark Forest, play the tutorial! Otherwise, skip and jump into the action.
       </p>
-      <div>
-        <span></span>
-        <Btn onClick={advance} className='btn'>
-          Proceed
+      <div className='btn'>
+        <Btn
+          onClick={() => {
+            advance();
+            setOpenTutorial(true);
+          }}
+        >
+          Play Tutorial
         </Btn>
+        <Btn onClick={advance}>Skip Tutorial</Btn>
       </div>
+      <div></div>
     </StyledOnboardingContent>
   );
 }
@@ -133,15 +168,16 @@ export default function OnboardingPane({
   onClose,
 }: {
   visible: boolean;
-  onClose: () => void;
+  onClose: (tutorial: boolean) => void;
 }) {
   const [onboardState, setOnboardState] = useState<OnboardState>(OnboardState.Money);
+  const [openTutorial, setOpenTutorial] = useState<boolean>(false);
 
   const advance = () => setOnboardState((x) => x + 1);
 
   useEffect(() => {
     if (onboardState === OnboardState.Keys + 1) {
-      onClose();
+      onClose(openTutorial);
     }
   }, [onboardState, onClose]);
 
@@ -151,10 +187,12 @@ export default function OnboardingPane({
       title={'Welcome to Dark Forest'}
       hideClose
       visible={visible}
-      onClose={onClose}
+      onClose={() => onClose(openTutorial)}
     >
       {onboardState === OnboardState.Money && <OnboardMoney advance={advance} />}
-      {onboardState === OnboardState.Keys && <OnboardKeys advance={advance} />}
+      {onboardState === OnboardState.Keys && (
+        <OnboardKeys advance={advance} setOpenTutorial={setOpenTutorial} />
+      )}
     </ModalPane>
   );
 }

@@ -10,8 +10,6 @@ export const enum TutorialManagerEvent {
 
 export const enum TutorialState {
   None,
-
-  HomePlanet,
   SendFleet,
   SpaceJunk,
   Spaceship,
@@ -59,13 +57,15 @@ class TutorialManager extends EventEmitter {
 
   private advance() {
     let newState = Math.min(this.tutorialState + 1, TutorialState.Completed);
-    if (this.shouldSkipState(newState)) newState++;
+    while (this.shouldSkipState(newState)) newState++;
 
     this.setTutorialState(newState);
   }
 
   private shouldSkipState(state: TutorialState) {
-    return !this.uiManager.getSpaceJunkEnabled() && state === TutorialState.SpaceJunk;
+    if(!this.uiManager.getSpaceJunkEnabled() && state === TutorialState.SpaceJunk) return true;
+    if(this.uiManager.getMySpaceships().length == 0 && state === TutorialState.Spaceship) return true;
+    return false;
   }
 
   reset() {

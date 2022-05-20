@@ -8,6 +8,7 @@ import { isUnconfirmedMoveTx } from '@darkforest_eth/serde';
 import {
   Artifact,
   ArtifactId,
+  ArtifactType,
   BaseRenderer,
   Biome,
   Chunk,
@@ -777,7 +778,7 @@ class GameUIManager extends EventEmitter {
 
         if (coordsEqual(loc.coords, this.getHomeCoords())) {
           const tutorialManager = TutorialManager.getInstance(this);
-          tutorialManager.acceptInput(TutorialState.HomePlanet);
+          tutorialManager.acceptInput(TutorialState.None);
         }
       }
     }
@@ -1085,6 +1086,21 @@ class GameUIManager extends EventEmitter {
 
   public getMyArtifactsNotOnPlanet(): Artifact[] {
     return this.getMyArtifacts().filter((a) => !a.onPlanetId);
+  }
+
+  public getMySpaceships(): Artifact[] {
+    const ships = this.gameManager
+      .getMyArtifacts()
+      .filter(
+        (a) =>
+          a.artifactType == ArtifactType.Spaceship ||
+          a.artifactType == ArtifactType.ShipMothership ||
+          a.artifactType == ArtifactType.ShipCrescent ||
+          a.artifactType == ArtifactType.ShipWhale ||
+          a.artifactType == ArtifactType.ShipGear ||
+          a.artifactType == ArtifactType.ShipTitan
+      );
+      return ships;
   }
 
   public getPlanetWithId(planetId: LocationId | undefined): Planet | undefined {
@@ -1437,7 +1453,7 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getGameover$();
   }
 
-  public getWinners(): EthAddress[]{
+  public getWinners(): EthAddress[] {
     return this.gameManager.getWinners();
   }
 

@@ -2928,6 +2928,20 @@ class GameManager extends EventEmitter {
         throw new Error('attempted to move from a planet not owned by player');
       }
 
+      if (this.contractConstants.SPACE_JUNK_ENABLED && this.account) {
+        const toPlanetJunk = this.entityStore.getPlanetWithLocation(newLocation)?.spaceJunk;
+        const playerJunk = this.getPlayerSpaceJunk(this.account);
+        const junkLimit = this.getPlayerSpaceJunkLimit(this.account);
+        const fromPlanet = this.getPlanetWithId(from)
+        let energyAbandoning : number = 0;
+        if(abandoning && fromPlanet) {
+          energyAbandoning =  this.getDefaultSpaceJunkForPlanetLevel(fromPlanet?.planetLevel) || 0;
+        }
+        if(toPlanetJunk && playerJunk && junkLimit && (playerJunk + toPlanetJunk - energyAbandoning > junkLimit)) {
+          throw new Error('player reached junk limit');
+        }
+      }
+
       const getArgs = async (): Promise<unknown[]> => {
         const snarkArgs = await this.snarkHelper.getMoveArgs(
           oldX,

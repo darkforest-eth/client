@@ -8,7 +8,7 @@ import TutorialManager, {
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import { Icon, IconType } from '../Components/Icons';
-import { Red, White } from '../Components/Text';
+import { Gold, Red, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
 import { useBooleanSetting } from '../Utils/SettingsHooks';
@@ -19,27 +19,8 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
 
   if (tutorialState === TutorialState.None) {
     return (
-      <div className='tutintro'>
-        Welcome to the universe of <White>DARK FOREST: <Red>ARENA</Red></White>!. 
-        <br/>
-        We have designed this modified version of Dark Forest to be fast-paced and high-action.
-        We hope it will attract a new type of player who wants the fun of Dark Forest in casual and non-technical setting.
-        <br/> 
-        Would you like to play the tutorial?
-        <div>
-          <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.None)}>
-            Yes
-          </Btn>
-          <Btn className='btn' onClick={() => tutorialManager.complete()}>
-            No
-          </Btn>
-        </div>
-      </div>
-    );
-  } else if (tutorialState === TutorialState.HomePlanet) {
-    return (
       <div>
-        Welcome to the universe.
+        Welcome to the Dark Forest tutorial!
         <br />
         <br />
         <White>Click your home planet to learn more.</White>
@@ -48,8 +29,8 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   } else if (tutorialState === TutorialState.SendFleet) {
     return (
       <div>
-        Well done! In the Selected Planet pane, you'll see more information about your planet. This
-        pane displays quick information about your planet and the ability to send resources.
+        Well done! This pane displays quick information about your planet and the ability to send resources.
+        Your planet uses <White>energy</White> to capture nearby planets. You can use <Gold>silver</Gold> for upgrades.
         <br />
         <br />
         <White>Try sending energy to another planet.</White> You can click and drag to look for
@@ -58,10 +39,13 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
     );
   } else if (tutorialState === TutorialState.SpaceJunk) {
     return (
-      <div>
-        When you sent energy to a planet you accumulated some <White>Space Junk</White>. Sending
-        energy to planets that no one has moved to yet will give you junk. You are not allowed to
-        take on more junk than your maximum limit and will be unable to make moves.
+      <div><p>
+        When you send planet you accumulate <White>Space Junk</White>. Once you hit the Space Junk limit, you 
+        won't be able to move to new planets. 
+        </p>
+        <p>
+          To reduce your space junk, <Red>Abandon</Red> planets and keep expanding!
+        </p>
         <br />
         <br />
         Take a look at the top of the screen to see you current and maximum{' '}
@@ -243,12 +227,12 @@ const StyledTutorialPane = styled.div<{ visible: boolean }>`
   }
 `;
 
-export function TutorialPane({ tutorialHook }: { tutorialHook: Hook<boolean> }) {
+export function TutorialPane({ tutorialHook }: { tutorialHook: boolean }) {
   const uiManager = useUIManager();
   const tutorialManager = TutorialManager.getInstance(uiManager);
 
   const [tutorialState, setTutorialState] = useState<TutorialState>(TutorialState.None);
-  const [tutorialOpen] = tutorialHook;
+  const tutorialOpen = tutorialHook;
   const [completed, setCompleted] = useBooleanSetting(uiManager, Setting.TutorialCompleted);
 
   // sync tutorial state
