@@ -7,7 +7,7 @@ import { Btn } from '../Components/Btn';
 import { Section, SectionHeader, Spacer } from '../Components/CoreUI';
 import { DarkForestTextInput, TextInput } from '../Components/Input';
 import { Slider } from '../Components/Slider';
-import { Green, Red } from '../Components/Text';
+import { Green, Red, Subber } from '../Components/Text';
 import Viewport, { getDefaultScroll } from '../Game/Viewport';
 import { useAccount, useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';
@@ -305,8 +305,13 @@ export function SettingsPane({
 
         <Section>
           <SectionHeader>Change RPC Endpoint</SectionHeader>
-          <Spacer height={8} />
           Current RPC Endpoint: {rpcUrl}
+          <Spacer height={8} />
+          Official Endpoints:
+          <Spacer height={4} />
+          <Subber>HTTP Endpoint: https://optimism.gnosischain.com/</Subber>
+          <Spacer height={4} />
+          <Subber>WSS  Endpoint: wss://optimism.gnosischain.com/wss</Subber>
           <Spacer height={8} />
           <TextInput
             value={rpcUrl}
