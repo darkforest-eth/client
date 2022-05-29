@@ -18,9 +18,9 @@ import {
   WorldCoords,
   WorldLocation
 } from '@darkforest_eth/types';
-import { BigNumberish } from 'ethers';
 import { LobbyPlanet } from '../../Frontend/Panes/Lobbies/LobbiesUtils';
 import { LobbyInitializers } from '../../Frontend/Panes/Lobbies/Reducer';
+import { lobbyPlanetsToInitPlanets, lobbyPlanetToInitPlanet } from '../../Frontend/Utils/helpers';
 import { ContractsAPI, makeContractsAPI } from '../GameLogic/ContractsAPI';
 
 export type CreatePlanetData = {
@@ -97,19 +97,8 @@ export class LobbyAdminTools {
   }
 
   async createPlanet(planet: LobbyPlanet, initializers: LobbyInitializers) {
-    const planetData = this.generatePlanetData(planet, initializers);
-    const locNum = planetData.location as BigNumberish;
-
     const args = Promise.resolve([
-      {
-        location: locNum,
-        perlin: planetData.perlinValue,
-        level: planet.level,
-        planetType: planet.planetType,
-        requireValidLocationId: false,
-        isTargetPlanet: planet.isTargetPlanet,
-        isSpawnPlanet: planet.isSpawnPlanet,
-      },
+      lobbyPlanetToInitPlanet(planet, initializers)
     ]);
 
     const txIntent: UnconfirmedCreateArenaPlanet = {
@@ -224,43 +213,9 @@ export class LobbyAdminTools {
 
   async bulkCreateAndReveal(planets: LobbyPlanet[], initializers: LobbyInitializers) {
     // make create Planet args
-    const createData = planets.map((p) => {
-      const planetData = this.generatePlanetData(p, initializers);
-      return {
-        location: planetData.location,
-        perlin: planetData.perlinValue,
-        level: p.level,
-        planetType: p.planetType,
-        requireValidLocationId: false,
-        isTargetPlanet: p.isTargetPlanet,
-        isSpawnPlanet: p.isSpawnPlanet,
-      };
-    });
+    const createData = lobbyPlanetsToInitPlanets(planets, initializers);
 
-    const revealData = await Promise.all(
-      planets.map(async (p) => {
-        const revealArgs = await this.makeRevealProof(
-          p.x,
-          p.y,
-          initializers.PLANETHASH_KEY,
-          initializers.SPACETYPE_KEY,
-          initializers.PERLIN_LENGTH_SCALE,
-          initializers.PERLIN_MIRROR_X,
-          initializers.PERLIN_MIRROR_Y,
-          initializers.DISABLE_ZK_CHECKS,
-          initializers.PLANET_RARITY
-        );
-
-        return {
-          _a: revealArgs[0],
-          _b: revealArgs[1],
-          _c: revealArgs[2],
-          _input: revealArgs[3],
-        };
-      })
-    );
-
-    const args = Promise.resolve([createData, revealData]);
+    const args = Promise.resolve([createData]);
     const txIntent = {
       methodName: 'bulkCreateAndReveal' as ContractMethodName,
       contract: this.contract.contract,

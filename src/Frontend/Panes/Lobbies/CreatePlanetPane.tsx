@@ -57,7 +57,6 @@ const defaultPlanet: LobbyPlanet = {
   isSpawnPlanet: false,
 };
 
-
 const planetTypeNames = ['Planet', 'Asteroid Field', 'Foundry', 'Spacetime Rip', 'Quasar'];
 export function CreatePlanetPane({
   config: config,
@@ -111,7 +110,7 @@ export function CreatePlanetPane({
               headers={headers}
               columns={columns}
               alignments={alignments}
-              itemsPerPage = {5}
+              itemsPerPage={5}
             />
           </TableContainer>
         </Row>
@@ -226,7 +225,7 @@ export function CreatePlanetPane({
       content = (
         <SelectFrom
           wide={false}
-          style = {{padding: '5px'}}
+          style={{ padding: '5px' }}
           values={planetTypeNames}
           labels={planetTypeNames}
           value={planetTypeNames[planet.planetType]}
@@ -331,24 +330,27 @@ export function CreatePlanetPane({
     <>
       {config.ADMIN_CAN_ADD_PLANETS.displayValue ? (
         <>
-          <StageContainer>
-            <Row>
-              <span>Stage Custom Planets</span>
-              <div style = {{display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <Button style={jcFlexEnd} onClick={mirrorPlanetX}>
-                  {mirrorX}
-                </Button>
-                <Button style={jcFlexEnd} onClick={mirrorPlanetY}>
-                  {mirrorY}
-                </Button>
-                <Btn style={jcFlexEnd} onClick={() => stagePlanet()}>
-                  Stage Planet
-                </Btn>
-              </div>
-            </Row>
-            {lobbyPlanetElems}
-          </StageContainer>
-
+          {config.NO_ADMIN.displayValue && lobbyAdminTools ? (
+            <Sub>You cannot stage planets after universe creation if admin disabled.</Sub>
+          ) : (
+            <StageContainer>
+              <Row>
+                <span>Stage Custom Planets</span>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <Button style={jcFlexEnd} onClick={mirrorPlanetX}>
+                    {mirrorX}
+                  </Button>
+                  <Button style={jcFlexEnd} onClick={mirrorPlanetY}>
+                    {mirrorY}
+                  </Button>
+                  <Btn style={jcFlexEnd} onClick={() => stagePlanet()}>
+                    Stage Planet
+                  </Btn>
+                </div>
+              </Row>
+              {lobbyPlanetElems}
+            </StageContainer>
+          )}
           <Row>
             <Warning>{config.ADMIN_PLANETS.warning}</Warning>
             <Warning>{error}</Warning>

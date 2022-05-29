@@ -119,6 +119,8 @@ const onePlayerRace: LobbyInitializers = {
     },
   ],
   TOKEN_MINT_END_TIMESTAMP: 1682435240778,
+  NO_ADMIN: false,
+  INIT_PLANETS: [],
   WHITELIST: [],
 };
 
@@ -265,6 +267,8 @@ const fourPlayerBattle: LobbyInitializers = {
     },
   ],
   TOKEN_MINT_END_TIMESTAMP: 1682174749561,
+  NO_ADMIN: false,
+  INIT_PLANETS: [],
   WHITELIST: [],
 };
 
@@ -395,6 +399,8 @@ const sprint: LobbyInitializers = {
     },
   ],
   TOKEN_MINT_END_TIMESTAMP: 1682435240778,
+  NO_ADMIN: false,
+  INIT_PLANETS: [],
   WHITELIST: [],
 };
 

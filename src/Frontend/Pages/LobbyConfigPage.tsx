@@ -1,12 +1,14 @@
 import { INIT_ADDRESS } from '@darkforest_eth/contracts';
 import initContractAbiUrl from '@darkforest_eth/contracts/abis/DFArenaInitialize.json';
+import { DFArenaInitialize } from '@darkforest_eth/contracts/typechain';
 import { EthConnection } from '@darkforest_eth/network';
 import { ContractMethodName, EthAddress, UnconfirmedCreateLobby } from '@darkforest_eth/types';
 import { Contract } from 'ethers';
-import _ from 'lodash';
+import _, { initial } from 'lodash';
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ContractsAPI } from '../../Backend/GameLogic/ContractsAPI';
+import { loadInitContract } from '../../Backend/Network/Blockchain';
 import { LobbyAdminTools } from '../../Backend/Utils/LobbyAdminTools';
 import { ConfigurationPane } from '../Panes/Lobbies/ConfigurationPane';
 import { MinimapPane } from '../Panes/Lobbies/MinimapPane';
@@ -17,7 +19,7 @@ import {
   lobbyConfigReducer,
   LobbyInitializers,
 } from '../Panes/Lobbies/Reducer';
-import { getLobbyCreatedEvent } from '../Utils/helpers';
+import { getLobbyCreatedEvent, lobbyPlanetsToInitPlanets } from '../Utils/helpers';
 
 export function LobbyConfigPage({
   contract,
@@ -39,10 +41,24 @@ export function LobbyConfigPage({
 
   const history = useHistory();
   async function createLobby(config: LobbyInitializers) {
-    const initializers = { ...startingConfig, ...config };
-    const InitABI = await fetch(initContractAbiUrl).then((r) => r.json());
+    var initializers = { ...startingConfig, ...config };
+    if (initializers.ADMIN_PLANETS) {
+      initializers.INIT_PLANETS = lobbyPlanetsToInitPlanets(
+        initializers.ADMIN_PLANETS,
+        initializers
+      );
+    }
+    /* Don't want to submit ADMIN_PLANET as initdata because they aren't used */
+    // @ts-expect-error The Operand of a delete must be optional
+    delete initializers.ADMIN_PLANETS;
+
+    console.log('initializers', initializers);
+    const initContract = await contract.ethConnection.loadContract<DFArenaInitialize>(
+      INIT_ADDRESS,
+      loadInitContract
+    );
     const artifactBaseURI = '';
-    const initInterface = Contract.getInterface(InitABI);
+    const initInterface = initContract.interface;
     const initAddress = INIT_ADDRESS;
     const initFunctionCall = initInterface.encodeFunctionData('init', [
       initializers.WHITELIST_ENABLED,

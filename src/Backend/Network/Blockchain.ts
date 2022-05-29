@@ -2,6 +2,7 @@
 import { NETWORK } from '@darkforest_eth/contracts';
 import diamondContractAbiUrl from '@darkforest_eth/contracts/abis/DarkForest.json';
 import faucetContractAbiUrl from '@darkforest_eth/contracts/abis/DFArenaFaucet.json';
+import initContractAbiUrl from '@darkforest_eth/contracts/abis/DFArenaInitialize.json';
 import { createContract, createEthConnection, EthConnection } from '@darkforest_eth/network';
 import type { Contract, providers, Wallet } from 'ethers';
 
@@ -30,6 +31,20 @@ export async function loadDiamondContract<T extends Contract>(
 
   return createContract<T>(address, abi, provider, signer);
 }
+
+/**
+ * Loads the init contract, which is responsible for initializing lobbies
+ */
+ export async function loadInitContract<T extends Contract>(
+  address: string,
+  provider: providers.JsonRpcProvider,
+  signer?: Wallet
+): Promise<T> {
+  const abi = await fetch(initContractAbiUrl).then((r) => r.json());
+
+  return createContract<T>(address, abi, provider, signer);
+}
+
 
 export function getEthConnection(): Promise<EthConnection> {
   const isProdNetwork = (NETWORK.toString() !== 'localhost' && NETWORK.toString() !== 'hardhat');

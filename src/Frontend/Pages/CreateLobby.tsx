@@ -77,6 +77,8 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
               config.ARTIFACT_POINT_VALUES[ArtifactRarity.Legendary],
               config.ARTIFACT_POINT_VALUES[ArtifactRarity.Mythic],
             ],
+            INIT_PLANETS: [],
+            NO_ADMIN: false,
             WHITELIST: []
           });
         })

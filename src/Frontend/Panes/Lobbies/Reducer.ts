@@ -119,7 +119,7 @@ export type LobbyConfigAction =
       type: 'ADMIN_PLANETS';
       value: LobbyPlanet | undefined;
       index: number;
-      number? : number;
+      number?: number;
     }
   | { type: 'MANUAL_SPAWN'; value: Initializers['MANUAL_SPAWN'] | undefined }
   | {
@@ -144,11 +144,12 @@ export type LobbyConfigAction =
       type: 'WHITELIST';
       index: number;
       value: EthAddress | undefined;
-    };
+    }
+  | { type: 'NO_ADMIN'; value: Initializers['NO_ADMIN'] | undefined };
 
 // TODO(#2328): WHITELIST_ENABLED should just be on Initializers
 export type LobbyInitializers = Initializers & {
-  WHITELIST_ENABLED: boolean | undefined;
+  WHITELIST_ENABLED: boolean;
   ADMIN_PLANETS: LobbyPlanet[];
   WHITELIST: EthAddress[];
 };
@@ -384,6 +385,10 @@ export function lobbyConfigReducer(state: LobbyConfigState, action: LobbyAction)
     }
     case 'WHITELIST': {
       update = ofWhitelist(action, state);
+      break;
+    }
+    case 'NO_ADMIN': {
+      update = ofBoolean(action, state);
       break;
     }
     default: {
@@ -919,8 +924,19 @@ export function lobbyConfigInit(startingConfig: LobbyInitializers) {
         };
         break;
       }
+      case 'NO_ADMIN': {
+        const defaultValue = startingConfig[key];
+        state[key] = {
+          currentValue: defaultValue,
+          displayValue: defaultValue,
+          defaultValue,
+          warning: undefined,
+        };
+        break;
+      }
       default: {
         // https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking
+        // @ts-expect-error Type 'string' is not assignable to type 'never'
         const _exhaustive: never = key;
         // Just ignore any values that we don't know about
         break;
@@ -2141,19 +2157,14 @@ export function ofWhitelist(
     };
   }
 
-  if (
-    value === undefined 
-  ) {
+  if (value === undefined) {
     return {
       ...state[type],
       warning: 'Address cannot be undefined',
     };
   }
 
-  if (
-    value.slice(0 , 2) !== "0x" ||
-    value.length !== 42 
-  ) {
+  if (value.slice(0, 2) !== '0x' || value.length !== 42) {
     return {
       ...state[type],
       warning: 'Improperly formatted address',
@@ -2164,7 +2175,7 @@ export function ofWhitelist(
   const displayValue = [...prevDisplayValue];
 
   if (currentValue[index]) {
-    console.log(`deleting ${currentValue[index]}`)
+    console.log(`deleting ${currentValue[index]}`);
     currentValue.splice(index, 1);
     displayValue.splice(index, 1);
 
@@ -2176,7 +2187,7 @@ export function ofWhitelist(
     };
   }
 
-  if(currentValue.find(v => value == v)) {
+  if (currentValue.find((v) => value == v)) {
     return {
       ...state[type],
       warning: 'Address already staged',

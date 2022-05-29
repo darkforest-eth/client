@@ -455,6 +455,9 @@ export class ContractsAPI extends EventEmitter {
       MODIFIERS,
       SPACESHIPS,
       START_TIME,
+      NO_ADMIN,
+      CONFIG_HASH,
+      INIT_PLANET_HASHES
     } = await this.makeCall(this.contract.getArenaConstants);
 
     const TOKEN_MINT_END_SECONDS = (
@@ -593,6 +596,9 @@ export class ContractsAPI extends EventEmitter {
       ],
       SPACESHIPS: [SPACESHIPS[0], SPACESHIPS[1], SPACESHIPS[2], SPACESHIPS[3], SPACESHIPS[4]],
       START_TIME: START_TIME.toNumber(),
+      NO_ADMIN: NO_ADMIN,
+      INIT_PLANET_HASHES: INIT_PLANET_HASHES,
+      CONFIG_HASH: CONFIG_HASH,
     };
 
     return constants;
