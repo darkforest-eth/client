@@ -459,7 +459,6 @@ export class ContractsAPI extends EventEmitter {
       CLAIM_VICTORY_ENERGY_PERCENT,
       MODIFIERS,
       SPACESHIPS,
-      START_TIME,
       NO_ADMIN,
       CONFIG_HASH,
       INIT_PLANET_HASHES
@@ -600,7 +599,6 @@ export class ContractsAPI extends EventEmitter {
         MODIFIERS[7].toNumber(),
       ],
       SPACESHIPS: [SPACESHIPS[0], SPACESHIPS[1], SPACESHIPS[2], SPACESHIPS[3], SPACESHIPS[4]],
-      START_TIME: START_TIME.toNumber(),
       NO_ADMIN: NO_ADMIN,
       INIT_PLANET_HASHES: INIT_PLANET_HASHES,
       CONFIG_HASH: CONFIG_HASH,
