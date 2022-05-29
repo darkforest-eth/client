@@ -237,6 +237,12 @@ class GameManager extends EventEmitter {
 
   private paused: boolean;
 
+    /**
+   * @todo change this to the correct timestamp each round.
+   */
+     private startTime: number | undefined;
+
+
   /**
    * @todo change this to the correct timestamp each round.
    */
@@ -393,6 +399,7 @@ class GameManager extends EventEmitter {
     gameover: boolean,
     winners: EthAddress[],
     spectator: boolean,
+    startTime: number | undefined,
     endTime : number | undefined,
   ) {
     super();
@@ -501,6 +508,7 @@ class GameManager extends EventEmitter {
     this.snarkHelper = snarkHelper;
     this.useMockHash = useMockHash;
     this.paused = paused;
+    this.startTime = startTime;
     this.endTimeSeconds = endTime;
 
     this.spectator = spectator;
@@ -709,6 +717,7 @@ class GameManager extends EventEmitter {
       initialState.gameover,
       initialState.winners,
       spectator,
+      initialState.startTime,
       initialState.endTime
     );
 
@@ -889,6 +898,9 @@ class GameManager extends EventEmitter {
       .on(ContractsAPIEvent.Gameover, async () => {
         gameManager.setGameover(true);
         gameManager.gameover$.publish(true);
+      })
+      .on(ContractsAPIEvent.GameStarted, async (timestamp) => {
+        gameManager.startTime = timestamp;
       });
 
     const unconfirmedTxs = await persistentChunkStore.getUnconfirmedSubmittedEthTxs();
@@ -1695,6 +1707,9 @@ class GameManager extends EventEmitter {
   private async setGameover(gameover: boolean) {
     this.gameover = gameover;
     this.winners = await this.contractsAPI.getWinners();
+    if(!this.startTime) {
+      await this.contractsAPI.getStartTime();
+    }
     this.endTimeSeconds = (await this.contractsAPI.getEndTime());
   }
 
@@ -3637,14 +3652,18 @@ class GameManager extends EventEmitter {
   }
 
   public gameDuration() {
-    if(this.endTimeSeconds) {
-      return this.endTimeSeconds - this.contractConstants.START_TIME;
+    if(!this.startTime){
+      // this.startTime = await this.contractsAPI.getStartTime();
+      if(!this.startTime) return 0;
     }
-    return Date.now() / 1000 - this.contractConstants.START_TIME;
+    if(this.endTimeSeconds) {
+      return this.endTimeSeconds - this.startTime;
+    }
+    return Date.now() / 1000 - this.startTime;
   }
 
-  public startTime() {
-      return this.contractConstants.START_TIME;
+  public getStartTime() {
+      return this.startTime;
   }
 
   public claimVictoryPercentage() {
@@ -3697,6 +3716,11 @@ class GameManager extends EventEmitter {
 
   public getPaused$(): Monomitter<boolean> {
     return this.paused$;
+  }
+
+  public getGameStarted(): boolean {
+    if(this.getStartTime() !== undefined) return true;
+    return false;
   }
 
   public getGameover(): boolean {

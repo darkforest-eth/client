@@ -59,7 +59,8 @@ export const enum ContractEvent {
   AdminGiveSpaceship = 'AdminGiveSpaceship',
   PauseStateChanged = 'PauseStateChanged',
   LobbyCreated = 'LobbyCreated',
-  Gameover = 'Gameover'
+  Gameover = 'Gameover',
+  GameStarted = 'GameStarted',
 }
 
 export const enum ContractsAPIEvent {
@@ -106,7 +107,8 @@ export const enum ContractsAPIEvent {
   TxCancelled = 'TxCancelled',
   PlanetTransferred = 'PlanetTransferred',
   LobbyCreated = 'LobbyCreated',
-  Gameover = "Gameover"
+  Gameover = 'Gameover',
+  GameStarted = 'GameStarted',
 }
 
 // planet locationID(BigInt), branch number

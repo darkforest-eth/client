@@ -305,6 +305,7 @@ export function SettingsPane({
 
         <Section>
           <SectionHeader>Change RPC Endpoint</SectionHeader>
+
           Current RPC Endpoint: {rpcUrl}
           <Spacer height={8} />
           Official Endpoints:
@@ -313,6 +314,7 @@ export function SettingsPane({
           <Spacer height={4} />
           <Subber>WSS  Endpoint: wss://optimism.gnosischain.com/wss</Subber>
           <Spacer height={8} />
+
           <TextInput
             value={rpcUrl}
             onChange={(e: Event & React.ChangeEvent<DarkForestTextInput>) =>
