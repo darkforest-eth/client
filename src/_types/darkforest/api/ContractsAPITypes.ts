@@ -332,6 +332,8 @@ export interface ContractConstants {
     boolean,
     boolean
   ];
+
+  RANDOM_ARTIFACTS: boolean;
   NO_ADMIN: boolean;
   INIT_PLANET_HASHES: string[];
   CONFIG_HASH: string;

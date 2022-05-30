@@ -130,6 +130,10 @@ export type LobbyConfigAction =
       type: 'CLAIM_VICTORY_ENERGY_PERCENT';
       value: Initializers['CLAIM_VICTORY_ENERGY_PERCENT'] | undefined;
     }
+    | {
+      type: 'RANDOM_ARTIFACTS';
+      value: Initializers['RANDOM_ARTIFACTS'] | undefined;
+    }
   | {
       type: 'MODIFIERS';
       index: number;
@@ -358,6 +362,10 @@ export function lobbyConfigReducer(state: LobbyConfigState, action: LobbyAction)
     }
     case 'CLAIM_VICTORY_ENERGY_PERCENT': {
       update = ofPositiveInteger(action, state);
+      break;
+    }
+    case 'RANDOM_ARTIFACTS': {
+      update = ofBoolean(action, state);
       break;
     }
     case 'ADMIN_PLANETS': {
@@ -882,6 +890,16 @@ export function lobbyConfigInit(startingConfig: LobbyInitializers) {
         break;
       }
       case 'CLAIM_VICTORY_ENERGY_PERCENT': {
+        const defaultValue = startingConfig[key];
+        state[key] = {
+          currentValue: defaultValue,
+          displayValue: defaultValue,
+          defaultValue,
+          warning: undefined,
+        };
+        break;
+      }
+      case 'RANDOM_ARTIFACTS': {
         const defaultValue = startingConfig[key];
         state[key] = {
           currentValue: defaultValue,

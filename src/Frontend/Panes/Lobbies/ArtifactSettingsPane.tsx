@@ -1,6 +1,6 @@
 import { ArtifactRarity } from '@darkforest_eth/types';
 import React from 'react';
-import { DarkForestNumberInput, NumberInput } from '../../Components/Input';
+import { Checkbox, DarkForestCheckbox, DarkForestNumberInput, NumberInput } from '../../Components/Input';
 import { ArtifactRarityLabel } from '../../Components/Labels/ArtifactLabels';
 import { Row } from '../../Components/Row';
 import { LobbiesPaneProps, Warning } from './LobbiesUtils';
@@ -35,6 +35,16 @@ const pointsRowStyle = { gap: '8px' } as CSSStyleDeclaration & React.CSSProperti
 export function ArtifactSettingsPane({ config, onUpdate }: LobbiesPaneProps) {
   return (
     <>
+          <Row>
+        <Checkbox
+          label='Artifacts are created randomly?'
+          checked={config.RANDOM_ARTIFACTS.displayValue}
+          onChange={(e: Event & React.ChangeEvent<DarkForestCheckbox>) =>
+            onUpdate({ type: 'RANDOM_ARTIFACTS', value: e.target.checked })
+          }
+        />
+      </Row>
+      
       <Row>
         <span>Photoid Cannon activation delay (in seconds)</span>
         <NumberInput

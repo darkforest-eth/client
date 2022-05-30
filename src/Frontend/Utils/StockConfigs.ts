@@ -100,6 +100,7 @@ const onePlayerRace: LobbyInitializers = {
   SPACESHIPS: [true, true, true, true, true],
   WHITELIST_ENABLED: false,
   START_PAUSED: false,
+  RANDOM_ARTIFACTS: false,
   ADMIN_PLANETS: [
     {
       x: -1950,
@@ -224,6 +225,7 @@ const fourPlayerBattle: LobbyInitializers = {
   SPACESHIPS: [true, true, false, true, false],
   WHITELIST_ENABLED: false,
   START_PAUSED: false,
+  RANDOM_ARTIFACTS: true,
   ADMIN_PLANETS: [
     {
       x: -5500,
@@ -372,6 +374,7 @@ const sprint: LobbyInitializers = {
   SPACESHIPS: [true, true, false, true, true],
   WHITELIST_ENABLED: false,
   START_PAUSED: false,
+  RANDOM_ARTIFACTS: true,
   ADMIN_PLANETS: [
     {
       x: -1000,
