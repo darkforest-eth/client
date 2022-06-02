@@ -899,8 +899,8 @@ class GameManager extends EventEmitter {
         gameManager.setGameover(true);
         gameManager.gameover$.publish(true);
       })
-      .on(ContractsAPIEvent.GameStarted, async (timestamp) => {
-        gameManager.startTime = timestamp;
+      .on(ContractsAPIEvent.GameStarted, async (player: EthAddress, startTime: number) => {
+        gameManager.startTime = startTime;
       });
 
     const unconfirmedTxs = await persistentChunkStore.getUnconfirmedSubmittedEthTxs();
@@ -3653,8 +3653,7 @@ class GameManager extends EventEmitter {
 
   public gameDuration() {
     if(!this.startTime){
-      // this.startTime = await this.contractsAPI.getStartTime();
-      if(!this.startTime) return 0;
+      return 0;
     }
     if(this.endTimeSeconds) {
       return this.endTimeSeconds - this.startTime;

@@ -474,6 +474,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
       if (contractAddress) {
         setStep(TerminalPromptStep.CONTRACT_SET);
       } else {
+
         const playerAddress = ethConnection?.getAddress();
         if (!playerAddress || !ethConnection) throw new Error('not logged in');
 
