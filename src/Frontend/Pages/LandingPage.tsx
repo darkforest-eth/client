@@ -1,6 +1,6 @@
 import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { address } from '@darkforest_eth/serde';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Btn } from '../Components/Btn';
@@ -110,15 +110,9 @@ export default function LandingPage() {
               <Btn size='large' onClick={() => history.push(`/arena/${defaultAddress}`)}>
                 Create Arena
               </Btn>
-              <Btn
-                size='large'
-                onClick={() =>
-                  window.open(
-                    `https://docs.google.com/forms/d/e/1FAIpQLSeYZJtgrw_er3xVzrD3O8bFR2NrhryTfR-ypJKFiR0WaEy8Ww/viewform`
-                  )
-                }
-              >
-                Give Feedback
+              <Btn size='large' style = {{borderColor: "red", color: "red"} as CSSStyleDeclaration & CSSProperties} onClick={() => history.push(`/play/`)}>
+
+                Solo Challenge
               </Btn>
 
             </ButtonWrapper>
