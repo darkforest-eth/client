@@ -253,7 +253,7 @@ function GrandPrix() {
           video tutorials
           </Link>
           , courtesy of {' '}
-          <Link to='https://twitter.com/moongate_io'>Moongate Guild</Link>
+          <Link to='https://twitter.com/moongate_io'>Moongate Guild</Link>.
 
           <br />
           <br />
@@ -262,7 +262,7 @@ function GrandPrix() {
           Discord
           </Link>
           {' '} and follow us on {' '}
-          <Link to='https://twitter.com/d_fdao'>Twitter</Link>
+          <Link to='https://twitter.com/d_fdao'>Twitter</Link>.
           <br />
           <br />
           Happy racing!
