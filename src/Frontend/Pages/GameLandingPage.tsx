@@ -101,7 +101,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
   const selectedAddress = params.get('account');
   const isLobby = contractAddress !== address(CONTRACT_ADDRESS);
   const CHUNK_SIZE = 5;
-  const config = stockConfig.competitive;
+  const config = stockConfig.competitive1;
   const defaultAddress = address(CONTRACT_ADDRESS);
 
   useEffect(() => {
@@ -1210,7 +1210,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
     });
     const playerAddress = ethConnection.getAddress();
 
-    var initializers = stockConfig.competitive;
+    var initializers = config;
     if (initializers.ADMIN_PLANETS) {
       initializers.INIT_PLANETS = lobbyPlanetsToInitPlanets(
         initializers.ADMIN_PLANETS,
@@ -1220,6 +1220,8 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
     /* Don't want to submit ADMIN_PLANET as initdata because they aren't used */
     // @ts-expect-error The Operand of a delete must be optional
     delete initializers.ADMIN_PLANETS;
+
+    console.log('config', initializers);
 
     const initContract = await ethConnection.loadContract<DFArenaInitialize>(
       INIT_ADDRESS,
@@ -1246,6 +1248,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
 
     const lobbyReceipt = await tx.confirmedPromise;
     const { owner, lobby } = getLobbyCreatedEvent(lobbyReceipt, contractsAPI.contract);
+    console.log(`created arena with ${lobbyReceipt.gasUsed} gas`);
 
     if (owner === playerAddress) {
       history.push({ pathname: `${match.path}${lobby}`, state: { contract: lobby } });
