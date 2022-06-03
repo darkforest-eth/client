@@ -18,7 +18,13 @@ const LOCATION_ID_UB = bigInt(
   '21888242871839275222246405745257275088548364400416034343698204186575808495617'
 );
 
-export { MIN_CHUNK_SIZE, MAX_CHUNK_SIZE, LOCATION_ID_UB };
+const competitiveConfig = '0x8e2603a6a33d7daa084d3265b1ba70413951bced3c283739990de55ad7679975';
+
+const roundEndTimestamp = '2022-06-07T00:00:00.000Z';
+
+const roundStartTimestamp = '2022-06-05T00:00:00.000Z';
+
+export { MIN_CHUNK_SIZE, MAX_CHUNK_SIZE, LOCATION_ID_UB,roundEndTimestamp,roundStartTimestamp, competitiveConfig };
 
 export const enum DFZIndex {
   MenuBar = 4,

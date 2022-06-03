@@ -16,6 +16,7 @@ import { ModalToggleButton } from './ModalIcon';
 import { NetworkHealth } from './NetworkHealth';
 import { Paused } from './Paused';
 import { Gameover } from './Gameover';
+import { Timer } from './Timer';
 
 const TopBarContainer = styled.div`
   z-index: ${DFZIndex.MenuBar};
@@ -232,6 +233,7 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: Hook<boolean>
         )}
       </AlignCenterHorizontally>
       <NetworkHealth />
+      <Timer/>
       <Gameover/>
       <Paused />
     </TopBarContainer>

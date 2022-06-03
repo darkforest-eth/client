@@ -99,7 +99,7 @@ import delay from 'delay';
 import { BigNumber, Contract, ContractInterface, constants, providers } from 'ethers';
 import { EventEmitter } from 'events';
 import NotificationManager from '../../Frontend/Game/NotificationManager';
-import { MIN_CHUNK_SIZE } from '../../Frontend/Utils/constants';
+import { competitiveConfig, MIN_CHUNK_SIZE } from '../../Frontend/Utils/constants';
 import { Diff, generateDiffEmitter, getDisposableEmitter } from '../../Frontend/Utils/EmitterUtils';
 import {
   getBooleanSetting,
@@ -1708,7 +1708,7 @@ class GameManager extends EventEmitter {
     this.gameover = gameover;
     this.winners = await this.contractsAPI.getWinners();
     if(!this.startTime) {
-      await this.contractsAPI.getStartTime();
+      this.startTime = await this.contractsAPI.getStartTime();
     }
     this.endTimeSeconds = (await this.contractsAPI.getEndTime());
   }
@@ -3732,6 +3732,10 @@ class GameManager extends EventEmitter {
 
   public getWinners(): EthAddress[] {
     return this.winners;
+  }
+
+  public isCompetitive(): boolean {
+    return this.contractConstants.CONFIG_HASH == competitiveConfig
   }
   
 }

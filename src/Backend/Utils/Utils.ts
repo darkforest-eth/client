@@ -2,6 +2,7 @@ import { formatNumber } from '@darkforest_eth/gamelogic';
 import { EthAddress, Planet, SpaceType, Upgrade, UpgradeBranchName } from '@darkforest_eth/types';
 import * as bigInt from 'big-integer';
 import { BigInteger } from 'big-integer';
+import { roundEndTimestamp, roundStartTimestamp } from '../../Frontend/Utils/constants';
 import { StatIdx } from '../../_types/global/GlobalTypes';
 
 export const ONE_DAY = 24 * 60 * 60 * 1000;
@@ -119,3 +120,11 @@ export const titleCase = (title: string): string =>
       return `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`;
     })
     .join(' ');
+
+export const isRoundOngoing = () : boolean => {
+  const roundStart = new Date(roundStartTimestamp).getTime();
+  
+  const roundEnd = new Date(roundEndTimestamp).getTime();
+  const now = Date.now();
+  return now > roundStart && now < roundEnd;
+}

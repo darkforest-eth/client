@@ -11,6 +11,8 @@ query {
 }
 `;
 
+const API_URL_GRAPH = 'https://graph-optimism.gnosischain.com/subgraphs/name/arena/test';
+
 export async function loadArenaLeaderboard(): Promise<ArenaLeaderboard> {
   const data = await fetchGQL(QUERY);
 
@@ -22,7 +24,7 @@ interface graphPlayer {
   winner: boolean;
 }
 
-async function fetchGQL(query: any, graphApiUrl = THEGRAPH_API_URL) {
+async function fetchGQL(query: any, graphApiUrl = API_URL_GRAPH) {
   const response = await fetch(graphApiUrl, {
     method: 'POST',
     body: JSON.stringify({ query }),

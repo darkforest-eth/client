@@ -3,13 +3,14 @@ import { address } from '@darkforest_eth/serde';
 import React, { CSSProperties } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { isRoundOngoing } from '../../Backend/Utils/Utils';
 import { Btn } from '../Components/Btn';
 import { EmSpacer, Link, Spacer, Title } from '../Components/CoreUI';
 import { EmailCTA, EmailCTAMode } from '../Components/Email';
 import { Modal } from '../Components/Modal';
-import { HideSmall, Red, Text, White } from '../Components/Text';
+import { Red, White, Text } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { ArenaLeaderboardElt } from '../Views/ArenaLeaderboard';
+import { ArenaLeaderboardDisplay } from '../Views/ArenaLeaderboard';
 import { LandingPageRoundArt } from '../Views/LandingPageRoundArt';
 
 export const enum LandingPageZIndex {
@@ -32,9 +33,9 @@ const defaultAddress = address(CONTRACT_ADDRESS);
 
 const ButtonWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   gap: 8px;
-  flex-direction: row;
 
   @media only screen and (max-device-width: 1000px) {
     grid-template-columns: auto;
@@ -98,36 +99,33 @@ export default function LandingPage() {
 
             <LandingPageRoundArt />
 
-            <p>
-              <White>Dark Forest</White> <Text>zkSNARK space warfare</Text>
-              <br />
-              <Red>Battle Arena</Red>
-            </p>
-
             <Spacer height={16} />
 
             <ButtonWrapper>
+              <Btn
+                size='large'
+                disabled={!isRoundOngoing()}
+                style={{ borderColor: 'red', color: 'red' } as CSSStyleDeclaration & CSSProperties}
+                onClick={() => history.push(`/play/`)}
+              >
+                Race the Grand Prix
+              </Btn>
               <Btn size='large' onClick={() => history.push(`/arena/${defaultAddress}`)}>
-                Create Arena
+                Create Custom Arena
               </Btn>
-              <Btn size='large' style = {{borderColor: "red", color: "red"} as CSSStyleDeclaration & CSSProperties} onClick={() => history.push(`/play/`)}>
-
-                Solo Challenge
-              </Btn>
-
             </ButtonWrapper>
           </Header>
             
-          <Spacer height={32} />
-          <EmailWrapper>
+          {/* <Spacer height={32} /> */}
+          {/* <EmailWrapper>
             <EmailCTA mode={EmailCTAMode.SUBSCRIBE} />
-          </EmailWrapper>
+          </EmailWrapper> */}
         </MainContentContainer>
 
         <Spacer height={28} />
 
         {/* <LeadboardDisplay /> */}
-        <ArenaLeaderboardElt/>
+        <ArenaLeaderboardDisplay />
 
         <Spacer height={256} />
       </Page>

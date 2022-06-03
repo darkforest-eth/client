@@ -101,7 +101,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
   const selectedAddress = params.get('account');
   const isLobby = contractAddress !== address(CONTRACT_ADDRESS);
   const CHUNK_SIZE = 5;
-  const config = stockConfig.competitive1;
+  const config = stockConfig.competitive;
   const defaultAddress = address(CONTRACT_ADDRESS);
 
   useEffect(() => {
