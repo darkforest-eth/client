@@ -115,7 +115,11 @@ export default function LandingPage() {
               </Btn>
             </ButtonWrapper>
           </Header>
-            
+
+          <Spacer height={32} />
+          <Link to='https://medium.com/dfdao/dark-forest-arena-grand-prix-f761896a752e'>
+            🏎 Grand Prix Info 🏎
+          </Link>
           {/* <Spacer height={32} /> */}
           {/* <EmailWrapper>
             <EmailCTA mode={EmailCTAMode.SUBSCRIBE} />
