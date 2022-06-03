@@ -54,7 +54,7 @@ export default function LandingPage() {
   return (
     <>
       <PrettyOverlayGradient />
-      {/* <Hiring /> */}
+      <GrandPrix />
 
       <Page>
         <OnlyMobile>
@@ -117,9 +117,9 @@ export default function LandingPage() {
           </Header>
 
           <Spacer height={32} />
-          <Link to='https://medium.com/dfdao/dark-forest-arena-grand-prix-f761896a752e'>
+          {/* <Link to='https://medium.com/dfdao/dark-forest-arena-grand-prix-f761896a752e'>
             🏎 Grand Prix Info 🏎
-          </Link>
+          </Link> */}
           {/* <Spacer height={32} /> */}
           {/* <EmailWrapper>
             <EmailCTA mode={EmailCTAMode.SUBSCRIBE} />
@@ -232,29 +232,40 @@ export const LinkContainer = styled.div`
   }
 `;
 
-function Hiring() {
+function GrandPrix() {
   return (
     <HideOnMobile>
       <Modal contain={['top', 'left', 'right']} initialX={50} initialY={50}>
-        <Title slot='title'>Dark Forest is Hiring!</Title>
+        <Title slot='title'>🏎 Grand Prix Info 🏎</Title>
         <div style={{ maxWidth: '300px', textAlign: 'justify' }}>
-          We are looking for experienced full stack and solidity developers to join our team! If you
-          like what you see,{' '}
-          <Link to='https://docs.google.com/forms/d/e/1FAIpQLSdaWvjxX4TrDDLidPXtgk6UW3rC082rpvi3AIPkCPxAahg_rg/viewform?usp=sf_link'>
-            consider applying
-          </Link>
-          . If you know someone who you think would be a great fit for our team,{' '}
-          <Link to='https://docs.google.com/forms/d/e/1FAIpQLScku_bQDbkPqpHrwBzOBfQ4SV6Nw6Tgxi6zWQL8Bb0olyBE3w/viewform?usp=sf_link'>
-            please refer them here
+          Race in the Grand Prix for a $100 prize and NFT trophies! 
+          
+          Here is more {' '}
+          <Link to='https://medium.com/dfdao/dark-forest-arena-grand-prix-f761896a752e'>
+          rules and info
           </Link>
           .
           <br />
           <br />
-          Learn more about the role{' '}
-          <Link to='https://ivanchub.notion.site/Dark-Forest-is-Hiring-ad1f0cbe816640fb9b4c663dacaaca04'>
-            here
+
+          If you are new to Dark Forest, check out our {' '}
+          <Link to='https://www.youtube.com/watch?v=3a4i9IyfmBI&list=PLn4H2Bj-iklclFZW_YpKCQaTnBVaECLDK'>
+          video tutorials
           </Link>
-          .
+          , courtesy of {' '}
+          <Link to='https://twitter.com/moongate_io'>Moongate Guild</Link>
+
+          <br />
+          <br />
+          Come join the chat in{' '}
+          <Link to='https://discord.gg/aaHada53mQ'>
+          Discord
+          </Link>
+          {' '} and follow us on {' '}
+          <Link to='https://twitter.com/d_fdao'>Twitter</Link>
+          <br />
+          <br />
+          Happy racing!
         </div>
       </Modal>
     </HideOnMobile>
