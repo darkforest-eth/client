@@ -71,7 +71,7 @@ async function convertData(arenas: graphArena[]): Promise<Leaderboard> {
   for (const arena of arenas) {
     if (!arena.gameOver || !arena.endTime || !arena.duration || arena.startTime == 0) continue;
 
-    // if (roundEnd < arena.endTime || roundStart > arena.startTime) continue;
+    if (roundEnd < arena.endTime || roundStart > arena.startTime) continue;
     const creatorAddress = address(arena.creator);
     const entry = entries.find((p) => creatorAddress == p.ethAddress);
 
