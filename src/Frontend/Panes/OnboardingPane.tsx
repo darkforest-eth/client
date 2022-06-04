@@ -52,7 +52,12 @@ function OnboardMoney({ advance }: { advance: () => void }) {
   return (
     <StyledOnboardingContent>
       <p>
-        Welcome to <Green>Dark Forest Arena</Green>!
+        Welcome to <Green>Dark Forest Arena: Grand Prix</Green>!
+      </p>
+      <p>
+        Race against the clock to capture the Target Planet (it has a big target floating above it)
+        as fast as possible! The player with the fastest time after 48hrs will win XDAI and a trophy
+        🏆.
       </p>
       <p>
         We have initialized a{' '}

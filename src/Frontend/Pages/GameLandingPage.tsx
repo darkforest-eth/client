@@ -159,7 +159,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
       if (isLobby) {
         terminal.current?.newline();
         terminal.current?.printElement(
-          <MythicLabelText text={`You are joining a Dark Forest lobby`} />
+          <MythicLabelText text={`You are joining a Dark Forest Arena`} />
         );
         terminal.current?.newline();
         terminal.current?.newline();
