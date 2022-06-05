@@ -11,7 +11,7 @@ import { getAllTwitters } from './UtilityServerAPI';
 
 const QUERY = `
 query {
-  arenas(where: {configHash: "${competitiveConfig}"}) {
+  arenas(first:1000, where: {configHash: "${competitiveConfig}"}) {
     id
     startTime
     creator
