@@ -2,7 +2,7 @@ import { Leaderboard } from '@darkforest_eth/types';
 
 export async function loadLeaderboard(): Promise<Leaderboard> {
   if (!process.env.DF_WEBSERVER_URL) {
-    return { entries: [] };
+    return { entries: [], length: 0 };
   }
 
   const address = `${process.env.DF_WEBSERVER_URL}/leaderboard`;

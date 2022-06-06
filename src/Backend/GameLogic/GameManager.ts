@@ -824,6 +824,9 @@ class GameManager extends EventEmitter {
           // mining manager should be initialized already via joinGame, but just in case...
           gameManager.initMiningManager(tx.intent.location.coords, 4);
         } else if (isUnconfirmedMoveTx(tx)) {
+          if(!gameManager.startTime) {
+            gameManager.startTime = Date.now() / 1000;
+          }
           const promises = [gameManager.bulkHardRefreshPlanets([tx.intent.from, tx.intent.to])];
           if (tx.intent.artifact) {
             promises.push(gameManager.hardRefreshArtifact(tx.intent.artifact));
@@ -1707,9 +1710,7 @@ class GameManager extends EventEmitter {
   private async setGameover(gameover: boolean) {
     this.gameover = gameover;
     this.winners = await this.contractsAPI.getWinners();
-    if(!this.startTime) {
-      this.startTime = await this.contractsAPI.getStartTime();
-    }
+    this.startTime = await this.contractsAPI.getStartTime();
     this.endTimeSeconds = (await this.contractsAPI.getEndTime());
   }
 
