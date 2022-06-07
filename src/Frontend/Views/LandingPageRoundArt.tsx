@@ -17,11 +17,6 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const ImgContainer = styled.div`
-  display: inline-block;
-  text-align: right;
   width: 750px;
   max-width: 80vw;
 
@@ -31,6 +26,10 @@ const ImgContainer = styled.div`
     padding: 8px;
     font-size: 80%;
   }
+`;
+
+const ImgContainer = styled.div`
+
 `;
 
 const LandingPageRoundArtImg = styled.img``;

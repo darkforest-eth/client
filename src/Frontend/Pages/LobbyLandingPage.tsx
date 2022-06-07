@@ -66,8 +66,8 @@ class LobbyPageTerminal {
       return;
     }
 
-    this.terminal.println(`Log in to create a lobby. If your account has less than 0.05 xDAi`);
-    this.terminal.println(`it will get dripped 0.05 Optimism xDai`);
+    this.terminal.println(`Log in to create a lobby. If your account has less than 0.005 xDAi`);
+    this.terminal.println(`it will get dripped 0.01 Optimism xDai`);
     this.terminal.newline();
 
     if (accounts.length > 0) {
@@ -104,9 +104,9 @@ class LobbyPageTerminal {
       this.terminal.print(`${accounts[i].address} `);
 
       if (this.balancesEth[i] < 0.01) {
-        this.terminal.println(this.balancesEth[i].toFixed(2) + ' xDAI', TerminalTextStyle.Red);
+        this.terminal.println(this.balancesEth[i].toFixed(3) + ' xDAI', TerminalTextStyle.Red);
       } else {
-        this.terminal.println(this.balancesEth[i].toFixed(2) + ' xDAI', TerminalTextStyle.Green);
+        this.terminal.println(this.balancesEth[i].toFixed(3) + ' xDAI', TerminalTextStyle.Green);
       }
     }
     this.terminal.println(``);
@@ -117,7 +117,7 @@ class LobbyPageTerminal {
       this.terminal.println('Unrecognized input. Please try again.', TerminalTextStyle.Red);
       await this.displayAccounts();
     }
-    // else if (this.balancesEth[selection - 1] < 0.05) {
+    // else if (this.balancesEth[selection - 1] < 0.01) {
     //   this.terminal.println('Not enough xDAI. Select another account.', TerminalTextStyle.Red);
     //   await this.displayAccounts();}
     else {
@@ -210,7 +210,7 @@ class LobbyPageTerminal {
       const nextAccessTimeSeconds = (await faucet.getNextAccessTime(address)).toNumber();
       const nowSeconds = Date.now() / 1000;
       console.log(`You can receive another drip in ${Math.floor((nextAccessTimeSeconds - nowSeconds)/60/60)} hours`);
-      if (currBalance < 0.05 && nowSeconds > nextAccessTimeSeconds) {
+      if (currBalance < 0.005 && nowSeconds > nextAccessTimeSeconds) {
         this.terminal.println(`Getting xDAI from faucet...`, TerminalTextStyle.Blue);
         const success = await requestFaucet(address);
 

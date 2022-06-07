@@ -28,8 +28,10 @@ export function ArenaLeaderboardDisplay() {
       <LeaderboardContainer>
         <StatsTableContainer>
           <StatsTable>
-            <CountDown />
-            <ArenasCreated leaderboard={competitiveLeaderboard} error={competitiveError} />
+            <LeaderboardContainer>
+              <CountDown />
+              <ArenasCreated leaderboard={competitiveLeaderboard} error={competitiveError} />
+            </LeaderboardContainer>
           </StatsTable>
         </StatsTableContainer>
         <Spacer height={8} />

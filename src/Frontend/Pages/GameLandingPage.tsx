@@ -368,9 +368,9 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
           terminal.current?.print(`(${i + 1}): `, TerminalTextStyle.Sub);
           terminal.current?.print(`${accounts[i].address} `);
           if (balances[i] == 0) {
-            terminal.current?.println(balances[i].toFixed(2) + ' xDAI', TerminalTextStyle.Red);
+            terminal.current?.println(balances[i].toFixed(3) + ' xDAI', TerminalTextStyle.Red);
           } else {
-            terminal.current?.println(balances[i].toFixed(2) + ' xDAI', TerminalTextStyle.Green);
+            terminal.current?.println(balances[i].toFixed(3) + ' xDAI', TerminalTextStyle.Green);
           }
         }
         terminal.current?.println(``);
@@ -490,8 +490,8 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
             (nextAccessTimeSeconds - nowSeconds) / 60 / 60
           )} hours`
         );
-        if (currBalance < 0.05 && nowSeconds > nextAccessTimeSeconds) {
-          terminal.current?.println(`Getting xDAI from faucet...`, TerminalTextStyle.Blue);
+        if (currBalance < 0.005 && nowSeconds > nextAccessTimeSeconds) {
+          terminal.current?.println(`Getting .01 xDAI from faucet...`, TerminalTextStyle.Blue);
           const success = await requestFaucet(playerAddress);
           if (success) {
             const newBalance = weiToEth(await ethConnection.loadBalance(playerAddress));

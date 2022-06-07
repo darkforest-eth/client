@@ -74,9 +74,9 @@ export function MapSelectPane({
 
   const maps: map[] = [
     {
-      title: '(1P) Solo Mission',
+      title: '(1P) Grand Prix',
       initializers: stockConfig.onePlayerRace,
-      description: 'Race across the universe!',
+      description: "Try this week's competitive event!",
     },
     {
       title: '(4P) Battle for the Center',
