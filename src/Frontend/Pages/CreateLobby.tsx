@@ -79,7 +79,7 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
             ],
             INIT_PLANETS: [],
             NO_ADMIN: false,
-            WHITELIST: []
+            WHITELIST: [],
           });
         })
         .catch((e) => {

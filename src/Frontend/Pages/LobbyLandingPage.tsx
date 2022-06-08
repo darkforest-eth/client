@@ -45,11 +45,11 @@ class LobbyPageTerminal {
   }
 
   public async chooseAccount() {
-    this.terminal.printElement(<MythicLabelText text='                  Create a Lobby' />);
+    this.terminal.printElement(<MythicLabelText text='Create an Arena' />);
     this.terminal.newline();
     this.terminal.newline();
-    this.terminal.printElement(<DarkForestTips tips={lobbyTips} title='Lobby Tips' />);
-    this.terminal.newline();
+    // this.terminal.printElement(<DarkForestTips tips={lobbyTips} title='Lobby Tips' />);
+    // this.terminal.newline();
 
     const accounts = getAccounts();
     this.terminal.println(`Found ${accounts.length} accounts on this device. Loading balances...`);
@@ -70,10 +70,15 @@ class LobbyPageTerminal {
     this.terminal.println(`it will get dripped 0.01 Optimism xDai`);
     this.terminal.newline();
 
-    if (accounts.length > 0) {
-      this.terminal.print('(a) ', TerminalTextStyle.Sub);
-      this.terminal.println('Login with existing account.');
-    }
+    accounts.forEach((account, i) => {
+      this.terminal.print(`(${i + 1}): `, TerminalTextStyle.Sub);
+      this.terminal.print(`${account.address} `);
+      this.terminal.println(
+        this.balancesEth[i].toFixed(2) + ' xDAi',
+        this.balancesEth[i] < 0.01 ? TerminalTextStyle.Red : TerminalTextStyle.Green
+      );
+    });
+    this.terminal.newline();
 
     this.terminal.print('(n) ', TerminalTextStyle.Sub);
     this.terminal.println(`Generate new burner wallet account.`);
@@ -83,8 +88,20 @@ class LobbyPageTerminal {
     this.terminal.println(`Select an option:`, TerminalTextStyle.Text);
 
     const userInput = await this.terminal.getInput();
-    if (userInput === 'a' && accounts.length > 0) {
-      this.displayAccounts();
+
+    if (+userInput && +userInput <= accounts.length && +userInput > 0) {
+      const selectedAccount = accounts[+userInput - 1];
+
+      try {
+        await this.ethConnection.setAccount(selectedAccount.privateKey);
+        await this.sendDrip(selectedAccount.address);
+      } catch (e) {
+        this.terminal.println(
+          'An unknown error occurred. please try again.',
+          TerminalTextStyle.Red
+        );
+        await this.chooseAccount();
+      }
     } else if (userInput === 'n') {
       this.generateAccount();
     } else if (userInput === 'i') {
@@ -93,47 +110,6 @@ class LobbyPageTerminal {
       this.terminal.println('Unrecognized input. Please try again.', TerminalTextStyle.Red);
       this.terminal.println('');
       await this.chooseAccount();
-    }
-  }
-
-  private async displayAccounts() {
-    this.terminal.println(``);
-    const accounts = getAccounts();
-    for (let i = 0; i < accounts.length; i += 1) {
-      this.terminal.print(`(${i + 1}): `, TerminalTextStyle.Sub);
-      this.terminal.print(`${accounts[i].address} `);
-
-      if (this.balancesEth[i] < 0.01) {
-        this.terminal.println(this.balancesEth[i].toFixed(3) + ' xDAI', TerminalTextStyle.Red);
-      } else {
-        this.terminal.println(this.balancesEth[i].toFixed(3) + ' xDAI', TerminalTextStyle.Green);
-      }
-    }
-    this.terminal.println(``);
-    this.terminal.println(`Select an account:`, TerminalTextStyle.Text);
-
-    const selection = +((await this.terminal.getInput()) || '');
-    if (isNaN(selection) || selection > accounts.length) {
-      this.terminal.println('Unrecognized input. Please try again.', TerminalTextStyle.Red);
-      await this.displayAccounts();
-    }
-    // else if (this.balancesEth[selection - 1] < 0.01) {
-    //   this.terminal.println('Not enough xDAI. Select another account.', TerminalTextStyle.Red);
-    //   await this.displayAccounts();}
-    else {
-      const account = accounts[selection - 1];
-      try {
-        await this.ethConnection.setAccount(account.privateKey);
-        await this.sendDrip(account.address);
-        // this.accountSet(account.address);
-      } catch (e) {
-        this.terminal.println(
-          'An unknown error occurred. please try again.',
-          TerminalTextStyle.Red
-        );
-        this.terminal.println('');
-        this.displayAccounts();
-      }
     }
   }
 
@@ -160,7 +136,7 @@ class LobbyPageTerminal {
       this.terminal.println('Also, clearing browser local storage/cache will render your');
       this.terminal.println('burner wallets inaccessible, unless you export your private keys.');
       this.terminal.println('');
-      this.terminal.println('Press any key to continue:', TerminalTextStyle.Text);
+      this.terminal.println('Press ENTER to continue:', TerminalTextStyle.Text);
 
       await this.terminal.getInput();
       await this.sendDrip(newAddr);
@@ -183,7 +159,16 @@ class LobbyPageTerminal {
     this.terminal.println(
       'Local storage is relatively insecure. We recommend only importing accounts with zero-to-no funds.'
     );
+    this.terminal.newline();
+    this.terminal.println('(x) to cancel', TerminalTextStyle.Text);
+    this.terminal.newline();
     const newSKey = (await this.terminal.getInput()) || '';
+    if (newSKey === 'x') {
+      this.terminal.newline();
+      this.terminal.println('Cancelled import.', TerminalTextStyle.Text);
+      await this.chooseAccount();
+      return;
+    }
     try {
       const newAddr = address(utils.computeAddress(newSKey));
 
@@ -209,7 +194,11 @@ class LobbyPageTerminal {
       );
       const nextAccessTimeSeconds = (await faucet.getNextAccessTime(address)).toNumber();
       const nowSeconds = Date.now() / 1000;
-      console.log(`You can receive another drip in ${Math.floor((nextAccessTimeSeconds - nowSeconds)/60/60)} hours`);
+      console.log(
+        `You can receive another drip in ${Math.floor(
+          (nextAccessTimeSeconds - nowSeconds) / 60 / 60
+        )} hours`
+      );
       if (currBalance < 0.005 && nowSeconds > nextAccessTimeSeconds) {
         this.terminal.println(`Getting xDAI from faucet...`, TerminalTextStyle.Blue);
         const success = await requestFaucet(address);
@@ -238,12 +227,12 @@ class LobbyPageTerminal {
             TerminalTextStyle.Blue
           );
           this.terminal.println('');
+          await this.chooseAccount();
           return;
         }
-      }
-      else {
+      } else {
         this.accountSet(address);
-      } 
+      }
     } catch (e) {
       console.log(e);
       this.terminal.println('An unknown error occurred. please try again.', TerminalTextStyle.Red);

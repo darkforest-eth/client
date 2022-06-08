@@ -57,7 +57,6 @@ import _ from 'lodash';
 const enum TerminalPromptStep {
   NONE,
   COMPATIBILITY_CHECKS_PASSED,
-  DISPLAY_ACCOUNTS,
   GENERATE_ACCOUNT,
   IMPORT_ACCOUNT,
   ARENA_CREATED,
@@ -290,11 +289,26 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
       terminal.current?.println(`Found ${accounts.length} accounts on this device.`);
       terminal.current?.println(``);
 
-      if (accounts.length > 0) {
-        terminal.current?.print('(a) ', TerminalTextStyle.Sub);
-        terminal.current?.println('Login with existing account.');
-      }
+      try {
+        const balances = await loadBalances(accounts.map((a) => a.address));
 
+        accounts.forEach((account, i) => {
+          terminal.current?.print(`(${i + 1}): `, TerminalTextStyle.Sub);
+          terminal.current?.print(`${account.address} `);
+          terminal.current?.println(
+            balances[i].toFixed(2) + ' xDAI',
+            balances[i] < 0.001 ? TerminalTextStyle.Red : TerminalTextStyle.Green
+          );
+        });
+      } catch (e) {
+        console.log(e);
+        terminal.current?.println(
+          'An unknown error occurred. please try again.',
+          TerminalTextStyle.Red
+        );
+        return;
+      }
+      terminal.current?.newline();
       terminal.current?.print('(n) ', TerminalTextStyle.Sub);
       terminal.current?.println(`Generate new burner wallet account.`);
       terminal.current?.print('(i) ', TerminalTextStyle.Sub);
@@ -327,8 +341,10 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
         }
       } else {
         const userInput = await terminal.current?.getInput();
-        if (userInput === 'a' && accounts.length > 0) {
-          setStep(TerminalPromptStep.DISPLAY_ACCOUNTS);
+        if (userInput && +userInput && +userInput <= accounts.length && +userInput > 0) {
+          const account = accounts[+userInput - 1];
+          await ethConnection?.setAccount(account.privateKey);
+          setStep(TerminalPromptStep.ACCOUNT_SET);
         } else if (userInput === 'n') {
           setStep(TerminalPromptStep.GENERATE_ACCOUNT);
         } else if (userInput === 'i') {
@@ -356,48 +372,6 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
     return balances.map(weiToEth);
   }
 
-  const advanceStateFromDisplayAccounts = useCallback(
-    async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
-      terminal.current?.println(``);
-      const accounts = getAccounts();
-
-      try {
-        const balances = await loadBalances(accounts.map((a) => a.address));
-
-        for (let i = 0; i < accounts.length; i += 1) {
-          terminal.current?.print(`(${i + 1}): `, TerminalTextStyle.Sub);
-          terminal.current?.print(`${accounts[i].address} `);
-          if (balances[i] == 0) {
-            terminal.current?.println(balances[i].toFixed(3) + ' xDAI', TerminalTextStyle.Red);
-          } else {
-            terminal.current?.println(balances[i].toFixed(3) + ' xDAI', TerminalTextStyle.Green);
-          }
-        }
-        terminal.current?.println(``);
-        terminal.current?.println(`Select an account:`, TerminalTextStyle.Text);
-
-        const selection = +((await terminal.current?.getInput()) || '');
-        if (isNaN(selection) || selection > accounts.length) {
-          terminal.current?.println('Unrecognized input. Please try again.');
-          await advanceStateFromDisplayAccounts(terminal);
-        } else {
-          const account = accounts[selection - 1];
-          await ethConnection?.setAccount(account.privateKey);
-          setStep(TerminalPromptStep.ACCOUNT_SET);
-        }
-      } catch (e) {
-        console.log(e);
-        terminal.current?.println(
-          'An unknown error occurred. please try again.',
-          TerminalTextStyle.Red
-        );
-        return;
-      }
-    },
-
-    [ethConnection]
-  );
-
   const advanceStateFromGenerateAccount = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
       const newWallet = Wallet.createRandom();
@@ -424,7 +398,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
           'burner wallets inaccessible, unless you export your private keys.'
         );
         terminal.current?.println('');
-        terminal.current?.println('Press any key to continue:', TerminalTextStyle.Text);
+        terminal.current?.println('Press ENTER to continue:', TerminalTextStyle.Text);
 
         await terminal.current?.getInput();
         setStep(TerminalPromptStep.ACCOUNT_SET);
@@ -451,7 +425,16 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
       terminal.current?.println(
         'Local storage is relatively insecure. We recommend only importing accounts with zero-to-no funds.'
       );
+      terminal.current?.newline();
+      terminal.current?.println('(x) to cancel', TerminalTextStyle.Text);
+      terminal.current?.newline();
       const newSKey = (await terminal.current?.getInput()) || '';
+      if (newSKey === 'x') {
+        terminal.current?.newline();
+        terminal.current?.println('Cancelled import.', TerminalTextStyle.Text);
+        setStep(TerminalPromptStep.COMPATIBILITY_CHECKS_PASSED);
+        return;
+      }
       try {
         const newAddr = address(utils.computeAddress(newSKey));
 
@@ -474,7 +457,6 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
       if (contractAddress) {
         setStep(TerminalPromptStep.CONTRACT_SET);
       } else {
-
         const playerAddress = ethConnection?.getAddress();
         if (!playerAddress || !ethConnection) throw new Error('not logged in');
 
@@ -516,6 +498,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
               TerminalTextStyle.Blue
             );
             terminal.current?.println('');
+            setStep(TerminalPromptStep.COMPATIBILITY_CHECKS_PASSED);
             return;
           }
         }
@@ -529,9 +512,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
           console.error(e);
           terminal.current?.println('FAILED', TerminalTextStyle.Red);
           terminal.current?.println('');
-          terminal.current?.println(
-            'Press ENTER to try again.'
-          );
+          terminal.current?.println('Press ENTER to try again.');
           await terminal.current?.getInput();
           terminal.current?.println('');
 
@@ -576,7 +557,10 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
   const advanceStateFromContractSet = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
       terminal.current?.println(``);
-      terminal.current?.println(`Would you like to play or spectate this game?`, TerminalTextStyle.Sub);
+      terminal.current?.println(
+        `Would you like to play or spectate this game?`,
+        TerminalTextStyle.Sub
+      );
 
       terminal.current?.print('(a) ', TerminalTextStyle.Sub);
       terminal.current?.println(`Play.`);
@@ -594,7 +578,9 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
         terminal.current?.println('Unrecognized input. Please try again.');
         await advanceStateFromContractSet(terminal);
       }
-    },[]);
+    },
+    []
+  );
 
   const advanceStateFromSpectating = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
@@ -644,8 +630,9 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
       terminal.current?.println('Connected to Dark Forest Contract');
       gameUIManagerRef.current = newGameUIManager;
       setStep(TerminalPromptStep.ALL_CHECKS_PASS);
-    },[ethConnection, isProd, contractAddress]
-  )
+    },
+    [ethConnection, isProd, contractAddress]
+  );
 
   const advanceStateFromPlaying = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
@@ -918,7 +905,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
           connection: ethConnection,
           terminal,
           contractAddress,
-          spectator : false
+          spectator: false,
         });
       } catch (e) {
         console.error(e);
@@ -1041,23 +1028,25 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
         setStep(TerminalPromptStep.TERMINATED);
         return;
       }
-      const endTime = gameUIManager.getEndTimeSeconds()
+      const endTime = gameUIManager.getEndTimeSeconds();
       if (endTime && Date.now() / 1000 > endTime) {
-        terminal.current?.println('ERROR: This game has ended. Terminating session.', TerminalTextStyle.Red);
+        terminal.current?.println(
+          'ERROR: This game has ended. Terminating session.',
+          TerminalTextStyle.Red
+        );
         setStep(TerminalPromptStep.TERMINATED);
         return;
       }
 
       terminal.current?.newline();
-      
+
       terminal.current?.println('We collect a minimal set of statistics such as SNARK proving');
       terminal.current?.println('times and average transaction times across browsers, to help ');
       terminal.current?.println('us optimize performance and fix bugs. You can opt out of this');
       terminal.current?.println('in the Settings pane.');
       terminal.current?.println('');
 
-
-      if(!gameUIManager.getGameManager().getContractConstants().MANUAL_SPAWN){
+      if (!gameUIManager.getGameManager().getContractConstants().MANUAL_SPAWN) {
         terminal.current?.newline();
         terminal.current?.println('Press ENTER to find a home planet. This may take up to 120s.');
         terminal.current?.println('This will consume a lot of CPU.');
@@ -1153,8 +1142,6 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
         await advanceStateFromNone(terminal);
       } else if (step === TerminalPromptStep.COMPATIBILITY_CHECKS_PASSED) {
         await advanceStateFromCompatibilityPassed(terminal);
-      } else if (step === TerminalPromptStep.DISPLAY_ACCOUNTS) {
-        await advanceStateFromDisplayAccounts(terminal);
       } else if (step === TerminalPromptStep.GENERATE_ACCOUNT) {
         await advanceStateFromGenerateAccount(terminal);
       } else if (step === TerminalPromptStep.IMPORT_ACCOUNT) {
@@ -1195,10 +1182,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
         await advanceStateFromError();
       }
     },
-    [
-      step,
-      ethConnection,
-    ]
+    [step, ethConnection]
   );
 
   async function createLobby() {
