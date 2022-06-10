@@ -271,7 +271,7 @@ function GrandPrix() {
           Race in the Grand Prix for a $100 prize and NFT trophies! 
           
           Here is more {' '}
-          <Link to='https://medium.com/dfdao/dark-forest-arena-grand-prix-f761896a752e'>
+          <Link to='https://medium.com/dfdao/grand-prix-week-2-dc3bef0d3913'>
           rules and info
           </Link>
           .
