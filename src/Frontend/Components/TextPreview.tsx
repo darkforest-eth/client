@@ -10,23 +10,40 @@ export function TextPreview({
   unFocusedWidth = DEFAULT_UNFOCUSED_WIDTH,
   focusedWidth = DEFAULT_FOCUSED_WIDTH,
   style,
+  disabled = false,
 }: {
   text?: string;
   unFocusedWidth?: string;
   focusedWidth?: string;
   maxLength?: number;
   style?: React.CSSProperties;
+  disabled?: boolean;
 }) {
   const [isTextBox, setIsTextbox] = useState(false);
 
   const onClick = useCallback((e: React.SyntheticEvent) => {
+    if(disabled) return;
     e.stopPropagation();
     setIsTextbox(true);
   }, []);
 
   const onBlur = useCallback(() => {
+    if(disabled) return;
     setIsTextbox(false);
   }, []);
+
+
+  const ShortenedText = styled.span`
+  ${({ width }: { width: string }) => css`
+    cursor: ${disabled ? 'pointer':'zoom-in'};
+    display: inline-block;
+    width: ${width};
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+  `}
+`;
 
   if (isTextBox) {
     return (
@@ -42,18 +59,6 @@ export function TextPreview({
     </ShortenedText>
   );
 }
-
-const ShortenedText = styled.span`
-  ${({ width }: { width: string }) => css`
-    cursor: zoom-in;
-    display: inline-block;
-    width: ${width};
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    vertical-align: bottom;
-  `}
-`;
 
 const InputContainer = styled.div`
   ${({ width }: { width: string }) => css`

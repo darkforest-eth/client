@@ -53,7 +53,7 @@ export function Gameover() {
           {winnerslabel}
         </TooltipTrigger>
       </GameoverContainer>
-      <TimeContainer>Game length: {prettyTime(gameDuration)}</TimeContainer>
+      {/* <TimeContainer>Game length: {prettyTime(gameDuration)}</TimeContainer> */}
     </>
   );
 }

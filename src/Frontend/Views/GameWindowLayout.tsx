@@ -23,6 +23,7 @@ import { PlayerArtifactsPane } from '../Panes/PlayerArtifactsPane';
 import { PluginLibraryPane } from '../Panes/PluginLibraryPane';
 import { PrivatePane } from '../Panes/PrivatePane';
 import { SettingsPane } from '../Panes/SettingsPane';
+import { SurveyPane } from '../Panes/SurveyPane';
 import { TransactionLogPane } from '../Panes/TransactionLogPane';
 import { TutorialPane } from '../Panes/TutorialPane';
 import { TwitterVerifyPane } from '../Panes/TwitterVerifyPane';
@@ -162,6 +163,8 @@ export function GameWindowLayout({
           visible={diagnosticsVisible}
           onClose={() => setDiagnosticsVisible(false)}
         />
+        <SurveyPane visible={uiManager.getGameover()} onClose={()=> {}} />
+
         {modalsContainer && (
           <PluginLibraryPane
             modalsContainer={modalsContainer}
@@ -173,6 +176,7 @@ export function GameWindowLayout({
       </div>
 
       <OnboardingPane
+        isCompetitive={uiManager.getGameManager().isCompetitive()}
         visible={onboardingVisible}
         onClose={(openTutorial: boolean) => {
           setOnboardingVisible(false);

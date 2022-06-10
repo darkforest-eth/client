@@ -1,7 +1,21 @@
 import { formatNumber } from '@darkforest_eth/gamelogic';
-import { EthAddress, Planet, SpaceType, Upgrade, UpgradeBranchName } from '@darkforest_eth/types';
+import { locationIdToDecStr } from '@darkforest_eth/serde';
+import { Initializers } from '@darkforest_eth/settings';
+import {
+  ArtifactRarity,
+  ArtifactType,
+  Biome,
+  EthAddress,
+  LocatablePlanet,
+  LocationId,
+  Planet,
+  SpaceType,
+  Upgrade,
+  UpgradeBranchName,
+} from '@darkforest_eth/types';
 import * as bigInt from 'big-integer';
 import { BigInteger } from 'big-integer';
+import { BigNumber, ethers, utils } from 'ethers';
 import { roundEndTimestamp, roundStartTimestamp } from '../../Frontend/Utils/constants';
 import { StatIdx } from '../../_types/global/GlobalTypes';
 
@@ -121,10 +135,100 @@ export const titleCase = (title: string): string =>
     })
     .join(' ');
 
-export const isRoundOngoing = () : boolean => {
+export const isRoundOngoing = (): boolean => {
   const roundStart = new Date(roundStartTimestamp).getTime();
-  
+
   const roundEnd = new Date(roundEndTimestamp).getTime();
   const now = Date.now();
   return now > roundStart && now < roundEnd;
+};
+
+function artifactRarityFromPlanetLevel(planetLevel: number): ArtifactRarity {
+  if (planetLevel <= 1) return ArtifactRarity.Common;
+  else if (planetLevel <= 3) return ArtifactRarity.Rare;
+  else if (planetLevel <= 5) return ArtifactRarity.Epic;
+  else if (planetLevel <= 7) return ArtifactRarity.Legendary;
+  else return ArtifactRarity.Mythic;
+}
+
+
+export function getDeterministicArtifact(planet: LocatablePlanet) {
+
+  const abiCoder = ethers.utils.defaultAbiCoder;
+
+  const artifactSeed = ethers.utils.keccak256(
+    abiCoder.encode(['uint'], [BigInt('0x'+planet.locationId)])
+  );
+
+  const seedHash = ethers.utils.keccak256(abiCoder.encode(['uint'], [BigInt(artifactSeed)]));
+
+  const seed = BigNumber.from(artifactSeed);
+  const lastByteOfSeed = seed.mod(BigNumber.from('0xff')).toNumber();
+  const bigLastByte = BigNumber.from(lastByteOfSeed);
+
+  const secondLastByteOfSeed = ((seed.sub(bigLastByte)).div(BigNumber.from(256))).mod(BigNumber.from('0xff')).toNumber();
+
+  const perlin = planet.perlin;
+  const biome = planet.biome;
+
+  // console.log(`seed hash ${seed.toHexString()}`);
+  // console.log(`seed string ${seed.toString()}`);
+  // console.log('mod', BigNumber.from('0xff').toNumber())
+  // console.log('lastByte', lastByteOfSeed);
+  // console.log('secondLastByte', secondLastByteOfSeed);
+  // console.log(`hex representations: last byte: ${bigLastByte.toHexString()} second last: ${BigNumber.from(secondLastByteOfSeed).toHexString()}`);
+  // console.log('biome', biome);
+
+  // console.log('js artifact seed hex', artifactSeed);
+  // console.log('hash of artifact seed', seedHash);
+
+  let artifactType: ArtifactType = ArtifactType.Pyramid;
+
+  if (lastByteOfSeed < 39) {
+    artifactType = ArtifactType.Monolith;
+  } else if (lastByteOfSeed < 78) {
+    artifactType = ArtifactType.Colossus;
+  }
+  // else if (lastByteOfSeed < 117) {
+  //     artifactType = ArtifactType.Spaceship;
+  // }
+  else if (lastByteOfSeed < 156) {
+    artifactType = ArtifactType.Pyramid;
+  } else if (lastByteOfSeed < 171) {
+    artifactType = ArtifactType.Wormhole;
+  } else if (lastByteOfSeed < 186) {
+    artifactType = ArtifactType.PlanetaryShield;
+  } else if (lastByteOfSeed < 201) {
+    artifactType = ArtifactType.PhotoidCannon;
+  } else if (lastByteOfSeed < 216) {
+    artifactType = ArtifactType.BloomFilter;
+  } else if (lastByteOfSeed < 231) {
+    artifactType = ArtifactType.BlackDomain;
+  } else {
+    if (biome === Biome.ICE) {
+      artifactType = ArtifactType.PlanetaryShield;
+    } else if (biome === Biome.LAVA) {
+      artifactType = ArtifactType.PhotoidCannon;
+    } else if (biome === Biome.WASTELAND) {
+      artifactType = ArtifactType.BloomFilter;
+    } else if (biome === Biome.CORRUPTED) {
+      artifactType = ArtifactType.BlackDomain;
+    } else {
+      artifactType = ArtifactType.Wormhole;
+    }
+    artifactType = ArtifactType.PhotoidCannon;
+  }
+
+  let bonus = 0;
+  if (secondLastByteOfSeed < 4) {
+    bonus = 2;
+  } else if (secondLastByteOfSeed < 16) {
+    bonus = 1;
+  }
+
+  const rarity = artifactRarityFromPlanetLevel(planet.planetLevel + bonus);
+
+  // console.log('artifactType', artifactType, 'rarity', rarity);
+
+  return { type: artifactType, rarity };
 }

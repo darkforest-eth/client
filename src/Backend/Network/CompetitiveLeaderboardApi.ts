@@ -13,9 +13,15 @@ import {
 } from '../../Frontend/Utils/constants';
 import { getAllTwitters } from './UtilityServerAPI';
 
-const QUERY = `
+const API_URL_GRAPH = 'https://graph-optimism.gnosischain.com/subgraphs/name/dfdao/arena-v1';
+
+export async function loadCompetitiveLeaderboard(
+  config: string = competitiveConfig,
+  isCompetitive: boolean
+): Promise<Leaderboard> {
+  const QUERY = `
 query {
-  arenas(first:1000, where: {configHash: "${competitiveConfig}"}) {
+  arenas(first:1000, where: {configHash: "${config}"}) {
     id
     startTime
     winners(first :1) {
@@ -28,10 +34,7 @@ query {
 }
 `;
 
-const API_URL_GRAPH = 'https://graph-optimism.gnosischain.com/subgraphs/name/dfdao/arena-v1';
-
-export async function loadCompetitiveLeaderboard(): Promise<Leaderboard> {
-  const data = await fetchGQL(QUERY);
+  const data = await fetchGQL(QUERY, isCompetitive);
   return data;
 }
 
@@ -48,8 +51,8 @@ interface graphArena {
   startTime: number;
 }
 
-async function fetchGQL(query: any, graphApiUrl = API_URL_GRAPH) {
-  const response = await fetch(graphApiUrl, {
+async function fetchGQL(query: any, isCompetitive: boolean) {
+  const response = await fetch(API_URL_GRAPH, {
     method: 'POST',
     body: JSON.stringify({ query }),
     headers: {
@@ -64,12 +67,12 @@ async function fetchGQL(query: any, graphApiUrl = API_URL_GRAPH) {
     throw new Error(rep.error);
   }
 
-  const ret = await convertData(rep.data.arenas);
+  const ret = await convertData(rep.data.arenas, isCompetitive);
 
   return ret;
 }
 
-async function convertData(arenas: graphArena[]): Promise<Leaderboard> {
+async function convertData(arenas: graphArena[], isCompetitive: boolean): Promise<Leaderboard> {
   let entries: LeaderboardEntry[] = [];
   const twitters = await getAllTwitters();
 
@@ -83,9 +86,8 @@ async function convertData(arenas: graphArena[]): Promise<Leaderboard> {
       !arena.duration ||
       arena.startTime == 0 ||
       arena.winners.length == 0 ||
-      !arena.winners[0].address ||
-      roundEnd < arena.endTime ||
-      roundStart > arena.startTime
+      !arena.winners[0].address || 
+      isCompetitive && (roundEnd <= arena.endTime || roundStart >= arena.startTime)
     )
       continue;
 

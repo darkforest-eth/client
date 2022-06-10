@@ -3,10 +3,13 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Btn } from '../Components/Btn';
 import { Icon, IconType } from '../Components/Icons';
-import { Blue, Green, Red, White } from '../Components/Text';
+import { Row } from '../Components/Row';
+import { Blue, Gold, Green, Red, White, Silver, Bronze } from '../Components/Text';
 import { TextPreview } from '../Components/TextPreview';
 import dfstyles from '../Styles/dfstyles';
 import { useAccount, useUIManager } from '../Utils/AppHooks';
+import { goldTime, silverTime, bronzeTime } from '../Utils/constants';
+import { formatDuration } from '../Utils/TimeUtils';
 import { ModalPane } from '../Views/ModalPane';
 
 const StyledOnboardingContent = styled.div`
@@ -45,35 +48,44 @@ const enum OnboardState {
 
 function OnboardMoney({ advance }: { advance: () => void }) {
   const uiManager = useUIManager();
+  const gameManager = uiManager.getGameManager();
   const account = useAccount(uiManager);
 
   const explorerAddressLink = `https://blockscout.com/poa/xdai/optimism/address/${account}`;
-
+  const isCompetitive = gameManager.isCompetitive();
+  const victoryThreshold = gameManager.getContractConstants().CLAIM_VICTORY_ENERGY_PERCENT;
   return (
     <StyledOnboardingContent>
       <p>
-        Welcome to <Green>Dark Forest Arena: Grand Prix</Green>!
+        Race against the clock to capture the Target Planet (it has a big 🎯 floating above it)
+        and <Green>claim victory when it contains at least <Gold>{victoryThreshold}%</Gold> energy!</Green>
       </p>
-      <p>
-        Race against the clock to capture the Target Planet (it has a big target floating above it)
-        as fast as possible! The player with the fastest time after 48hrs will win XDAI and a trophy
-        🏆.
-      </p>
+      {isCompetitive && (
+        <p>
+          <div>NOW INTRODUCING RANKS</div>
+          <div>End the race in a certain time to earn Bronze, Silver, and Gold ranks.</div>
+          <div>
+            Gold: <Gold>{formatDuration(goldTime * 1000)}</Gold>
+          </div>
+          <div>
+            Silver: <Silver>{formatDuration(silverTime * 1000)}</Silver>
+          </div>
+          <div>
+            Bronze: <Bronze>{formatDuration(bronzeTime * 1000)}</Bronze>
+          </div>
+        </p>
+      )}
+      <p>The ⏲️ starts when you make your first move. </p>
+      {isCompetitive && <p>The player with the fastest time after 48hrs will win XDAI and a 🏆!</p>}
       <p>
         We have initialized a{' '}
         <a onClick={() => window.open('https://github.com/austintgriffith/burner-wallet')}>
-          burner wallet:
+          burner wallet
         </a>{' '}
-      </p>
-      <div>
+        containing 1¢ of xDAI:
         <Blue>
           <a onClick={() => window.open(explorerAddressLink)}>({account})</a>
         </Blue>
-      </div>
-      <p>
-        for you and dripped 5c to it, courtesy of dfdao and Gnosis Chain.{' '}
-        <White>Please enable popups</White> so that all transactions may be confirmed by you.
-        <Icon type={IconType.Settings} />
       </p>
       <div>
         <span></span>
@@ -140,7 +152,7 @@ function OnboardKeys({
           {viewHomeCoords ? 'Hide' : 'View'} home coords
         </Btn>{' '}
         <br />
-        Your private key is:{' '}
+        Your home coords are:{' '}
         <TextPreview
           text={viewHomeCoords ? home : 'hidden'}
           focusedWidth={'150px'}
@@ -171,9 +183,11 @@ function OnboardKeys({
 export default function OnboardingPane({
   visible,
   onClose,
+  isCompetitive = false,
 }: {
   visible: boolean;
   onClose: (tutorial: boolean) => void;
+  isCompetitive: boolean;
 }) {
   const [onboardState, setOnboardState] = useState<OnboardState>(OnboardState.Money);
   const [openTutorial, setOpenTutorial] = useState<boolean>(false);
@@ -189,7 +203,7 @@ export default function OnboardingPane({
   return (
     <ModalPane
       id={ModalName.Onboarding}
-      title={'Welcome to Dark Forest'}
+      title={`Welcome to Dark Forest Arena${isCompetitive ? ': Grand Prix' : ''}!`}
       hideClose
       visible={visible}
       onClose={() => onClose(openTutorial)}

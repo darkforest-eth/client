@@ -41,3 +41,7 @@ export const ArtifactBiomeLabel = ({ artifact }: { artifact: Artifact }) =>
 
 export const ArtifactBiomeLabelAnim = ({ artifact }: { artifact: Artifact }) =>
   isAncient(artifact) ? <AncientLabelAnim /> : <BiomeLabelAnim biome={artifact.planetBiome} />;
+
+export const ArtifactBiomeLabelAnimSimple = ({ biome }: { biome: Biome }) => (
+  <BiomeLabelAnim biome={biome} />
+);

@@ -239,7 +239,7 @@ export function useArenaLeaderboard(poll: number | undefined = undefined): {
   return { leaderboard, error };
 }
 
-export function useCompetitiveLeaderboard(poll: number | undefined = undefined ): {
+export function useCompetitiveLeaderboard(isCompetitive: boolean = true, address : string | undefined = undefined , poll: number | undefined = undefined ): {
 competitiveLeaderboard: Leaderboard | undefined;
 competitiveError: Error | undefined;
 } {
@@ -248,7 +248,7 @@ const [competitiveError, setCompetitiveError] = useState<Error | undefined>();
 
 const loadCompetitive = useCallback(async function loadCompetitive() {
   try {
-    setCompetitiveLeaderboard(await loadCompetitiveLeaderboard());
+    setCompetitiveLeaderboard(await loadCompetitiveLeaderboard(address, isCompetitive));
   } catch (e) {
     console.log('error loading leaderboard', e);
     setCompetitiveError(e);

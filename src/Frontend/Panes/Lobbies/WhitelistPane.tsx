@@ -68,7 +68,7 @@ export function WhitelistPane({
     try {
       setStatus('creating');
       if (!lobbyAdminTools) {
-        setError("You haven't created a lobby.");
+        setError("You haven't created an arena.");
         return;
       }
 
@@ -175,7 +175,7 @@ export function WhitelistPane({
           {!lobbyAdminTools && (
             <Row>
               <Sub>
-                <Red>Warning:</Red> Cannot allowlist players until lobby is created
+                <Red>Warning:</Red> Cannot allowlist players until arena is created
               </Sub>
             </Row>
           )}

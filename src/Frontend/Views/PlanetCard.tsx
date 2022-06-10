@@ -1,6 +1,6 @@
-import { isLocatable } from '@darkforest_eth/gamelogic';
+import { isAncient, isLocatable } from '@darkforest_eth/gamelogic';
 import { getPlanetName } from '@darkforest_eth/procedural';
-import { Planet, TooltipName } from '@darkforest_eth/types';
+import { ArtifactRarityNames, ArtifactTypeNames, BiomeNames, Planet, PlanetType, TooltipName } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
@@ -28,6 +28,9 @@ import { useActiveArtifact, usePlanetArtifacts, useUIManager } from '../Utils/Ap
 import { useEmitterValue } from '../Utils/EmitterHooks';
 import { SelectArtifactRow } from './ArtifactRow';
 import { Halved, PlanetActiveArtifact, RowTip, TimesTwo, TitleBar } from './PlanetCardComponents';
+import { ArtifactRarityBiomeTypeText, ArtifactRarityLabelAnim } from '../Components/Labels/ArtifactLabels';
+import { getDeterministicArtifact } from '../../Backend/Utils/Utils';
+import { ArtifactBiomeLabelAnimSimple } from '../Components/Labels/BiomeLabels';
 
 export function PlanetCardTitle({
   planet,
@@ -71,8 +74,12 @@ export function PlanetCard({
   const artifacts = usePlanetArtifacts(p, uiManager);
   const spaceJunkEnabled = uiManager.getSpaceJunkEnabled();
   const isAbandoning = useEmitterValue(uiManager.isAbandoning$, uiManager.isAbandoning());
+  const randomArtifacts = uiManager.getGameManager().getContractConstants().RANDOM_ARTIFACTS;
 
   if (!planet || !isLocatable(planet)) return <></>;
+  const {type, rarity} = getDeterministicArtifact(planet)
+  const isFoundry = planet.planetType == PlanetType.RUINS;
+  const triedFinding = planet.hasTriedFindingArtifact;
 
   return (
     <>
@@ -92,6 +99,18 @@ export function PlanetCard({
             <EmSpacer width={0.5} />
           </InlineBlock>
         </AlignCenterHorizontally>
+        {!randomArtifacts && isFoundry && !triedFinding ? 
+        <AlignCenterHorizontally style={{ justifyContent: 'space-between' }}>
+          <InlineBlock>
+          <span>Contains</span>
+          {' '}
+          <ArtifactRarityLabelAnim rarity={rarity}/>
+          {' '}
+          <span>{ArtifactTypeNames[type]} </span>
+          </InlineBlock>
+        </AlignCenterHorizontally>
+        : null
+        }
         {active && (
           <>
             <EmSpacer height={0.5} />

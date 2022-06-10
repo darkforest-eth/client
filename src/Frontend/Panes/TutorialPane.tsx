@@ -8,7 +8,7 @@ import TutorialManager, {
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
 import { Icon, IconType } from '../Components/Icons';
-import { Gold, Red, White } from '../Components/Text';
+import { Gold, Green, Red, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { useUIManager } from '../Utils/AppHooks';
 import { useBooleanSetting } from '../Utils/SettingsHooks';
@@ -19,28 +19,45 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
 
   if (tutorialState === TutorialState.None) {
     return (
-      <div>
+      <div className='tutzoom'>
         Welcome to the Dark Forest tutorial!
         <br />
         <br />
         <White>Click your home planet to learn more.</White>
+        <div style={{ gap: '5px' }}>
+          <Btn className='btn' onClick={() => tutorialManager.complete()}>
+            Exit
+          </Btn>
+          <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.None)}>
+            Skip
+          </Btn>
+        </div>
       </div>
     );
   } else if (tutorialState === TutorialState.SendFleet) {
     return (
-      <div>
+      <div className='tutzoom'>
         Well done! This pane displays quick information about your planet and the ability to send
         resources. Your planet uses <White>energy</White> to capture nearby planets. You can use{' '}
         <Gold>silver</Gold> for upgrades.
         <br />
         <br />
-        <White>Try sending energy to another planet.</White> You can click and drag to look for
-        other planets.
+        <White>Try sending energy to another planet.</White> You can click and drag to send energy
+        to another planet. Alternatively, click your planet, press {<White>q</White>}, and click a
+        nearby planet.
+        <div style={{ gap: '5px' }}>
+          <Btn className='btn' onClick={() => tutorialManager.complete()}>
+            Exit
+          </Btn>
+          <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.SendFleet)}>
+            Skip
+          </Btn>
+        </div>
       </div>
     );
   } else if (tutorialState === TutorialState.SpaceJunk) {
     return (
-      <div>
+      <div className='tutzoom'>
         <p>
           When you send planet you accumulate <White>Space Junk</White>. Once you hit the Space Junk
           limit, you won't be able to move to new planets.
@@ -52,7 +69,10 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         <br />
         Take a look at the top of the screen to see you current and maximum{' '}
         <White>Space Junk</White>.
-        <div>
+        <div style={{ gap: '5px' }}>
+          <Btn className='btn' onClick={() => tutorialManager.complete()}>
+            Exit
+          </Btn>
           <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.SpaceJunk)}>
             Next
           </Btn>
@@ -61,34 +81,51 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
     );
   } else if (tutorialState === TutorialState.Spaceship) {
     return (
-      <div>
-        You also control several space ships - check your home planet! You can move spaceships
-        between any two planets, even if you don't own the source or destination planets. Space
-        ships can move any distance!{' '}
-        <White>Try moving a spaceship you own to another planet now!</White>
+      <div className='tutzoom'>
+        <p>
+          You also control several space ships - check your home planet! You can move spaceships
+          between any two planets, even if you don't own them. Space ships can move any distance!{' '}
+          <White>Try moving a spaceship you own to another planet now!</White>
+        </p>
+        <p>Tip: Before moving, click a spaceship to select it. Then execute your move.</p>
+        <div style={{ gap: '5px' }}>
+          <Btn className='btn' onClick={() => tutorialManager.complete()}>
+            Exit
+          </Btn>
+          <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.Spaceship)}>
+            Skip
+          </Btn>
+        </div>
       </div>
     );
   } else if (tutorialState === TutorialState.Deselect) {
     return (
-      <div>
+      <div className='tutzoom'>
         Congrats, you've submitted a move to xDAI! Moves that are in the mempool are shown as dotted
         lines. Accepted moves are shown as solid lines.
         <br />
         <br />
         <White>Try deselecting a planet now. Click in empty space to deselect.</White>
+        <div style={{ gap: '5px' }}>
+          <Btn className='btn' onClick={() => tutorialManager.complete()}>
+            Exit
+          </Btn>
+          <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.Deselect)}>
+            Skip
+          </Btn>
+        </div>
       </div>
     );
   } else if (tutorialState === TutorialState.ZoomOut) {
     return (
       <div className='tutzoom'>
-        Great! You'll notice that most of the universe appears grayed out. You need to explore those
-        areas before you can view them.
-        <br />
-        <br />
-        You'll notice a target <Icon type={IconType.Target} /> indicating where you are currently
-        exploring. <White>Press next when you can see it.</White> You can also zoom using the mouse
-        wheel.
-        <div>
+        <p>Great! You can zoom using the mouse wheel. </p>
+        <p>Try zooming all the way out so you can find the target planet!</p>
+        <div style={{ gap: '5px' }}>
+          <Btn className='btn' onClick={() => tutorialManager.complete()}>
+            Exit
+          </Btn>
+
           <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.ZoomOut)}>
             Next
           </Btn>
@@ -97,60 +134,87 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
     );
   } else if (tutorialState === TutorialState.MinerMove) {
     return (
-      <div>
-        You can move your explorer by using the bottom-left context menu when nothing is selected.
+      <div className='tutzoom'>
+        Most of the universe appears greyed out. You need to use your explorer{' '}
+        <Icon type={IconType.Target} /> to reveal those areas.
         <br />
+        The explorer <Icon type={IconType.Target} /> indicates where you are exploring.
         <br />
         <White>
-          Try moving your explorer by clicking on the Move <Icon type={IconType.Target} /> button
+          Move your explorer with the bottom-left context menu by clicking on the Move{' '}
+          <Icon type={IconType.Target} /> button
         </White>
-        , then clicking somewhere in space.
+        , then clicking in a grey region.
+        <div style={{ gap: '5px' }}>
+          <Btn className='btn' onClick={() => tutorialManager.complete()}>
+            Exit
+          </Btn>
+          <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.MinerMove)}>
+            Skip
+          </Btn>
+        </div>
       </div>
     );
   } else if (tutorialState === TutorialState.MinerPause) {
     return (
-      <div>
+      <div className='tutzoom'>
         Great! You can also pause your explorer by clicking the pause <Icon type={IconType.Pause} />{' '}
         button.
         <br />
         <br />
         <White>Try pausing your explorer now.</White>
+        <div style={{ gap: '5px' }}>
+          <Btn className='btn' onClick={() => tutorialManager.complete()}>
+            Exit
+          </Btn>
+          <Btn
+            className='btn'
+            onClick={() => tutorialManager.acceptInput(TutorialState.MinerPause)}
+          >
+            Skip
+          </Btn>
+        </div>
       </div>
     );
   } else if (tutorialState === TutorialState.Terminal) {
     return (
-      <div>
+      <div className='tutzoom'>
         You can hide the terminal on the right by clicking on its left edge.
         <br />
         <br />
         <White>Try hiding the terminal now.</White>
+        <div style={{ gap: '5px' }}>
+          <Btn className='btn' onClick={() => tutorialManager.complete()}>
+            Exit
+          </Btn>
+          <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.Terminal)}>
+            Skip
+          </Btn>
+        </div>
       </div>
     );
   } else if (tutorialState === TutorialState.HowToGetScore) {
-    let content = (
-      <>
-        <White>It's an Arena Battle!</White> <br />
-        <br />
-        Capture the Target Planet (it has a big target floating above it) to win!
-        <br />
-      </>
-    );
-    if (uiManager.getGameManager().isCompetitive()) {
-      content = (
-        <>
-          <White>It's a Grand Prix!</White> <br />
-          <br />
-          Race against the clock to capture the Target Planet (it has a big target floating above
-          it) as fast as possible! The player with the fastest time after 48hrs will win XDAI and a
-          trophy 🏆. Good luck!
-          <br />
-        </>
-      );
-    }
+    const isCompetitive = uiManager.getGameManager().isCompetitive();
+    const victoryThreshold = uiManager
+      .getGameManager()
+      .getContractConstants().CLAIM_VICTORY_ENERGY_PERCENT;
     return (
       <div className='tutzoom'>
-        {content}
-        <div>
+        <White>It's a{isCompetitive ? ' Grand Prix!' : 'n Arena Battle!'}</White>
+        <p>
+          Race against the clock to capture the Target Planet (it has a big 🎯 floating above it)
+          and{' '}
+          <Green>
+            claim victory when it contains at least <Gold>{victoryThreshold}%</Gold> energy!
+          </Green>
+        </p>
+        {isCompetitive && (
+          <p>The player with the fastest time after 48hrs will win XDAI and a 🏆!</p>
+        )}
+        <div style={{ gap: '5px' }}>
+          <Btn className='btn' onClick={() => tutorialManager.complete()}>
+            Exit
+          </Btn>
           <Btn
             className='btn'
             onClick={() => tutorialManager.acceptInput(TutorialState.HowToGetScore)}
@@ -160,46 +224,52 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         </div>
       </div>
     );
-  } else if (tutorialState === TutorialState.ScoringDetails) {
-    return (
-      <div className='tutzoom'>
-        To win, take ownership of the target planet and fill its energy to{' '}
-        {uiManager.getGameManager().getContractConstants().CLAIM_VICTORY_ENERGY_PERCENT}%. Then
-        claim victory on that planet. If you capture the target planet first, you win!
-        <div>
-          <Btn
-            className='btn'
-            onClick={() => tutorialManager.acceptInput(TutorialState.ScoringDetails)}
-          >
-            Next
-          </Btn>
-        </div>
-      </div>
-    );
-  } else if (tutorialState === TutorialState.Valhalla) {
-    return (
-      <div className='tutalmost'>
-        If you win an official round (one of the default worlds on the home page), you will improve
-        your ELO and see your name on the leaderboard! More details about rewards and competitive
-        play will be released soon ;).
-        <br />
-        <br />
-        To win, capture the target planet (^:
-        <div>
-          <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.Valhalla)}>
-            Next
-          </Btn>
-        </div>
-      </div>
-    );
-  } else if (tutorialState === TutorialState.AlmostCompleted) {
+  } 
+  // else if (tutorialState === TutorialState.ScoringDetails) {
+  //   return (
+  //     <div className='tutzoom'>
+  //       To win, take ownership of the target planet and fill its energy to{' '}
+  //       {uiManager.getGameManager().getContractConstants().CLAIM_VICTORY_ENERGY_PERCENT}%. Then
+  //       claim victory on that planet. If you capture the target planet first, you win!
+  //       <div style={{ gap: '5px' }}>
+  //         <Btn className='btn' onClick={() => tutorialManager.complete()}>
+  //           Exit
+  //         </Btn>
+  //         <Btn
+  //           className='btn'
+  //           onClick={() => tutorialManager.acceptInput(TutorialState.ScoringDetails)}
+  //         >
+  //           Next
+  //         </Btn>
+  //       </div>
+  //     </div>
+  //   );
+  // } 
+  // else if (tutorialState === TutorialState.Valhalla) {
+  //   return (
+  //     <div className='tutalmost'>
+  //       If you win an official round (one of the default worlds on the home page), you will improve
+  //       your ELO and see your name on the leaderboard! More details about rewards and competitive
+  //       play will be released soon ;).
+  //       <br />
+  //       <br />
+  //       To win, capture the target planet (^:
+  //       <div>
+  //         <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.Valhalla)}>
+  //           Next
+  //         </Btn>
+  //       </div>
+  //     </div>
+  //   );
+  // } 
+  else if (tutorialState === TutorialState.AlmostCompleted) {
     return (
       <div className='tutalmost'>
         This is the end of the tutorial. Go out and explore the universe! More information will pop
         up in the <White>upper-right</White> as you discover more about the game.
         <br />
         We hope you enjoy Dark Forest!
-        <div>
+        <div style={{ gap: '5px' }}>
           <Btn className='btn' onClick={() => tutorialManager.complete()}>
             Finish
           </Btn>

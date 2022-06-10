@@ -64,7 +64,13 @@ export const Quasar = ({ height, width }: AlertIcon) => {
 export const FoundRuins = ({ height, width }: AlertIcon) => {
   return <img height={height} width={width} src='/public/icons/alerts/planettypes/ruins.svg' />;
 };
+export const Star = ({ height, width, color }: AlertIcon & {color: string}) => {
+  return <img height={height} width={width} style = {{filter : color}} src='/public/icons/star.svg' />;
+};
 
+export const Gnosis = ({ height, width }: AlertIcon) => {
+  return <img height={height} width={width} src='/public/icons/gclogo.svg' />;
+};
 export const FoundSpacetimeRip = ({ height, width }: AlertIcon) => {
   return (
     <img height={height} width={width} src='/public/icons/alerts/planettypes/tradingpost.svg' />

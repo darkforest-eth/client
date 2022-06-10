@@ -1,7 +1,9 @@
 import { ArenaLeaderboard, ArtifactRarity, Leaderboard } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { getRank, Rank } from '../../Backend/Utils/Rank';
 import { Spacer } from '../Components/CoreUI';
+import { Gnosis, Star } from '../Components/Icons';
 import { TwitterLink } from '../Components/Labels/Labels';
 import { LoadingSpinner } from '../Components/LoadingSpinner';
 import { Red, Subber } from '../Components/Text';
@@ -13,7 +15,6 @@ import { roundEndTimestamp, roundStartTimestamp } from '../Utils/constants';
 import { formatDuration } from '../Utils/TimeUtils';
 import { GenericErrorBoundary } from './GenericErrorBoundary';
 import { SortableTable } from './SortableTable';
-import { TabbedView } from './TabbedView';
 import { Table } from './Table';
 
 const errorMessage = 'Error Loading Leaderboard';
@@ -68,6 +69,34 @@ function scoreToTime(score?: number | null) {
 
 // pass in either an address, or a twitter handle. this function will render the appropriate
 // component
+function compPlayerToEntry(
+  playerAddress: string,
+  playerTwitter: string | undefined,
+  color: string
+) {
+  return (
+    <span
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '5px' }}
+    >
+      {playerTwitter ? (
+        <TwitterLink twitter={playerTwitter} color={color} />
+      ) : (
+        <TextPreview text={playerAddress} focusedWidth={'150px'} unFocusedWidth={'150px'} />
+      )}
+
+      <a
+        style={{ display: 'flex', alignItems: 'center' }}
+        target="_blank"
+        href={`https://blockscout.com/xdai/optimism/address/${playerAddress}`}
+      >
+        <GnoButton>
+          <Gnosis height='25px' width='25Fpx' />
+        </GnoButton>
+      </a>
+    </span>
+  );
+}
+
 function playerToEntry(playerStr: string, color: string) {
   // if this is an address
   if (playerStr.startsWith('0x') && playerStr.length === 42) {
@@ -82,21 +111,26 @@ function getRankColor([rank, score]: [number, number | undefined]) {
     return dfstyles.colors.subtext;
   }
 
-  if (score === 0) {
-    return RarityColors[ArtifactRarity.Legendary];
+  if (getRank(score) == Rank.GOLD) {
+    return dfstyles.colors.dfgold;
   }
+  if (getRank(score) == Rank.SILVER) return dfstyles.colors.dfsilver;
 
-  if (rank === 0) {
-    return RarityColors[ArtifactRarity.Legendary];
-  }
+  if (getRank(score) == Rank.BRONZE) return dfstyles.colors.dfbronze;
 
-  if (rank < 6) {
-    return RarityColors[ArtifactRarity.Epic];
-  }
-
-  return dfstyles.colors.dfgreen;
+  return dfstyles.colors.subtext;
 }
 
+function getRankStar(rank: number) {
+  const gold =
+    'invert(73%) sepia(29%) saturate(957%) hue-rotate(354deg) brightness(100%) contrast(95%)';
+  const purple =
+    'invert(39%) sepia(54%) saturate(6205%) hue-rotate(264deg) brightness(100%) contrast(103%)';
+  if (rank < 6) {
+    return <Star width={'20px'} height={'20px'} color={rank == 0 ? gold : purple}></Star>;
+  }
+  return <></>;
+}
 type Row = [string, number | undefined, number | undefined];
 
 const sortFunctions = [
@@ -127,8 +161,7 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
         alignments={['r', 'r', 'l', 'r']}
         headers={[
           <Cell key='player'>place</Cell>,
-
-          <Cell key='player'>player</Cell>,
+          <Cell key='twitter'>twitter</Cell>,
           <Cell key='score'>games</Cell>,
           <Cell key='place'>wins</Cell>,
         ]}
@@ -161,30 +194,41 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
   );
 }
 
-function CompetitiveLeaderboardTable({ rows }: { rows: Array<[string, number | undefined]> }) {
+function CompetitiveLeaderboardTable({
+  rows,
+}: {
+  rows: Array<[string, string | undefined, number | undefined]>;
+}) {
   if (rows.length == 0) return <Subber>No players finished</Subber>;
   return (
     <TableContainer>
       <Table
-        alignments={['r', 'l', 'r']}
+        alignments={['r', 'r', 'l', 'l', 'r']}
         headers={[
-          <Cell key='place'>place</Cell>,
-          <Cell key='player'>player</Cell>,
-          <Cell key='score'>time</Cell>,
+          <Cell key='star'></Cell>,
+          <Cell key='place'></Cell>,
+          <Cell key='player'></Cell>,
+          <Cell key='player'></Cell>,
+          <Cell key='score'></Cell>,
         ]}
         rows={rows}
         columns={[
-          (row: [string, number], i) => (
-            <Cell style={{ color: getRankColor([i, row[1]]) }}>
-              {row[1] === undefined || row[1] === null ? 'unranked' : i + 1 + '.'}
+          (row: [string, string | undefined, number | undefined], i) => getRankStar(i),
+          (row: [string, string | undefined, number | undefined], i) => (
+            <Cell style={{ color: getRankColor([i, row[2]]) }}>
+              {row[2] === undefined || row[2] === null ? 'unranked' : i + 1 + '.'}
             </Cell>
           ),
-          (row: [string, number | undefined], i) => {
-            const color = getRankColor([i, row[1]]);
-            return <Cell style={{ color }}>{playerToEntry(row[0], color)}</Cell>;
+          (row: [string, string | undefined, number | undefined], i) => {
+            const color = getRankColor([i, row[2]]);
+            return (
+              <Cell style={{ color }}>
+                {compPlayerToEntry(row[0], row[1], color)}
+              </Cell>
+            );
           },
-          (row: [string, number], i) => {
-            return <Cell style={{ color: getRankColor([i, row[1]]) }}>{scoreToTime(row[1])}</Cell>;
+          (row: [string, string | undefined, number | undefined], i) => {
+            return <Cell style={{ color: getRankColor([i, row[2]]) }}>{scoreToTime(row[2])}</Cell>;
           },
         ]}
       />
@@ -228,7 +272,7 @@ function CountDown() {
   return (
     <tbody>
       <tr>
-        <td>{str}</td>
+        {str && <td>{str}</td>}
         <td>{time}</td>
       </tr>
     </tbody>
@@ -260,8 +304,7 @@ function ArenasCreated({
         </tbody>
       </div>
     );
-  }
-  else {
+  } else {
     return <></>;
   }
 }
@@ -297,13 +340,10 @@ function CompetitiveLeaderboardBody({
     return a.score - b.score;
   });
 
-  const competitiveRows: [string, number | undefined][] = leaderboard.entries.map((entry) => {
-    if (typeof entry.twitter === 'string') {
-      return [entry.twitter, entry.score];
-    }
-
-    return [entry.ethAddress, entry.score];
-  });
+  const competitiveRows: [string, string | undefined, number | undefined][] =
+    leaderboard.entries.map((entry) => {
+      return [entry.ethAddress, entry.twitter, entry.score];
+    });
 
   return <CompetitiveLeaderboardTable rows={competitiveRows} />;
 }
@@ -406,4 +446,10 @@ const StatsTable = styled.table`
       text-align: left;
     }
   }
+`;
+
+const GnoButton = styled.button`
+  // background-color: ${dfstyles.colors.text};
+  border-radius: 30%;
+  border-color: ${dfstyles.colors.border};
 `;

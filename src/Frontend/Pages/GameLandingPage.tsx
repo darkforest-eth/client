@@ -102,6 +102,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
   const CHUNK_SIZE = 5;
   const config = stockConfig.competitive;
   const defaultAddress = address(CONTRACT_ADDRESS);
+  const isGrandPrix = !contractAddress;
 
   useEffect(() => {
     getEthConnection()
@@ -556,6 +557,10 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
 
   const advanceStateFromContractSet = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
+      if(isGrandPrix) {
+        setStep(TerminalPromptStep.PLAYING);
+        return;
+      }
       terminal.current?.println(``);
       terminal.current?.println(
         `Would you like to play or spectate this game?`,
@@ -1086,16 +1091,16 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
 
   const advanceStateFromAllChecksPass = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
-      terminal.current?.println('');
-      terminal.current?.println('Press ENTER to begin');
-      terminal.current?.println("Press 's' then ENTER to begin in SAFE MODE - plugins disabled");
+      // terminal.current?.println('');
+      // terminal.current?.println('Press ENTER to begin');
+      // terminal.current?.println("Press 's' then ENTER to begin in SAFE MODE - plugins disabled");
 
-      const input = await terminal.current?.getInput();
+      // const input = await terminal.current?.getInput();
 
-      if (input === 's') {
-        const gameUIManager = gameUIManagerRef.current;
-        gameUIManager?.getGameManager()?.setSafeMode(true);
-      }
+      // if (input === 's') {
+      //   const gameUIManager = gameUIManagerRef.current;
+      //   gameUIManager?.getGameManager()?.setSafeMode(true);
+      // }
 
       setStep(TerminalPromptStep.COMPLETE);
       setInitRenderState(InitRenderState.COMPLETE);
@@ -1186,7 +1191,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
   );
 
   async function createLobby() {
-    if (!ethConnection || !defaultAddress) throw new Error('cannot create lobby');
+    if (!ethConnection || !defaultAddress) throw new Error('cannot create arena');
 
     const contractsAPI = await makeContractsAPI({
       connection: ethConnection,
@@ -1204,8 +1209,6 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
     /* Don't want to submit ADMIN_PLANET as initdata because they aren't used */
     // @ts-expect-error The Operand of a delete must be optional
     delete initializers.ADMIN_PLANETS;
-
-    console.log('config', initializers);
 
     const initContract = await ethConnection.loadContract<DFArenaInitialize>(
       INIT_ADDRESS,
@@ -1248,7 +1251,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
       contractAddress,
     });
 
-    _.chunk(config.INIT_PLANETS, CHUNK_SIZE).map(async (chunk) => {
+    const createPlanetTxs = _.chunk(config.INIT_PLANETS, CHUNK_SIZE).map(async (chunk) => {
       const args = Promise.resolve([chunk]);
       const txIntent = {
         methodName: 'bulkCreateAndReveal' as ContractMethodName,
@@ -1260,12 +1263,15 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
         gasLimit: '15000000',
       });
 
-      await tx.confirmedPromise;
-      console.log(
-        `successfully created planets`,
-        chunk.map((i) => i)
-      );
+      return tx.confirmedPromise;
     });
+    
+    await Promise.all(createPlanetTxs);
+    console.log(
+      `successfully created planets`,
+      createPlanetTxs.map((i) => i)
+    );
+
   }
 
   useEffect(() => {

@@ -18,13 +18,29 @@ const LOCATION_ID_UB = bigInt(
   '21888242871839275222246405745257275088548364400416034343698204186575808495617'
 );
 
-const competitiveConfig = '0x6cc6954ecdfefd966e52e5911555a778770e412c3f4393a8b6033ea95688519e';
+const competitiveConfig = '0x38329f176da42d2c89b7e424175e8b0ab3c9008cb0d98f947857884d76c6d9d2';
 
-const roundEndTimestamp = '2022-06-07T00:00:00.000Z';
+const roundStartTimestamp = '2022-06-11T00:00:00.000Z';
 
-const roundStartTimestamp = '2022-06-05T00:00:00.000Z';
+const roundEndTimestamp = '2022-06-13T00:00:00.000Z';
 
-export { MIN_CHUNK_SIZE, MAX_CHUNK_SIZE, LOCATION_ID_UB,roundEndTimestamp,roundStartTimestamp, competitiveConfig };
+const bronzeTime = 5400; // 90 minutes in seconds
+
+const silverTime = 3600; // 1 hour in seconds
+
+const goldTime = 1800; // 30 minutes in seconds
+
+export {
+  MIN_CHUNK_SIZE,
+  MAX_CHUNK_SIZE,
+  LOCATION_ID_UB,
+  roundEndTimestamp,
+  roundStartTimestamp,
+  competitiveConfig,
+  bronzeTime,
+  silverTime,
+  goldTime
+};
 
 export const enum DFZIndex {
   MenuBar = 4,

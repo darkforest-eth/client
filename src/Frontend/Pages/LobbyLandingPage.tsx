@@ -48,9 +48,6 @@ class LobbyPageTerminal {
     this.terminal.printElement(<MythicLabelText text='Create an Arena' />);
     this.terminal.newline();
     this.terminal.newline();
-    // this.terminal.printElement(<DarkForestTips tips={lobbyTips} title='Lobby Tips' />);
-    // this.terminal.newline();
-
     const accounts = getAccounts();
     this.terminal.println(`Found ${accounts.length} accounts on this device. Loading balances...`);
     this.terminal.newline();
@@ -66,15 +63,15 @@ class LobbyPageTerminal {
       return;
     }
 
-    this.terminal.println(`Log in to create a lobby. If your account has less than 0.005 xDAi`);
-    this.terminal.println(`it will get dripped 0.01 Optimism xDai`);
+    this.terminal.println(`Log in to create an arena. If your account has less than 0.005 xDAI`);
+    this.terminal.println(`it will get dripped 0.01 Optimism xDAI`);
     this.terminal.newline();
 
     accounts.forEach((account, i) => {
       this.terminal.print(`(${i + 1}): `, TerminalTextStyle.Sub);
       this.terminal.print(`${account.address} `);
       this.terminal.println(
-        this.balancesEth[i].toFixed(2) + ' xDAi',
+        this.balancesEth[i].toFixed(2) + ' xDAI',
         this.balancesEth[i] < 0.01 ? TerminalTextStyle.Red : TerminalTextStyle.Green
       );
     });
@@ -261,7 +258,7 @@ export function LobbyLandingPage({ onReady }: { onReady: (connection: EthConnect
         terminal.current,
         (account: EthAddress) => {
           if (connection) {
-            terminal.current?.println(`Creating lobby with account: ${account}`);
+            terminal.current?.println(`Creating arena with account: ${account}`);
             onReady(connection);
           } else {
             alert('Unable to make a connection to blockchain');
@@ -281,18 +278,18 @@ export function LobbyLandingPage({ onReady }: { onReady: (connection: EthConnect
 }
 
 const lobbyTips = [
-  'A lobby is a Dark Forest universe which is under the control of the account that created it.',
-  'You can customize most aspects of Dark Forest when you create a lobby.',
+  'An arena is a Dark Forest universe which is under the control of the account that created it.',
+  'You can customize most aspects of Dark Forest when you create an arena.',
   'Mirror the X or Y space type for credibly neutral maps.',
   'Fixed world radius can be used for a 1v1 battle.',
   'Try increasing game speed for a quick round.',
-  'Use the Admin Controls plugin for god-mode control over your lobby.',
+  'Use the Admin Controls plugin for god-mode control over your arena.',
   'You can spawn in any space type by adjusting the player spawn perlin range',
   'Disable ZK to make mining the unverse super fast. WARNING: insecure.',
   "Don't like Space Junk? Disable it!",
   "Don't like Capture Zones? Disable them!",
   'Change the Planet Hash Key to change where planets are. Think of it as the seed for planet generation.',
-  'Change the Space Type Key to vary the space type zones in your lobby.',
+  'Change the Space Type Key to vary the space type zones in your arena.',
   // TODO: link to the blog post
   // TODO: link to Jordan's video
 ];

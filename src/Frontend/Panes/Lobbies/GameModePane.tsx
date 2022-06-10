@@ -23,9 +23,9 @@ export function GameModePane({ lobbyAddress }: { lobbyAddress: EthAddress | unde
   
   const content = (
     <>
-      <Title slot='title'>Customize Lobby</Title>
+      <Title slot='title'>Customize Arena</Title>
       <div>
-        Welcome Cadet! You can launch a copy of Dark Forest from this UI. We call this a Lobby.
+        Welcome Cadet! You can launch a copy of Dark Forest from this UI. We call this an Arena.
         <Spacer height={12} />
         First, choose a game mode:
         <Spacer height={12} />
@@ -56,7 +56,7 @@ export function GameModePane({ lobbyAddress }: { lobbyAddress: EthAddress | unde
       <Spacer height={20} />
 
       <ButtonRow >
-        <LinkButton disabled = {!active} to={`/settings`}>Customize Lobby Settings</LinkButton>
+        <LinkButton disabled = {!active} to={`/settings`}>Customize Arena Settings</LinkButton>
       </ButtonRow>
     </>
   );

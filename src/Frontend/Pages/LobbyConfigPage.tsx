@@ -52,7 +52,6 @@ export function LobbyConfigPage({
     // @ts-expect-error The Operand of a delete must be optional
     delete initializers.ADMIN_PLANETS;
 
-    console.log('initializers', initializers);
     const initContract = await contract.ethConnection.loadContract<DFArenaInitialize>(
       INIT_ADDRESS,
       loadInitContract

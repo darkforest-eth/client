@@ -222,7 +222,8 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: Hook<boolean>
             </TooltipTrigger>
           </>
         )}
-        <BoardPlacement account={account} />
+        {/* <BoardPlacement account={account} /> */}
+        <Timer/>
       </AlignCenterHorizontally>
       <AlignCenterHorizontally style={{ justifyContent: 'space-around', width: '100%' }}>
         {captureZones}
@@ -233,7 +234,6 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: Hook<boolean>
         )}
       </AlignCenterHorizontally>
       <NetworkHealth />
-      <Timer/>
       <Gameover/>
       <Paused />
     </TopBarContainer>

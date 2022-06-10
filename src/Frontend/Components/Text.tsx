@@ -51,7 +51,13 @@ export const Red = styled.span`
   color: ${dfstyles.colors.dfred};
 `;
 export const Gold = styled.span`
-  color: ${dfstyles.colors.dfyellow};
+  color: ${dfstyles.colors.dfgold};
+`;
+export const Silver = styled.span`
+color: ${dfstyles.colors.dfsilver};
+`;
+export const Bronze = styled.span`
+color: ${dfstyles.colors.dfbronze};
 `;
 
 export const Colored = styled.span<{ color: string }>`

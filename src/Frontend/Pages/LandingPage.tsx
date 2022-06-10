@@ -8,7 +8,7 @@ import { Btn } from '../Components/Btn';
 import { EmSpacer, Link, Spacer, Title } from '../Components/CoreUI';
 import { EmailCTA, EmailCTAMode } from '../Components/Email';
 import { Modal } from '../Components/Modal';
-import { Red, White, Text } from '../Components/Text';
+import { Red, White, Text, HideSmall } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { ArenaLeaderboardDisplay } from '../Views/ArenaLeaderboard';
 import { LandingPageRoundArt } from '../Views/LandingPageRoundArt';
@@ -100,16 +100,15 @@ export default function LandingPage() {
             <LandingPageRoundArt />
 
             <Spacer height={16} />
-            <Spacer height={16} />
             
             <ButtonWrapper>
               <Btn
                 size='large'
-                // disabled={!isRoundOngoing()}
+                disabled={!isRoundOngoing()}
                 style={{ borderColor: 'red', color: 'red' } as CSSStyleDeclaration & CSSProperties}
                 onClick={() => history.push(`/play/`)}
               >
-                Practice Grand Prix #1
+                Race the Grand Prix
               </Btn>
               <Btn size='large' onClick={() => history.push(`/arena/${defaultAddress}`)}>
                 Create Custom Arena
@@ -118,6 +117,36 @@ export default function LandingPage() {
           </Header>
 
           <Spacer height={32} />
+
+          <HallOfFame style={{ color: dfstyles.colors.text }}>
+            <HallOfFameTitle>Racing Legends</HallOfFameTitle>
+            <Spacer height={8} />
+            <table style = {{width: '100%'}}>
+              <tbody style = {{width: '100%'}}>
+                <TRow>
+                  <td>
+                    <HideSmall>Week{' '}</HideSmall>1
+                  </td>
+                  <td>
+                    06/05/<HideSmall>20</HideSmall>22
+                  </td>
+                  <td>
+                    <Link to='https://twitter.com/TheVelorum'>Velorum</Link>
+                  </td>
+                </TRow>
+                <TRow>
+                  <td>
+                    <HideSmall>Week{' '}</HideSmall>2
+                  </td>
+                  <td>
+                    06/11/<HideSmall>20</HideSmall>22
+                  </td>
+                  <td>?????
+                  </td>
+                </TRow>
+              </tbody>
+            </table>
+          </HallOfFame>
           {/* <Link to='https://medium.com/dfdao/dark-forest-arena-grand-prix-f761896a752e'>
             🏎 Grand Prix Info 🏎
           </Link> */}
@@ -141,7 +170,7 @@ export default function LandingPage() {
 const PrettyOverlayGradient = styled.div`
   width: 100vw;
   height: 100vh;
-  background-image: linear-gradient(to right bottom, #511111, #5b0023, #5d003c, #510659, #262077);
+  background-image: linear-gradient(to left bottom, #012338, #1e2142, #3e173e, #56042a, #5e0808);
   background-position: 50%, 50%;
   display: inline-block;
   position: fixed;
@@ -258,13 +287,11 @@ function GrandPrix() {
 
           <br />
           <br />
-          Come join the chat in{' '}
-          <Link to='https://discord.gg/aaHada53mQ'>
-          Discord
+          If you enjoy the game, consider donating to our{' '} 
+          <Link to='https://gitcoin.co/grants/4875/dfdao-dark-forest-gaming-collective'>
+          Gitcoin GR14 grant!
           </Link>
-          {' '} and follow us on {' '}
-          <Link to='https://twitter.com/d_fdao'>Twitter</Link>.
-          <br />
+          <br/>
           <br />
           Happy racing!
         </div>
