@@ -14,7 +14,7 @@ import { ModalPane } from '../Views/ModalPane';
 
 const StyledOnboardingContent = styled.div`
   width: 36em;
-  height: 20em;
+  height: 25em;
   position: relative;
   color: ${dfstyles.colors.text};
 
