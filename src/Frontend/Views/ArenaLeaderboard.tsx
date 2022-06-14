@@ -22,7 +22,7 @@ const errorMessage = 'Error Loading Leaderboard';
 export function ArenaLeaderboardDisplay() {
   const { leaderboard, error } = useArenaLeaderboard();
 
-  const { competitiveLeaderboard, competitiveError } = useCompetitiveLeaderboard();
+  const { competitiveLeaderboard, competitiveError } = useCompetitiveLeaderboard(false);
 
   return (
     <GenericErrorBoundary errorMessage={errorMessage}>

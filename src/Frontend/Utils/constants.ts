@@ -20,9 +20,9 @@ const LOCATION_ID_UB = bigInt(
 
 const competitiveConfig = '0x38329f176da42d2c89b7e424175e8b0ab3c9008cb0d98f947857884d76c6d9d2';
 
-const roundStartTimestamp = '2022-06-11T00:00:00.000Z';
+const roundStartTimestamp = '2022-06-20T00:00:00.000Z';
 
-const roundEndTimestamp = '2022-06-13T00:00:00.000Z';
+const roundEndTimestamp = '2022-06-18T00:00:00.000Z';
 
 const bronzeTime = 5400; // 90 minutes in seconds
 

@@ -100,15 +100,14 @@ export default function LandingPage() {
             <LandingPageRoundArt />
 
             <Spacer height={16} />
-            
             <ButtonWrapper>
               <Btn
                 size='large'
-                disabled={!isRoundOngoing()}
+                // disabled={!isRoundOngoing()}
                 style={{ borderColor: 'red', color: 'red' } as CSSStyleDeclaration & CSSProperties}
                 onClick={() => history.push(`/play/`)}
               >
-                Race the Grand Prix
+                Practice Grand Prix #2
               </Btn>
               <Btn size='large' onClick={() => history.push(`/arena/${defaultAddress}`)}>
                 Create Custom Arena
@@ -141,7 +140,9 @@ export default function LandingPage() {
                   <td>
                     06/11/<HideSmall>20</HideSmall>22
                   </td>
-                  <td>?????
+                  <td>
+                    {' '}
+                    <Link to='https://twitter.com/Ner0nzz'>Ner0nzz</Link>
                   </td>
                 </TRow>
               </tbody>
@@ -268,30 +269,23 @@ function GrandPrix() {
       <Modal contain={['top', 'left', 'right']} initialX={50} initialY={50}>
         <Title slot='title'>🏎 Grand Prix Info 🏎</Title>
         <div style={{ maxWidth: '300px', textAlign: 'justify' }}>
-          Race in the Grand Prix for a $100 prize and NFT trophies! 
-          
-          Here is more {' '}
-          <Link to='https://medium.com/dfdao/grand-prix-week-2-dc3bef0d3913'>
-          rules and info
-          </Link>
+          Race in the Grand Prix for a $100 prize and NFT trophies! Here is more{' '}
+          <Link to='https://medium.com/dfdao/grand-prix-week-2-dc3bef0d3913'>rules and info</Link>
           .
           <br />
           <br />
-
-          If you are new to Dark Forest, check out our {' '}
+          If you are new to Dark Forest, check out our{' '}
           <Link to='https://www.youtube.com/watch?v=3a4i9IyfmBI&list=PLn4H2Bj-iklclFZW_YpKCQaTnBVaECLDK'>
-          video tutorials
+            video tutorials
           </Link>
-          , courtesy of {' '}
-          <Link to='https://twitter.com/moongate_io'>Moongate Guild</Link>.
-
+          , courtesy of <Link to='https://twitter.com/moongate_io'>Moongate Guild</Link>.
           <br />
           <br />
-          If you enjoy the game, consider donating to our{' '} 
+          If you enjoy the game, consider donating to our{' '}
           <Link to='https://gitcoin.co/grants/4875/dfdao-dark-forest-gaming-collective'>
-          Gitcoin GR14 grant!
+            Gitcoin GR14 grant!
           </Link>
-          <br/>
+          <br />
           <br />
           Happy racing!
         </div>
