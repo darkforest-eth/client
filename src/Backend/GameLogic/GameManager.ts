@@ -214,6 +214,14 @@ class GameManager extends EventEmitter {
   private readonly persistentChunkStore: PersistentChunkStore;
 
   /**
+   * An object that syncs any newly added or deleted chunks to the player's IndexedDB.
+   *
+   * @todo it also persists other game data to IndexedDB. This class needs to be renamed `GameSaver`
+   * or something like that.
+   */
+  private readonly configHashPersistentChunkStore: PersistentChunkStore;
+
+  /**
    * Responsible for generating snark proofs.
    */
   private readonly snarkHelper: SnarkArgsHelper;
@@ -401,6 +409,8 @@ class GameManager extends EventEmitter {
     spectator: boolean,
     startTime: number | undefined,
     endTime : number | undefined,
+    configHashPersistentChunkStore: PersistentChunkStore,
+
   ) {
     super();
 
@@ -505,6 +515,7 @@ class GameManager extends EventEmitter {
 
     this.contractsAPI = contractsAPI;
     this.persistentChunkStore = persistentChunkStore;
+    this.configHashPersistentChunkStore = configHashPersistentChunkStore;
     this.snarkHelper = snarkHelper;
     this.useMockHash = useMockHash;
     this.paused = paused;
@@ -604,11 +615,13 @@ class GameManager extends EventEmitter {
     terminal,
     contractAddress,
     spectator,
+    configHash,
   }: {
     connection: EthConnection;
     terminal: React.MutableRefObject<TerminalHandle | undefined>;
     contractAddress: EthAddress;
     spectator: boolean;
+    configHash?: string;
   }): Promise<GameManager> {
     if (!terminal.current) {
       throw new Error('you must pass in a handle to a terminal');
@@ -626,6 +639,7 @@ class GameManager extends EventEmitter {
     terminal.current?.println('Loading game data from disk...');
 
     const persistentChunkStore = await PersistentChunkStore.create({ account, contractAddress });
+    const configHashPersistentChunkStore = await PersistentChunkStore.create({ account, contractAddress, configHash });
 
     terminal.current?.println('Downloading data from Ethereum blockchain...');
     terminal.current?.println('(the contract is very big. this may take a while)');
@@ -718,7 +732,8 @@ class GameManager extends EventEmitter {
       initialState.winners,
       spectator,
       initialState.startTime,
-      initialState.endTime
+      initialState.endTime,
+      configHashPersistentChunkStore
     );
 
     gameManager.setPlayerTwitters(initialState.twitters);
@@ -3427,7 +3442,8 @@ class GameManager extends EventEmitter {
    * Load the serialized versions of all the plugins that this player has.
    */
   public async loadPlugins(): Promise<SerializedPlugin[]> {
-    return this.persistentChunkStore.loadPlugins();
+    console.log('loading Plugins from storage')
+    return this.configHashPersistentChunkStore.loadPlugins();
   }
 
   /**
@@ -3435,6 +3451,7 @@ class GameManager extends EventEmitter {
    */
   public async savePlugins(savedPlugins: SerializedPlugin[]): Promise<void> {
     await this.persistentChunkStore.savePlugins(savedPlugins);
+    await this.configHashPersistentChunkStore.savePlugins(savedPlugins);
   }
 
   /**

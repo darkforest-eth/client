@@ -53,6 +53,7 @@ import { stockConfig } from '../Utils/StockConfigs';
 import { ContractMethodName, EthAddress, UnconfirmedCreateLobby } from '@darkforest_eth/types';
 import { getLobbyCreatedEvent, lobbyPlanetsToInitPlanets } from '../Utils/helpers';
 import _ from 'lodash';
+import { LobbyInitializers } from '../Panes/Lobbies/Reducer';
 
 const enum TerminalPromptStep {
   NONE,
@@ -504,9 +505,9 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
           }
         }
         terminal.current?.println('');
-        terminal.current?.print('Creating new arena instance...');
+        terminal.current?.print('Creating new arena instance... ');
         try {
-          await createLobby();
+          await createLobby(config);
           terminal.current?.println('arena created.', TerminalTextStyle.Green);
           setStep(TerminalPromptStep.ARENA_CREATED);
         } catch (e) {
@@ -526,7 +527,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
 
   const advanceStateFromArenaCreated = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
-      terminal.current?.print('Adding custom planets...');
+      terminal.current?.print('Adding custom planets... ');
 
       try {
         await createPlanets();
@@ -906,11 +907,19 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
       try {
         if (!ethConnection || !contractAddress) throw new Error('no eth connection');
 
+        const diamond = await ethConnection.loadContract<DarkForest>(
+          contractAddress,
+          loadDiamondContract
+        );
+
+        const configHash = (await diamond.getArenaConstants()).CONFIG_HASH;
+
         newGameManager = await GameManager.create({
           connection: ethConnection,
           terminal,
           contractAddress,
           spectator: false,
+          configHash
         });
       } catch (e) {
         console.error(e);
@@ -1190,7 +1199,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
     [step, ethConnection]
   );
 
-  async function createLobby() {
+  async function createLobby(config: LobbyInitializers) {
     if (!ethConnection || !defaultAddress) throw new Error('cannot create arena');
 
     const contractsAPI = await makeContractsAPI({
@@ -1214,6 +1223,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
       INIT_ADDRESS,
       loadInitContract
     );
+
     const artifactBaseURI = '';
     const initInterface = initContract.interface;
     const initAddress = INIT_ADDRESS;
@@ -1234,8 +1244,18 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
     });
 
     const lobbyReceipt = await tx.confirmedPromise;
-    const { owner, lobby } = getLobbyCreatedEvent(lobbyReceipt, contractsAPI.contract);
     console.log(`created arena with ${lobbyReceipt.gasUsed} gas`);
+
+    const { owner, lobby } = getLobbyCreatedEvent(lobbyReceipt, contractsAPI.contract);
+
+    const diamond = await ethConnection.loadContract<DarkForest>(
+      lobby,
+      loadDiamondContract
+    );
+
+    // const startTx = await diamond.start();
+    // const startRct = startTx.wait();
+    // console.log(`initialized arena with ${(await startRct).gasUsed} gas`);
 
     if (owner === playerAddress) {
       history.push({ pathname: `${match.path}${lobby}`, state: { contract: lobby } });
