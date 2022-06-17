@@ -1,16 +1,43 @@
 // Highlight Buffs
 //
-// Highlight all buffs (2x modifiers), also artifact locations and spacetime rips!
+// Find all 2x buffs, artifacts, spacetime rips, and more!
 //
 // author: https://twitter.com/davidryan59
 
 import { PlanetType, PlanetTypeNames, PlanetLevel, PlanetLevelNames } from "https://cdn.skypack.dev/@darkforest_eth/types";
+import { isSpaceShip } from "https://cdn.skypack.dev/@darkforest_eth/gamelogic";
 
+// ----------------------------------------
+// User Configurable Options
+
+const DEFAULT_ELLIPSE = true
+const DEFAULT_PULSE_OPACITY = false
+const DEFAULT_LINE = true
+const DEFAULT_PULSE_RADIUS = false
+const DEFAULT_LINE_DASHED = true
+const DEFAULT_PULSE_LINE_WIDTH = false
+const DEFAULT_SYNC_PULSES = false
+const DEFAULT_PULSE_FAST = false
+
+const DEFAULT_LEVEL_MIN = 0;  // default minimum level of planets to highlight
+const DEFAULT_LEVEL_MAX = 9;  // default maximum level of planets to highlight
+const DEFAULT_RANGE_INDEX = 5;  // see below, index 3 is "Up to 10,000"
+
+const ENABLE_ROUND_5_OPTIONS = true;  // Half Junk, Spaceship, Capture options introduced in v0.6 Round 5
+const ENABLE_TARGET_AND_SPAWN = true;  // Target and Spawn are used in DF DAO Grand Prix
+
+const REFRESH_INTERVAL_MS = 500;  // Recalculate highlights, useful if viewport moves
 const DEV_MODE = false;  // Put as true to highlight UI sections for debugging
+
+// ----------------------------------------
+
 
 const viewport = ui.getViewport();
 
 const PLUGIN_NAME = "Highlight Buffs";
+
+const emptyAddress = "0x0000000000000000000000000000000000000000";
+const ADDRESS_LOCAL_STORAGE_KEY = 'KNOWN_ADDRESSES';
 
 const WIDTH_PX_CONTAINER = "320px";
 const WIDTH_PX_HALF = "145px";
@@ -40,7 +67,7 @@ const RANGES = [
   [500000, "Up to 500,000"],
   [999999, "Up to 999,999"]
 ];
-const DEFAULT_RANGE_MAX = RANGES[3][0];
+const DEFAULT_RANGE_MAX = RANGES[DEFAULT_RANGE_INDEX][0];
 
 // See Dark Forest Client, file: src/_types/global/GlobalTypes.ts/StatIdx
 const StatIdx = {
@@ -49,13 +76,8 @@ const StatIdx = {
   Range: 2,
   Speed: 3,
   Defense: 4,
-  Target: 5
+  HalfJunk: 5,
 }
-
-// Make smaller planets visible at long range by making highlight bigger
-// Additive for Fill, Multiplicative for Line
-const DEFAULT_LEVEL_MIN = 2;  // default minimum level of planets to highlight
-const DEFAULT_LEVEL_MAX = 9;  // default maximum level of planets to highlight
 
 // Miscellaneous constants
 const BASE_LINE_WIDTH_PX = 1.0;
@@ -107,20 +129,50 @@ const periodMsHighlight2xEnergyGro = 1451;
 const periodMsHighlight2xDefense = 1543;
 const periodMsHighlight2xSpeed = 1657;
 const periodMsHighlight2xRange = 1753;
+const periodMsHighlightHalfJunk = 1831;
+const periodMsHighlightInvadeNoCapture = 1787;
+const periodMsHighlightSpaceship = 1699;
 const periodMsHighlightTarget = 1819;
 const periodMsHighlightSpawn = 1947;
 
-
 // Set up colours for each of the highlights. Use similar colours to asteroid colour for 2x buffs.
+const colsHighlightArtifact = [255, 100, 100];
+const colsHighlightRip = [80, 200, 255];
 const colsHighlight2xEnergyCap = [255, 160, 60];
 const colsHighlight2xEnergyGro = [120, 255, 120];
 const colsHighlight2xDefense = [180, 140, 255];
 const colsHighlight2xSpeed = [255, 100, 255];
 const colsHighlight2xRange = [225, 225, 80];
-const colsHighlightRip = [80, 200, 255];
-const colsHighlightArtifact = [255, 100, 100];
+const colsHighlightHalfJunk = [180, 150, 130];
+const colsHighlightInvadeNoCapture = [170, 255, 100];
+const colsHighlightSpaceship = [190, 100, 255];
 const colsHighlightTarget = [212, 175, 155];
 const colsHighlightSpawn = [69, 175, 155];
+
+// Helper functions for spaceships
+const loadAccounts = plugin => {
+  const knownAddresses = [];
+  const accounts = [];
+  const serializedAddresses = localStorage.getItem(ADDRESS_LOCAL_STORAGE_KEY);
+  if (serializedAddresses !== null) {
+      const addresses = JSON.parse(serializedAddresses);
+      for (const addressStr of addresses) {
+          knownAddresses.push(addressStr);
+      }
+  }
+  for (const addy of knownAddresses) {
+      accounts.push({ address: addy });
+  }
+  plugin.accounts = accounts;
+};
+const loadSpaceships = plugin => {
+  for (const acc of plugin.accounts) {
+      const spaceshipsOwnedByAccount = df.entityStore
+          .getArtifactsOwnedBy(acc.address)
+          .filter(artifact => isSpaceShip(artifact.artifactType));
+      plugin.spaceships = [...plugin.spaceships, ...spaceshipsOwnedByAccount];
+  }
+};
 
 // Helper functions for filters
 const prospectExpired = (plugin, planet) => {
@@ -129,15 +181,18 @@ const prospectExpired = (plugin, planet) => {
   if (planet.hasTriedFindingArtifact) return false;
   return planet.prospectedBlockNumber + 255 - df.contractsAPI.ethConnection.blockNumber <= 0;  // 256 blocks to prospect an artifact
 }
+const planetWasAlreadyInvaded = p => p.invader !== emptyAddress;
+const planetWasAlreadyCaptured = p => p.capturer !== emptyAddress;
+const planetHasRelevantSpaceship = (plugin, planet) => planet.heldArtifactIds.some(id => plugin.spaceships.some(spaceship => id === spaceship.id));
 const distanceToPlanetSquared = planet => planet.location ? (viewport.centerWorldCoords.x - planet.location.coords.x) ** 2 + (viewport.centerWorldCoords.y - planet.location.coords.y) ** 2 : MAX_DISTANCE;
 const distanceInRange = (plugin, planet) => distanceToPlanetSquared(planet) <= plugin.getSelectValue(RANGE_MAX) ** 2;
 const levelInRange = (plugin, planet) => plugin.getSelectValue(LEVEL_MIN) <= planet.planetLevel && planet.planetLevel <= plugin.getSelectValue(LEVEL_MAX);
-const distanceAndLevelInRange = (plugin, planet) => levelInRange(plugin, planet) && distanceInRange(plugin, planet);
+const mainChecks = (plugin, planet) => levelInRange(plugin, planet) && distanceInRange(plugin, planet) && !planet.destroyed;
 const planetTypeMatches = (plugin, planet) => {
   const type = plugin.getSelectValue(PLANET_TYPE);
   return type === ALL_PLANET_TYPES || type === planet.planetType;
 };
-const filter2xStat = (statIdx, upgradeIdx=-1) => (plugin, planet) => distanceAndLevelInRange(plugin, planet) && planetTypeMatches(plugin, planet) && (planet.bonus && planet.bonus[statIdx] || planet.upgradeState && planet.upgradeState[upgradeIdx]);
+const filter2xStat = (statIdx, upgradeIdx=-1) => (plugin, planet) => mainChecks(plugin, planet) && planetTypeMatches(plugin, planet) && (planet.bonus && planet.bonus[statIdx] || planet.upgradeState && planet.upgradeState[upgradeIdx]);
 
 // Filters for each highlight type
 const filter2xEnergyCap = filter2xStat(StatIdx.EnergyCap);
@@ -145,13 +200,15 @@ const filter2xEnergyGro = filter2xStat(StatIdx.EnergyGro);
 const filter2xDefense = filter2xStat(StatIdx.Defense, 0);  // defense rank upgrades are on planet.upgradeState[0]
 const filter2xSpeed = filter2xStat(StatIdx.Speed, 2);  // speed rank upgrades are on planet.upgradeState[2]
 const filter2xRange = filter2xStat(StatIdx.Range, 1);  // range rank upgrades are on planet.upgradeState[1]
-const filterRip = (plugin, planet) => distanceAndLevelInRange(plugin, planet) && planet.planetType === PlanetType.TRADING_POST;
-const filterTarget = (plugin, planet) =>  distanceAndLevelInRange(plugin, planet) && planet.isTargetPlanet;
-const filterSpawn = (plugin, planet) => distanceAndLevelInRange(plugin, planet) && planet.isSpawnPlanet;
-
+const filterHalfJunk = filter2xStat(StatIdx.HalfJunk);
+const filterRip = (plugin, planet) => mainChecks(plugin, planet) && planet.planetType === PlanetType.TRADING_POST;
+const filterInvadeNoCapture = (plugin, planet) => mainChecks(plugin, planet) && planetWasAlreadyInvaded(planet) && !planetWasAlreadyCaptured(planet);
+const filterSpaceship = (plugin, planet) => mainChecks(plugin, planet) && planetHasRelevantSpaceship(plugin, planet);
+const filterTarget = (plugin, planet) => mainChecks(plugin, planet) && planet.isTargetPlanet;
+const filterSpawn = (plugin, planet) => mainChecks(plugin, planet) && planet.isSpawnPlanet;
 const filterArtifact = (plugin, planet) => {
   // Filter out planets of wrong size
-  if (!distanceAndLevelInRange(plugin, planet)) return false;
+  if (!mainChecks(plugin, planet)) return false;
 
   // Include any planet with an artifact circling (and is big enough)
   if (planet.heldArtifactIds.length > 0) return true;
@@ -161,7 +218,6 @@ const filterArtifact = (plugin, planet) => {
     && !(planet.hasTriedFindingArtifact || planet.unconfirmedFindArtifact)
     && !prospectExpired(plugin, planet);
 };
-
 
 const divCreator = ({width, margin, padding, devCol="#550000"}) => {
   const div = document.createElement("div");
@@ -377,15 +433,19 @@ class Plugin {
     this.ui = {};
     this.ui.select = {};
     initialiseSelectWrappers(this);
+    this.accounts = [];
+    this.spaceships = [];
+    loadAccounts(this);
+    loadSpaceships(this);
     this.drawOptions = {
-      ellipse: {value: false, label: "Ellipse"},
-      pulseOpacity: {value: true, label: "Pulse Opacity"},
-      line: {value: true, label: "Line"},
-      pulseRadius: {value: true, label: "Pulse Radius"},
-      lineDashed: {value: false, label: "Line Dashed"},
-      pulseLineWidth: {value: true, label: "Pulse Line Width"},
-      sync: {value: false, label: "Sync Pulses"},
-      pulseFast: {value: false, label: "Pulse Fast"},
+      ellipse: {value: DEFAULT_ELLIPSE, label: "Ellipse"},
+      pulseOpacity: {value: DEFAULT_PULSE_OPACITY, label: "Pulse Opacity"},
+      line: {value: DEFAULT_LINE, label: "Line"},
+      pulseRadius: {value: DEFAULT_PULSE_RADIUS, label: "Pulse Radius"},
+      lineDashed: {value: DEFAULT_LINE_DASHED, label: "Line Dashed"},
+      pulseLineWidth: {value: DEFAULT_PULSE_LINE_WIDTH, label: "Pulse Line Width"},
+      sync: {value: DEFAULT_SYNC_PULSES, label: "Sync Pulses"},
+      pulseFast: {value: DEFAULT_PULSE_FAST, label: "Pulse Fast"},
     }
     this.drawOptionList = Object.keys(this.drawOptions);
     this.highlightData = {
@@ -396,13 +456,23 @@ class Plugin {
       planetsWith2xSpeed: {label: "Speed", filter: filter2xSpeed, array: [TOGGLE_OFF], periodMs: periodMsHighlight2xSpeed, cols: colsHighlight2xSpeed},
       planetsWith2xEnergyGro: {label: "Energy Gro", filter: filter2xEnergyGro, array: [TOGGLE_OFF], periodMs: periodMsHighlight2xEnergyGro, cols: colsHighlight2xEnergyGro},
       planetsWith2xRange: {label: "Range", filter: filter2xRange, array: [TOGGLE_OFF], periodMs: periodMsHighlight2xRange, cols: colsHighlight2xRange},
-      planetsWithTarget: {label: "Target", filter: filterTarget, array: [TOGGLE_OFF], periodMs: periodMsHighlightTarget, cols: colsHighlightTarget},
-      planetsWithSpawn: {label: "Spawn", filter: filterSpawn, array: [TOGGLE_OFF], periodMs: periodMsHighlightSpawn, cols: colsHighlightSpawn}
-
+    };
+    if (ENABLE_ROUND_5_OPTIONS) {
+      this.highlightData['planetsWithHalfJunk'] = {label: "Half Junk", filter: filterHalfJunk, array: [TOGGLE_OFF], periodMs: periodMsHighlightHalfJunk, cols: colsHighlightHalfJunk};
+      this.highlightData['planetsWithInvadeNoCapture'] = { label: "Need Capture", filter: filterInvadeNoCapture, array: [TOGGLE_OFF], periodMs: periodMsHighlightInvadeNoCapture, cols: colsHighlightInvadeNoCapture };
+      this.highlightData['planetsWithSpaceship'] = { label: "Spaceship", filter: filterSpaceship, array: [TOGGLE_OFF], periodMs: periodMsHighlightSpaceship, cols: colsHighlightSpaceship };
+    };
+    if (ENABLE_TARGET_AND_SPAWN) {
+      this.highlightData['planetsWithTarget'] = {label: "Target", filter: filterTarget, array: [TOGGLE_OFF], periodMs: periodMsHighlightTarget, cols: colsHighlightTarget};
+      this.highlightData['planetsWithSpawn'] =  {label: "Spawn", filter: filterSpawn, array: [TOGGLE_OFF], periodMs: periodMsHighlightSpawn, cols: colsHighlightSpawn};
     };
     this.highlightList = Object.keys(this.highlightData);
     console.log(`Initialised ${PLUGIN_NAME} plugin:`);
     console.dir(this);
+
+    this.refreshHighlightsTimer = setInterval(() => {
+      setTimeout(this.recalcAllHighlights, 0);
+    }, REFRESH_INTERVAL_MS);
   }
 
   // Toggle individual draw options on or off
@@ -528,7 +598,15 @@ class Plugin {
     ctx.restore();
   }
 
-  destroy() {}
+  clearRefreshHighlights() {
+    if (this.refreshHighlightsTimer) {
+      clearInterval(this.refreshHighlightsTimer)
+    }
+  }
+
+  destroy() {
+    this.clearRefreshHighlights();
+  }
 }
 
 export default Plugin;
