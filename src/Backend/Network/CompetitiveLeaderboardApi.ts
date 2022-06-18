@@ -13,7 +13,7 @@ import {
 } from '../../Frontend/Utils/constants';
 import { getAllTwitters } from './UtilityServerAPI';
 
-const API_URL_GRAPH = 'https://5a04-2601-601-d00-5e30-ed4a-347f-6eae-7dde.ngrok.io/subgraphs/name/df';
+const API_URL_GRAPH = 'https://bc0d-137-184-52-141.ngrok.io/subgraphs/name/df';
 
 export async function loadCompetitiveLeaderboard(
   config: string = competitiveConfig,
