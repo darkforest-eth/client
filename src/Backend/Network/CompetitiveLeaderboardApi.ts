@@ -13,7 +13,7 @@ import {
 } from '../../Frontend/Utils/constants';
 import { getAllTwitters } from './UtilityServerAPI';
 
-const API_URL_GRAPH = 'https://bc0d-137-184-52-141.ngrok.io/subgraphs/name/df';
+const API_URL_GRAPH = 'https://graph-optimism.gnosischain.com/subgraphs/name/dfdao/arena-v1';
 
 export async function loadCompetitiveLeaderboard(
   config: string = competitiveConfig,
