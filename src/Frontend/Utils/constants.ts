@@ -18,17 +18,17 @@ const LOCATION_ID_UB = bigInt(
   '21888242871839275222246405745257275088548364400416034343698204186575808495617'
 );
 
-const competitiveConfig = '0x58975a691f8765ef71b7ffd9f6d64fa3d22aa1bb046265984a07fb30f7ddad33';
+const competitiveConfig = '0x6cc6954ecdfefd966e52e5911555a778770e412c3f4393a8b6033ea95688519e';
 
-const roundStartTimestamp = '2022-06-18T00:00:00.000Z';
+const roundStartTimestamp = '2022-06-25T00:00:00.000Z';
 
-const roundEndTimestamp = '2022-06-21T00:00:00.000Z';
+const roundEndTimestamp = '2022-06-28T00:00:00.000Z';
 
-const bronzeTime = 80 * 60; // 80 minutes in seconds
+const bronzeTime = 4500; // 80 minutes in seconds
 
-const silverTime = 40 * 60 // 40 minutes in seconds
+const silverTime = 3500; // 40 minutes in seconds
 
-const goldTime = 20 * 60; // 20 minutes in seconds
+const goldTime = 2500; // 20 minutes in seconds
 
 export {
   MIN_CHUNK_SIZE,

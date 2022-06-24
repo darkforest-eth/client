@@ -28,32 +28,6 @@ const Numbers = styled.div`
   display: inline-block;
 `;
 
-function BoardPlacement({ account }: { account: EthAddress | undefined }) {
-  const uiManager = useUIManager();
-  const player = usePlayer(uiManager, account);
-
-  let content;
-
-  if (!player.value) {
-    content = <Sub>n/a</Sub>;
-  } else {
-    let formattedScore = 'n/a';
-    if (player.value.score !== undefined && player.value.score !== null) {
-      formattedScore = player.value.score.toLocaleString();
-    }
-
-    content = (
-      <Sub>
-        <TooltipTrigger name={TooltipName.Score}>
-          score: <Text>{formattedScore}</Text>
-        </TooltipTrigger>
-      </Sub>
-    );
-  }
-
-  return <Numbers>{content}</Numbers>;
-}
-
 function SpaceJunk({ account }: { account: EthAddress | undefined }) {
   const uiManager = useUIManager();
 
@@ -83,7 +57,7 @@ function SpaceJunk({ account }: { account: EthAddress | undefined }) {
     <Numbers>
       <Sub>
         <TooltipTrigger name={TooltipName.SpaceJunk}>
-          space junk:{' '}
+          junk:{' '}
           <Text>
             {spaceJunk} / {spaceJunkLimit}
           </Text>
@@ -222,19 +196,17 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: Hook<boolean>
             </TooltipTrigger>
           </>
         )}
-        {/* <BoardPlacement account={account} /> */}
-        <Timer/>
-      </AlignCenterHorizontally>
-      <AlignCenterHorizontally style={{ justifyContent: 'space-around', width: '100%' }}>
-        {captureZones}
+        {/* {captureZones} */}
         {uiManager.getSpaceJunkEnabled() && (
           <>
             <SpaceJunk account={account} />
           </>
         )}
+        {/* <BoardPlacement account={account} /> */}
       </AlignCenterHorizontally>
+      <Timer account={account} />
       <NetworkHealth />
-      <Gameover/>
+      <Gameover />
       <Paused />
     </TopBarContainer>
   );

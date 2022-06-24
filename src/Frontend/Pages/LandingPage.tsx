@@ -107,7 +107,7 @@ export default function LandingPage() {
                 style={{ borderColor: 'red', color: 'red' } as CSSStyleDeclaration & CSSProperties}
                 onClick={() => history.push(`/play/`)}
               >
-                Race the Grand Prix
+                Race Grand Prix
               </Btn>
               <Btn size='large' onClick={() => history.push(`/arena/${defaultAddress}`)}>
                 Create Custom Arena
@@ -269,8 +269,8 @@ function GrandPrix() {
       <Modal contain={['top', 'left', 'right']} initialX={50} initialY={50}>
         <Title slot='title'>🏎 Grand Prix Info 🏎</Title>
         <div style={{ maxWidth: '300px', textAlign: 'justify' }}>
-          Race in the Grand Prix for a $200 prize and NFT trophies! Here is more{' '}
-          <Link to='https://medium.com/dfdao/grand-prix-week-3-17f7dc2cb6f8'>rules and info</Link>
+          Race in the Grand Prix for a $300 prize and NFT trophies! Here is more{' '}
+          <Link to='https://medium.com/dfdao/grand-prix-week-4-6b0d9c0174bf'>rules and info</Link>
           .
           <br />
           <br />
@@ -281,9 +281,9 @@ function GrandPrix() {
           , courtesy of <Link to='https://twitter.com/moongate_io'>Moongate Guild</Link>.
           <br />
           <br />
-          If you enjoy the game, consider donating to our{' '}
-          <Link to='https://gitcoin.co/grants/4875/dfdao-dark-forest-gaming-collective'>
-            Gitcoin GR14 grant!
+          Or read community member ClassicJordon's
+          <Link to='https://medium.com/@classicjdf/classicjs-dark-forest-101-strategy-guide-part-1-energy-1b80923fee69'>
+            beginners strategy guide!
           </Link>
           <br />
           <br />

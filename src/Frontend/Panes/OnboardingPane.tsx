@@ -57,27 +57,36 @@ function OnboardMoney({ advance }: { advance: () => void }) {
   return (
     <StyledOnboardingContent>
       <p>
-        Race against the clock to capture the Target Planet (it has a big 🎯 floating above it)
-        and <Green>claim victory when it contains at least <Gold>{victoryThreshold}%</Gold> energy!</Green>
+        Race against the clock to capture the Target Planet (it has a big 🎯 floating above it) and{' '}
+        <Green>
+          claim victory when it contains at least <Gold>{victoryThreshold}%</Gold> energy!
+        </Green>
       </p>
-      {isCompetitive && (
+      <p>
+        <div>INTRODUCING OUR NEW SCORING ALGORITHM</div>
+        <div><White>Scoring is now calculated using time AND moves</White>.</div>
+      </p>
+      <p>
+          Here is how scoring works: Score = time (secs) * (1 + moves / 1000). The lowest score
+          wins!
+        </p>
+      {/* {isCompetitive && ( */}
         <p>
-          <div>NOW INTRODUCING RANKS</div>
-          <div>End the race in a certain time to earn Bronze, Silver, and Gold ranks.</div>
+          <div>Earn below these scores to earn Bronze, Silver, and Gold ranks.</div>
           <div>
-            Gold: <Gold>{formatDuration(goldTime * 1000)}</Gold>
+            Gold: <Gold>{goldTime}</Gold>
           </div>
           <div>
-            Silver: <Silver>{formatDuration(silverTime * 1000)}</Silver>
+            Silver: <Silver>{silverTime}</Silver>
           </div>
           <div>
-            Bronze: <Bronze>{formatDuration(bronzeTime * 1000)}</Bronze>
+            Bronze: <Bronze>{bronzeTime}</Bronze>
           </div>
         </p>
-      )}
+      {/* )} */}
       <p>The ⏲️ starts when you make your first move. </p>
       {isCompetitive && <p>The player with the fastest time after 48hrs will win XDAI and a 🏆!</p>}
-      <p>
+      {/* <p>
         We have initialized a{' '}
         <a onClick={() => window.open('https://github.com/austintgriffith/burner-wallet')}>
           burner wallet
@@ -86,7 +95,7 @@ function OnboardMoney({ advance }: { advance: () => void }) {
         <Blue>
           <a onClick={() => window.open(explorerAddressLink)}>({account})</a>
         </Blue>
-      </p>
+      </p> */}
       <div>
         <span></span>
         <Btn className='btn' onClick={advance}>

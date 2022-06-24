@@ -3768,6 +3768,10 @@ class GameManager extends EventEmitter {
     return this.contractConstants.CONFIG_HASH == competitiveConfig
   }
   
+  public getPlayerMoves(addr: EthAddress): number | undefined {
+    const player = this.players.get(addr);
+    return player?.moves;
+  }
 }
 
 export default GameManager;

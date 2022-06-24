@@ -21,13 +21,12 @@ export async function loadCompetitiveLeaderboard(
 ): Promise<Leaderboard> {
   const QUERY = `
 query {
-  arenas(first:1000, where: {configHash: "${config}"}) {
-    id
+  arenas(first:1000, where: {configHash: "${config}", , gameOver: true}) {
     startTime
     winners(first :1) {
       address
+      moves
    }
-    gameOver
     endTime
     duration
   }
@@ -40,14 +39,14 @@ query {
 
 interface winners {
   address: string;
+  moves: number;
 }
 interface graphArena {
   winners: winners[];
   creator: string;
   duration: number | null;
+  moves: number | null;
   endTime: number | null;
-  gameOver: boolean;
-  id: string;
   startTime: number;
 }
 
@@ -81,7 +80,6 @@ async function convertData(arenas: graphArena[], isCompetitive: boolean): Promis
   const roundEnd = new Date(roundEndTimestamp).getTime() / 1000;
   for (const arena of arenas) {
     if (
-      !arena.gameOver ||
       !arena.endTime ||
       !arena.duration ||
       arena.startTime == 0 ||
@@ -94,14 +92,17 @@ async function convertData(arenas: graphArena[], isCompetitive: boolean): Promis
     const winnerAddress = address(arena.winners[0].address);
     const entry = entries.find((p) => winnerAddress == p.ethAddress);
 
+    const score = Math.round(arena.duration * (1 + (arena.winners[0].moves / 1000))  * 100) / 100; // round to hundredths place
+    console.log(`${winnerAddress}: ${arena.winners[0].moves} moves in ${arena.duration} seconds, score: ${score}`)
+
     if (!entry) {
       entries.push({
         ethAddress: winnerAddress,
-        score: arena.duration,
+        score: score,
         twitter: twitters[winnerAddress],
       });
-    } else if (entry.score && entry.score > arena.duration) {
-      entry.score = arena.duration;
+    } else if (entry.score && entry.score > score) {
+      entry.score = score;
     }
   }
 

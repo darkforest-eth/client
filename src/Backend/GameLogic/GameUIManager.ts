@@ -1457,6 +1457,10 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getGameover$();
   }
 
+  getPlayerMoves(addr : EthAddress) {
+    return this.gameManager.getPlayerMoves(addr);
+  }
+
   public getWinners(): EthAddress[] {
     return this.gameManager.getWinners();
   }

@@ -7,6 +7,7 @@ import TutorialManager, {
 } from '../../Backend/GameLogic/TutorialManager';
 import { Hook } from '../../_types/global/GlobalTypes';
 import { Btn } from '../Components/Btn';
+import { Link } from '../Components/CoreUI';
 import { Icon, IconType } from '../Components/Icons';
 import { Gold, Green, Red, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
@@ -39,7 +40,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
       <div className='tutzoom'>
         Well done! This pane displays quick information about your planet and the ability to send
         resources. Your planet uses <White>energy</White> to capture nearby planets. You can use{' '}
-        <Gold>silver</Gold> for upgrades.
+        <Gold>silver</Gold> for planet upgrades <Link to = "https://www.youtube.com/watch?v=eXWfaVt_i3o&list=PLn4H2Bj-iklclFZW_YpKCQaTnBVaECLDK&index=5">(Click here for more on silver)</Link>.
         <br />
         <br />
         <White>Try sending energy to another planet.</White> You can click and drag to send energy
@@ -224,7 +225,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
         </div>
       </div>
     );
-  } 
+  }
   // else if (tutorialState === TutorialState.ScoringDetails) {
   //   return (
   //     <div className='tutzoom'>
@@ -244,7 +245,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   //       </div>
   //     </div>
   //   );
-  // } 
+  // }
   // else if (tutorialState === TutorialState.Valhalla) {
   //   return (
   //     <div className='tutalmost'>
@@ -261,12 +262,18 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   //       </div>
   //     </div>
   //   );
-  // } 
+  // }
   else if (tutorialState === TutorialState.AlmostCompleted) {
     return (
       <div className='tutalmost'>
-        This is the end of the tutorial. Go out and explore the universe! More information will pop
-        up in the <White>upper-right</White> as you discover more about the game.
+        This is the end of the tutorial. For a more in-depth strategy guide,{' '}
+        <Link to='https://medium.com/@classicjdf/classicjs-dark-forest-101-strategy-guide-part-1-energy-1b80923fee69'>
+          click here
+        </Link>
+        . For video tutorials, <Link to='https://www.youtube.com/watch?v=3a4i9IyfmBI&list=PLn4H2Bj-iklclFZW_YpKCQaTnBVaECLDK'>
+          click here
+        </Link>. More information will pop up in the <White>upper-right</White> as you discover more about
+        the game.
         <br />
         We hope you enjoy Dark Forest!
         <div style={{ gap: '5px' }}>

@@ -228,7 +228,7 @@ function CompetitiveLeaderboardTable({
             );
           },
           (row: [string, string | undefined, number | undefined], i) => {
-            return <Cell style={{ color: getRankColor([i, row[2]]) }}>{scoreToTime(row[2])}</Cell>;
+            return <Cell style={{ color: getRankColor([i, row[2]]) }}>{row[2]}</Cell>;
           },
         ]}
       />
