@@ -145,6 +145,18 @@ export default function LandingPage() {
                     <Link to='https://twitter.com/Ner0nzz'>Ner0nzz</Link>
                   </td>
                 </TRow>
+                <TRow>
+                  <td>
+                    <HideSmall>Week{' '}</HideSmall>2
+                  </td>
+                  <td>
+                    06/18/<HideSmall>20</HideSmall>22
+                  </td>
+                  <td>
+                    {' '}
+                    <Link to='https://twitter.com/Ner0nzz'>Ner0nzz</Link>
+                  </td>
+                </TRow>
               </tbody>
             </table>
           </HallOfFame>
@@ -281,7 +293,7 @@ function GrandPrix() {
           , courtesy of <Link to='https://twitter.com/moongate_io'>Moongate Guild</Link>.
           <br />
           <br />
-          Or read community member ClassicJordon's
+          Or read community member ClassicJordon's {' '}
           <Link to='https://medium.com/@classicjdf/classicjs-dark-forest-101-strategy-guide-part-1-energy-1b80923fee69'>
             beginners strategy guide!
           </Link>
