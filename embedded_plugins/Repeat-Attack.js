@@ -100,6 +100,10 @@ class Repeater {
     this.attacks.splice(position, 1);
     this.saveAttacks();
   }
+  removeAllAttacks() {
+    this.attacks = [];
+    this.saveAttacks();
+  }
   stopFiring(planetId) {
     this.attacks = this.attacks.filter(item => item.srcId !== planetId);
     this.saveAttacks();
@@ -245,7 +249,7 @@ function AddAttack({ onCreate, stopFiring, stopBeingFiredAt }) {
         style=${{fontSize: '90%'}}
       >
         <button
-          style=${{...VerticalSpacing, width: 80, marginRight: 5}}
+          style=${{...VerticalSpacing, width: 80, marginRight: 10}}
           onClick=${() => planet && stopFiring(planet.locationId)}
         >
           Stop Firing
@@ -307,8 +311,11 @@ function AttackList({ repeater }) {
     />
     <h1 style=${{...HalfVerticalSpacing, fontWeight: 'bold'}}>
       Active (${actionsChildren.length})
+      <button style=${{ float: 'right', marginLeft: 10 }} onClick=${() => {repeater.removeAllAttacks(); setAttacks([])}}>
+        Clear All
+      </button>
       <button style=${{ float: 'right' }} onClick=${() => setAttacks([...repeater.attacks])}>
-        refresh
+        Refresh
       </button>
     </h1>
     <div style=${actionList}>${actionsChildren.length ? actionsChildren : 'No Actions.'}</div>
