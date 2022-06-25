@@ -45,7 +45,6 @@ interface graphArena {
   winners: winners[];
   creator: string;
   duration: number | null;
-  moves: number | null;
   endTime: number | null;
   startTime: number;
 }
@@ -85,7 +84,7 @@ async function convertData(arenas: graphArena[], isCompetitive: boolean): Promis
       arena.startTime == 0 ||
       arena.winners.length == 0 ||
       !arena.winners[0].address || 
-      isCompetitive && (roundEnd <= arena.endTime || roundStart >= arena.startTime)
+      isCompetitive && (roundEnd <= arena.endTime || roundStart >= arena.startTime) 
     )
       continue;
 
@@ -99,10 +98,14 @@ async function convertData(arenas: graphArena[], isCompetitive: boolean): Promis
       entries.push({
         ethAddress: winnerAddress,
         score: score,
+        time: arena.duration,
+        moves: arena.winners[0].moves,
         twitter: twitters[winnerAddress],
       });
     } else if (entry.score && entry.score > score) {
       entry.score = score;
+      entry.moves = arena.winners[0].moves;
+      entry.time = arena.duration;
     }
   }
 

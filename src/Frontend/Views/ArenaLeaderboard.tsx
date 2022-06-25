@@ -1,4 +1,4 @@
-import { ArenaLeaderboard, ArtifactRarity, Leaderboard } from '@darkforest_eth/types';
+import { ArenaLeaderboard, ArtifactRarity, Leaderboard, LeaderboardEntry } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { getRank, Rank } from '../../Backend/Utils/Rank';
@@ -194,10 +194,11 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
   );
 }
 
+
 function CompetitiveLeaderboardTable({
   rows,
 }: {
-  rows: Array<[string, string | undefined, number | undefined]>;
+  rows: LeaderboardEntry[];
 }) {
   if (rows.length == 0) return <Subber>No players finished</Subber>;
   return (
@@ -207,28 +208,36 @@ function CompetitiveLeaderboardTable({
         headers={[
           <Cell key='star'></Cell>,
           <Cell key='place'></Cell>,
-          <Cell key='player'></Cell>,
-          <Cell key='player'></Cell>,
-          <Cell key='score'></Cell>,
+          <Cell key='player'>Player</Cell>,
+          <Cell key='moves'>Moves</Cell>,
+          <Cell key='time'>Time</Cell>,
+
+          <Cell key='score'>Score</Cell>,
         ]}
         rows={rows}
         columns={[
-          (row: [string, string | undefined, number | undefined], i) => getRankStar(i),
-          (row: [string, string | undefined, number | undefined], i) => (
-            <Cell style={{ color: getRankColor([i, row[2]]) }}>
-              {row[2] === undefined || row[2] === null ? 'unranked' : i + 1 + '.'}
+          (row: LeaderboardEntry, i) => getRankStar(i),
+          (row: LeaderboardEntry, i) => (
+            <Cell style={{ color: getRankColor([i, row.score]) }}>
+              {row.score === undefined || row.score === null ? 'unranked' : i + 1 + '.'}
             </Cell>
           ),
-          (row: [string, string | undefined, number | undefined], i) => {
-            const color = getRankColor([i, row[2]]);
+          (row: LeaderboardEntry, i) => {
+            const color = getRankColor([i, row.score]);
             return (
               <Cell style={{ color }}>
-                {compPlayerToEntry(row[0], row[1], color)}
+                {compPlayerToEntry(row.ethAddress, row.twitter, color)}
               </Cell>
             );
           },
-          (row: [string, string | undefined, number | undefined], i) => {
-            return <Cell style={{ color: getRankColor([i, row[2]]) }}>{row[2]}</Cell>;
+          (row: LeaderboardEntry, i) => {
+            return <Cell style={{ color: getRankColor([i, row.score]) }}>{row.moves}</Cell>;
+          },
+          (row: LeaderboardEntry, i) => {
+            return <Cell style={{ color: getRankColor([i, row.score]) }}>{formatDuration(row.time * 1000)}</Cell>;
+          },
+          (row: LeaderboardEntry, i) => {
+            return <Cell style={{ color: getRankColor([i, row.score]) }}>{row.score}</Cell>;
           },
         ]}
       />
@@ -340,12 +349,7 @@ function CompetitiveLeaderboardBody({
     return a.score - b.score;
   });
 
-  const competitiveRows: [string, string | undefined, number | undefined][] =
-    leaderboard.entries.map((entry) => {
-      return [entry.ethAddress, entry.twitter, entry.score];
-    });
-
-  return <CompetitiveLeaderboardTable rows={competitiveRows} />;
+  return <CompetitiveLeaderboardTable rows={leaderboard.entries} />;
 }
 
 function ArenaLeaderboardBody({

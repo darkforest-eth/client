@@ -50,8 +50,8 @@ export function Timer({ account }: { account: EthAddress | undefined }) {
         extraContent={
           <Text>
             <p> score is calculated using the following equation:</p>
-            <White>Score = Time (seconds) * (1 - Moves / 1000)</White>{'\n'}
-            <p>Your score is {Math.round(score)} = {time} * (1 - {moves} / 1000)</p>
+            <White>Score = Time (seconds) * (1 + Moves / 1000)</White>{'\n'}
+            <p>Your score is {Math.round(score)} = {time} * (1 + {moves} / 1000)</p>
           </Text>
         }
       >

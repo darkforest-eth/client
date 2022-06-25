@@ -147,7 +147,7 @@ export default function LandingPage() {
                 </TRow>
                 <TRow>
                   <td>
-                    <HideSmall>Week{' '}</HideSmall>2
+                    <HideSmall>Week{' '}</HideSmall>3
                   </td>
                   <td>
                     06/18/<HideSmall>20</HideSmall>22
