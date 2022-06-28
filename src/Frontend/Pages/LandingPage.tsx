@@ -103,11 +103,11 @@ export default function LandingPage() {
             <ButtonWrapper>
               <Btn
                 size='large'
-                disabled={!isRoundOngoing()}
+                // disabled={!isRoundOngoing()}
                 style={{ borderColor: 'red', color: 'red' } as CSSStyleDeclaration & CSSProperties}
                 onClick={() => history.push(`/play/`)}
               >
-                Race Grand Prix
+                Practice Grand Prix #4
               </Btn>
               <Btn size='large' onClick={() => history.push(`/arena/${defaultAddress}`)}>
                 Create Custom Arena
@@ -155,6 +155,18 @@ export default function LandingPage() {
                   <td>
                     {' '}
                     <Link to='https://twitter.com/Ner0nzz'>Ner0nzz</Link>
+                  </td>
+                </TRow>
+                <TRow>
+                  <td>
+                    <HideSmall>Week{' '}</HideSmall>4
+                  </td>
+                  <td>
+                    06/25/<HideSmall>20</HideSmall>22
+                  </td>
+                  <td>
+                    {' '}
+                    <Link to='https://twitter.com/ClassicJordon'>ClassicJordon</Link>
                   </td>
                 </TRow>
               </tbody>
