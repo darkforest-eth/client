@@ -20,9 +20,9 @@ import { Table } from './Table';
 const errorMessage = 'Error Loading Leaderboard';
 
 export function ArenaLeaderboardDisplay() {
-  const { leaderboard, error } = useArenaLeaderboard();
+  // const { leaderboard, error } = useArenaLeaderboard(true);
 
-  const { competitiveLeaderboard, competitiveError } = useCompetitiveLeaderboard(false);
+  const { competitiveLeaderboard, competitiveError } = useCompetitiveLeaderboard(true);
 
   return (
     <GenericErrorBoundary errorMessage={errorMessage}>

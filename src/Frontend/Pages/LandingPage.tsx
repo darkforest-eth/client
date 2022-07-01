@@ -103,11 +103,11 @@ export default function LandingPage() {
             <ButtonWrapper>
               <Btn
                 size='large'
-                // disabled={!isRoundOngoing()}
+                disabled={!isRoundOngoing()}
                 style={{ borderColor: 'red', color: 'red' } as CSSStyleDeclaration & CSSProperties}
                 onClick={() => history.push(`/play/`)}
               >
-                Practice Grand Prix #4
+                Enter Grand Prix #5
               </Btn>
               <Btn size='large' onClick={() => history.push(`/arena/${defaultAddress}`)}>
                 Create Custom Arena
@@ -118,7 +118,7 @@ export default function LandingPage() {
           <Spacer height={32} />
 
           <HallOfFame style={{ color: dfstyles.colors.text }}>
-            <HallOfFameTitle>Racing Legends</HallOfFameTitle>
+            <HallOfFameTitle>Wallbreakers</HallOfFameTitle>
             <Spacer height={8} />
             <table style = {{width: '100%'}}>
               <tbody style = {{width: '100%'}}>
