@@ -18,11 +18,11 @@ const LOCATION_ID_UB = bigInt(
   '21888242871839275222246405745257275088548364400416034343698204186575808495617'
 );
 
-const competitiveConfig = '0x7b1158a60256b79ad803f3330b0cdcbd0f7ceebf3fe0473c320abf425577b4a5';
+const competitiveConfig = '0xc8b6b767570b2e39b622c6d5a8c4ac65a61d50a94f4312ac171483c95b2ec996';
 
 const roundStartTimestamp = '2022-07-02T00:00:00.000Z';
 
-const roundEndTimestamp = '2022-06-04T00:00:00.000Z';
+const roundEndTimestamp = '2022-07-04T00:00:00.000Z';
 
 const bronzeTime = 4500; // 80 minutes in seconds
 
