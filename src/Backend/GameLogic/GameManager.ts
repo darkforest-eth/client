@@ -142,7 +142,7 @@ import { SerializedPlugin } from '../Plugins/SerializedPlugin';
 import PersistentChunkStore from '../Storage/PersistentChunkStore';
 import { easeInAnimation, emojiEaseOutAnimation } from '../Utils/Animation';
 import SnarkArgsHelper from '../Utils/SnarkArgsHelper';
-import { hexifyBigIntNestedArray } from '../Utils/Utils';
+import { getDeterministicArtifact, hexifyBigIntNestedArray } from '../Utils/Utils';
 import { getEmojiMessage } from './ArrivalUtils';
 import { CaptureZoneGenerator, CaptureZonesGeneratedEvent } from './CaptureZoneGenerator';
 import { ContractsAPI, makeContractsAPI } from './ContractsAPI';
@@ -3771,6 +3771,12 @@ class GameManager extends EventEmitter {
   public getPlayerMoves(addr: EthAddress): number | undefined {
     const player = this.players.get(addr);
     return player?.moves;
+  }
+
+  public getDeterministicArtifact(locationId: LocationId) {
+    const planet = this.getPlanetWithId(locationId) as LocatablePlanet;
+    if (!planet?.location) return null;
+    return getDeterministicArtifact(planet);
   }
 }
 
