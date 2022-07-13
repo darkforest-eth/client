@@ -1,15 +1,24 @@
+import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { EthConnection } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
 import { ArtifactRarity, EthAddress } from '@darkforest_eth/types';
 import React, { useCallback, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { ContractsAPI, makeContractsAPI } from '../../Backend/GameLogic/ContractsAPI';
+import { Account, getActive, logOut } from '../../Backend/Network/AccountManager';
+import { getEthConnection } from '../../Backend/Network/Blockchain';
+import { loadConfigFromAddress } from '../../Backend/Network/ConfigApi';
+import { getAllTwitters } from '../../Backend/Network/UtilityServerAPI';
+import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
 import { InitRenderState, Wrapper } from '../Components/GameLandingPageComponents';
 import { LobbyInitializers } from '../Panes/Lobbies/Reducer';
+import { TwitterProvider } from '../Utils/AppHooks';
 import { listenForKeyboardEvents, unlinkKeyboardEvents } from '../Utils/KeyEmitters';
+import { stockConfig } from '../Utils/StockConfigs';
 import { CadetWormhole } from '../Views/CadetWormhole';
+import LoadingPage from './LoadingPage';
 import { LobbyConfigPage } from './LobbyConfigPage';
-import { LobbyLandingPage } from './LobbyLandingPage';
+import { PortalLandingPage, sendDrip } from './PortalLandingPage';
 
 type ErrorState =
   | { type: 'invalidAddress' }
@@ -18,76 +27,94 @@ type ErrorState =
 
 export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>) {
   const [connection, setConnection] = useState<EthConnection | undefined>();
-  const [ownerAddress, setOwnerAddress] = useState<EthAddress | undefined>();
+  const [account, setAccount] = useState<Account | undefined>(getActive());
   const [contract, setContract] = useState<ContractsAPI | undefined>();
   const [startingConfig, setStartingConfig] = useState<LobbyInitializers | undefined>();
-  let contractAddress: EthAddress | undefined;
-  try {
-    contractAddress = address(match.params.contract);
-  } catch (err) {
-    console.error('Invalid address', err);
-  }
+  const contractAddress: EthAddress = address(CONTRACT_ADDRESS);
+  const configContractAddress = address(match.params.contract) || contractAddress;
+  const [twitters, setTwitters] = useState<AddressTwitterMap | undefined>();
+
+  useEffect(() => {
+    getAllTwitters().then((t) => setTwitters(t));
+  }, []);
 
   const [errorState, setErrorState] = useState<ErrorState | undefined>(
     contractAddress ? undefined : { type: 'invalidAddress' }
   );
 
   useEffect(() => {
+    async function getConnection() {
+      try {
+        const connection = await getEthConnection();
+        setConnection(connection);
+      } catch (e) {
+        alert('error connecting to blockchain');
+        console.log(e);
+      }
+    }
+
+    getConnection();
     listenForKeyboardEvents();
 
     return () => unlinkKeyboardEvents();
   }, []);
 
   const onReady = useCallback(
-    (connection: EthConnection) => {
-      setConnection(connection);
-      setOwnerAddress(connection.getAddress());
+    (connect: EthConnection) => {
+      const address = connect.getAddress();
+      const privateKey = connect.getPrivateKey();
+      if (!address || !privateKey) throw new Error('account not found');
+      setAccount({ address, privateKey });
     },
     [setConnection]
   );
 
   useEffect(() => {
-    if (connection && contractAddress) {
-      makeContractsAPI({ connection, contractAddress })
-        .then((contract) => setContract(contract))
-        .catch((e) => {
-          console.log(e);
-          setErrorState({ type: 'contractLoad' });
-        });
-    }
-  }, [connection, contractAddress]);
+      async function setPlayer(ethConnection: EthConnection) {
+        try {
+          if (!!account) {
+            await ethConnection.setAccount(account.privateKey);
+            await sendDrip(ethConnection, account.address);
+            onReady(ethConnection);
+            return;
+          }
+        } catch (e) {
+          alert('Unable to connect account');
+          logOut();
+        }
+      }
+    
+    if (connection) setPlayer(connection);
+  
+  }, [connection]);
 
   useEffect(() => {
-    if (contract) {
-      contract
-        .getConstants()
-        .then((config) => {
-          setStartingConfig({
-            ...config,
-            WHITELIST_ENABLED: false,
-            START_PAUSED: false,
-            CLAIM_PLANET_COOLDOWN: 0,
-            ADMIN_PLANETS: [],
-            TOKEN_MINT_END_TIMESTAMP: 1682435240778, // Tuesday, April 25, 2023
-            ARTIFACT_POINT_VALUES: [
-              config.ARTIFACT_POINT_VALUES[ArtifactRarity.Unknown],
-              config.ARTIFACT_POINT_VALUES[ArtifactRarity.Common],
-              config.ARTIFACT_POINT_VALUES[ArtifactRarity.Rare],
-              config.ARTIFACT_POINT_VALUES[ArtifactRarity.Epic],
-              config.ARTIFACT_POINT_VALUES[ArtifactRarity.Legendary],
-              config.ARTIFACT_POINT_VALUES[ArtifactRarity.Mythic],
-            ],
-            INIT_PLANETS: [],
-            NO_ADMIN: false,
-            WHITELIST: [],
+    if (connection) {
+      if (contractAddress) {
+        makeContractsAPI({ connection, contractAddress })
+          .then((contract) => setContract(contract))
+          .catch((e) => {
+            console.log(e);
+            setErrorState({ type: 'contractLoad' });
           });
-        })
-        .catch((e) => {
-          console.log(e);
-          setErrorState({ type: 'invalidContract' });
-        });
+      }
+      if (configContractAddress && !startingConfig) {
+        loadConfigFromAddress(configContractAddress)
+          .then((config) => {
+            if (!config) {
+              setStartingConfig(stockConfig.vanilla);
+            } else {
+              setStartingConfig(config.config);
+            }
+            return;
+          })
+          .catch((e) => {
+            console.log(e);
+            setErrorState({ type: 'contractLoad' });
+          });
+      }
     }
-  }, [contract]);
+  }, [connection, contractAddress, account]);
 
   if (errorState) {
     switch (errorState.type) {
@@ -103,18 +130,24 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
     }
   }
 
-  const content =
-    contract && connection && ownerAddress && startingConfig ? (
-      <LobbyConfigPage
-        contract={contract}
-        connection={connection}
-        ownerAddress={ownerAddress}
-        startingConfig={startingConfig}
-        root={`/arena/${contractAddress}`}
-      />
-    ) : (
-      <LobbyLandingPage onReady={onReady} />
-    );
+  let content = <LoadingPage />;
+
+  if (connection && startingConfig && contract) {
+    content =
+      account && twitters ? (
+        <TwitterProvider value={twitters}>
+          <LobbyConfigPage
+            contractsAPI={contract}
+            connection={connection}
+            ownerAddress={account.address}
+            startingConfig={startingConfig}
+            root={`/arena/${configContractAddress}`}
+          />
+        </TwitterProvider>
+      ) : (
+        <PortalLandingPage onReady={onReady} connection={connection} />
+      );
+  }
 
   return (
     <Wrapper initRender={InitRenderState.NONE} terminalEnabled={false}>

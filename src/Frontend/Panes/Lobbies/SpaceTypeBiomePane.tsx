@@ -1,3 +1,4 @@
+import { TooltipName } from '@darkforest_eth/types';
 import React from 'react';
 import { Checkbox, DarkForestCheckbox } from '../../Components/Input';
 import { Row } from '../../Components/Row';
@@ -7,11 +8,17 @@ import {
   Slider,
   SliderHandle,
 } from '../../Components/Slider';
+import { PortalTooltipTrigger } from '../Tooltip';
 import { LobbiesPaneProps, Warning } from './LobbiesUtils';
 
 export function SpaceTypeBiomePane({ config, onUpdate }: LobbiesPaneProps) {
   return (
     <>
+      <Row>
+        Space types affect the defense, speed, range, and upgrade potential of planets that exist
+        within them. Nebula and Space increase defense of planets, while Dead Space increases planet
+        speed.
+      </Row>
       <Row>
         <Checkbox
           label='Mirror space type and biome on x-axis?'
@@ -54,42 +61,50 @@ export function SpaceTypeBiomePane({ config, onUpdate }: LobbiesPaneProps) {
         <Warning>{config.PERLIN_LENGTH_SCALE.warning}</Warning>
       </Row>
       <Row>
-        <Slider min={0} max={32} step={1} variant='range' label='Space type thresholds'>
-          <SliderHandle
-            slot='handle'
-            name='space'
-            label='Space'
-            value={config.PERLIN_THRESHOLD_1.displayValue}
-            step={1}
-            max='next'
-            onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
-              onUpdate({ type: 'PERLIN_THRESHOLD_1', value: e.target.value });
-            }}
-          />
-          <SliderHandle
-            slot='handle'
-            name='deep-space'
-            label='Deep Space'
-            value={config.PERLIN_THRESHOLD_2.displayValue}
-            step={1}
-            min='previous'
-            max='next'
-            onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
-              onUpdate({ type: 'PERLIN_THRESHOLD_2', value: e.target.value });
-            }}
-          />
-          <SliderHandle
-            slot='handle'
-            name='dead-space'
-            label='Dead Space'
-            value={config.PERLIN_THRESHOLD_3.displayValue}
-            step={1}
-            min='previous'
-            onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
-              onUpdate({ type: 'PERLIN_THRESHOLD_3', value: e.target.value });
-            }}
-          />
-        </Slider>
+        <PortalTooltipTrigger
+          name={TooltipName.Empty}
+          extraContent={
+            'The first slider affects Nebula and Space. The second slider affects Space and Deep Space. The third slider affects Deep Space and Dead Space.'
+          }
+          style={{ width: '100%' }}
+        >
+          <Slider min={0} max={32} step={1} variant='range' label='Space type thresholds'>
+            <SliderHandle
+              slot='handle'
+              name='space'
+              label='Space'
+              value={config.PERLIN_THRESHOLD_1.displayValue}
+              step={1}
+              max='next'
+              onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
+                onUpdate({ type: 'PERLIN_THRESHOLD_1', value: e.target.value });
+              }}
+            />
+            <SliderHandle
+              slot='handle'
+              name='deep-space'
+              label='Deep Space'
+              value={config.PERLIN_THRESHOLD_2.displayValue}
+              step={1}
+              min='previous'
+              max='next'
+              onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
+                onUpdate({ type: 'PERLIN_THRESHOLD_2', value: e.target.value });
+              }}
+            />
+            <SliderHandle
+              slot='handle'
+              name='dead-space'
+              label='Dead Space'
+              value={config.PERLIN_THRESHOLD_3.displayValue}
+              step={1}
+              min='previous'
+              onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
+                onUpdate({ type: 'PERLIN_THRESHOLD_3', value: e.target.value });
+              }}
+            />
+          </Slider>
+        </PortalTooltipTrigger>
       </Row>
       <Row>
         <Warning>
@@ -99,30 +114,38 @@ export function SpaceTypeBiomePane({ config, onUpdate }: LobbiesPaneProps) {
         </Warning>
       </Row>
       <Row>
-        <Slider min={0} max={32} step={1} variant='range' label='Biome thresholds'>
-          <SliderHandle
-            slot='handle'
-            name='biome-threshold-1'
-            label='Biome threshold 1'
-            value={config.BIOME_THRESHOLD_1.displayValue}
-            step={1}
-            max='next'
-            onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
-              onUpdate({ type: 'BIOME_THRESHOLD_1', value: e.target.value });
-            }}
-          />
-          <SliderHandle
-            slot='handle'
-            name='biome-threshold-2'
-            label='Biome threshold 2'
-            value={config.BIOME_THRESHOLD_2.displayValue}
-            step={1}
-            min='previous'
-            onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
-              onUpdate({ type: 'BIOME_THRESHOLD_2', value: e.target.value });
-            }}
-          />
-        </Slider>
+        <PortalTooltipTrigger
+          name={TooltipName.Empty}
+          extraContent={
+            'Biomes affect artifact strength and rarity.'
+          }
+          style={{ width: '100%' }}
+        >
+          <Slider min={0} max={32} step={1} variant='range' label='Biome thresholds'>
+            <SliderHandle
+              slot='handle'
+              name='biome-threshold-1'
+              label='Biome threshold 1'
+              value={config.BIOME_THRESHOLD_1.displayValue}
+              step={1}
+              max='next'
+              onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
+                onUpdate({ type: 'BIOME_THRESHOLD_1', value: e.target.value });
+              }}
+            />
+            <SliderHandle
+              slot='handle'
+              name='biome-threshold-2'
+              label='Biome threshold 2'
+              value={config.BIOME_THRESHOLD_2.displayValue}
+              step={1}
+              min='previous'
+              onChange={(e: Event & React.ChangeEvent<DarkForestSliderHandle>) => {
+                onUpdate({ type: 'BIOME_THRESHOLD_2', value: e.target.value });
+              }}
+            />
+          </Slider>
+        </PortalTooltipTrigger>
       </Row>
       <Row>
         <Warning>{config.BIOME_THRESHOLD_1.warning || config.BIOME_THRESHOLD_2.warning}</Warning>

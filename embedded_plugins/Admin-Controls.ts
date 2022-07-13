@@ -10,6 +10,8 @@ import {
   MAX_BIOME,
   //@ts-ignore
 } from 'https://cdn.skypack.dev/@darkforest_eth/constants';
+  //@ts-ignore
+import { modPBigInt } from 'https://cdn.skypack.dev/@darkforest_eth/hashing';
 //@ts-ignore
 import { getPlanetNameHash } from 'https://cdn.skypack.dev/@darkforest_eth/procedural';
 import {
@@ -204,45 +206,37 @@ async function createPlanet(
   coords: WorldCoords,
   level: number,
   type: PlanetType,
-  isSpawn: boolean,
-  isTarget: boolean
+  isSpawnPlanet: boolean,
+  isTargetPlanet: boolean
 ) {
-  coords.x = Math.round(coords.x);
-  coords.y = Math.round(coords.y);
+  coords.x = modPBigInt(Math.round(coords.x)).toString();
+  coords.y = modPBigInt(Math.round(coords.y)).toString();
 
   const location = df.locationBigIntFromCoords(coords).toString();
   const perlinValue = df.biomebasePerlin(coords, true);
 
   const args = Promise.resolve([
     {
+      location,
       x: coords.x,
       y: coords.y,
+      perlin: perlinValue,
       level,
       planetType: type,
       requireValidLocationId: false,
-      location: location,
-      perlin: perlinValue,
-      isSpawnPlanet: isSpawn,
-      isTargetPlanet: isTarget,
+      isTargetPlanet,
+      isSpawnPlanet,
+      blockedPlanetIds: [],
     },
   ]);
 
   const tx = await df.submitTransaction({
     args,
     contract: df.getContract(),
-    methodName: 'createArenaPlanet',
+    methodName: 'createAndReveal',
   });
 
   await tx.confirmedPromise;
-
-  const revealArgs = df.getSnarkHelper().getRevealArgs(coords.x, coords.y);
-  const revealTx = await df.submitTransaction({
-    args: revealArgs,
-    contract: df.getContract(),
-    methodName: 'revealLocation',
-  });
-
-  await revealTx.confirmedPromise;
 
   await df.hardRefreshPlanet(locationIdFromDecStr(location));
 }

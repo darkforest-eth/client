@@ -37,6 +37,7 @@ import {
   PlanetAttacked,
   PlanetConquered,
   PlanetLost,
+  PlanetSupported,
   Quasar,
   TxDeclined,
 } from '../Components/Icons';
@@ -75,6 +76,7 @@ export const enum NotificationType {
   PlanetLost,
   PlanetWon,
   PlanetAttacked,
+  PlanetSupported,
   ArtifactProspected,
   ArtifactFound,
   ReceivedPlanet,
@@ -190,6 +192,9 @@ class NotificationManager extends EventEmitter {
         break;
       case NotificationType.PlanetAttacked:
         return <PlanetAttacked height={'48px'} width={'48px'} />;
+        break;
+      case NotificationType.PlanetSupported:
+        return <PlanetSupported height={'48px'} width={'48px'} />;
         break;
       case NotificationType.PlanetLost:
         return <PlanetLost height={'48px'} width={'48px'} />;
@@ -395,6 +400,15 @@ class NotificationManager extends EventEmitter {
       NotificationType.PlanetAttacked,
       <span>
         Your Planet <PlanetNameLink planet={planet}></PlanetNameLink> has been attacked!
+      </span>
+    );
+  }
+
+  planetSupported(planet: LocatablePlanet): void {
+    this.notify(
+      NotificationType.PlanetSupported,
+      <span>
+        A friend has supported your Planet <PlanetNameLink planet={planet}></PlanetNameLink>!
       </span>
     );
   }

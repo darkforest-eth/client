@@ -120,13 +120,15 @@ export class ViewportEntities {
   private replacePlanets(newPlanetsInViewport: LocatablePlanet[]) {
     const radii = this.getPlanetRadii(Viewport.getInstance());
     const planetsToRemove = new Set(Array.from(this.cachedPlanets.keys()));
-
+    const player = this.uiManager.getAccount();
+    if(!player) return;
     newPlanetsInViewport.forEach((planet: LocatablePlanet) => {
       planetsToRemove.delete(planet.locationId);
 
       const newPlanetInfo: PlanetRenderInfo = {
         planet: planet,
         radii: radii.get(planet.planetLevel) as Radii,
+        blocked: this.gameManager.playerMoveBlocked(player, planet.locationId)
       };
 
       if (!planet.emojiBobAnimation) {

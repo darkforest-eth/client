@@ -1,4 +1,4 @@
-import { ArtifactPointValues, EthAddress, UpgradeBranches } from '@darkforest_eth/types';
+import { ArtifactPointValues, EthAddress, LocationId, UpgradeBranches } from '@darkforest_eth/types';
 import { BigNumber as EthersBN } from 'ethers';
 
 export const enum ZKArgIdx {
@@ -61,6 +61,8 @@ export const enum ContractEvent {
   LobbyCreated = 'LobbyCreated',
   Gameover = 'Gameover',
   GameStarted = 'GameStarted',
+  PlayerReady = 'PlayerReady',
+  PlayerNotReady = 'PlayerNotReady',
 }
 
 export const enum ContractsAPIEvent {
@@ -109,6 +111,8 @@ export const enum ContractsAPIEvent {
   LobbyCreated = 'LobbyCreated',
   Gameover = 'Gameover',
   GameStarted = 'GameStarted',
+  PlayerReady = 'PlayerReady',
+  PlayerNotReady = 'PlayerNotReady',
 }
 
 // planet locationID(BigInt), branch number
@@ -186,7 +190,7 @@ export interface ContractConstants {
   PERLIN_MIRROR_X: boolean;
   PERLIN_MIRROR_Y: boolean;
 
-  TOKEN_MINT_END_SECONDS: number;
+  TOKEN_MINT_END_TIMESTAMP: number;
 
   MAX_NATURAL_PLANET_LEVEL: number;
   TIME_FACTOR_HUNDREDTHS: number;
@@ -337,6 +341,15 @@ export interface ContractConstants {
   NO_ADMIN: boolean;
   INIT_PLANET_HASHES: string[];
   CONFIG_HASH: string;
+  CONFIRM_START: boolean;
+  BLOCK_MOVES: boolean;
+  BLOCK_CAPTURE: boolean;
+
+  TARGETS_REQUIRED_FOR_VICTORY: number;
+  TEAMS_ENABLED: boolean;
+  NUM_TEAMS: number;
+  RANKED: boolean;
+  START_PAUSED: boolean;
 }
 
 export type ClientMockchainData =

@@ -13,7 +13,7 @@ import { Icon, IconType } from '../Components/Icons';
 import { Row } from '../Components/Row';
 import { Bronze, Gold, Green, Red, Silver, White } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { useCompetitiveLeaderboard, useUIManager } from '../Utils/AppHooks';
+import { useArenaLeaderboard, useEloLeaderboard, useUIManager } from '../Utils/AppHooks';
 import { bronzeTime, goldTime, silverTime } from '../Utils/constants';
 import { useBooleanSetting } from '../Utils/SettingsHooks';
 import { formatDuration } from '../Utils/TimeUtils';
@@ -50,19 +50,23 @@ function getStyledRank(rank: Rank) {
   return <p>None</p>;
 }
 
-function SurveyPaneContent() {
+function SurveyPaneContent({ numSpawnPlanets }: { numSpawnPlanets: number }) {
   const uiManager = useUIManager();
   const time = uiManager.getGameDuration();
   const isCompetitive = uiManager.getGameManager().isCompetitive();
   const config = uiManager.getGameManager().getContractConstants().CONFIG_HASH;
   // const config = '0x8ea5aaee703231d3893553d7c2d287c2da33e2251811dce40cca2d768b3a7950'
-  const { competitiveLeaderboard, competitiveError } = useCompetitiveLeaderboard(false, config);
+  const { arenaLeaderboard, arenaError } = useArenaLeaderboard(false, config);
+  const winners = uiManager.getWinners();
+  const losers = uiManager
+    .getAllPlayers()
+    .filter((player) => !winners.find((address) => address == player.address));
 
-  let competitiveStats = undefined;
+  let arenaStats = undefined;
   if (isCompetitive) {
     const rank = getRank(time);
 
-    competitiveStats = (
+    arenaStats = (
       <div>
         <Row>
           Gold time: <Gold>{formatDuration(goldTime * 1000)}</Gold>
@@ -86,77 +90,55 @@ function SurveyPaneContent() {
     );
   }
 
-  if (!uiManager.getGameover()) return <></>;
-  return (
-    <div>
-      <Row>
-        <White>Run Statistics</White>
+  if (uiManager.getGameManager().getSpawnPlanets.length == 1) {
+    return (
+      <div>
+        <Row>
+          <White>Run Statistics</White>
+        </Row>
+        <Row>
+          Time: <Green>{formatDuration(time * 1000)}</Green>
+        </Row>
+        {arenaLeaderboard && !arenaError && (
+          <Row>
+            Place:{' '}
+            <White>
+              {getPlace(arenaLeaderboard, time)}/{arenaLeaderboard.entries.length}
+            </White>
+          </Row>
+        )}
+        {arenaStats}
+        <div style={{ textAlign: 'center' }}>
+          <p>Help us improve Grand Prix by </p>
+          <Link to={'https://forms.gle/coFn68RvPrEKaXcKA'}> giving feedback on this survey 😊</Link>
+        </div>{' '}
+      </div>
+    );
+  } else {
+    return (
+      //TODO: Provide data about run
+      <div>
+        {/* <Row>
+        <White>Match Statistics</White>
       </Row>
       <Row>
         Time: <Green>{formatDuration(time * 1000)}</Green>
       </Row>
-      {competitiveLeaderboard && !competitiveError && (
-        <Row>
-          Place:{' '}
-          <White>
-            {getPlace(competitiveLeaderboard, time)}/{competitiveLeaderboard.entries.length}
-          </White>
-        </Row>
-      )}
-      {competitiveStats}
-      <div style={{ textAlign: 'center' }}>
-        <p>Help us improve Grand Prix by </p>
-        <Link to={'https://forms.gle/coFn68RvPrEKaXcKA'}>
-          {' '}
-          giving feedback on this survey 😊
-        </Link>
-      </div>{' '}
-    </div>
-  );
+   */}
+        {/* {arenaStats} */}
+        <div style={{ textAlign: 'center' }}>
+          <p>Help us improve Dark Forest Arena by </p>
+          <Link to={'https://forms.gle/coFn68RvPrEKaXcKA'}> giving feedback on this survey 😊</Link>
+        </div>{' '}
+      </div>
+    );
+  }
 }
-
-const StyledSurveyPane = styled.div`
-  display: block;
-  position: absolute;
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
-  text-align: center;
-
-  background: ${dfstyles.colors.backgroundlighter};
-  color: ${dfstyles.colors.text};
-  padding: 8px;
-  border-bottom: 1px solid ${dfstyles.colors.border};
-  border-right: 1px solid ${dfstyles.colors.border};
-
-  width: 24em;
-  height: fit-content;
-
-  z-index: 10;
-
-  & .tutintro {
-    & > div:last-child {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      margin-top: 1em;
-    }
-  }
-
-  & .tutzoom,
-  & .tutalmost {
-    & > div:last-child {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-      margin-top: 1em;
-    }
-  }
-`;
 
 export function SurveyPane({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const uiManager = useUIManager();
+  const numSpawnPlanets = uiManager.getGameManager().getSpawnPlanets().length;
+  if (numSpawnPlanets == 0 || !uiManager.getGameover()) return <></>;
   return (
     <ModalPane
       id={ModalName.Survey}
@@ -165,7 +147,7 @@ export function SurveyPane({ visible, onClose }: { visible: boolean; onClose: ()
       hideClose
       onClose={onClose}
     >
-      <SurveyPaneContent />
+      <SurveyPaneContent numSpawnPlanets={numSpawnPlanets} />
     </ModalPane>
   );
 }

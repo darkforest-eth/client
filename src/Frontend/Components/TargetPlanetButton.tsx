@@ -1,6 +1,4 @@
-import {
-  isUnconfirmedClaimVictoryTx
-} from '@darkforest_eth/serde';
+import { isUnconfirmedClaimVictoryTx } from '@darkforest_eth/serde';
 import { Planet, TooltipName } from '@darkforest_eth/types';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
@@ -11,7 +9,7 @@ import { INVADE } from '../Utils/ShortcutConstants';
 import { LoadingSpinner } from './LoadingSpinner';
 import { MaybeShortcutButton } from './MaybeShortcutButton';
 import { Row } from './Row';
-import { Green, White } from './Text';
+import { Green, Red, White } from './Text';
 
 const StyledRow = styled(Row)`
   .button {
@@ -32,11 +30,10 @@ export function TargetPlanetButton({
   const owned = planet?.owner === account;
   const isTargetPlanet = planet?.isTargetPlanet;
   const gameOver = gameManager.isRoundOver();
+  const isBlocked =
+    account && planet ? gameManager.playerMoveBlocked(account, planet.locationId) : false;
 
-  const shouldShow = useMemo(
-    () => owned && isTargetPlanet,
-    [owned, planet]
-  );
+  const shouldShow = useMemo(() => owned && isTargetPlanet, [owned, planet]);
 
   const energyLeftToClaimVictory = useMemo(() => {
     if (!owned || !planet) {
@@ -45,12 +42,16 @@ export function TargetPlanetButton({
     const energyRequired = gameManager.getContractConstants().CLAIM_VICTORY_ENERGY_PERCENT;
     const planetEnergyPercent = Math.floor((planet.energy * 100) / planet.energyCap);
     const percentNeeded = energyRequired - planetEnergyPercent;
-    const energyNeeded = Math.ceil((percentNeeded + 2) / 100 * planet.energyCap);
+    const energyNeeded = Math.ceil(((percentNeeded + 2) / 100) * planet.energyCap);
     return { percentNeeded: percentNeeded, energyNeeded: energyNeeded };
   }, [planet?.energy]);
 
   const claimable = useMemo(
-    () => energyLeftToClaimVictory && energyLeftToClaimVictory.percentNeeded <= 0 && !gameOver,
+    () =>
+      energyLeftToClaimVictory &&
+      energyLeftToClaimVictory.percentNeeded <= 0 &&
+      !isBlocked &&
+      !gameOver,
     [energyLeftToClaimVictory?.percentNeeded, gameOver]
   );
 
@@ -61,7 +62,7 @@ export function TargetPlanetButton({
 
   const claimVictory = () => {
     if (!planet || gameOver) return;
-    gameManager.claimVictory(planet.locationId);
+    gameManager.claimVictory();
   };
 
   return (
@@ -85,7 +86,7 @@ export function TargetPlanetButton({
                 <>
                   <Green>
                     {gameOver && <>The game is over!</>}
-                    {!gameOver && <>Capture this planet to win the game!</>}
+                    {!gameOver && !isBlocked && <>Capture this planet to win the game!</>}
                     {!!energyLeftToClaimVictory && energyLeftToClaimVictory.percentNeeded > 0 && (
                       <>
                         You need <White>{energyLeftToClaimVictory.energyNeeded}</White> (
@@ -94,6 +95,7 @@ export function TargetPlanetButton({
                       </>
                     )}
                   </Green>
+                  <Red>{isBlocked && <>You are blocked from capturing this planet 😭</>}</Red>
                 </>
               }
             >

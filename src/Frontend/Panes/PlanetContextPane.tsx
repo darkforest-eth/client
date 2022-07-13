@@ -88,7 +88,7 @@ function PlanetContextPaneContent({
       />
       <MineArtifactButton planetWrapper={planet} />
       {captureRow}
-      {captureTargetRow}
+      {/* {captureTargetRow} */}
 
       <VerticalSplit>
         <>
@@ -213,7 +213,7 @@ export function PlanetContextPane({ visible, onClose }: { visible: boolean; onCl
       title={(small: boolean) => <PlanetCardTitle small={small} planet={planet} />}
       hideClose
       helpContent={SelectedPlanetHelpContent}
-      width='350px'
+      width='375px'
     >
       {render}
     </ModalPane>

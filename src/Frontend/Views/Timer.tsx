@@ -20,10 +20,12 @@ export function Timer({ account }: { account: EthAddress | undefined }) {
 
   function CountDown({ colored }: { colored: boolean }) {
     const update = () => {
-      if (!account) return;
-      const moves = uiManager.getPlayerMoves(account) || 0;
+      if (account) {
+        const moves = uiManager.getPlayerMoves(account) || 0;
+        setMoves(moves);
+      }
+
       const gameDuration = uiManager.getGameDuration();
-      setMoves(moves);
       setTime(`${formatDuration(gameDuration * 1000)}`);
       const points = gameDuration * (1 + moves / 1000);
       setScore(points);
@@ -45,29 +47,11 @@ export function Timer({ account }: { account: EthAddress | undefined }) {
     }, []);
 
     return (
-      <TooltipTrigger
-        name={TooltipName.Empty}
-        extraContent={
-          <Text>
-            <p> score is calculated using the following equation:</p>
-            <White>Score = Time (seconds) * (1 + Moves / 1000)</White>{'\n'}
-            <p>Your score is {Math.round(score)} = {time} * (1 + {moves} / 1000)</p>
-          </Text>
-        }
-      >
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 33%)',
-            width: '100%',
-            textAlign: 'center',
-          }}
-        >
-          <span style={{ gridColumn: '1' }}>Moves: {moves}</span>
-          <span style={{ gridColumn: '2' }}>{time}</span>
-          <span style={{ color, gridColumn: '3' }}>Score: {Math.round(score)}</span>
-        </div>
-      </TooltipTrigger>
+      <>
+        {account && <span style={{ gridColumn: '1' }}>Moves: {moves}</span>}
+        <span style={{ gridColumn: '2' }}>{time}</span>
+        {/* <span style={{ color, gridColumn: '3' }}>Score: {Math.round(score)}</span> */}
+      </>
     );
   }
 

@@ -1,8 +1,14 @@
-import { ArtifactRarity } from '@darkforest_eth/types';
+import { ArtifactRarity, TooltipName } from '@darkforest_eth/types';
 import React from 'react';
-import { Checkbox, DarkForestCheckbox, DarkForestNumberInput, NumberInput } from '../../Components/Input';
+import {
+  Checkbox,
+  DarkForestCheckbox,
+  DarkForestNumberInput,
+  NumberInput,
+} from '../../Components/Input';
 import { ArtifactRarityLabel } from '../../Components/Labels/ArtifactLabels';
 import { Row } from '../../Components/Row';
+import { PortalTooltipTrigger } from '../Tooltip';
 import { LobbiesPaneProps, Warning } from './LobbiesUtils';
 
 function ArtifactPointsPerRarity({
@@ -35,7 +41,12 @@ const pointsRowStyle = { gap: '8px' } as CSSStyleDeclaration & React.CSSProperti
 export function ArtifactSettingsPane({ config, onUpdate }: LobbiesPaneProps) {
   return (
     <>
-          <Row>
+      <Row>
+      <PortalTooltipTrigger
+          name={TooltipName.Empty}
+          extraContent={'When disabled, artifacts are created deterministically. When enabled, they are generated randomly when prospected.'}
+          style={{ width: '100%' }}
+        >
         <Checkbox
           label='Artifacts are created randomly?'
           checked={config.RANDOM_ARTIFACTS.displayValue}
@@ -43,8 +54,9 @@ export function ArtifactSettingsPane({ config, onUpdate }: LobbiesPaneProps) {
             onUpdate({ type: 'RANDOM_ARTIFACTS', value: e.target.checked })
           }
         />
+        </PortalTooltipTrigger>
       </Row>
-      
+
       <Row>
         <span>Photoid Cannon activation delay (in seconds)</span>
         <NumberInput
@@ -58,7 +70,13 @@ export function ArtifactSettingsPane({ config, onUpdate }: LobbiesPaneProps) {
         <Warning>{config.PHOTOID_ACTIVATION_DELAY.warning}</Warning>
       </Row>
       <Row>
+      <PortalTooltipTrigger
+          name={TooltipName.Empty}
+          extraContent={'Used when playing with traditional Dark Forest scoring.'}
+          style={{ width: '100%' }}
+        >
         <span>Artifact point values by rarity</span>
+        </PortalTooltipTrigger>
       </Row>
       <Row style={pointsRowStyle}>
         {(config.ARTIFACT_POINT_VALUES.displayValue ?? []).map((displayValue, idx) => (

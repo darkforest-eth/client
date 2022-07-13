@@ -471,6 +471,10 @@ function CapturablePane() {
   return <>This planet has been invaded, which means you can capture it for score.</>;
 }
 
+function BlockedPane() {
+  return <>You are blocked from moving to this planet.</>;
+}
+
 const ModalWithdrawSilverTooltipPane = () => <>Withdraw silver to earn score.</>;
 
 const Hats = () => <>Buy hats for the selected planet.</>;
@@ -569,5 +573,6 @@ export function TooltipContent({ name }: { name: TooltipName | undefined }) {
   if (name === TooltipName.Capturable) return <CapturablePane />;
   if (name === TooltipName.TargetPlanet) return <TargetPlanet />;
   if (name === TooltipName.SpawnPlanet) return <SpawnPlanet />;
+  if(name === TooltipName.Blocked) return <BlockedPane />
   return <></>;
 }

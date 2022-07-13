@@ -1,17 +1,18 @@
 import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { address } from '@darkforest_eth/serde';
-import React, { CSSProperties } from 'react';
+import { IconType } from '@darkforest_eth/ui';
+import React, { CSSProperties, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { createGlobalStyle, CSSObject } from 'styled-components';
 import { isRoundOngoing } from '../../Backend/Utils/Utils';
 import { Btn } from '../Components/Btn';
-import { EmSpacer, Link, Spacer, Title } from '../Components/CoreUI';
+import { EmSpacer, Link, Spacer } from '../Components/CoreUI';
 import { EmailCTA, EmailCTAMode } from '../Components/Email';
+import { Icon } from '../Components/Icons';
 import { Modal } from '../Components/Modal';
 import { Red, White, Text, HideSmall } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { ArenaLeaderboardDisplay } from '../Views/ArenaLeaderboard';
-import { LandingPageRoundArt } from '../Views/LandingPageRoundArt';
+import { ArenaPortalButton } from '../Views/Portal/PortalHomeView';
 
 export const enum LandingPageZIndex {
   Background = 0,
@@ -21,196 +22,290 @@ export const enum LandingPageZIndex {
 
 const links = {
   twitter: 'http://twitter.com/darkforest_eth',
-  email: 'mailto:ivan@0xparc.org',
+  email: 'mailto:zeroxhank@gmail.com',
   blog: 'https://blog.zkga.me/',
-  discord: 'https://discord.gg/2u2TN6v8r6',
+  discord: 'https://discord.gg/WzYuegCh',
   github: 'https://github.com/darkforest-eth',
   wiki: 'https://dfwiki.net/wiki/Main_Page',
   plugins: 'https://plugins.zkga.me/',
 };
 
-const defaultAddress = address(CONTRACT_ADDRESS);
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-
-  @media only screen and (max-device-width: 1000px) {
-    grid-template-columns: auto;
-    flex-direction: column;
-  }
-
-  --df-button-color: ${dfstyles.colors.dfgreen};
-  --df-button-border: 1px solid ${dfstyles.colors.dfgreen};
-  --df-button-hover-background: ${dfstyles.colors.dfgreen};
-  --df-button-hover-border: 1px solid ${dfstyles.colors.dfgreen};
-`;
-
 export default function LandingPage() {
   const history = useHistory();
+  const [showWallbreakers, setShowWallbreakers] = useState<boolean>(false);
 
   return (
     <>
-      <PrettyOverlayGradient />
-      <GrandPrix />
-
-      <Page>
-        <OnlyMobile>
-          <Spacer height={8} />
-        </OnlyMobile>
-        <HideOnMobile>
-          <Spacer height={150} />
-        </HideOnMobile>
-
-        <MainContentContainer>
-          <Header>
-            <LinkContainer>
-              <Link to={links.email}>email</Link>
-              <Spacer width={4} />
-              <Link to={links.blog}>blog</Link>
-              <Spacer width={4} />
-
-              <a className={'link-twitter'} href={links.twitter}>
-                <span className={'icon-twitter'}></span>
-              </a>
-              <Spacer width={4} />
-              <a className={'link-discord'} href={links.discord}>
-                <span className={'icon-discord'}></span>
-              </a>
-              <Spacer width={4} />
-              <a className={'link-github'} href={links.github}>
-                <span className={'icon-github'}></span>
-              </a>
-
-              <Spacer width={4} />
-              <Link to={links.plugins}>plugins</Link>
-              <Spacer width={4} />
-              <Link to={links.wiki}>wiki</Link>
-            </LinkContainer>
-
-            <OnlyMobile>
-              <Spacer height={4} />
-            </OnlyMobile>
-            <HideOnMobile>
-              <Spacer height={16} />
-            </HideOnMobile>
-
-            <LandingPageRoundArt />
-
-            <Spacer height={16} />
-            <ButtonWrapper>
-              <Btn
-                size='large'
-                disabled={!isRoundOngoing()}
-                style={{ borderColor: 'red', color: 'red' } as CSSStyleDeclaration & CSSProperties}
-                onClick={() => history.push(`/play/`)}
-              >
-                Enter Grand Prix #5
-              </Btn>
-              <Btn size='large' onClick={() => history.push(`/arena/${defaultAddress}`)}>
-                Create Custom Arena
-              </Btn>
-            </ButtonWrapper>
-          </Header>
-
-          <Spacer height={32} />
-
-          <HallOfFame style={{ color: dfstyles.colors.text }}>
-            <HallOfFameTitle>Wallbreakers</HallOfFameTitle>
-            <Spacer height={8} />
-            <table style = {{width: '100%'}}>
-              <tbody style = {{width: '100%'}}>
-                <TRow>
-                  <td>
-                    <HideSmall>Week{' '}</HideSmall>1
-                  </td>
-                  <td>
-                    06/05/<HideSmall>20</HideSmall>22
-                  </td>
-                  <td>
-                    <Link to='https://twitter.com/TheVelorum'>Velorum</Link>
-                  </td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>Week{' '}</HideSmall>2
-                  </td>
-                  <td>
-                    06/11/<HideSmall>20</HideSmall>22
-                  </td>
-                  <td>
-                    {' '}
-                    <Link to='https://twitter.com/Ner0nzz'>Ner0nzz</Link>
-                  </td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>Week{' '}</HideSmall>3
-                  </td>
-                  <td>
-                    06/18/<HideSmall>20</HideSmall>22
-                  </td>
-                  <td>
-                    {' '}
-                    <Link to='https://twitter.com/Ner0nzz'>Ner0nzz</Link>
-                  </td>
-                </TRow>
-                <TRow>
-                  <td>
-                    <HideSmall>Week{' '}</HideSmall>4
-                  </td>
-                  <td>
-                    06/25/<HideSmall>20</HideSmall>22
-                  </td>
-                  <td>
-                    {' '}
-                    <Link to='https://twitter.com/ClassicJordon'>ClassicJordon</Link>
-                  </td>
-                </TRow>
-              </tbody>
-            </table>
-          </HallOfFame>
-          {/* <Link to='https://medium.com/dfdao/dark-forest-arena-grand-prix-f761896a752e'>
-            🏎 Grand Prix Info 🏎
-          </Link> */}
-          {/* <Spacer height={32} /> */}
-          {/* <EmailWrapper>
-            <EmailCTA mode={EmailCTAMode.SUBSCRIBE} />
-          </EmailWrapper> */}
-        </MainContentContainer>
-
-        <Spacer height={28} />
-
-        {/* <LeadboardDisplay /> */}
-        <ArenaLeaderboardDisplay />
-
-        <Spacer height={256} />
-      </Page>
+      <Container>
+        <BackgroundImage />
+        <Nav>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <Icon
+              style={{ width: '80px', height: '80px' } as CSSStyleDeclaration & CSSProperties}
+              type={IconType.Dfdao}
+            />
+            <div>
+              <WallbreakersButton onClick={() => setShowWallbreakers(!showWallbreakers)}>
+                <span
+                  style={{
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                  }}
+                >
+                  Wallbreakers {showWallbreakers ? '↑' : '↓'}
+                </span>
+              </WallbreakersButton>
+              {showWallbreakers && (
+                <WallbreakersContainer>
+                  <table style={{ width: '100%' }}>
+                    <tbody style={{ width: '100%' }}>
+                      <TRow>
+                        <td>
+                          <HideSmall>Week </HideSmall>1
+                        </td>
+                        <td>
+                          <Link to='https://twitter.com/TheVelorum'>Velorum</Link>
+                        </td>
+                      </TRow>
+                      <TRow>
+                        <td>
+                          <HideSmall>Week </HideSmall>2
+                        </td>
+                        <td>
+                          {' '}
+                          <Link to='https://twitter.com/Ner0nzz'>Ner0nzz</Link>
+                        </td>
+                      </TRow>
+                      <TRow>
+                        <td>
+                          <HideSmall>Week </HideSmall>3
+                        </td>
+                        <td>
+                          {' '}
+                          <Link to='https://twitter.com/Ner0nzz'>Ner0nzz</Link>
+                        </td>
+                      </TRow>
+                      <TRow>
+                        <td>
+                          <HideSmall>Week </HideSmall>4
+                        </td>
+                        <td>
+                          {' '}
+                          <Link to='https://twitter.com/ClassicJordon'>ClassicJordon</Link>
+                        </td>
+                      </TRow>
+                      <TRow>
+                        <td>
+                          <HideSmall>Week </HideSmall>5
+                        </td>
+                        <td>
+                          {' '}
+                          <Link to='https://twitter.com/Yuri_v9v'>Yuri_v9v</Link>
+                        </td>
+                      </TRow>
+                    </tbody>
+                  </table>
+                </WallbreakersContainer>
+              )}
+            </div>
+          </div>
+          <LinksContainer>
+            {Object.entries(links).map(([link, href], key) => (
+              <React.Fragment key={key}>
+                <NavLink key={key} to={href}>
+                  {link}
+                </NavLink>
+                {key !== Object.entries(links).length - 1 && <p>{` | `}</p>}
+              </React.Fragment>
+            ))}
+          </LinksContainer>
+        </Nav>
+        <Content>
+          <TextContainer>
+            <Badge><HideSmall>Dark Forest Arena</HideSmall> 🏟️</Badge>
+            {/* <Title>Playing is building</Title> */}
+            {/* <Desc>Play dfdao's fast-paced, free version of the premier on-chain game.</Desc> */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ArenaPortalButton style={{ flex: '2' }} onClick={() => history.push('/portal/map')}>
+                Enter
+              </ArenaPortalButton>
+              <ArenaPortalButton style = {{flex: '1'}} secondary onClick={() => window.open('https://medium.com/dfdao/%EF%B8%8F-the-galactic-league-%EF%B8%8F-aa17acc9c7d7','blank')}>
+                Learn More
+              </ArenaPortalButton>
+            </div>
+          </TextContainer>
+          {/* <ImgContainer>
+            <img
+              src='/public/round_art/galacticleague.jpg'
+              style={{
+                maxWidth: '90%',
+                // transformStyle: 'preserve-3d',
+                // transform: 'rotateY(358deg)',
+              }}
+            />
+          </ImgContainer> */}
+        </Content>
+        {/* <HideOnMobile>
+          <BgGrid src='/public/img/LandingPageGrid.svg' />
+        </HideOnMobile> */}
+      </Container>
     </>
   );
 }
 
-const PrettyOverlayGradient = styled.div`
+const HideOnMobile = styled.div`
+  @media only screen and (max-device-width: 1000px) {
+    display: none;
+  }
+`;
+
+const BgGrid = styled.img`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+`;
+
+const NavLink = styled(Link)`
+  color: #fff;
+  font-family: 'Karla', sans-serif;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  transition: color 0.2s ease;
+  &:hover {
+    color: ${dfstyles.colors.dfblue};
+  }
+`;
+
+const Badge = styled.div`
+  font-size: 3rem;
+  // border-radius: 3rem;
+  // background-color: ${dfstyles.colors.backgroundlighter};
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.5rem 1rem;
+  align-self: flex-start;
+  @media (max-width: 768px) {
+    align-self: center;
+  }
+`;
+
+const WallbreakersButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 6px;
+  background: #323232;
+  // border: 1px solid #646464;
+  padding: 8px;
+  cursor: pointer;
+  box-shadow: 0px 0px 1px rgba(66, 71, 76, 0.32), 0px 4px 8px rgba(66, 71, 76, 0.06),
+    0px 8px 48px rgba(87, 87, 87, 0.08);
+`;
+
+const Container = styled.div`
+justify-content:center;
+  background: #111;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  align-items: center;
+  position: relative;
+  @media (max-width: 768px) {
+    overflow-y: auto;
+    margin-bottom: 3rem;
+  }
+`;
+
+const Content = styled.div`
+  box-shadow 0px 0px 15px gray;
+  justify-content: center;
+  backdrop-filter: brightness(0.1) blur(5px);
+  align-items: center;
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+  }
+  z-index: 2;
+  border-radius: 20px;
+`;
+
+
+const Nav = styled.div`
+  position: fixed;
+  top: 0;
+  backdrop-filter: brightness(0.2) blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 3rem;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+const LinksContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+`;
+
+const TextContainer = styled.div`
+border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  padding: 3rem;
+  @media (max-width: 768px) {
+    align-items: center;
+    text-align: center;
+  }
+`;
+
+const ImgContainer = styled.div`
+  // perspective: 150px;
+`;
+
+const Title = styled.h1`
+  font-family: 'Karla', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: calc(36px + (64 - 36) * (100vw - 320px) / (1920 - 320));
+  letter-spacing: -0.049375rem;
+`;
+
+const Desc = styled.span`
+  font-family: 'Inconsolata', monospace;
+  color: #fff;
+  font-size: 1.5rem;
+`;
+
+export const BackgroundImage = styled.img`
   width: 100vw;
   height: 100vh;
-  background-image: linear-gradient(to left bottom, #012338, #1e2142, #3e173e, #56042a, #5e0808);
+  display: fixed;
+  background-image: url(/public/img/deathstar.png);
+  background-size: cover;
+  filter: blur(5px) brightness(0.9);
   background-position: 50%, 50%;
-  display: inline-block;
+  // display: inline-block;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: -1;
-`;
-
-const Header = styled.div`
-  text-align: center;
-`;
-
-const EmailWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
+  // z-index: -1;
 `;
 
 const TRow = styled.tr`
@@ -224,34 +319,6 @@ const TRow = styled.tr`
     text-align: right;
     padding-left: 16pt;
   }
-`;
-
-const MainContentContainer = styled.div`
-  max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const Page = styled.div`
-  position: absolute;
-  width: 100vw;
-  max-width: 100vw;
-  height: 100%;
-  color: white;
-  font-size: ${dfstyles.fontSize};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: ${LandingPageZIndex.BasePage};
-`;
-
-const HallOfFameTitle = styled.div`
-  color: ${dfstyles.colors.subtext};
-  display: inline-block;
-  border-bottom: 1px solid ${dfstyles.colors.subtext};
-  line-height: 1em;
 `;
 
 export const LinkContainer = styled.div`
@@ -287,86 +354,15 @@ export const LinkContainer = styled.div`
   }
 `;
 
-function GrandPrix() {
-  return (
-    <HideOnMobile>
-      <Modal contain={['top', 'left', 'right']} initialX={50} initialY={50}>
-        <Title slot='title'>🏎 Grand Prix Info 🏎</Title>
-        <div style={{ maxWidth: '300px', textAlign: 'justify' }}>
-          Race in the Grand Prix for a $300 prize and NFT trophies! Here is more{' '}
-          <Link to='https://medium.com/dfdao/grand-prix-week-4-6b0d9c0174bf'>rules and info</Link>
-          .
-          <br />
-          <br />
-          If you are new to Dark Forest, check out our{' '}
-          <Link to='https://www.youtube.com/watch?v=3a4i9IyfmBI&list=PLn4H2Bj-iklclFZW_YpKCQaTnBVaECLDK'>
-            video tutorials
-          </Link>
-          , courtesy of <Link to='https://twitter.com/moongate_io'>Moongate Guild</Link>.
-          <br />
-          <br />
-          Or read community member ClassicJordon's {' '}
-          <Link to='https://medium.com/@classicjdf/classicjs-dark-forest-101-strategy-guide-part-1-energy-1b80923fee69'>
-            beginners strategy guide!
-          </Link>
-          <br />
-          <br />
-          Happy racing!
-        </div>
-      </Modal>
-    </HideOnMobile>
-  );
-}
-
-const HideOnMobile = styled.div`
-  @media only screen and (max-device-width: 1000px) {
-    display: none;
-  }
-`;
-
-const OnlyMobile = styled.div`
-  @media only screen and (min-device-width: 1000px) {
-    display: none;
-  }
-`;
-
-const Involved = styled.div`
-  width: 100%;
-  padding-left: 16px;
-  padding-right: 16px;
-  display: grid;
-  grid-template-columns: auto auto;
-  gap: 10px;
-  grid-auto-rows: minmax(100px, auto);
-
-  @media only screen and (max-device-width: 1000px) {
-    grid-template-columns: auto;
-  }
-`;
-
-const InvolvedItem = styled.a`
-  height: 150px;
-  display: inline-block;
-  margin: 4px;
-  padding: 4px 8px;
-
-  background-color: ${dfstyles.colors.backgroundlighter};
-  background-size: cover;
-  background-position: 50% 50%;
-  background-repeat: no-repeat;
-
-  cursor: pointer;
-  transition: transform 200ms;
-  &:hover {
-    transform: scale(1.03);
-  }
-  &:hover:active {
-    transform: scale(1.05);
-  }
-`;
-
-const HallOfFame = styled.div`
-  @media only screen and (max-device-width: 1000px) {
-    font-size: 70%;
-  }
+const WallbreakersContainer = styled.div`
+  position: absolute;
+  padding: 16px;
+  background-color: ${dfstyles.colors.backgroundlight};
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: space-between;
 `;

@@ -1,8 +1,10 @@
+import { TooltipName } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React from 'react';
 import { DarkForestNumberInput, NumberInput } from '../../Components/Input';
 import { Row } from '../../Components/Row';
 import { DarkForestSlider, Slider } from '../../Components/Slider';
+import { PortalTooltipTrigger } from '../Tooltip';
 import { LobbiesPaneProps, Warning } from './LobbiesUtils';
 
 const rowChunkSize = 5;
@@ -54,13 +56,19 @@ export function PlanetPane({ config, onUpdate }: LobbiesPaneProps) {
   return (
     <>
       <Row>
-        <span>Planet rarity:</span>
-        <NumberInput
-          value={config.PLANET_RARITY.displayValue}
-          onChange={(e: Event & React.ChangeEvent<DarkForestNumberInput>) => {
-            onUpdate({ type: 'PLANET_RARITY', value: e.target.value });
-          }}
-        />
+        <PortalTooltipTrigger
+          name={TooltipName.Empty}
+          extraContent={'Increase this number to decrease the density of planets.'}
+          style={{ width: '100%' }}
+        >
+          <span>Planet rarity:</span>
+          <NumberInput
+            value={config.PLANET_RARITY.displayValue}
+            onChange={(e: Event & React.ChangeEvent<DarkForestNumberInput>) => {
+              onUpdate({ type: 'PLANET_RARITY', value: e.target.value });
+            }}
+          />
+        </PortalTooltipTrigger>
       </Row>
       <Row>
         <Warning>{config.PLANET_RARITY.warning}</Warning>

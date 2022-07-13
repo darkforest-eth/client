@@ -1,68 +1,102 @@
-import { THEGRAPH_API_URL } from '@darkforest_eth/constants';
-import { ArenaLeaderboard, ArenaLeaderboardEntry } from '@darkforest_eth/types';
+import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
+import { address } from '@darkforest_eth/serde';
+import {
+  ArenaLeaderboard,
+  ArenaLeaderboardEntry,
+  Leaderboard,
+  LeaderboardEntry,
+} from '@darkforest_eth/types';
+import {
+  roundEndTimestamp,
+  roundStartTimestamp,
+  competitiveConfig,
+  apiUrl,
+} from '../../Frontend/Utils/constants';
+import { getGraphQLData } from './GraphApi';
 import { getAllTwitters } from './UtilityServerAPI';
 
-const QUERY = `
+export async function loadArenaLeaderboard(
+  config: string = competitiveConfig,
+  isCompetitive: boolean
+): Promise<Leaderboard> {
+  const QUERY = `
 query {
-  arenaPlayers(first: 1000) {
-    address
-    winner
+  arenas(first:1000, where: {configHash: "${config}"}) {
+    id
+    startTime
+    winners(first :1) {
+      address
+      moves
+   }
+    gameOver
+    endTime
+    duration
   }
 }
 `;
 
-const API_URL_GRAPH = 'https://graph-optimism.gnosischain.com/subgraphs/name/arena/test';
+  const rawData = await getGraphQLData(QUERY, apiUrl);
 
-export async function loadArenaLeaderboard(): Promise<ArenaLeaderboard> {
-  const data = await fetchGQL(QUERY);
-
-  return data;
-}
-
-interface graphPlayer {
-  address: string;
-  winner: boolean;
-}
-
-async function fetchGQL(query: any, graphApiUrl = API_URL_GRAPH) {
-  const response = await fetch(graphApiUrl, {
-    method: 'POST',
-    body: JSON.stringify({ query }),
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-  });
-
-  const rep = await response.json();
-
-  if (rep.error) {
-    throw new Error(rep.error);
+  if (rawData.error) {
+    throw new Error(rawData.error);
   }
 
-  const ret = await convertData(rep.data.arenaPlayers);
+  const ret = await convertData(rawData.data.arenas, config == competitiveConfig);
 
   return ret;
 }
 
-async function convertData(inputPlayers: graphPlayer[]): Promise<ArenaLeaderboard> {
-  let players: ArenaLeaderboardEntry[] = [];
+interface winners {
+  address: string;
+  moves: number
+}
+interface GraphArena {
+  winners: winners[];
+  creator: string;
+  duration: number | null;
+  endTime: number | null;
+  gameOver: boolean;
+  id: string;
+  startTime: number;
+  moves: number;
+}
+
+async function convertData(arenas: GraphArena[], isCompetitive: boolean): Promise<Leaderboard> {
+  let entries: LeaderboardEntry[] = [];
   const twitters = await getAllTwitters();
 
-  for (const player of inputPlayers) {
-    const entry = players.find((p) => player.address == p.address);
-    if (!!entry) {
-      entry.games++;
-      if (player.winner) entry.wins++;
-    } else {
-      players.push({
-        address: player.address,
-        games: 1,
-        wins: player.winner ? 1 : 0,
-        twitter: twitters[player.address],
+  const roundStart = new Date(roundStartTimestamp).getTime() / 1000;
+
+  const roundEnd = new Date(roundEndTimestamp).getTime() / 1000;
+  for (const arena of arenas) {
+    if (
+      !arena.gameOver ||
+      !arena.endTime ||
+      !arena.duration ||
+      arena.startTime == 0 ||
+      arena.winners.length == 0 ||
+      !arena.winners[0].address || 
+      isCompetitive && (roundEnd <= arena.endTime || roundStart >= arena.startTime)
+    )
+      continue;
+
+    const winnerAddress = address(arena.winners[0].address);
+    const entry = entries.find((p) => winnerAddress == p.ethAddress);
+
+    if (!entry) {
+      entries.push({
+        ethAddress: winnerAddress,
+        score: arena.duration,
+        twitter: twitters[winnerAddress],
+        moves: arena.winners[0].moves,
+        startTime: arena.startTime,
+        endTime: arena.endTime,
+        time: arena.duration
       });
+    } else if (entry.score && entry.score > arena.duration) {
+      entry.score = arena.duration;
     }
   }
 
-  return { entries: players } as ArenaLeaderboard;
+  return { entries, length: arenas.length };
 }

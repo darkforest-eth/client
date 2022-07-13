@@ -16,7 +16,7 @@ export function getLobbyCreatedEvent(
   const log = lobbyReceipt.logs.find((log) => log.topics[0] === lobbyCreatedHash);
   if (log) {
     return {
-      owner: address(contract.interface.parseLog(log).args.ownerAddress),
+      owner: address(contract.interface.parseLog(log).args.creatorAddress),
       lobby: address(contract.interface.parseLog(log).args.lobbyAddress),
     };
   } else {
@@ -24,16 +24,35 @@ export function getLobbyCreatedEvent(
   }
 }
 
+// THIS IS BAD BECAUSE NOT TYPE SAFE
+export function getReadyEvent(
+  readyReceipt: TransactionReceipt,
+  contract: DarkForest
+): { player: EthAddress; time: number } {
+  const readyHash = keccak256(toUtf8Bytes('PlayerReady(address,uint256)'));
+  const log = readyReceipt.logs.find((log) => log.topics[0] === readyHash);
+  if (log) {
+    return {
+      player: address(contract.interface.parseLog(log).args.player),
+      time: contract.interface.parseLog(log).args.time,
+    };
+  } else {
+    throw new Error('Player Ready event not found');
+  }
+}
+
+
 export function lobbyPlanetToInitPlanet(planet: LobbyPlanet, initializers: LobbyInitializers) {
-  const location = initializers.DISABLE_ZK_CHECKS
-    ? fakeHash(initializers.PLANET_RARITY)(planet.x, planet.y).toString()
-    : mimcHash(initializers.PLANETHASH_KEY)(planet.x, planet.y).toString();
+  const locationFunc = initializers.DISABLE_ZK_CHECKS
+    ? fakeHash(initializers.PLANET_RARITY)
+    : mimcHash(initializers.PLANETHASH_KEY);
+
+  const location = locationFunc(planet.x, planet.y).toString();
 
   const planetCoords = {
     x: planet.x,
     y: planet.y,
   };
-
   const perlinValue = perlin(planetCoords, {
     key: initializers.SPACETYPE_KEY,
     scale: initializers.PERLIN_LENGTH_SCALE,
@@ -52,9 +71,28 @@ export function lobbyPlanetToInitPlanet(planet: LobbyPlanet, initializers: Lobby
     requireValidLocationId: false,
     isTargetPlanet: planet.isTargetPlanet,
     isSpawnPlanet: planet.isSpawnPlanet,
+    blockedPlanetIds: planet.blockedPlanetLocs.map((p) => locationFunc(p.x, p.y).toString()),
   };
 }
 
-export function lobbyPlanetsToInitPlanets(planets: LobbyPlanet[], initializers: LobbyInitializers) {
-  return planets.map(p => lobbyPlanetToInitPlanet(p, initializers));
+export function lobbyPlanetsToInitPlanets(initializers: LobbyInitializers, planets: LobbyPlanet[]) {
+  const initPlanets: {
+    x: string;
+    y: string;
+    level: number;
+    planetType: number;
+    requireValidLocationId: boolean;
+    location: string;
+    perlin: number;
+    isTargetPlanet: boolean;
+    isSpawnPlanet: boolean;
+    blockedPlanetIds: string[];
+  }[] = [];
+  planets.forEach((p) =>
+  initPlanets.push(lobbyPlanetToInitPlanet(p, initializers))
+  );
+  // SORT INIT PLANETS SO THEY HAVE SAME ORDER ON-CHAIN. THIS CAN BREAK CONFIG HASH OTHERWISE.
+  initPlanets.sort((a,b) => (a.location > b.location ? 1 : -1))
+  return initPlanets;
 }
+

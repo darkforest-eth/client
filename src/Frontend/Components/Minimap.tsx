@@ -53,14 +53,23 @@ function drawOnCanvas(canvas: HTMLCanvasElement | null, msg: DrawMessage) {
   ctx.stroke();
 }
 
+// The minimap canvas will always be drawn at CANVAS_SIZE.
+// if the size of the style prop in the parent component is different,
+// the canvas will be scaled to fit
+
+export const CANVAS_SIZE = {
+  width: '400',
+  height: '400',
+};
+
 export function Minimap({
-  style = {width: "400px", height: "400px"},
+  style = { width: '400px', height: '400px' },
   minimapConfig,
-  setRefreshing = (b: boolean) => {}
+  setRefreshing = (b: boolean) => {},
 }: {
   style?: { width: string; height: string };
   minimapConfig: MinimapConfig | undefined;
-  setRefreshing? : (refreshing : boolean) => void;
+  setRefreshing?: (refreshing: boolean) => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const worker = useMemo(getWorker, []);
@@ -85,5 +94,12 @@ export function Minimap({
     return () => worker.removeEventListener('message', onMessage);
   }, [worker, setRefreshing]);
 
-  return <canvas ref={canvasRef} style={{...style, margin: 'auto'}} width='400' height='400' />;
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ ...style, margin: '0', gridArea: '1/1' }}
+      width={CANVAS_SIZE.width}
+      height={CANVAS_SIZE.height}
+    />
+  );
 }

@@ -28,7 +28,7 @@ const rowStyle = { gap: '8px' } as CSSStyleDeclaration & React.CSSProperties;
 // Handling the non-input lvl 0 by calculating the items in the row
 const itemStyle = { flex: `1 1 ${Math.floor(100 / rowChunkSize)}%` };
 
-const CHUNK_SIZE = 5;
+const CHUNK_SIZE = 25;
 
 const TableContainer = styled.div`
   overflow-y: scroll;
@@ -55,6 +55,7 @@ const defaultPlanet: LobbyPlanet = {
   planetType: 0,
   isTargetPlanet: false,
   isSpawnPlanet: false,
+  blockedPlanetLocs: [],
 };
 
 const planetTypeNames = ['Planet', 'Asteroid Field', 'Foundry', 'Spacetime Rip', 'Quasar'];

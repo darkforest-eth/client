@@ -17,11 +17,16 @@ import { NetworkHealth } from './NetworkHealth';
 import { Paused } from './Paused';
 import { Gameover } from './Gameover';
 import { Timer } from './Timer';
+import { Play } from './Play';
+import { TargetPlanetVictory } from './TargetPlanetVictory';
+import { getConfigName } from '@darkforest_eth/procedural';
+import Button from '../Components/Button';
 
 const TopBarContainer = styled.div`
   z-index: ${DFZIndex.MenuBar};
   padding: 0 2px;
   width: 530px;
+  gap: 5px;
 `;
 
 const Numbers = styled.div`
@@ -129,7 +134,7 @@ function CaptureZones({
 
   useEmitterSubscribe(
     emitter,
-    (zoneGeneration) => {
+    (zoneGeneration: { nextChangeBlock: any }) => {
       setNextGenerationBlock(zoneGeneration.nextChangeBlock);
     },
     [setNextGenerationBlock]
@@ -142,6 +147,32 @@ function CaptureZones({
       </TooltipTrigger>
     </Numbers>
   );
+}
+
+function BoardPlacement({ account }: { account: EthAddress | undefined }) {
+  const uiManager = useUIManager();
+  const player = usePlayer(uiManager, account);
+
+  let content;
+
+  if (!player.value) {
+    content = <Sub>n/a</Sub>;
+  } else {
+    let formattedScore = 'n/a';
+    if (player.value.score !== undefined && player.value.score !== null) {
+      formattedScore = player.value.score.toLocaleString();
+    }
+
+    content = (
+      <Sub>
+        <TooltipTrigger name={TooltipName.Score}>
+          score: <Text>{formattedScore}</Text>
+        </TooltipTrigger>
+      </Sub>
+    );
+  }
+
+  return <Numbers>{content}</Numbers>;
 }
 
 export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: Hook<boolean> }) {
@@ -168,7 +199,7 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: Hook<boolean>
           name={TooltipName.Empty}
           extraContent={<Text>Your burner wallet address.</Text>}
         >
-          <AccountLabel includeAddressIfHasTwitter={true} width={'50px'} />
+          <AccountLabel includeAddressIfHasTwitter={true} width={'75px'} />
         </TooltipTrigger>
         <TooltipTrigger
           name={TooltipName.Empty}
@@ -196,18 +227,42 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: Hook<boolean>
             </TooltipTrigger>
           </>
         )}
-        {/* {captureZones} */}
-        {uiManager.getSpaceJunkEnabled() && (
+        <TooltipTrigger
+          name={TooltipName.Empty}
+          extraContent={<Text>This is the map configuration. Click to copy the hash.</Text>}
+        >
+          <Button
+            onClick={() => {
+              navigator.clipboard.writeText(uiManager.contractConstants.CONFIG_HASH).then(
+                () => {
+                  console.log('Async: Copying to clipboard was successful!');
+                },
+                (err) => {
+                  console.error('Async: Could not copy text: ', err);
+                }
+              );
+            }}
+          >
+            {getConfigName(uiManager.contractConstants.CONFIG_HASH)}
+          </Button>
+        </TooltipTrigger>
+      </AlignCenterHorizontally>{' '}
+      <AlignCenterHorizontally
+        style={{ justifyContent: 'space-evenly', width: '100%', marginTop: '7px' }}
+      >
+        {uiManager.getSpaceJunkEnabled() && <SpaceJunk account={account} />}
+        {uiManager.contractConstants.TARGET_PLANETS ? (
           <>
-            <SpaceJunk account={account} />
+            <Timer account={account} />
           </>
+        ) : (
+          <BoardPlacement account={account} />
         )}
-        {/* <BoardPlacement account={account} /> */}
       </AlignCenterHorizontally>
-      <Timer account={account} />
-      <NetworkHealth />
+      <TargetPlanetVictory />
       <Gameover />
       <Paused />
+      {/* <Play /> */}
     </TopBarContainer>
   );
 }

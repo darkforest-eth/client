@@ -147,6 +147,7 @@ export const AlignCenterHorizontally = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  // margin-top: 7px;
 `;
 
 export const AlignCenterVertically = styled.div`
@@ -321,6 +322,7 @@ export function SelectFrom({
   labels,
   style,
   wide,
+  portal,
 }: {
   values: string[];
   value: string;
@@ -328,6 +330,7 @@ export function SelectFrom({
   labels: string[];
   style?: React.CSSProperties;
   wide?: boolean;
+  portal?: boolean;
 }) {
   const onChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
@@ -344,12 +347,54 @@ export function SelectFrom({
     copyOfValues.push(value);
   }
 
+  const portalStyle = portal ? {  background: dfstyles.colors.textLight, color: dfstyles.colors.backgrounddark} : {};
+
   return (
-    <Select wide={wide} style={style} value={value} onChange={onChange}>
+    <Select wide={wide} style={{...style, ...portalStyle}} value={value} onChange={onChange}>
       {copyOfValues.map((value, i) => {
         return (
           <option key={value} value={value}>
             {copyOfLabels[i]}
+          </option>
+        );
+      })}
+    </Select>
+  );
+}
+
+export function SelectMultipleFrom({
+  options,
+  values,
+  setValues,
+  labels,
+  style,
+  wide,
+}: {
+  options: string[];
+  values: string[];
+  setValues: (values: string[]) => void;
+  labels: string[];
+  style?: React.CSSProperties;
+  wide?: boolean;
+}) {
+  const onChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      if(values.find(v => v == e.target.value)) setValues(values.filter(v => v !== e.target.value))
+      else setValues([...values, e.target.value]);
+    },
+    [setValues]
+  );
+
+  const copyOfOptions = [...options];
+  const copyOfLabels = [...labels];
+    console.log(`values length: ${values.length}`)
+  const v = `${values.length} selected`
+  return (
+    <Select wide={wide} style={style} value={v} onChange={onChange}>
+      {copyOfOptions.map((option, i) => {
+        return (
+          <option key={option} value={option}>
+            {copyOfLabels[i]} {values.find(v => option == v) && 'found'}
           </option>
         );
       })}

@@ -1,9 +1,18 @@
 import { ModalId } from '@darkforest_eth/types';
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { IconType } from '@darkforest_eth/ui';
+import React, {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import { Btn } from '../Components/Btn';
 import { EmSpacer, Spacer, Title, Truncate } from '../Components/CoreUI';
 import { PaneProps } from '../Components/GameWindowComponents';
+import { Icon } from '../Components/Icons';
 import { MaybeShortcutButton } from '../Components/MaybeShortcutButton';
 import { DarkForestModal, Modal, PositionChangedEvent } from '../Components/Modal';
 import dfstyles from '../Styles/dfstyles';
@@ -174,7 +183,7 @@ export function ModalPane({
   }, [visible, modalManager, id]);
 
   let content;
-  if (showingHelp) {
+  if (showingInformationSection) {
     content = (
       <InformationSection hide={() => setShowingInformationSection(false)}>
         {renderedFrameHelp || (helpContent && helpContent())}
@@ -190,7 +199,7 @@ export function ModalPane({
 
   function getFrameTitle(args?: ModalFrame) {
     if (!args) return undefined;
-    return `${args.title}`;
+    return <>{args.title}</>;
   }
 
   const modalTitleElement = typeof title === 'string' ? title : title(frames.length > 0);
@@ -223,7 +232,7 @@ export function ModalPane({
             shortcutKey={MODAL_BACK_SHORTCUT}
             shortcutText={MODAL_BACK_SHORTCUT}
           >
-            back
+            🠔
           </MaybeShortcutButton>
         )}
         <Title slot='title'>
@@ -239,19 +248,23 @@ export function ModalPane({
           {helpContent !== undefined && !minimized && (
             <>
               <Btn size='small' onClick={() => setShowingInformationSection((showing) => !showing)}>
-                help
+                <ModalIcon><Icon type={IconType.Help} /></ModalIcon>
               </Btn>
               <Spacer width={4} />
             </>
           )}
-          <Btn size='small' onClick={() => setMinimized((minimized: boolean) => !minimized)}>
-            {minimized ? 'maximize' : 'minimize'}
+          <Btn
+            size='small'
+            onClick={() => setMinimized((minimized: boolean) => !minimized)}
+            style={{ fontFamily: 'serif' } as CSSStyleDeclaration & CSSProperties}
+          >
+            <ModalIcon><Icon type = {minimized ? IconType.Maximize : IconType.Minimize}/></ModalIcon>
           </Btn>
           {!hideClose && (
             <>
               <Spacer width={4} />
               <Btn size='small' onClick={() => onClose()}>
-                close
+                <ModalIcon><Icon type={IconType.X} /></ModalIcon>
               </Btn>
             </>
           )}
@@ -262,3 +275,10 @@ export function ModalPane({
     );
   }
 }
+
+const ModalIcon = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  padding: 5px 0px;
+`

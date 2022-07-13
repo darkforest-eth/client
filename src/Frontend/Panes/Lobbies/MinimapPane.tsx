@@ -1,24 +1,14 @@
-import color from 'color';
-import _ from 'lodash';
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { Btn } from '../../Components/Btn';
 import { Spacer } from '../../Components/CoreUI';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Minimap } from '../../Components/Minimap';
-import { Modal } from '../../Components/Modal';
-import { Row } from '../../Components/Row';
 import { MinimapColors, MinimapConfig } from './MinimapUtils';
 import { LobbyConfigAction } from './Reducer';
+import { chunk } from 'lodash';
 
-const rowChunkSize = 4;
-
-const rowStyle = { gap: '5px' } as CSSStyleDeclaration & React.CSSProperties;
-
-export interface keyItem {
-  name: string;
-  color: string;
-}
-const keyItems: keyItem[] = [
+export const KEY_ITEMS: KeyItem[] = [
   { name: 'Nebula', color: MinimapColors.innerNebula },
   { name: 'Space', color: MinimapColors.outerNebula },
   { name: 'Deep Space', color: MinimapColors.deepSpace },
@@ -29,68 +19,99 @@ const keyItems: keyItem[] = [
   { name: 'Created Planet', color: MinimapColors.createdPlanet },
 ];
 
-function Key() {
-  return (
-    <>
-      {_.chunk(keyItems, rowChunkSize).map((items, rowIdx) => {
-        return (
-          <Row key={`key-item${rowIdx}`} style={rowStyle}>
-            {items.map((item) => (
-              <span
-                key={item.name}
-                style={{
-                  flex: `1 1 ${Math.floor(100 / rowChunkSize)}%`,
-                  borderRadius: '3px',
-                  backgroundColor: item.color,
-                  padding: '3px',
-                  textAlign: 'center',
-                  color: `${color(item.color).isLight() ? 'black' : 'white'}`,
-                  fontSize: '0.8rem' 
-                }}
-              >
-                {item.name}
-              </span>
-            ))}
-          </Row>
-        );
-      })}
-    </>
-  );
+export interface MinimapDisplayConfig {
+  keys?: boolean;
+  size?: { width: string; height: string };
 }
 
+const ROW_CHUNK_SIZE = 4;
+
+export interface KeyItem {
+  name: string;
+  color: string;
+}
+
+export const MinimapKeys: React.FC<{ keyItems: KeyItem[] }> = ({ keyItems }) => {
+  return (
+    <MetaRow>
+      {chunk(keyItems, ROW_CHUNK_SIZE).map((items, rowIdx) => {
+        return (
+          <Column key={`key-item${rowIdx}`}>
+            {items.map((item, itemIdx) => (
+              <MapKey key={itemIdx}>
+                <MapKeyIcon color={item.color}></MapKeyIcon>
+                <span
+                  key={item.name}
+                  style={{
+                    color: '#fff',
+                    fontSize: '0.8rem',
+                  }}
+                >
+                  {item.name}
+                </span>
+              </MapKey>
+            ))}
+          </Column>
+        );
+      })}
+    </MetaRow>
+  );
+};
+
 export function MinimapPane({
-  modalIndex,
   minimapConfig,
   onUpdate,
   created,
+  displayConfig,
 }: {
-  modalIndex: number;
   minimapConfig: MinimapConfig | undefined;
   onUpdate: (action: LobbyConfigAction) => void;
   created: boolean;
+  displayConfig?: MinimapDisplayConfig;
 }) {
   const [refreshing, setRefreshing] = useState(false);
 
-  const randomize = () => {
-    console.log('randomizing!!!');
-    const seed = Math.floor(Math.random() * 10000);
-    onUpdate({ type: 'PLANETHASH_KEY', value: seed });
-    onUpdate({ type: 'SPACETYPE_KEY', value: seed + 1 });
-    onUpdate({ type: 'BIOMEBASE_KEY', value: seed + 2 });
-  };
-
   return (
-    <Modal width='416px' initialX={650} initialY={200} index={modalIndex}>
-      <div slot='title'>World Minimap</div>
-      <Minimap minimapConfig={minimapConfig} setRefreshing={setRefreshing} />
+    <div>
+      <Minimap
+        style={
+          displayConfig && displayConfig.size
+            ? { width: displayConfig.size.width, height: displayConfig.size.height }
+            : { width: '400px', height: '400px' }
+        }
+        minimapConfig={minimapConfig}
+        setRefreshing={setRefreshing}
+      />
       <div style={{ textAlign: 'center', height: '24px' }}>
         {refreshing ? <LoadingSpinner initialText='Refreshing...' /> : null}
       </div>
-      <Key />
-      <Spacer height = {5}/> 
-      <Btn size='stretch' onClick={randomize} disabled={refreshing || created}>
-        Randomize Map
-      </Btn>
-    </Modal>
+      {displayConfig && displayConfig.keys && <MinimapKeys keyItems={KEY_ITEMS} />}
+      <Spacer height={5} />
+    </div>
   );
 }
+
+const MapKey = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const MapKeyIcon = styled.div<{ color: string }>`
+  height: 16px;
+  width: 16px;
+  background: ${({ color }) => color};
+`;
+
+const MetaRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+`;

@@ -15,3 +15,14 @@ export function formatDuration(durationMs: number) {
 function timestampSection(value: number) {
   return value.toString().padStart(2, '0');
 }
+
+export function formatDate(date: Date): string {
+  // +1 to account for zero index on month and date
+  return `${date.getMonth() + 1}/${date.getDate() + 1}/${date.getFullYear()}`
+}
+
+export function formatStartTime(startTime: number): string {
+  const date = new Date(startTime * 1000);
+  return formatDate(date) + ' ' + date.toLocaleTimeString()
+}
+

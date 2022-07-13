@@ -11,12 +11,14 @@ export interface Account {
   privateKey: string;
 }
 
+const ACTIVE_TIME = 1000 * 60 * 60 * 24 * 7;
 /**
  * This is the key in local storage in which we keep an array of all the public addresses of the
  * accounts that have been imported/generated into this client.
  */
 const ADDRESS_LOCAL_STORAGE_KEY = 'KNOWN_ADDRESSES';
-
+const ACTIVE_LOCAL_STORAGE_KEY = 'ACTIVE_ADDRESS';
+const ACTIVE_SET_TIME_STORAGE_KEY = 'ACTIVE_SET';
 /**
  * In-memory representation of all the accounts in this client.
  */
@@ -36,6 +38,43 @@ function save() {
   }
 }
 
+export function setActive(account: Account) {
+  localStorage.setItem(ACTIVE_LOCAL_STORAGE_KEY, account.address);
+  localStorage.setItem(`skey-${account.address}`, account.privateKey);
+
+  localStorage.setItem(ACTIVE_SET_TIME_STORAGE_KEY, Date.now().toString());
+}
+
+/**
+ * Store all of the accounts in local storage.
+ */
+
+export function resetActive(): void {
+  localStorage.removeItem(ACTIVE_LOCAL_STORAGE_KEY);
+
+  localStorage.removeItem(ACTIVE_SET_TIME_STORAGE_KEY);
+}
+
+function loadActive(): Account | undefined {
+  const timeSetStr = localStorage.getItem(ACTIVE_SET_TIME_STORAGE_KEY);
+  const timeSet = Number(timeSetStr);
+  const activeAccount = localStorage.getItem(ACTIVE_LOCAL_STORAGE_KEY);
+
+  if (
+    timeSetStr == null ||
+    timeSet == NaN ||
+    activeAccount == null ||
+    timeSetStr == '' ||
+    activeAccount == '' ||
+    Date.now() - ACTIVE_TIME > timeSet
+  ) {
+    resetActive();
+    return undefined;
+  }
+
+  return accounts.find((account) => account.address == address(activeAccount));
+}
+
 /**
  * Load all of the accounts from local storage.
  */
@@ -45,7 +84,7 @@ function load(): Account[] {
 
   // first we load the public addresses
   const serializedAddresses = localStorage.getItem(ADDRESS_LOCAL_STORAGE_KEY);
-  if (serializedAddresses !== null) {
+  if (serializedAddresses && serializedAddresses.length > 0) {
     const addresses = JSON.parse(serializedAddresses) as string[];
     for (const addressStr of addresses) {
       knownAddresses.push(address(addressStr));
@@ -74,6 +113,10 @@ export function getAccounts(): Account[] {
   return [...accounts];
 }
 
+export function getActive(): Account | undefined {
+  return loadActive();
+}
+
 /**
  * Adds the given account, and saves it to localstorage.
  */
@@ -84,4 +127,9 @@ export function addAccount(privateKey: string) {
   });
 
   save();
+}
+
+export function logOut() {
+  resetActive();
+  window.location.reload();
 }

@@ -1,7 +1,14 @@
-import { isAncient, isLocatable } from '@darkforest_eth/gamelogic';
+import { formatNumber, isAncient, isLocatable } from '@darkforest_eth/gamelogic';
 import { getPlanetName } from '@darkforest_eth/procedural';
-import { ArtifactRarityNames, ArtifactTypeNames, BiomeNames, Planet, PlanetType, TooltipName } from '@darkforest_eth/types';
-import React from 'react';
+import {
+  ArtifactRarityNames,
+  ArtifactTypeNames,
+  BiomeNames,
+  Planet,
+  PlanetType,
+  TooltipName,
+} from '@darkforest_eth/types';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { StatIdx } from '../../_types/global/GlobalTypes';
@@ -21,16 +28,20 @@ import {
   SilverGrowthText,
   SpeedText,
 } from '../Components/Labels/PlanetLabels';
-import { Sub } from '../Components/Text';
+import { Green, Red, Smaller, Sub } from '../Components/Text';
 import { PlanetIcons } from '../Renderers/PlanetscapeRenderer/PlanetIcons';
 import dfstyles, { snips } from '../Styles/dfstyles';
-import { useActiveArtifact, usePlanetArtifacts, useUIManager } from '../Utils/AppHooks';
+import { useAccount, useActiveArtifact, usePlanetArtifacts, useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';
 import { SelectArtifactRow } from './ArtifactRow';
 import { Halved, PlanetActiveArtifact, RowTip, TimesTwo, TitleBar } from './PlanetCardComponents';
-import { ArtifactRarityBiomeTypeText, ArtifactRarityLabelAnim } from '../Components/Labels/ArtifactLabels';
+import {
+  ArtifactRarityBiomeTypeText,
+  ArtifactRarityLabelAnim,
+} from '../Components/Labels/ArtifactLabels';
 import { getDeterministicArtifact } from '../../Backend/Utils/Utils';
 import { ArtifactBiomeLabelAnimSimple } from '../Components/Labels/BiomeLabels';
+import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
 
 export function PlanetCardTitle({
   planet,
@@ -39,6 +50,10 @@ export function PlanetCardTitle({
   planet: Wrapper<Planet | undefined>;
   small?: boolean;
 }) {
+  const uiManager = useUIManager();
+  const account = useAccount(uiManager);
+  const gameManager = uiManager.getGameManager();
+
   if (!planet.value) return <></>;
   if (small) return <>{getPlanetName(planet.value)}</>;
 
@@ -46,6 +61,8 @@ export function PlanetCardTitle({
     <AlignCenterHorizontally style={{ width: 'initial', display: 'inline-flex' }}>
       {getPlanetName(planet.value)}
       <EmSpacer width={0.5} />
+      <EmSpacer width={0.5} />
+
       <PlanetIcons planet={planet.value} />
     </AlignCenterHorizontally>
   );
@@ -69,18 +86,40 @@ export function PlanetCard({
   standalone?: boolean;
 }) {
   const uiManager = useUIManager();
+  const gameManager = uiManager.getGameManager();
   const active = useActiveArtifact(p, uiManager);
   const planet = p.value;
   const artifacts = usePlanetArtifacts(p, uiManager);
   const spaceJunkEnabled = uiManager.getSpaceJunkEnabled();
   const isAbandoning = useEmitterValue(uiManager.isAbandoning$, uiManager.isAbandoning());
-  const randomArtifacts = uiManager.getGameManager().getContractConstants().RANDOM_ARTIFACTS;
+  const randomArtifacts = gameManager.getContractConstants().RANDOM_ARTIFACTS;
+
+  const energyLeftToClaimVictory = useMemo(() => {
+    if (!planet) {
+      return 0;
+    }
+    const percentRequired = gameManager.getContractConstants().CLAIM_VICTORY_ENERGY_PERCENT;
+    const percentHeld = Math.floor((planet.energy * 100) / planet.energyCap);
+    let percentNeeded;
+    if (planet.owner == EMPTY_ADDRESS) {
+      percentNeeded = percentRequired + percentHeld;
+    } else {
+      percentNeeded = percentRequired - percentHeld;
+    }
+
+    const energyNeeded = Math.ceil((percentNeeded / 100) * planet.energyCap);
+    return energyNeeded;
+  }, [planet?.energy]);
 
   if (!planet || !isLocatable(planet)) return <></>;
-  const {type, rarity} = getDeterministicArtifact(planet)
+  const { type, rarity } = getDeterministicArtifact(planet);
   const isFoundry = planet.planetType == PlanetType.RUINS;
   const triedFinding = planet.hasTriedFindingArtifact;
 
+  const energyRequired =
+    (gameManager.getContractConstants().CLAIM_VICTORY_ENERGY_PERCENT * planet.energyCap) / 100;
+
+  const energyNeeded = energyRequired - planet.energy;
   return (
     <>
       {standalone && (
@@ -99,18 +138,27 @@ export function PlanetCard({
             <EmSpacer width={0.5} />
           </InlineBlock>
         </AlignCenterHorizontally>
-        {!randomArtifacts && isFoundry && !triedFinding ? 
-        <AlignCenterHorizontally style={{ justifyContent: 'space-between' }}>
-          <InlineBlock>
-          <span>Contains</span>
-          {' '}
-          <ArtifactRarityLabelAnim rarity={rarity}/>
-          {' '}
-          <span>{ArtifactTypeNames[type]} </span>
-          </InlineBlock>
-        </AlignCenterHorizontally>
-        : null
-        }
+        {planet.isTargetPlanet && (
+          <AlignCenterHorizontally style={{ justifyContent: 'space-between' }}>
+            <Smaller>
+              {energyLeftToClaimVictory > 0 ? (
+                <span>
+                  <Red>{formatNumber(energyLeftToClaimVictory)}</Red> needed to capture
+                </span>
+              ) : (
+                <Green>This target is capturable!</Green>
+              )}
+            </Smaller>
+          </AlignCenterHorizontally>
+        )}
+        {!randomArtifacts && isFoundry && !triedFinding ? (
+          <AlignCenterHorizontally style={{ justifyContent: 'space-between' }}>
+            <InlineBlock>
+              <span>Contains</span> <ArtifactRarityLabelAnim rarity={rarity} />{' '}
+              <span>{ArtifactTypeNames[type]} </span>
+            </InlineBlock>
+          </AlignCenterHorizontally>
+        ) : null}
         {active && (
           <>
             <EmSpacer height={0.5} />

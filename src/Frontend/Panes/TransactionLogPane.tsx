@@ -215,7 +215,6 @@ const getPlanetFromTransaction = (
   if (isUnconfirmedWithdrawSilverTx(tx)) return gameManager.getPlanetWithId(tx.intent.locationId);
   if (isUnconfirmedInvadePlanetTx(tx)) return gameManager.getPlanetWithId(tx.intent.locationId);
   if (isUnconfirmedCapturePlanetTx(tx)) return gameManager.getPlanetWithId(tx.intent.locationId);
-  if (isUnconfirmedClaimVictoryTx(tx)) return gameManager.getPlanetWithId(tx.intent.locationId);
 };
 
 function QueuedTransactionsTable({ transactions }: { transactions: Wrapper<TransactionRecord> }) {

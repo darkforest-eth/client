@@ -1,3 +1,4 @@
+import { TooltipName } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React from 'react';
 import {
@@ -8,6 +9,7 @@ import {
 } from '../../Components/Input';
 import { Row } from '../../Components/Row';
 import { DarkForestSlider, Slider } from '../../Components/Slider';
+import { PortalTooltipTrigger } from '../Tooltip';
 import { LobbiesPaneProps, Warning } from './LobbiesUtils';
 
 function JunkPerLevel({
@@ -69,7 +71,7 @@ export function SpaceJunkPane({ config, onUpdate }: LobbiesPaneProps) {
         </Row>
         <Row>
           <Slider
-            label='Abandon speed boost bonus'
+            label='Speed boost when abandoning planet'
             variant='filled'
             min={1}
             max={11}
@@ -86,7 +88,7 @@ export function SpaceJunkPane({ config, onUpdate }: LobbiesPaneProps) {
         </Row>
         <Row>
           <Slider
-            label='Abandon range boost bonus'
+            label='Range boost when abandoning planet'
             variant='filled'
             min={1}
             max={11}
@@ -114,6 +116,11 @@ export function SpaceJunkPane({ config, onUpdate }: LobbiesPaneProps) {
   return (
     <>
       <Row>
+      <PortalTooltipTrigger
+          name={TooltipName.Empty}
+          extraContent={'If enabled, space junk accrues as players capture planets. Players must abandon planets to reduce their total.'}
+          style={{ width: '100%' }}
+        >
         <Checkbox
           label='Space junk enabled?'
           checked={config.SPACE_JUNK_ENABLED.displayValue}
@@ -121,6 +128,7 @@ export function SpaceJunkPane({ config, onUpdate }: LobbiesPaneProps) {
             onUpdate({ type: 'SPACE_JUNK_ENABLED', value: e.target.checked });
           }}
         />
+        </PortalTooltipTrigger>
       </Row>
       <Row>
         <Warning>{config.SPACE_JUNK_ENABLED.warning}</Warning>

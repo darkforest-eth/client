@@ -17,6 +17,7 @@ import { ExplorePane } from '../Panes/ExplorePane';
 import { HelpPane } from '../Panes/HelpPane';
 import { HoverPlanetPane } from '../Panes/HoverPlanetPane';
 import OnboardingPane from '../Panes/OnboardingPane';
+import { WaitingRoomPane} from '../Panes/WaitingRoomPane'
 import { PlanetContextPane } from '../Panes/PlanetContextPane';
 import { PlanetDexPane } from '../Panes/PlanetDexPane';
 import { PlayerArtifactsPane } from '../Panes/PlayerArtifactsPane';
@@ -35,6 +36,7 @@ import { TOGGLE_DIAGNOSTICS_PANE } from '../Utils/ShortcutConstants';
 import { NotificationsPane } from './Notifications';
 import { SidebarPane } from './SidebarPane';
 import { TopBar } from './TopBar';
+import GameManager from '../../Backend/GameLogic/GameManager';
 
 export function GameWindowLayout({
   terminalVisible,
@@ -88,7 +90,10 @@ export function GameWindowLayout({
   const modalsContainerCB = useCallback((node) => {
     setModalsContainer(node);
   }, []);
-  const [onboardingVisible, setOnboardingVisible] = useBooleanSetting(uiManager, Setting.NewPlayer);
+
+  const [waitingRoomVisible, setWaitingRoomVisible] = useState(!uiManager.gameStarted && uiManager.contractConstants.MANUAL_SPAWN);
+
+  // const [onboardingVisible, setOnboardingVisible] = useBooleanSetting(uiManager, Setting.NewPlayer);
   const [tutorialVisible, setTutorialVisible] = useBooleanSetting(uiManager, Setting.TutorialOpen);
   const selected = useSelectedPlanet(uiManager).value;
   const [selectedPlanetVisible, setSelectedPlanetVisible] = useState<boolean>(!!selected);
@@ -116,6 +121,8 @@ export function GameWindowLayout({
   }, [userTerminalVisibleSetting, setTerminalVisibleSetting, terminalVisible]);
 
   useEffect(() => setSelectedPlanetVisible(!!selected), [selected, setSelectedPlanetVisible]);
+
+  // useEffect(() => setWaitingRoomVisible(!uiManager.getGameStarted())), [uiManager.getGameStarted()];
 
   useOnUp(
     TOGGLE_DIAGNOSTICS_PANE,
@@ -175,13 +182,18 @@ export function GameWindowLayout({
         )}
       </div>
 
-      <OnboardingPane
+      {/* <OnboardingPane
         isCompetitive={uiManager.getGameManager().isCompetitive()}
         visible={onboardingVisible}
         onClose={(openTutorial: boolean) => {
           setOnboardingVisible(false);
           openTutorial && setTutorialVisible(true);
         }}
+      /> */}
+
+      <WaitingRoomPane
+        visible = {waitingRoomVisible}
+        onClose = {() => setWaitingRoomVisible(false)}
       />
 
       <MainWindow>

@@ -1,8 +1,9 @@
-import { TooltipName } from '@darkforest_eth/types';
+import { EthAddress, TooltipName } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
 import { AccountLabel } from '../Components/Labels/Labels';
 import { Gold } from '../Components/Text';
+import { TextPreview } from '../Components/TextPreview';
 import { TooltipTrigger } from '../Panes/Tooltip';
 import { useGameover, useUIManager } from '../Utils/AppHooks';
 
@@ -20,21 +21,12 @@ export function Gameover() {
   const winners = uiManager.getWinners();
   const gameDuration = uiManager.getGameDuration();
   const gameover = useGameover();
-  if (!gameover || winners.length == 0) {
+  const teamsEnabled = uiManager.getTeamsEnabled();
+  const winningTeam = uiManager.getPlayer(winners[0])?.team;
+
+  if (!gameover) {
     return <></>;
   }
-
-  let winnerslabel = (
-    <>
-      {winners.map((winner, idx) => (
-        <AccountLabel
-          key={idx}
-          includeAddressIfHasTwitter={true}
-          ethAddress={winner}
-        />
-      ))}
-    </>
-  );
 
   return (
     <>
@@ -42,15 +34,21 @@ export function Gameover() {
         <TooltipTrigger
           extraContent={
             <>
-              GAMEOVER! The winner{winners.length > 1 ? 's are' : ' is '} {winnerslabel}
+              GAMEOVER! The winner is {teamsEnabled ? `Team ${winningTeam}` : winners[0]}
             </>
           }
           name={TooltipName.Empty}
         >
           <Gold>GAMEOVER!</Gold>
           <br />
-          The winner{winners.length > 1 ? 's are' : ' is '}
-          {winnerslabel}
+          Winner: {' '} {teamsEnabled ? `Team ${winningTeam}` : <AccountLabel ethAddress={winners[0] as EthAddress}/>}
+          {/* {winners.map((winner, idx) => (
+            <AccountLabel
+              key={idx}
+              includeAddressIfHasTwitter={true}
+              ethAddress={winner as EthAddress}
+            />
+          ))} */}
         </TooltipTrigger>
       </GameoverContainer>
       {/* <TimeContainer>Game length: {prettyTime(gameDuration)}</TimeContainer> */}
