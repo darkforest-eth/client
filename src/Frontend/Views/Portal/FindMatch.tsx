@@ -22,6 +22,7 @@ export interface MatchDetails {
   spotsTaken: number;
   matchId: string;
   startTime: number;
+  players: { address: string }[] | undefined;
 }
 
 export const MatchComponent: React.FC<MatchDetails> = ({
@@ -31,13 +32,19 @@ export const MatchComponent: React.FC<MatchDetails> = ({
   spotsTaken,
   matchId,
   startTime,
+  players,
 }) => {
   const twitters = useTwitters();
 
   return (
     <MatchContainer>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-        <span>{compPlayerToEntry(creator, twitters[creator])}</span>
+        <span>By: {compPlayerToEntry(creator, twitters[creator])}</span>
+        {players &&
+          players.length > 0 && <span>Players: </span> &&
+          players.map((p) => (
+            <span key={p.address}>{compPlayerToEntry(p.address, twitters[p.address])}</span>
+          ))}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <span>{matchType}</span>
           {totalSpots == spotsTaken ? (
@@ -80,6 +87,7 @@ export const FindMatch: React.FC<FindMatchProps> = ({ game, error, nPlayers }) =
                 spotsTaken={entry.players ? entry.players.length : 0}
                 matchId={entry.id}
                 startTime={entry.startTime}
+                players={entry.players}
               />
             ))
           )

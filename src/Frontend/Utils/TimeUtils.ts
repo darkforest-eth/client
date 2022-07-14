@@ -18,7 +18,7 @@ function timestampSection(value: number) {
 
 export function formatDate(date: Date): string {
   // +1 to account for zero index on month and date
-  return `${date.getMonth() + 1}/${date.getDate() + 1}/${date.getFullYear()}`
+  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
 }
 
 export function formatStartTime(startTime: number): string {
