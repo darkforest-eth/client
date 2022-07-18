@@ -21,7 +21,7 @@ export async function loadConfigFromHash(config: string): Promise<
 > {
   const query = `
 query {
-    arenas(first:1, where: {configHash: "${config}"}) {
+    arenas(first:5, where: {configHash: "${config}"}) {
         lobbyAddress,
         configHash,
         gameOver,
@@ -31,7 +31,9 @@ query {
 }
 `;
   const rawData = await getGraphQLData(query, apiUrl);
-  const res = await convertGraphConfig(rawData.data.arenas[0]);
+  // @ts-expect-error
+  const hasPlanets = rawData.data.arenas.filter(a => a.planets.length > 0);
+  const res = await convertGraphConfig(hasPlanets[0]);
   return res;
 }
 
