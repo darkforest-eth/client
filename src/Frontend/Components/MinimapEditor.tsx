@@ -1,8 +1,8 @@
 import { WorldCoords } from '@darkforest_eth/types';
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { removeAlphabet } from '../Panes/Lobbies/LobbiesUtils';
-import { MinimapConfig } from '../Panes/Lobbies/MinimapUtils';
+import { removeAlphabet } from '../Panes/Lobby/LobbiesUtils';
+import { MinimapConfig } from '../Panes/Lobby/MinimapUtils';
 
 export const MinimapEditor: React.FC<{
   style?: { width: string; height: string };

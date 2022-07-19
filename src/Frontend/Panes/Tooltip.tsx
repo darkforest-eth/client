@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import dfstyles from '../Styles/dfstyles';
 import { useOverlayContainer } from '../Utils/AppHooks';
 import { DFZIndex } from '../Utils/constants';
-import { TooltipContent } from './TooltipPanes';
+import { TooltipContent } from './Game/TooltipPanes';
 
 /**
  * Each {@link TooltipName} has a corresponding tooltip element.

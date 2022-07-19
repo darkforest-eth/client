@@ -12,8 +12,8 @@ export function TargetPlanetVictory() {
   const gameManager = uiManager.getGameManager();
   const canClaimVictory = uiManager.checkVictoryCondition();
   const gameover = useGameover();
-  const requiredPlanets = gameManager.getContractConstants().TARGETS_REQUIRED_FOR_VICTORY;
-  const requiredEnergy = gameManager.getContractConstants().CLAIM_VICTORY_ENERGY_PERCENT;
+  const requiredPlanets = uiManager.contractConstants.TARGETS_REQUIRED_FOR_VICTORY;
+  const requiredEnergy = uiManager.contractConstants.CLAIM_VICTORY_ENERGY_PERCENT;
 
   if (gameover) {
     return <></>;
@@ -38,7 +38,7 @@ export function TargetPlanetVictory() {
 
           {canClaimVictory && (
             <ArenaPortalButton
-              onClick={() => uiManager.getGameManager().claimVictory()}
+              onClick={() => gameManager.claimVictory()}
             >
               Claim Victory!
             </ArenaPortalButton>

@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { loadAccountData } from '../../../Backend/Network/AccountApi';
 import { TwitterLink } from '../../Components/Labels/Labels';
 import { TextPreview } from '../../Components/TextPreview';
-import { LobbyInitializers } from '../../Panes/Lobbies/Reducer';
+import { LobbyInitializers } from '../../Panes/Lobby/Reducer';
 import { useTwitters } from '../../Utils/AppHooks';
 import { ArenaDisplay } from './ArenaDisplay';
 

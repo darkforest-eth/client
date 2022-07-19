@@ -8,7 +8,7 @@ import ReaderDataStore from '../../Backend/Storage/ReaderDataStore';
 import { getPlanetShortHash } from '../../Backend/Utils/Utils';
 import { Sub } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { Share } from '../Views/Share';
+import { Share } from '../Views/Game/Share';
 
 const PlanetCard = styled.div`
   width: 36em;

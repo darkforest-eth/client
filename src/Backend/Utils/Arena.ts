@@ -3,7 +3,7 @@ import { DarkForest, DFArenaInitialize } from '@darkforest_eth/contracts/typecha
 import { EthConnection } from '@darkforest_eth/network';
 import { ContractMethodName, EthAddress, UnconfirmedCreateLobby } from '@darkforest_eth/types';
 import _ from 'lodash';
-import { LobbyInitializers } from '../../Frontend/Panes/Lobbies/Reducer';
+import { LobbyInitializers } from '../../Frontend/Panes/Lobby/Reducer';
 import { OPTIMISM_GAS_LIMIT } from '../../Frontend/Utils/constants';
 import { getLobbyCreatedEvent, lobbyPlanetsToInitPlanets } from '../../Frontend/Utils/helpers';
 import { ContractsAPI } from '../GameLogic/ContractsAPI';

@@ -11,9 +11,6 @@ import {
   loadEloLeaderboard,
 } from '../../../../Backend/Network/EloLeaderboardApi';
 import { loadRecentMaps } from '../../../../Backend/Network/MapsApi';
-import { Sub } from '../../../Components/Text';
-import { ArenaLeaderboardDisplay, EloLeaderboardDisplay } from '../../ArenaLeaderboard';
-import { ArenaPortalButton } from '../PortalHomeView';
 
 export const OfficialGameBanner: React.FC<{
   configHash: string;

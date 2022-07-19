@@ -1,5 +1,5 @@
 import { address } from '@darkforest_eth/serde';
-import { LobbyInitializers } from '../Panes/Lobbies/Reducer';
+import { LobbyInitializers } from '../Panes/Lobby/Reducer';
 
 const vanilla: LobbyInitializers = {
   ADMIN_CAN_ADD_PLANETS: true,

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import { LobbyInitializers } from '../../Panes/Lobbies/Reducer';
+import { LobbyInitializers } from '../../Panes/Lobby/Reducer';
 import dfstyles from '../../Styles/dfstyles';
 import { Table } from '../Table';
 

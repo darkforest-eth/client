@@ -1,8 +1,8 @@
 import { PlanetTypeNames } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { CloseButton, LobbyPlanet } from '../Panes/Lobbies/LobbiesUtils';
-import { LobbyAction, LobbyConfigState } from '../Panes/Lobbies/Reducer';
+import { CloseButton, LobbyPlanet } from '../Panes/Lobby/LobbiesUtils';
+import { LobbyAction, LobbyConfigState } from '../Panes/Lobby/Reducer';
 import { PlanetPropEditor } from './LobbyPlanetPropEditor';
 
 export interface LobbyPlanetInspectorProps {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import * as ToastPrimitive from '@radix-ui/react-toast';
-import { CloseIcon } from '../Panes/Lobbies/LobbiesUtils';
+import { CloseIcon } from '../Panes/Lobby/LobbiesUtils';
 
 export interface ToastProps {
   open: boolean;

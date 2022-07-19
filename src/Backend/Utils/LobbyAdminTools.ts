@@ -18,8 +18,8 @@ import {
   WorldCoords,
   WorldLocation,
 } from '@darkforest_eth/types';
-import { LobbyPlanet } from '../../Frontend/Panes/Lobbies/LobbiesUtils';
-import { LobbyInitializers } from '../../Frontend/Panes/Lobbies/Reducer';
+import { LobbyPlanet } from '../../Frontend/Panes/Lobby/LobbiesUtils';
+import { LobbyInitializers } from '../../Frontend/Panes/Lobby/Reducer';
 import { lobbyPlanetsToInitPlanets, lobbyPlanetToInitPlanet } from '../../Frontend/Utils/helpers';
 import { ContractsAPI, makeContractsAPI } from '../GameLogic/ContractsAPI';
 

@@ -10,8 +10,8 @@ import { MythicLabel, MythicLabelText } from '../../Components/Labels/MythicLabe
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Minimap } from '../../Components/Minimap';
 import { TextPreview } from '../../Components/TextPreview';
-import { generateMinimapConfig, MinimapConfig } from '../../Panes/Lobbies/MinimapUtils';
-import { LobbyInitializers } from '../../Panes/Lobbies/Reducer';
+import { generateMinimapConfig, MinimapConfig } from '../../Panes/Lobby/MinimapUtils';
+import { LobbyInitializers } from '../../Panes/Lobby/Reducer';
 import { competitiveConfig } from '../../Utils/constants';
 
 import { MapDetails } from './MapDetails';

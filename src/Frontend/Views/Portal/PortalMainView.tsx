@@ -13,7 +13,7 @@ import { Modal } from '../../Components/Modal';
 import dfstyles from '../../Styles/dfstyles';
 import { useTwitters } from '../../Utils/AppHooks';
 import { competitiveConfig } from '../../Utils/constants';
-import { ModalPane } from '../ModalPane';
+import { ModalPane } from '../Game/ModalPane';
 import { Account } from './Account';
 import { AccountInfoView } from './AccountInfoView';
 import { MapInfoView } from './MapInfoView';

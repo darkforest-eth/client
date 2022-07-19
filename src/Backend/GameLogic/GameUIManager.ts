@@ -1489,6 +1489,10 @@ class GameUIManager extends EventEmitter {
     return Renderer.instance;
   }
 
+  public isCompetitive() : boolean {
+    return this.gameManager.isCompetitive();
+  }
+
   getPaused(): boolean {
     return this.gameManager.getPaused();
   }

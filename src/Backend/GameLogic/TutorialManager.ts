@@ -57,17 +57,17 @@ class TutorialManager extends EventEmitter {
       const notifManager = NotificationManager.getInstance();
       notifManager.welcomePlayer();
     } else if (newState === TutorialState.HowToGetScore) {
-      const targetLocation = this.uiManager.getGameManager().getPlayerTargetPlanets();
+      const targetLocation = this.uiManager.getPlayerTargetPlanets();
       if (targetLocation.length > 0) {
         this.uiManager.centerLocationId(targetLocation[0].locationId)
       };
     } else if (newState === TutorialState.BlockedPlanet) {
-      const blockedLocation = this.uiManager.getGameManager().getPlayerBlockedPlanets();
+      const blockedLocation = this.uiManager.getPlayerBlockedPlanets();
       if (blockedLocation.length > 0) {
         this.uiManager.centerLocationId(blockedLocation[0].locationId)
       };
     }else if (newState === TutorialState.DefensePlanet) {
-      const defenseLocation = this.uiManager.getGameManager().getPlayerDefensePlanets();
+      const defenseLocation = this.uiManager.getPlayerDefensePlanets();
       if (defenseLocation.length > 0) {
         this.uiManager.centerLocationId(defenseLocation[0].locationId)
       };

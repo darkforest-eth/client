@@ -8,7 +8,7 @@ import { AccountLabel } from '../Components/Labels/Labels';
 import { Row } from '../Components/Row';
 import { Sub } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { EmojiPlanetNotification } from './EmojiPlanetNotification';
+import { EmojiPlanetNotification } from './Game/EmojiPlanetNotification';
 
 export const enum PlanetNotifType {
   PlanetCanUpgrade,

@@ -21,7 +21,7 @@ export function AccountLabel({
 }) {
   const uiManager = useUIManager();
   const player = usePlayer(uiManager, ethAddress);
-  const teamsEnabled = uiManager.getGameManager().getContractConstants().TEAMS_ENABLED;
+  const teamsEnabled = uiManager.contractConstants.TEAMS_ENABLED;
   const color = colorFn(getPlayerColor(player.value, teamsEnabled)).darken(0.5).hex();
 
   if (ethAddress === EMPTY_ADDRESS || player.value == undefined) {

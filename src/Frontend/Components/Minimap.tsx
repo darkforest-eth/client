@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import { DrawMessage, MinimapColors, MinimapConfig } from '../Panes/Lobbies/MinimapUtils';
+import { DrawMessage, MinimapColors, MinimapConfig } from '../Panes/Lobby/MinimapUtils';
 
 function getWorker() {
   return new Worker(new URL('../../Backend/Utils/minimap.worker.ts', import.meta.url));

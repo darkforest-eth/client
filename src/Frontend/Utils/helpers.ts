@@ -3,9 +3,9 @@ import { address } from '@darkforest_eth/serde';
 import { EthAddress } from '@darkforest_eth/types';
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
 import { TransactionReceipt } from '@ethersproject/providers';
-import { LobbyPlanet } from '../Panes/Lobbies/LobbiesUtils';
+import { LobbyPlanet } from '../Panes/Lobby/LobbiesUtils';
 import { fakeHash, mimcHash, modPBigInt, perlin } from '@darkforest_eth/hashing';
-import { LobbyInitializers } from '../Panes/Lobbies/Reducer';
+import { LobbyInitializers } from '../Panes/Lobby/Reducer';
 
 // THIS IS BAD BECAUSE NOT TYPE SAFE
 export function getLobbyCreatedEvent(

@@ -2,11 +2,8 @@ import { EthAddress, TooltipName } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { getRank, Rank } from '../../Backend/Utils/Rank';
-import { AccountLabel } from '../Components/Labels/Labels';
-import { Gold, Text, White } from '../Components/Text';
-import { TooltipTrigger } from '../Panes/Tooltip';
 import dfstyles from '../Styles/dfstyles';
-import { useGameover, useUIManager } from '../Utils/AppHooks';
+import { useUIManager } from '../Utils/AppHooks';
 import { formatDuration } from '../Utils/TimeUtils';
 
 export function Timer({ account }: { account: EthAddress | undefined }) {
@@ -16,7 +13,7 @@ export function Timer({ account }: { account: EthAddress | undefined }) {
   const [moves, setMoves] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
 
-  const isCompetitive = uiManager.getGameManager().isCompetitive();
+  const isCompetitive = uiManager.isCompetitive();
 
   function CountDown({ colored }: { colored: boolean }) {
     const update = () => {

@@ -7,8 +7,8 @@ import styled from 'styled-components';
 import { convertGraphConfig } from '../../../Backend/Network/ConfigApi';
 import { Minimap } from '../../Components/Minimap';
 import { TextPreview } from '../../Components/TextPreview';
-import { generateMinimapConfig } from '../../Panes/Lobbies/MinimapUtils';
-import { LobbyInitializers } from '../../Panes/Lobbies/Reducer';
+import { generateMinimapConfig } from '../../Panes/Lobby/MinimapUtils';
+import { LobbyInitializers } from '../../Panes/Lobby/Reducer';
 
 export interface ArenaData {
   configHash: string;

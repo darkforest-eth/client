@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { EthAddress } from '@darkforest_eth/types';
-import { generateMinimapConfig, MinimapConfig } from '../../../Panes/Lobbies/MinimapUtils';
+import { generateMinimapConfig, MinimapConfig } from '../../../Panes/Lobby/MinimapUtils';
 import { debounce } from 'lodash';
 import styled from 'styled-components';
 import { Link, useHistory } from 'react-router-dom';
-import { LobbyInitializers } from '../../../Panes/Lobbies/Reducer';
+import { LobbyInitializers } from '../../../Panes/Lobby/Reducer';
 import { LoadingSpinner } from '../../../Components/LoadingSpinner';
 import { Minimap } from '../../../Components/Minimap';
 import { getConfigName } from '@darkforest_eth/procedural';

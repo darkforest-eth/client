@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { LobbyPlanet, PLANET_TYPE_NAMES, SelectMultipleFrom } from '../Panes/Lobbies/LobbiesUtils';
+import { LobbyPlanet, PLANET_TYPE_NAMES, SelectMultipleFrom } from '../Panes/Lobby/LobbiesUtils';
 import { SelectFrom } from './CoreUI';
 import Select from 'react-select';
 import { Checkbox, NumberInput, DarkForestCheckbox, DarkForestNumberInput } from './Input';

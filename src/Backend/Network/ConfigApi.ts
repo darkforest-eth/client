@@ -1,8 +1,8 @@
 import { EthAddress, GraphArena, GraphPlanet, WorldCoords } from '@darkforest_eth/types';
 import { BigNumber } from 'ethers';
 import _ from 'lodash';
-import { LobbyPlanet } from '../../Frontend/Panes/Lobbies/LobbiesUtils';
-import { LobbyInitializers } from '../../Frontend/Panes/Lobbies/Reducer';
+import { LobbyPlanet } from '../../Frontend/Panes/Lobby/LobbiesUtils';
+import { LobbyInitializers } from '../../Frontend/Panes/Lobby/Reducer';
 import { apiUrl, CONFIG_CONSTANTS } from '../../Frontend/Utils/constants';
 import { PlanetTypeWeights } from '../../_types/darkforest/api/ContractsAPITypes';
 import { getGraphQLData } from './GraphApi';

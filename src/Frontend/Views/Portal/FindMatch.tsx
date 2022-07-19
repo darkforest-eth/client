@@ -6,7 +6,7 @@ import { Subber } from '../../Components/Text';
 import dfstyles from '../../Styles/dfstyles';
 import { useTwitters } from '../../Utils/AppHooks';
 import { formatStartTime } from '../../Utils/TimeUtils';
-import { compPlayerToEntry } from '../ArenaLeaderboard';
+import { compPlayerToEntry } from '../Leaderboards/ArenaLeaderboard';
 import { GenericErrorBoundary } from '../GenericErrorBoundary';
 
 export interface FindMatchProps {
