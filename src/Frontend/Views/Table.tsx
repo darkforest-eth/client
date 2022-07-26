@@ -6,13 +6,14 @@ import dfstyles from '../Styles/dfstyles';
 
 const TableElement = styled.table`
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: hidden;
   scrollbar-width: initial;
   border-radius: ${dfstyles.borderRadius};
 `;
 
 const ScrollableBody = styled.tbody`
   width: 100%;
+  overflow-y: scroll;
 `;
 
 const AlignmentOptions: { [key: string]: CSSProperties['textAlign'] } = {

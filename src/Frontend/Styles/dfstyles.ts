@@ -1,7 +1,7 @@
 import { RECOMMENDED_MODAL_WIDTH } from '@darkforest_eth/constants';
 import { SpaceType } from '@darkforest_eth/types';
 import color from 'color';
-import { css } from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const ARTIFACT_ROW_H = 48;
 
@@ -168,5 +168,13 @@ export const snips = {
     backgroundRepeat: 'no-repeat',
   } as CSSStyleDeclaration & React.CSSProperties,
 };
+
+export const PortalButton = styled.button`
+background: ${dfstyles.colors.text};
+color: ${dfstyles.colors.borderDarkest};
+border: 1px solid ${dfstyles.colors.borderDarkest};
+border-radius: 3px;
+padding: 2px 5px;
+`
 
 export default dfstyles;

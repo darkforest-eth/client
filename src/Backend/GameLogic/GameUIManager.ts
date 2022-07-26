@@ -315,8 +315,8 @@ class GameUIManager extends EventEmitter {
     }
   }
 
-  public joinGame(beforeRetry: (e: Error) => Promise<boolean>): Promise<void> {
-    return this.gameManager.joinGame(beforeRetry);
+  public joinGame(beforeRetry: (e: Error) => Promise<boolean>, team : number): Promise<void> {
+    return this.gameManager.joinGame(beforeRetry, team);
   }
 
   public addAccount(coords: WorldCoords): Promise<boolean> {
@@ -567,7 +567,7 @@ class GameUIManager extends EventEmitter {
             silver,
             artifact?.id,
             abandoning
-          );
+          )
           tutorialManager.acceptInput(TutorialState.SendFleet);
         }
 
@@ -700,8 +700,24 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getEndTimeSeconds();
   }
 
+  public getTeamsEnabled(): boolean {
+    return this.gameManager.getTeamsEnabled();
+  }
+
+  public checkVictoryCondition() : boolean {
+    return this.gameManager.checkVictoryCondition();
+  }
+
   public isRoundOver(): boolean {
     return this.gameManager.isRoundOver();
+  }
+
+  public getTargetsHeld(address?: EthAddress) : Planet[] {
+    return this.gameManager.getTargetsHeld(address);
+  }
+
+  public getTargetsRequired() : number {
+    return this.gameManager.targetsRequired;
   }
 
   public getUpgrade(branch: UpgradeBranchName, level: number): Upgrade {
@@ -778,7 +794,7 @@ class GameUIManager extends EventEmitter {
 
         if (coordsEqual(loc.coords, this.getHomeCoords())) {
           const tutorialManager = TutorialManager.getInstance(this);
-          tutorialManager.acceptInput(TutorialState.None);
+          tutorialManager.acceptInput(TutorialState.SpawnPlanet);
         }
       }
     }
@@ -1337,6 +1353,42 @@ class GameUIManager extends EventEmitter {
     return this.contractConstants.TARGET_PLANETS;
   }
 
+  public getSpawnPlanets(): Planet[] {
+    return this.gameManager.getSpawnPlanets();
+  }
+
+  public getPlayerTargetPlanets(account? : EthAddress): Planet[] {
+    return this.gameManager.getPlayerTargetPlanets(account);
+  }
+
+  public isTargetHeld(planet: Planet) : boolean {
+    return this.gameManager.isTargetHeld(planet);
+  }
+
+  public blockMovesEnabled() :boolean {
+    return this.gameManager.blockMoves();
+  }
+
+  public playerMoveBlocked(player: EthAddress, planet: LocationId) : boolean {
+    return this.gameManager.playerMoveBlocked(player, planet);
+  }
+
+  public getAllTargetPlanets() : Planet[] {
+    return this.gameManager.getAllTargetPlanets();
+  }
+
+  public playerCaptureBlocked(player: EthAddress, planet: LocationId) : boolean {
+    return this.gameManager.playerCaptureBlocked(player, planet);
+  }
+
+  public getPlayerBlockedPlanets(account?: EthAddress) : Planet[] {
+    return this.gameManager.getPlayerBlockedPlanets(account);
+  }
+
+  public getPlayerDefensePlanets(account?: EthAddress) : Planet[] {
+    return this.gameManager.getPlayerDefensePlanets(account);
+  }
+
   public potentialCaptureScore(planetLevel: number): number {
     return this.contractConstants.CAPTURE_ZONE_PLANET_LEVEL_SCORE[planetLevel];
   }
@@ -1437,6 +1489,10 @@ class GameUIManager extends EventEmitter {
     return Renderer.instance;
   }
 
+  public isCompetitive() : boolean {
+    return this.gameManager.isCompetitive();
+  }
+
   getPaused(): boolean {
     return this.gameManager.getPaused();
   }
@@ -1445,8 +1501,12 @@ class GameUIManager extends EventEmitter {
     return this.gameManager.getPaused$();
   }
 
-  getGameStarted(): boolean {
+  get gameStarted(): boolean {
     return this.gameManager.getGameStarted();
+  }
+
+  getGameStarted$(): Monomitter<boolean> {
+    return this.gameManager.getGameStarted$();
   }
 
   getGameover(): boolean {
@@ -1455,6 +1515,10 @@ class GameUIManager extends EventEmitter {
 
   getGameover$(): Monomitter<boolean> {
     return this.gameManager.getGameover$();
+  }
+
+  getPlayerMoves(addr : EthAddress) {
+    return this.gameManager.getPlayerMoves(addr);
   }
 
   public getWinners(): EthAddress[] {

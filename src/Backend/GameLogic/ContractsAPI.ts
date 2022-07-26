@@ -28,6 +28,7 @@ import {
   ArtifactId,
   ArtifactType,
   AutoGasSetting,
+  BlocklistMap,
   DiagnosticUpdater,
   EthAddress,
   LocationId,
@@ -121,7 +122,7 @@ export class ContractsAPI extends EventEmitter {
    */
   private getGasFeeForTransaction(tx: Transaction): AutoGasSetting | string {
     if (
-      (tx.intent.methodName === 'initializePlayer' || tx.intent.methodName === 'getSpaceShips') &&
+      (tx.intent.methodName === 'arenaInitializePlayer' || tx.intent.methodName === 'getSpaceShips') &&
       tx.intent.contract.address === this.contract.address
     ) {
       return '50';
@@ -224,13 +225,16 @@ export class ContractsAPI extends EventEmitter {
           contract.filters.PauseStateChanged(null).topics,
           contract.filters.LobbyCreated(null, null).topics,
           contract.filters.Gameover(null).topics,
-          contract.filters.GameStarted(null).topics,
+          contract.filters.GameStarted(null,null).topics,
+          contract.filters.PlayerReady(null,null).topics,
+          contract.filters.PlayerNotReady(null,null).topics,
         ].map((topicsOrUndefined) => (topicsOrUndefined || [])[0]),
       ] as Array<string | Array<string>>,
     };
 
     const eventHandlers = {
       [ContractEvent.PauseStateChanged]: (paused: boolean) => {
+        // console.log(`paused ${paused}`);
         this.emit(ContractsAPIEvent.PauseStateChanged, paused);
       },
       [ContractEvent.AdminOwnershipChanged]: (location: EthersBN, _newOwner: string) => {
@@ -369,12 +373,21 @@ export class ContractsAPI extends EventEmitter {
       [ContractEvent.LobbyCreated]: (ownerAddr: string, lobbyAddr: string) => {
         this.emit(ContractsAPIEvent.LobbyCreated, address(ownerAddr), address(lobbyAddr));
       },
-      [ContractEvent.Gameover]: (location: EthersBN) => {
-        this.emit(ContractsAPIEvent.PlanetUpdate, locationIdFromEthersBN(location));
+      [ContractEvent.Gameover]: (player: string) => {
+        this.emit(ContractsAPIEvent.PlayerUpdate, address(player));
         this.emit(ContractsAPIEvent.Gameover);
       },
       [ContractEvent.GameStarted]: (player: string, startTime: EthersBN) => {
+        // console.log('GAme started', player);
         this.emit(ContractsAPIEvent.GameStarted, address(player), startTime.toNumber());
+      },
+      [ContractEvent.PlayerReady]: (player: string, time: EthersBN) => {
+        // console.log('CONTRACT PLAYER READY', player);
+        this.emit(ContractsAPIEvent.PlayerUpdate, address(player));
+      },
+      [ContractEvent.PlayerNotReady]: (player: string, time: EthersBN) => {
+        // console.log('CONTRACT PLAYER NOT READY', player);
+        this.emit(ContractsAPIEvent.PlayerUpdate, address(player));
       },
     };
 
@@ -399,7 +412,13 @@ export class ContractsAPI extends EventEmitter {
     contract.removeAllListeners(ContractEvent.PlanetInvaded);
     contract.removeAllListeners(ContractEvent.PlanetCaptured);
     contract.removeAllListeners(ContractEvent.Gameover);
+    contract.removeAllListeners(ContractEvent.PauseStateChanged);
+    contract.removeAllListeners(ContractEvent.PlayerReady);
+    contract.removeAllListeners(ContractEvent.PlayerNotReady);
     contract.removeAllListeners(ContractEvent.GameStarted);
+    contract.removeAllListeners(ContractEvent.PlayerReady);
+    contract.removeAllListeners(ContractEvent.PlayerNotReady);
+
   }
 
   public getContractAddress(): EthAddress {
@@ -462,10 +481,18 @@ export class ContractsAPI extends EventEmitter {
       RANDOM_ARTIFACTS,
       NO_ADMIN,
       CONFIG_HASH,
-      INIT_PLANET_HASHES
+      INIT_PLANET_HASHES,
+      CONFIRM_START,
+      BLOCK_CAPTURE,
+      BLOCK_MOVES,
+      TARGETS_REQUIRED_FOR_VICTORY,
+      TEAMS_ENABLED,
+      NUM_TEAMS,
+      RANKED,
+      START_PAUSED
     } = await this.makeCall(this.contract.getArenaConstants);
 
-    const TOKEN_MINT_END_SECONDS = (
+    const TOKEN_MINT_END_TIMESTAMP = (
       await this.makeCall(this.contract.TOKEN_MINT_END_TIMESTAMP)
     ).toNumber();
 
@@ -503,7 +530,7 @@ export class ContractsAPI extends EventEmitter {
       PERLIN_MIRROR_X,
       PERLIN_MIRROR_Y,
       CLAIM_PLANET_COOLDOWN: 0,
-      TOKEN_MINT_END_SECONDS,
+      TOKEN_MINT_END_TIMESTAMP,
       MAX_NATURAL_PLANET_LEVEL: MAX_NATURAL_PLANET_LEVEL.toNumber(),
       TIME_FACTOR_HUNDREDTHS: TIME_FACTOR_HUNDREDTHS.toNumber(),
       PERLIN_THRESHOLD_1: PERLIN_THRESHOLD_1.toNumber(),
@@ -530,7 +557,6 @@ export class ContractsAPI extends EventEmitter {
       PLANET_TRANSFER_ENABLED,
       PLANET_TYPE_WEIGHTS,
       ARTIFACT_POINT_VALUES,
-
       SPACE_JUNK_ENABLED,
       SPACE_JUNK_LIMIT: SPACE_JUNK_LIMIT.toNumber(),
       PLANET_LEVEL_JUNK: [
@@ -600,14 +626,21 @@ export class ContractsAPI extends EventEmitter {
         MODIFIERS[7].toNumber(),
       ],
       SPACESHIPS: [SPACESHIPS[0], SPACESHIPS[1], SPACESHIPS[2], SPACESHIPS[3], SPACESHIPS[4]],
-
-      RANDOM_ARTIFACTS : RANDOM_ARTIFACTS,
-      NO_ADMIN: NO_ADMIN,
-      INIT_PLANET_HASHES: INIT_PLANET_HASHES,
-      CONFIG_HASH: CONFIG_HASH,
+      RANDOM_ARTIFACTS,
+      NO_ADMIN,
+      INIT_PLANET_HASHES,
+      CONFIG_HASH,
+      CONFIRM_START,
+      START_PAUSED,
+      BLOCK_CAPTURE,
+      BLOCK_MOVES,
+      TARGETS_REQUIRED_FOR_VICTORY: TARGETS_REQUIRED_FOR_VICTORY.toNumber(),
+      TEAMS_ENABLED,
+      NUM_TEAMS: NUM_TEAMS.toNumber(),
+      RANKED
     };
 
-    return constants;
+    return constants; 
   }
 
   public async getPlayers(

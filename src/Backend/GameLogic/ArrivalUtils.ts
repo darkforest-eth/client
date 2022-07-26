@@ -8,6 +8,7 @@ import {
   Planet,
   PlanetMessage,
   PlanetType,
+  Player,
   QueuedArrival,
   Upgrade,
 } from '@darkforest_eth/types';
@@ -146,7 +147,9 @@ export const arrive = (
   artifactsOnPlanet: Artifact[],
   arrival: QueuedArrival,
   arrivingArtifact: Artifact | undefined,
-  contractConstants: ContractConstants
+  contractConstants: ContractConstants,
+  arrivalPlayer: Player | undefined,
+  toOwner: Player | undefined
 ): PlanetDiff => {
   // this function optimistically simulates an arrival
   if (toPlanet.locationId !== arrival.toPlanet) {
@@ -164,7 +167,8 @@ export const arrive = (
   // apply energy
   const { energyArriving } = arrival;
 
-  if (arrival.player !== toPlanet.owner) {
+  const onSameTeam = toOwner && arrivalPlayer?.team == toOwner?.team;
+  if (arrival.player !== toPlanet.owner && (!contractConstants.TEAMS_ENABLED || !onSameTeam) ) {
     if (arrival.arrivalType === ArrivalType.Wormhole) {
       // if this is a wormhole arrival to a planet that isn't owned by the initiator of
       // the move, then don't move any energy

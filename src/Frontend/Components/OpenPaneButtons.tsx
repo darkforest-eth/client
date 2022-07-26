@@ -1,14 +1,14 @@
 import { LocationId } from '@darkforest_eth/types';
 import React, { useCallback } from 'react';
-import { BroadcastPane, BroadcastPaneHelpContent } from '../Panes/BroadcastPane';
-import { HatPane } from '../Panes/HatPane';
+import { BroadcastPane, BroadcastPaneHelpContent } from '../Panes/Game/BroadcastPane';
+import { HatPane } from '../Panes/Game/HatPane';
 import {
   ManagePlanetArtifactsHelpContent,
   ManagePlanetArtifactsPane,
   PlanetInfoHelpContent,
 } from '../Panes/ManagePlanetArtifacts/ManagePlanetArtifactsPane';
-import { PlanetInfoPane } from '../Panes/PlanetInfoPane';
-import { UpgradeDetailsPane, UpgradeDetailsPaneHelpContent } from '../Panes/UpgradeDetailsPane';
+import { PlanetInfoPane } from '../Panes/Game/PlanetInfoPane';
+import { UpgradeDetailsPane, UpgradeDetailsPaneHelpContent } from '../Panes/Game/UpgradeDetailsPane';
 import {
   TOGGLE_BROADCAST_PANE,
   TOGGLE_HAT_PANE,
@@ -16,7 +16,7 @@ import {
   TOGGLE_PLANET_INFO_PANE,
   TOGGLE_UPGRADES_PANE,
 } from '../Utils/ShortcutConstants';
-import { ModalHandle } from '../Views/ModalPane';
+import { ModalHandle } from '../Views/Game/ModalPane';
 import { MaybeShortcutButton } from './MaybeShortcutButton';
 
 export function OpenPaneButton({

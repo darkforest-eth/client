@@ -1,7 +1,7 @@
 import { ModalId } from '@darkforest_eth/types';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import { ModalPane } from '../Views/ModalPane';
+import { ModalPane } from '../Views/Game/ModalPane';
 
 /**
  * Allows you to instantiate a modal, and render it into the desired element.

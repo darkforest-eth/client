@@ -224,18 +224,18 @@ export function PlanetOwnerLabel({
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
   const owner = usePlayer(uiManager, planet?.owner);
-
+  const teamsEnabled = uiManager.getGameManager().getContractConstants().TEAMS_ENABLED;
   const defaultColor = dfstyles.colors.subtext;
 
   if (!planet) return <>/</>;
 
-  if (planet.owner === EMPTY_ADDRESS) return <Sub>Unclaimed</Sub>;
+  if (planet.owner === EMPTY_ADDRESS || !owner.value) return <Sub>Unclaimed</Sub>;
 
   if (abbreviateOwnAddress && planet.owner === account) {
     return <Colored color={dfstyles.colors.dfgreen}>yours!</Colored>;
   }
 
-  const color = colorWithOwnerColor ? defaultColor : getPlayerColor(planet.owner);
+  const color = colorWithOwnerColor ? defaultColor : getPlayerColor(owner.value, teamsEnabled);
   if (planet.owner && owner.value?.twitter) {
     return <TwitterLink color={color} twitter={owner.value.twitter} />;
   }

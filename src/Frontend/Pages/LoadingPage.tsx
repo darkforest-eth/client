@@ -1,15 +1,18 @@
-import * as React from 'react';
-
-const styles = {
-  container: {
-    height: '100%',
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-};
+import React from 'react';
+import {useEffect, useState} from 'react';
+import styled from 'styled-components';
+import { LoadingSpinner } from '../Components/LoadingSpinner';
 
 export default function LoadingPage() {
-  return <div style={styles.container}>Loading... (this may take a few seconds)</div>;
+
+  return <LoadingContainer style = {{fontSize: '3em'}}><LoadingSpinner initialText='Loading...'></LoadingSpinner></LoadingContainer>;
 }
+
+
+const LoadingContainer = styled.div`
+height: 100%;
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+`

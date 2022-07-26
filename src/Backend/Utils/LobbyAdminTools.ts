@@ -5,7 +5,7 @@ import {
   fakeProof,
   RevealSnarkContractCallArgs,
   RevealSnarkInput,
-  SnarkJSProofAndSignals
+  SnarkJSProofAndSignals,
 } from '@darkforest_eth/snarks';
 import revealCircuitPath from '@darkforest_eth/snarks/reveal.wasm';
 import revealZkeyPath from '@darkforest_eth/snarks/reveal.zkey';
@@ -16,10 +16,10 @@ import {
   UnconfirmedCreateArenaPlanet,
   UnconfirmedReveal,
   WorldCoords,
-  WorldLocation
+  WorldLocation,
 } from '@darkforest_eth/types';
-import { LobbyPlanet } from '../../Frontend/Panes/Lobbies/LobbiesUtils';
-import { LobbyInitializers } from '../../Frontend/Panes/Lobbies/Reducer';
+import { LobbyPlanet } from '../../Frontend/Panes/Lobby/LobbiesUtils';
+import { LobbyInitializers } from '../../Frontend/Panes/Lobby/Reducer';
 import { lobbyPlanetsToInitPlanets, lobbyPlanetToInitPlanet } from '../../Frontend/Utils/helpers';
 import { ContractsAPI, makeContractsAPI } from '../GameLogic/ContractsAPI';
 
@@ -57,9 +57,13 @@ export class LobbyAdminTools {
     lobbyAddress: EthAddress,
     connection: EthConnection
   ): Promise<LobbyAdminTools> {
+    try {
     const contract = await makeContractsAPI({ connection, contractAddress: lobbyAddress });
     const lobbyAdminTools = new LobbyAdminTools(lobbyAddress, contract, connection);
     return lobbyAdminTools;
+    } catch(e) {
+      throw new Error("couldn't connect to blockchain.")
+    }
   }
 
   private generatePlanetData(planet: LobbyPlanet, initializers: LobbyInitializers) {
@@ -97,9 +101,7 @@ export class LobbyAdminTools {
   }
 
   async createPlanet(planet: LobbyPlanet, initializers: LobbyInitializers) {
-    const args = Promise.resolve([
-      lobbyPlanetToInitPlanet(planet, initializers)
-    ]);
+    const args = Promise.resolve([lobbyPlanetToInitPlanet(planet, initializers)]);
 
     const txIntent: UnconfirmedCreateArenaPlanet = {
       methodName: 'createArenaPlanet',
@@ -142,7 +144,7 @@ export class LobbyAdminTools {
     const txIntent: UnconfirmedReveal = {
       methodName: 'revealLocation',
       contract: this.contract.contract,
-      locationId: location.toString() as LocationId, 
+      locationId: location.toString() as LocationId,
       location: worldLocation,
       args: getArgs(),
     };
@@ -213,9 +215,9 @@ export class LobbyAdminTools {
 
   async bulkCreateAndReveal(planets: LobbyPlanet[], initializers: LobbyInitializers) {
     // make create Planet args
-    const createData = lobbyPlanetsToInitPlanets(planets, initializers);
+    const initPlanets = lobbyPlanetsToInitPlanets(initializers, planets);
 
-    const args = Promise.resolve([createData]);
+    const args = Promise.resolve([initPlanets]);
     const txIntent = {
       methodName: 'bulkCreateAndReveal' as ContractMethodName,
       contract: this.contract.contract,

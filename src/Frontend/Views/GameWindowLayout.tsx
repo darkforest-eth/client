@@ -10,31 +10,32 @@ import {
   WindowWrapper,
 } from '../Components/GameWindowComponents';
 import ControllableCanvas from '../Game/ControllableCanvas';
-import { ArtifactHoverPane } from '../Panes/ArtifactHoverPane';
-import { CoordsPane } from '../Panes/CoordsPane';
-import { DiagnosticsPane } from '../Panes/DiagnosticsPane';
-import { ExplorePane } from '../Panes/ExplorePane';
-import { HelpPane } from '../Panes/HelpPane';
-import { HoverPlanetPane } from '../Panes/HoverPlanetPane';
-import OnboardingPane from '../Panes/OnboardingPane';
-import { PlanetContextPane } from '../Panes/PlanetContextPane';
-import { PlanetDexPane } from '../Panes/PlanetDexPane';
-import { PlayerArtifactsPane } from '../Panes/PlayerArtifactsPane';
-import { PluginLibraryPane } from '../Panes/PluginLibraryPane';
-import { PrivatePane } from '../Panes/PrivatePane';
-import { SettingsPane } from '../Panes/SettingsPane';
-import { SurveyPane } from '../Panes/SurveyPane';
-import { TransactionLogPane } from '../Panes/TransactionLogPane';
-import { TutorialPane } from '../Panes/TutorialPane';
-import { TwitterVerifyPane } from '../Panes/TwitterVerifyPane';
+import { ArtifactHoverPane } from '../Panes/Game/ArtifactHoverPane';
+import { CoordsPane } from '../Panes/Game/CoordsPane';
+import { DiagnosticsPane } from '../Panes/Game/DiagnosticsPane';
+import { ExplorePane } from '../Panes/Game/ExplorePane';
+import { HelpPane } from '../Panes/Game/HelpPane';
+import { HoverPlanetPane } from '../Panes/Game/HoverPlanetPane';
+import OnboardingPane from '../Panes/Game/OnboardingPane';
+import { WaitingRoomPane} from '../Panes/Game/WaitingRoomPane'
+import { PlanetContextPane } from '../Panes/Game/PlanetContextPane';
+import { PlanetDexPane } from '../Panes/Game/PlanetDexPane';
+import { PlayerArtifactsPane } from '../Panes/Game/PlayerArtifactsPane';
+import { PluginLibraryPane } from '../Panes/Game/PluginLibraryPane';
+import { PrivatePane } from '../Panes/Game/PrivatePane';
+import { SettingsPane } from '../Panes/Game/SettingsPane';
+import { SurveyPane } from '../Panes/Game/SurveyPane';
+import { TransactionLogPane } from '../Panes/Game/TransactionLogPane';
+import { TutorialPane } from '../Panes/Game/TutorialPane';
+import { TwitterVerifyPane } from '../Panes/Game/TwitterVerifyPane';
 import { ZoomPane } from '../Panes/ZoomPane';
 import { useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 import { useOnUp } from '../Utils/KeyEmitters';
 import { useBooleanSetting } from '../Utils/SettingsHooks';
 import { TOGGLE_DIAGNOSTICS_PANE } from '../Utils/ShortcutConstants';
-import { NotificationsPane } from './Notifications';
-import { SidebarPane } from './SidebarPane';
-import { TopBar } from './TopBar';
+import { NotificationsPane } from './Game/Notifications';
+import { SidebarPane } from '../Panes/Game/SidebarPane';
+import { TopBar } from './Game/TopBar';
 
 export function GameWindowLayout({
   terminalVisible,
@@ -88,7 +89,10 @@ export function GameWindowLayout({
   const modalsContainerCB = useCallback((node) => {
     setModalsContainer(node);
   }, []);
-  const [onboardingVisible, setOnboardingVisible] = useBooleanSetting(uiManager, Setting.NewPlayer);
+
+  const [waitingRoomVisible, setWaitingRoomVisible] = useState(!uiManager.gameStarted && uiManager.contractConstants.MANUAL_SPAWN);
+
+  // const [onboardingVisible, setOnboardingVisible] = useBooleanSetting(uiManager, Setting.NewPlayer);
   const [tutorialVisible, setTutorialVisible] = useBooleanSetting(uiManager, Setting.TutorialOpen);
   const selected = useSelectedPlanet(uiManager).value;
   const [selectedPlanetVisible, setSelectedPlanetVisible] = useState<boolean>(!!selected);
@@ -116,6 +120,8 @@ export function GameWindowLayout({
   }, [userTerminalVisibleSetting, setTerminalVisibleSetting, terminalVisible]);
 
   useEffect(() => setSelectedPlanetVisible(!!selected), [selected, setSelectedPlanetVisible]);
+
+  // useEffect(() => setWaitingRoomVisible(!uiManager.getGameStarted())), [uiManager.getGameStarted()];
 
   useOnUp(
     TOGGLE_DIAGNOSTICS_PANE,
@@ -175,13 +181,18 @@ export function GameWindowLayout({
         )}
       </div>
 
-      <OnboardingPane
-        isCompetitive={uiManager.getGameManager().isCompetitive()}
+      {/* <OnboardingPane
+        isCompetitive={uiManager.isCompetitive()}
         visible={onboardingVisible}
         onClose={(openTutorial: boolean) => {
           setOnboardingVisible(false);
           openTutorial && setTutorialVisible(true);
         }}
+      /> */}
+
+      <WaitingRoomPane
+        visible = {waitingRoomVisible}
+        onClose = {() => setWaitingRoomVisible(false)}
       />
 
       <MainWindow>

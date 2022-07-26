@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useUIManager } from '../Utils/AppHooks';
 import { useEmitterSubscribe } from '../Utils/EmitterHooks';
-import { ModalPane } from '../Views/ModalPane';
+import { ModalPane } from '../Views/Game/ModalPane';
 import { PluginElements } from './CoreUI';
 
 export function PluginModal({

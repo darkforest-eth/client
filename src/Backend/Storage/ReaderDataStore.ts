@@ -143,7 +143,7 @@ class ReaderDataStore {
 
     for (const arrival of arrivals) {
       if (nowInSeconds < arrival.arrivalTime) break;
-      arrive(planet, [], arrival, undefined, contractConstants);
+      arrive(planet, [], arrival, undefined, contractConstants, undefined, undefined);
     }
 
     updatePlanetToTime(planet, [], Date.now(), contractConstants);

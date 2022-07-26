@@ -6,12 +6,13 @@ import { createGlobalStyle } from 'styled-components';
 import { Theme } from '../Components/Theme';
 import { LandingPageBackground } from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
-import { CreateLobby } from './CreateLobby';
+import { CreateLobby } from './Lobby/CreateLobby';
 import { EventsPage } from './EventsPage';
-import { GameLandingPage } from './GameLandingPage';
+import { GameLandingPage } from './Game/GameLandingPage';
 import { GifMaker } from './GifMaker';
 import LandingPage from './LandingPage';
 import { NotFoundPage } from './NotFoundPage';
+import { PortalPage } from './Portal/PortalPage';
 import { ShareArtifact } from './ShareArtifact';
 import { SharePlanet } from './SharePlanet';
 import { TestArtifactImages } from './TestArtifactImages';
@@ -31,9 +32,10 @@ function App() {
       <Theme color='dark' scale='medium'>
         <Router>
           <Switch>
-            {/* <Redirect path='/play' to={`/play/${defaultAddress}`} push={true} exact={true} /> */}
-            <Route path='/play/' component={GameLandingPage} exact = {true}/>
+            <Redirect path='/play' to={`/play/${defaultAddress}`} push={true} exact={true} />
             <Route path='/play/:contract' component={GameLandingPage} />
+            <Redirect path='/portal' to={`/portal/map`} push={true} exact={true} />
+            <Route path='/portal' component={PortalPage}/>
             <Route path='/events' component={EventsPage} />
             <Route path='/' exact component={LandingPage} />
             <Redirect path='/arena' to={`/arena/${defaultAddress}`} push={true} exact={true} />

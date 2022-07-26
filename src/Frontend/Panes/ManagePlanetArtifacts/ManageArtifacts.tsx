@@ -2,8 +2,8 @@ import { Artifact, LocatablePlanet, PlanetType } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { Spacer } from '../../Components/CoreUI';
-import { ModalHandle } from '../../Views/ModalPane';
-import { AllArtifacts } from '../ArtifactsList';
+import { ModalHandle } from '../../Views/Game/ModalPane';
+import { AllArtifacts } from '../Game/ArtifactsList';
 
 export function ManageArtifactsPane({
   planet,

@@ -22,28 +22,27 @@ export function TextPreview({
   const [isTextBox, setIsTextbox] = useState(false);
 
   const onClick = useCallback((e: React.SyntheticEvent) => {
-    if(disabled) return;
+    if (disabled) return;
     e.stopPropagation();
     setIsTextbox(true);
   }, []);
 
   const onBlur = useCallback(() => {
-    if(disabled) return;
+    if (disabled) return;
     setIsTextbox(false);
   }, []);
 
-
   const ShortenedText = styled.span`
-  ${({ width }: { width: string }) => css`
-    cursor: ${disabled ? 'pointer':'zoom-in'};
-    display: inline-block;
-    width: ${width};
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    vertical-align: bottom;
-  `}
-`;
+    ${({ width }: { width: string }) => css`
+      cursor: ${disabled ? 'pointer' : 'zoom-in'};
+      display: inline-block;
+      width: ${width};
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: bottom;
+    `}
+  `;
 
   if (isTextBox) {
     return (

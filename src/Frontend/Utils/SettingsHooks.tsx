@@ -43,8 +43,8 @@ const defaultSettings: Record<Setting, string> = {
   [Setting.HasAcceptedPluginRisk]: onlyInDevelopment(),
   [Setting.GasFeeGwei]: AutoGasSetting.Average,
   [Setting.TerminalVisible]: 'true',
-  [Setting.TutorialOpen]: 'false',
-
+  // [Setting.TutorialOpen]: onlyInProduction(),
+  [Setting.TutorialOpen]: 'true',
   [Setting.FoundPirates]: 'false',
   [Setting.TutorialCompleted]: 'false',
   [Setting.FoundSilver]: 'false',
@@ -55,7 +55,7 @@ const defaultSettings: Record<Setting, string> = {
   [Setting.FoundDeepSpace]: 'false',
   [Setting.FoundSpace]: 'false',
   // prevent the tutorial and help pane popping up in development mode.
-  [Setting.NewPlayer]: onlyInProduction(),
+  [Setting.NewPlayer]: 'false',
   [Setting.MiningCores]: '1',
   [Setting.IsMining]: 'true',
   [Setting.DisableDefaultShortcuts]: 'false',

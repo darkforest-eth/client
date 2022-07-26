@@ -4,7 +4,7 @@ import React from 'react';
 import { CenterBackgroundSubtext, Underline } from '../../Components/CoreUI';
 import { useAccount, useMyArtifactsList, usePlanet, useUIManager } from '../../Utils/AppHooks';
 import { useEmitterValue } from '../../Utils/EmitterHooks';
-import { ModalHandle } from '../../Views/ModalPane';
+import { ModalHandle } from '../../Views/Game/ModalPane';
 import { ManageArtifactsPane } from './ManageArtifacts';
 
 export function PlanetInfoHelpContent() {

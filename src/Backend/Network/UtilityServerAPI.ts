@@ -201,11 +201,11 @@ export const requestFaucet = async (address: EthAddress): Promise<boolean> => {
   try {
     const res = await fetch(`${process.env.FAUCET_URL}/drip/${address}`, {})
     if(!res.ok) {
-      console.log('res', res);
       const json = await res.json()
       console.log(json)
+      return false;
     }
-    return res.ok;
+    return true;
   } catch (e) {
     console.error(`error when requesting drip: ${e}`);
     return false;

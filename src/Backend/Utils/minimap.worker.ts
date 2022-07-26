@@ -1,6 +1,6 @@
 import { perlin } from "@darkforest_eth/hashing";
 import { SpaceType, WorldCoords } from "@darkforest_eth/types";
-import { DrawMessage, MinimapConfig, PlanetType } from "../../Frontend/Panes/Lobbies/MinimapUtils";
+import { DrawMessage, MinimapConfig, PlanetType } from "../../Frontend/Panes/Lobby/MinimapUtils";
 
 const ctx = self as unknown as Worker;
 

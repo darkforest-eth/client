@@ -18,28 +18,114 @@ const LOCATION_ID_UB = bigInt(
   '21888242871839275222246405745257275088548364400416034343698204186575808495617'
 );
 
-const competitiveConfig = '0x38329f176da42d2c89b7e424175e8b0ab3c9008cb0d98f947857884d76c6d9d2';
+const apiUrl = 'https://9a46-143-244-168-87.ngrok.io/subgraphs/name/df-arena-v2';
 
-const roundStartTimestamp = '2022-06-20T00:00:00.000Z';
+const competitiveConfig = '0x568297442f966cc66f2be7ced683e35ea2ca1e68b4f26dd5424158244da40bcc';
 
-const roundEndTimestamp = '2022-06-18T00:00:00.000Z';
+const roundStartTimestamp = '2022-07-13T00:00:00.000Z';
 
-const bronzeTime = 5400; // 90 minutes in seconds
+const roundEndTimestamp = '2022-07-20T00:00:00.000Z';
 
-const silverTime = 3600; // 1 hour in seconds
+const bronzeTime = 4500; // 80 minutes in seconds
 
-const goldTime = 1800; // 30 minutes in seconds
+const silverTime = 3500; // 40 minutes in seconds
+
+const goldTime = 2500; // 20 minutes in seconds
+
+const OPTIMISM_GAS_LIMIT = 15000000;
+
+const MAX_ADMIN_PLANETS = 30;
+
+const CONFIG_CONSTANTS = `config{
+  # CLAIM_PLANET_COOLDOWN,
+  # INIT_PLANETS,
+  ABANDON_RANGE_CHANGE_PERCENT,
+  ABANDON_SPEED_CHANGE_PERCENT,
+  ADMIN_CAN_ADD_PLANETS,
+  ARTIFACT_POINT_VALUES,
+  BIOME_THRESHOLD_1,
+  BIOME_THRESHOLD_2,
+  BIOMEBASE_KEY,
+  BLOCK_CAPTURE,
+  BLOCK_MOVES,
+  CAPTURE_ZONE_CHANGE_BLOCK_INTERVAL,
+  CAPTURE_ZONE_COUNT,
+  CAPTURE_ZONE_HOLD_BLOCKS_REQUIRED,
+  CAPTURE_ZONE_PLANET_LEVEL_SCORE,
+  CAPTURE_ZONE_RADIUS,
+  CAPTURE_ZONES_ENABLED,
+  CAPTURE_ZONES_PER_5000_WORLD_RADIUS,
+  CLAIM_VICTORY_ENERGY_PERCENT,
+  CONFIRM_START,
+  DISABLE_ZK_CHECKS,
+  INIT_PERLIN_MAX,
+  INIT_PERLIN_MIN,
+  LOCATION_REVEAL_COOLDOWN,
+  MANUAL_SPAWN,
+  MAX_NATURAL_PLANET_LEVEL,
+  MODIFIERS,
+  NO_ADMIN,
+  NUM_TEAMS,
+  PERLIN_LENGTH_SCALE,
+  PERLIN_MIRROR_X,
+  PERLIN_MIRROR_Y,
+  PERLIN_THRESHOLD_1,
+  PERLIN_THRESHOLD_2,
+  PERLIN_THRESHOLD_3,
+  PHOTOID_ACTIVATION_DELAY,
+  PLANET_LEVEL_JUNK,
+  PLANET_LEVEL_THRESHOLDS,
+  PLANET_RARITY,
+  PLANET_TRANSFER_ENABLED,
+  PLANET_TYPE_WEIGHTS,
+  PLANETHASH_KEY,
+  RANDOM_ARTIFACTS,
+  RANKED,
+  SILVER_SCORE_VALUE,
+  SPACE_JUNK_ENABLED,
+  SPACE_JUNK_LIMIT,
+  SPACESHIPS,
+  SPACETYPE_KEY,
+  SPAWN_RIM_AREA,
+  START_PAUSED,
+  TARGET_PLANETS,
+  TARGETS_REQUIRED_FOR_VICTORY,
+  TEAMS_ENABLED,
+  TIME_FACTOR_HUNDREDTHS,
+  TOKEN_MINT_END_TIMESTAMP,
+  WHITELIST_ENABLED,
+  WORLD_RADIUS_LOCKED,
+  WORLD_RADIUS_MIN,
+},
+planets(first: ${MAX_ADMIN_PLANETS}) {
+  x,
+  y,
+  locationDec,
+  perlin,
+  level,
+  planetType,
+  targetPlanet,
+  spawnPlanet,
+  blockedPlanetIds {
+    locationDec
+    x
+    y
+  }
+}`;
 
 export {
   MIN_CHUNK_SIZE,
   MAX_CHUNK_SIZE,
+  OPTIMISM_GAS_LIMIT,
   LOCATION_ID_UB,
+  apiUrl,
   roundEndTimestamp,
   roundStartTimestamp,
   competitiveConfig,
   bronzeTime,
   silverTime,
-  goldTime
+  CONFIG_CONSTANTS,
+  goldTime,
 };
 
 export const enum DFZIndex {

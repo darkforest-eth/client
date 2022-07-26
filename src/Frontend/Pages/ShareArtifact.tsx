@@ -2,7 +2,7 @@ import { Artifact, ArtifactId } from '@darkforest_eth/types';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import ReaderDataStore from '../../Backend/Storage/ReaderDataStore';
-import { Share } from '../Views/Share';
+import { Share } from '../Views/Game/Share';
 
 export function ShareArtifact({ match }: RouteComponentProps<{ artifactId: ArtifactId }>) {
   function load(dataStore: ReaderDataStore) {

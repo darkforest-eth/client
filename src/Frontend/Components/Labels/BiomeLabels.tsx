@@ -3,7 +3,7 @@ import { Artifact, Biome, BiomeNames, LocatablePlanet, Planet } from '@darkfores
 import React from 'react';
 import styled from 'styled-components';
 import { BiomeTextColors } from '../../Styles/Colors';
-import { AncientLabel, AncientLabelAnim } from '../AncientLabel';
+import { AncientLabel, AncientLabelAnim } from './AncientLabel';
 import { icyAnim, shakeAnim } from '../BiomeAnims';
 import { LavaLabel } from './LavaLabel';
 import { WastelandLabel } from './WastelandLabel';

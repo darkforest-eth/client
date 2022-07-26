@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export function LoadingSpinner({ initialText, rate }: { initialText?: string; rate?: number }) {
+export function LoadingSpinner({ initialText, rate}: { initialText?: string; rate?: number }) {
   const speed = rate || 100;
   const text = initialText || 'Loading...';
   const [currentText, setCurrentText] = useState(text);
