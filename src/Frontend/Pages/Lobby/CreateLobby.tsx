@@ -1,10 +1,9 @@
 import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { EthConnection } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
-import { ArtifactRarity, EthAddress } from '@darkforest_eth/types';
+import { EthAddress } from '@darkforest_eth/types';
 import React, { useCallback, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { ContractsAPI, makeContractsAPI } from '../../../Backend/GameLogic/ContractsAPI';
 import { Account, getActive, logOut } from '../../../Backend/Network/AccountManager';
 import { getEthConnection } from '../../../Backend/Network/Blockchain';
 import { loadConfigFromAddress } from '../../../Backend/Network/ConfigApi';
@@ -19,6 +18,7 @@ import { CadetWormhole } from '../../Views/CadetWormhole';
 import LoadingPage from '../LoadingPage';
 import { LobbyConfigPage } from './LobbyConfigPage';
 import { PortalLandingPage, sendDrip } from '../Portal/PortalLandingPage';
+import { ArenaCreationManager } from '../../../Backend/GameLogic/ArenaCreationManager';
 
 type ErrorState =
   | { type: 'invalidAddress' }
@@ -28,20 +28,22 @@ type ErrorState =
 export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>) {
   const [connection, setConnection] = useState<EthConnection | undefined>();
   const [account, setAccount] = useState<Account | undefined>(getActive());
-  const [contract, setContract] = useState<ContractsAPI | undefined>();
+  const [arenaCreationManager, setArenaCreationManager] = useState<
+    ArenaCreationManager | undefined
+  >();
   const [startingConfig, setStartingConfig] = useState<LobbyInitializers | undefined>();
+  const [twitters, setTwitters] = useState<AddressTwitterMap | undefined>();
   const contractAddress: EthAddress = address(CONTRACT_ADDRESS);
   const configContractAddress = address(match.params.contract) || contractAddress;
-  const [twitters, setTwitters] = useState<AddressTwitterMap | undefined>();
+  const [errorState, setErrorState] = useState<ErrorState | undefined>(
+    contractAddress ? undefined : { type: 'invalidAddress' }
+  );
 
   useEffect(() => {
     getAllTwitters().then((t) => setTwitters(t));
   }, []);
 
-  const [errorState, setErrorState] = useState<ErrorState | undefined>(
-    contractAddress ? undefined : { type: 'invalidAddress' }
-  );
-
+  // get connection on page open
   useEffect(() => {
     async function getConnection() {
       try {
@@ -59,6 +61,7 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
     return () => unlinkKeyboardEvents();
   }, []);
 
+  // set account when logged into portalLandingPage
   const onReady = useCallback(
     (connect: EthConnection) => {
       const address = connect.getAddress();
@@ -69,30 +72,31 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
     [setConnection]
   );
 
+  // when connected and there's an account, skip landing page
   useEffect(() => {
-      async function setPlayer(ethConnection: EthConnection) {
-        try {
-          if (!!account) {
-            await ethConnection.setAccount(account.privateKey);
-            await sendDrip(ethConnection, account.address);
-            onReady(ethConnection);
-            return;
-          }
-        } catch (e) {
-          alert('Unable to connect account');
-          logOut();
+    async function setPlayer(ethConnection: EthConnection) {
+      try {
+        if (!!account) {
+          await ethConnection.setAccount(account.privateKey);
+          await sendDrip(ethConnection, account.address);
+          onReady(ethConnection);
+          return;
         }
+      } catch (e) {
+        alert('Unable to connect account');
+        logOut();
       }
-    
+    }
+
     if (connection) setPlayer(connection);
-  
   }, [connection]);
 
+  // when connected
   useEffect(() => {
     if (connection) {
-      if (contractAddress) {
-        makeContractsAPI({ connection, contractAddress })
-          .then((contract) => setContract(contract))
+      if (contractAddress && !arenaCreationManager) {
+        ArenaCreationManager.create(connection, contractAddress)
+          .then((creationManager) => setArenaCreationManager(creationManager))
           .catch((e) => {
             console.log(e);
             setErrorState({ type: 'contractLoad' });
@@ -100,21 +104,14 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
       }
       if (configContractAddress && !startingConfig) {
         loadConfigFromAddress(configContractAddress)
-          .then((config) => {
-            if (!config) {
-              setStartingConfig(stockConfig.vanilla);
-            } else {
-              setStartingConfig(config.config);
-            }
-            return;
-          })
+          .then((config) => setStartingConfig(config.config))
           .catch((e) => {
             console.log(e);
-            setErrorState({ type: 'contractLoad' });
+            setStartingConfig(stockConfig.vanilla);
           });
       }
     }
-  }, [connection, contractAddress, account]);
+  }, [connection, contractAddress, startingConfig]);
 
   if (errorState) {
     switch (errorState.type) {
@@ -132,14 +129,12 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
 
   let content = <LoadingPage />;
 
-  if (connection && startingConfig && contract) {
+  if (connection && startingConfig && arenaCreationManager) {
     content =
       account && twitters ? (
         <TwitterProvider value={twitters}>
           <LobbyConfigPage
-            contractsAPI={contract}
-            connection={connection}
-            ownerAddress={account.address}
+            arenaCreationManager={arenaCreationManager}
             startingConfig={startingConfig}
             root={`/arena/${configContractAddress}`}
           />

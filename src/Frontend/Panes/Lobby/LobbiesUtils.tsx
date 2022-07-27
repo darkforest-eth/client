@@ -4,7 +4,6 @@ import { EthAddress, LocationId, WorldCoords } from '@darkforest_eth/types';
 import React, { ChangeEvent, MouseEventHandler, useCallback } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import { LobbyAdminTools } from '../../../Backend/Utils/LobbyAdminTools';
 import { Btn, ShortcutBtn } from '../../Components/Btn';
 import { Select, Title } from '../../Components/CoreUI';
 import { Row } from '../../Components/Row';
@@ -20,6 +19,19 @@ export declare type LobbyPlanet = {
   isSpawnPlanet: boolean;
   blockedPlanetLocs: WorldCoords[];
 };
+
+export declare type InitPlanet = {
+  x: string;
+  y: string;
+  level: number;
+  planetType: number;
+  requireValidLocationId: boolean;
+  location: string;
+  perlin: number;
+  isTargetPlanet: boolean;
+  isSpawnPlanet: boolean;
+  blockedPlanetIds: string[];
+}
 
 export interface LobbiesPaneProps {
   config: LobbyConfigState;

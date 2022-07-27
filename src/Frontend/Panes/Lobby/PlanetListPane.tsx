@@ -2,7 +2,10 @@ import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
 import _, { chunk } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { CreatedPlanet, LobbyAdminTools } from '../../../Backend/Utils/LobbyAdminTools';
+import {
+  CreatedPlanet,
+  ArenaCreationManager,
+} from '../../../Backend/GameLogic/ArenaCreationManager';
 import { Link, Spacer } from '../../Components/CoreUI';
 import { Row } from '../../Components/Row';
 import { Sub } from '../../Components/Text';
@@ -21,28 +24,22 @@ export function PlanetListPane({
   config,
   onUpdate,
   onPlanetSelect: onPlanetSelect,
-  lobbyAdminTools,
+  arenaCreationManager,
   maxPlanetsPerPage = 5,
   selectedIndex,
 }: {
   config: LobbyConfigState;
   onUpdate: (change: LobbyConfigAction) => void;
   onPlanetSelect: (index: number) => void;
-  lobbyAdminTools: LobbyAdminTools | undefined;
+  arenaCreationManager: ArenaCreationManager;
   maxPlanetsPerPage?: number;
   selectedIndex?: number;
 }) {
   const [createdPlanets, setCreatedPlanets] = useState<CreatedPlanet[] | undefined>();
 
   useEffect(() => {
-    setCreatedPlanets(lobbyAdminTools?.planets);
-  }, [lobbyAdminTools]);
-
-  // <div style={{ ...jcFlexEnd, ...rowStyle }}>
-  //       <Btn disabled={!lobbyAdminTools} onClick={async () => await createAndRevealPlanet(i)}>
-  //         ✓
-  //       </Btn>
-  //     </div>
+    setCreatedPlanets(arenaCreationManager?.planets);
+  }, [arenaCreationManager]);
 
   const StagedPlanetItem: React.FC<{ planet: LobbyPlanet; index: number }> = ({
     planet,
@@ -259,7 +256,7 @@ export function PlanetListPane({
     ) : (
       <Row>
         <Sub>
-          {lobbyAdminTools
+          {arenaCreationManager
             ? 'No planets created '
             : "Planets won't be created on-chain until world is created"}
         </Sub>
@@ -271,7 +268,7 @@ export function PlanetListPane({
     <>
       {config.ADMIN_CAN_ADD_PLANETS.displayValue ? (
         <>
-          {config.NO_ADMIN.displayValue && lobbyAdminTools && (
+          {config.NO_ADMIN.displayValue && arenaCreationManager && (
             <Sub>You cannot stage planets after universe creation if admin disabled.</Sub>
           )}
           <StagedPlanets config={config} onUpdate={onUpdate} />
