@@ -1,9 +1,12 @@
 import { getConfigName } from '@darkforest_eth/procedural';
 import { Leaderboard, LiveMatch } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
-import { loadArenaLeaderboard } from '../../../Backend/Network/ArenaLeaderboardApi';
-import { GraphConfigPlayer, loadEloLeaderboard } from '../../../Backend/Network/EloLeaderboardApi';
-import { loadLiveMatches } from '../../../Backend/Network/SpyApi';
+import { loadArenaLeaderboard } from '../../../Backend/Network/GraphApi/ArenaLeaderboardApi';
+import {
+  GraphConfigPlayer,
+  loadEloLeaderboard,
+} from '../../../Backend/Network/GraphApi/EloLeaderboardApi';
+import { loadLiveMatches } from '../../../Backend/Network/GraphApi/SpyApi';
 import { Subber } from '../../Components/Text';
 import { LobbyInitializers } from '../../Panes/Lobby/Reducer';
 import { ArenaLeaderboardDisplay, EloLeaderboardDisplay } from '../Leaderboards/ArenaLeaderboard';

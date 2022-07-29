@@ -11,9 +11,9 @@ import {
   roundStartTimestamp,
   competitiveConfig,
   apiUrl,
-} from '../../Frontend/Utils/constants';
-import { getGraphQLData } from './GraphApi';
-import { getAllTwitters } from './UtilityServerAPI';
+} from '../../../Frontend/Utils/constants';
+import { getGraphQLData } from '../GraphApi';
+import { getAllTwitters } from '../UtilityServerAPI';
 
 export async function loadArenaLeaderboard(
   config: string = competitiveConfig,
@@ -48,7 +48,7 @@ query {
 
 interface winners {
   address: string;
-  moves: number
+  moves: number;
 }
 interface GraphArena {
   winners: winners[];
@@ -75,8 +75,8 @@ async function convertData(arenas: GraphArena[], isCompetitive: boolean): Promis
       !arena.duration ||
       arena.startTime == 0 ||
       arena.winners.length == 0 ||
-      !arena.winners[0].address || 
-      isCompetitive && (roundEnd <= arena.endTime || roundStart >= arena.startTime)
+      !arena.winners[0].address ||
+      (isCompetitive && (roundEnd <= arena.endTime || roundStart >= arena.startTime))
     )
       continue;
 
@@ -91,7 +91,7 @@ async function convertData(arenas: GraphArena[], isCompetitive: boolean): Promis
         moves: arena.winners[0].moves,
         startTime: arena.startTime,
         endTime: arena.endTime,
-        time: arena.duration
+        time: arena.duration,
       });
     } else if (entry.score && entry.score > arena.duration) {
       entry.score = arena.duration;

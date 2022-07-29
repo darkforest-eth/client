@@ -4,7 +4,7 @@ import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { convertGraphConfig } from '../../../Backend/Network/ConfigApi';
+import { convertGraphConfig } from '../../../Backend/Network/GraphApi/ConfigApi';
 import { Minimap } from '../../Components/Minimap';
 import { TextPreview } from '../../Components/TextPreview';
 import { generateMinimapConfig } from '../../Panes/Lobby/MinimapUtils';
@@ -30,7 +30,9 @@ const mapSize = '125px';
 
 function ArenaCard({ arena }: { arena: ArenaData }) {
   const lastPlayed = new Date(arena.startTime * 1000);
-  const formattedDate = `${lastPlayed.getMonth() + 1}/${lastPlayed.getDate() + 1}/${lastPlayed.getFullYear()}`;
+  const formattedDate = `${lastPlayed.getMonth() + 1}/${
+    lastPlayed.getDate() + 1
+  }/${lastPlayed.getFullYear()}`;
   return (
     <Link
       to={`/portal/map/${arena.configHash}`}

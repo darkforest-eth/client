@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { isFindable } from '../../Backend/GameLogic/ArrivalUtils';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { TooltipTrigger } from '../Panes/Tooltip';
-import { useAccount, useUIManager } from '../Utils/AppHooks';
+import { useAddress, useUIManager } from '../Utils/AppHooks';
 import { useEmitterValue } from '../Utils/EmitterHooks';
 import { MINE_ARTIFACT } from '../Utils/ShortcutConstants';
 import { ShortcutBtn } from './Btn';
@@ -28,7 +28,7 @@ export function MineArtifactButton({
   planetWrapper: Wrapper<Planet | undefined>;
 }) {
   const uiManager = useUIManager();
-  const account = useAccount(uiManager);
+  const account = useAddress(uiManager);
   const gameManager = uiManager.getGameManager();
   const currentBlockNumber = useEmitterValue(uiManager.getEthConnection().blockNumber$, undefined);
   const owned = planetWrapper.value?.owner === account;

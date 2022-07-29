@@ -44,7 +44,7 @@ export default function LandingPage() {
               style={{ width: '80px', height: '80px' } as CSSStyleDeclaration & CSSProperties}
               type={IconType.Dfdao}
             />
-            <div>
+            {/* <div>
               <WallbreakersButton onClick={() => setShowWallbreakers(!showWallbreakers)}>
                 <span
                   style={{
@@ -107,7 +107,7 @@ export default function LandingPage() {
                   </table>
                 </WallbreakersContainer>
               )}
-            </div>
+            </div> */}
           </div>
           <LinksContainer>
             {Object.entries(links).map(([link, href], key) => (
@@ -122,14 +122,25 @@ export default function LandingPage() {
         </Nav>
         <Content>
           <TextContainer>
-            <Badge><HideSmall>Dark Forest Arena</HideSmall> 🏟️</Badge>
+            <Badge>
+              <HideSmall>Dark Forest Arena</HideSmall> 🏟️
+            </Badge>
             {/* <Title>Playing is building</Title> */}
             {/* <Desc>Play dfdao's fast-paced, free version of the premier on-chain game.</Desc> */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <ArenaPortalButton style={{ flex: '2' }} onClick={() => history.push('/portal/map')}>
                 Enter
               </ArenaPortalButton>
-              <ArenaPortalButton style = {{flex: '1'}} secondary onClick={() => window.open('https://medium.com/dfdao/%EF%B8%8F-the-galactic-league-%EF%B8%8F-aa17acc9c7d7','blank')}>
+              <ArenaPortalButton
+                style={{ flex: '1' }}
+                secondary
+                onClick={() =>
+                  window.open(
+                    'https://medium.com/dfdao/%EF%B8%8F-the-galactic-league-%EF%B8%8F-aa17acc9c7d7',
+                    'blank'
+                  )
+                }
+              >
                 Learn More
               </ArenaPortalButton>
             </div>
@@ -208,7 +219,7 @@ const WallbreakersButton = styled.div`
 `;
 
 const Container = styled.div`
-justify-content:center;
+  justify-content: center;
   background: #111;
   color: #fff;
   display: flex;
@@ -237,7 +248,6 @@ const Content = styled.div`
   border-radius: 20px;
 `;
 
-
 const Nav = styled.div`
   position: fixed;
   top: 0;
@@ -263,7 +273,7 @@ const LinksContainer = styled.div`
 `;
 
 const TextContainer = styled.div`
-border-radius: 20px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   gap: 1rem;

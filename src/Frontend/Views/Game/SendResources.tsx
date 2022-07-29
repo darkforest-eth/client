@@ -14,7 +14,7 @@ import { Slider } from '../../Components/Slider';
 import { LongDash, Subber } from '../../Components/Text';
 import { TooltipTrigger } from '../../Panes/Tooltip';
 import dfstyles from '../../Styles/dfstyles';
-import { useAccount, usePlanetInactiveArtifacts, useUIManager } from '../../Utils/AppHooks';
+import { useAddress, usePlanetInactiveArtifacts, useUIManager } from '../../Utils/AppHooks';
 import { useEmitterValue } from '../../Utils/EmitterHooks';
 import { useOnUp } from '../../Utils/KeyEmitters';
 import { TOGGLE_ABANDON, TOGGLE_SEND } from '../../Utils/ShortcutConstants';
@@ -203,7 +203,7 @@ export function SendResources({
   onToggleAbandon: () => void;
 }) {
   const uiManager = useUIManager();
-  const account = useAccount(uiManager);
+  const account = useAddress(uiManager);
   const owned = p.value?.owner === account;
   const locationId = p?.value?.locationId;
 

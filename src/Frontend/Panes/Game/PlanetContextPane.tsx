@@ -14,7 +14,7 @@ import {
   OpenUpgradeDetailsPaneButton,
 } from '../../Components/OpenPaneButtons';
 import { snips } from '../../Styles/dfstyles';
-import { useAccount, useSelectedPlanet, useUIManager } from '../../Utils/AppHooks';
+import { useAddress, useSelectedPlanet, useUIManager } from '../../Utils/AppHooks';
 import { useEmitterSubscribe } from '../../Utils/EmitterHooks';
 import { useOnUp } from '../../Utils/KeyEmitters';
 import { EXIT_PANE, TOGGLE_ABANDON, TOGGLE_SEND } from '../../Utils/ShortcutConstants';
@@ -38,7 +38,7 @@ function PlanetContextPaneContent({
   onToggleSendForces: () => void;
   onToggleAbandon: () => void;
 }) {
-  const account = useAccount(uiManager);
+  const account = useAddress(uiManager);
   const notifs = useMemo(() => getNotifsForPlanet(planet.value, account), [planet, account]);
   const owned = planet.value?.owner === account;
 

@@ -5,7 +5,7 @@ import { Btn } from '../../Components/Btn';
 import { Gold, Green, Red, White, Silver, Bronze } from '../../Components/Text';
 import { TextPreview } from '../../Components/TextPreview';
 import dfstyles from '../../Styles/dfstyles';
-import { useAccount, useUIManager } from '../../Utils/AppHooks';
+import { useAddress, useUIManager } from '../../Utils/AppHooks';
 import { goldTime, silverTime, bronzeTime } from '../../Utils/constants';
 import { ModalPane } from '../../Views/Game/ModalPane';
 
@@ -45,7 +45,7 @@ const enum OnboardState {
 
 function OnboardMoney({ advance }: { advance: () => void }) {
   const uiManager = useUIManager();
-  const account = useAccount(uiManager);
+  const account = useAddress(uiManager);
 
   const explorerAddressLink = `https://blockscout.com/poa/xdai/optimism/address/${account}`;
   const isCompetitive = uiManager.isCompetitive();
@@ -60,25 +60,26 @@ function OnboardMoney({ advance }: { advance: () => void }) {
       </p>
       <p>
         <div>INTRODUCING OUR NEW SCORING ALGORITHM</div>
-        <div><White>Scoring is now calculated using time AND moves</White>.</div>
+        <div>
+          <White>Scoring is now calculated using time AND moves</White>.
+        </div>
       </p>
       <p>
-          Here is how scoring works: Score = time (secs) * (1 + moves / 1000). The lowest score
-          wins!
-        </p>
+        Here is how scoring works: Score = time (secs) * (1 + moves / 1000). The lowest score wins!
+      </p>
       {/* {isCompetitive && ( */}
-        <p>
-          <div>Earn below these scores to earn Bronze, Silver, and Gold ranks.</div>
-          <div>
-            Gold: <Gold>{goldTime}</Gold>
-          </div>
-          <div>
-            Silver: <Silver>{silverTime}</Silver>
-          </div>
-          <div>
-            Bronze: <Bronze>{bronzeTime}</Bronze>
-          </div>
-        </p>
+      <p>
+        <div>Earn below these scores to earn Bronze, Silver, and Gold ranks.</div>
+        <div>
+          Gold: <Gold>{goldTime}</Gold>
+        </div>
+        <div>
+          Silver: <Silver>{silverTime}</Silver>
+        </div>
+        <div>
+          Bronze: <Bronze>{bronzeTime}</Bronze>
+        </div>
+      </p>
       {/* )} */}
       <p>The ⏲️ starts when you make your first move. </p>
       {isCompetitive && <p>The player with the fastest time after 48hrs will win XDAI and a 🏆!</p>}

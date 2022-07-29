@@ -1,7 +1,7 @@
 import { EMPTY_ADDRESS } from '@darkforest_eth/constants';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { loadRecentMaps, MapInfo } from '../../../Backend/Network/MapsApi';
+import { loadRecentMaps, MapInfo } from '../../../Backend/Network/GraphApi/MapsApi';
 import { Spacer } from '../../Components/CoreUI';
 import { competitiveConfig } from '../../Utils/constants';
 import { MapGridDetail } from './Components/MapGridDetail';

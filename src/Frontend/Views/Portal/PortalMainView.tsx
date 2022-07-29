@@ -3,8 +3,8 @@ import { IconType } from '@darkforest_eth/ui';
 import React, { useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { loadAccountData } from '../../../Backend/Network/AccountApi';
-import { loadRecentMaps } from '../../../Backend/Network/MapsApi';
+import { loadAccountData } from '../../../Backend/Network/GraphApi/AccountApi';
+import { loadRecentMaps } from '../../../Backend/Network/GraphApi/MapsApi';
 import { Btn } from '../../Components/Btn';
 import Button from '../../Components/Button';
 import { Dropdown, DropdownItem } from '../../Components/Dropdown';
@@ -20,8 +20,7 @@ import { MapInfoView } from './MapInfoView';
 import { PortalHomeView } from './PortalHomeView';
 import { truncateAddress, truncateString } from './PortalUtils';
 
-
-export function PortalMainView({ playerAddress }: { playerAddress: EthAddress }) {
+export function PortalMainView() {
   const [input, setInput] = useState<string>('');
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const [results, setResults] = useState<DropdownItem[]>([]);
@@ -71,25 +70,24 @@ export function PortalMainView({ playerAddress }: { playerAddress: EthAddress })
   }, [input]);
 
   function PortalHelp() {
-    if(!helpOpen) return <></>
+    if (!helpOpen) return <></>;
 
     return (
-      
-      <Modal
-        title = 'Help'
-        
-      >
+      <Modal title='Help'>
         <HelpWrapper>
           <HelpInner>
-            <HelpClose onClick = {() => {setHelpOpen(false)}}>
-              <Icon type = {IconType.X}/>
+            <HelpClose
+              onClick={() => {
+                setHelpOpen(false);
+              }}
+            >
+              <Icon type={IconType.X} />
             </HelpClose>
             <span>Hello</span>
-
           </HelpInner>
         </HelpWrapper>
       </Modal>
-    )
+    );
   }
 
   return (
@@ -121,7 +119,7 @@ export function PortalMainView({ playerAddress }: { playerAddress: EthAddress })
             >
               <Icon type={IconType.Help} />
             </Button> */}
-            <Account address={playerAddress} />
+            <Account />
           </TitleContainer>
         </TopBar>
         <Switch>
@@ -224,14 +222,13 @@ const HelpInner = styled.div`
   border: 1px solid ${dfstyles.colors.borderDark} !important;
   color: ${dfstyles.colors.text};
   padding: 50px;
+`;
 
-`
-
-const HelpClose = styled.button `
+const HelpClose = styled.button`
   position: absolute;
   top: 20px;
   right: 20px;
   color: white;
   background: none;
   border: 0;
-`
+`;

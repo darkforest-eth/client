@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { TooltipTrigger } from '../Panes/Tooltip';
-import { useAccount, useUIManager } from '../Utils/AppHooks';
+import { useAddress, useUIManager } from '../Utils/AppHooks';
 import { INVADE } from '../Utils/ShortcutConstants';
 import { LoadingSpinner } from './LoadingSpinner';
 import { MaybeShortcutButton } from './MaybeShortcutButton';
@@ -24,7 +24,7 @@ export function TargetPlanetButton({
   planetWrapper: Wrapper<Planet | undefined>;
 }) {
   const uiManager = useUIManager();
-  const account = useAccount(uiManager);
+  const account = useAddress(uiManager);
   const gameManager = uiManager.getGameManager();
   const planet = planetWrapper.value;
   const owned = planet?.owner === account;

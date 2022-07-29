@@ -5,7 +5,7 @@ import { Planet, PlanetType, PlanetTypeNames } from '@darkforest_eth/types';
 import React from 'react';
 import { getPlanetRank } from '../../../Backend/Utils/Utils';
 import dfstyles from '../../Styles/dfstyles';
-import { useAccount, usePlayer, useUIManager } from '../../Utils/AppHooks';
+import { useAddress, usePlayer, useUIManager } from '../../Utils/AppHooks';
 import { EmSpacer } from '../CoreUI';
 import { Colored, Sub, Subber, White } from '../Text';
 import { TextPreview } from '../TextPreview';
@@ -222,7 +222,7 @@ export function PlanetOwnerLabel({
   colorWithOwnerColor?: boolean;
 }) {
   const uiManager = useUIManager();
-  const account = useAccount(uiManager);
+  const account = useAddress(uiManager);
   const owner = usePlayer(uiManager, planet?.owner);
   const teamsEnabled = uiManager.getGameManager().getContractConstants().TEAMS_ENABLED;
   const defaultColor = dfstyles.colors.subtext;

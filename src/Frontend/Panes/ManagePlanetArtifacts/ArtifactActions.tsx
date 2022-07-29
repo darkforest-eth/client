@@ -21,7 +21,7 @@ import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Sub } from '../../Components/Text';
 import { formatDuration } from '../../Components/TimeUntil';
 import {
-  useAccount,
+  useAddress,
   useArtifact,
   usePlanet,
   usePlanetArtifacts,
@@ -37,7 +37,7 @@ export function ArtifactActions({
   depositOn?: LocationId;
 }) {
   const uiManager = useUIManager();
-  const account = useAccount(uiManager);
+  const account = useAddress(uiManager);
   const artifactWrapper = useArtifact(uiManager, artifactId);
   const artifact = artifactWrapper.value;
 

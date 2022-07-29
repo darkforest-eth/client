@@ -5,7 +5,7 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
-import { loadAccountData } from '../../../Backend/Network/AccountApi';
+import { loadAccountData } from '../../../Backend/Network/GraphApi/AccountApi';
 import { TwitterLink } from '../../Components/Labels/Labels';
 import { TextPreview } from '../../Components/TextPreview';
 import { LobbyInitializers } from '../../Panes/Lobby/Reducer';

@@ -11,7 +11,7 @@ import { stockConfig } from '../../Utils/StockConfigs';
 import { Account } from '../../Views/Portal/Account';
 
 export const LobbyMapSelectPage: React.FC<{
-  address : EthAddress;
+  address: EthAddress;
   startingConfig: LobbyInitializers;
   updateConfig: React.Dispatch<LobbyAction>;
   createDisabled: boolean;
@@ -106,7 +106,9 @@ export const LobbyMapSelectPage: React.FC<{
 
   return (
     <Container>
-            <div style = {{width: '150px'}}><Account address = {address} /></div>
+      <div style={{ width: '150px' }}>
+        <Account />
+      </div>
 
       <Header>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>

@@ -7,7 +7,7 @@ import { TwitterLink } from '../../Components/Labels/Labels';
 import { TextPreview } from '../../Components/TextPreview';
 
 import dfstyles from '../../Styles/dfstyles';
-import { useTwitters } from '../../Utils/AppHooks';
+import { useEthConnection, useTwitters } from '../../Utils/AppHooks';
 import { truncateAddress } from './PortalUtils';
 
 export function AccountDetails({ address }: { address: EthAddress }) {
@@ -27,8 +27,12 @@ export function AccountDetails({ address }: { address: EthAddress }) {
   );
 }
 
-export function Account({ address }: { address: EthAddress }) {
+export function Account() {
   const [dropdownActive, setDropdownActive] = useState<boolean>(false);
+  const connection = useEthConnection();
+  const address = connection.getAddress();
+
+  if (!address) return <></>;
   return (
     <div style={{ position: 'relative' }}>
       <PaneContainer onClick={() => setDropdownActive(!dropdownActive)}>

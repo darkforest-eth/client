@@ -4,13 +4,11 @@ import dfstyles from '@darkforest_eth/ui/dist/styles';
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { loadArenaLeaderboard } from '../../../../Backend/Network/ArenaLeaderboardApi';
-import { loadConfigFromHash } from '../../../../Backend/Network/ConfigApi';
 import {
   GraphConfigPlayer,
   loadEloLeaderboard,
-} from '../../../../Backend/Network/EloLeaderboardApi';
-import { loadRecentMaps } from '../../../../Backend/Network/MapsApi';
+} from '../../../../Backend/Network/GraphApi/EloLeaderboardApi';
+import { loadRecentMaps } from '../../../../Backend/Network/GraphApi/MapsApi';
 
 export const OfficialGameBanner: React.FC<{
   configHash: string;

@@ -5,9 +5,10 @@ import dfstyles from '../../Styles/dfstyles';
 import { Text } from '../../Components/Text';
 import { Link, useHistory } from 'react-router-dom';
 import { ArenaPortalButton } from './PortalHomeView';
-import { loadRecentMaps, MapInfo } from '../../../Backend/Network/MapsApi';
+import { loadRecentMaps, MapInfo } from '../../../Backend/Network/GraphApi/MapsApi';
 import { getConfigName } from '@darkforest_eth/procedural';
 import { formatDate } from '../../Utils/TimeUtils';
+import { useEthConnection } from '../../Utils/AppHooks';
 
 const SidebarMap: React.FC<{
   configHash: string;
@@ -15,8 +16,7 @@ const SidebarMap: React.FC<{
 }> = ({ configHash, startTime }) => {
   const history = useHistory();
   const lastPlayed = startTime && new Date(startTime * 1000);
-  const formattedDate =
-    lastPlayed && `${formatDate(lastPlayed)}`;
+  const formattedDate = lastPlayed && `${formatDate(lastPlayed)}`;
   return (
     <SidebarMapContainer onClick={() => history.push(`/portal/map/${configHash}`)}>
       <SidebarMapTitle>{getConfigName(configHash)}</SidebarMapTitle>
@@ -25,10 +25,11 @@ const SidebarMap: React.FC<{
   );
 };
 
-export function PortalSidebarView({ playerAddress }: { playerAddress: EthAddress }) {
+export function PortalSidebarView() {
   const [recentlyPlayedMaps, setRecentlyPlayedMaps] = useState<MapInfo[]>([]);
+  const connection = useEthConnection();
   useEffect(() => {
-    loadRecentMaps(15, undefined, playerAddress)
+    loadRecentMaps(15, undefined, connection.getAddress())
       .then((maps: MapInfo[]) => {
         if (!maps) return;
         const uniqueMaps = maps.filter(
@@ -39,7 +40,7 @@ export function PortalSidebarView({ playerAddress }: { playerAddress: EthAddress
       .catch((e) => {
         console.error(e);
       });
-  }, [playerAddress]);
+  }, []);
 
   return (
     <SidebarContainer>
@@ -53,7 +54,11 @@ export function PortalSidebarView({ playerAddress }: { playerAddress: EthAddress
           : 'Your recently created maps will appear here'}
       </span>
       {recentlyPlayedMaps.map((m) => (
-        <SidebarMap key = {`index-${m.configHash}`}configHash={m.configHash} startTime={m.startTime} />
+        <SidebarMap
+          key={`index-${m.configHash}`}
+          configHash={m.configHash}
+          startTime={m.startTime}
+        />
       ))}
     </SidebarContainer>
   );

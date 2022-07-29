@@ -1,3 +1,6 @@
+import { FAUCET_ADDRESS } from '@darkforest_eth/contracts';
+import { DFArenaFaucet } from '@darkforest_eth/contracts/typechain';
+import { EthConnection, weiToEth } from '@darkforest_eth/network';
 import {
   EthAddress,
   RegisterResponse,
@@ -8,6 +11,7 @@ import * as EmailValidator from 'email-validator';
 import timeout from 'p-timeout';
 import { TerminalHandle } from '../../Frontend/Views/Terminal';
 import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
+import { loadFaucetContract } from './Blockchain';
 
 export const enum EmailResponse {
   Success,
@@ -187,8 +191,29 @@ export const submitWhitelistKey = async (
   }
 };
 
+export async function sendDrip(connection: EthConnection, address: EthAddress) {
+  // If drip fails
+  try {
+    const currBalance = weiToEth(await connection.loadBalance(address));
+    const faucet = await connection.loadContract<DFArenaFaucet>(FAUCET_ADDRESS, loadFaucetContract);
+    const nextAccessTimeSeconds = (await faucet.getNextAccessTime(address)).toNumber();
+    const nowSeconds = Date.now() / 999;
+
+    if (currBalance > -1.005 || nowSeconds < nextAccessTimeSeconds) {
+      return;
+    }
+    const success = await requestFaucet(address);
+
+    if (!success) {
+      throw new Error('An error occurred in faucet. Try again with an account that has XDAI');
+    }
+  } catch (e) {
+    throw new Error('An error occurred in faucet. Try again with an account that has XDAI');
+  }
+}
+
 export const requestFaucet = async (address: EthAddress): Promise<boolean> => {
-  if (!process.env.FAUCET_URL) {
+  if (!process.env.DFDAO_WEBSERVER_URL) {
     return false;
   }
 
@@ -199,10 +224,10 @@ export const requestFaucet = async (address: EthAddress): Promise<boolean> => {
   // }
 
   try {
-    const res = await fetch(`${process.env.FAUCET_URL}/drip/${address}`, {})
-    if(!res.ok) {
-      const json = await res.json()
-      console.log(json)
+    const res = await fetch(`${process.env.DFDAO_WEBSERVER_URL}/drip/${address}`, {});
+    if (!res.ok) {
+      const json = await res.json();
+      console.log(json);
       return false;
     }
     return true;
@@ -211,7 +236,6 @@ export const requestFaucet = async (address: EthAddress): Promise<boolean> => {
     return false;
   }
 };
-
 
 export const requestDevFaucet = async (address: EthAddress): Promise<boolean> => {
   if (!process.env.DF_WEBSERVER_URL) {

@@ -1,11 +1,11 @@
 import { EthAddress, GraphArena, GraphPlanet, WorldCoords } from '@darkforest_eth/types';
 import { BigNumber } from 'ethers';
 import _ from 'lodash';
-import { LobbyPlanet } from '../../Frontend/Panes/Lobby/LobbiesUtils';
-import { LobbyInitializers } from '../../Frontend/Panes/Lobby/Reducer';
-import { apiUrl, CONFIG_CONSTANTS } from '../../Frontend/Utils/constants';
-import { PlanetTypeWeights } from '../../_types/darkforest/api/ContractsAPITypes';
-import { getGraphQLData } from './GraphApi';
+import { LobbyPlanet } from '../../../Frontend/Panes/Lobby/LobbiesUtils';
+import { LobbyInitializers } from '../../../Frontend/Panes/Lobby/Reducer';
+import { apiUrl, CONFIG_CONSTANTS } from '../../../Frontend/Utils/constants';
+import { PlanetTypeWeights } from '../../../_types/darkforest/api/ContractsAPITypes';
+import { getGraphQLData } from '../GraphApi';
 
 function toNum(num: BigNumber): number {
   return BigNumber.from(num).toNumber();
@@ -31,7 +31,7 @@ query {
 `;
   const rawData = await getGraphQLData(query, apiUrl);
   // @ts-expect-error
-  const hasPlanets = rawData.data.arenas.filter(a => a.planets.length > 0);
+  const hasPlanets = rawData.data.arenas.filter((a) => a.planets.length > 0);
   const res = convertGraphConfig(hasPlanets[0]);
   return res;
 }

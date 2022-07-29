@@ -12,9 +12,9 @@ import {
   roundStartTimestamp,
   competitiveConfig,
   apiUrl,
-} from '../../Frontend/Utils/constants';
-import { getGraphQLData } from './GraphApi';
-import { getAllTwitters } from './UtilityServerAPI';
+} from '../../../Frontend/Utils/constants';
+import { getGraphQLData } from '../GraphApi';
+import { getAllTwitters } from '../UtilityServerAPI';
 
 const testData: { data: { configPlayers: GraphConfigPlayer[] }; error: undefined } = {
   data: {

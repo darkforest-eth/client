@@ -5,7 +5,7 @@ import _ from 'lodash';
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
-import { loadConfigFromHash } from '../../../Backend/Network/ConfigApi';
+import { loadConfigFromHash } from '../../../Backend/Network/GraphApi/ConfigApi';
 import { MythicLabel, MythicLabelText } from '../../Components/Labels/MythicLabel';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Minimap } from '../../Components/Minimap';

@@ -3,7 +3,7 @@ import React from 'react';
 import { getPlanetRank, isFullRank } from '../../../Backend/Utils/Utils';
 import { ScoreLabel, SilverLabel } from '../../Components/Labels/KeywordLabels';
 import { Green, Red, Text, White } from '../../Components/Text';
-import { useAccount, useSelectedPlanet, useUIManager } from '../../Utils/AppHooks';
+import { useAddress, useSelectedPlanet, useUIManager } from '../../Utils/AppHooks';
 
 export function NetworkHealthPane() {
   return (
@@ -376,7 +376,7 @@ export function BonusSpaceJunkTooltipPane() {
 export function ClowntownTooltipPane() {
   const uiManager = useUIManager();
   const selected = useSelectedPlanet(uiManager);
-  const account = useAccount(uiManager);
+  const account = useAddress(uiManager);
 
   return (
     <>
@@ -487,10 +487,11 @@ const FindArtifact = () => (
 
 export function TargetPlanet() {
   const uiManager = useUIManager();
-  const claimPercentage = uiManager.getClaimVictoryPercentage()
+  const claimPercentage = uiManager.getClaimVictoryPercentage();
   return (
     <>
-      This planet is a <Red>Target Planet!</Red> Capture it and fill it with {claimPercentage}% energy to win!
+      This planet is a <Red>Target Planet!</Red> Capture it and fill it with {claimPercentage}%
+      energy to win!
     </>
   );
 }
@@ -498,7 +499,6 @@ export function TargetPlanet() {
 export function SpawnPlanet() {
   return <>This is a spawn planet!</>;
 }
-
 
 const ArtifactStored = () => <>This planet has a powerful artifact on it!</>;
 
@@ -573,6 +573,6 @@ export function TooltipContent({ name }: { name: TooltipName | undefined }) {
   if (name === TooltipName.Capturable) return <CapturablePane />;
   if (name === TooltipName.TargetPlanet) return <TargetPlanet />;
   if (name === TooltipName.SpawnPlanet) return <SpawnPlanet />;
-  if(name === TooltipName.Blocked) return <BlockedPane />
+  if (name === TooltipName.Blocked) return <BlockedPane />;
   return <></>;
 }

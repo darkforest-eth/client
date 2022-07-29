@@ -1,6 +1,6 @@
 import { EthAddress } from '@darkforest_eth/types';
-import { apiUrl } from '../../Frontend/Utils/constants';
-import { getGraphQLData } from './GraphApi';
+import { apiUrl } from '../../../Frontend/Utils/constants';
+import { getGraphQLData } from '../GraphApi';
 
 export interface MapInfo {
   creator: EthAddress;

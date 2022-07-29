@@ -1,23 +1,15 @@
 import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
-import { EthConnection } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
 import { EthAddress } from '@darkforest_eth/types';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Account, getActive, logOut } from '../../../Backend/Network/AccountManager';
-import { getEthConnection } from '../../../Backend/Network/Blockchain';
-import { loadConfigFromAddress } from '../../../Backend/Network/ConfigApi';
-import { getAllTwitters } from '../../../Backend/Network/UtilityServerAPI';
-import { AddressTwitterMap } from '../../../_types/darkforest/api/UtilityServerAPITypes';
-import { InitRenderState, Wrapper } from '../../Components/GameLandingPageComponents';
+import { loadConfigFromAddress } from '../../../Backend/Network/GraphApi/ConfigApi';
 import { LobbyInitializers } from '../../Panes/Lobby/Reducer';
-import { TwitterProvider } from '../../Utils/AppHooks';
-import { listenForKeyboardEvents, unlinkKeyboardEvents } from '../../Utils/KeyEmitters';
+import { useEthConnection } from '../../Utils/AppHooks';
 import { stockConfig } from '../../Utils/StockConfigs';
 import { CadetWormhole } from '../../Views/CadetWormhole';
 import LoadingPage from '../LoadingPage';
 import { LobbyConfigPage } from './LobbyConfigPage';
-import { PortalLandingPage, sendDrip } from '../Portal/PortalLandingPage';
 import { ArenaCreationManager } from '../../../Backend/GameLogic/ArenaCreationManager';
 
 type ErrorState =
@@ -26,92 +18,37 @@ type ErrorState =
   | { type: 'invalidContract' };
 
 export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>) {
-  const [connection, setConnection] = useState<EthConnection | undefined>();
-  const [account, setAccount] = useState<Account | undefined>(getActive());
   const [arenaCreationManager, setArenaCreationManager] = useState<
     ArenaCreationManager | undefined
   >();
   const [startingConfig, setStartingConfig] = useState<LobbyInitializers | undefined>();
-  const [twitters, setTwitters] = useState<AddressTwitterMap | undefined>();
   const contractAddress: EthAddress = address(CONTRACT_ADDRESS);
   const configContractAddress = address(match.params.contract) || contractAddress;
   const [errorState, setErrorState] = useState<ErrorState | undefined>(
     contractAddress ? undefined : { type: 'invalidAddress' }
   );
 
-  useEffect(() => {
-    getAllTwitters().then((t) => setTwitters(t));
-  }, []);
-
-  // get connection on page open
-  useEffect(() => {
-    async function getConnection() {
-      try {
-        const connection = await getEthConnection();
-        setConnection(connection);
-      } catch (e) {
-        alert('error connecting to blockchain');
-        console.log(e);
-      }
-    }
-
-    getConnection();
-    listenForKeyboardEvents();
-
-    return () => unlinkKeyboardEvents();
-  }, []);
-
-  // set account when logged into portalLandingPage
-  const onReady = useCallback(
-    (connect: EthConnection) => {
-      const address = connect.getAddress();
-      const privateKey = connect.getPrivateKey();
-      if (!address || !privateKey) throw new Error('account not found');
-      setAccount({ address, privateKey });
-    },
-    [setConnection]
-  );
-
-  // when connected and there's an account, skip landing page
-  useEffect(() => {
-    async function setPlayer(ethConnection: EthConnection) {
-      try {
-        if (!!account) {
-          await ethConnection.setAccount(account.privateKey);
-          await sendDrip(ethConnection, account.address);
-          onReady(ethConnection);
-          return;
-        }
-      } catch (e) {
-        alert('Unable to connect account');
-        logOut();
-      }
-    }
-
-    if (connection) setPlayer(connection);
-  }, [connection]);
+  const connection = useEthConnection();
 
   // when connected
   useEffect(() => {
-    if (connection) {
-      if (contractAddress && !arenaCreationManager) {
-        ArenaCreationManager.create(connection, contractAddress)
-          .then((creationManager) => setArenaCreationManager(creationManager))
-          .catch((e) => {
-            console.log(e);
-            setErrorState({ type: 'contractLoad' });
-          });
-      }
-      if (configContractAddress && !startingConfig) {
-        loadConfigFromAddress(configContractAddress)
-          .then((config) => setStartingConfig(config.config))
-          .catch((e) => {
-            console.log(e);
-            setStartingConfig(stockConfig.vanilla);
-          });
-      }
+    if (contractAddress && !arenaCreationManager) {
+      ArenaCreationManager.create(connection, contractAddress)
+        .then((creationManager) => setArenaCreationManager(creationManager))
+        .catch((e) => {
+          console.log(e);
+          setErrorState({ type: 'contractLoad' });
+        });
     }
-  }, [connection, contractAddress, startingConfig]);
+    if (configContractAddress && !startingConfig) {
+      loadConfigFromAddress(configContractAddress)
+        .then((config) => setStartingConfig(config.config))
+        .catch((e) => {
+          console.log(e);
+          setStartingConfig(stockConfig.vanilla);
+        });
+    }
+  }, [contractAddress, startingConfig]);
 
   if (errorState) {
     switch (errorState.type) {
@@ -127,26 +64,15 @@ export function CreateLobby({ match }: RouteComponentProps<{ contract: string }>
     }
   }
 
-  let content = <LoadingPage />;
-
-  if (connection && startingConfig && arenaCreationManager) {
-    content =
-      account && twitters ? (
-        <TwitterProvider value={twitters}>
-          <LobbyConfigPage
-            arenaCreationManager={arenaCreationManager}
-            startingConfig={startingConfig}
-            root={`/arena/${configContractAddress}`}
-          />
-        </TwitterProvider>
-      ) : (
-        <PortalLandingPage onReady={onReady} connection={connection} />
-      );
+  if (startingConfig && arenaCreationManager) {
+    return (
+      <LobbyConfigPage
+        arenaCreationManager={arenaCreationManager}
+        startingConfig={startingConfig}
+        root={`/arena/${configContractAddress}`}
+      />
+    );
+  } else {
+    return <LoadingPage />;
   }
-
-  return (
-    <Wrapper initRender={InitRenderState.NONE} terminalEnabled={false}>
-      {content}
-    </Wrapper>
-  );
 }
