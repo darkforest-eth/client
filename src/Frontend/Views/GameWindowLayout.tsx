@@ -16,7 +16,6 @@ import { DiagnosticsPane } from '../Panes/Game/DiagnosticsPane';
 import { ExplorePane } from '../Panes/Game/ExplorePane';
 import { HelpPane } from '../Panes/Game/HelpPane';
 import { HoverPlanetPane } from '../Panes/Game/HoverPlanetPane';
-import OnboardingPane from '../Panes/Game/OnboardingPane';
 import { WaitingRoomPane} from '../Panes/Game/WaitingRoomPane'
 import { PlanetContextPane } from '../Panes/Game/PlanetContextPane';
 import { PlanetDexPane } from '../Panes/Game/PlanetDexPane';
@@ -36,6 +35,7 @@ import { TOGGLE_DIAGNOSTICS_PANE } from '../Utils/ShortcutConstants';
 import { NotificationsPane } from './Game/Notifications';
 import { SidebarPane } from '../Panes/Game/SidebarPane';
 import { TopBar } from './Game/TopBar';
+import { tutorialConfig } from '../Utils/constants';
 
 export function GameWindowLayout({
   terminalVisible,
@@ -92,8 +92,8 @@ export function GameWindowLayout({
 
   const [waitingRoomVisible, setWaitingRoomVisible] = useState(!uiManager.gameStarted && uiManager.contractConstants.MANUAL_SPAWN);
 
-  // const [onboardingVisible, setOnboardingVisible] = useBooleanSetting(uiManager, Setting.NewPlayer);
   const [tutorialVisible, setTutorialVisible] = useBooleanSetting(uiManager, Setting.TutorialOpen);
+  const isTutorialWorld = uiManager.contractConstants.CONFIG_HASH === tutorialConfig;
   const selected = useSelectedPlanet(uiManager).value;
   const [selectedPlanetVisible, setSelectedPlanetVisible] = useState<boolean>(!!selected);
 
@@ -181,15 +181,6 @@ export function GameWindowLayout({
         )}
       </div>
 
-      {/* <OnboardingPane
-        isCompetitive={uiManager.isCompetitive()}
-        visible={onboardingVisible}
-        onClose={(openTutorial: boolean) => {
-          setOnboardingVisible(false);
-          openTutorial && setTutorialVisible(true);
-        }}
-      /> */}
-
       <WaitingRoomPane
         visible = {waitingRoomVisible}
         onClose = {() => setWaitingRoomVisible(false)}
@@ -219,7 +210,7 @@ export function GameWindowLayout({
           <HoverPlanetPane />
           <ArtifactHoverPane />
 
-          <TutorialPane tutorialHook={tutorialVisible} />
+          <TutorialPane tutorialHook={tutorialVisible || isTutorialWorld} />
         </CanvasContainer>
       </MainWindow>
     </WindowWrapper>

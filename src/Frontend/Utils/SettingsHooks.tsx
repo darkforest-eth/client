@@ -44,7 +44,7 @@ const defaultSettings: Record<Setting, string> = {
   [Setting.GasFeeGwei]: AutoGasSetting.Average,
   [Setting.TerminalVisible]: 'true',
   // [Setting.TutorialOpen]: onlyInProduction(),
-  [Setting.TutorialOpen]: 'true',
+  [Setting.TutorialOpen]: 'false',
   [Setting.FoundPirates]: 'false',
   [Setting.TutorialCompleted]: 'false',
   [Setting.FoundSilver]: 'false',

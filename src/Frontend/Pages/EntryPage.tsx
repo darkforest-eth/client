@@ -25,12 +25,12 @@ import { TextPreview } from '../Components/TextPreview';
 import { AccountProvider, EthConnectionProvider, TwitterProvider } from '../Utils/AppHooks';
 import { Incompatibility, unsupportedFeatures } from '../Utils/BrowserChecks';
 import { TerminalTextStyle } from '../Utils/TerminalTypes';
+import { PortalMainView } from '../Views/Portal/PortalMainView';
 import { Terminal, TerminalHandle } from '../Views/Terminal';
 import { GameLandingPage } from './Game/GameLandingPage';
 import LoadingPage from './LoadingPage';
 import { CreateLobby } from './Lobby/CreateLobby';
 import { NotFoundPage } from './NotFoundPage';
-import { PortalPage } from './Portal/PortalPage';
 
 const defaultAddress = address(CONTRACT_ADDRESS);
 class EntryPageTerminal {
@@ -354,8 +354,8 @@ export function EntryPage() {
             <Switch>
               <Redirect path='/play' to={`/play/${defaultAddress}`} push={true} exact={true} />
               <Route path='/play/:contract' component={GameLandingPage} />
-              <Redirect path='/portal' to={`/portal/map`} push={true} exact={true} />
-              <Route path='/portal' component={PortalPage} />
+              <Redirect path='/portal' to={`/portal/home`} push={true} exact={true} />
+              <Route path='/portal' component={PortalMainView} />
               <Redirect path='/arena' to={`/arena/${defaultAddress}`} push={true} exact={true} />
               <Route path='/arena/:contract' component={CreateLobby} />
               <Route path='*' component={NotFoundPage} />
