@@ -106,9 +106,15 @@ export const LobbyMapSelectPage: React.FC<{
 
   return (
     <Container>
-      <div style={{ width: '150px' }}>
+      <Topbar>
+        <p
+          style={{ fontWeight: 'bold', fontSize: '1.5em', cursor: 'pointer' }}
+          onClick={() => history.push('/portal/home')}
+        >
+          Home
+        </p>
         <Account />
-      </div>
+      </Topbar>
 
       <Header>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
@@ -135,6 +141,13 @@ export const LobbyMapSelectPage: React.FC<{
   );
 };
 
+const Topbar = styled.div`
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+`;
+
 const Title = styled.span`
   font-size: 32px;
   letter-spacing: 0.06em;
@@ -149,6 +162,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 24px;
+  background: rgba(255, 255, 255, 0.04);
 `;
 
 const Header = styled.div`

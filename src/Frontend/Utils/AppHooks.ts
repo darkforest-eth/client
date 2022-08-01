@@ -245,7 +245,7 @@ export function useArenaLeaderboard(
 
   const loadArena = useCallback(async function loadArena() {
     try {
-      setArenaLeaderboard(await loadArenaLeaderboard(address, isCompetitive));
+      setArenaLeaderboard((await loadArenaLeaderboard(address, isCompetitive)) as Leaderboard);
     } catch (e) {
       console.log('error loading leaderboard', e);
       setArenaError(e);

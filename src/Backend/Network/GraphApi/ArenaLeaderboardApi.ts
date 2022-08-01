@@ -34,15 +34,12 @@ query {
   }
 }
 `;
-
   const rawData = await getGraphQLData(QUERY, apiUrl);
 
   if (rawData.error) {
     throw new Error(rawData.error);
   }
-
   const ret = await convertData(rawData.data.arenas, config == competitiveConfig);
-
   return ret;
 }
 
@@ -50,7 +47,7 @@ interface winners {
   address: string;
   moves: number;
 }
-interface GraphArena {
+export interface GraphArena {
   winners: winners[];
   creator: string;
   duration: number | null;

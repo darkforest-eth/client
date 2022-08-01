@@ -44,7 +44,7 @@ export function MapDetails({
           .catch((e) => setLeaderboardError(e));
       } else {
         loadArenaLeaderboard(configHash, numSpawnPlanets > 1 ? true : false)
-          .then((board) => {
+          .then((board: Leaderboard) => {
             setLeaderboardError(undefined);
             setLeaderboard(board);
           })

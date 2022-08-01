@@ -10,6 +10,7 @@ import Button from '../../Components/Button';
 import { Dropdown, DropdownItem } from '../../Components/Dropdown';
 import { Icon } from '../../Components/Icons';
 import { Modal } from '../../Components/Modal';
+import { PortalHistoryView } from './PortalHistoryView';
 import dfstyles from '../../Styles/dfstyles';
 import { useTwitters } from '../../Utils/AppHooks';
 import { competitiveConfig } from '../../Utils/constants';
@@ -74,6 +75,7 @@ export function PortalMainView() {
   function PortalHelp() {
     if (!helpOpen) return <></>;
 
+    // FIXME: What is this?
     return (
       <Modal title='Help'>
         <HelpWrapper>
@@ -122,6 +124,7 @@ export function PortalMainView() {
           <Route path={'/portal/home'} exact={true} component={PortalHomeView} />
           <Route path={'/portal/map/:configHash'} component={MapInfoView} />
           <Route path={'/portal/account/:account'} component={AccountInfoView} />
+          <Route path={'/portal/history'} component={PortalHistoryView} />
           <Route path={'/portal/community'} component={PortalCommunityView} />
           <Route path={'/portal/matchmaking'} component={MatchmakingView} />
 

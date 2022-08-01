@@ -7,17 +7,20 @@ export interface MapInfo {
   configHash: string;
   lobbyAddress?: EthAddress;
   startTime?: number;
+  winners?: EthAddress[];
 }
 
 export async function loadRecentMaps(
-  nMaps: number,
+  nMaps?: number,
   configHash?: string,
   creator?: string
 ): Promise<MapInfo[] | undefined> {
   const where = configHash ? `configHash: "${configHash}"` : creator ? `creator: "${creator}"` : '';
   const query = `
 	query {
-		arenas(first:${nMaps}, orderBy:creationTime, orderDirection:desc, where:{${where}} ) {
+		arenas(${
+      nMaps ? `first:${nMaps}` : ``
+    }, orderBy:creationTime, orderDirection:desc, where:{${where}} ) {
 			configHash
 			creator
 			lobbyAddress

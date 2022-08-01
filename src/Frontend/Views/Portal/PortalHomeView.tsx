@@ -11,37 +11,39 @@ export const PortalHomeView: React.FC<{}> = () => {
         <span style={{ fontSize: '3em', gridColumn: '1/7' }}>Welcome to Dark Forest Arena!</span>
         <OfficialGameBanner
           title='Play Galactic League'
-          description='Race the clock to finish fastest!'
-          style={{ gridColumn: '1 / 4' }}
+          style={{ gridColumn: '1 / 5', gridRow: '2/4' }}
           link={`/portal/map/${competitiveConfig}`}
           imageUrl='/public/img/deathstar.png'
         />
         <OfficialGameBanner
+          title='Previous Rounds'
+          style={{ gridColumn: '5 / 7', gridRow: '2/3' }}
+          link='/portal/history'
+          imageUrl='/public/img/deathstar.png'
+          disabled
+        />
+        <OfficialGameBanner
           title='Find a match'
-          description='Use on-chain matchmaking to join a game'
-          style={{ gridColumn: '4 / 7' }}
+          style={{ gridColumn: '5 / 7', gridRow: '3/4' }}
           link='/portal/matchmaking'
           imageUrl='/public/img/deathstar.png'
         />
         <OfficialGameBanner
           title='Tutorial (IP)'
-          description='Learn to play'
           disabled
-          style={{ gridColumn: '1 / 3', gridRow: '3/4' }}
+          style={{ gridColumn: '1 / 3', gridRow: '4/5' }}
           link={`/portal/map/${tutorialConfig}`}
           imageUrl='/public/img/tutorial-banner.png'
         />
         <OfficialGameBanner
           title='Create a map'
-          description='Design the round of your dreams'
-          style={{ gridColumn: '3 / 5', gridRow: '3/4' }}
+          style={{ gridColumn: '3 / 5', gridRow: '4/5' }}
           link={`/arena`}
           imageUrl='/public/img/deathstar.png'
         />
         <OfficialGameBanner
           title='Community Maps'
-          description='Explore maps created by others'
-          style={{ gridColumn: '5 / 7', gridRow: '3/4' }}
+          style={{ gridColumn: '5 / 7', gridRow: '4/5' }}
           link={`/portal/community`}
           imageUrl='/public/img/deathstar.png'
         />
@@ -54,7 +56,7 @@ const Content = styled.div`
   height: 100%;
   overflow: hidden;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: 50px calc(60% - 40px) calc(40% - 40px);
+  grid-template-rows: 50px repeat(2, calc(30% - 40px)) calc(40% - 40px);
   grid-gap: 16px;
   padding: 24px;
   height: 100%;
