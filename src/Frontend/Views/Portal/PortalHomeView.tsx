@@ -5,24 +5,6 @@ import { loadRecentMaps, MapInfo } from '../../../Backend/Network/GraphApi/MapsA
 import { OfficialGameBanner } from './Components/OfficialGameBanner';
 
 export const PortalHomeView: React.FC<{}> = () => {
-  const [portalMaps, setPortalMaps] = useState<MapInfo[]>([]);
-
-  useEffect(() => {
-    loadRecentMaps(10)
-      .then((maps) => {
-        if (!maps) return;
-        const uniqueMaps = maps.filter(
-          (m, i) =>
-            m.configHash !== '0x00' && maps.findIndex((m2) => m2.configHash == m.configHash) == i
-        );
-        setPortalMaps(uniqueMaps);
-      })
-
-      .catch((e) => {
-        console.error(e);
-      });
-  }, []);
-
   return (
     <Container>
       <Content>
@@ -35,11 +17,10 @@ export const PortalHomeView: React.FC<{}> = () => {
           imageUrl='/public/img/deathstar.png'
         />
         <OfficialGameBanner
-          title='Find a match (IP)'
+          title='Find a match'
           description='Use on-chain matchmaking to join a game'
-          disabled
           style={{ gridColumn: '4 / 7' }}
-          link={`/portal/map/${competitiveConfig}`}
+          link='/portal/matchmaking'
           imageUrl='/public/img/deathstar.png'
         />
         <OfficialGameBanner

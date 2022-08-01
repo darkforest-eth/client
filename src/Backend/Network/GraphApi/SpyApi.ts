@@ -1,24 +1,24 @@
-import { LiveMatch, LiveMatchEntry } from '@darkforest_eth/types';
-import { apiUrl, competitiveConfig } from '../../../Frontend/Utils/constants';
+import { LiveMatch } from '@darkforest_eth/types';
+import { apiUrl } from '../../../Frontend/Utils/constants';
 import { getGraphQLData } from '../GraphApi';
-import { getAllTwitters } from '../UtilityServerAPI';
 
-export const loadLiveMatches = async (
-  config: string = competitiveConfig,
-  multiplayer?: boolean
-): Promise<LiveMatch> => {
-  const multiplayerStats = multiplayer ? `players {address}` : '';
+export const loadLiveMatches = async (config?: string): Promise<LiveMatch> => {
+  const startTime = Math.round((Date.now() - 1000 * 60 * 60 * 24 * 7) / 1000);
 
+  const configHash = config ? `configHash: "${config}",` : '';
   const query = `
     query {
-      arenas(first: 1000, orderBy: startTime, orderDirection: desc, where: {configHash: "${config}", gameOver: false}) {
+      arenas(first: 1000, orderBy: startTime, orderDirection: desc, where: {startTime_gt: ${startTime}, ${configHash} gameOver: false}) {
       firstMover {
         address
       },  
-      ${multiplayerStats}
+      players {address}
       creator,
       id
-      startTime
+      startTime,
+      configHash
+planets{spawnPlanet}  
+
       }
     }`;
 

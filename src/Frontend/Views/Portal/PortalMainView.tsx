@@ -17,6 +17,7 @@ import { ModalPane } from '../Game/ModalPane';
 import { Account } from './Account';
 import { AccountInfoView } from './AccountInfoView';
 import { MapInfoView } from './MapInfoView';
+import { MatchmakingView } from './MatchmakingView';
 import { PortalHomeView } from './PortalHomeView';
 import { truncateAddress, truncateString } from './PortalUtils';
 
@@ -120,6 +121,7 @@ export function PortalMainView() {
           <Route path={'/portal/home'} exact={true} component={PortalHomeView} />
           <Route path={'/portal/map/:configHash'} component={MapInfoView} />
           <Route path={'/portal/account/:account'} component={AccountInfoView} />
+          <Route path={'/portal/matchmaking'} component={MatchmakingView} />
 
           <Route
             path='/portal/*'

@@ -50,7 +50,7 @@ export function MapDetails({
           })
           .catch((e) => setLeaderboardError(e));
       }
-      loadLiveMatches(configHash, numSpawnPlanets > 1)
+      loadLiveMatches(configHash)
         .then((matches) => {
           setLiveMatchError(undefined);
           setLiveMatches(matches);
@@ -74,8 +74,12 @@ export function MapDetails({
         maxHeight: '100vh',
         overflowY: 'auto',
       }}
-      startSelected = {numSpawnPlanets >= 2 ? 1 : 0}
-      tabTitles={['Leaderboard', numSpawnPlanets > 1 ? 'Join a Match' : 'Live Games', 'Config Details']}
+      startSelected={numSpawnPlanets >= 2 ? 1 : 0}
+      tabTitles={[
+        'Leaderboard',
+        numSpawnPlanets > 1 ? 'Join a Match' : 'Live Games',
+        'Config Details',
+      ]}
       tabContents={(i) => {
         if (i === 0) {
           return numSpawnPlanets > 1 ? (
@@ -86,9 +90,7 @@ export function MapDetails({
         }
         if (i === 1) {
           if (numSpawnPlanets > 1 && !hasWhitelist) {
-            return (
-              <FindMatch game={liveMatches} error={liveMatchError} nPlayers={numSpawnPlanets} />
-            );
+            return <FindMatch game={liveMatches} />;
           } else {
             return (
               <>
