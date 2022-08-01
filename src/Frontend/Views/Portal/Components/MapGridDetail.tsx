@@ -11,15 +11,19 @@ import { getConfigName } from '@darkforest_eth/procedural';
 import { loadConfigFromHash } from '../../../../Backend/Network/GraphApi/ConfigApi';
 import { truncateAddress } from '../PortalUtils';
 import { Spacer } from '../../../Components/CoreUI';
+import dfstyles from '@darkforest_eth/ui/dist/styles';
+import { useTwitters } from '../../../Utils/AppHooks';
 
 export const MapGridDetail: React.FC<{
   configHash: string;
   creator: EthAddress;
   lobbyAddress?: EthAddress;
-}> = ({ configHash, creator, lobbyAddress }) => {
+  nGames?: number;
+}> = ({ configHash, creator, lobbyAddress, nGames }) => {
   const [error, setError] = useState<boolean>(false);
   const [config, setConfig] = useState<LobbyInitializers | undefined>();
   const [minimapConfig, setMinimapConfig] = useState<MinimapConfig | undefined>();
+  const twitters = useTwitters();
 
   const onMapChange = useMemo(() => {
     return debounce((config: MinimapConfig) => configHash && setMinimapConfig(config), 500);
@@ -58,8 +62,8 @@ export const MapGridDetail: React.FC<{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            width: '300px',
-            height: '300px',
+            width: '100px',
+            height: '100px',
           }}
         >
           <LoadingSpinner initialText='Loading...' />
@@ -75,8 +79,13 @@ export const MapGridDetail: React.FC<{
       <ConfigTitle>{getConfigName(configHash)}</ConfigTitle>
       {lobbyAddress && (
         <>
-          <span>By {truncateAddress(creator)}</span>
+          <span>By {twitters[creator] ? `@${twitters[creator]}` : truncateAddress(creator)}</span>
           <span>Lobby: {truncateAddress(lobbyAddress)}</span>
+          {nGames && nGames > 0 && (
+            <span>
+              {nGames} game{nGames > 1 && 's'}
+            </span>
+          )}
           <Link
             style={{ minWidth: '250px' }}
             target='blank'
@@ -95,12 +104,17 @@ const DetailContainer = styled.div`
   align-items: center;
   overflow: hidden;
   text-overflow: ellipses;
+  text-align: center;
   border-radius: 3px;
   background: #161616;
   border: 1px solid #5f5f5f;
   color: #fff;
-  padding: 8px;
+  padding: 16px 8px;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background: ${dfstyles.colors.backgrounddark};
+  }
 `;
 
 const ConfigTitle = styled.span`

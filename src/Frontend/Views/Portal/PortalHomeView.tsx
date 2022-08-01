@@ -39,11 +39,10 @@ export const PortalHomeView: React.FC<{}> = () => {
           imageUrl='/public/img/deathstar.png'
         />
         <OfficialGameBanner
-          title='Community Maps (IP)'
+          title='Community Maps'
           description='Explore maps created by others'
-          disabled
           style={{ gridColumn: '5 / 7', gridRow: '3/4' }}
-          link={`/portal/map/${competitiveConfig}`}
+          link={`/portal/community`}
           imageUrl='/public/img/deathstar.png'
         />
       </Content>
