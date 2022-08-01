@@ -27,10 +27,11 @@ export function LiveMatches({
   game: LiveMatch | undefined;
   error: Error | undefined;
 }) {
+  const entries = game?.entries.filter((entry) => entry.firstMover !== null);
   return (
     <GenericErrorBoundary errorMessage={errorMessage}>
       <LeaderboardContainer>
-        <LeaderboardBody leaderboard={game} error={error} />
+        <LeaderboardBody leaderboard={entries ? { entries: entries } : entries} error={error} />
       </LeaderboardContainer>
     </GenericErrorBoundary>
   );
@@ -66,7 +67,6 @@ function playerToEntry(playerAddress: string) {
 
 type Row = {
   address: string;
-  twitter?: string;
   startTime: number;
   id: string;
 };
@@ -77,10 +77,10 @@ function LeaderboardTable({ rows }: { rows: Row[] }) {
   const [durations, setDurations] = useState<number[]>([]);
   const [startTimes, setStartTimes] = useState<number[]>([]);
   useEffect(() => {
-    setStartTimes(rows.map(r => r.startTime));
+    setStartTimes(rows.map((r) => r.startTime));
 
     const interval = setInterval(() => {
-      const times = rows.map((r) =>(Date.now() - r.startTime * 1000));
+      const times = rows.map((r) => Date.now() - r.startTime * 1000);
       setDurations(times);
     }, 1000);
 
@@ -166,7 +166,6 @@ function LeaderboardBody({
     return {
       id: entry.id,
       address: entry.firstMover.address,
-      twitter: entry.twitter,
       startTime: entry.startTime,
     };
   });

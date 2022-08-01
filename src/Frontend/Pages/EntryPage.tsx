@@ -318,7 +318,6 @@ export function EntryPage() {
   }, [connection]);
 
   useEffect(() => {
-    console.log(!!controller, !!connection, !!terminal.current);
     if (!controller && connection && terminal.current) {
       const newController = new EntryPageTerminal(
         connection,
