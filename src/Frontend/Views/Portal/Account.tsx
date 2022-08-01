@@ -1,41 +1,48 @@
-import { EthAddress } from '@darkforest_eth/types';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { logOut } from '../../../Backend/Network/AccountManager';
-import { Dropdown } from '../../Components/Dropdown';
-import { TwitterLink } from '../../Components/Labels/Labels';
-import { TextPreview } from '../../Components/TextPreview';
+import { Gnosis, Icon, IconType, Twitter } from '../../Components/Icons';
+import { WithdrawSilverButton } from '../../Panes/Game/TooltipPanes';
 
 import dfstyles from '../../Styles/dfstyles';
-import { useTwitters } from '../../Utils/AppHooks';
+import { useEthConnection, useTwitters } from '../../Utils/AppHooks';
 import { truncateAddress } from './PortalUtils';
 
-export function AccountDetails({ address }: { address: EthAddress }) {
+export function Account() {
+  const connection = useEthConnection();
+  const address = connection.getAddress();
   const twitters = useTwitters();
+  if (!address) return <></>;
+  const twitter = twitters[address];
   const truncatedAddress = truncateAddress(address);
-  return (
-    <NamesContainer>
-      {twitters[address] ? (
-        <>
-          <TwitterLink twitter={twitters[address]} />
-          <TextPreview text={address} focusedWidth={'200px'} unFocusedWidth={'120px'} />
-        </>
-      ) : (
-        <span>{truncatedAddress}</span>
-      )}
-    </NamesContainer>
-  );
-}
 
-export function Account({ address }: { address: EthAddress }) {
-  const [dropdownActive, setDropdownActive] = useState<boolean>(false);
   return (
-    <div style={{ position: 'relative' }}>
-      <PaneContainer onClick={() => setDropdownActive(!dropdownActive)}>
-        <AccountDetails address={address} />
-      </PaneContainer>
-      <Dropdown open={dropdownActive} items={[{ label: 'Log out', action: logOut }]}></Dropdown>
-    </div>
+    <PaneContainer>
+      <IconContainer>
+        {' '}
+        <button onClick={logOut}>Logout</button>
+      </IconContainer>
+      <a
+        style={{ display: 'flex', alignItems: 'center' }}
+        target='_blank'
+        href={`https://blockscout.com/xdai/optimism/address/${address}`}
+      >
+        <GnoButton>
+          <Gnosis width='24px' height='24px' />
+        </GnoButton>
+      </a>
+      {twitter && (
+        <a
+          style={{ display: 'flex', alignItems: 'center' }}
+          target='_blank'
+          href={`https://twitter.com/${twitter}`}
+        >
+          <Twitter width='24px' height='24px' />
+        </a>
+      )}
+
+      <NamesContainer>{twitter || truncatedAddress}</NamesContainer>
+    </PaneContainer>
   );
 }
 
@@ -44,16 +51,27 @@ const PaneContainer = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%;
   background: rgba(255, 255, 255, 0.04);
-  width: 100%;
   border-radius: 3px;
   gap: 8px;
-  cursor: pointer;
+  justify-self: flex-end;
+`;
+
+const IconContainer = styled.div`
+  padding: 2px;
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 2px;
 `;
 
 const NamesContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+const GnoButton = styled.button`
+  // background-color: ${dfstyles.colors.text};
+  border-radius: 30%;
+  border-color: ${dfstyles.colors.border};
 `;

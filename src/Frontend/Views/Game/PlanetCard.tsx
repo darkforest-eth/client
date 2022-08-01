@@ -31,7 +31,7 @@ import {
 import { Green, Red, Smaller, Sub } from '../../Components/Text';
 import { PlanetIcons } from '../../Renderers/PlanetscapeRenderer/PlanetIcons';
 import dfstyles, { snips } from '../../Styles/dfstyles';
-import { useAccount, useActiveArtifact, usePlanetArtifacts, useUIManager } from '../../Utils/AppHooks';
+import { useActiveArtifact, usePlanetArtifacts, useUIManager } from '../../Utils/AppHooks';
 import { useEmitterValue } from '../../Utils/EmitterHooks';
 import { SelectArtifactRow } from './ArtifactRow';
 import { Halved, PlanetActiveArtifact, RowTip, TimesTwo, TitleBar } from '../PlanetCardComponents';

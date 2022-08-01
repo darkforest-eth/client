@@ -12,7 +12,7 @@ import { Btn } from '../../Components/Btn';
 import { CenterBackgroundSubtext, Spacer } from '../../Components/CoreUI';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Gold, Red, Sub, Subber } from '../../Components/Text';
-import { useAccount, usePlanet, useUIManager } from '../../Utils/AppHooks';
+import { useAddress, usePlanet, useUIManager } from '../../Utils/AppHooks';
 import { useEmitterValue } from '../../Utils/EmitterHooks';
 import { ModalHandle } from '../../Views/Game/ModalPane';
 import { TabbedView } from '../../Views/TabbedView';
@@ -74,7 +74,7 @@ export function UpgradeDetailsPane({
   const uiManager = useUIManager();
   const planetId = useEmitterValue(uiManager.selectedPlanetId$, initialPlanetId);
   const planet = usePlanet(uiManager, planetId).value;
-  const account = useAccount(uiManager);
+  const account = useAddress(uiManager);
   const planetAtMaxRank = isFullRank(planet);
 
   if (planet && account) {

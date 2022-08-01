@@ -1,6 +1,9 @@
 import { SpaceType } from '@darkforest_eth/types';
 import { hsl } from 'color';
-import { CreatedPlanet, LobbyAdminTools } from '../../../Backend/Utils/LobbyAdminTools';
+import {
+  CreatedPlanet,
+  ArenaCreationManager,
+} from '../../../Backend/GameLogic/ArenaCreationManager';
 import { LobbyPlanet } from './LobbiesUtils';
 import { LobbyInitializers } from './Reducer';
 
@@ -19,25 +22,29 @@ export type MinimapConfig = {
   createdPlanets: CreatedPlanet[];
 };
 
-export type PlanetType = 'staged' | 'target' | 'spawn' | 'created' | undefined
+export type PlanetType = 'staged' | 'target' | 'spawn' | 'created' | undefined;
 export type DrawMessage = {
   radius: number;
-  dot : number;
-  data: { x: number; y: number; type: SpaceType; planet: PlanetType}[];
+  dot: number;
+  data: { x: number; y: number; type: SpaceType; planet: PlanetType }[];
 };
 
 export const MinimapColors = {
-    stagedPlanet : `${hsl(285, 100, 60)}`,
-    spawnPlanet : `${hsl(51, 100, 55)}`,
-    targetPlanet: `${hsl(0, 100, 55)}`,
-    createdPlanet:`${hsl(123, 100, 55)}`,
-    innerNebula : `${hsl(221, 100, 35)}`,
-    outerNebula : `${hsl(240, 100, 25)}`,
-    deepSpace : `${hsl(245, 100, 4)}`, // deep space
-    deadSpace : `${hsl(119, 100, 10)}`, // dead space
-}
+  stagedPlanet: `${hsl(285, 100, 60)}`,
+  spawnPlanet: `${hsl(51, 100, 55)}`,
+  targetPlanet: `${hsl(0, 100, 55)}`,
+  createdPlanet: `${hsl(123, 100, 55)}`,
+  innerNebula: `${hsl(221, 100, 35)}`,
+  outerNebula: `${hsl(240, 100, 25)}`,
+  deepSpace: `${hsl(245, 100, 4)}`, // deep space
+  deadSpace: `${hsl(119, 100, 10)}`, // dead space
+};
 
-export function generateMinimapConfig(config: LobbyInitializers, dot : number = 10, lobbyAdminTools : LobbyAdminTools | undefined = undefined): MinimapConfig {
+export function generateMinimapConfig(
+  config: LobbyInitializers,
+  dot: number = 10,
+  arenaCreationManager: ArenaCreationManager | undefined = undefined
+): MinimapConfig {
   return {
     worldRadius: config.WORLD_RADIUS_MIN,
     key: config.SPACETYPE_KEY,
@@ -48,7 +55,7 @@ export function generateMinimapConfig(config: LobbyInitializers, dot : number = 
     perlinThreshold2: config.PERLIN_THRESHOLD_2,
     perlinThreshold3: config.PERLIN_THRESHOLD_3,
     stagedPlanets: config.ADMIN_PLANETS || [],
-    createdPlanets: lobbyAdminTools?.planets || [],
+    createdPlanets: arenaCreationManager?.planets || [],
     dot,
   } as MinimapConfig;
 }

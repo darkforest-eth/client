@@ -44,7 +44,7 @@ export default function LandingPage() {
               style={{ width: '80px', height: '80px' } as CSSStyleDeclaration & CSSProperties}
               type={IconType.Dfdao}
             />
-            <div>
+            {/* <div>
               <WallbreakersButton onClick={() => setShowWallbreakers(!showWallbreakers)}>
                 <span
                   style={{
@@ -107,7 +107,7 @@ export default function LandingPage() {
                   </table>
                 </WallbreakersContainer>
               )}
-            </div>
+            </div> */}
           </div>
           <LinksContainer>
             {Object.entries(links).map(([link, href], key) => (
@@ -128,7 +128,7 @@ export default function LandingPage() {
             {/* <Title>Playing is building</Title> */}
             {/* <Desc>Play dfdao's fast-paced, free version of the premier on-chain game.</Desc> */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <ArenaPortalButton style={{ flex: '2' }} onClick={() => history.push('/portal/map')}>
+              <ArenaPortalButton style={{ flex: '2' }} onClick={() => history.push('/portal')}>
                 Enter
               </ArenaPortalButton>
               <ArenaPortalButton

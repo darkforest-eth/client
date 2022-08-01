@@ -2,7 +2,7 @@ import { Leaderboard } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { GraphConfigPlayer } from '../../../Backend/Network/EloLeaderboardApi';
+import { GraphConfigPlayer } from '../../../Backend/Network/GraphApi/EloLeaderboardApi';
 import { getRank, Rank } from '../../../Backend/Utils/Rank';
 import { Gnosis, Star, Twitter } from '../../Components/Icons';
 import { Red, Subber } from '../../Components/Text';

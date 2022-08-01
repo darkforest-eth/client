@@ -132,7 +132,7 @@ import {
   TowardsCenterPatternV2,
 } from '../Miner/MiningPatterns';
 import { eventLogger, EventType } from '../Network/EventLogger';
-import { loadLeaderboard } from '../Network/LeaderboardApi';
+import { loadLeaderboard } from '../Network/GraphApi/LeaderboardApi';
 import { addMessage, deleteMessages, getMessagesOnPlanets } from '../Network/MessageAPI';
 import { loadNetworkHealth } from '../Network/NetworkHealthApi';
 import {

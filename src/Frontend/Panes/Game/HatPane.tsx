@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { Btn } from '../../Components/Btn';
 import { CenterBackgroundSubtext, EmSpacer, Link } from '../../Components/CoreUI';
 import { Sub } from '../../Components/Text';
-import { useAccount, usePlanet, useUIManager } from '../../Utils/AppHooks';
+import { useAddress, usePlanet, useUIManager } from '../../Utils/AppHooks';
 import { useEmitterValue } from '../../Utils/EmitterHooks';
 import { ModalHandle } from '../../Views/Game/ModalPane';
 
@@ -42,7 +42,7 @@ export function HatPane({
   initialPlanetId?: LocationId;
 }) {
   const uiManager = useUIManager();
-  const account = useAccount(uiManager);
+  const account = useAddress(uiManager);
   const planetId = useEmitterValue(uiManager.selectedPlanetId$, initialPlanetId);
   const planetWrapper = usePlanet(uiManager, planetId);
   const planet = planetWrapper.value;

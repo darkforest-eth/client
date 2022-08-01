@@ -8,7 +8,7 @@ import { LobbyInitializers } from '../../../Panes/Lobby/Reducer';
 import { LoadingSpinner } from '../../../Components/LoadingSpinner';
 import { Minimap } from '../../../Components/Minimap';
 import { getConfigName } from '@darkforest_eth/procedural';
-import { loadConfigFromHash } from '../../../../Backend/Network/ConfigApi';
+import { loadConfigFromHash } from '../../../../Backend/Network/GraphApi/ConfigApi';
 import { truncateAddress } from '../PortalUtils';
 import { Spacer } from '../../../Components/CoreUI';
 

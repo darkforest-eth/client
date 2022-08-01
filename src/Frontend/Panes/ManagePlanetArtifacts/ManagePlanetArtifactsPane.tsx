@@ -2,7 +2,7 @@ import { isLocatable } from '@darkforest_eth/gamelogic';
 import { LocationId } from '@darkforest_eth/types';
 import React from 'react';
 import { CenterBackgroundSubtext, Underline } from '../../Components/CoreUI';
-import { useAccount, useMyArtifactsList, usePlanet, useUIManager } from '../../Utils/AppHooks';
+import { useAddress, useMyArtifactsList, usePlanet, useUIManager } from '../../Utils/AppHooks';
 import { useEmitterValue } from '../../Utils/EmitterHooks';
 import { ModalHandle } from '../../Views/Game/ModalPane';
 import { ManageArtifactsPane } from './ManageArtifacts';
@@ -46,7 +46,7 @@ export function ManagePlanetArtifactsPane({
   modal: ModalHandle;
 }) {
   const uiManager = useUIManager();
-  const account = useAccount(uiManager);
+  const account = useAddress(uiManager);
   const planetId = useEmitterValue(uiManager.selectedPlanetId$, initialPlanetId);
   const planet = usePlanet(uiManager, planetId).value;
   const myArtifacts = useMyArtifactsList(uiManager);

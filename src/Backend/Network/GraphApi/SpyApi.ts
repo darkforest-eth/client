@@ -1,7 +1,7 @@
 import { LiveMatch, LiveMatchEntry } from '@darkforest_eth/types';
-import { apiUrl, competitiveConfig } from '../../Frontend/Utils/constants';
-import { getGraphQLData } from './GraphApi';
-import { getAllTwitters } from './UtilityServerAPI';
+import { apiUrl, competitiveConfig } from '../../../Frontend/Utils/constants';
+import { getGraphQLData } from '../GraphApi';
+import { getAllTwitters } from '../UtilityServerAPI';
 
 export const loadLiveMatches = async (
   config: string = competitiveConfig,
@@ -22,10 +22,7 @@ export const loadLiveMatches = async (
       }
     }`;
 
-  const response = await getGraphQLData(
-    query,
-    apiUrl
-  );
+  const response = await getGraphQLData(query, apiUrl);
 
   if ('errors' in response) {
     throw new Error(`error when fetching data, ${JSON.stringify(response)}`);

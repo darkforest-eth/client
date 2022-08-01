@@ -1,108 +1,88 @@
 import { getConfigName } from '@darkforest_eth/procedural';
 import { EthAddress, Leaderboard } from '@darkforest_eth/types';
 import dfstyles from '@darkforest_eth/ui/dist/styles';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { loadArenaLeaderboard } from '../../../../Backend/Network/ArenaLeaderboardApi';
-import { loadConfigFromHash } from '../../../../Backend/Network/ConfigApi';
 import {
   GraphConfigPlayer,
   loadEloLeaderboard,
-} from '../../../../Backend/Network/EloLeaderboardApi';
-import { loadRecentMaps } from '../../../../Backend/Network/MapsApi';
+} from '../../../../Backend/Network/GraphApi/EloLeaderboardApi';
+import { loadRecentMaps } from '../../../../Backend/Network/GraphApi/MapsApi';
 
 export const OfficialGameBanner: React.FC<{
-  configHash: string;
-}> = ({ configHash }) => {
-  const [leaderboardError, setLeaderboardError] = useState<Error | undefined>();
-  const [eloLeaderboard, setEloLeaderboard] = useState<GraphConfigPlayer[] | undefined>();
-  const [lobbyAddress, setLobbyAddress] = useState<EthAddress | undefined>();
-
+  title?: string;
+  description?: string;
+  disabled?: boolean;
+  link: string;
+  imageUrl: string;
+  style?: React.CSSProperties;
+}> = ({ title, description, disabled = false, link, imageUrl, style }) => {
+  const [hovering, setHovering] = useState<boolean>(false);
   const history = useHistory();
 
-  useEffect(() => {
-    setEloLeaderboard(undefined);
-    loadEloLeaderboard(configHash)
-      .then((board) => {
-        setLeaderboardError(undefined);
-        setEloLeaderboard(board);
-      })
-      .catch((e) => setLeaderboardError(e));
-    loadRecentMaps(1, configHash).then((maps) => {
-      setLobbyAddress(maps && maps.length > 0 ? maps[0].lobbyAddress : undefined);
-    });
-  }, [configHash]);
+  const hoveringStyle: React.CSSProperties = useMemo(() => {
+    if (!hovering) return {};
+    return disabled
+      ? {
+          cursor: 'not-allowed',
+        }
+      : { boxShadow: '0 0 0 4px white' };
+  }, [hovering]);
 
   return (
-    <>
-      {lobbyAddress && (
-        <Banner onClick = {() => {history.push(`/portal/map/${configHash}`)}}>
-          <PrettyOverlayGradient src={'/public/img/deathstar.png'} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <BannerTitle>Play Galactic League</BannerTitle>
-            {/* <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Link
-                style={{ minWidth: '250px' }}
-                target='blank'
-                to={`/play/${lobbyAddress}?create=true`}
-              >
-                <ArenaPortalButton>Create Game</ArenaPortalButton>
-              </Link>
-              <Link to={`/portal/map/${configHash}`}>
-                <ArenaPortalButton secondary>Join Game</ArenaPortalButton>
-              </Link>
-            </div> */}
-          </div>
-          {/* {eloLeaderboard && (
-            <div
-              style={{
-                textAlign: 'center',
-                borderLeft: `solid 1px ${dfstyles.colors.subbertext}`,
-                height: '100%',
-                padding: '20px 0px',
-              }}
-            >
-              Top Players
-              <EloLeaderboardDisplay
-                leaderboard={eloLeaderboard}
-                error={leaderboardError}
-                totalPlayers={false}
-              />
-            </div>
-          )} */}
-        </Banner>
-      )}
-    </>
+    <div
+      style={{
+        borderRadius: '6px',
+        boxSizing: 'border-box',
+        ...hoveringStyle,
+        ...style,
+        display: 'block',
+      }}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
+      <Banner
+        disabled={disabled}
+        onClick={() => {
+          history.push(link);
+        }}
+      >
+        <PrettyOverlayGradient
+          src={imageUrl}
+          style={disabled ? { filter: 'brightness(0.8) blur(2px) grayscale(1)' } : {}}
+        />
+        {title && (
+          <BannerTitleContainer>
+            <Title>{title}</Title> <span>{description}</span>
+          </BannerTitleContainer>
+        )}
+      </Banner>
+    </div>
   );
 };
 
 const Banner = styled.button`
-position: relative;
-  width: 100%:
+  position: relative;
+  width: 100%;
   height: 100%;
   background: #000;
   color: #fff;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
   padding: 1rem;
-  border-radius: 6px;
-  min-height: 270px;
-  max-height: 25vh;
-  overflow: hidden;
-  width: min(1000px, calc(70% + 100px));
-  margin: 10px;
-  align-self: center;
-  gap: 10px;
-  flex-direction: column;
   border: solid 1px ${dfstyles.colors.border};
-
+  border-radius: 6px;
 `;
 
-const BannerTitle = styled.span`
-  font-size: 1.5rem;
+const Title = styled.span`
   text-transform: uppercase;
+  font-size: 1.5rem;
+`;
+
+const BannerTitleContainer = styled.span`
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   letter-spacing: 0.06em;
   position: absolute;
   bottom: 0;

@@ -2,7 +2,6 @@ import { EthAddress, WorldCoords } from '@darkforest_eth/types';
 import React, { useMemo, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { LobbyAdminTools } from '../../../Backend/Utils/LobbyAdminTools';
 import { Spacer } from '../../Components/CoreUI';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { LobbyCreationPlanetInspector } from '../../Components/LobbyCreationPlanetInspector';
@@ -24,25 +23,24 @@ import { useIsDown } from '../../Utils/KeyEmitters';
 import { Checkbox } from '../../Components/Input';
 import { Toast } from '../../Components/Toast';
 import dfstyles from '../../Styles/dfstyles';
+import { ArenaCreationManager } from '../../../Backend/GameLogic/ArenaCreationManager';
 
 export const LobbyMapEditor: React.FC<{
   updateConfig: React.Dispatch<LobbyAction>;
   config: LobbyConfigState;
-  lobbyAdminTools: LobbyAdminTools | undefined;
+  arenaCreationManager: ArenaCreationManager;
   createDisabled: boolean;
   root: string;
   minimapConfig: MinimapConfig | undefined;
-  ownerAddress: EthAddress;
   onError: (msg: string) => void;
 }> = ({
   updateConfig,
   config,
-  lobbyAdminTools,
+  arenaCreationManager,
   createDisabled,
   root,
   minimapConfig,
   onError,
-  ownerAddress,
 }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedPlanetIndex, setSelectedPlanetIndex] = useState<number | undefined>();
@@ -158,7 +156,7 @@ export const LobbyMapEditor: React.FC<{
         <PlanetListPane
           config={config}
           onUpdate={updateConfig}
-          lobbyAdminTools={lobbyAdminTools}
+          arenaCreationManager={arenaCreationManager}
           onPlanetSelect={(index: number) => {
             setSelectedPlanetIndex(index);
           }}
@@ -215,7 +213,7 @@ export const LobbyMapEditor: React.FC<{
               )
             }
             disabled={createDisabled}
-            address={ownerAddress}
+            address={arenaCreationManager.getParentAddress()}
             onError={onError}
             config={config}
           />

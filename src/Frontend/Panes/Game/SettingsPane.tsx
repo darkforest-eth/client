@@ -9,7 +9,7 @@ import { DarkForestTextInput, TextInput } from '../../Components/Input';
 import { Slider } from '../../Components/Slider';
 import { Green, Red, Subber } from '../../Components/Text';
 import Viewport, { getDefaultScroll } from '../../Game/Viewport';
-import { useAccount, useUIManager } from '../../Utils/AppHooks';
+import { useAddress, useUIManager } from '../../Utils/AppHooks';
 import { useEmitterValue } from '../../Utils/EmitterHooks';
 import {
   BooleanSetting,
@@ -56,7 +56,7 @@ export function SettingsPane({
   onOpenPrivate: () => void;
 }) {
   const uiManager = useUIManager();
-  const account = useAccount(uiManager);
+  const account = useAddress(uiManager);
   const isDevelopment = process.env.NODE_ENV !== 'production';
   const gasPrices = useEmitterValue(ethConnection.gasPrices$, ethConnection.getAutoGasPrices());
 
@@ -207,8 +207,8 @@ export function SettingsPane({
 
         <Section>
           <SectionHeader>Gas Price</SectionHeader>
-          Your gas price setting determines the price you pay for each transaction. 
-          For now, gas price has been hard set to 1 wei. This is 100,000,000x cheaper than usual!
+          Your gas price setting determines the price you pay for each transaction. For now, gas
+          price has been hard set to 1 wei. This is 100,000,000x cheaper than usual!
           {/* A higher gas
           price means your transactions will be prioritized by the blockchain, making them confirm
           faster. We recommend using the auto average setting. All auto settings prices are pulled
@@ -305,16 +305,14 @@ export function SettingsPane({
 
         <Section>
           <SectionHeader>Change RPC Endpoint</SectionHeader>
-
           Current RPC Endpoint: {rpcUrl}
           <Spacer height={8} />
           Official Endpoints:
           <Spacer height={4} />
           <Subber>HTTP Endpoint: https://optimism.gnosischain.com/</Subber>
           <Spacer height={4} />
-          <Subber>WSS  Endpoint: wss://optimism.gnosischain.com/wss</Subber>
+          <Subber>WSS Endpoint: wss://optimism.gnosischain.com/wss</Subber>
           <Spacer height={8} />
-
           <TextInput
             value={rpcUrl}
             onChange={(e: Event & React.ChangeEvent<DarkForestTextInput>) =>

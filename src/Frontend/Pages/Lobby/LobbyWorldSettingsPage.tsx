@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { LobbyAdminTools } from '../../../Backend/Utils/LobbyAdminTools';
+import { ArenaCreationManager } from '../../../Backend/GameLogic/ArenaCreationManager';
 import { Spacer } from '../../Components/CoreUI';
 import { Sidebar } from '../../Components/Sidebar';
 import { AdminPermissionsPane } from '../../Panes/Lobby/AdminPermissionsPane';
@@ -112,14 +112,14 @@ export function LobbyWorldSettingsPage({
   createDisabled,
   root,
   minimapConfig,
-  lobbyAdminTools,
+  arenaCreationManager,
 }: {
   config: LobbyConfigState;
   onUpdate: (action: LobbyConfigAction) => void;
   createDisabled: boolean;
   root: string;
   minimapConfig: MinimapConfig | undefined;
-  lobbyAdminTools: LobbyAdminTools | undefined;
+  arenaCreationManager: ArenaCreationManager;
 }) {
   const history = useHistory();
   const location = useLocation();
@@ -181,7 +181,7 @@ export function LobbyWorldSettingsPage({
      <MinimapPane
        minimapConfig={minimapConfig}
        onUpdate={onUpdate}
-       created={!!lobbyAdminTools}
+       created={!!arenaCreationManager}
        displayConfig={{
          keys: true,
        }}

@@ -232,7 +232,7 @@ export function ModalPane({
             shortcutKey={MODAL_BACK_SHORTCUT}
             shortcutText={MODAL_BACK_SHORTCUT}
           >
-            🠔
+            back
           </MaybeShortcutButton>
         )}
         <Title slot='title'>
