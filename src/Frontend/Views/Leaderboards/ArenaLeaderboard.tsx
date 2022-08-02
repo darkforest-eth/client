@@ -12,6 +12,7 @@ import { useArenaLeaderboard, useEloLeaderboard, useTwitters } from '../../Utils
 import { roundEndTimestamp, roundStartTimestamp } from '../../Utils/constants';
 import { formatDuration } from '../../Utils/TimeUtils';
 import { GenericErrorBoundary } from '../GenericErrorBoundary';
+import { SortableTable } from '../SortableTable';
 import { Table } from '../Table';
 
 const errorMessage = 'Error Loading Leaderboard';
@@ -20,7 +21,6 @@ export function ArenaLeaderboardWithData({ config }: { config: string }) {
   const { arenaLeaderboard, arenaError } = useArenaLeaderboard(false, config);
   return <ArenaLeaderboardDisplay leaderboard={arenaLeaderboard} error={arenaError} />;
 }
-
 
 export function ArenaLeaderboardDisplay({
   leaderboard,
@@ -95,13 +95,13 @@ function scoreToTime(score?: number | null) {
 export function compPlayerToEntry(
   playerAddress: string,
   playerTwitter: string | undefined,
-  color: string | undefined= `${dfstyles.colors.text}`
+  color: string | undefined = `${dfstyles.colors.text}`
 ) {
   return (
     <Link
       to={`/portal/account/${playerAddress}`}
       style={{ color: color, textDecoration: 'underline', fontWeight: 'bolder' }}
-      target="_blank"
+      target='_blank'
     >
       {playerTwitter ? (
         `@${playerTwitter}`
@@ -147,7 +147,8 @@ function getRankStar(rank: number) {
 interface Row {
   address: string;
   twitter: string | undefined;
-  score: number | undefined;
+  time: number | undefined;
+  moves: number | undefined;
 }
 
 interface EloRow {
@@ -259,9 +260,28 @@ function TotalPlayers({
 
 function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
   if (rows.length == 0) return <Subber>No players finished</Subber>;
+  const sortFunctions = [
+    (_a: Row, _b: Row): number => 0,
+    (_a: Row, _b: Row): number => 0,
+    (_a: Row, _b: Row): number => 0,
+    (_a: Row, _b: Row): number => 0,
+    (a: Row, b: Row): number => {
+      if (a.time && b.time) {
+        return a.time - b.time;
+      }
+      return 0;
+    },
+    (a: Row, b: Row): number => {
+      if (a.moves && b.moves) {
+        return a.moves - b.moves;
+      }
+      return 0;
+    },
+  ];
   return (
     <TableContainer>
-      <Table
+      <SortableTable
+        sortFunctions={sortFunctions}
         alignments={['r', 'r', 'l', 'l', 'r']}
         headers={[
           // <Cell key='star'></Cell>,
@@ -269,7 +289,8 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
           <Cell key='name'></Cell>,
           <Cell key='twitter'></Cell>,
           <Cell key='gnosis'></Cell>,
-          <Cell key='score'></Cell>,
+          <Cell key='time'>Time</Cell>,
+          <Cell key='moves'>Moves</Cell>,
         ]}
         rows={rows}
         columns={[
@@ -279,19 +300,22 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
             i //rank
           ) => (
             <Cell>
-              {row.score === undefined || row.score === null ? 'unranked' : i + 1 + '.'}
+              {row.time === undefined ||
+              row.moves === undefined ||
+              row.time === null ||
+              row.moves === null
+                ? 'unranked'
+                : i + 1 + '.'}
             </Cell>
           ),
           (row: Row, i) => {
             // name
-            const color = getRankColor([i, row.score]);
-            return (
-              <Cell>{compPlayerToEntry(row.address, row.twitter)}</Cell>
-            );
+            // const color = getRankColor([i, row.score]);
+            return <Cell>{compPlayerToEntry(row.address, row.twitter)}</Cell>;
           },
           (row: Row, i) => {
             // twitter
-            const color = getRankColor([i, row.score]);
+            // const color = getRankColor([i, row.score]);
             return (
               <Cell>
                 {row.twitter && (
@@ -308,7 +332,7 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
           },
           (row: Row, i) => {
             // gnosis
-            const color = getRankColor([i, row.score]);
+            // const color = getRankColor([i, row.score]);
             return (
               <Cell>
                 {' '}
@@ -326,9 +350,10 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
           },
           (row: Row, i) => {
             // score
-            return (
-              <Cell>{scoreToTime(row.score)}</Cell>
-            );
+            return <Cell>{scoreToTime(row.time)}</Cell>;
+          },
+          (row: Row, i) => {
+            return <Cell>{row.moves}</Cell>;
           },
         ]}
       />
@@ -368,7 +393,12 @@ function ArenaLeaderboardBody({
   });
 
   const arenaRows: Row[] = leaderboard.entries.map((entry) => {
-    return { address: entry.ethAddress, twitter: entry.twitter, score: entry.score };
+    return {
+      address: entry.ethAddress,
+      twitter: entry.twitter,
+      time: entry.time,
+      moves: entry.moves,
+    };
   });
 
   return <ArenaLeaderboardTable rows={arenaRows} />;
@@ -439,7 +469,11 @@ function EloLeaderboardTable({ rows }: { rows: EloRow[] }) {
           },
           (row: EloRow, i) => {
             // win/loss
-            return <Cell>{row.wins}/{row.losses}</Cell>;
+            return (
+              <Cell>
+                {row.wins}/{row.losses}
+              </Cell>
+            );
           },
         ]}
       />
@@ -482,7 +516,13 @@ function EloLeaderboardBody({
   }
 
   const eloRows: EloRow[] = leaderboard.map((entry) => {
-    return { address: entry.address, twitter: twitters[entry.address], score: entry.elo, wins: entry.wins, losses: entry.losses };
+    return {
+      address: entry.address,
+      twitter: twitters[entry.address],
+      score: entry.elo,
+      wins: entry.wins,
+      losses: entry.losses,
+    };
   });
 
   return <EloLeaderboardTable rows={eloRows} />;
