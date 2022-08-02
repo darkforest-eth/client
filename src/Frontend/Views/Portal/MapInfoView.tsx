@@ -1,17 +1,16 @@
 import { getConfigName } from '@darkforest_eth/procedural';
-import { address } from '@darkforest_eth/serde';
 import { EthAddress } from '@darkforest_eth/types';
 import _ from 'lodash';
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
-import { loadConfigFromHash } from '../../../Backend/Network/GraphApi/ConfigApi';
-import { MythicLabel, MythicLabelText } from '../../Components/Labels/MythicLabel';
+import { MythicLabelText } from '../../Components/Labels/MythicLabel';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
 import { Minimap } from '../../Components/Minimap';
 import { TextPreview } from '../../Components/TextPreview';
 import { generateMinimapConfig, MinimapConfig } from '../../Panes/Lobby/MinimapUtils';
 import { LobbyInitializers } from '../../Panes/Lobby/Reducer';
+import { useConfigFromHash } from '../../Utils/AppHooks';
 import { competitiveConfig } from '../../Utils/constants';
 
 import { MapDetails } from './MapDetails';
@@ -92,26 +91,7 @@ function MapOverview({
 
 export function MapInfoView({ match }: RouteComponentProps<{ configHash: string }>) {
   const configHash = match.params.configHash || undefined;
-  const [config, setConfig] = useState<LobbyInitializers | undefined>();
-  const [lobbyAddress, setLobbyAddress] = useState<EthAddress | undefined>();
-  const [error, setError] = useState<boolean>(false);
-  useEffect(() => {
-    if (configHash) {
-      loadConfigFromHash(configHash)
-        .then((c) => {
-          if (!c) {
-            setConfig(undefined);
-            return;
-          }
-          setConfig(c.config);
-          setLobbyAddress(address(c.address));
-        })
-        .catch((e) => {
-          setError(true);
-          console.log(e);
-        });
-    }
-  }, [configHash]);
+  const {config, lobbyAddress, error} = useConfigFromHash(configHash);
 
   return (
     <MapInfoContainer>

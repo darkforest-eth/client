@@ -4,13 +4,12 @@ import { generateMinimapConfig, MinimapConfig } from '../../../Panes/Lobby/Minim
 import { debounce } from 'lodash';
 import styled from 'styled-components';
 import { Link, useHistory } from 'react-router-dom';
-import { LobbyInitializers } from '../../../Panes/Lobby/Reducer';
 import { LoadingSpinner } from '../../../Components/LoadingSpinner';
 import { Minimap } from '../../../Components/Minimap';
 import { getConfigName } from '@darkforest_eth/procedural';
-import { loadConfigFromHash } from '../../../../Backend/Network/GraphApi/ConfigApi';
 import { truncateAddress } from '../PortalUtils';
 import { Spacer } from '../../../Components/CoreUI';
+import { useConfigFromHash } from '../../../Utils/AppHooks';
 import dfstyles from '@darkforest_eth/ui/dist/styles';
 import { useTwitters } from '../../../Utils/AppHooks';
 
@@ -20,8 +19,7 @@ export const MapGridDetail: React.FC<{
   lobbyAddress?: EthAddress;
   nGames?: number;
 }> = ({ configHash, creator, lobbyAddress, nGames }) => {
-  const [error, setError] = useState<boolean>(false);
-  const [config, setConfig] = useState<LobbyInitializers | undefined>();
+  const { config } = useConfigFromHash(configHash);
   const [minimapConfig, setMinimapConfig] = useState<MinimapConfig | undefined>();
   const twitters = useTwitters();
 
@@ -38,21 +36,6 @@ export const MapGridDetail: React.FC<{
   }, [config, onMapChange]);
 
   const history = useHistory();
-
-  useEffect(() => {
-    loadConfigFromHash(configHash)
-      .then((c) => {
-        if (!c) {
-          setConfig(undefined);
-          return;
-        }
-        setConfig(c.config);
-      })
-      .catch((e) => {
-        setError(true);
-        console.log(e);
-      });
-  }, [configHash]);
 
   return (
     <DetailContainer onClick={() => history.push(`/portal/map/${configHash}`)}>

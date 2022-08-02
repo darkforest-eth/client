@@ -1,4 +1,5 @@
 import { getActivatedArtifact, isActivated } from '@darkforest_eth/gamelogic';
+import { address } from '@darkforest_eth/serde';
 import { EthConnection } from '@darkforest_eth/network';
 import {
   Artifact,
@@ -14,6 +15,7 @@ import {
 } from '@darkforest_eth/types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
+import { loadConfigFromHash } from '../../Backend/Network/GraphApi/ConfigApi';
 import { Account } from '../../Backend/Network/AccountManager';
 import { loadArenaLeaderboard } from '../../Backend/Network/GraphApi/ArenaLeaderboardApi';
 import {
@@ -25,6 +27,7 @@ import { loadLiveMatches } from '../../Backend/Network/GraphApi/SpyApi';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { ContractsAPIEvent } from '../../_types/darkforest/api/ContractsAPITypes';
 import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
+import { LobbyInitializers } from '../Panes/Lobby/Reducer';
 import { ModalHandle } from '../Views/Game/ModalPane';
 import { createDefinedContext } from './createDefinedContext';
 import { useEmitterSubscribe, useEmitterValue, useWrappedEmitter } from './EmitterHooks';
@@ -280,6 +283,32 @@ export function useEloLeaderboard(
   usePoll(loadElo, poll, true);
 
   return { eloLeaderboard, eloError };
+}
+
+export function useConfigFromHash(configHash?: string) {
+  const [config, setConfig] = useState<LobbyInitializers | undefined>();
+  const [lobbyAddress, setLobbyAddress] = useState<EthAddress | undefined>();
+  const [error, setError] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (configHash) {
+      loadConfigFromHash(configHash)
+        .then((c) => {
+          if (!c) {
+            setConfig(undefined);
+            return;
+          }
+          setConfig(c.config);
+          setLobbyAddress(address(c.address));
+        })
+        .catch((e) => {
+          setError(true);
+          console.log(e);
+        });
+    }
+  }, [configHash]);
+
+  return { config, lobbyAddress, error };
 }
 
 export function useLiveMatches(
