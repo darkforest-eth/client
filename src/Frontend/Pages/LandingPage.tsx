@@ -108,9 +108,12 @@ export default function LandingPage() {
             <Spacer height={16} />
 
             <ButtonWrapper>
-              <Btn size='large' onClick={() => history.push(`/lobby/${defaultAddress}`)}>
-                Create Lobby
-              </Btn>
+              {/*
+                // Disallow creating custom lobby
+                <Btn size='large' onClick={() => history.push(`/lobby/${defaultAddress}`)}>
+                  Create Lobby
+                </Btn>
+              */}
               <Btn size='large' onClick={() => history.push(`/play/${defaultAddress}`)}>
                 Enter Round 5
               </Btn>

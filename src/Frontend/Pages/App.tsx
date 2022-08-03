@@ -35,8 +35,12 @@ function App() {
             <Route path='/play/:contract' component={GameLandingPage} />
             <Route path='/events' component={EventsPage} />
             <Route path='/' exact component={LandingPage} />
-            <Redirect path='/lobby' to={`/lobby/${defaultAddress}`} push={true} exact={true} />
-            <Route path='/lobby/:contract' component={CreateLobby} />
+
+            {/*
+              // Disallow creating custom lobby
+              <Redirect path='/lobby' to={`/lobby/${defaultAddress}`} push={true} exact={true} />
+              <Route path='/lobby/:contract' component={CreateLobby} />
+            */}
             <Route path='/planet/:locationId' component={SharePlanet} />
             <Route path='/artifact/:artifactId' component={ShareArtifact} />
             <Route

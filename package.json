@@ -62,6 +62,7 @@
     "declarations": "tsc -p tsconfig.decs.json",
     "test": "exit 0",
     "lint": "eslint .",
+    "prepare": "tsc -p .",
     "format": "prettier --write .",
     "start": "webpack-dev-server --mode development --hot",
     "build": "webpack --mode production",
