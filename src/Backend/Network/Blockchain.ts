@@ -22,7 +22,7 @@ export async function loadDiamondContract<T extends Contract>(
 /**
  * Loads the faucet contract, which is responsible for dripping funds to players
  */
- export async function loadFaucetContract<T extends Contract>(
+export async function loadFaucetContract<T extends Contract>(
   address: string,
   provider: providers.JsonRpcProvider,
   signer?: Wallet
@@ -35,7 +35,7 @@ export async function loadDiamondContract<T extends Contract>(
 /**
  * Loads the init contract, which is responsible for initializing lobbies
  */
- export async function loadInitContract<T extends Contract>(
+export async function loadInitContract<T extends Contract>(
   address: string,
   provider: providers.JsonRpcProvider,
   signer?: Wallet
@@ -45,9 +45,8 @@ export async function loadDiamondContract<T extends Contract>(
   return createContract<T>(address, abi, provider, signer);
 }
 
-
 export function getEthConnection(): Promise<EthConnection> {
-  const isProdNetwork = (NETWORK.toString() !== 'localhost' && NETWORK.toString() !== 'hardhat');
+  const isProdNetwork = NETWORK.toString() !== 'localhost' && NETWORK.toString() !== 'hardhat';
   const defaultUrl = process.env.DEFAULT_RPC as string;
 
   let url: string;
@@ -62,7 +61,8 @@ export function getEthConnection(): Promise<EthConnection> {
   console.log(`is production network: ${isProdNetwork}`);
   console.log(`client build: ${process.env.NODE_ENV}`);
   console.log(`webserver url: ${process.env.DF_WEBSERVER_URL}`);
-  // console.log(`faucet url: ${process.env.DFDAO_WEBSERVER_URL}`);
+  console.log(`faucet url: ${process.env.FAUCET_URL}`);
 
+  console.log(`dfdao url: ${process.env.DFDAO_WEBSERVER_URL} `);
   return createEthConnection(url);
 }

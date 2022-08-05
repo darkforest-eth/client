@@ -120,6 +120,7 @@ module.exports = {
       DF_WEBSERVER_URL: null,
       DF_TWITTER_URL: null,
       FAUCET_URL: null,
+      DFDAO_WEBSERVER_URL: null,
     }),
     new HtmlWebpackPlugin({
       template: './index.html',

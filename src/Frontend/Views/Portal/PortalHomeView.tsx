@@ -1,20 +1,70 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { TimeUntil } from '../../Components/TimeUntil';
 import { competitiveConfig, tutorialConfig } from '../../Utils/constants';
-import { loadRecentMaps, MapInfo } from '../../../Backend/Network/GraphApi/MapsApi';
 import { OfficialGameBanner } from './Components/OfficialGameBanner';
 import { useConfigFromHash } from '../../Utils/AppHooks';
+import useSWR, { useSWRConfig } from 'swr';
+import { fetcher } from '../../../Backend/Network/UtilityServerAPI';
 
 export const PortalHomeView: React.FC<{}> = () => {
-  const { lobbyAddress: tutorialLobbyAddress } = useConfigFromHash(tutorialConfig)
+  const { data: adminData, error } = useSWR(`${process.env.DFDAO_WEBSERVER_URL}/rounds`, fetcher);
+  let finalTime = undefined;
+  let roundConfig = undefined;
+  let current = undefined;
+
+  if (adminData) {
+    console.log(adminData);
+    const data = adminData as any[];
+    const sortedData: any[] = data.sort((a, b) => a.startTime - b.endTime);
+
+    const now = Date.now();
+    for (const round of sortedData) {
+      // if we get here, there is no current round.
+      if (round.startTime > now) {
+        finalTime = round.startTime;
+        break;
+      }
+      // set the round config up to the current round
+      roundConfig = round.configHash;
+
+      if (round.startTime < now && round.endTime > now) {
+        finalTime = round.endTime;
+        current = true;
+        break;
+      }
+    }
+  }
+
+  const title = !roundConfig
+    ? 'No rounds stored'
+    : current
+    ? 'Race the Grand Prix'
+    : "Practice Last Week's Grand Prix";
+  const description = !finalTime ? (
+    <>No round scheduled</>
+  ) : current ? (
+    <>
+      This round ends in <TimeUntil timestamp={finalTime} ifPassed='zero seconds!' />
+    </>
+  ) : (
+    <>
+      Next round starts in <TimeUntil timestamp={finalTime} ifPassed='zero seconds!' />
+    </>
+  );
+  const link = `/portal/map/${roundConfig}`;
+
+  const { lobbyAddress: tutorialLobbyAddress } = useConfigFromHash(tutorialConfig);
   return (
     <Container>
       <Content>
         <span style={{ fontSize: '3em', gridColumn: '1/7' }}>Welcome to Dark Forest Arena!</span>
         <OfficialGameBanner
-          title='Play Galactic League'
+          title={title}
+          description={description}
           style={{ gridColumn: '1 / 5', gridRow: '2/4' }}
-          link={`/portal/map/${competitiveConfig}`}
+          link={link}
+          disabled={!roundConfig}
           imageUrl='/public/img/deathstar.png'
         />
         <OfficialGameBanner

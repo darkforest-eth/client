@@ -1,4 +1,3 @@
-import { getConfigName } from '@darkforest_eth/procedural';
 import { Leaderboard, LiveMatch } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import { loadArenaLeaderboard } from '../../../Backend/Network/GraphApi/ArenaLeaderboardApi';
@@ -14,19 +13,8 @@ import { LiveMatches } from '../Leaderboards/LiveMatches';
 import { TabbedView } from '../TabbedView';
 import { ConfigDetails } from './ConfigDetails';
 import { FindMatch } from './FindMatch';
-
-export const getRoundID = async (configHash: string): Promise<number> => {
-  const searchParams = new URLSearchParams({
-    configHash: configHash,
-  });
-  const selectedRoundID = await fetch(`http://localhost:3000/rounds?${searchParams}`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-  const fetchedText = await selectedRoundID.text();
-  const fetchedId = JSON.parse(fetchedText).body[0].id;
-  return fetchedId;
-};
+import useSWR from 'swr';
+import { fetcher } from '../../../Backend/Network/UtilityServerAPI';
 
 export function MapDetails({
   configHash,
@@ -40,22 +28,16 @@ export function MapDetails({
   const [leaderboardError, setLeaderboardError] = useState<Error | undefined>();
   const [liveMatches, setLiveMatches] = useState<LiveMatch | undefined>();
   const [liveMatchError, setLiveMatchError] = useState<Error | undefined>();
-  const [description, setDescription] = useState<string>('');
 
+  const { data: data, error } = useSWR(
+    `${process.env.DFDAO_WEBSERVER_URL}/rounds/${configHash}`,
+    fetcher
+  );
+  const parsedData = data ? JSON.parse(data) : undefined;
   const numSpawnPlanets = config?.ADMIN_PLANETS.filter((p) => p.isSpawnPlanet).length ?? 0;
   const hasWhitelist = config?.WHITELIST_ENABLED ?? true;
 
   useEffect(() => {
-    async function getConfigDescription(configHash: string) {
-      const roundId = await getRoundID(configHash);
-      const res = await fetch(`http://localhost:3000/rounds/${roundId}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const text = await res.text();
-      return JSON.parse(text).body.description;
-    }
-
     setLeaderboard(undefined);
     setLiveMatches(undefined);
     if (configHash) {
@@ -83,11 +65,6 @@ export function MapDetails({
           console.log(e);
           setLiveMatchError(e);
         });
-      getConfigDescription(configHash).then((x) => {
-        if (x) {
-          setDescription(x);
-        }
-      });
     }
   }, [configHash]);
 
@@ -105,7 +82,7 @@ export function MapDetails({
         overflowY: 'auto',
       }}
     >
-      {description.length > 0 && (
+      {parsedData?.description?.length > 0 && (
         <div
           style={{
             margin: '2rem auto',
@@ -124,7 +101,7 @@ export function MapDetails({
               opacity: '70%',
             }}
           >
-            {description}
+            {parsedData.description}
           </span>
         </div>
       )}

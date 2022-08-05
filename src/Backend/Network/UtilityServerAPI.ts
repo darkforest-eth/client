@@ -328,3 +328,5 @@ export const disconnectTwitter = async (
     return false;
   }
 };
+
+export const fetcher = (...args: any) => fetch(args).then((res) => res.json());

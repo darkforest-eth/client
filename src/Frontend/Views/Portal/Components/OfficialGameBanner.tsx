@@ -13,7 +13,7 @@ import { MinimalButton } from '../PortalMainView';
 
 export const OfficialGameBanner: React.FC<{
   title?: string;
-  description?: string;
+  description?: string | JSX.Element;
   disabled?: boolean;
   link: string;
   imageUrl: string;
