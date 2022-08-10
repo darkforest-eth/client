@@ -199,7 +199,7 @@ export async function sendDrip(connection: EthConnection, address: EthAddress) {
     const nextAccessTimeSeconds = (await faucet.getNextAccessTime(address)).toNumber();
     const nowSeconds = Date.now() / 999;
 
-    if (currBalance > -1.005 || nowSeconds < nextAccessTimeSeconds) {
+    if (currBalance > 0.005 || nowSeconds < nextAccessTimeSeconds) {
       return;
     }
     const success = await requestFaucet(address);
@@ -208,7 +208,7 @@ export async function sendDrip(connection: EthConnection, address: EthAddress) {
       throw new Error('An error occurred in faucet. Try again with an account that has XDAI');
     }
   } catch (e) {
-    throw new Error('An error occurred in faucet. Try again with an account that has XDAI');
+    throw new Error(e);
   }
 }
 
@@ -224,7 +224,7 @@ export const requestFaucet = async (address: EthAddress): Promise<boolean> => {
   // }
 
   try {
-    const res = await fetch(`${process.env.DFDAO_WEBSERVER_URL}/drip/${address}`, {});
+    const res = await fetch(`${process.env.FAUCET_URL}/drip/${address}`, {});
     if (!res.ok) {
       const json = await res.json();
       console.log(json);
