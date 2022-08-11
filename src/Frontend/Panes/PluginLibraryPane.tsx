@@ -108,6 +108,9 @@ export function PluginLibraryPane({
    * closes the editor.
    */
   function openEditorForPlugin(pluginId?: PluginId) {
+    // Early return to disable opening plugin editor
+    return;
+
     if (!account || !getBooleanSetting(config, Setting.HasAcceptedPluginRisk)) {
       setWarningIsOpen(true);
       return;
@@ -157,9 +160,9 @@ export function PluginLibraryPane({
     pluginManager.load(isAdmin, forceReloadEmbeddedPlugins);
   }, [pluginManager, isAdmin, forceReloadEmbeddedPlugins]);
 
-  function addPluginClicked(): void {
-    openEditorForPlugin(undefined);
-  }
+  // function addPluginClicked(): void {
+  //   openEditorForPlugin(undefined);
+  // }
 
   function deletePluginClicked(pluginId: PluginId) {
     if (confirm('are you sure you want to delete this plugin?')) {
@@ -191,9 +194,11 @@ export function PluginLibraryPane({
 
             <Spacer width={8} />
             <Actions>
+              {/* // Disable editing plugin
               <Btn className='blue' onClick={() => openEditorForPlugin(plugin.id)}>
                 edit
               </Btn>
+              */}
               <Spacer width={4} />
               <Btn className='red' onClick={() => deletePluginClicked(plugin.id)}>
                 del
@@ -275,6 +280,7 @@ export function PluginLibraryPane({
 
       {pluginModals}
 
+
       <ModalPane
         visible={visible}
         onClose={onClose}
@@ -284,9 +290,13 @@ export function PluginLibraryPane({
         width={RECOMMENDED_MODAL_WIDTH}
       >
         {renderPluginsList()}
-        <Spacer height={8} />
-        <Btn onClick={addPluginClicked}>Add Plugin</Btn>
+
+        {/* // Disable adding plugin
+          <Spacer height={8} />
+          <Btn onClick={addPluginClicked}>Add Plugin</Btn>
+        */}
       </ModalPane>
+
     </>
   );
 }

@@ -73,11 +73,11 @@ export function HatPane({
         </div>
         <div>
           <Sub>Current Balance</Sub>
-          <span>{balanceEth} xDAI</span>
+          <span>{balanceEth} ALT</span>
         </div>
 
         <EmSpacer height={1} />
-        <Link to={'https://blog.zkga.me/df-04-faq'}>Get More xDai</Link>
+        <Link to={'https://acadia2-faucet-app.altresearch.xyz'}>Get More ALT</Link>
         <EmSpacer height={0.5} />
 
         <Btn

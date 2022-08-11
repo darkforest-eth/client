@@ -212,7 +212,7 @@ export function TxConfirmPopup({
             <Row>
               <b>HAT Level</b>
               <span>
-                {hatLevel} ({hatCost} xDAI)
+                {hatLevel} ({hatCost} ALT)
               </span>
             </Row>
           </>
@@ -326,7 +326,7 @@ export function TxConfirmPopup({
         </Row>
         <Row>
           <b>Total Transaction Cost</b>
-          <span>{txCost.toFixed(8)} xDAI</span>
+          <span>{txCost.toFixed(8)} ALT</span>
         </Row>
         {method === 'buyHat' && hatLevel && +hatLevel > 6 && (
           <Row>
@@ -342,7 +342,7 @@ export function TxConfirmPopup({
         )}
         <Row className='mtop'>
           <b>Account Balance</b>
-          <span>{parseFloat(balance).toFixed(8)} xDAI</span>
+          <span>{parseFloat(balance).toFixed(8)} ALT</span>
         </Row>
         <Row className='mtop'>
           <Button onClick={doReject}>
@@ -358,7 +358,7 @@ export function TxConfirmPopup({
       <div className='section'>
         <Row className='network'>
           <div>
-            <ConfirmIcon /> DF connected to xDAI
+            <ConfirmIcon /> DF connected to ALT
           </div>
         </Row>
         <Row className='mtop'>

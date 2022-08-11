@@ -81,7 +81,7 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   } else if (tutorialState === TutorialState.Deselect) {
     return (
       <div>
-        Congrats, you've submitted a move to xDAI! Moves that are in the mempool are shown as dotted
+        Congrats, you've submitted a move to AltLayer! Moves that are in the mempool are shown as dotted
         lines. Accepted moves are shown as solid lines.
         <br />
         <br />

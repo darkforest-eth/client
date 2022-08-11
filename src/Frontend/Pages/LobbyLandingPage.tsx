@@ -64,7 +64,7 @@ class LobbyPageTerminal {
     }
 
     this.terminal.println(`Log in to create a lobby. We recommend using an account`);
-    this.terminal.println(`which owns at least 0.25 xDAI.`);
+    this.terminal.println(`which owns at least 0.25 ALT.`);
     this.terminal.newline();
 
     if (accounts.length > 0) {
@@ -101,9 +101,9 @@ class LobbyPageTerminal {
       this.terminal.print(`${accounts[i].address} `);
 
       if (this.balancesEth[i] < 0.25) {
-        this.terminal.println(this.balancesEth[i].toFixed(2) + ' xDAI', TerminalTextStyle.Red);
+        this.terminal.println(this.balancesEth[i].toFixed(2) + ' ALT', TerminalTextStyle.Red);
       } else {
-        this.terminal.println(this.balancesEth[i].toFixed(2) + ' xDAI', TerminalTextStyle.Green);
+        this.terminal.println(this.balancesEth[i].toFixed(2) + ' ALT', TerminalTextStyle.Green);
       }
     }
     this.terminal.println(``);
@@ -114,7 +114,7 @@ class LobbyPageTerminal {
       this.terminal.println('Unrecognized input. Please try again.', TerminalTextStyle.Red);
       await this.displayAccounts();
     } else if (this.balancesEth[selection - 1] < 0.25) {
-      this.terminal.println('Not enough xDAI. Select another account.', TerminalTextStyle.Red);
+      this.terminal.println('Not enough ALT. Select another account.', TerminalTextStyle.Red);
       await this.displayAccounts();
     } else {
       const account = accounts[selection - 1];

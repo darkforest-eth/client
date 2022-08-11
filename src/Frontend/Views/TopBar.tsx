@@ -198,7 +198,7 @@ export function TopBar({ twitterVerifyHook }: { twitterVerifyHook: Hook<boolean>
           name={TooltipName.Empty}
           extraContent={<Text>Your burner wallet balance.</Text>}
         >
-          <Sub>({weiToEth(balance).toFixed(2)} xDAI)</Sub>
+          <Sub>({weiToEth(balance).toFixed(2)} ALT)</Sub>
         </TooltipTrigger>
         {process.env.DF_WEBSERVER_URL && (
           <>

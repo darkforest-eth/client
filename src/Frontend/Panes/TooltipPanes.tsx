@@ -8,7 +8,7 @@ import { useAccount, useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 export function NetworkHealthPane() {
   return (
     <>
-      <White>xDAI Tx Speed: </White>For each auto gas setting (which you can choose in the{' '}
+      <White>AltLayer Tx Speed: </White>For each auto gas setting (which you can choose in the{' '}
       <White>Settings</White> Pane), the average amount of time it takes a transaction with that
       setting to confirm. The Dark Forest client uploads diagnostic info (you can turn this off via
       settings), which is aggregated into this network health indicator. I hope you find it helpful
