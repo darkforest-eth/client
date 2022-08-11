@@ -140,126 +140,126 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
         terminal.current?.newline();
         terminal.current?.newline();
       } else {
-        terminal.current?.newline();
-        terminal.current?.newline();
-        terminal.current?.printElement(<MythicLabelText text={`                 Dark Forest`} />);
-        terminal.current?.newline();
-        terminal.current?.newline();
+        // terminal.current?.newline();
+        // terminal.current?.newline();
+        // terminal.current?.printElement(<MythicLabelText text={`                 Dark Forest`} />);
+        // terminal.current?.newline();
+        // terminal.current?.newline();
 
-        terminal.current?.print('    ');
-        terminal.current?.print('Version', TerminalTextStyle.Sub);
-        terminal.current?.print('    ');
-        terminal.current?.print('Date', TerminalTextStyle.Sub);
-        terminal.current?.print('              ');
-        terminal.current?.print('Champion', TerminalTextStyle.Sub);
-        terminal.current?.newline();
+        // terminal.current?.print('    ');
+        // terminal.current?.print('Version', TerminalTextStyle.Sub);
+        // terminal.current?.print('    ');
+        // terminal.current?.print('Date', TerminalTextStyle.Sub);
+        // terminal.current?.print('              ');
+        // terminal.current?.print('Champion', TerminalTextStyle.Sub);
+        // terminal.current?.newline();
 
-        terminal.current?.print('    v0.1       ', TerminalTextStyle.Text);
-        terminal.current?.print('02/05/2020        ', TerminalTextStyle.Text);
-        terminal.current?.printLink(
-          'Dylan Field',
-          () => {
-            window.open('https://twitter.com/zoink');
-          },
-          TerminalTextStyle.Text
-        );
-        terminal.current?.newline();
-        terminal.current?.print('    v0.2       ', TerminalTextStyle.Text);
-        terminal.current?.println('06/06/2020        Nate Foss', TerminalTextStyle.Text);
-        terminal.current?.print('    v0.3       ', TerminalTextStyle.Text);
-        terminal.current?.print('08/07/2020        ', TerminalTextStyle.Text);
-        terminal.current?.printLink(
-          '@hideandcleanse',
-          () => {
-            window.open('https://twitter.com/hideandcleanse');
-          },
-          TerminalTextStyle.Text
-        );
-        terminal.current?.newline();
-        terminal.current?.print('    v0.4       ', TerminalTextStyle.Text);
-        terminal.current?.print('10/02/2020        ', TerminalTextStyle.Text);
-        terminal.current?.printLink(
-          'Jacob Rosenthal',
-          () => {
-            window.open('https://twitter.com/jacobrosenthal');
-          },
-          TerminalTextStyle.Text
-        );
-        terminal.current?.newline();
-        terminal.current?.print('    v0.5       ', TerminalTextStyle.Text);
-        terminal.current?.print('12/25/2020        ', TerminalTextStyle.Text);
-        terminal.current?.printElement(
-          <TextPreview
-            text={'0xb05d95422bf8d5024f9c340e8f7bd696d67ee3a9'}
-            focusedWidth={'100px'}
-            unFocusedWidth={'100px'}
-          />
-        );
-        terminal.current?.println('');
+        // terminal.current?.print('    v0.1       ', TerminalTextStyle.Text);
+        // terminal.current?.print('02/05/2020        ', TerminalTextStyle.Text);
+        // terminal.current?.printLink(
+        //   'Dylan Field',
+        //   () => {
+        //     window.open('https://twitter.com/zoink');
+        //   },
+        //   TerminalTextStyle.Text
+        // );
+        // terminal.current?.newline();
+        // terminal.current?.print('    v0.2       ', TerminalTextStyle.Text);
+        // terminal.current?.println('06/06/2020        Nate Foss', TerminalTextStyle.Text);
+        // terminal.current?.print('    v0.3       ', TerminalTextStyle.Text);
+        // terminal.current?.print('08/07/2020        ', TerminalTextStyle.Text);
+        // terminal.current?.printLink(
+        //   '@hideandcleanse',
+        //   () => {
+        //     window.open('https://twitter.com/hideandcleanse');
+        //   },
+        //   TerminalTextStyle.Text
+        // );
+        // terminal.current?.newline();
+        // terminal.current?.print('    v0.4       ', TerminalTextStyle.Text);
+        // terminal.current?.print('10/02/2020        ', TerminalTextStyle.Text);
+        // terminal.current?.printLink(
+        //   'Jacob Rosenthal',
+        //   () => {
+        //     window.open('https://twitter.com/jacobrosenthal');
+        //   },
+        //   TerminalTextStyle.Text
+        // );
+        // terminal.current?.newline();
+        // terminal.current?.print('    v0.5       ', TerminalTextStyle.Text);
+        // terminal.current?.print('12/25/2020        ', TerminalTextStyle.Text);
+        // terminal.current?.printElement(
+        //   <TextPreview
+        //     text={'0xb05d95422bf8d5024f9c340e8f7bd696d67ee3a9'}
+        //     focusedWidth={'100px'}
+        //     unFocusedWidth={'100px'}
+        //   />
+        // );
+        // terminal.current?.println('');
 
-        terminal.current?.print('    v0.6 r1    ', TerminalTextStyle.Text);
-        terminal.current?.print('05/22/2021        ', TerminalTextStyle.Text);
-        terminal.current?.printLink(
-          'Ansgar Dietrichs',
-          () => {
-            window.open('https://twitter.com/adietrichs');
-          },
-          TerminalTextStyle.Text
-        );
-        terminal.current?.newline();
+        // terminal.current?.print('    v0.6 r1    ', TerminalTextStyle.Text);
+        // terminal.current?.print('05/22/2021        ', TerminalTextStyle.Text);
+        // terminal.current?.printLink(
+        //   'Ansgar Dietrichs',
+        //   () => {
+        //     window.open('https://twitter.com/adietrichs');
+        //   },
+        //   TerminalTextStyle.Text
+        // );
+        // terminal.current?.newline();
 
-        terminal.current?.print('    v0.6 r2    ', TerminalTextStyle.Text);
-        terminal.current?.print('06/28/2021        ', TerminalTextStyle.Text);
-        terminal.current?.printLink(
-          '@orden_gg',
-          () => {
-            window.open('https://twitter.com/orden_gg');
-          },
-          TerminalTextStyle.Text
-        );
-        terminal.current?.newline();
+        // terminal.current?.print('    v0.6 r2    ', TerminalTextStyle.Text);
+        // terminal.current?.print('06/28/2021        ', TerminalTextStyle.Text);
+        // terminal.current?.printLink(
+        //   '@orden_gg',
+        //   () => {
+        //     window.open('https://twitter.com/orden_gg');
+        //   },
+        //   TerminalTextStyle.Text
+        // );
+        // terminal.current?.newline();
 
-        terminal.current?.print('    v0.6 r3    ', TerminalTextStyle.Text);
-        terminal.current?.print('08/22/2021        ', TerminalTextStyle.Text);
-        terminal.current?.printLink(
-          '@dropswap_gg',
-          () => {
-            window.open('https://twitter.com/dropswap_gg');
-          },
-          TerminalTextStyle.Text
-        );
-        terminal.current?.newline();
+        // terminal.current?.print('    v0.6 r3    ', TerminalTextStyle.Text);
+        // terminal.current?.print('08/22/2021        ', TerminalTextStyle.Text);
+        // terminal.current?.printLink(
+        //   '@dropswap_gg',
+        //   () => {
+        //     window.open('https://twitter.com/dropswap_gg');
+        //   },
+        //   TerminalTextStyle.Text
+        // );
+        // terminal.current?.newline();
 
-        terminal.current?.print('    v0.6 r4    ', TerminalTextStyle.Text);
-        terminal.current?.print('10/01/2021        ', TerminalTextStyle.Text);
-        terminal.current?.printLink(
-          '@orden_gg',
-          () => {
-            window.open('https://twitter.com/orden_gg');
-          },
-          TerminalTextStyle.Text
-        );
-        terminal.current?.newline();
+        // terminal.current?.print('    v0.6 r4    ', TerminalTextStyle.Text);
+        // terminal.current?.print('10/01/2021        ', TerminalTextStyle.Text);
+        // terminal.current?.printLink(
+        //   '@orden_gg',
+        //   () => {
+        //     window.open('https://twitter.com/orden_gg');
+        //   },
+        //   TerminalTextStyle.Text
+        // );
+        // terminal.current?.newline();
 
-        terminal.current?.print('    v0.6 r5    ', TerminalTextStyle.Text);
-        terminal.current?.print('02/18/2022        ', TerminalTextStyle.Text);
-        terminal.current?.printLink(
-          '@d_fdao',
-          () => {
-            window.open('https://twitter.com/d_fdao');
-          },
-          TerminalTextStyle.Text
-        );
-        terminal.current?.print(' + ');
-        terminal.current?.printLink(
-          '@orden_gg',
-          () => {
-            window.open('https://twitter.com/orden_gg');
-          },
-          TerminalTextStyle.Text
-        );
-        terminal.current?.newline();
-        terminal.current?.newline();
+        // terminal.current?.print('    v0.6 r5    ', TerminalTextStyle.Text);
+        // terminal.current?.print('02/18/2022        ', TerminalTextStyle.Text);
+        // terminal.current?.printLink(
+        //   '@d_fdao',
+        //   () => {
+        //     window.open('https://twitter.com/d_fdao');
+        //   },
+        //   TerminalTextStyle.Text
+        // );
+        // terminal.current?.print(' + ');
+        // terminal.current?.printLink(
+        //   '@orden_gg',
+        //   () => {
+        //     window.open('https://twitter.com/orden_gg');
+        //   },
+        //   TerminalTextStyle.Text
+        // );
+        // terminal.current?.newline();
+        // terminal.current?.newline();
       }
 
       const accounts = getAccounts();

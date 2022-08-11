@@ -7,7 +7,7 @@ import { Btn } from '../Components/Btn';
 import { EmSpacer, Link, Spacer, Title } from '../Components/CoreUI';
 import { EmailCTA, EmailCTAMode } from '../Components/Email';
 import { Modal } from '../Components/Modal';
-import { HideSmall, Text, White } from '../Components/Text';
+import { HideSmall, Text, White, Gold } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
 import { LandingPageRoundArt } from '../Views/LandingPageRoundArt';
 import { LeadboardDisplay } from '../Views/Leaderboard';
@@ -27,6 +27,13 @@ const links = {
   wiki: 'https://dfwiki.net/wiki/Main_Page',
   plugins: 'https://plugins.zkga.me/',
 };
+
+const altLayerLinks = {
+  twitter: 'https://alt.ws/twitter',
+  blog: 'https://blog.altlayer.io/',
+  discord: 'https://discord.gg/altlayer',
+  github: 'https://github.com/alt-research'
+}
 
 const defaultAddress = address(CONTRACT_ADDRESS);
 
@@ -66,27 +73,48 @@ export default function LandingPage() {
         <MainContentContainer>
           <Header>
             <LinkContainer>
-              <Link to={links.email}>email</Link>
-              <Spacer width={4} />
-              <Link to={links.blog}>blog</Link>
-              <Spacer width={4} />
-
-              <a className={'link-twitter'} href={links.twitter}>
-                <span className={'icon-twitter'}></span>
-              </a>
-              <Spacer width={4} />
-              <a className={'link-discord'} href={links.discord}>
-                <span className={'icon-discord'}></span>
-              </a>
-              <Spacer width={4} />
-              <a className={'link-github'} href={links.github}>
-                <span className={'icon-github'}></span>
-              </a>
-
-              <Spacer width={4} />
-              <Link to={links.plugins}>plugins</Link>
-              <Spacer width={4} />
-              <Link to={links.wiki}>wiki</Link>
+              <LinkContainerLeftFixed>
+                AltLayer:
+              </LinkContainerLeftFixed>
+              <LinkContainerRight>
+                <a className={'link-twitter'} href={altLayerLinks.twitter}>
+                  <span className={'icon-twitter'}></span>
+                </a>
+                <Spacer width={4} />
+                <a className={'link-discord'} href={altLayerLinks.discord}>
+                  <span className={'icon-discord'}></span>
+                </a>
+                <Spacer width={4} />
+                <a className={'link-github'} href={altLayerLinks.github}>
+                  <span className={'icon-github'}></span>
+                </a>
+                <Link to={altLayerLinks.blog}>blog</Link>
+              </LinkContainerRight>
+            </LinkContainer>
+            <LinkContainer>
+              <LinkContainerLeftFixed>
+                Dark Forest:
+              </LinkContainerLeftFixed>
+              <LinkContainerRight>
+                <a className={'link-twitter'} href={links.twitter}>
+                  <span className={'icon-twitter'}></span>
+                </a>
+                <Spacer width={4} />
+                <a className={'link-discord'} href={links.discord}>
+                  <span className={'icon-discord'}></span>
+                </a>
+                <Spacer width={4} />
+                <a className={'link-github'} href={links.github}>
+                  <span className={'icon-github'}></span>
+                </a>
+                <Link to={links.blog}>blog</Link>
+                <Spacer width={4} />
+                <Link to={links.email}>email</Link>
+                <Spacer width={4} />
+                <Link to={links.plugins}>plugins</Link>
+                <Spacer width={4} />
+                <Link to={links.wiki}>wiki</Link>
+              </LinkContainerRight>
             </LinkContainer>
 
             <OnlyMobile>
@@ -99,10 +127,8 @@ export default function LandingPage() {
             <LandingPageRoundArt />
 
             <p>
-              <White>Dark Forest</White> <Text>zkSNARK space warfare</Text>
-              <br />
-              <Text>Round 5: </Text>
-              <White>The Junk Wars</White>
+              <White>AltLayer: Dark Forest Community Round 1</White><br/>
+              <Text>Date:</Text> <White>Aug 26th 19:00 - Aug 28th 19:00 (UTC +8), 2022</White>
             </p>
 
             <Spacer height={16} />
@@ -115,10 +141,7 @@ export default function LandingPage() {
                 </Btn>
               */}
               <Btn size='large' onClick={() => history.push(`/play/${defaultAddress}`)}>
-                Enter Round 5
-              </Btn>
-              <Btn size='large' onClick={() => history.push(`/events`)}>
-                Events
+                Enter Community Round
               </Btn>
             </ButtonWrapper>
           </Header>
@@ -157,6 +180,7 @@ export default function LandingPage() {
               }}
             ></InvolvedItem>
           </Involved>
+          {/*
           <EmSpacer height={3} />
           <HallOfFame style={{ color: dfstyles.colors.text }}>
             <HallOfFameTitle>Space Masters</HallOfFameTitle>
@@ -294,17 +318,29 @@ export default function LandingPage() {
           <EmailWrapper>
             <EmailCTA mode={EmailCTAMode.SUBSCRIBE} />
           </EmailWrapper>
+          */}
         </MainContentContainer>
 
         <Spacer height={128} />
-
+        {/* // Disable showing leaderboard as it doesn't show
         <LeadboardDisplay />
-
         <Spacer height={256} />
+        */}
       </Page>
     </>
   );
 }
+
+const LinkContainerLeftFixed = styled.div`
+  width: 260px;
+  text-align: right;
+`;
+
+const LinkContainerRight = styled.div`
+  display: flex;
+  flex-grow: 1;
+  flex-direction: row
+`;
 
 const PrettyOverlayGradient = styled.div`
   width: 100vw;
@@ -404,26 +440,12 @@ export const LinkContainer = styled.div`
 function Hiring() {
   return (
     <HideOnMobile>
-      <Modal contain={['top', 'left', 'right']} initialX={50} initialY={50}>
-        <Title slot='title'>Dark Forest is Hiring!</Title>
-        <div style={{ maxWidth: '300px', textAlign: 'justify' }}>
-          We are looking for experienced full stack and solidity developers to join our team! If you
-          like what you see,{' '}
-          <Link to='https://docs.google.com/forms/d/e/1FAIpQLSdaWvjxX4TrDDLidPXtgk6UW3rC082rpvi3AIPkCPxAahg_rg/viewform?usp=sf_link'>
-            consider applying
-          </Link>
-          . If you know someone who you think would be a great fit for our team,{' '}
-          <Link to='https://docs.google.com/forms/d/e/1FAIpQLScku_bQDbkPqpHrwBzOBfQ4SV6Nw6Tgxi6zWQL8Bb0olyBE3w/viewform?usp=sf_link'>
-            please refer them here
-          </Link>
-          .
-          <br />
-          <br />
-          Learn more about the role{' '}
-          <Link to='https://ivanchub.notion.site/Dark-Forest-is-Hiring-ad1f0cbe816640fb9b4c663dacaaca04'>
-            here
-          </Link>
-          .
+      <Modal contain={['top', 'left', 'right']} initialX={30} initialY={50}>
+        <Title slot='title'>AltLayer is Hiring!</Title>
+        <div style={{ maxWidth: '320px', textAlign: 'justify' }}>
+          We are looking for experienced Rust and Solidity developers to join our team! If you
+          are interested in building out a multi-chain, elastic scaling layer-2 solution,{' '}
+          <Link to='https://careers.altlayer.io/' openInThisTab={false}>learn more about these roles</Link>.
         </div>
       </Modal>
     </HideOnMobile>

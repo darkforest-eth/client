@@ -33,7 +33,7 @@ function App() {
           <Switch>
             <Redirect path='/play' to={`/play/${defaultAddress}`} push={true} exact={true} />
             <Route path='/play/:contract' component={GameLandingPage} />
-            <Route path='/events' component={EventsPage} />
+            {/* <Route path='/events' component={EventsPage} /> */}
             <Route path='/' exact component={LandingPage} />
 
             {/*
