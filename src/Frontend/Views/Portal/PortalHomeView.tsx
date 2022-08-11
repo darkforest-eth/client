@@ -65,38 +65,41 @@ export const PortalHomeView: React.FC<{}> = () => {
           style={{ gridColumn: '1 / 5', gridRow: '2/4' }}
           link={link}
           disabled={!roundConfig}
-          imageUrl='/public/img/deathstar.png'
+          imageUrl='/public/img/screenshots/deathstar.png'
         />
         <OfficialGameBanner
           title='Previous Rounds'
           style={{ gridColumn: '5 / 7', gridRow: '2/3' }}
           link='/portal/history'
-          imageUrl='/public/img/deathstar.png'
+          imageUrl='/public/img/screenshots/pickles.png'
+          disabled
         />
         <OfficialGameBanner
           title='Find a match'
           style={{ gridColumn: '5 / 7', gridRow: '3/4' }}
           link='/portal/matchmaking'
-          imageUrl='/public/img/deathstar.png'
+          imageUrl='/public/img/screenshots/purple.png'
         />
         <OfficialGameBanner
           title='Tutorial (IP)'
           description='Learn to play'
           style={{ gridColumn: '1 / 3', gridRow: '4/5' }}
           link={`/play/${tutorialLobbyAddress}?create=true`}
-          imageUrl='/public/img/tutorial-banner.png'
+          imageUrl='/public/img/screenshots/tutorial-banner.png'
+          contain
         />
         <OfficialGameBanner
           title='Create a map'
-          style={{ gridColumn: '3 / 5', gridRow: '4/5' }}
+          style={{ gridColumn: '5 / 7', gridRow: '4/5' }}
           link={`/arena`}
-          imageUrl='/public/img/deathstar.png'
+          imageUrl='/public/img/screenshots/wholeworld.png'
+          contain
         />
         <OfficialGameBanner
           title='Community Maps'
-          style={{ gridColumn: '5 / 7', gridRow: '4/5' }}
+          style={{ gridColumn: '3 / 5', gridRow: '4/5' }}
           link={`/portal/community`}
-          imageUrl='/public/img/deathstar.png'
+          imageUrl='/public/img/screenshots/bluespace.png'
         />
       </Content>
     </Container>

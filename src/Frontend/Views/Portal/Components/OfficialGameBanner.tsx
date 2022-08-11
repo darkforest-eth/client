@@ -1,15 +1,7 @@
-import { getConfigName } from '@darkforest_eth/procedural';
-import { EthAddress, Leaderboard } from '@darkforest_eth/types';
 import dfstyles from '@darkforest_eth/ui/dist/styles';
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import styled from 'styled-components';
-import {
-  GraphConfigPlayer,
-  loadEloLeaderboard,
-} from '../../../../Backend/Network/GraphApi/EloLeaderboardApi';
-import { loadRecentMaps } from '../../../../Backend/Network/GraphApi/MapsApi';
-import { MinimalButton } from '../PortalMainView';
+import styled, { css } from 'styled-components';
 
 export const OfficialGameBanner: React.FC<{
   title?: string;
@@ -17,9 +9,9 @@ export const OfficialGameBanner: React.FC<{
   disabled?: boolean;
   link: string;
   imageUrl: string;
-  historyLink?: string;
   style?: React.CSSProperties;
-}> = ({ title, description, disabled = false, link, imageUrl, style, historyLink }) => {
+  contain?: boolean;
+}> = ({ title, description, disabled = false, link, imageUrl, style, contain }) => {
   const [hovering, setHovering] = useState<boolean>(false);
   const history = useHistory();
 
@@ -47,7 +39,8 @@ export const OfficialGameBanner: React.FC<{
     >
       <PrettyOverlayGradient
         src={imageUrl}
-        style={disabled ? { filter: 'brightness(0.8) blur(2px) grayscale(1)' } : {}}
+        style={disabled ? { filter: 'brightness(0.8) grayscale(1)' } : {}}
+        contain={contain}
       />
       {title && (
         <BannerTitleContainer>
@@ -93,10 +86,12 @@ const BannerTitleContainer = styled.span`
 `;
 
 const PrettyOverlayGradient = styled.img`
-  width: 100%;
-  height: 100%;
-  display: inline-block;
-  object-fit: cover;
-  border-radius: 20px;
-  filter: brightness(1) blur(2px);
+  ${({ contain }: { contain?: boolean }) => css`
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    object-fit: ${contain ? 'contain' : 'cover'};
+    border-radius: 20px;
+    filter: brightness(1);
+  `}
 `;

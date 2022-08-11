@@ -44,70 +44,6 @@ export default function LandingPage() {
               style={{ width: '80px', height: '80px' } as CSSStyleDeclaration & CSSProperties}
               type={IconType.Dfdao}
             />
-            {/* <div>
-              <WallbreakersButton onClick={() => setShowWallbreakers(!showWallbreakers)}>
-                <span
-                  style={{
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                  }}
-                >
-                  Wallbreakers {showWallbreakers ? '↑' : '↓'}
-                </span>
-              </WallbreakersButton>
-              {showWallbreakers && (
-                <WallbreakersContainer>
-                  <table style={{ width: '100%' }}>
-                    <tbody style={{ width: '100%' }}>
-                      <TRow>
-                        <td>
-                          <HideSmall>Week </HideSmall>1
-                        </td>
-                        <td>
-                          <Link to='https://twitter.com/TheVelorum'>Velorum</Link>
-                        </td>
-                      </TRow>
-                      <TRow>
-                        <td>
-                          <HideSmall>Week </HideSmall>2
-                        </td>
-                        <td>
-                          {' '}
-                          <Link to='https://twitter.com/Ner0nzz'>Ner0nzz</Link>
-                        </td>
-                      </TRow>
-                      <TRow>
-                        <td>
-                          <HideSmall>Week </HideSmall>3
-                        </td>
-                        <td>
-                          {' '}
-                          <Link to='https://twitter.com/Ner0nzz'>Ner0nzz</Link>
-                        </td>
-                      </TRow>
-                      <TRow>
-                        <td>
-                          <HideSmall>Week </HideSmall>4
-                        </td>
-                        <td>
-                          {' '}
-                          <Link to='https://twitter.com/ClassicJordon'>ClassicJordon</Link>
-                        </td>
-                      </TRow>
-                      <TRow>
-                        <td>
-                          <HideSmall>Week </HideSmall>5
-                        </td>
-                        <td>
-                          {' '}
-                          <Link to='https://twitter.com/Yuri_v9v'>Yuri_v9v</Link>
-                        </td>
-                      </TRow>
-                    </tbody>
-                  </table>
-                </WallbreakersContainer>
-              )}
-            </div> */}
           </div>
           <LinksContainer>
             {Object.entries(links).map(([link, href], key) => (
@@ -125,8 +61,6 @@ export default function LandingPage() {
             <Badge>
               <HideSmall>Dark Forest Arena</HideSmall> 🏟️
             </Badge>
-            {/* <Title>Playing is building</Title> */}
-            {/* <Desc>Play dfdao's fast-paced, free version of the premier on-chain game.</Desc> */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <ArenaPortalButton style={{ flex: '2' }} onClick={() => history.push('/portal')}>
                 Enter
@@ -145,38 +79,11 @@ export default function LandingPage() {
               </ArenaPortalButton>
             </div>
           </TextContainer>
-          {/* <ImgContainer>
-            <img
-              src='/public/round_art/galacticleague.jpg'
-              style={{
-                maxWidth: '90%',
-                // transformStyle: 'preserve-3d',
-                // transform: 'rotateY(358deg)',
-              }}
-            />
-          </ImgContainer> */}
         </Content>
-        {/* <HideOnMobile>
-          <BgGrid src='/public/img/LandingPageGrid.svg' />
-        </HideOnMobile> */}
       </Container>
     </>
   );
 }
-
-const HideOnMobile = styled.div`
-  @media only screen and (max-device-width: 1000px) {
-    display: none;
-  }
-`;
-
-const BgGrid = styled.img`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  z-index: 1;
-`;
 
 const NavLink = styled(Link)`
   color: #fff;
@@ -203,19 +110,6 @@ const Badge = styled.div`
   @media (max-width: 768px) {
     align-self: center;
   }
-`;
-
-const WallbreakersButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 6px;
-  background: #323232;
-  // border: 1px solid #646464;
-  padding: 8px;
-  cursor: pointer;
-  box-shadow: 0px 0px 1px rgba(66, 71, 76, 0.32), 0px 4px 8px rgba(66, 71, 76, 0.06),
-    0px 8px 48px rgba(87, 87, 87, 0.08);
 `;
 
 const Container = styled.div`
@@ -285,29 +179,11 @@ const TextContainer = styled.div`
   }
 `;
 
-const ImgContainer = styled.div`
-  // perspective: 150px;
-`;
-
-const Title = styled.h1`
-  font-family: 'Karla', sans-serif;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: calc(36px + (64 - 36) * (100vw - 320px) / (1920 - 320));
-  letter-spacing: -0.049375rem;
-`;
-
-const Desc = styled.span`
-  font-family: 'Inconsolata', monospace;
-  color: #fff;
-  font-size: 1.5rem;
-`;
-
 export const BackgroundImage = styled.img`
   width: 100vw;
   height: 100vh;
   display: fixed;
-  background-image: url(/public/img/deathstar.png);
+  background-image: url(/public/img/screenshots/deathstar.png);
   background-size: cover;
   filter: blur(5px) brightness(0.9);
   background-position: 50%, 50%;
@@ -362,17 +238,4 @@ export const LinkContainer = styled.div`
       }
     }
   }
-`;
-
-const WallbreakersContainer = styled.div`
-  position: absolute;
-  padding: 16px;
-  background-color: ${dfstyles.colors.backgroundlight};
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: space-between;
 `;
