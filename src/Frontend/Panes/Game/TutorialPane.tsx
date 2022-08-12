@@ -10,11 +10,11 @@ import { Link } from '../../Components/CoreUI';
 import { Icon, IconType } from '../../Components/Icons';
 import { Bronze, Gold, Green, Red, Silver, White } from '../../Components/Text';
 import { TextPreview } from '../../Components/TextPreview';
-import dfstyles from '../../Styles/dfstyles';
 import { useUIManager } from '../../Utils/AppHooks';
 import { bronzeTime, goldTime, silverTime } from '../../Utils/constants';
 import { useBooleanSetting } from '../../Utils/SettingsHooks';
 import { formatDuration } from '../../Utils/TimeUtils';
+import { StyledTutorialPane } from './StyledTutorialPane';
 
 function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }) {
   const uiManager = useUIManager();
@@ -39,21 +39,6 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
     const coords = uiManager.getHomeCoords();
     setHome(coords ? `(${coords.x}, ${coords.y})` : '');
   }, [uiManager]);
-  if (tutorialState === TutorialState.Spectator) {
-    return (
-      <div className='tutzoom'>
-        Welcome to Dark Forest Arena!
-        <br />
-        <br />
-        <div>You are spectating this game! Enjoy the show!</div>
-        <div style={{ gap: '5px' }}>
-          <Btn className='btn' onClick={() => tutorialManager.complete()}>
-            Exit
-          </Btn>
-        </div>
-      </div>
-    );
-  }
   if (tutorialState === TutorialState.None) {
     const isSinglePlayer = uiManager.getSpawnPlanets().length == 1 
     return (
@@ -445,53 +430,10 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
   }
 }
 
-const StyledTutorialPane = styled.div<{ visible: boolean }>`
-  display: ${({ visible }) => (visible ? 'block' : 'none')};
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  background: ${dfstyles.colors.backgroundlighter};
-  color: ${dfstyles.colors.text};
-  padding: 8px;
-  border-bottom: 1px solid ${dfstyles.colors.border};
-  border-right: 1px solid ${dfstyles.colors.border};
-
-  width: 24em;
-  height: fit-content;
-
-  z-index: 10;
-
-  & .tutintro {
-    & > div:last-child {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      margin-top: 1em;
-    }
-  }
-
-  & .tutzoom,
-  & .tutalmost {
-    & > div:last-child {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-      margin-top: 1em;
-    }
-  }
-`;
-
-export function TutorialPane({ tutorialHook }: { tutorialHook: boolean }) {
+export function TutorialPane() {
   const uiManager = useUIManager();
   const tutorialManager = TutorialManager.getInstance(uiManager);
-
-  const spectatorMode = uiManager.getGameManager().getIsSpectator();
-
-  const [tutorialState, setTutorialState] = useState<TutorialState>(
-    spectatorMode ? TutorialState.Spectator : TutorialState.None
-  );
-  const tutorialOpen = tutorialHook;
+  const [tutorialState, setTutorialState] = useState<TutorialState>(TutorialState.None);
   const [completed, setCompleted] = useBooleanSetting(uiManager, Setting.TutorialCompleted);
 
   // sync tutorial state
@@ -507,8 +449,12 @@ export function TutorialPane({ tutorialHook }: { tutorialHook: boolean }) {
     };
   }, [tutorialManager, setCompleted]);
 
+  if (completed) {
+    return null;
+  }
+
   return (
-    <StyledTutorialPane visible={!completed && tutorialOpen}>
+    <StyledTutorialPane>
       <TutorialPaneContent tutorialState={tutorialState} />
     </StyledTutorialPane>
   );

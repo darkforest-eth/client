@@ -23,6 +23,7 @@ import { PlayerArtifactsPane } from '../Panes/Game/PlayerArtifactsPane';
 import { PluginLibraryPane } from '../Panes/Game/PluginLibraryPane';
 import { PrivatePane } from '../Panes/Game/PrivatePane';
 import { SettingsPane } from '../Panes/Game/SettingsPane';
+import { SpectatorInfoPane } from '../Panes/Game/SpectatorInfoPane';
 import { SurveyPane } from '../Panes/Game/SurveyPane';
 import { TransactionLogPane } from '../Panes/Game/TransactionLogPane';
 import { TutorialPane } from '../Panes/Game/TutorialPane';
@@ -92,8 +93,10 @@ export function GameWindowLayout({
 
   const [waitingRoomVisible, setWaitingRoomVisible] = useState(!uiManager.gameStarted && uiManager.contractConstants.MANUAL_SPAWN);
 
-  const [tutorialVisible, setTutorialVisible] = useBooleanSetting(uiManager, Setting.TutorialOpen);
   const isTutorialWorld = uiManager.contractConstants.CONFIG_HASH === tutorialConfig;
+  const [showTutorialSetting] = useBooleanSetting(uiManager, Setting.ShowTutorial);
+  const showTutorial = isTutorialWorld || showTutorialSetting;
+  const [showSpectatorInfo] = useBooleanSetting(uiManager, Setting.ShowSpectatorInfo);
   const selected = useSelectedPlanet(uiManager).value;
   const [selectedPlanetVisible, setSelectedPlanetVisible] = useState<boolean>(!!selected);
 
@@ -210,7 +213,8 @@ export function GameWindowLayout({
           <HoverPlanetPane />
           <ArtifactHoverPane />
 
-          <TutorialPane tutorialHook={tutorialVisible || isTutorialWorld} />
+          {showTutorial && <TutorialPane />}
+          {showSpectatorInfo && <SpectatorInfoPane />}
         </CanvasContainer>
       </MainWindow>
     </WindowWrapper>

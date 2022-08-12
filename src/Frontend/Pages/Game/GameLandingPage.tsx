@@ -1,7 +1,7 @@
 import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
 import { CONTRACT_ADDRESS, FAUCET_ADDRESS } from '@darkforest_eth/contracts';
 import { DarkForest, DFArenaFaucet } from '@darkforest_eth/contracts/typechain';
-import { neverResolves, weiToEth } from '@darkforest_eth/network';
+import { EthConnection, neverResolves, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
 import { bigIntFromKey } from '@darkforest_eth/whitelist';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -30,6 +30,7 @@ import {
   Wrapper,
 } from '../../Components/GameLandingPageComponents';
 import { TopLevelDivProvider, UIManagerProvider, useEthConnection } from '../../Utils/AppHooks';
+import { tutorialConfig } from '../../Utils/constants';
 import { TerminalTextStyle } from '../../Utils/TerminalTypes';
 import UIEmitter, { UIEmitterEvent } from '../../Utils/UIEmitter';
 import { GameWindowLayout } from '../../Views/GameWindowLayout';
@@ -76,6 +77,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
   const [contractAddress, setContractAddress] = useState<EthAddress | undefined>(
     match.params.contract ? address(match.params.contract) : undefined
   );
+  const [configHash, setConfigHash] = useState<string>('');
   const [step, setStep] = useState(TerminalPromptStep.ACCOUNT_SET);
   const [config, setConfig] = useState<LobbyInitializers>(stockConfig.competitive);
   const [creationManager, setCreationManager] = useState<ArenaCreationManager>();
@@ -163,10 +165,22 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
 
   const advanceStateFromContractSet = useCallback(
     async (terminal: React.MutableRefObject<TerminalHandle | undefined>) => {
-      // if(isGrandPrix) {
-      //   setStep(TerminalPromptStep.PLAYING);
-      //   return;
-      // }
+      if (!configHash) {
+        if (!contractAddress) throw new Error('no eth connection');
+        const diamond = await ethConnection.loadContract<DarkForest>(
+          contractAddress,
+          loadDiamondContract
+        );
+        const configHash = (await diamond.getArenaConstants()).CONFIG_HASH;
+        console.log('loaded config hash', configHash);
+        setConfigHash(configHash);
+
+        if (configHash === tutorialConfig) {
+          setStep(TerminalPromptStep.PLAYING);
+          return;
+        }
+      }
+      
       terminal.current?.println(``);
       terminal.current?.println(
         `Would you like to play or spectate this game?`,
@@ -195,7 +209,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
         await advanceStateFromContractSet(terminal);
       }
     },
-    []
+    [configHash, contractAddress]
   );
 
   const advanceStateFromSpectating = useCallback(
@@ -474,14 +488,6 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
 
       try {
         if (!contractAddress) throw new Error('no eth connection');
-
-        const diamond = await ethConnection.loadContract<DarkForest>(
-          contractAddress,
-          loadDiamondContract
-        );
-
-        const configHash = (await diamond.getArenaConstants()).CONFIG_HASH;
-        console.log('loaded config hash', configHash);
 
         newGameManager = await GameManager.create({
           connection: ethConnection,

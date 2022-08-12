@@ -26,12 +26,13 @@ export const ALL_AUTO_GAS_SETTINGS = [
   AutoGasSetting.Fast,
 ];
 
+
 function onlyInProduction(): string {
-  return process.env.NODE_ENV === 'production' ? 'true' : 'false';
+  return JSON.stringify(process.env.NODE_ENV === 'production');
 }
 
 function onlyInDevelopment(): string {
-  return process.env.NODE_ENV !== 'production' ? 'true' : 'false';
+  return JSON.stringify(process.env.NODE_ENV !== 'production');
 }
 
 const defaultSettings: Record<Setting, string> = {
@@ -43,8 +44,8 @@ const defaultSettings: Record<Setting, string> = {
   [Setting.HasAcceptedPluginRisk]: onlyInDevelopment(),
   [Setting.GasFeeGwei]: AutoGasSetting.Average,
   [Setting.TerminalVisible]: 'true',
-  // [Setting.TutorialOpen]: onlyInProduction(),
-  [Setting.TutorialOpen]: 'false',
+  [Setting.ShowTutorial]: 'false',
+  [Setting.ShowSpectatorInfo]: 'true',
   [Setting.FoundPirates]: 'false',
   [Setting.TutorialCompleted]: 'false',
   [Setting.FoundSilver]: 'false',

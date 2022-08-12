@@ -9,7 +9,6 @@ export const enum TutorialManagerEvent {
 }
 
 export const enum TutorialState {
-  Spectator,
   None,
   Security,
   SpawnPlanet,
@@ -99,7 +98,7 @@ class TutorialManager extends EventEmitter {
       contractAddress: this.uiManager.getContractAddress(),
       account: this.uiManager.getAccount(),
     };
-    setBooleanSetting(config, Setting.TutorialOpen, true);
+    setBooleanSetting(config, Setting.ShowTutorial, true);
     this.setTutorialState(TutorialState.None);
   }
 
