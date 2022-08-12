@@ -61,7 +61,7 @@ function OnboardMoney({ advance }: { advance: () => void }) {
         <a onClick={() => window.open('https://github.com/austintgriffith/burner-wallet')}>
           burner wallet
         </a>{' '}
-        for you and dripped 15c to it, courtesy of Dark Forest Team and xDAI.
+        for you and dripped 15c to it, courtesy of Dark Forest Team and ALT.
       </p>
       <p className='indent'>
         Your burner wallet address is: <br />
