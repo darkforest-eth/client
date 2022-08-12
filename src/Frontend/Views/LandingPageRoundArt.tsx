@@ -7,7 +7,7 @@ export function LandingPageRoundArt() {
   return (
     <Container>
       <ImgContainer>
-        <LandingPageRoundArtImg src={'/public/round_art/round5.jpg'} />
+        <LandingPageRoundArtImg src={'/public/round_art/alt-round1.jpg'} />
         <Smaller>
           <Text>Art by</Text> <TwitterLink twitter='JannehMoe' />{' '}
         </Smaller>

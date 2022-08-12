@@ -60,7 +60,8 @@ export default function LandingPage() {
   return (
     <>
       <PrettyOverlayGradient />
-      <Hiring />
+      <HiringAltLayer />
+      <HiringDarkForest />
 
       <Page>
         <OnlyMobile>
@@ -127,7 +128,7 @@ export default function LandingPage() {
             <LandingPageRoundArt />
 
             <p>
-              <White>AltLayer: Dark Forest Community Round 1</White><br/>
+              <White>Dark Forest on AltLayer: Community Round 1</White><br/>
               <Text>Date:</Text> <White>Aug 26th 19:00 - Aug 28th 19:00 (UTC +8), 2022</White>
             </p>
 
@@ -146,6 +147,7 @@ export default function LandingPage() {
             </ButtonWrapper>
           </Header>
           <EmSpacer height={3} />
+          {/*
           Ways to get Involved
           <EmSpacer height={1} />
           <Involved>
@@ -180,6 +182,7 @@ export default function LandingPage() {
               }}
             ></InvolvedItem>
           </Involved>
+          */}
           {/*
           <EmSpacer height={3} />
           <HallOfFame style={{ color: dfstyles.colors.text }}>
@@ -437,15 +440,44 @@ export const LinkContainer = styled.div`
   }
 `;
 
-function Hiring() {
+function HiringAltLayer() {
   return (
     <HideOnMobile>
-      <Modal contain={['top', 'left', 'right']} initialX={30} initialY={50}>
+      <Modal contain={['top', 'left', 'right']} initialX={30} initialY={30}>
         <Title slot='title'>AltLayer is Hiring!</Title>
         <div style={{ maxWidth: '320px', textAlign: 'justify' }}>
           We are looking for experienced Rust and Solidity developers to join our team! If you
           are interested in building out a multi-chain, elastic scaling layer-2 solution,{' '}
           <Link to='https://careers.altlayer.io/' openInThisTab={false}>learn more about these roles</Link>.
+        </div>
+      </Modal>
+    </HideOnMobile>
+  );
+}
+
+function HiringDarkForest() {
+  return (
+    <HideOnMobile>
+      <Modal contain={['top', 'left', 'right']} initialX={30} initialY={220}>
+        <Title slot='title'>Dark Forest is Hiring!</Title>
+        <div style={{ maxWidth: '320px', textAlign: 'justify' }}>
+          We are looking for experienced full stack and solidity developers to join our team! If you
+          like what you see,{' '}
+          <Link to='https://docs.google.com/forms/d/e/1FAIpQLSdaWvjxX4TrDDLidPXtgk6UW3rC082rpvi3AIPkCPxAahg_rg/viewform?usp=sf_link'>
+            consider applying
+          </Link>
+          . If you know someone who you think would be a great fit for our team,{' '}
+          <Link to='https://docs.google.com/forms/d/e/1FAIpQLScku_bQDbkPqpHrwBzOBfQ4SV6Nw6Tgxi6zWQL8Bb0olyBE3w/viewform?usp=sf_link'>
+            please refer them here
+          </Link>
+          .
+          <br />
+          <br />
+          Learn more about the role{' '}
+          <Link to='https://ivanchub.notion.site/Dark-Forest-is-Hiring-ad1f0cbe816640fb9b4c663dacaaca04'>
+            here
+          </Link>
+          .
         </div>
       </Modal>
     </HideOnMobile>
