@@ -44,6 +44,7 @@ export function LobbyConfirmPage({
 }) {
   const blockscoutURL = `${BLOCK_EXPLORER_URL}/${lobbyTx}`;
   const url = `${window.location.origin}/play/${arenaCreationManager.getArenaAddress()}`;
+  const configHash = arenaCreationManager.getArenaConfigHash();
   const twitters = useTwitters();
   const handleEnterUniverse = () => {
     if (config.ADMIN_PLANETS.displayValue && config.ADMIN_PLANETS.displayValue.length > 0) {
@@ -100,7 +101,7 @@ export function LobbyConfirmPage({
   }
   return (
     <Container>
-      <Sidebar previousPath={!created ? root : undefined} title={!created ? '← Choose Map': ''}>
+      <Sidebar previousPath={!created ? root : undefined} title={!created ? 'Choose Map' : ''}>
         <span>Confirm your map configuration before creating your DF Arena Universe.</span>
         <Spacer height={24} />
         <PlanetListPane
@@ -180,13 +181,6 @@ export function LobbyConfirmPage({
               </Button>
             </Row>
             <Row>
-              <div>
-                <Link to={blockscoutURL} style={{ textDecoration: 'none' }}>
-                  <MythicLabelText text='Your universe has been created!'></MythicLabelText>
-                </Link>
-              </div>
-            </Row>
-            <Row>
               <CopyableInput
                 label='Share with your friends'
                 displayValue={url}
@@ -196,6 +190,16 @@ export function LobbyConfirmPage({
                 onCopyError={onError}
               />
             </Row>
+            {configHash && (
+              <Row>
+                <CopyableInput
+                  label="Your map's configuration hash"
+                  displayValue={configHash}
+                  copyText={configHash}
+                  onCopyError={onError}
+                />
+              </Row>
+            )}
           </>
         )}
         <Spacer height={16} />
