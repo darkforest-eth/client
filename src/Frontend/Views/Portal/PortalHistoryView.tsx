@@ -58,43 +58,49 @@ export const PortalHistoryView: React.FC<{}> = ({}) => {
       {error ? (
         <span>Unable to load Grand Prix round history.</span>
       ) : (
-        <TimelineContainer>
-          <thead>
-            <tr>
-              <TimelineHeader>Started</TimelineHeader>
-              <TimelineHeader>Name</TimelineHeader>
-              <TimelineHeader>Winner</TimelineHeader>
-            </tr>
-          </thead>
-          <tbody>
-            {rounds &&
-              rounds
-                .filter((round: any) => round.startTime < Date.now())
-                .map((historyItem: RoundHistoryItem) => (
-                  <TimelineRow
-                    key={historyItem.configHash}
-                    onClick={() => {
-                      history.push(`/portal/map/${historyItem.configHash}`);
-                    }}
-                  >
-                    <TimelineItem>{formatStartTime(historyItem.startTime / 1000)}</TimelineItem>
-                    <TimelineItem>{historyItem.name}</TimelineItem>
-                    <TimelineItem>
-                      {historyItem.winner !== undefined && historyItem.winner !== '' ? (
-                        <Link to={`https://twitter.com/${addressToTwitter(historyItem.winner)}`}>
-                          {addressToTwitter(historyItem.winner)}
-                        </Link>
-                      ) : (
-                        'None'
-                      )}
-                    </TimelineItem>
-                    <TimelineItem>
-                      <HoverIcon />
-                    </TimelineItem>
-                  </TimelineRow>
-                ))}
-          </tbody>
-        </TimelineContainer>
+        <>
+          {rounds && rounds.length > 0 ? (
+            <TimelineContainer>
+              <thead>
+                <tr>
+                  <TimelineHeader>Started</TimelineHeader>
+                  <TimelineHeader>Name</TimelineHeader>
+                  <TimelineHeader>Winner</TimelineHeader>
+                </tr>
+              </thead>
+              <tbody>
+                {' '}
+                {rounds
+                  .filter((round: any) => round.startTime < Date.now())
+                  .map((historyItem: RoundHistoryItem) => (
+                    <TimelineRow
+                      key={historyItem.configHash}
+                      onClick={() => {
+                        history.push(`/portal/map/${historyItem.configHash}`);
+                      }}
+                    >
+                      <TimelineItem>{formatStartTime(historyItem.startTime / 1000)}</TimelineItem>
+                      <TimelineItem>{historyItem.name}</TimelineItem>
+                      <TimelineItem>
+                        {historyItem.winner !== undefined && historyItem.winner !== '' ? (
+                          <Link to={`https://twitter.com/${addressToTwitter(historyItem.winner)}`}>
+                            {addressToTwitter(historyItem.winner)}
+                          </Link>
+                        ) : (
+                          'None'
+                        )}
+                      </TimelineItem>
+                      <TimelineItem>
+                        <HoverIcon />
+                      </TimelineItem>
+                    </TimelineRow>
+                  ))}
+              </tbody>
+            </TimelineContainer>
+          ) : (
+            <span>No Previous Rounds</span>
+          )}
+        </>
       )}
     </Container>
   );

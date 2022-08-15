@@ -72,7 +72,6 @@ export const PortalHomeView: React.FC<{}> = () => {
           style={{ gridColumn: '5 / 7', gridRow: '2/3' }}
           link='/portal/history'
           imageUrl='/public/img/screenshots/pickles.png'
-          disabled
         />
         <OfficialGameBanner
           title='Find a match'
