@@ -32,7 +32,8 @@ const altLayerLinks = {
   twitter: 'https://alt.ws/twitter',
   blog: 'https://blog.altlayer.io/',
   discord: 'https://discord.gg/altlayer',
-  github: 'https://github.com/alt-research'
+  github: 'https://github.com/alt-research',
+  privacy: 'https://docs.altlayer.io/privacy-policy.html'
 }
 
 const defaultAddress = address(CONTRACT_ADDRESS);
@@ -90,6 +91,8 @@ export default function LandingPage() {
                   <span className={'icon-github'}></span>
                 </a>
                 <Link to={altLayerLinks.blog}>blog</Link>
+                <Spacer width={4} />
+                <Link to={altLayerLinks.privacy}>privacy</Link>
               </LinkContainerRight>
             </LinkContainer>
             <LinkContainer>
@@ -324,11 +327,12 @@ export default function LandingPage() {
           */}
         </MainContentContainer>
 
-        <Spacer height={128} />
         {/* // Disable showing leaderboard as it doesn't show
+        <Spacer height={128} />
         <LeadboardDisplay />
         <Spacer height={256} />
         */}
+
       </Page>
     </>
   );
