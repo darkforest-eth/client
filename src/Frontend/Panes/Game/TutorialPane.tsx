@@ -1,6 +1,5 @@
 import { Setting } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import TutorialManager, {
   TutorialManagerEvent,
   TutorialState,
@@ -11,17 +10,11 @@ import { Icon, IconType } from '../../Components/Icons';
 import { Bronze, Gold, Green, Red, Silver, White } from '../../Components/Text';
 import { TextPreview } from '../../Components/TextPreview';
 import { useUIManager } from '../../Utils/AppHooks';
-import { bronzeTime, goldTime, silverTime } from '../../Utils/constants';
 import { useBooleanSetting } from '../../Utils/SettingsHooks';
-import { formatDuration } from '../../Utils/TimeUtils';
 import { StyledTutorialPane } from './StyledTutorialPane';
 
 function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }) {
   const uiManager = useUIManager();
-  const isCompetitive = uiManager.isCompetitive();
-  const victoryThreshold = uiManager.contractConstants.CLAIM_VICTORY_ENERGY_PERCENT;
-  const numForVictory = uiManager.contractConstants.TARGETS_REQUIRED_FOR_VICTORY;
-
   const tutorialManager = TutorialManager.getInstance(uiManager);
 
   const [sKey, setSKey] = useState<string | undefined>(undefined);
@@ -39,60 +32,8 @@ function TutorialPaneContent({ tutorialState }: { tutorialState: TutorialState }
     const coords = uiManager.getHomeCoords();
     setHome(coords ? `(${coords.x}, ${coords.y})` : '');
   }, [uiManager]);
-  if (tutorialState === TutorialState.None) {
-    const isSinglePlayer = uiManager.getSpawnPlanets().length == 1 
-    return (
-      <div className='tutzoom'>
-        Welcome to Dark Forest Arena!
-        <br />
-        <br />
-        <div>
-          {isSinglePlayer? (
-            <>
-              Race against the clock to capture the Target Planet (it has a big 🎯 floating above
-              it) and{' '}
-              <Green>
-                claim victory when it contains at least <Gold>{victoryThreshold}%</Gold> energy!
-              </Green>
-            </>
-          ) : (
-            <>
-              Battle your opponent to capture the Target Planet (it has a big 🎯 floating above it)
-              and{' '}
-              <Green>
-                claim victory when it contains at least <Gold>{victoryThreshold}%</Gold> energy!
-              </Green>
-              .
-            </>
-          )}
-          You need {numForVictory} to win.
-        </div>
-        {isCompetitive && isSinglePlayer && (
-          <div>
-            <p>End the race in a certain time to earn Bronze, Silver, and Gold ranks.</p>
-            <p>
-              Gold: <Gold>{formatDuration(goldTime * 1000)}</Gold>
-            </p>
-            <p>
-              Silver: <Silver>{formatDuration(silverTime * 1000)}</Silver>
-            </p>
-            <p>
-              Bronze: <Bronze>{formatDuration(bronzeTime * 1000)}</Bronze>
-            </p>
-          </div>
-        )}
-        <div>
-          ⏲️ starts when you press ready!
-          {isCompetitive && 'The player with the fastest time after 48hrs will win XDAI and a 🏆!'}
-        </div>
-        <div style={{ gap: '5px' }}>
-          <Btn className='btn' onClick={() => tutorialManager.acceptInput(TutorialState.None)}>
-            Next
-          </Btn>
-        </div>
-      </div>
-    );
-  } else if (tutorialState === TutorialState.Security) {
+
+  if (tutorialState === TutorialState.Security) {
     return (
       <div className='tutzoom'>
         <div>

@@ -16,7 +16,7 @@ import { DiagnosticsPane } from '../Panes/Game/DiagnosticsPane';
 import { ExplorePane } from '../Panes/Game/ExplorePane';
 import { HelpPane } from '../Panes/Game/HelpPane';
 import { HoverPlanetPane } from '../Panes/Game/HoverPlanetPane';
-import { WaitingRoomPane} from '../Panes/Game/WaitingRoomPane'
+import { WaitingRoomPane } from '../Panes/Game/WaitingRoomPane';
 import { PlanetContextPane } from '../Panes/Game/PlanetContextPane';
 import { PlanetDexPane } from '../Panes/Game/PlanetDexPane';
 import { PlayerArtifactsPane } from '../Panes/Game/PlayerArtifactsPane';
@@ -37,6 +37,7 @@ import { NotificationsPane } from './Game/Notifications';
 import { SidebarPane } from '../Panes/Game/SidebarPane';
 import { TopBar } from './Game/TopBar';
 import { tutorialConfig } from '../Utils/constants';
+import { ArenaBriefingPane } from '../Panes/Game/ArenaBriefingPane';
 
 export function GameWindowLayout({
   terminalVisible,
@@ -91,12 +92,15 @@ export function GameWindowLayout({
     setModalsContainer(node);
   }, []);
 
-  const [waitingRoomVisible, setWaitingRoomVisible] = useState(!uiManager.gameStarted && uiManager.contractConstants.MANUAL_SPAWN);
+  const [waitingRoomVisible, setWaitingRoomVisible] = useState(
+    !uiManager.gameStarted && uiManager.contractConstants.MANUAL_SPAWN
+  );
 
   const isTutorialWorld = uiManager.contractConstants.CONFIG_HASH === tutorialConfig;
   const [showTutorialSetting] = useBooleanSetting(uiManager, Setting.ShowTutorial);
   const showTutorial = isTutorialWorld || showTutorialSetting;
   const [showSpectatorInfo] = useBooleanSetting(uiManager, Setting.ShowSpectatorInfo);
+  const [showArenaBriefing] = useBooleanSetting(uiManager, Setting.ShowArenaBriefing);
   const selected = useSelectedPlanet(uiManager).value;
   const [selectedPlanetVisible, setSelectedPlanetVisible] = useState<boolean>(!!selected);
 
@@ -172,7 +176,7 @@ export function GameWindowLayout({
           visible={diagnosticsVisible}
           onClose={() => setDiagnosticsVisible(false)}
         />
-        <SurveyPane visible={uiManager.getGameover()} onClose={()=> {}} />
+        <SurveyPane visible={uiManager.getGameover()} onClose={() => {}} />
 
         {modalsContainer && (
           <PluginLibraryPane
@@ -184,10 +188,7 @@ export function GameWindowLayout({
         )}
       </div>
 
-      <WaitingRoomPane
-        visible = {waitingRoomVisible}
-        onClose = {() => setWaitingRoomVisible(false)}
-      />
+      <WaitingRoomPane visible={waitingRoomVisible} onClose={() => setWaitingRoomVisible(false)} />
 
       <MainWindow>
         <CanvasContainer>
@@ -215,6 +216,7 @@ export function GameWindowLayout({
 
           {showTutorial && <TutorialPane />}
           {showSpectatorInfo && <SpectatorInfoPane />}
+          {showArenaBriefing && <ArenaBriefingPane />}
         </CanvasContainer>
       </MainWindow>
     </WindowWrapper>
