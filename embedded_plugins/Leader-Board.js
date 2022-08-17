@@ -14,6 +14,10 @@ const reverseOrdering = false;
 
 // ---------------------------------------------------------------
 
+const AL_SERVER_URL = window.location.href.includes('localhost')
+  ? 'http://localhost:3011'
+  : 'https://df-server.acadia2.altlayer.io'
+
 import { getPlayerColor } from "https://cdn.skypack.dev/@darkforest_eth/procedural";
 
 let roundEndTime = df.getTokenMintEndTimeSeconds()*1000;
@@ -50,7 +54,7 @@ function formatNumber(num, decimalCount = 1) {
 }
 
 async function downloadLeaderboard() {
-  return fetch('https://api.zkga.me/leaderboard')
+  return fetch(`${AL_SERVER_URL}/leaderboard`)
     .then(response => response.json())
 }
 

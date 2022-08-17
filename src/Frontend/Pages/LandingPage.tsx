@@ -131,11 +131,16 @@ export default function LandingPage() {
             <LandingPageRoundArt />
 
             <p>
+              <White>Dark Forest on AltLayer: Test Round</White> (score not counted)<br/>
+              <Text>Date:</Text> <White>Aug 26th 12:00 - Sep 5th 12:00 (GMT), 2022</White>
+            </p>
+            <Spacer height={32} />
+            <p>
               <White>Dark Forest on AltLayer: Community Round 1</White><br/>
-              <Text>Date:</Text> <White>Aug 26th 19:00 - Aug 28th 19:00 (UTC +8), 2022</White>
+              <Text>Date:</Text> <White>Sep 9th 12:00 - Sep 11th 12:00 (GMT), 2022</White>
             </p>
 
-            <Spacer height={16} />
+            <Spacer height={48} />
 
             <ButtonWrapper>
               {/*
