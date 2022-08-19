@@ -1,14 +1,92 @@
-import React from 'react';
+import { BadgeType } from '@darkforest_eth/ui';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { logOut } from '../../../Backend/Network/AccountManager';
+import { Badge, BadgeDetails, SpacedBadges } from '../../Components/Badges';
+import { Btn } from '../../Components/Btn';
 import { Gnosis, Icon, IconType, Twitter } from '../../Components/Icons';
 import { WithdrawSilverButton } from '../../Panes/Game/TooltipPanes';
 
 import dfstyles from '../../Styles/dfstyles';
 import { useEthConnection, useTwitters } from '../../Utils/AppHooks';
+import { TiledTable } from '../TiledTable';
 import { truncateAddress } from './PortalUtils';
 
+const mockBadges: BadgeType[] = [
+  BadgeType.Dfdao,
+  BadgeType.Dfdao,
+  BadgeType.Dfdao,
+  BadgeType.Dfdao,
+  BadgeType.Dfdao,
+  BadgeType.Dfdao,
+  BadgeType.Dfdao,
+  BadgeType.Dfdao,
+  BadgeType.Dfdao,
+];
+
+function AccountModal({ setOpen }: { setOpen: (open: boolean) => void }) {
+  const connection = useEthConnection();
+  const address = connection.getAddress();
+  const twitters = useTwitters();
+  if (!address) return <></>;
+  const twitter = twitters[address];
+  const truncatedAddress = truncateAddress(address);
+
+  const badgeElements = useMemo(
+    () => mockBadges.map((badge, idx) => <BadgeDetails type={badge} key={`badge-${idx}`} />),
+    [mockBadges]
+  );
+  return (
+    <ModalContainer onClick={() => setOpen(false)}>
+      <AccountDetails
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <AccountContent>
+          <button
+            style={{ position: 'absolute', top: '12px', right: '12px' }}
+            onClick={() => setOpen(false)}
+          >
+            <Icon type={IconType.X} />
+          </button>
+          <div style={{ fontSize: '2em' }}>{twitter || truncatedAddress}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Btn
+              onClick={() => {
+                window.open(`https://blockscout.com/xdai/optimism/address/${address}`, '_blank');
+              }}
+            >
+              <Gnosis width='24px' height='24px' />
+              Account Details
+            </Btn>
+            {twitter && (
+              <Btn
+                onClick={() => {
+                  window.open(`https://twitter.com/${twitter}`, '_blank');
+                }}
+              >
+                <Twitter width='24px' height='24px' />
+                {twitter ? 'Twitter' : 'Connect'}
+              </Btn>
+            )}
+          </div>
+          {/* <StackedBadges items={mockBadges} /> */}
+          {badgeElements && badgeElements.length > 0 ? (
+            <TiledTable items={badgeElements} paginated={true} title='Your Badges' />
+          ) : (
+            'You have no badges'
+          )}
+        </AccountContent>
+        <Footer>
+          <Btn onClick={logOut}>Logout</Btn>
+        </Footer>
+      </AccountDetails>
+    </ModalContainer>
+  );
+}
 export function Account() {
+  const [open, setOpen] = useState<boolean>(false);
   const connection = useEthConnection();
   const address = connection.getAddress();
   const twitters = useTwitters();
@@ -17,36 +95,49 @@ export function Account() {
   const truncatedAddress = truncateAddress(address);
 
   return (
-    <PaneContainer>
-      <IconContainer>
-        {' '}
-        <button onClick={logOut}>Logout</button>
-      </IconContainer>
-      <a
-        style={{ display: 'flex', alignItems: 'center' }}
-        target='_blank'
-        href={`https://blockscout.com/xdai/optimism/address/${address}`}
-      >
-        <GnoButton>
-          <Gnosis width='24px' height='24px' />
-        </GnoButton>
-      </a>
-      {twitter && (
-        <a
-          style={{ display: 'flex', alignItems: 'center' }}
-          target='_blank'
-          href={`https://twitter.com/${twitter}`}
-        >
-          <Twitter width='24px' height='24px' />
-        </a>
-      )}
-
-      <NamesContainer>{twitter || truncatedAddress}</NamesContainer>
-    </PaneContainer>
+    <>
+      {open && <AccountModal setOpen={setOpen} />}
+      <PaneContainer onClick={() => setOpen(true)}>{twitter || truncatedAddress}</PaneContainer>
+    </>
   );
 }
 
-const PaneContainer = styled.div`
+const ModalContainer = styled.div`
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+`;
+
+const AccountContent = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+`;
+
+const AccountDetails = styled.div`
+  width: 600px;
+  height: 60%;
+  background: #38383b;
+  border: 1px solid #676767;
+  color: #dddde9;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  justify-content: space-between;
+  border-radius: 5px;
+  position: relative;
+`;
+
+const PaneContainer = styled.button`
   padding: 8px;
   position: relative;
   display: flex;
@@ -57,21 +148,9 @@ const PaneContainer = styled.div`
   justify-self: flex-end;
 `;
 
-const IconContainer = styled.div`
-  padding: 2px;
+const Footer = styled.div`
+  width: 100%;
+  border-top: solid 1px #676767;
   display: flex;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 2px;
-`;
-
-const NamesContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-const GnoButton = styled.button`
-  // background-color: ${dfstyles.colors.text};
-  border-radius: 30%;
-  border-color: ${dfstyles.colors.border};
+  padding-top: 12px;
 `;
