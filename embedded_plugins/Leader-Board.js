@@ -16,7 +16,7 @@ const reverseOrdering = false;
 
 const AL_SERVER_URL = window.location.href.includes('localhost')
   ? 'http://localhost:3011'
-  : 'https://darkforest-leaderboard.altresearch.xyz'
+  : 'http://darkforest-leaderboard.altresearch.xyz'
 
 import { getPlayerColor } from "https://cdn.skypack.dev/@darkforest_eth/procedural";
 
