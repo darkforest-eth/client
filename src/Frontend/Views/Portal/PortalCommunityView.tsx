@@ -1,6 +1,7 @@
+import { MapInfo } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { loadRecentMaps, MapInfo } from '../../../Backend/Network/GraphApi/MapsApi';
+import { loadRecentMaps } from '../../../Backend/Network/GraphApi/MapsApi';
 import { MapGridDetail } from './Components/MapGridDetail';
 
 export const PortalCommunityView: React.FC<{}> = () => {

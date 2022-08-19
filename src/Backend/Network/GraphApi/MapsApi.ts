@@ -1,13 +1,5 @@
-import { EthAddress } from '@darkforest_eth/types';
+import { EthAddress, MapInfo } from '@darkforest_eth/types';
 import { getGraphQLData } from '../GraphApi';
-
-export interface MapInfo {
-  creator: EthAddress;
-  configHash: string;
-  lobbyAddress?: EthAddress;
-  startTime?: number;
-  winners?: EthAddress[];
-}
 
 export async function loadRecentMaps(
   nMaps?: number,

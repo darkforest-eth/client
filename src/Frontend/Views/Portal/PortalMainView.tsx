@@ -22,6 +22,7 @@ import { PortalCommunityView } from './PortalCommunityView';
 import { MatchmakingView } from './MatchmakingView';
 import { PortalHomeView } from './PortalHomeView';
 import { truncateAddress, truncateString } from './PortalUtils';
+import { loadSeasonLeaderboard, loadWallbreakers } from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
 
 export function PortalMainView() {
   const [input, setInput] = useState<string>('');
@@ -100,7 +101,7 @@ export function PortalMainView() {
       <MainContainer>
         <TopBar>
           <TitleContainer>
-            <Title onClick={() => history.push('/portal/home')}>Home</Title>
+            <Title onClick={() => history.push('/portal/home')}>Home</Title>            
           </TitleContainer>
 
           <TitleContainer>
@@ -127,7 +128,6 @@ export function PortalMainView() {
           <Route path={'/portal/history'} component={PortalHistoryView} />
           <Route path={'/portal/community'} component={PortalCommunityView} />
           <Route path={'/portal/matchmaking'} component={MatchmakingView} />
-
           <Route
             path='/portal/*'
             component={() => (

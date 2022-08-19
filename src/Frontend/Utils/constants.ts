@@ -113,6 +113,30 @@ planets(first: ${MAX_ADMIN_PLANETS}) {
   }
 }`;
 
+const TEMP_START_TIME = 1597862644;
+const TEMP_END_TIME = 1724093044;
+
+export interface GrandPrixMetadata {
+  id: number;
+  configHash: string;
+  startTime: number;
+  endTime: number;
+}
+const SEASON_GRAND_PRIXS: GrandPrixMetadata[] = [
+  {
+    id: 1,
+    configHash:'0xe8c09c646e1c9228918754437a7130a30e4837b21689b51dfd67a8ecf55ebd6e',
+    startTime: TEMP_START_TIME,
+    endTime: TEMP_END_TIME,
+  },
+  {
+    id: 1,
+    configHash:'0x88f6a4430a1723523d420e1320599408c4627e573debe7dd96897c9736d739d0',
+    startTime: TEMP_START_TIME,
+    endTime: TEMP_END_TIME,
+  }
+];
+
 export {
   MIN_CHUNK_SIZE,
   MAX_CHUNK_SIZE,
@@ -126,6 +150,7 @@ export {
   silverTime,
   CONFIG_CONSTANTS,
   goldTime,
+  SEASON_GRAND_PRIXS
 };
 
 export const enum DFZIndex {

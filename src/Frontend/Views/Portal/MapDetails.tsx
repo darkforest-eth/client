@@ -1,8 +1,7 @@
-import { Leaderboard, LiveMatch } from '@darkforest_eth/types';
+import { GraphConfigPlayer, Leaderboard, LiveMatch } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
-import { loadArenaLeaderboard } from '../../../Backend/Network/GraphApi/ArenaLeaderboardApi';
+import { loadArenaLeaderboard } from '../../../Backend/Network/GraphApi/GrandPrixApi';
 import {
-  GraphConfigPlayer,
   loadEloLeaderboard,
 } from '../../../Backend/Network/GraphApi/EloLeaderboardApi';
 import { loadLiveMatches } from '../../../Backend/Network/GraphApi/SpyApi';

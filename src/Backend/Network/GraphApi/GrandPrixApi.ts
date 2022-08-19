@@ -1,5 +1,5 @@
 import { address } from '@darkforest_eth/serde';
-import { Leaderboard, LeaderboardEntry } from '@darkforest_eth/types';
+import { GraphArena, Leaderboard, LeaderboardEntry } from '@darkforest_eth/types';
 import {
   roundEndTimestamp,
   roundStartTimestamp,
@@ -8,47 +8,46 @@ import {
 import { getGraphQLData } from '../GraphApi';
 import { getAllTwitters } from '../UtilityServerAPI';
 
+/**
+ * Purpose: 
+ * Fetch necessary data for Grand Prixs
+ * 
+ */
+
+
 export async function loadArenaLeaderboard(
   config: string = competitiveConfig,
   isCompetitive: boolean
 ): Promise<Leaderboard> {
   const QUERY = `
 query {
-  arenas(first:1000, where: {configHash: "${config}"}) {
+  arenas(
+    first:1000, 
+    where: {configHash: "${config}", duration_not: null}
+    orderBy: duration
+    orderDirection: asc
+  )
+  {
     id
     startTime
     winners(first :1) {
       address
       moves
-   }
+   }    
     gameOver
     endTime
     duration
   }
 }
 `;
+console.log(`query`, QUERY);
   const rawData = await getGraphQLData(QUERY, process.env.GRAPH_URL || 'localhost:8000');
-
+  console.log('arenaData', rawData);
   if (rawData.error) {
     throw new Error(rawData.error);
   }
   const ret = await convertData(rawData.data.arenas, config == competitiveConfig);
   return ret;
-}
-
-interface winners {
-  address: string;
-  moves: number;
-}
-export interface GraphArena {
-  winners: winners[];
-  creator: string;
-  duration: number | null;
-  endTime: number | null;
-  gameOver: boolean;
-  id: string;
-  startTime: number;
-  moves: number;
 }
 
 async function convertData(arenas: GraphArena[], isCompetitive: boolean): Promise<Leaderboard> {
@@ -63,9 +62,9 @@ async function convertData(arenas: GraphArena[], isCompetitive: boolean): Promis
       !arena.gameOver ||
       !arena.endTime ||
       !arena.duration ||
-      arena.startTime == 0 ||
-      arena.winners.length == 0 ||
-      !arena.winners[0].address ||
+      // arena.startTime == 0 ||
+      // arena.winners.length == 0 ||
+      // !arena.winners[0].address ||
       (isCompetitive && (roundEnd <= arena.endTime || roundStart >= arena.startTime))
     )
       continue;

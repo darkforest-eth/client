@@ -5,6 +5,7 @@ import {
   Artifact,
   ArtifactId,
   EthAddress,
+  GraphConfigPlayer,
   Leaderboard,
   LiveMatch,
   LocationId,
@@ -17,9 +18,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { loadConfigFromHash } from '../../Backend/Network/GraphApi/ConfigApi';
 import { Account } from '../../Backend/Network/AccountManager';
-import { loadArenaLeaderboard } from '../../Backend/Network/GraphApi/ArenaLeaderboardApi';
+import { loadArenaLeaderboard } from '../../Backend/Network/GraphApi/GrandPrixApi';
 import {
-  GraphConfigPlayer,
   loadEloLeaderboard,
 } from '../../Backend/Network/GraphApi/EloLeaderboardApi';
 import { loadLeaderboard } from '../../Backend/Network/GraphApi/LeaderboardApi';

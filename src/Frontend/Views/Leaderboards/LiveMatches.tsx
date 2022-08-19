@@ -72,7 +72,7 @@ type Row = {
 };
 
 function LeaderboardTable({ rows }: { rows: Row[] }) {
-  if (rows.length == 0) return <Subber>No players finished</Subber>;
+  if (rows.length == 0) return <Subber>No live games</Subber>;
 
   const [durations, setDurations] = useState<number[]>([]);
   const [startTimes, setStartTimes] = useState<number[]>([]);
