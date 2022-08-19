@@ -64,5 +64,6 @@ export function getEthConnection(): Promise<EthConnection> {
   console.log(`faucet url: ${process.env.FAUCET_URL}`);
 
   console.log(`dfdao url: ${process.env.DFDAO_WEBSERVER_URL} `);
+  console.log(`graph url: ${process.env.GRAPH_URL}`);
   return createEthConnection(url);
 }

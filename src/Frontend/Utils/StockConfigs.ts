@@ -209,7 +209,7 @@ const onePlayerRace: LobbyInitializers = {
   CAPTURE_ZONES_PER_5000_WORLD_RADIUS: 3,
   MANUAL_SPAWN: true,
   TARGET_PLANETS: true,
-  CLAIM_VICTORY_ENERGY_PERCENT: 100,
+  CLAIM_VICTORY_ENERGY_PERCENT: 20,
   MODIFIERS: [100, 100, 100, 100, 75, 100, 100, 100],
   SPACESHIPS: [true, true, false, true, false],
   RANDOM_ARTIFACTS: false,
@@ -222,8 +222,8 @@ const onePlayerRace: LobbyInitializers = {
       y: -2321,
       level: 3,
       planetType: 0,
-      isTargetPlanet: false,
       isSpawnPlanet: true,
+      isTargetPlanet: true,
       blockedPlanetLocs: [],
     },
     {
@@ -1582,7 +1582,7 @@ export interface StockConfig {
 }
 export const stockConfig: StockConfig = {
   vanilla: vanilla,
-  onePlayerRace: grandPrixWeek4,
+  onePlayerRace: onePlayerRace,
   fourPlayerBattle: fourPlayerBattle,
   sprint: EloMap,
   competitive: EloMap,

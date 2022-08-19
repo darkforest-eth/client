@@ -121,6 +121,7 @@ module.exports = {
       DF_TWITTER_URL: null,
       FAUCET_URL: null,
       DFDAO_WEBSERVER_URL: null,
+      GRAPH_URL: 'http://localhost:8000/subgraphs/name/df',
     }),
     new HtmlWebpackPlugin({
       template: './index.html',

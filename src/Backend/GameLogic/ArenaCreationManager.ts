@@ -20,6 +20,7 @@ import {
   UnconfirmedCreateArenaPlanet,
   UnconfirmedCreateLobby,
   UnconfirmedReveal,
+  UnconfirmedStartLobby,
   WorldCoords,
   WorldLocation,
 } from '@darkforest_eth/types';
@@ -98,13 +99,13 @@ export class ArenaCreationManager {
         },
       ]);
       console.log('creating lobby at', this.contract.getContractAddress());
-      const txIntent: UnconfirmedCreateLobby = {
+      const createTxIntent: UnconfirmedCreateLobby = {
         methodName: 'createLobby',
         contract: this.contract.contract,
         args: Promise.resolve([initAddress, initFunctionCall]),
       };
 
-      const tx = await this.contract.submitTransaction(txIntent, {
+      const tx = await this.contract.submitTransaction(createTxIntent, {
         // The createLobby function costs somewhere around 12mil gas
         gasLimit: OPTIMISM_GAS_LIMIT,
       });
@@ -116,8 +117,18 @@ export class ArenaCreationManager {
 
       const diamond = await this.connection.loadContract<DarkForest>(lobby, loadDiamondContract);
 
-      const startTx = await diamond.start({ gasLimit: OPTIMISM_GAS_LIMIT });
-      const startRct = await startTx.wait();
+      const startTxIntent: UnconfirmedStartLobby = {
+        methodName: 'start',
+        contract: diamond, // Calling this on new diamond
+        args: Promise.resolve([]),
+      };
+
+      const startTx = await this.contract.submitTransaction(startTxIntent, {
+        // The createLobby function costs somewhere around 12mil gas
+        gasLimit: OPTIMISM_GAS_LIMIT,
+      });
+
+      const startRct = await startTx.confirmedPromise;
       console.log(`initialized arena with ${startRct.gasUsed} gas`);
       this.created = true;
       this.arenaAddress = lobby;
@@ -214,8 +225,9 @@ export class ArenaCreationManager {
       gasLimit: '15000000',
     });
 
+    const createRct = await tx.confirmedPromise;
+    console.log(`created ${planets?.length} planets with ${createRct.gasUsed} gas`);
     await tx.confirmedPromise;
-
     planetsToCreate.map((p) =>
       this.createdPlanets.push({ ...p, createTx: tx?.hash, revealTx: tx?.hash })
     );
@@ -224,7 +236,7 @@ export class ArenaCreationManager {
   public async bulkCreateInitPlanets({
     config,
     planets,
-    CHUNK_SIZE = 10,
+    CHUNK_SIZE = 24,
   }: {
     config: LobbyInitializers;
     planets?: InitPlanet[];
@@ -238,15 +250,13 @@ export class ArenaCreationManager {
         contract: this.lobbyContract(),
         args: args,
       };
-
       const tx = await this.contract.submitTransaction(txIntent, {
-        gasLimit: OPTIMISM_GAS_LIMIT,
+        gasLimit: OPTIMISM_GAS_LIMIT
       });
-
       return tx.confirmedPromise;
     });
 
-    await Promise.all(createPlanetTxs);
+    const res = await Promise.all(createPlanetTxs);
     console.log(
       `successfully created planets`,
       createPlanetTxs.map((i) => i)

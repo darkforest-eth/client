@@ -3,8 +3,7 @@ import { BigNumber } from 'ethers';
 import _ from 'lodash';
 import { LobbyPlanet } from '../../../Frontend/Panes/Lobby/LobbiesUtils';
 import { LobbyInitializers } from '../../../Frontend/Panes/Lobby/Reducer';
-import { apiUrl, CONFIG_CONSTANTS } from '../../../Frontend/Utils/constants';
-import { PlanetTypeWeights } from '../../../_types/darkforest/api/ContractsAPITypes';
+import { CONFIG_CONSTANTS } from '../../../Frontend/Utils/constants';
 import { getGraphQLData } from '../GraphApi';
 
 function toNum(num: BigNumber): number {
@@ -29,11 +28,11 @@ query {
       }
 }
 `;
-  const rawData = await getGraphQLData(query, apiUrl);
+  const rawData = await getGraphQLData(query, process.env.GRAPH_URL || 'localhost:8000');
   // @ts-expect-error
   const hasPlanets = rawData.data.arenas.filter((a) => a.planets.length > 0);
   const res = convertGraphConfig(hasPlanets[0]);
-  return res;
+  if(res) return res;
 }
 
 export async function loadConfigFromAddress(address: EthAddress): Promise<{
@@ -52,7 +51,10 @@ export async function loadConfigFromAddress(address: EthAddress): Promise<{
   }
 `;
   try {
-    const rawData: GraphArena = (await getGraphQLData(query, apiUrl)).data.arena;
+    const rawData: GraphArena = (
+      await getGraphQLData(query, process.env.GRAPH_URL || 'localhost:8000')
+    ).data.arena;
+    if(!rawData) throw new Error('arena has no data');
     const configData = convertGraphConfig(rawData);
     return configData;
   } catch (e) {

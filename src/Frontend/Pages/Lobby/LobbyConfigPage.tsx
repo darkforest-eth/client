@@ -18,7 +18,7 @@ import { Toast } from '../../Components/Toast';
 
 type Status = 'waitingForCreate' | 'creating' | 'created' | 'errored' | undefined;
 
-const BULK_CREATE_CHUNK_SIZE = 5;
+const BULK_CREATE_CHUNK_SIZE = 24;
 
 export function LobbyConfigPage({
   arenaCreationManager,
@@ -41,7 +41,7 @@ export function LobbyConfigPage({
   const created = status === 'created' && arenaCreationManager.arenaCreated;
 
   // once admin tools are created, create and reveal
-  useEffect(() => {
+  useEffect(() => {   
     async function doCreateReveal() {
       await bulkCreateAndRevealPlanets();
       setStatus('created');

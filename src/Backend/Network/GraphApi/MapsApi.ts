@@ -1,5 +1,4 @@
 import { EthAddress } from '@darkforest_eth/types';
-import { apiUrl } from '../../../Frontend/Utils/constants';
 import { getGraphQLData } from '../GraphApi';
 
 export interface MapInfo {
@@ -28,5 +27,5 @@ export async function loadRecentMaps(
 		}
 	}
 	`;
-  return (await getGraphQLData(query, apiUrl)).data?.arenas;
+  return (await getGraphQLData(query, process.env.GRAPH_URL || 'localhost:8000')).data?.arenas;
 }

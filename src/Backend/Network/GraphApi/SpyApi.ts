@@ -1,5 +1,4 @@
 import { LiveMatch } from '@darkforest_eth/types';
-import { apiUrl } from '../../../Frontend/Utils/constants';
 import { getGraphQLData } from '../GraphApi';
 
 export const loadLiveMatches = async (config?: string): Promise<LiveMatch> => {
@@ -22,7 +21,7 @@ planets{spawnPlanet}
       }
     }`;
 
-  const response = await getGraphQLData(query, apiUrl);
+  const response = await getGraphQLData(query, process.env.GRAPH_URL || 'localhost:8000');
 
   if ('errors' in response) {
     throw new Error(`error when fetching data, ${JSON.stringify(response)}`);
