@@ -1,107 +1,256 @@
 import { getConfigName } from '@darkforest_eth/procedural';
+import { BadgeType, IconType } from '@darkforest_eth/ui';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import useSWR from 'swr';
-import { fetcher } from '../../../Backend/Network/UtilityServerAPI';
-import { Link } from '../../Components/CoreUI';
-import { MythicLabelText } from '../../Components/Labels/MythicLabel';
-import dfstyles from '../../Styles/dfstyles';
-import { useTwitters } from '../../Utils/AppHooks';
-import { formatStartTime } from '../../Utils/TimeUtils';
+import { Icon } from '../../Components/Icons';
+import { Sub } from '../../Components/Text';
+import { TiledTable } from '../TiledTable';
 
 export interface TimelineProps {
   configHashes: string[];
 }
 
-export interface RoundHistoryItem {
-  configHash: string;
-  name: string;
-  startTime: number;
-  winner: string;
+interface SeasonHistoryItem {
+  id: number;
+  grandPrixHistoryItems: GrandPrixHistoryItem[];
+  rank: number;
+  players: number;
 }
 
-export const PortalHistoryView: React.FC<{}> = ({}) => {
+interface GrandPrixHistoryItem {
+  configHash: string;
+  startTime: string;
+  endTime: string;
+  players: number;
+  rank: number;
+  score: number;
+  badges: BadgeType[];
+}
+
+const seasons: SeasonHistoryItem[] = [
+  {
+    id: 1,
+    rank: 5,
+    players: 1000,
+    grandPrixHistoryItems: [
+      {
+        configHash: '0xfe719a3cfccf2bcfa23f71f0af80a931eda4f4197331828d728b7505a6156930',
+        startTime: '2022-07-13T00:00:00.000Z',
+        endTime: '2022-07-13T00:00:00.000Z',
+        players: 1000,
+        rank: 5,
+        score: 10000,
+        badges: [BadgeType.Dfdao, BadgeType.Dfdao],
+      },
+      {
+        configHash: '0xfe719a3cfccf2bcfa23f71f0af80a931eda4f4197331828d728b7505a6156930',
+        startTime: '2022-07-13T00:00:00.000Z',
+        endTime: '2022-07-13T00:00:00.000Z',
+        players: 1000,
+        rank: 5,
+        score: 10000,
+        badges: [BadgeType.Dfdao, BadgeType.Dfdao],
+      },
+      {
+        configHash: '0xfe719a3cfccf2bcfa23f71f0af80a931eda4f4197331828d728b7505a6156930',
+        startTime: '2022-07-13T00:00:00.000Z',
+        endTime: '2022-07-13T00:00:00.000Z',
+        players: 1000,
+        rank: 5,
+        score: 10000,
+        badges: [BadgeType.Dfdao, BadgeType.Dfdao],
+      },
+      {
+        configHash: '0xfe719a3cfccf2bcfa23f71f0af80a931eda4f4197331828d728b7505a6156930',
+        startTime: '2022-07-13T00:00:00.000Z',
+        endTime: '2022-07-13T00:00:00.000Z',
+        players: 1000,
+        rank: 5,
+        score: 10000,
+        badges: [BadgeType.Dfdao, BadgeType.Dfdao],
+      },
+      {
+        configHash: '0xfe719a3cfccf2bcfa23f71f0af80a931eda4f4197331828d728b7505a6156930',
+        startTime: '2022-07-13T00:00:00.000Z',
+        endTime: '2022-07-13T00:00:00.000Z',
+        players: 1000,
+        rank: 5,
+        score: 10000,
+        badges: [BadgeType.Dfdao, BadgeType.Dfdao],
+      },
+      {
+        configHash: '0xfe719a3cfccf2bcfa23f71f0af80a931eda4f4197331828d728b7505a6156930',
+        startTime: '2022-07-13T00:00:00.000Z',
+        endTime: '2022-07-13T00:00:00.000Z',
+        players: 1000,
+        rank: 5,
+        score: 10000,
+        badges: [BadgeType.Dfdao, BadgeType.Dfdao],
+      },
+    ],
+  },
+  {
+    id: 1,
+    rank: 5,
+    players: 1000,
+    grandPrixHistoryItems: [
+      {
+        configHash: '0xfe719a3cfccf2bcfa23f71f0af80a931eda4f4197331828d728b7505a6156930',
+        startTime: '2022-07-13T00:00:00.000Z',
+        endTime: '2022-07-13T00:00:00.000Z',
+        players: 1000,
+        rank: 5,
+        score: 10000,
+        badges: [BadgeType.Dfdao, BadgeType.Dfdao],
+      },
+      {
+        configHash: '0xfe719a3cfccf2bcfa23f71f0af80a931eda4f4197331828d728b7505a6156930',
+        startTime: '2022-07-13T00:00:00.000Z',
+        endTime: '2022-07-13T00:00:00.000Z',
+        players: 1000,
+        rank: 5,
+        score: 10000,
+        badges: [BadgeType.Dfdao, BadgeType.Dfdao],
+      },
+      {
+        configHash: '0xfe719a3cfccf2bcfa23f71f0af80a931eda4f4197331828d728b7505a6156930',
+        startTime: '2022-07-13T00:00:00.000Z',
+        endTime: '2022-07-13T00:00:00.000Z',
+        players: 1000,
+        rank: 5,
+        score: 10000,
+        badges: [BadgeType.Dfdao, BadgeType.Dfdao],
+      },
+      {
+        configHash: '0xfe719a3cfccf2bcfa23f71f0af80a931eda4f4197331828d728b7505a6156930',
+        startTime: '2022-07-13T00:00:00.000Z',
+        endTime: '2022-07-13T00:00:00.000Z',
+        players: 1000,
+        rank: 5,
+        score: 10000,
+        badges: [BadgeType.Dfdao, BadgeType.Dfdao],
+      },
+    ],
+  },
+];
+
+const MapComponent: React.FC<{ round: GrandPrixHistoryItem; index: number }> = ({
+  round,
+  index,
+}) => {
   const history = useHistory();
-  const twitters = useTwitters() as Object;
-  const { data: adminData, error } = useSWR(`${process.env.DFDAO_WEBSERVER_URL}/rounds`, fetcher);
-  const rounds = useMemo(() => {
-    if (adminData) {
-      return adminData.map((round: RoundHistoryItem & { endTime: number }) => {
-        return {
-          configHash: round.configHash,
-          name: getConfigName(round.configHash),
-          startTime: round.startTime,
-          endTime: round.endTime,
-          winner: round.winner,
-        };
-      });
-    } else {
-      return [];
-    }
-  }, [adminData]);
+  return (
+    <MapContainer onClick={() => history.push(`/portal/map/${round.configHash}`)}>
+      <MapNameContainer>
+        <div style={{ position: 'absolute', top: '0', left: '5px' }}>GP{index}</div>
+        <WhiteFont>{getConfigName(round.configHash)}</WhiteFont>
+      </MapNameContainer>
+      <MapDetailsContainer>
+        <Sub>score</Sub> <WhiteFont>{round.score}</WhiteFont>
+        <Sub>rank</Sub>{' '}
+        <WhiteFont>
+          {round.rank} of {round.players}
+        </WhiteFont>
+        <Sub>badges</Sub> <WhiteFont>{round.badges.length}</WhiteFont>
+      </MapDetailsContainer>
+    </MapContainer>
+  );
+};
 
-  const addressToTwitter = (address: string) => {
-    const foundTwitter = Object.entries(twitters).find((t) => t[1] == address.toLowerCase().trim());
-    if (foundTwitter) {
-      return foundTwitter[0];
-    } else {
-      return address;
-    }
-  };
+const WhiteFont = styled.p`
+  color: white;
+  font-size: 1.15rem;
+  margin-top: -12px;
+  margin-bottom: -6px;
+`;
+const MapContainer = styled.div`
+  background: #363639;
+  display: flex;
+  padding: 8px;
+  border-radius: 5px;
+  text-align: left;
+  gap: 8px;
+  margin: 8px;
+  max-width: calc(33% - 13px);
+  cursor: pointer;
+`;
 
+const MapNameContainer = styled.div`
+  flex: 1;
+  display: flex;
+  background: #202020;
+  align-items: flex-end;
+  position: relative;
+  border-radius: 5px;
+  padding: 5px;
+  text-align: left;
+`;
+
+const MapDetailsContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 5px;
+`;
+
+export const PortalHistoryView: React.FC<{}> = ({}) => {
+  const [current, setCurrent] = useState<number>(0);
+
+  const rounds = seasons[current].grandPrixHistoryItems;
+  const totalScore = useMemo(() => rounds.reduce((prev, curr) => curr.score + prev, 0), [rounds]);
+  const mapComponents = useMemo(
+    () => rounds.map((round, idx) => <MapComponent round={round} index={idx} />),
+    [rounds]
+  );
+  const leftDisplay = current == 0 ? 'none' : 'flex';
+  const rightDisplay = current == seasons.length - 1 ? 'none' : 'flex';
   return (
     <Container>
-      <Header>
-        <MythicLabelText text='Previous Grand Prix Rounds'></MythicLabelText>
-      </Header>
-      {error ? (
-        <span>Unable to load Grand Prix round history.</span>
-      ) : (
-        <>
-          {rounds && rounds.length > 0 ? (
-            <TimelineContainer>
-              <thead>
-                <tr>
-                  <TimelineHeader>Started</TimelineHeader>
-                  <TimelineHeader>Name</TimelineHeader>
-                  <TimelineHeader>Winner</TimelineHeader>
-                </tr>
-              </thead>
-              <tbody>
-                {' '}
-                {rounds
-                  .filter((round: any) => round.startTime < Date.now())
-                  .map((historyItem: RoundHistoryItem) => (
-                    <TimelineRow
-                      key={historyItem.configHash}
-                      onClick={() => {
-                        history.push(`/portal/map/${historyItem.configHash}`);
-                      }}
-                    >
-                      <TimelineItem>{formatStartTime(historyItem.startTime / 1000)}</TimelineItem>
-                      <TimelineItem>{historyItem.name}</TimelineItem>
-                      <TimelineItem>
-                        {historyItem.winner !== undefined && historyItem.winner !== '' ? (
-                          <Link to={`https://twitter.com/${addressToTwitter(historyItem.winner)}`}>
-                            {addressToTwitter(historyItem.winner)}
-                          </Link>
-                        ) : (
-                          'None'
-                        )}
-                      </TimelineItem>
-                      <TimelineItem>
-                        <HoverIcon />
-                      </TimelineItem>
-                    </TimelineRow>
-                  ))}
-              </tbody>
-            </TimelineContainer>
-          ) : (
-            <span>No Previous Rounds</span>
-          )}
-        </>
-      )}
+      <HeaderContainer>
+        <TitleContainer>
+          <button
+            onClick={() => setCurrent(current - 1)}
+            style={{
+              position: 'absolute',
+              left: '-40px',
+              margin: 'auto',
+              display: leftDisplay,
+              fontSize: '2rem',
+              transform: 'rotate(180deg)',
+            }}
+          >
+            <Icon type={IconType.RightArrow} />
+          </button>
+          <span>Season {current + 1}</span>
+          <button
+            onClick={() => setCurrent(current + 1)}
+            style={{
+              position: 'absolute',
+              right: '-40px',
+              margin: 'auto',
+              display: rightDisplay,
+              fontSize: '2rem',
+            }}
+          >
+            <Icon type={IconType.RightArrow} />
+          </button>
+        </TitleContainer>
+
+        <div style={{ fontSize: '1.5rem', textAlign: 'right' }}>
+          <div>
+            <Sub>rank</Sub> <span style={{ fontSize: '2rem' }}>{seasons[current].rank}</span> of{' '}
+            {seasons[current].players}
+          </div>
+          <div>
+            <Sub>score</Sub> <span style={{ fontSize: '2rem' }}>{totalScore}</span>
+          </div>
+        </div>
+      </HeaderContainer>
+      <BodyContainer>
+        <TiledTable title={<span style={{ fontSize: '2em' }}>Maps</span>} items={mapComponents} />
+      </BodyContainer>
     </Container>
   );
 };
@@ -110,54 +259,52 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  padding: 16px 48px;
+`;
+
+const HeaderContainer = styled.div`
+  background: rgb(42, 42, 42);
+  background: linear-gradient(0deg, rgba(42, 42, 42, 1) 05%, rgba(20, 20, 20, 1) 100%);
+  width: 100%;
+  max-width: 1300px;
+  min-height: 200px;
+  border-radius: 48px 48px 0px 0px;
+  display: flex;
   justify-content: center;
+  gap: 20%;
+  align-items: center;
+`;
+
+const TitleContainer = styled.div`
+  position: relative;
+  font-size: 5em;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const BodyContainer = styled.div`
+  width: 800px;
   height: 100%;
 `;
 
-const Header = styled.h1`
-  font-size: 1.5rem;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+const RightArrow = styled.div`
+  width: 0;
+  height: 0;
+  border-top: 2rem solid transparent;
+  border-bottom: 2rem solid transparent;
+
+  border-left: 2rem solid green;
 `;
 
-const TimelineContainer = styled.table`
-  margin-top: 3rem;
-  border-collapse: collapse;
-  display: block;
-  border-spacing: 0;
-  font-size: 1rem;
-  overflow-y: auto;
-`;
+const LeftArrow = styled.div`
+  width: 0;
+  height: 0;
+  border-top: 2rem solid transparent;
+  border-bottom: 2rem solid transparent;
 
-const TimelineRow = styled.tr`
-  width: 100%;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  &:hover {
-    background: #252525;
-  }
+  border-right: 2rem solid blue;
 `;
-
-const TimelineHeader = styled.th`
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: ${dfstyles.colors.subtext};
-`;
-
-const TimelineItem = styled.td`
-  padding: 8px 16px;
-`;
-
-const HoverIcon = () => {
-  return (
-    <svg width='15' height='15' viewBox='0 0 15 15' fill='none' xmlns='http://www.w3.org/2000/svg'>
-      <path
-        d='M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z'
-        fill='currentColor'
-        fill-rule='evenodd'
-        clip-rule='evenodd'
-      ></path>
-    </svg>
-  );
-};

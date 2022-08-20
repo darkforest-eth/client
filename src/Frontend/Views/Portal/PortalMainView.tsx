@@ -153,7 +153,7 @@ const MainContainer = styled.div`
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.04);
+  background: #2a2a2a;
 `;
 
 const TopBar = styled.div`
