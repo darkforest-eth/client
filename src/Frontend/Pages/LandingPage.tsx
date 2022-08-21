@@ -31,6 +31,7 @@ const links = {
 const altLayerLinks = {
   twitter: 'https://alt.ws/twitter',
   blog: 'https://blog.altlayer.io/',
+  preRegister: 'https://gleam.io/o1mPK/altlayer-darkforest-whitelist',
   discord: 'https://discord.gg/altlayer',
   github: 'https://github.com/alt-research',
   privacy: 'https://docs.altlayer.io/privacy-policy.html'
@@ -142,12 +143,10 @@ export default function LandingPage() {
                 <Spacer height={40} />
 
                 <ButtonWrapper>
-                  {/*
-                    // Disallow creating custom lobby
-                    <Btn size='large' onClick={() => history.push(`/lobby/${defaultAddress}`)}>
-                      Create Lobby
-                    </Btn>
-                  */}
+                  <Btn size='large' onClick={() => window.open(altLayerLinks.preRegister)}>
+                    Pre-register
+                  </Btn>
+
                   <Btn size='large' onClick={() => history.push(`/play/${defaultAddress}`)}>
                     Enter Community Round
                   </Btn>
