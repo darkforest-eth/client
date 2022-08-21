@@ -47,6 +47,9 @@ export const Text = styled.span`
 export const White = styled.span`
   color: ${dfstyles.colors.dfwhite};
 `;
+export const ALPurple = styled.span`
+  color: ${dfstyles.colors.alpurple};
+`;
 export const Red = styled.span`
   color: ${dfstyles.colors.dfred};
 `;
@@ -65,8 +68,20 @@ export const Invisible = styled.span`
   color: rgba(0, 0, 0, 0);
 `;
 
+export const Larger = styled.span`
+  font-size: 115%;
+`;
+
+export const Txt90pc = styled.span`
+  font-size: 90%;
+`;
+
 export const Smaller = styled.span`
   font-size: 80%;
+`;
+
+export const Smaller_2 = styled.span`
+  font-size: 70%;
 `;
 
 export const HideSmall = styled.span`

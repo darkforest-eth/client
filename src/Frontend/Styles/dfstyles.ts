@@ -40,6 +40,8 @@ const dfpurple = '#9189d9';
 const dfwhite = '#ffffff';
 const dforange = 'rgb(196, 101, 0)';
 
+const alpurple = '#7978B3';
+
 const dfstyles = {
   colors: {
     text,
@@ -67,6 +69,7 @@ const dfstyles = {
     dfpurple,
     dfwhite,
     dforange,
+    alpurple,
 
     artifactBackground: 'rgb(21, 17, 71)',
 
