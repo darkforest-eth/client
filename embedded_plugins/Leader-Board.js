@@ -7,7 +7,7 @@
 // Updates every 60 seconds
 
 const updateTimeInSeconds = 60;
-const leaderboardRange = 5; // 5 people above and below you
+const leaderboardRange = 10; // 10 people above and below you
 
 const emptyAddress = "0x0000000000000000000000000000000000000000";
 const reverseOrdering = false;
@@ -19,6 +19,7 @@ const AL_SERVER_URL = window.location.href.includes('localhost')
   : 'https://darkforest-leaderboard.altresearch.xyz'
 
 import { getPlayerColor } from "https://cdn.skypack.dev/@darkforest_eth/procedural";
+import { DateTime } from 'https://cdn.skypack.dev/luxon';
 
 let roundEndTime = df.getTokenMintEndTimeSeconds()*1000;
 
@@ -37,9 +38,9 @@ function timestampSection(value) {
 }
 
 function getStrTimeUntilRoundEnds() {
-  const timeUntilEnd = roundEndTime - new Date().getTime();
-  if (timeUntilEnd <= 0) return "00:00";
-  else return formatDuration(timeUntilEnd);
+  const currentEpoch = DateTime.utc().toUnixInteger() * 1000;
+  const timeUntilEnd = roundEndTime - currentEpoch;
+  return timeUntilEnd <= 0 ? "00:00" : formatDuration(timeUntilEnd);
 }
 
 // ---------------------------------------------------------------
