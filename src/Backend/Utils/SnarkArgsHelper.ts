@@ -197,7 +197,7 @@ class SnarkArgsHelper {
   async getInitArgs(x: number, y: number, r: number): Promise<InitSnarkContractCallArgs> {
     try {
       const start = Date.now();
-      this.terminal.current?.println('INIT: calculating witness and proof', TerminalTextStyle.Sub);
+      this.terminal?.current?.println('INIT: calculating witness and proof', TerminalTextStyle.Sub);
       const input: InitSnarkInput = {
         x: modPBigInt(x).toString(),
         y: modPBigInt(y).toString(),
@@ -214,7 +214,7 @@ class SnarkArgsHelper {
         : await this.snarkProverQueue.doProof(input, initCircuitPath, initZkeyPath);
       const ret = buildContractCallArgs(proof, publicSignals) as InitSnarkContractCallArgs;
       const end = Date.now();
-      this.terminal.current?.println(
+      this.terminal?.current?.println(
         `INIT: calculated witness and proof in ${end - start}ms`,
         TerminalTextStyle.Sub
       );

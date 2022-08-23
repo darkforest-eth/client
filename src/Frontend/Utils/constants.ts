@@ -1,4 +1,7 @@
+import { address } from '@darkforest_eth/serde';
+import { EthAddress } from '@darkforest_eth/types';
 import * as bigInt from 'big-integer';
+import { constants } from 'ethers';
 
 // To developer, increase this number to 256. This, in combination with setting `DISABLE_ZK_CHECKS`
 // in darkforest.toml, will make you mine the map at ULTRA SPEED!
@@ -116,25 +119,28 @@ planets(first: ${MAX_ADMIN_PLANETS}) {
 const TEMP_START_TIME = 1597862644;
 const TEMP_END_TIME = 1724093044;
 
+// One hour 
+const WALLBREAKER_BONUS = 5 * 60;
+const START_ENGINE_BONUS = 100;
+const DAY_IN_SECONDS = 24 * 60 * 60;
+
+// startTime and endTime are in UNIX seconds
 export interface GrandPrixMetadata {
-  id: number;
+  seasonId: number;
   configHash: string;
   startTime: number;
   endTime: number;
+  parentAddress: EthAddress;
 }
+
 const SEASON_GRAND_PRIXS: GrandPrixMetadata[] = [
   {
-    id: 1,
-    configHash:'0xe8c09c646e1c9228918754437a7130a30e4837b21689b51dfd67a8ecf55ebd6e',
+    seasonId: 1,
+    configHash:'0xd08bbeb0785370a68369f0a042e33ef2688da6da5e79acbb5688ddbb8ca4a862',
     startTime: TEMP_START_TIME,
     endTime: TEMP_END_TIME,
+    parentAddress: address(constants.AddressZero)
   },
-  {
-    id: 1,
-    configHash:'0x88f6a4430a1723523d420e1320599408c4627e573debe7dd96897c9736d739d0',
-    startTime: TEMP_START_TIME,
-    endTime: TEMP_END_TIME,
-  }
 ];
 
 export {
@@ -150,7 +156,10 @@ export {
   silverTime,
   CONFIG_CONSTANTS,
   goldTime,
-  SEASON_GRAND_PRIXS
+  SEASON_GRAND_PRIXS,
+  WALLBREAKER_BONUS,
+  START_ENGINE_BONUS,
+  DAY_IN_SECONDS
 };
 
 export const enum DFZIndex {

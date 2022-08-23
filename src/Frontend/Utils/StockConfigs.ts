@@ -115,11 +115,11 @@ const vanilla: LobbyInitializers = {
   RANKED: false,
 };
 
-const onePlayerRace: LobbyInitializers = {
+const devOnePlayerRace: LobbyInitializers = {
   ADMIN_CAN_ADD_PLANETS: true,
   WORLD_RADIUS_LOCKED: true,
   WORLD_RADIUS_MIN: 3000,
-  DISABLE_ZK_CHECKS: false,
+  DISABLE_ZK_CHECKS: true,
   PLANETHASH_KEY: 4401,
   SPACETYPE_KEY: 4402,
   BIOMEBASE_KEY: 4403,
@@ -218,77 +218,14 @@ const onePlayerRace: LobbyInitializers = {
   START_PAUSED: false,
   ADMIN_PLANETS: [
     {
-      x: -1668,
-      y: -2321,
+      x: 0,
+      y: 0,
       level: 3,
       planetType: 0,
       isSpawnPlanet: true,
       isTargetPlanet: true,
       blockedPlanetLocs: [],
-    },
-    {
-      x: -320,
-      y: -1772,
-      level: 3,
-      planetType: 0,
-      isTargetPlanet: false,
-      isSpawnPlanet: false,
-      blockedPlanetLocs: [],
-    },
-    {
-      x: 2005,
-      y: 1973,
-      level: 4,
-      planetType: 4,
-      isTargetPlanet: true,
-      isSpawnPlanet: false,
-      blockedPlanetLocs: [],
-    },
-    {
-      x: -1222,
-      y: -1363,
-      level: 3,
-      planetType: 0,
-      isTargetPlanet: false,
-      isSpawnPlanet: false,
-      blockedPlanetLocs: [],
-    },
-    {
-      x: -263,
-      y: -727,
-      level: 3,
-      planetType: 0,
-      isTargetPlanet: false,
-      isSpawnPlanet: false,
-      blockedPlanetLocs: [],
-    },
-    {
-      x: -53,
-      y: 763,
-      level: 3,
-      planetType: 0,
-      isTargetPlanet: false,
-      isSpawnPlanet: false,
-      blockedPlanetLocs: [],
-    },
-    {
-      x: 717,
-      y: 1174,
-      level: 3,
-      planetType: 0,
-      isTargetPlanet: false,
-      isSpawnPlanet: false,
-      blockedPlanetLocs: [],
-    },
-    {
-      x: 2054,
-      y: 984,
-      level: 3,
-      planetType: 0,
-      isTargetPlanet: false,
-      isSpawnPlanet: false,
-      blockedPlanetLocs: [],
-    },
+    }
   ],
   TOKEN_MINT_END_TIMESTAMP: 1717258179,
   WHITELIST: [],
@@ -1579,10 +1516,12 @@ export interface StockConfig {
   fourPlayerBattle: LobbyInitializers;
   sprint: LobbyInitializers;
   competitive: LobbyInitializers;
+  devOnePlayerRace: LobbyInitializers
 }
 export const stockConfig: StockConfig = {
   vanilla: vanilla,
-  onePlayerRace: onePlayerRace,
+  onePlayerRace: devOnePlayerRace,
+  devOnePlayerRace: devOnePlayerRace,
   fourPlayerBattle: fourPlayerBattle,
   sprint: EloMap,
   competitive: EloMap,

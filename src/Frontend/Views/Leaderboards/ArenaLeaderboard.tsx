@@ -220,7 +220,7 @@ function ArenasCreated({
     return (
       <tbody style={{ fontSize: '1.25em' }}>
         <tr>
-          <td>Total Players</td>
+          <td>Total Matches</td>
           <td>{leaderboard.length}</td>
         </tr>
       </tbody>

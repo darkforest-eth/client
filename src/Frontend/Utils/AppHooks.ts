@@ -4,7 +4,11 @@ import { EthConnection } from '@darkforest_eth/network';
 import {
   Artifact,
   ArtifactId,
+  BadgeType,
+  CleanConfigPlayer,
+  ConfigPlayer,
   EthAddress,
+  GrandPrixBadge,
   GraphConfigPlayer,
   Leaderboard,
   LiveMatch,
@@ -19,9 +23,7 @@ import GameUIManager from '../../Backend/GameLogic/GameUIManager';
 import { loadConfigFromHash } from '../../Backend/Network/GraphApi/ConfigApi';
 import { Account } from '../../Backend/Network/AccountManager';
 import { loadArenaLeaderboard } from '../../Backend/Network/GraphApi/GrandPrixApi';
-import {
-  loadEloLeaderboard,
-} from '../../Backend/Network/GraphApi/EloLeaderboardApi';
+import { loadEloLeaderboard } from '../../Backend/Network/GraphApi/EloLeaderboardApi';
 import { loadLeaderboard } from '../../Backend/Network/GraphApi/LeaderboardApi';
 import { loadLiveMatches } from '../../Backend/Network/GraphApi/SpyApi';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
@@ -32,6 +34,8 @@ import { ModalHandle } from '../Views/Game/ModalPane';
 import { createDefinedContext } from './createDefinedContext';
 import { useEmitterSubscribe, useEmitterValue, useWrappedEmitter } from './EmitterHooks';
 import { usePoll } from './Hooks';
+import { loadSeasonBadges } from '../../Backend/Network/GraphApi/BadgeApi';
+import { loadAllPlayerData, loadGrandPrixLeaderboard } from '../../Backend/Network/GraphApi/SeasonLeaderboardApi';
 
 export const { useDefinedContext: useEthConnection, provider: EthConnectionProvider } =
   createDefinedContext<EthConnection>();
@@ -51,6 +55,9 @@ export const { useDefinedContext: useTwitters, provider: TwitterProvider } =
 export function useOverlayContainer(): HTMLDivElement | null {
   return useUIManager()?.getOverlayContainer() ?? null;
 }
+
+export const { useDefinedContext: useSeasonData, provider: SeasonDataProvider } =
+  createDefinedContext<CleanConfigPlayer[]>();
 
 /**
  * Get the currently used account on the client.
@@ -233,6 +240,28 @@ export function useLeaderboard(poll: number | undefined = undefined): {
   usePoll(load, poll, true);
 
   return { leaderboard, error };
+}
+
+export function usePlayerBadges(poll: number | undefined = undefined): {
+  grandPrixBadges: BadgeType[] | undefined;
+  error: Error | undefined;
+} {
+  const [grandPrixBadges, setBadges] = useState<BadgeType[] | undefined>();
+  const [error, setError] = useState<Error | undefined>();
+
+  const load = useCallback(async function load() {
+    try {
+      // TODO: Populate with current account;
+      setBadges(await loadSeasonBadges('0x1c0f0Af3262A7213E59Be7f1440282279D788335'));
+    } catch (e) {
+      console.log('error loading badges', e);
+      setError(e);
+    }
+  }, []);
+
+  usePoll(load, poll, true);
+
+  return { grandPrixBadges, error };
 }
 
 export function useArenaLeaderboard(

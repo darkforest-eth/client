@@ -1,5 +1,6 @@
 // should be able to be treated as a text element
-import { DarkForestBadge, BadgeType, getBadgeElement } from '@darkforest_eth/ui';
+import { BadgeType } from '@darkforest_eth/types';
+import { DarkForestBadge, getBadgeElement } from '@darkforest_eth/ui';
 import { createComponent } from '@lit-labs/react';
 import React from 'react';
 import styled from 'styled-components';
@@ -12,9 +13,6 @@ export const Badge = createComponent(React, DarkForestBadge.tagName, DarkForestB
   // If we had any, we would map DOM events to React handlers passed in as props. For example:
   // onClick: 'click'
 });
-
-// Re-export the IconType abstract type & the "enum" object for easier access
-export { BadgeType } from '@darkforest_eth/ui';
 
 export function BadgeDetails({ type }: { type: BadgeType }) {
   const badgeElement = getBadgeElement(type);

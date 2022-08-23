@@ -2,7 +2,7 @@ import { CONTRACT_ADDRESS, FAUCET_ADDRESS } from '@darkforest_eth/contracts';
 import { DFArenaFaucet } from '@darkforest_eth/contracts/typechain';
 import { EthConnection, ThrottledConcurrentQueue, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
-import { EthAddress } from '@darkforest_eth/types';
+import { CleanConfigPlayer, ConfigPlayer, EthAddress } from '@darkforest_eth/types';
 import { utils, Wallet } from 'ethers';
 import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
@@ -17,12 +17,13 @@ import {
   logOut,
 } from '../../Backend/Network/AccountManager';
 import { getEthConnection } from '../../Backend/Network/Blockchain';
+import { loadAllPlayerData } from '../../Backend/Network/GraphApi/SeasonLeaderboardApi';
 import { getAllTwitters, sendDrip } from '../../Backend/Network/UtilityServerAPI';
 import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
 import { InitRenderState, TerminalWrapper, Wrapper } from '../Components/GameLandingPageComponents';
 import { MythicLabelText } from '../Components/Labels/MythicLabel';
 import { TextPreview } from '../Components/TextPreview';
-import { AccountProvider, EthConnectionProvider, TwitterProvider } from '../Utils/AppHooks';
+import { AccountProvider, EthConnectionProvider, TwitterProvider, SeasonDataProvider } from '../Utils/AppHooks';
 import { Incompatibility, unsupportedFeatures } from '../Utils/BrowserChecks';
 import { TerminalTextStyle } from '../Utils/TerminalTypes';
 import { PortalMainView } from '../Views/Portal/PortalMainView';
@@ -275,13 +276,19 @@ export function EntryPage() {
 
   const [twitters, setTwitters] = useState<AddressTwitterMap | undefined>();
   const [connection, setConnection] = useState<EthConnection | undefined>();
+  const [seasonPlayers, setPlayers] = useState<CleanConfigPlayer[] | undefined>();
 
-  /* get all twitters on page load*/
+  /* get all twitters on page load */
   useEffect(() => {
     getAllTwitters().then((t) => setTwitters(t));
   }, []);
 
-  /* set connection on page load*/
+  /* get all season data on page load*/
+  useEffect(() => {
+    loadAllPlayerData().then((t) => setPlayers(t));
+  }, []);
+
+  /* set connection on page load */
   useEffect(() => {
     async function getConnection() {
       try {
@@ -318,7 +325,9 @@ export function EntryPage() {
   }, [connection]);
 
   useEffect(() => {
+    console.log(`!controller`, !controller, `connection`, connection, `terminal`, terminal.current)
     if (!controller && connection && terminal.current) {
+      console.log(`setting new controller`);
       const newController = new EntryPageTerminal(
         connection,
         terminal.current,
@@ -349,6 +358,7 @@ export function EntryPage() {
     return (
       <EthConnectionProvider value={connection}>
         <TwitterProvider value={twitters}>
+          <SeasonDataProvider value={seasonPlayers!}>
           <Router>
             <Switch>
               <Redirect path='/play' to={`/play/${defaultAddress}`} push={true} exact={true} />
@@ -360,6 +370,7 @@ export function EntryPage() {
               <Route path='*' component={NotFoundPage} />
             </Switch>
           </Router>
+          </SeasonDataProvider>
         </TwitterProvider>
       </EthConnectionProvider>
     );

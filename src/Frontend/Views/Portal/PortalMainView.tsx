@@ -12,7 +12,7 @@ import { Icon } from '../../Components/Icons';
 import { Modal } from '../../Components/Modal';
 import { PortalHistoryView } from './PortalHistoryView';
 import dfstyles from '../../Styles/dfstyles';
-import { useTwitters } from '../../Utils/AppHooks';
+import { useEthConnection, useTwitters } from '../../Utils/AppHooks';
 import { competitiveConfig } from '../../Utils/constants';
 import { ModalPane } from '../Game/ModalPane';
 import { Account } from './Account';
@@ -22,7 +22,14 @@ import { PortalCommunityView } from './PortalCommunityView';
 import { MatchmakingView } from './MatchmakingView';
 import { PortalHomeView } from './PortalHomeView';
 import { truncateAddress, truncateString } from './PortalUtils';
-import { loadSeasonLeaderboard, loadWallbreakers } from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
+import {
+  loadSeasonLeaderboard,
+  loadWallbreakers,
+} from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
+import { loadSeasonBadges } from '../../../Backend/Network/GraphApi/BadgeApi';
+import { populate } from '../../../Backend/Utils/Populate';
+import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
+import { address } from '@darkforest_eth/serde';
 
 export function PortalMainView() {
   const [input, setInput] = useState<string>('');
@@ -31,6 +38,7 @@ export function PortalMainView() {
   const [helpOpen, setHelpOpen] = useState<boolean>(false);
   const history = useHistory();
   const twitters = useTwitters() as Object;
+  const connection = useEthConnection();
 
   useEffect(() => {
     async function handleSearch() {
@@ -101,7 +109,26 @@ export function PortalMainView() {
       <MainContainer>
         <TopBar>
           <TitleContainer>
-            <Title onClick={() => history.push('/portal/home')}>Home</Title>            
+            <Title onClick={() => history.push('/portal/home')}>Home</Title>
+            {process.env.NODE_ENV !== 'production' ? (
+              <>
+                <Button
+                  onClick={async () => {
+                    await populate(connection, address(CONTRACT_ADDRESS));
+                  }}
+                >
+                  Populate
+                </Button>
+                <Button
+                onClick={async () => {
+                  const a = await loadSeasonBadges('0x1c0f0Af3262A7213E59Be7f1440282279D788335');
+                }}
+              >
+                Load Season
+              </Button>
+            </>
+            ) : null}
+            
           </TitleContainer>
 
           <TitleContainer>
