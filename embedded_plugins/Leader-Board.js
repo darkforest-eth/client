@@ -138,7 +138,7 @@ function Plugin() {
     let i = centerRank - leaderboardRange;
     if (i < 0) i = 0;
     let max = centerRank + leaderboardRange;
-    let lr = leaderboardRange*2;
+    let lr = leaderboardRange * 2;
     if (max-i < lr) max += lr - (max-i); // show at least leaderboardRange*2 + 1 players
     for ( ; i < o.leaderboard.length && i <= max; ++i) {
       o.addPlayerToBoard(table, o.leaderboard[i], i+1);

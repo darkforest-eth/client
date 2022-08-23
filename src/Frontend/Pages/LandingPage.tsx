@@ -34,7 +34,8 @@ const altLayerLinks = {
   preRegister: 'https://gleam.io/o1mPK/altlayer-darkforest-whitelist',
   discord: 'https://discord.gg/altlayer',
   github: 'https://github.com/alt-research',
-  privacy: 'https://docs.altlayer.io/privacy-policy.html'
+  privacy: 'https://docs.altlayer.io/privacy-policy.html',
+  tnc: 'https://docs.altlayer.io/AltLayer-Darkforest-Campaign-Terms-and-Conditions.html',
 }
 
 const defaultAddress = address(CONTRACT_ADDRESS);
@@ -89,17 +90,20 @@ export default function LandingPage() {
                 <a className={'link-twitter'} href={altLayerLinks.twitter}>
                   <span className={'icon-twitter'}></span>
                 </a>
-                <Spacer width={4} />
+                <Spacer width={2} />
                 <a className={'link-discord'} href={altLayerLinks.discord}>
                   <span className={'icon-discord'}></span>
                 </a>
-                <Spacer width={4} />
+                <Spacer width={2} />
                 <a className={'link-github'} href={altLayerLinks.github}>
                   <span className={'icon-github'}></span>
                 </a>
+                <Spacer width={2} />
                 <Link to={altLayerLinks.blog}>Blog</Link>
-                <Spacer width={4} />
+                <Spacer width={2} />
                 <Link to={altLayerLinks.privacy}>Privacy</Link>
+                <Spacer width={2} />
+                <Link to={altLayerLinks.tnc}>T&amp;C</Link>
               </LinkInnerContainer>
 
               <HideOnMobile><EmSpacer width={2}/></HideOnMobile>
@@ -109,20 +113,20 @@ export default function LandingPage() {
                 <a className={'link-twitter'} href={links.twitter}>
                   <span className={'icon-twitter'}></span>
                 </a>
-                <Spacer width={4} />
+                <Spacer width={2} />
                 <a className={'link-discord'} href={links.discord}>
                   <span className={'icon-discord'}></span>
                 </a>
-                <Spacer width={4} />
+                <Spacer width={2} />
                 <a className={'link-github'} href={links.github}>
                   <span className={'icon-github'}></span>
                 </a>
                 <Link to={links.blog}>Blog</Link>
-                <Spacer width={4} />
+                <Spacer width={2} />
                 <Link to={links.email}>Email</Link>
-                <Spacer width={4} />
+                <Spacer width={2} />
                 <Link to={links.plugins}>Plugins</Link>
-                <Spacer width={4} />
+                <Spacer width={2} />
                 <Link to={links.wiki}>Wiki</Link>
               </LinkInnerContainer>
             </LinkContainerRightSide>
