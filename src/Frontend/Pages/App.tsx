@@ -4,6 +4,7 @@ import { createGlobalStyle } from 'styled-components';
 import { Theme } from '../Components/Theme';
 import { LandingPageBackground } from '../Renderers/LandingPageCanvas';
 import dfstyles from '../Styles/dfstyles';
+import { SeasonLeaderboard } from '../Views/Leaderboards/SeasonLeaderboard';
 import { EntryPage } from './EntryPage';
 import { EventsPage } from './EventsPage';
 import { GifMaker } from './GifMaker';
@@ -40,6 +41,7 @@ function App() {
             {!isProd && <Route path='/bg' component={LandingPageBackground} />}
 
             <Route path='*' component={EntryPage} />
+            <Route path='/leaderboard' component={SeasonLeaderboard} />
           </Switch>
         </Router>
       </Theme>

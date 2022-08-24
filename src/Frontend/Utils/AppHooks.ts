@@ -35,7 +35,6 @@ import { createDefinedContext } from './createDefinedContext';
 import { useEmitterSubscribe, useEmitterValue, useWrappedEmitter } from './EmitterHooks';
 import { usePoll } from './Hooks';
 import { loadSeasonBadges } from '../../Backend/Network/GraphApi/BadgeApi';
-import { loadAllPlayerData, loadGrandPrixLeaderboard } from '../../Backend/Network/GraphApi/SeasonLeaderboardApi';
 
 export const { useDefinedContext: useEthConnection, provider: EthConnectionProvider } =
   createDefinedContext<EthConnection>();

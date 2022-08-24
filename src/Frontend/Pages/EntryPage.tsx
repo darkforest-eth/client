@@ -23,7 +23,12 @@ import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPIT
 import { InitRenderState, TerminalWrapper, Wrapper } from '../Components/GameLandingPageComponents';
 import { MythicLabelText } from '../Components/Labels/MythicLabel';
 import { TextPreview } from '../Components/TextPreview';
-import { AccountProvider, EthConnectionProvider, TwitterProvider, SeasonDataProvider } from '../Utils/AppHooks';
+import {
+  AccountProvider,
+  EthConnectionProvider,
+  TwitterProvider,
+  SeasonDataProvider,
+} from '../Utils/AppHooks';
 import { Incompatibility, unsupportedFeatures } from '../Utils/BrowserChecks';
 import { TerminalTextStyle } from '../Utils/TerminalTypes';
 import { PortalMainView } from '../Views/Portal/PortalMainView';
@@ -325,7 +330,7 @@ export function EntryPage() {
   }, [connection]);
 
   useEffect(() => {
-    console.log(`!controller`, !controller, `connection`, connection, `terminal`, terminal.current)
+    console.log(`!controller`, !controller, `connection`, connection, `terminal`, terminal.current);
     if (!controller && connection && terminal.current) {
       console.log(`setting new controller`);
       const newController = new EntryPageTerminal(
@@ -359,17 +364,17 @@ export function EntryPage() {
       <EthConnectionProvider value={connection}>
         <TwitterProvider value={twitters}>
           <SeasonDataProvider value={seasonPlayers!}>
-          <Router>
-            <Switch>
-              <Redirect path='/play' to={`/play/${defaultAddress}`} push={true} exact={true} />
-              <Route path='/play/:contract' component={GameLandingPage} />
-              <Redirect path='/portal' to={`/portal/home`} push={true} exact={true} />
-              <Route path='/portal' component={PortalMainView} />
-              <Redirect path='/arena' to={`/arena/${defaultAddress}`} push={true} exact={true} />
-              <Route path='/arena/:contract' component={CreateLobby} />
-              <Route path='*' component={NotFoundPage} />
-            </Switch>
-          </Router>
+            <Router>
+              <Switch>
+                <Redirect path='/play' to={`/play/${defaultAddress}`} push={true} exact={true} />
+                <Route path='/play/:contract' component={GameLandingPage} />
+                <Redirect path='/portal' to={`/portal/home`} push={true} exact={true} />
+                <Route path='/portal' component={PortalMainView} />
+                <Redirect path='/arena' to={`/arena/${defaultAddress}`} push={true} exact={true} />
+                <Route path='/arena/:contract' component={CreateLobby} />
+                <Route path='*' component={NotFoundPage} />
+              </Switch>
+            </Router>
           </SeasonDataProvider>
         </TwitterProvider>
       </EthConnectionProvider>

@@ -1,13 +1,12 @@
 import { getConfigName } from '@darkforest_eth/procedural';
+import { address } from '@darkforest_eth/serde';
 import { BadgeType, EthAddress, GrandPrixHistory, SeasonScore } from '@darkforest_eth/types';
 import { IconType } from '@darkforest_eth/ui';
+import { isAddress } from 'ethers/lib/utils';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  loadPlayerSeasonHistoryView,
-  loadSeasonLeaderboard,
-} from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
+import { loadPlayerSeasonHistoryView } from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
 import { Icon } from '../../Components/Icons';
 import { Sub } from '../../Components/Text';
 import { useAccount, useEthConnection, useSeasonData } from '../../Utils/AppHooks';
@@ -172,11 +171,13 @@ const MapDetailsContainer = styled.div`
   gap: 5px;
 `;
 
-export const PortalHistoryView: React.FC<{}> = ({}) => {
+export function PortalHistoryView({ match }: RouteComponentProps<{ account: string }>) {
   const [current, setCurrent] = useState<number>(0);
+  const account = match.params.account as EthAddress;
+  if (!account) return <div>Loading...</div>;
 
-  const account = useEthConnection().getAddress()!;
   const configPlayers = useSeasonData();
+
   const seasonHistories = loadPlayerSeasonHistoryView(account, configPlayers);
   console.log(seasonHistories);
 
@@ -237,7 +238,7 @@ export const PortalHistoryView: React.FC<{}> = ({}) => {
       </BodyContainer>
     </Container>
   );
-};
+}
 
 const Container = styled.div`
   display: flex;

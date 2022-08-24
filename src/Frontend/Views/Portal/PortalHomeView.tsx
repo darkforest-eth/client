@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { TimeUntil } from '../../Components/TimeUntil';
 import { competitiveConfig, tutorialConfig } from '../../Utils/constants';
 import { OfficialGameBanner } from './Components/OfficialGameBanner';
-import { useConfigFromHash } from '../../Utils/AppHooks';
+import { useConfigFromHash, useEthConnection } from '../../Utils/AppHooks';
 import useSWR, { useSWRConfig } from 'swr';
 import { fetcher } from '../../../Backend/Network/UtilityServerAPI';
 
@@ -12,6 +12,7 @@ export const PortalHomeView: React.FC<{}> = () => {
   let finalTime = undefined;
   let roundConfig = undefined;
   let current = undefined;
+  const account = useEthConnection().getAddress();
 
   if (adminData) {
     console.log(adminData);
@@ -70,7 +71,7 @@ export const PortalHomeView: React.FC<{}> = () => {
         <OfficialGameBanner
           title='Previous Rounds'
           style={{ gridColumn: '5 / 7', gridRow: '2/3' }}
-          link='/portal/history'
+          link={`/portal/history/${account}`}
           imageUrl='/public/img/screenshots/pickles.png'
         />
         <OfficialGameBanner
