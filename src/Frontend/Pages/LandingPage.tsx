@@ -35,7 +35,7 @@ const altLayerLinks = {
   discord: 'https://discord.gg/altlayer',
   github: 'https://github.com/alt-research',
   privacy: 'https://docs.altlayer.io/privacy-policy.html',
-  faucet: '',
+  faucet: 'https://flashlayer-1-faucet.altlayer.io/',
   tnc: 'https://docs.altlayer.io/AltLayer-Darkforest-Campaign-Terms-and-Conditions.html',
 }
 
