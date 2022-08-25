@@ -259,7 +259,7 @@ const LinkInnerContainer = styled.div`
 const PrettyOverlayGradient = styled.div`
   width: 100vw;
   height: 100vh;
-  background: url("/img/background.png") no-repeat center fixed;
+  background: url("public/img/background.png") no-repeat center fixed;
   background-size: cover;
   display: inline-block;
   position: fixed;
