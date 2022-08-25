@@ -30,11 +30,12 @@ const links = {
 
 const altLayerLinks = {
   twitter: 'https://alt.ws/twitter',
-  blog: 'https://blog.altlayer.io/',
+  blog: 'https://blog.altlayer.io/launching-dark-forest-community-gaming-round-e243e116f3d5',
   preRegister: 'https://gleam.io/o1mPK/altlayer-darkforest-whitelist',
   discord: 'https://discord.gg/altlayer',
   github: 'https://github.com/alt-research',
   privacy: 'https://docs.altlayer.io/privacy-policy.html',
+  faucet: '',
   tnc: 'https://docs.altlayer.io/AltLayer-Darkforest-Campaign-Terms-and-Conditions.html',
 }
 
@@ -43,8 +44,9 @@ const defaultAddress = address(CONTRACT_ADDRESS);
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 8px;
-  flex-direction: row;
+  flex-direction: column;
 
   @media only screen and (max-device-width: 1000px) {
     grid-template-columns: auto;
@@ -139,20 +141,30 @@ export default function LandingPage() {
               <LandingPageRoundArt />
               <HeroSection>
                 <TitleSection>
-                  <ALPurple><Larger>Dark Forest on AltLayer<br/>Community Round 1</Larger></ALPurple><br/>
-                  <Spacer height={10} />
-                  <ALPurple><Smaller_2>Sep 9th 12:00 - Sep 11th 12:00 (GMT), 2022</Smaller_2></ALPurple>
+                  <ALPurple>
+                    <Larger>Dark Forest on AltLayer</Larger><br/>
+                    <Spacer height={18} />
+                    <span>Warm-up Round</span><br/>
+                    <Smaller_2>Aug 26th 12:00 - Sep 05th 12:00 (GMT), 2022</Smaller_2>
+                    <Spacer height={10} />
+                    <span>Community Round 1</span><br/>
+                    <Smaller_2>Sep 9th 12:00 - Sep 11th 12:00 (GMT), 2022</Smaller_2>
+                  </ALPurple>
                 </TitleSection>
 
                 <Spacer height={40} />
 
                 <ButtonWrapper>
                   <Btn size='large' onClick={() => window.open(altLayerLinks.preRegister)}>
-                    Pre-register
+                    <FixedWidthBtn>Pre-register for Community Round 📝</FixedWidthBtn>
+                  </Btn>
+
+                  <Btn size='large' onClick={() => window.open(altLayerLinks.faucet)}>
+                    <FixedWidthBtn>Faucet for Warm-up round 🚰</FixedWidthBtn>
                   </Btn>
 
                   <Btn size='large' onClick={() => history.push(`/play/${defaultAddress}`)}>
-                    Enter Warm-up Round
+                    <FixedWidthBtn>Enter Warm-up Round 🚀</FixedWidthBtn>
                   </Btn>
                 </ButtonWrapper>
               </HeroSection>
@@ -172,6 +184,13 @@ const HeroSection = styled.div`
 const TitleSection = styled.div`
   font-family: "PressStart2P", Inconsolata, monospace;
   filter: brightness(120%)
+`;
+
+const FixedWidthBtn = styled.div`
+  font-size: 18px;
+  max-width: 100%;
+  display: block;
+  width: 390px;
 `;
 
 export const LinkContainer = styled.div`
