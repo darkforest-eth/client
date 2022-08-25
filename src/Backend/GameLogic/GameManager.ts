@@ -590,7 +590,7 @@ class GameManager extends EventEmitter {
 
     const persistentChunkStore = await PersistentChunkStore.create({ account, contractAddress });
 
-    terminal.current?.println('Downloading data from Ethereum blockchain...');
+    terminal.current?.println('Downloading data from the blockchain...');
     terminal.current?.println('(the contract is very big. this may take a while)');
     terminal.current?.newline();
 

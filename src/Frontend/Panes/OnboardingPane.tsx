@@ -57,7 +57,7 @@ function OnboardMoney({ advance }: { advance: () => void }) {
         Welcome to <Green>Dark Forest</Green>!
       </p>
       <p>
-        <Red>There is real money being transacted in-game!</Red> We have initialized a{' '}
+        We have initialized a{' '}
         <a onClick={() => window.open('https://github.com/austintgriffith/burner-wallet')}>
           burner wallet
         </a>{' '}

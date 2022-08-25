@@ -212,7 +212,6 @@ const tips = [
     <Link to='https://discord.gg/C23An5qNGv'>Dark Forest Discord</Link>!
   </>,
   'There are many different artifact types, each with unique properties... try activating one on a planet!',
-  'The top 63 players get NFT rewards at the end of each v0.6 round!',
   "There are many different ways to enjoy Dark Forest - as long as you're having fun, you're doing it right.",
   'Be careful when capturing planets - if you attack a player-owned planet, it may look like an act of war!',
   'A planet can have at most one active artifact.',
