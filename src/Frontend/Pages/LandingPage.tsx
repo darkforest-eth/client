@@ -160,7 +160,7 @@ export default function LandingPage() {
                   </Btn>
 
                   <Btn size='large' onClick={() => window.open(altLayerLinks.faucet)}>
-                    <FixedWidthBtn>Faucet for Warm-up round 🚰</FixedWidthBtn>
+                    <FixedWidthBtn>Faucet for Warm-up Round 🚰</FixedWidthBtn>
                   </Btn>
 
                   <Btn size='large' onClick={() => history.push(`/play/${defaultAddress}`)}>
