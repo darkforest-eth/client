@@ -22,6 +22,7 @@ import {
   START_ENGINE_BONUS,
   WALLBREAKER_BONUS,
   GrandPrixMetadata,
+  EGP,
 } from '../../../Frontend/Utils/constants';
 import { getGraphQLData } from '../GraphApi';
 import { getAllTwitters } from '../UtilityServerAPI';
@@ -83,6 +84,7 @@ export async function loadWallbreakers(): Promise<Wallbreaker[]> {
 // Returns all the ConfigPlayers for each Grand Prix, including the Wallbreaker.
 // It calls loadWallbreakers() internally.
 export async function loadAllPlayerData(): Promise<CleanConfigPlayer[]> {
+  if(!EGP) return [];
   const stringHashes = SEASON_GRAND_PRIXS.map((season) => `"${season.configHash}"`);
   // Query size is number of unique players on each Grand Prix in a season. (6 GPs * 100 players = 100 results).
   // If > 1000, graph won't return.

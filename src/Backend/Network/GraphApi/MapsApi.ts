@@ -16,8 +16,12 @@ export async function loadRecentMaps(
 			creator
 			lobbyAddress
 			startTime
+			planets {
+				id
+			}
 		}
 	}
 	`;
+
   return (await getGraphQLData(query, process.env.GRAPH_URL || 'localhost:8000')).data?.arenas;
 }

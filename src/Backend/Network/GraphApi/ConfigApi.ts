@@ -31,6 +31,7 @@ query {
   const rawData = await getGraphQLData(query, process.env.GRAPH_URL || 'localhost:8000');
   // @ts-expect-error
   const hasPlanets = rawData.data.arenas.filter((a) => a.planets.length > 0);
+  if(hasPlanets.length == 0) return undefined;
   const res = convertGraphConfig(hasPlanets[0]);
   if(res) return res;
 }

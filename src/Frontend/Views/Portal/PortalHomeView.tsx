@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TimeUntil } from '../../Components/TimeUntil';
-import { competitiveConfig, tutorialConfig } from '../../Utils/constants';
+import { competitiveConfig, EGP, tutorialConfig } from '../../Utils/constants';
 import { OfficialGameBanner } from './Components/OfficialGameBanner';
 import { useConfigFromHash, useEthConnection } from '../../Utils/AppHooks';
 import useSWR, { useSWRConfig } from 'swr';
@@ -69,6 +69,7 @@ export const PortalHomeView: React.FC<{}> = () => {
           imageUrl='/public/img/screenshots/deathstar.png'
         />
         <OfficialGameBanner
+          disabled={!EGP}
           title='Previous Rounds'
           style={{ gridColumn: '5 / 7', gridRow: '2/3' }}
           link={`/portal/history/${account}`}

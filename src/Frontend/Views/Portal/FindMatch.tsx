@@ -98,19 +98,23 @@ export const FindMatch: React.FC<FindMatchProps> = ({ game }) => {
               key={`row-${rowIdx}`}
               style={{ gap: '16px' } as CSSStyleDeclaration & CSSProperties}
             >
-              {items.map((entry: ExtendedMatchEntry) => (
-                <MatchComponent
-                  configHash={entry.configHash}
-                  key={entry.id}
-                  creator={entry.creator}
-                  matchType='1v1'
-                  totalSpots={entry.planets.filter((planet) => planet.spawnPlanet == true).length}
-                  spotsTaken={entry.players ? entry.players.length : 0}
-                  matchId={entry.id}
-                  startTime={entry.startTime}
-                  players={entry.players}
-                />
-              ))}
+              {items
+                .filter(
+                  (entry) => entry.planets.filter((planet) => planet.spawnPlanet == true).length > 0
+                )
+                .map((entry: ExtendedMatchEntry) => (
+                  <MatchComponent
+                    configHash={entry.configHash}
+                    key={entry.id}
+                    creator={entry.creator}
+                    matchType='1v1'
+                    totalSpots={entry.planets.filter((planet) => planet.spawnPlanet == true).length}
+                    spotsTaken={entry.players ? entry.players.length : 0}
+                    matchId={entry.id}
+                    startTime={entry.startTime}
+                    players={entry.players}
+                  />
+                ))}
             </Row>
           ))
         )}

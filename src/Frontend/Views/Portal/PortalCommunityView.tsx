@@ -43,6 +43,7 @@ export const PortalCommunityView: React.FC<{}> = () => {
         <span style={{ fontSize: '3em', gridColumn: '1/7' }}>Community Maps</span>
         <Grid>
           {portalMaps
+            .filter((map) => map.planets && map.planets.length > 0)
             .sort((a, b) => {
               const aVal = numGamesPerConfig.get(a.configHash) || 0;
               const bVal = numGamesPerConfig.get(b.configHash) || 1;
