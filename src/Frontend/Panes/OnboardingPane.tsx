@@ -49,7 +49,7 @@ function OnboardMoney({ advance }: { advance: () => void }) {
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
 
-  const explorerAddressLink = `https://blockscout.com/poa/xdai/address/${account}`;
+  const explorerAddressLink = `https://flashlayer-1-explorer.altlayer.io/address/${account}`;
 
   return (
     <StyledOnboardingContent>
