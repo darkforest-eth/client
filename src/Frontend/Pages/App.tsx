@@ -39,9 +39,7 @@ function App() {
             {!isProd && <Route path='/images' component={TestArtifactImages} />}
             {!isProd && <Route path='/gifs' component={GifMaker} />}
             {!isProd && <Route path='/bg' component={LandingPageBackground} />}
-
             <Route path='*' component={EntryPage} />
-            <Route path='/leaderboard' component={SeasonLeaderboard} />
           </Switch>
         </Router>
       </Theme>

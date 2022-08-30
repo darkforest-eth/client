@@ -123,7 +123,7 @@ const TEMP_END_TIME = 1724093044;
 const WALLBREAKER_BONUS = 5 * 60;
 const START_ENGINE_BONUS = 100;
 const DAY_IN_SECONDS = 24 * 60 * 60;
-const EGP = false;
+const EGP = true;
 
 // startTime and endTime are in UNIX seconds
 export interface GrandPrixMetadata {

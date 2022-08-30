@@ -13,7 +13,7 @@ import { useEthConnection, usePlayerBadges, useSeasonData, useTwitters } from '.
 import { TiledTable } from '../TiledTable';
 import { truncateAddress } from './PortalUtils';
 
-const mockBadges: BadgeType[] = [BadgeType.Dfdao, BadgeType.StartYourEngine];
+const mockBadges: BadgeType[] = [BadgeType.Tree, BadgeType.Wallbreaker, BadgeType.Nice, BadgeType.Sleepy, BadgeType.StartYourEngine];
 
 function AccountModal({ setOpen }: { setOpen: (open: boolean) => void }) {
   const connection = useEthConnection();
@@ -22,17 +22,18 @@ function AccountModal({ setOpen }: { setOpen: (open: boolean) => void }) {
   if (!address) return <></>;
   const twitter = twitters[address];
   const truncatedAddress = truncateAddress(address);
-  const configPlayers = useSeasonData();
-  const grandPrixBadges = loadPlayerBadges(address, configPlayers);
+  const grandPrixBadges = mockBadges;
+  const badgeElements = useMemo(() => {
+    if (!grandPrixBadges) return;
 
-  const badgeElements = useMemo(
-    () =>
-      grandPrixBadges &&
-      grandPrixBadges.map((grandPrixBadge, idx) => (
-        <BadgeDetails type={grandPrixBadge} key={`badge-${idx}`} />
-      )),
-    [grandPrixBadges]
-  );
+    const countedBadges: { count: number; badge: BadgeType }[] = [];
+    grandPrixBadges.forEach((badge) => {
+      const found = countedBadges.find((b) => b.badge == badge);
+      if (!found) return countedBadges.push({ count: 1, badge: badge });
+      return found.count++;
+    });
+    return countedBadges.map((badge) => <BadgeDetails type={badge.badge} count={badge.count} />);
+  }, [grandPrixBadges]);
 
   return (
     <ModalContainer onClick={() => setOpen(false)}>
@@ -123,7 +124,7 @@ const AccountContent = styled.div`
 
 const AccountDetails = styled.div`
   width: 600px;
-  height: 60%;
+  min-height: 60%;
   background: #38383b;
   border: 1px solid #676767;
   color: #dddde9;

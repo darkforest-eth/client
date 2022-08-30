@@ -14,14 +14,16 @@ export const Badge = createComponent(React, DarkForestBadge.tagName, DarkForestB
   // onClick: 'click'
 });
 
-export function BadgeDetails({ type }: { type: BadgeType }) {
+export function BadgeDetails({ type, count = 1 }: { type: BadgeType; count: number }) {
   const badgeElement = getBadgeElement(type);
   if (!badgeElement) return <></>;
 
   return (
     <BadgeDetailsContainer>
       <Badge type={type} />
-      <span style={{ fontSize: '1.25rem' }}>{badgeElement.name}</span>
+      <span style={{ fontSize: '1.25rem' }}>
+        {badgeElement.name} {count > 1 ? `(x${count})` : ''}
+      </span>
       <span>{badgeElement.description}</span>
     </BadgeDetailsContainer>
   );
