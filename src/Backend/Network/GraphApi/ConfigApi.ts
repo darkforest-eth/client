@@ -33,7 +33,7 @@ query {
   const hasPlanets = rawData.data.arenas.filter((a) => a.planets.length > 0);
   if(hasPlanets.length == 0) return undefined;
   const res = convertGraphConfig(hasPlanets[0]);
-  if(res) return res;
+  if (res) return res;
 }
 
 export async function loadConfigFromAddress(address: EthAddress): Promise<{
@@ -55,7 +55,7 @@ export async function loadConfigFromAddress(address: EthAddress): Promise<{
     const rawData: GraphArena = (
       await getGraphQLData(query, process.env.GRAPH_URL || 'localhost:8000')
     ).data.arena;
-    if(!rawData) throw new Error('arena has no data');
+    if (!rawData) throw new Error('arena has no data');
     const configData = convertGraphConfig(rawData);
     return configData;
   } catch (e) {

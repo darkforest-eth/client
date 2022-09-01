@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Btn } from '../Components/Btn';
 import { AccountLabel } from '../Components/Labels/Labels';
 import { Gold, Green, Red } from '../Components/Text';
+import { LobbyButton } from '../Pages/Lobby/LobbyMapEditor';
 import { TooltipTrigger } from '../Panes/Tooltip';
 import { useGameover, useUIManager } from '../Utils/AppHooks';
 
@@ -37,11 +38,9 @@ export function TargetPlanetVictory() {
           </span>
 
           {canClaimVictory && (
-            <ArenaPortalButton
-              onClick={() => gameManager.claimVictory()}
-            >
+            <LobbyButton primary onClick={() => gameManager.claimVictory()}>
               Claim Victory!
-            </ArenaPortalButton>
+            </LobbyButton>
           )}
         </TooltipTrigger>
       </GameoverContainer>
@@ -57,26 +56,4 @@ const GameoverContainer = styled.div`
 const TimeContainer = styled.div`
   font-size: 1em;
   text-align: center;
-`;
-
-export const ArenaPortalButton = styled.button<{ secondary?: boolean }>`
-  padding: 8px 16px;
-  border-radius: 3px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  border: ${({ secondary }) => (!secondary ? '2px solid #2EE7BA' : '1px solid #5F5F5F')};
-  color: ${({ secondary }) => (!secondary ? '#2EE7BA' : '#fff')};
-  background: ${({ secondary }) => (!secondary ? '#09352B' : '#252525')};
-  border-radius: 4px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: background 80ms ease 0s, border-color;
-  &:hover {
-    background: ${({ secondary }) => (!secondary ? '#0E5141' : '#3D3D3D')};
-    border-color: ${({ secondary }) => (!secondary ? '#30FFCD' : '#797979')};
-  }
 `;

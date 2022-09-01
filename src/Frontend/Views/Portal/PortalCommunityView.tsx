@@ -86,36 +86,3 @@ const Container = styled.div`
   margin: 0 auto;
   height: calc(100vh - 56px);
 `;
-
-// TODO: Replace this with LobbyButton when #68 is merged
-export const ArenaPortalButton = styled.button<{ secondary?: boolean }>`
-  padding: 8px 16px;
-  border-radius: 3px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  border: ${({ secondary }) => (!secondary ? '2px solid #2EE7BA' : '1px solid #5F5F5F')};
-  color: ${({ secondary }) => (!secondary ? '#2EE7BA' : '#fff')};
-  background: ${({ secondary }) => (!secondary ? '#09352B' : '#252525')};
-  padding: 16px;
-  border-radius: 4px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: background 80ms ease 0s, border-color;
-  &:hover {
-    background: ${({ secondary }) => (!secondary ? '#0E5141' : '#3D3D3D')};
-    border-color: ${({ secondary }) => (!secondary ? '#30FFCD' : '#797979')};
-  }
-`;
-
-const MoreGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  grid-gap: 10px;
-  margin-top: 16px;
-`;
-
-const MoreMapsContainer = styled.div`
-  overflow-y: auto;
-`;

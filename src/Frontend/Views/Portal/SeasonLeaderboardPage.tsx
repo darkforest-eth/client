@@ -12,10 +12,12 @@ import {
 } from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
 import dfstyles from '../../Styles/dfstyles';
 import { useSeasonData } from '../../Utils/AppHooks';
-import { SEASON_GRAND_PRIXS } from '../../Utils/constants';
-import { MinimalButton } from '../Portal/PortalMainView';
+import { theme } from './styleUtils';
 
-const Entry: React.FC<{ entry: SeasonLeaderboardEntry; index: number }> = ({ entry, index }) => {
+export const Entry: React.FC<{
+  entry: SeasonLeaderboardEntry;
+  index: number;
+}> = ({ entry, index }) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   return (
     <tr>
@@ -75,7 +77,6 @@ const Entry: React.FC<{ entry: SeasonLeaderboardEntry; index: number }> = ({ ent
 const Leaderboard: React.FC<SeasonLeaderboardProps> = ({ seasonId, entries }) => {
   return (
     <Container>
-      <Title>Season {seasonId} Leaderboard</Title>
       <Table>
         <Header>
           <tr>
@@ -98,75 +99,19 @@ const Leaderboard: React.FC<SeasonLeaderboardProps> = ({ seasonId, entries }) =>
   );
 };
 
-let N_MOCK_ENTRIES = 30;
-
-let DUMMY: SeasonLeaderboardEntry[] = [];
-for (let i = 0; i < N_MOCK_ENTRIES; i++) {
-  const address = '0x' + Math.floor(Math.random() * 10000000000000000).toString(16);
-  const entry: SeasonLeaderboardEntry = {
-    address,
-    games: [
-      {
-        id: '123',
-        address: address,
-        duration: Math.floor(Math.random() * 1000),
-        moves: Math.floor(Math.random() * 1000),
-        startTime: SEASON_GRAND_PRIXS[0].startTime,
-        endTime: SEASON_GRAND_PRIXS[0].endTime,
-        badges: [BadgeType.StartYourEngine, BadgeType.Wallbreaker],
-        gamesStarted: Math.floor(Math.random() * 100),
-        gamesFinished: Math.floor(Math.random() * 100),
-        configHash: '0x' + Math.floor(Math.random() * 10000000000000000).toString(16),
-        score: Math.floor(i * Math.random() * 1000),
-      },
-      {
-        id: '123',
-        address: address,
-        duration: Math.floor(Math.random() * 1000),
-        moves: Math.floor(Math.random() * 1000),
-        startTime: SEASON_GRAND_PRIXS[0].startTime,
-        endTime: SEASON_GRAND_PRIXS[0].endTime,
-        badges: [BadgeType.StartYourEngine, BadgeType.Wallbreaker],
-        gamesStarted: Math.floor(Math.random() * 100),
-        gamesFinished: Math.floor(Math.random() * 100),
-        configHash: '0x' + Math.floor(Math.random() * 10000000000000000).toString(16),
-        score: Math.floor(i * Math.random() * 1000),
-      },
-      {
-        id: '123',
-        address: address,
-        duration: Math.floor(Math.random() * 1000),
-        moves: Math.floor(Math.random() * 1000),
-        startTime: SEASON_GRAND_PRIXS[0].startTime,
-        endTime: SEASON_GRAND_PRIXS[0].endTime,
-        badges: [BadgeType.StartYourEngine, BadgeType.Wallbreaker],
-        gamesStarted: Math.floor(Math.random() * 100),
-        gamesFinished: Math.floor(Math.random() * 100),
-        configHash: '0x' + Math.floor(Math.random() * 10000000000000000).toString(16),
-        score: Math.floor(i * Math.random() * 1000),
-      },
-    ],
-    score: Math.floor(i * Math.random() * 1000),
-    badges: Math.floor(Math.random() * 1000),
-  };
-  DUMMY.push(entry);
-}
-
-export const SeasonLeaderboard: React.FC = () => {
+export const SeasonLeaderboardPage: React.FC = () => {
   const allPlayers = useSeasonData();
   const seasonId = 1;
   const leaderboard = loadSeasonLeaderboard(allPlayers, seasonId);
 
   console.log(`leaderboard`, leaderboard);
-  return <Leaderboard seasonId={seasonId} entries={leaderboard.entries} />;
+  return (
+    <div style={{ margin: '0 auto', textAlign: 'center' }}>
+      <Title>Season {seasonId} Leaderboard</Title>
+      <Leaderboard seasonId={seasonId} entries={leaderboard.entries} />
+    </div>
+  );
 };
-
-const Topbar = styled.div`
-  width: 100%;
-  height: 50px;
-  display: flex;
-  justify-content: space-between;
-`;
 
 const Container = styled.div`
   width: 66%;
@@ -221,7 +166,7 @@ const Row = styled.div<{ expanded?: boolean }>`
   padding: 0.5rem;
   cursor: pointer;
   transition: 0.2s ease-in-out;
-  background: ${(props) => (props.expanded ? dfstyles.colors.backgroundlighter : 'transparent')};
+  background: ${theme.colors.bg2};
   &:hover {
     background: ${dfstyles.colors.backgroundlighter};
   }

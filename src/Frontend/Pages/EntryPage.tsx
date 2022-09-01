@@ -1,4 +1,4 @@
-import { CONTRACT_ADDRESS, FAUCET_ADDRESS } from '@darkforest_eth/contracts';
+import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { DFArenaFaucet } from '@darkforest_eth/contracts/typechain';
 import { EthConnection, ThrottledConcurrentQueue, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
@@ -320,7 +320,8 @@ export function EntryPage() {
           setLoadingStatus('creating');
         }
       } catch (e) {
-        alert('Unable to connect to active account. Please login into another.');
+        // alert('Unable to connect to active account. Please login into another.');
+        console.error('Unable to connect to active account. Please login into another.');
         logOut();
       }
     }
@@ -330,6 +331,7 @@ export function EntryPage() {
   }, [connection]);
 
   useEffect(() => {
+    console.log(`controller: ${controller} connection ${connection} current ${terminal.current}`)
     if (!controller && connection && terminal.current) {
       const newController = new EntryPageTerminal(
         connection,

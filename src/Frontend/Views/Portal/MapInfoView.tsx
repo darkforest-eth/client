@@ -14,7 +14,7 @@ import { useConfigFromHash } from '../../Utils/AppHooks';
 import { competitiveConfig } from '../../Utils/constants';
 
 import { MapDetails } from './MapDetails';
-import { ArenaPortalButton } from './PortalHomeView';
+import { LobbyButton } from '../../Pages/Lobby/LobbyMapEditor';
 
 const NONE = 'No map found';
 function MapOverview({
@@ -53,7 +53,9 @@ function MapOverview({
   return (
     <OverviewContainer>
       <div style={{ textAlign: 'center' }}>
-        {configHash == competitiveConfig &&  <MythicLabelText text={`Galactic League Official Map`} />}
+        {configHash == competitiveConfig && (
+          <MythicLabelText text={`Galactic League Official Map`} />
+        )}
         <MapTitle>{mapName}</MapTitle>
         <TextPreview text={configHash} focusedWidth={'200px'} unFocusedWidth={'200px'} />
       </div>
@@ -77,12 +79,12 @@ function MapOverview({
           setRefreshing={() => {}}
         />
       )}
-      <div style = {{display: 'flex', gap: '16px', justifyContent: 'center', width: '100%'}}>
+      <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', width: '100%' }}>
         <Link style={{ minWidth: '250px' }} target='blank' to={`/arena/${lobbyAddress}/settings`}>
-          <ArenaPortalButton secondary>Remix Map</ArenaPortalButton>
+          <LobbyButton>Remix Map</LobbyButton>
         </Link>
         <Link style={{ minWidth: '250px' }} target='blank' to={`/play/${lobbyAddress}?create=true`}>
-          <ArenaPortalButton>Create Match</ArenaPortalButton>
+          <LobbyButton primary>Create Match</LobbyButton>
         </Link>
       </div>
     </OverviewContainer>
@@ -91,7 +93,7 @@ function MapOverview({
 
 export function MapInfoView({ match }: RouteComponentProps<{ configHash: string }>) {
   const configHash = match.params.configHash || undefined;
-  const {config, lobbyAddress, error} = useConfigFromHash(configHash);
+  const { config, lobbyAddress, error } = useConfigFromHash(configHash);
 
   return (
     <MapInfoContainer>

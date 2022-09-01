@@ -179,7 +179,8 @@ export function PortalHistoryView({ match }: RouteComponentProps<{ account: stri
   const configPlayers = useSeasonData();
 
   const seasonHistories = loadPlayerSeasonHistoryView(account, configPlayers);
-  console.log(seasonHistories);
+  console.log(`season Histories`, seasonHistories);
+  if (seasonHistories.length == 0) return <Container>Player not found...</Container>;
 
   const rounds = seasonHistories[current].grandPrixs;
   const totalScore = useMemo(() => rounds.reduce((prev, curr) => curr.score + prev, 0), [rounds]);

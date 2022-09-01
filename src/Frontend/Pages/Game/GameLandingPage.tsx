@@ -1,5 +1,5 @@
 import { BLOCK_EXPLORER_URL } from '@darkforest_eth/constants';
-import { CONTRACT_ADDRESS, FAUCET_ADDRESS } from '@darkforest_eth/contracts';
+import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { DarkForest, DFArenaFaucet } from '@darkforest_eth/contracts/typechain';
 import { EthConnection, neverResolves, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
@@ -180,7 +180,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
           return;
         }
       }
-      
+
       terminal.current?.println(``);
       terminal.current?.println(
         `Would you like to play or spectate this game?`,

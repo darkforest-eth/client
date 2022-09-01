@@ -12,7 +12,7 @@ import { Icon } from '../Components/Icons';
 import { Modal } from '../Components/Modal';
 import { Red, White, Text, HideSmall } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { ArenaPortalButton } from '../Views/Portal/PortalHomeView';
+import { LobbyButton } from './Lobby/LobbyMapEditor';
 
 export const enum LandingPageZIndex {
   Background = 0,
@@ -62,12 +62,11 @@ export default function LandingPage() {
               <HideSmall>Dark Forest Arena</HideSmall> 🏟️
             </Badge>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <ArenaPortalButton style={{ flex: '2' }} onClick={() => history.push('/portal')}>
+              <LobbyButton primary style={{ flex: '2' }} onClick={() => history.push('/portal')}>
                 Enter
-              </ArenaPortalButton>
-              <ArenaPortalButton
+              </LobbyButton>
+              <LobbyButton
                 style={{ flex: '1' }}
-                secondary
                 onClick={() =>
                   window.open(
                     'https://medium.com/dfdao/%EF%B8%8F-the-galactic-league-%EF%B8%8F-aa17acc9c7d7',
@@ -76,7 +75,7 @@ export default function LandingPage() {
                 }
               >
                 Learn More
-              </ArenaPortalButton>
+              </LobbyButton>
             </div>
           </TextContainer>
         </Content>

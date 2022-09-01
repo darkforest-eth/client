@@ -63,7 +63,6 @@ const StyledTerminalWrapper = styled.div<{
       : 'none'};
   height: 100%;
   // overflow: hidden;
-  background: ${dfstyles.colors.background};
   position: relative;
 
   ${(props) => (props.initRender !== InitRenderState.NONE ? STWInit : STWNoInit)};

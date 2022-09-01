@@ -74,9 +74,7 @@ export const LobbyMapEditor: React.FC<{
     //   return;
     // }
     if (
-      config.ADMIN_PLANETS.displayValue?.find(
-        (p) => planetCoord.x == p?.x && planetCoord.y == p?.y
-      )
+      config.ADMIN_PLANETS.displayValue?.find((p) => planetCoord.x == p?.x && planetCoord.y == p?.y)
     ) {
       onError('Planet with identical coords staged');
       return;
@@ -84,7 +82,7 @@ export const LobbyMapEditor: React.FC<{
     const newPlanetToStage: LobbyPlanet = {
       ...mutablePlanet,
       x: planetCoord.x,
-      y: planetCoord.y
+      y: planetCoord.y,
     };
     const index = config.ADMIN_PLANETS.displayValue?.length ?? 0;
     updateConfig({
@@ -120,7 +118,7 @@ export const LobbyMapEditor: React.FC<{
               (config.BLOCK_MOVES.displayValue ?? false)
             }
             stagedPlanets={config.ADMIN_PLANETS.currentValue ?? []}
-            excludePlanetTypes={['x','y']}
+            excludePlanetTypes={['x', 'y']}
             onChange={(planet) => setMutablePlanet(planet)}
             root={root}
           />
@@ -267,7 +265,7 @@ const MainContentInner = styled.div`
   margin: 0 auto;
 `;
 
-const LobbyButton = styled.button<{ primary?: boolean }>`
+export const LobbyButton = styled.button<{ primary?: boolean }>`
   text-transform: uppercase;
   letter-spacing: 0.06em;
   border: ${({ primary }) => (primary ? '2px solid #2EE7BA' : '1px solid #5F5F5F')};
@@ -280,9 +278,14 @@ const LobbyButton = styled.button<{ primary?: boolean }>`
   justify-content: center;
   align-items: center;
   transition: background 80ms ease 0s, border-color;
-  &:hover {
+  &:hover:not([disabled]) {
     background: ${({ primary }) => (primary ? '#0E5141' : '#3D3D3D')};
     border-color: ${({ primary }) => (primary ? '#30FFCD' : '#797979')};
+  }
+  &:disabled {
+    cursor: not-allowed;
+    background: #0e5141;
+    border-color: transparent;
   }
 `;
 
