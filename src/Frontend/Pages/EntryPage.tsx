@@ -4,7 +4,7 @@ import { EthConnection, ThrottledConcurrentQueue, weiToEth } from '@darkforest_e
 import { address } from '@darkforest_eth/serde';
 import { CleanConfigPlayer, ConfigPlayer, EthAddress } from '@darkforest_eth/types';
 import { utils, Wallet } from 'ethers';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { active } from 'sortablejs';
 import {
@@ -330,21 +330,22 @@ export function EntryPage() {
     }
   }, [connection]);
 
-  useEffect(() => {
-    console.log(`controller: ${controller} connection ${connection} current ${terminal.current}`)
-    if (!controller && connection && terminal.current) {
-      const newController = new EntryPageTerminal(
-        connection,
-        terminal.current,
-        async (account: Account) => {
-          await connection.setAccount(account.privateKey);
-          setLoadingStatus('complete');
-        }
-      );
-      newController.checkCompatibility();
-      setController(newController);
-    }
-  }, [terminal, connection, controller, loadingStatus]);
+  const controllerHandler = useCallback(
+    (terminalRef) => {
+      if (!controller && connection) {
+        const newController = new EntryPageTerminal(
+          connection,
+          terminalRef,
+          async (account: Account) => {
+            await connection.setAccount(account.privateKey);
+            setLoadingStatus('complete');
+          }
+        );
+        newController.checkCompatibility();
+      }
+    },
+    [connection, controller]
+  );
 
   if (!connection || !twitters || loadingStatus == 'loading') {
     return <LoadingPage />;
@@ -352,7 +353,7 @@ export function EntryPage() {
     return (
       <Wrapper initRender={InitRenderState.NONE} terminalEnabled={false}>
         <TerminalWrapper initRender={InitRenderState.NONE} terminalEnabled={false}>
-          <Terminal ref={terminal} promptCharacter={'$'} />
+          <Terminal ref={controllerHandler} promptCharacter={'$'} />
         </TerminalWrapper>
 
         {/* this div is here so the styling matches gamelandingpage styling*/}
