@@ -6,14 +6,26 @@ import { loadPlayerBadges } from '../../../Backend/Network/GraphApi/SeasonLeader
 import { Badge, BadgeDetails, SpacedBadges } from '../../Components/Badges';
 import { Btn } from '../../Components/Btn';
 import { Gnosis, Icon, IconType, Twitter } from '../../Components/Icons';
+import { TextPreview } from '../../Components/TextPreview';
 import { WithdrawSilverButton } from '../../Panes/Game/TooltipPanes';
 
 import dfstyles from '../../Styles/dfstyles';
-import { useEthConnection, usePlayerBadges, useSeasonData, useTwitters } from '../../Utils/AppHooks';
+import {
+  useEthConnection,
+  usePlayerBadges,
+  useSeasonData,
+  useTwitters,
+} from '../../Utils/AppHooks';
 import { TiledTable } from '../TiledTable';
 import { truncateAddress } from './PortalUtils';
 
-const mockBadges: BadgeType[] = [BadgeType.Tree, BadgeType.Wallbreaker, BadgeType.Nice, BadgeType.Sleepy, BadgeType.StartYourEngine];
+const mockBadges: BadgeType[] = [
+  BadgeType.Tree,
+  BadgeType.Wallbreaker,
+  BadgeType.Nice,
+  BadgeType.Sleepy,
+  BadgeType.StartYourEngine,
+];
 
 function AccountModal({ setOpen }: { setOpen: (open: boolean) => void }) {
   const connection = useEthConnection();
@@ -49,7 +61,9 @@ function AccountModal({ setOpen }: { setOpen: (open: boolean) => void }) {
           >
             <Icon type={IconType.X} />
           </button>
-          <div style={{ fontSize: '2em' }}>{twitter || truncatedAddress}</div>
+          <div style={{ fontSize: '2em' }}>
+            {twitter ?? <TextPreview text={address} unFocusedWidth={'50%'} focusedWidth={'100%'} />}
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Btn
               onClick={() => {
