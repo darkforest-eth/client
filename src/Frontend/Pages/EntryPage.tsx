@@ -2,7 +2,12 @@ import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { DFArenaFaucet } from '@darkforest_eth/contracts/typechain';
 import { EthConnection, ThrottledConcurrentQueue, weiToEth } from '@darkforest_eth/network';
 import { address } from '@darkforest_eth/serde';
-import { CleanConfigPlayer, ConfigPlayer, EthAddress } from '@darkforest_eth/types';
+import {
+  CleanConfigPlayer,
+  ConfigPlayer,
+  EthAddress,
+  GrandPrixMetadata,
+} from '@darkforest_eth/types';
 import { utils, Wallet } from 'ethers';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
@@ -17,6 +22,7 @@ import {
   logOut,
 } from '../../Backend/Network/AccountManager';
 import { getEthConnection } from '../../Backend/Network/Blockchain';
+import { loadRegistry } from '../../Backend/Network/GraphApi/GrandPrixApi';
 import { loadAllPlayerData } from '../../Backend/Network/GraphApi/SeasonLeaderboardApi';
 import { getAllTwitters, sendDrip } from '../../Backend/Network/UtilityServerAPI';
 import { AddressTwitterMap } from '../../_types/darkforest/api/UtilityServerAPITypes';
@@ -28,6 +34,7 @@ import {
   EthConnectionProvider,
   TwitterProvider,
   SeasonDataProvider,
+  SeasonPlayerProvider,
 } from '../Utils/AppHooks';
 import { Incompatibility, unsupportedFeatures } from '../Utils/BrowserChecks';
 import { TerminalTextStyle } from '../Utils/TerminalTypes';
@@ -102,48 +109,48 @@ class EntryPageTerminal {
     }
   }
   public async chooseAccount() {
-    this.terminal.printElement(<MythicLabelText text='Welcome to Dark Forest Arena' />);
-    this.terminal.newline();
-    this.terminal.newline();
+    this.terminal?.printElement(<MythicLabelText text='Welcome to Dark Forest Arena' />);
+    this.terminal?.newline();
+    this.terminal?.newline();
 
     const accounts = getAccounts();
 
-    this.terminal.println(`Found ${accounts.length} accounts on this device. Loading balances...`);
-    this.terminal.newline();
+    this.terminal?.println(`Found ${accounts.length} accounts on this device. Loading balances...`);
+    this.terminal?.newline();
 
     try {
       await this.loadBalances(accounts.map((a) => a.address));
     } catch (e) {
       console.log(e);
-      this.terminal.println(
+      this.terminal?.println(
         `Error loading balances. Reload the page to try again.`,
         TerminalTextStyle.Red
       );
       return;
     }
 
-    this.terminal.println(`Log in to create an arena. If your account has less than 0.005 xDAI`);
-    this.terminal.println(`it will get dripped 0.01 Optimism xDAI`);
-    this.terminal.newline();
+    this.terminal?.println(`Log in to create an arena. If your account has less than 0.005 xDAI`);
+    this.terminal?.println(`it will get dripped 0.01 Optimism xDAI`);
+    this.terminal?.newline();
 
     accounts.forEach((account, i) => {
-      this.terminal.print(`(${i + 1}): `, TerminalTextStyle.Sub);
-      this.terminal.print(`${account.address} `);
-      this.terminal.println(
+      this.terminal?.print(`(${i + 1}): `, TerminalTextStyle.Sub);
+      this.terminal?.print(`${account.address} `);
+      this.terminal?.println(
         this.balancesEth[i].toFixed(2) + ' xDAI',
         this.balancesEth[i] < 0.01 ? TerminalTextStyle.Red : TerminalTextStyle.Green
       );
     });
-    this.terminal.newline();
+    this.terminal?.newline();
 
-    this.terminal.print('(n) ', TerminalTextStyle.Sub);
-    this.terminal.println(`Generate new burner wallet account.`);
-    this.terminal.print('(i) ', TerminalTextStyle.Sub);
-    this.terminal.println(`Import private key.`);
-    this.terminal.println(``);
-    this.terminal.println(`Select an option:`, TerminalTextStyle.Text);
+    this.terminal?.print('(n) ', TerminalTextStyle.Sub);
+    this.terminal?.println(`Generate new burner wallet account.`);
+    this.terminal?.print('(i) ', TerminalTextStyle.Sub);
+    this.terminal?.println(`Import private key.`);
+    this.terminal?.println(``);
+    this.terminal?.println(`Select an option:`, TerminalTextStyle.Text);
 
-    const userInput = await this.terminal.getInput();
+    const userInput = await this.terminal?.getInput();
 
     if (+userInput && +userInput <= accounts.length && +userInput > 0) {
       const selectedAccount = accounts[+userInput - 1];
@@ -153,8 +160,8 @@ class EntryPageTerminal {
     } else if (userInput === 'i') {
       this.importAccount();
     } else {
-      this.terminal.println('Unrecognized input. Please try again.', TerminalTextStyle.Red);
-      this.terminal.println('');
+      this.terminal?.println('Unrecognized input. Please try again.', TerminalTextStyle.Red);
+      this.terminal?.println('');
       await this.chooseAccount();
     }
   }
@@ -282,6 +289,7 @@ export function EntryPage() {
   const [twitters, setTwitters] = useState<AddressTwitterMap | undefined>();
   const [connection, setConnection] = useState<EthConnection | undefined>();
   const [seasonPlayers, setPlayers] = useState<CleanConfigPlayer[] | undefined>();
+  const [seasonData, setSeasonData] = useState<GrandPrixMetadata[] | undefined>();
 
   /* get all twitters on page load */
   useEffect(() => {
@@ -290,8 +298,25 @@ export function EntryPage() {
 
   /* get all season data on page load*/
   useEffect(() => {
-    loadAllPlayerData().then((t) => setPlayers(t));
-  }, []);
+    if (connection) {
+      console.log(`loading registry...`);
+      loadRegistry(connection)
+      .then((t) => {
+        setSeasonData(t)
+      })
+      .catch((e) => {
+        console.log(`load registry error`, e);
+        setSeasonData([])
+      })
+    }
+  }, [connection]);
+
+  useEffect(() => {
+    if (seasonData) {
+      console.log(`loading players...`);
+      loadAllPlayerData(seasonData).then((t) => setPlayers(t));
+    }
+  }, [seasonData]);
 
   /* set connection on page load */
   useEffect(() => {
@@ -364,18 +389,25 @@ export function EntryPage() {
     return (
       <EthConnectionProvider value={connection}>
         <TwitterProvider value={twitters}>
-          <SeasonDataProvider value={seasonPlayers!}>
-            <Router>
-              <Switch>
-                <Redirect path='/play' to={`/play/${defaultAddress}`} push={true} exact={true} />
-                <Route path='/play/:contract' component={GameLandingPage} />
-                <Redirect path='/portal' to={`/portal/home`} push={true} exact={true} />
-                <Route path='/portal' component={PortalMainView} />
-                <Redirect path='/arena' to={`/arena/${defaultAddress}`} push={true} exact={true} />
-                <Route path='/arena/:contract' component={CreateLobby} />
-                <Route path='*' component={NotFoundPage} />
-              </Switch>
-            </Router>
+          <SeasonDataProvider value={seasonData!}>
+            <SeasonPlayerProvider value={seasonPlayers!}>
+              <Router>
+                <Switch>
+                  <Redirect path='/play' to={`/play/${defaultAddress}`} push={true} exact={true} />
+                  <Route path='/play/:contract' component={GameLandingPage} />
+                  <Redirect path='/portal' to={`/portal/home`} push={true} exact={true} />
+                  <Route path='/portal' component={PortalMainView} />
+                  <Redirect
+                    path='/arena'
+                    to={`/arena/${defaultAddress}`}
+                    push={true}
+                    exact={true}
+                  />
+                  <Route path='/arena/:contract' component={CreateLobby} />
+                  <Route path='*' component={NotFoundPage} />
+                </Switch>
+              </Router>
+            </SeasonPlayerProvider>
           </SeasonDataProvider>
         </TwitterProvider>
       </EthConnectionProvider>

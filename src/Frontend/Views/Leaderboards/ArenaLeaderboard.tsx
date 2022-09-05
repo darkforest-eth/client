@@ -14,6 +14,7 @@ import { formatDuration } from '../../Utils/TimeUtils';
 import { GenericErrorBoundary } from '../GenericErrorBoundary';
 import { SortableTable } from '../SortableTable';
 import { Table } from '../Table';
+import { scoreToTime } from '../Portal/PortalUtils';
 
 const errorMessage = 'Error Loading Leaderboard';
 
@@ -77,18 +78,7 @@ export function EloLeaderboardDisplay({
   );
 }
 
-function scoreToTime(score?: number | null) {
-  if (score === null || score === undefined) {
-    return 'n/a';
-  }
-  score = Math.floor(score);
 
-  const seconds = String(score % 60).padStart(2, '0');
-  const minutes = String(Math.floor(score / 60) % 60).padStart(2, '0');
-  const hours = String(Math.min(99, Math.floor(score / 3600))).padStart(2, '0');
-
-  return hours + ':' + minutes + ':' + seconds;
-}
 
 // pass in either an address, or a twitter handle. this function will render the appropriate
 // component
@@ -144,11 +134,20 @@ function getRankStar(rank: number) {
   return <></>;
 }
 
+export function goldStar() {
+  const gold =
+    'invert(73%) sepia(29%) saturate(957%) hue-rotate(354deg) brightness(100%) contrast(95%)';
+  return <Star width={'20px'} height={'20px'} color={gold}></Star>;
+
+}
+
 interface Row {
   address: string;
   twitter: string | undefined;
   time: number | undefined;
   moves: number | undefined;
+  score: number | undefined;
+  wallBreaker: boolean | undefined;
 }
 
 interface EloRow {
@@ -284,17 +283,18 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
         sortFunctions={sortFunctions}
         alignments={['r', 'r', 'l', 'l', 'r']}
         headers={[
-          // <Cell key='star'></Cell>,
+          <Cell key='star'></Cell>,
           <Cell key='rank'></Cell>,
           <Cell key='name'></Cell>,
           <Cell key='twitter'></Cell>,
           <Cell key='gnosis'></Cell>,
+          <Cell key='score'>Score</Cell>,
           <Cell key='time'>Time</Cell>,
           <Cell key='moves'>Moves</Cell>,
         ]}
         rows={rows}
         columns={[
-          // (row: Row, i) => getRankStar(i), //star
+          (row: Row, i) => row.wallBreaker ? goldStar() : <></>, //star
           (
             row: Row,
             i //rank
@@ -350,6 +350,10 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
           },
           (row: Row, i) => {
             // score
+            return <Cell>{row.score}</Cell>;
+          },
+          (row: Row, i) => {
+            // score
             return <Cell>{scoreToTime(row.time)}</Cell>;
           },
           (row: Row, i) => {
@@ -389,7 +393,7 @@ function ArenaLeaderboardBody({
       return -1;
     }
 
-    return a.score - b.score;
+    return b.score - a.score;
   });
 
   const arenaRows: Row[] = leaderboard.entries.map((entry) => {
@@ -398,6 +402,8 @@ function ArenaLeaderboardBody({
       twitter: entry.twitter,
       time: entry.time,
       moves: entry.moves,
+      score: entry.score,
+      wallBreaker: entry?.wallBreaker
     };
   });
 

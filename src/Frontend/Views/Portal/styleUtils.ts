@@ -7,6 +7,7 @@ export const theme = {
     fgPrimary: '#FFFFFF',
     fgMuted: '#DDDDE9',
     fgMuted2: '#CACACA',
+    green: '#5EFFA8',
   },
   borderRadius: '4px',
   fonts: {

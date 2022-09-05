@@ -2,31 +2,14 @@ import { BadgeType } from '@darkforest_eth/types';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { logOut } from '../../../Backend/Network/AccountManager';
-import { loadPlayerBadges } from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
-import { Badge, BadgeDetails, SpacedBadges } from '../../Components/Badges';
+import { Badge, BadgeDetailsCol, SpacedBadges } from '../../Components/Badges';
 import { Btn } from '../../Components/Btn';
 import { Gnosis, Icon, IconType, Twitter } from '../../Components/Icons';
 import { TextPreview } from '../../Components/TextPreview';
-import { WithdrawSilverButton } from '../../Panes/Game/TooltipPanes';
 
-import dfstyles from '../../Styles/dfstyles';
-import {
-  useEthConnection,
-  usePlayerBadges,
-  useSeasonData,
-  useTwitters,
-} from '../../Utils/AppHooks';
-import { TiledTable } from '../TiledTable';
-import { truncateAddress } from './PortalUtils';
+import { useEthConnection, useTwitters } from '../../Utils/AppHooks';
+import { mockBadges, truncateAddress } from './PortalUtils';
 import { theme } from './styleUtils';
-
-const mockBadges: BadgeType[] = [
-  BadgeType.Tree,
-  BadgeType.Wallbreaker,
-  BadgeType.Nice,
-  BadgeType.Sleepy,
-  BadgeType.StartYourEngine,
-];
 
 function AccountModal({ setOpen }: { setOpen: (open: boolean) => void }) {
   const connection = useEthConnection();
@@ -34,19 +17,6 @@ function AccountModal({ setOpen }: { setOpen: (open: boolean) => void }) {
   const twitters = useTwitters();
   if (!address) return <></>;
   const twitter = twitters[address];
-  const truncatedAddress = truncateAddress(address);
-  const grandPrixBadges = mockBadges;
-  const badgeElements = useMemo(() => {
-    if (!grandPrixBadges) return;
-
-    const countedBadges: { count: number; badge: BadgeType }[] = [];
-    grandPrixBadges.forEach((badge) => {
-      const found = countedBadges.find((b) => b.badge == badge);
-      if (!found) return countedBadges.push({ count: 1, badge: badge });
-      return found.count++;
-    });
-    return countedBadges.map((badge) => <BadgeDetails type={badge.badge} count={badge.count} />);
-  }, [grandPrixBadges]);
 
   return (
     <ModalContainer onClick={() => setOpen(false)}>
@@ -85,12 +55,6 @@ function AccountModal({ setOpen }: { setOpen: (open: boolean) => void }) {
               </Btn>
             )}
           </div>
-          {/* <StackedBadges items={mockBadges} /> */}
-          {badgeElements && badgeElements.length > 0 ? (
-            <TiledTable items={badgeElements} paginated={true} title='Your Badges' />
-          ) : (
-            'You have no badges'
-          )}
         </AccountContent>
         <Footer>
           <Btn onClick={logOut}>Logout</Btn>
@@ -139,7 +103,7 @@ const AccountContent = styled.div`
 
 const AccountDetails = styled.div`
   width: 600px;
-  min-height: 60%;
+  min-height: 20%;
   background: #38383b;
   border: 1px solid #676767;
   color: #dddde9;
@@ -166,4 +130,11 @@ const Footer = styled.div`
   border-top: solid 1px #676767;
   display: flex;
   padding-top: 12px;
+`;
+
+const BadgeGrid = styled.div`
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: ${theme.spacing.md};
 `;

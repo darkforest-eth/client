@@ -3,12 +3,27 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { theme } from '../styleUtils';
 
-export interface TabNavTypes {
-  tabs: {
-    label: string;
-    to: string;
-  }[];
+export interface TabType {
+  label: string;
+  to: string;
+  wildcard?: string;
 }
+
+export interface TabNavTypes {
+  tabs: TabType[];
+}
+
+const getTabActive = (currentPath: string, tab: TabType) => {
+  if (tab.wildcard) {
+    const splitPath = currentPath.trim().split('/');
+    const pathWithoutWildcard = splitPath.filter((p) => p !== tab.wildcard);
+    const splitTabLoc = tab.to.trim().split('/');
+    const currentPathIsSubsetOfTab = pathWithoutWildcard.every((p) => splitTabLoc.includes(p));
+    return currentPathIsSubsetOfTab;
+  } else {
+    return location.pathname === tab.to;
+  }
+};
 
 export const TabNav: React.FC<TabNavTypes> = ({ tabs }) => {
   const loc = useLocation();
@@ -16,7 +31,7 @@ export const TabNav: React.FC<TabNavTypes> = ({ tabs }) => {
     <Container>
       {tabs.map((tab, i) => (
         <Link key={i} to={tab.to}>
-          <Tab key={tab.label} active={loc.pathname === tab.to}>
+          <Tab key={tab.label} active={getTabActive(loc.pathname, tab)}>
             {tab.label}
           </Tab>
         </Link>

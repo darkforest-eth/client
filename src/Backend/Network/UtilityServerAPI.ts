@@ -216,7 +216,7 @@ export const requestFaucet = async (address: EthAddress): Promise<boolean> => {
   if (!process.env.FAUCET_URL) {
     return false;
   }
-
+  
   console.log(`sending faucet request for`, address);
   // TODO: Provide own env variable for this feature
   // if (process.env.NODE_ENV === 'production') {

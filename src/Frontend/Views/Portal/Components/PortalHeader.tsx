@@ -7,10 +7,11 @@ import { useHistory } from 'react-router-dom';
 import { useConfigFromHash, useEthConnection } from '../../../Utils/AppHooks';
 import { tutorialConfig } from '../../../Utils/constants';
 import { MinimalButton } from '../PortalMainView';
-import { populate } from '../../../../Backend/Utils/Populate';
+import { populate, populateBulk } from '../../../../Backend/Utils/Populate';
 import { address } from '@darkforest_eth/serde';
-import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 import { Logo } from '../../../Panes/Lobby/LobbiesUtils';
+import { loadRegistry } from '../../../../Backend/Network/GraphApi/GrandPrixApi';
+import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
 
 export const PortalHeader = () => {
   const history = useHistory();
@@ -33,18 +34,12 @@ export const PortalHeader = () => {
           onClick={() => history.push('/portal/home')}
         >
           <Logo width={56} />
-          <span
-            style={{
-              textTransform: 'uppercase',
-            }}
-          >
-            Arena
-          </span>
         </div>
         {process.env.NODE_ENV !== 'production' ? (
           <MinimalButton
             onClick={async () => {
-              await populate(connection, address(CONTRACT_ADDRESS));
+              await populateBulk(connection, address(CONTRACT_ADDRESS), 5);
+              //await populate(connection, address(CONTRACT_ADDRESS));
             }}
           >
             Populate
@@ -59,12 +54,13 @@ export const PortalHeader = () => {
             to: '/portal/home',
           },
           {
-            label: 'Create',
-            to: '/arena',
-          },
-          {
             label: 'History',
             to: `/portal/history/${playerAddress}`,
+            wildcard: playerAddress,
+          },
+          {
+            label: 'Create',
+            to: '/arena',
           },
           {
             label: 'Community',

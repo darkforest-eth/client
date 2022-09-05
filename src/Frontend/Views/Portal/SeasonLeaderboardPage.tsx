@@ -11,7 +11,8 @@ import {
   SeasonLeaderboardProps,
 } from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
 import dfstyles from '../../Styles/dfstyles';
-import { useSeasonData } from '../../Utils/AppHooks';
+import { useSeasonData, useSeasonPlayers } from '../../Utils/AppHooks';
+import { getCurrentGrandPrix } from './PortalUtils';
 import { theme } from './styleUtils';
 
 export const Entry: React.FC<{
@@ -61,10 +62,10 @@ export const Entry: React.FC<{
                   borderTop: `1px solid ${dfstyles.colors.borderDarker}`,
                 }}
               >
-                <span>{entry.badges} badges this season</span>
                 <Link to={`/portal/history/${entry.address}`}>
                   <button>View player</button>
                 </Link>
+                <span>{entry.badges} badges this season</span>
               </div>
             </div>
           </ExpandedGames>
@@ -100,15 +101,16 @@ const Leaderboard: React.FC<SeasonLeaderboardProps> = ({ seasonId, entries }) =>
 };
 
 export const SeasonLeaderboardPage: React.FC = () => {
-  const allPlayers = useSeasonData();
-  const seasonId = 1;
-  const leaderboard = loadSeasonLeaderboard(allPlayers, seasonId);
-
-  console.log(`leaderboard`, leaderboard);
+  const allPlayers = useSeasonPlayers();
+  const SEASON_GRAND_PRIXS = useSeasonData();
+  const currentGrandPrix = getCurrentGrandPrix(SEASON_GRAND_PRIXS);
+  if(!currentGrandPrix) return <div>No grand prix is currently active</div>
+  const leaderboard = loadSeasonLeaderboard(allPlayers, currentGrandPrix.seasonId, SEASON_GRAND_PRIXS);
+  const seasonId = currentGrandPrix.seasonId;
   return (
     <div style={{ margin: '0 auto', textAlign: 'center' }}>
       <Title>Season {seasonId} Leaderboard</Title>
-      <Leaderboard seasonId={seasonId} entries={leaderboard.entries} />
+      <Leaderboard seasonId={seasonId} entries={leaderboard.entries} />;
     </div>
   );
 };

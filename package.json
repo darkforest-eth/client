@@ -20,6 +20,7 @@
     "@darkforest_eth/types": "6.7.29",
     "@darkforest_eth/ui": "6.7.29",
     "@darkforest_eth/whitelist": "6.7.29",
+    "@dfdao/dynasty": "1.1.0",
     "@lit-labs/react": "^1.0.0",
     "@radix-ui/react-toast": "^0.1.1",
     "animejs": "^3.2.1",

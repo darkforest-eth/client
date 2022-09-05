@@ -31,7 +31,6 @@ import { InitPlanet, LobbyPlanet } from '../../Frontend/Panes/Lobby/LobbiesUtils
 import { LobbyInitializers } from '../../Frontend/Panes/Lobby/Reducer';
 import { OPTIMISM_GAS_LIMIT } from '../../Frontend/Utils/constants';
 import { loadDiamondContract, loadInitContract } from '../Network/Blockchain';
-import { loadConfigFromAddress } from '../Network/GraphApi/ConfigApi';
 import { ContractsAPI, makeContractsAPI } from './ContractsAPI';
 
 export type CreatePlanetData = {

@@ -77,6 +77,11 @@ export default function LandingPage() {
                 Learn More
               </LobbyButton>
             </div>
+            <div>
+              Welcome to the Eternal Grand Prix Play Test. <br></br>
+              Fill out this {' '}
+              <Link to='https://forms.gle/zkgeFF15koBopCNC9'>form </Link> to share your feedback and get $5.
+            </div>
           </TextContainer>
         </Content>
       </Container>

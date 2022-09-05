@@ -1,49 +1,45 @@
-import { Leaderboard } from '@darkforest_eth/types';
-import { BigNumber } from 'ethers';
+import { Leaderboard, RegistryResponse } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { loadArenaLeaderboard } from '../../../Backend/Network/GraphApi/GrandPrixApi';
+import {
+  loadGrandPrixLeaderboard,
+  loadUniquePlayerBadges,
+  loadSeasonLeaderboard,
+} from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
 import { LoadingSpinner } from '../../Components/LoadingSpinner';
-import { useConfigFromHash, useEthConnection } from '../../Utils/AppHooks';
+import {
+  useConfigFromHash,
+  useEthConnection,
+  useSeasonData,
+  useSeasonPlayers,
+  useTwitters,
+} from '../../Utils/AppHooks';
 import { ArenaLeaderboardDisplay } from '../Leaderboards/ArenaLeaderboard';
 import { LabeledPanel } from './Components/LabeledPanel';
 import { PaddedRow } from './Components/PaddedRow';
 import { SeasonLeaderboardEntryComponent } from './Components/SeasonLeaderboardEntryComponent';
 import { GPFeed } from './GPFeed';
 import { MapOverview } from './MapOverview';
-import { createDummySeasonLeaderboardData } from './PortalUtils';
+import { getCurrentGrandPrix } from './PortalUtils';
 import { theme } from './styleUtils';
-
-export interface RoundResponse {
-  configHash: string;
-  startTime: BigNumber;
-  endTime: BigNumber;
-  parentAddress: string;
-  seasonId: BigNumber;
-}
-
-const DUMMY = {
-  configHash: '0xd08bbeb0785370a68369f0a042e33ef2688da6da5e79acbb5688ddbb8ca4a862',
-  startTime: BigNumber.from('1661435558381'),
-  endTime: BigNumber.from('1761435658381'),
-  parentAddress: '0xcee9abadf221ca7db9fb8c3a2d402d9cab9bb38d',
-  seasonId: BigNumber.from('1'),
-} as RoundResponse;
 
 export const PortalHomeView: React.FC<{}> = () => {
   const [leaderboard, setLeaderboard] = useState<Leaderboard | undefined>();
-  const { config, lobbyAddress, error } = useConfigFromHash(DUMMY.configHash);
+  const SEASON_GRAND_PRIXS = useSeasonData();
+  const grandPrix = getCurrentGrandPrix(SEASON_GRAND_PRIXS);
+  if(!grandPrix) return <div>No active round</div>
+  const twitters = useTwitters();
+  const allPlayers = useSeasonPlayers();
+  const connection = useEthConnection();
+  const address = connection.getAddress();
+  if (!address) return <></>;
+  const leaders = loadGrandPrixLeaderboard(allPlayers, grandPrix.configHash, twitters);
+  const { config, lobbyAddress, error } = useConfigFromHash(grandPrix.configHash);
+  const uniqueBadges = loadUniquePlayerBadges(allPlayers, grandPrix.seasonId, SEASON_GRAND_PRIXS);
 
   useEffect(() => {
-    setLeaderboard(undefined);
-    async function loadLeaderboard() {
-      if (DUMMY.configHash) {
-        const leaderboard = await loadArenaLeaderboard(DUMMY.configHash, true);
-        setLeaderboard(leaderboard);
-      }
-    }
-    loadLeaderboard();
-  }, [DUMMY.configHash]);
+    setLeaderboard(leaders);
+  }, []);
 
   if (error) {
     return (
@@ -68,32 +64,32 @@ export const PortalHomeView: React.FC<{}> = () => {
     <Container>
       <div className='row w-100' style={{ gap: theme.spacing.xl }}>
         <div className='col w-100'>
-          <MapOverview round={DUMMY} config={config} lobbyAddress={lobbyAddress} />
+          <MapOverview round={grandPrix} config={config} lobbyAddress={lobbyAddress} />
         </div>
         <div className='col w-100'>
           <Label>Live Feed</Label>
-          <GPFeed leaderboard={leaderboard} />
+          <GPFeed configHash={grandPrix.configHash} />
         </div>
       </div>
       <div className='row w-100' style={{ gap: theme.spacing.xl }}>
         <div className='col w-100'>
-          <LabeledPanel label='Active game leaderboard'>
+          <LabeledPanel label='Active Round'>
             <ArenaLeaderboardDisplay leaderboard={leaderboard} error={undefined} />
-            {leaderboard?.entries.length === 0 ||
-              (leaderboard && leaderboard.length <= 3 && (
-                <PaddedRow>
-                  <span>Play the current round to get your score on the leaderboard</span>
-                </PaddedRow>
-              ))}
           </LabeledPanel>
         </div>
         <div className='col w-100'>
           <LabeledPanel label='Season leaderboard'>
             <div className='col' style={{ gap: theme.spacing.md }}>
-              {createDummySeasonLeaderboardData(15)
-                .sort((a, b) => b.score - a.score)
+              {loadSeasonLeaderboard(allPlayers, grandPrix.seasonId, SEASON_GRAND_PRIXS)
+                .entries.sort((a, b) => b.score - a.score)
+                .filter(e => e.score > 0)
                 .map((entry, index) => (
-                  <SeasonLeaderboardEntryComponent key={index} entry={entry} index={index} />
+                  <SeasonLeaderboardEntryComponent
+                    key={index}
+                    entry={entry}
+                    index={index}
+                    uniqueBadges={uniqueBadges}
+                  />
                 ))}
             </div>
           </LabeledPanel>
@@ -122,7 +118,7 @@ const Content = styled.div`
   margin-bottom: 24px;
 `;
 
-const Label = styled.span`
+export const Label = styled.span`
   font-size: 1rem;
   color: ${theme.colors.fgPrimary};
   font-family: ${theme.fonts.mono};

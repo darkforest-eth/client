@@ -1516,12 +1516,17 @@ export interface StockConfig {
   fourPlayerBattle: LobbyInitializers;
   sprint: LobbyInitializers;
   competitive: LobbyInitializers;
-  devOnePlayerRace: LobbyInitializers
+  devOnePlayerRace: LobbyInitializers;
+  devOnePlayerRaceB: LobbyInitializers
 }
 export const stockConfig: StockConfig = {
   vanilla: vanilla,
   onePlayerRace: devOnePlayerRace,
   devOnePlayerRace: devOnePlayerRace,
+  devOnePlayerRaceB: {
+    ...devOnePlayerRace,
+    TIME_FACTOR_HUNDREDTHS: 1500
+  },
   fourPlayerBattle: fourPlayerBattle,
   sprint: EloMap,
   competitive: EloMap,

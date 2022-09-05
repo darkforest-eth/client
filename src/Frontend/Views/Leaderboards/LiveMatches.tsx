@@ -1,4 +1,4 @@
-import { LiveMatch } from '@darkforest_eth/types';
+import { CleanMatchEntry, ExtendedMatchEntry, LiveMatch } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Btn } from '../../Components/Btn';
@@ -11,12 +11,17 @@ import dfstyles from '../../Styles/dfstyles';
 import { useLiveMatches, useTwitters } from '../../Utils/AppHooks';
 import { formatDuration, formatStartTime } from '../../Utils/TimeUtils';
 import { GenericErrorBoundary } from '../GenericErrorBoundary';
+import { getPlayer } from '../Portal/GPFeed';
 import { MinimalButton } from '../Portal/PortalMainView';
 import { Table } from '../Table';
 
+export interface MatchDisplay extends CleanMatchEntry {
+  time: number;
+}
+
 const errorMessage = 'Error Loading Leaderboard';
 export function LiveMatchesDisplay({ config }: { config: string }) {
-  const { liveMatches, spyError } = useLiveMatches(config);
+  const { liveMatches, spyError } = useLiveMatches(config, 1000);
   return <LiveMatches game={liveMatches} error={spyError} />;
 }
 
@@ -27,11 +32,10 @@ export function LiveMatches({
   game: LiveMatch | undefined;
   error: Error | undefined;
 }) {
-  const entries = game?.entries.filter((entry) => entry.firstMover !== null);
   return (
     <GenericErrorBoundary errorMessage={errorMessage}>
       <LeaderboardContainer>
-        <LeaderboardBody leaderboard={entries ? { entries: entries } : entries} error={error} />
+        <LeaderboardBody leaderboard={game} error={error} />
       </LeaderboardContainer>
     </GenericErrorBoundary>
   );
@@ -71,7 +75,7 @@ type Row = {
   id: string;
 };
 
-function LeaderboardTable({ rows }: { rows: Row[] }) {
+function LeaderboardTable({ rows }: { rows: MatchDisplay[] }) {
   if (rows.length == 0) return <Subber>No live games</Subber>;
 
   const [durations, setDurations] = useState<number[]>([]);
@@ -92,34 +96,53 @@ function LeaderboardTable({ rows }: { rows: Row[] }) {
       <Table
         alignments={['c', 'c', 'c', 'c']}
         headers={[
+          <Cell key='status'></Cell>,
           <Cell key='player'>Player</Cell>,
-          <Cell key='lobby'>Arena ID</Cell>,
           <Cell key='start_time'>Start Time</Cell>,
           <Cell key='duration'>Duration</Cell>,
+          <Cell key='moves'>Moves</Cell>,
           <Cell key='go'></Cell>,
         ]}
         rows={rows}
         columns={[
-          (row: Row, i) => {
-            return <Cell>{playerToEntry(row.address)}</Cell>;
-          },
-          (row: Row, i) => {
+          (row: MatchDisplay, i) => {
             return (
               <Cell>
-                <TextPreview text={row.id} focusedWidth={'75px'} unFocusedWidth={'75px'} />
+                <TextPreview
+                  text={row.gameOver ? '🎖' : '🚀'}
+                  focusedWidth={'75px'}
+                  unFocusedWidth={'75px'}
+                />
               </Cell>
             );
           },
-          (row: Row, i) => {
-            return <Cell>{startTimes[i] ? formatStartTime(startTimes[i]) : 'loading...'}</Cell>;
+          (row: MatchDisplay, i) => {
+            return <Cell>{playerToEntry(getPlayer(row))}</Cell>;
           },
-          (row: Row, i) => {
-            return <Cell>{durations[i] ? formatDuration(durations[i]) : 'loading...'}</Cell>;
+
+          (row: MatchDisplay, i) => {
+            return <Cell>{formatStartTime(row.startTime) ?? 'loading...'}</Cell>;
           },
-          (row: Row, i) => {
+          (row: MatchDisplay, i) => {
             return (
               <Cell>
-                <Link to={`https://arena.dfdao.xyz/play/${row.id}`}>
+                {row.gameOver
+                  ? formatDuration(row.duration * 1000)
+                  : durations[i] ? formatDuration(durations[i]) : 'loading...'}
+              </Cell>
+            );
+          },
+          (row: MatchDisplay, i) => {
+            return (
+              <Cell>
+                {row.moves}
+              </Cell>
+            );
+          },
+          (row: MatchDisplay, i) => {
+            return (
+              <Cell>
+                <Link to={`/play/${row.lobbyAddress}`}>
                   <MinimalButton>View</MinimalButton>
                 </Link>
               </Cell>
@@ -150,27 +173,18 @@ function LeaderboardBody({
     return <Subber>Leaderboard loading...</Subber>;
   }
 
-  leaderboard.entries.sort((a, b) => {
-    if (typeof a.startTime !== 'number' && typeof b.startTime !== 'number') {
-      return 0;
-    } else if (typeof a.startTime !== 'number') {
-      return 1;
-    } else if (typeof b.startTime !== 'number') {
-      return -1;
-    }
+  const latest = leaderboard.entries
+    .map((m) => {
+      return {
+        ...m,
+        time: m.gameOver ? m.endTime : m.startTime,
+      };
+    })
+    .sort((a, b) => {
+      return b.time - a.time;
+    }) as MatchDisplay[];
 
-    return b.startTime - a.startTime;
-  });
-
-  const competitiveRows: Row[] = leaderboard.entries.map((entry) => {
-    return {
-      id: entry.id,
-      address: entry.firstMover.address,
-      startTime: entry.startTime,
-    };
-  });
-
-  return <LeaderboardTable rows={competitiveRows} />;
+  return <LeaderboardTable rows={latest} />;
 }
 
 const Cell = styled.div`

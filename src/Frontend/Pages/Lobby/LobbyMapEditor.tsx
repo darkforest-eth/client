@@ -61,7 +61,6 @@ export const LobbyMapEditor: React.FC<{
   }, [selectedPlanetIndex, config.ADMIN_PLANETS]);
 
   const randomizeMap = () => {
-    // console.log('randomizing!!!');
     const seed = Math.floor(Math.random() * 10000);
     updateConfig({ type: 'PLANETHASH_KEY', value: seed });
     updateConfig({ type: 'SPACETYPE_KEY', value: seed + 1 });

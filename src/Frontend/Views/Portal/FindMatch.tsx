@@ -1,4 +1,4 @@
-import { EthAddress, LiveMatch, ExtendedMatchEntry } from '@darkforest_eth/types';
+import { EthAddress, LiveMatch, ExtendedMatchEntry, CleanMatchEntry } from '@darkforest_eth/types';
 import React, { CSSProperties } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -26,7 +26,7 @@ export interface MatchDetails {
   spotsTaken: number;
   matchId: string;
   startTime: number;
-  players: { address: string }[] | undefined;
+  players: string[] | undefined;
 }
 
 export const MatchComponent: React.FC<MatchDetails> = ({
@@ -53,7 +53,7 @@ export const MatchComponent: React.FC<MatchDetails> = ({
           <span>
             Players:{' '}
             {players.map((p) => (
-              <span key={p.address}>{compPlayerToEntry(p.address, twitters[p.address])}</span>
+              <span key={p}>{compPlayerToEntry(p, twitters[p])}</span>
             ))}
           </span>
         )}
@@ -100,17 +100,17 @@ export const FindMatch: React.FC<FindMatchProps> = ({ game }) => {
             >
               {items
                 .filter(
-                  (entry) => entry.planets.filter((planet) => planet.spawnPlanet == true).length > 0
+                  (entry) => entry.numSpawn > 0
                 )
-                .map((entry: ExtendedMatchEntry) => (
+                .map((entry: CleanMatchEntry) => (
                   <MatchComponent
                     configHash={entry.configHash}
-                    key={entry.id}
+                    key={entry.lobbyAddress}
                     creator={entry.creator}
                     matchType='1v1'
-                    totalSpots={entry.planets.filter((planet) => planet.spawnPlanet == true).length}
-                    spotsTaken={entry.players ? entry.players.length : 0}
-                    matchId={entry.id}
+                    totalSpots={entry.numSpawn}
+                    spotsTaken={entry.players.length}
+                    matchId={entry.lobbyAddress}
                     startTime={entry.startTime}
                     players={entry.players}
                   />
@@ -143,7 +143,7 @@ const MatchContainer = styled.div`
   height: 100%;
 `;
 
-const MatchButton = styled.button`
+export const MatchButton = styled.button`
   border-radius: 3px;
   padding: 8px 16px;
   background: ${dfstyles.colors.backgroundlighter};

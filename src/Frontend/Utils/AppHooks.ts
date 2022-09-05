@@ -9,6 +9,7 @@ import {
   ConfigPlayer,
   EthAddress,
   GrandPrixBadge,
+  GrandPrixMetadata,
   GraphConfigPlayer,
   Leaderboard,
   LiveMatch,
@@ -34,7 +35,8 @@ import { ModalHandle } from '../Views/Game/ModalPane';
 import { createDefinedContext } from './createDefinedContext';
 import { useEmitterSubscribe, useEmitterValue, useWrappedEmitter } from './EmitterHooks';
 import { usePoll } from './Hooks';
-import { loadSeasonBadges } from '../../Backend/Network/GraphApi/BadgeApi';
+import { DUMMY } from './constants';
+import { createDummyLiveMatches } from '../Views/Portal/PortalUtils';
 
 export const { useDefinedContext: useEthConnection, provider: EthConnectionProvider } =
   createDefinedContext<EthConnection>();
@@ -55,8 +57,11 @@ export function useOverlayContainer(): HTMLDivElement | null {
   return useUIManager()?.getOverlayContainer() ?? null;
 }
 
-export const { useDefinedContext: useSeasonData, provider: SeasonDataProvider } =
+export const { useDefinedContext: useSeasonPlayers, provider: SeasonPlayerProvider } =
   createDefinedContext<CleanConfigPlayer[]>();
+
+export const { useDefinedContext: useSeasonData, provider: SeasonDataProvider } =
+  createDefinedContext<GrandPrixMetadata[]>();
 
 /**
  * Get the currently used account on the client.
@@ -241,28 +246,6 @@ export function useLeaderboard(poll: number | undefined = undefined): {
   return { leaderboard, error };
 }
 
-export function usePlayerBadges(poll: number | undefined = undefined): {
-  grandPrixBadges: BadgeType[] | undefined;
-  error: Error | undefined;
-} {
-  const [grandPrixBadges, setBadges] = useState<BadgeType[] | undefined>();
-  const [error, setError] = useState<Error | undefined>();
-
-  const load = useCallback(async function load() {
-    try {
-      // TODO: Populate with current account;
-      setBadges(await loadSeasonBadges('0x1c0f0Af3262A7213E59Be7f1440282279D788335'));
-    } catch (e) {
-      console.log('error loading badges', e);
-      setError(e);
-    }
-  }, []);
-
-  usePoll(load, poll, true);
-
-  return { grandPrixBadges, error };
-}
-
 export function useArenaLeaderboard(
   isCompetitive: boolean,
   address: string | undefined = undefined,
@@ -350,7 +333,12 @@ export function useLiveMatches(
   const [spyError, setSpyError] = useState<Error | undefined>();
   const loadSpy = useCallback(async function loadSpy() {
     try {
-      setLiveMatches(await loadLiveMatches(config));
+      if(DUMMY) {
+        setLiveMatches( createDummyLiveMatches(10))
+      }
+      else {
+        setLiveMatches(await loadLiveMatches(config));
+      }
     } catch (e) {
       console.log('error loading leaderboard', e);
       setSpyError(e);
