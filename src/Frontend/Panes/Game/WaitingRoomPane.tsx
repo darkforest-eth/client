@@ -112,8 +112,9 @@ export function WaitingRoomPane({ visible, onClose }: { visible: boolean; onClos
   // Play audio when ready
   useEffect(() => {
     const audio = new Audio('../../../public/ready-alert.mp3');
+    audio.volume = 0.5;
     const listener = () => {
-      if (started && startTime && Math.abs(startTime - Date.now()/1000) < 60) {
+      if (started && startTime && Math.abs(startTime - Date.now() / 1000) < 60) {
         audio.play();
       }
     };
@@ -125,7 +126,8 @@ export function WaitingRoomPane({ visible, onClose }: { visible: boolean; onClos
 
   const submitting = useMemo(() => {
     const txs = uiManager.getGameManager().getGameObjects().transactions;
-    const submit = txs.hasTransaction(isUnconfirmedReadyTx) || txs.hasTransaction(isUnconfirmedNotReadyTx);
+    const submit =
+      txs.hasTransaction(isUnconfirmedReadyTx) || txs.hasTransaction(isUnconfirmedNotReadyTx);
     return submit;
   }, [
     objects.transactions.getTransactions(isUnconfirmedReadyTx),
@@ -207,9 +209,11 @@ export function WaitingRoomPane({ visible, onClose }: { visible: boolean; onClos
                         const res = await uiManager.getGameManager().notReady();
                       } else {
                         const res = await uiManager.getGameManager().ready();
-                        const rct = await res.confirmedPromise
+                        const rct = await res.confirmedPromise;
                         const eventDetails = getReadyEvent(rct, gameManager.getContract());
-                        gameManager.getContractAPI().emit(ContractsAPIEvent.PlayerUpdate, address(eventDetails.player));
+                        gameManager
+                          .getContractAPI()
+                          .emit(ContractsAPIEvent.PlayerUpdate, address(eventDetails.player));
                         console.log(`updated player`, eventDetails.player);
                       }
                     }}
