@@ -111,7 +111,6 @@ const MapContainer = styled.div`
   flex-direction: column;
   border: 1px solid ${theme.colors.bg3};
   border-radius: ${theme.borderRadius};
-  cursor: pointer;
 `;
 
 const MapNameContainer = styled.div`
