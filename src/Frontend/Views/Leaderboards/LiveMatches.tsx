@@ -108,11 +108,7 @@ function LeaderboardTable({ rows }: { rows: MatchDisplay[] }) {
           (row: MatchDisplay, i) => {
             return (
               <Cell>
-                <TextPreview
-                  text={row.gameOver ? '🎖' : '🚀'}
-                  focusedWidth={'75px'}
-                  unFocusedWidth={'75px'}
-                />
+                <span>{row.gameOver ? '🎖' : '🚀'}</span>
               </Cell>
             );
           },
@@ -128,16 +124,14 @@ function LeaderboardTable({ rows }: { rows: MatchDisplay[] }) {
               <Cell>
                 {row.gameOver
                   ? formatDuration(row.duration * 1000)
-                  : durations[i] ? formatDuration(durations[i]) : 'loading...'}
+                  : durations[i]
+                  ? formatDuration(durations[i])
+                  : 'loading...'}
               </Cell>
             );
           },
           (row: MatchDisplay, i) => {
-            return (
-              <Cell>
-                {row.moves}
-              </Cell>
-            );
+            return <Cell>{row.moves}</Cell>;
           },
           (row: MatchDisplay, i) => {
             return (
