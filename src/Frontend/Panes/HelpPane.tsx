@@ -37,21 +37,19 @@ export function HelpPane({ visible, onClose }: { visible: boolean; onClose: () =
         )}
 
         <Section>
-          <SectionHeader>Firstly, Some Links:</SectionHeader>
-          <Link to='https://blog.zkga.me'>Official Info and Announcements</Link>
+          <SectionHeader>First, some links:</SectionHeader>
+          <Link to='https://blog.altlayer.io/launching-dark-forest-community-gaming-round-e243e116f3d5'>Official Info and Announcements</Link>
           <br />
-          <Link to='https://twitter.com/darkforest_eth'>Official Twitter</Link>
+          <Link to='https://alt.ws/twitter'>AltLayer Twitter</Link>
           <br />
-          <Link to='https://discord.gg/2u2TN6v8r6'>Official Discord Server</Link>
-          <br />
-          <Link to='https://dfwiki.net/'>Community-Run Wiki</Link>
+          <Link to='https://discord.gg/altlayer'>Official Discord Server</Link>
           <br />
           <br />
-          Secondly... welcome to
+          Second, welcome to:
         </Section>
 
         <Section>
-          <SectionHeader>Dark Forest v0.6 R5: The Junk Wars</SectionHeader>
+          <SectionHeader>Dark Forest on AltLayer Community Round 1</SectionHeader>
           Dark Forest is a vast universe, obfuscated by zero-knowledge cryptography. Your{' '}
           <White>explorer</White> (bottom left) explores the universe, searching for{' '}
           <White>Planets</White> and other players.
@@ -69,8 +67,8 @@ export function HelpPane({ visible, onClose }: { visible: boolean; onClose: () =
 
         <Section>
           <SectionHeader>Prizes and Scoring</SectionHeader>A snapshot of scores will be taken on{' '}
-          <White>February 28, 2022</White> at 9PM Pacific Time. At that time, the top 63
-          highest-scoring players will be awarded prizes from a pool 63 prize planets. You can see
+          <White>Sep 11th, 2022</White> at 12PM GMT Time. At that time, the top 20
+          highest-scoring players will be awarded by AltLayer OG badges. You can see
           the current rankings by scrolling down on the landing page of the game.
           <EmSpacer height={1} />
           Scoring this round is made up of three parts: finding artifacts using you Gear ship,

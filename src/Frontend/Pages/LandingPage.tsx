@@ -144,9 +144,6 @@ export default function LandingPage() {
                   <ALPurple>
                     <Larger>Dark Forest on AltLayer</Larger><br/>
                     <Spacer height={18} />
-                    <span>Warm-up Round</span><br/>
-                    <Smaller_2>Aug 26th 12:00 - Sep 05th 12:00 (GMT), 2022</Smaller_2>
-                    <Spacer height={10} />
                     <span>Community Round 1</span><br/>
                     <Smaller_2>Sep 9th 12:00 - Sep 11th 12:00 (GMT), 2022</Smaller_2>
                   </ALPurple>
@@ -155,14 +152,6 @@ export default function LandingPage() {
                 <Spacer height={40} />
 
                 <ButtonWrapper>
-                  <Btn size='large' onClick={() => window.open(altLayerLinks.preRegister)}>
-                    <FixedWidthBtn>Pre-register for Community Round 📝</FixedWidthBtn>
-                  </Btn>
-
-                  <Btn size='large' onClick={() => window.open(altLayerLinks.faucet)}>
-                    <FixedWidthBtn>Faucet for Warm-up Round 🚰</FixedWidthBtn>
-                  </Btn>
-
                   <Btn size='large' onClick={() => history.push(`/play/${defaultAddress}`)}>
                     <FixedWidthBtn>Enter Warm-up Round 🚀</FixedWidthBtn>
                   </Btn>
