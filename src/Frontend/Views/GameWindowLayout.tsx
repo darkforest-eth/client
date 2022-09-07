@@ -38,6 +38,7 @@ import { SidebarPane } from '../Panes/Game/SidebarPane';
 import { TopBar } from './Game/TopBar';
 import { tutorialConfig } from '../Utils/constants';
 import { ArenaBriefingPane } from '../Panes/Game/ArenaBriefingPane';
+import { useHistory } from 'react-router-dom';
 
 export function GameWindowLayout({
   terminalVisible,
@@ -47,6 +48,7 @@ export function GameWindowLayout({
   setTerminalVisible: (visible: boolean) => void;
 }) {
   const uiManager = useUIManager();
+  const history = useHistory();
   const modalManager = uiManager.getModalManager();
   const modalPositions = modalManager.getModalPositions();
 
@@ -66,7 +68,12 @@ export function GameWindowLayout({
     },
     [modalPositions]
   );
-
+  const exitGame = () => {
+    const confirmation = confirm('are you sure you want to quit this game?');
+    if (confirmation) {
+      history.push('/portal/home');
+    }
+  };
   const [helpVisible, setHelpVisible] = useState<boolean>(isModalOpen(ModalName.Help));
   const [transactionLogVisible, setTransactionLogVisible] = useState<boolean>(
     isModalOpen(ModalName.TransactionLog)
@@ -196,7 +203,7 @@ export function GameWindowLayout({
             <ZoomPane />
           </UpperLeft>
           <SidebarPane
-            transactionLogHook={[transactionLogVisible, setTransactionLogVisible]}
+            exitHook={exitGame}
             settingsHook={[settingsVisible, setSettingsVisible]}
             helpHook={[helpVisible, setHelpVisible]}
             pluginsHook={[pluginsVisible, setPluginsVisible]}

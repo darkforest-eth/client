@@ -26,3 +26,4 @@ export const EXIT_PANE = SpecialKey.Escape;
 export const TOGGLE_DIAGNOSTICS_PANE = 'i';
 export const TOGGLE_EXPLORE = SpecialKey.Space;
 export const TOGGLE_TARGETTING = '`';
+export const QUIT = 'b';

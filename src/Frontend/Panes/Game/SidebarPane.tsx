@@ -1,10 +1,15 @@
 import { ModalName } from '@darkforest_eth/types';
+import { IconType } from '@darkforest_eth/ui';
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Hook } from '../../../_types/global/GlobalTypes';
-import { BorderlessPane, EmSpacer } from '../../Components/CoreUI';
+import { BorderlessPane, EmSpacer, Spacer } from '../../Components/CoreUI';
+import { Icon } from '../../Components/Icons';
+import { MaybeShortcutButton } from '../../Components/MaybeShortcutButton';
 import { DFZIndex } from '../../Utils/constants';
 import {
+  QUIT,
   TOGGLE_HELP_PANE,
   TOGGLE_PLUGINS_PANE,
   TOGGLE_SETTINGS_PANE,
@@ -12,7 +17,7 @@ import {
   TOGGLE_YOUR_ARTIFACTS_PANE,
   TOGGLE_YOUR_PLANETS_DEX_PANE,
 } from '../../Utils/ShortcutConstants';
-import { ModalToggleButton } from '../../Views/ModalIcon';
+import { ModalIconText, ModalToggleButton } from '../../Views/ModalIcon';
 
 export function SidebarPane({
   settingsHook,
@@ -20,16 +25,17 @@ export function SidebarPane({
   pluginsHook,
   yourArtifactsHook,
   planetdexHook,
-  transactionLogHook,
+  exitHook,
 }: {
   settingsHook: Hook<boolean>;
   helpHook: Hook<boolean>;
   pluginsHook: Hook<boolean>;
   yourArtifactsHook: Hook<boolean>;
   planetdexHook: Hook<boolean>;
-  transactionLogHook: Hook<boolean>;
+  exitHook: () => void;
 }) {
   const [sidebarHovered, setSidebarHovered] = useState<boolean>(false);
+  const history = useHistory();
 
   return (
     <WindowTogglesPaneContainer
@@ -81,15 +87,24 @@ export function SidebarPane({
           shortcutKey={TOGGLE_YOUR_PLANETS_DEX_PANE}
           shortcutText={sidebarHovered ? TOGGLE_YOUR_PLANETS_DEX_PANE : undefined}
         />
-        <EmSpacer height={0.5} />
-        <ModalToggleButton
-          modal={ModalName.TransactionLog}
-          hook={transactionLogHook}
-          text={sidebarHovered ? 'Transaction Log' : undefined}
+        <EmSpacer height={0.5} />{' '}
+        <MaybeShortcutButton
+          onClick={exitHook}
+          shortcutKey={QUIT}
+          shortcutText={sidebarHovered ? QUIT : undefined}
+          onShortcutPressed={exitHook}
           size='stretch'
-          shortcutKey={TOGGLE_TRANSACTIONS_PANE}
-          shortcutText={sidebarHovered ? TOGGLE_TRANSACTIONS_PANE : undefined}
-        />
+        >
+          <ModalIconText>
+            <Icon type={IconType.Exit} />
+            {sidebarHovered && (
+              <>
+                <Spacer width={8} />
+                Exit
+              </>
+            )}
+          </ModalIconText>
+        </MaybeShortcutButton>
       </BorderlessPane>
     </WindowTogglesPaneContainer>
   );
