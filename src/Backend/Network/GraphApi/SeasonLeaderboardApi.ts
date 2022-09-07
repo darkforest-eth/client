@@ -58,7 +58,6 @@ export async function loadWallbreakers(
       }
     }
     `;
-    console.log(`wb query`, QUERY);
     return getGraphQLData(QUERY, process.env.GRAPH_URL || 'localhost:8000');
   });
   const res = await Promise.all(wallbreakerQuery);
@@ -82,7 +81,6 @@ export async function loadWallbreakers(
         arenaAddress: wbr.lobbyAddress,
       } as Wallbreaker;
     });
-  console.log(`wallbreakers`, wallBreakers);
   return wallBreakers;
 }
 
@@ -208,7 +206,6 @@ export function loadSeasonLeaderboard(
     };
     leaderboardProps.entries.push(entry);
   }
-  console.log(`szn leaders`, leaderboardProps);
   return leaderboardProps;
 }
 

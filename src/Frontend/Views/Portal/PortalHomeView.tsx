@@ -67,7 +67,7 @@ export const PortalHomeView: React.FC<{}> = () => {
           <MapOverview round={grandPrix} config={config} lobbyAddress={lobbyAddress} />
         </div>
         <div className='col w-100'>
-          <Label>Live Feed</Label>
+          <Label>Recent Activity</Label>
           <GPFeed configHash={grandPrix.configHash} />
         </div>
       </div>

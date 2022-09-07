@@ -29,7 +29,7 @@ export function MapDetails({
   const twitters = useTwitters();
   const allPlayers = useSeasonPlayers();
   const leaders = loadGrandPrixLeaderboard(allPlayers, configHash, twitters);
-  console.log(`leaders`, leaders);
+
   // 5sec poll if live data
   const { liveMatches, spyError } = useLiveMatches(configHash, !DUMMY ? 5000 : undefined);
   useEffect(() => {
