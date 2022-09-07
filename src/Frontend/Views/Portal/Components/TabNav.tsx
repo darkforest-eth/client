@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { theme } from '../styleUtils';
@@ -6,7 +6,9 @@ import { theme } from '../styleUtils';
 export interface TabType {
   label: string;
   to: string;
+  secondary?: string;
   wildcard?: string;
+  dropdown?: TabType[];
 }
 
 export interface TabNavTypes {
@@ -27,14 +29,73 @@ const getTabActive = (currentPath: string, tab: TabType) => {
 
 export const TabNav: React.FC<TabNavTypes> = ({ tabs }) => {
   const loc = useLocation();
+  const [hoveringDropdownTab, setHoveringDropdownTab] = useState<boolean>(false);
+  const [hoveringMenu, setHoveringMenu] = useState<boolean>(false);
+
   return (
     <Container>
       {tabs.map((tab, i) => (
-        <Link key={i} to={tab.to}>
-          <Tab key={tab.label} active={getTabActive(loc.pathname, tab)}>
-            {tab.label}
-          </Tab>
-        </Link>
+        <>
+          {tab.dropdown ? (
+            <div style={{ position: 'relative' }}>
+              <Tab
+                key={tab.label}
+                active={false}
+                onMouseEnter={() => setHoveringDropdownTab(true)}
+                onMouseLeave={() => {
+                  setTimeout(() => {
+                    setHoveringDropdownTab(false);
+                  }, 200);
+                }}
+              >
+                {tab.label}
+              </Tab>
+              {tab.dropdown && (
+                <DropdownContainer
+                  onMouseEnter={() => {
+                    setHoveringMenu(true);
+                  }}
+                  onMouseLeave={() => setHoveringMenu(false)}
+                  active={hoveringDropdownTab || hoveringMenu}
+                >
+                  {tab.dropdown.map((dropdownTab, j) => (
+                    <DropdownItemContainer>
+                      {dropdownTab.to.startsWith('http') ? (
+                        <a href={dropdownTab.to} target='_blank' rel='noreferrer'>
+                          <DropdownItemCol>
+                            <DropdownTitle>{dropdownTab.label}</DropdownTitle>
+                            {dropdownTab.secondary && (
+                              <span style={{ color: theme.colors.fgMuted2 }}>
+                                {dropdownTab.secondary}
+                              </span>
+                            )}
+                          </DropdownItemCol>
+                        </a>
+                      ) : (
+                        <Link key={j} to={dropdownTab.to}>
+                          <DropdownItemCol>
+                            <DropdownTitle>{dropdownTab.label}</DropdownTitle>
+                            {dropdownTab.secondary && (
+                              <span style={{ color: theme.colors.fgMuted2 }}>
+                                {dropdownTab.secondary}
+                              </span>
+                            )}
+                          </DropdownItemCol>
+                        </Link>
+                      )}
+                    </DropdownItemContainer>
+                  ))}
+                </DropdownContainer>
+              )}
+            </div>
+          ) : (
+            <Link key={i} to={tab.to}>
+              <Tab key={tab.label} active={getTabActive(loc.pathname, tab)}>
+                {tab.label}
+              </Tab>
+            </Link>
+          )}
+        </>
       ))}
     </Container>
   );
@@ -57,6 +118,7 @@ const Tab = styled.div<{ active: boolean }>`
   padding: ${theme.spacing.md};
   width: 100%;
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: center;
   color: ${(props) => (props.active ? theme.colors.fgPrimary : theme.colors.fgMuted)};
@@ -69,4 +131,55 @@ const Tab = styled.div<{ active: boolean }>`
     background: ${theme.colors.bg2};
     color: ${theme.colors.fgPrimary};
   }
+`;
+
+const DropdownContainer = styled.div<{ active: boolean }>`
+  z-index: 999;
+  position: absolute;
+  top: calc(100% + ${theme.spacing.md});
+  right: -180px;
+  width: 360px;
+  max-width: calc(100vw - ${theme.spacing.xl});
+  padding: ${theme.spacing.md};
+  border-radius: ${theme.borderRadius};
+  background: ${theme.colors.bg2};
+  pointer-events: ${(props) => (props.active ? 'auto' : 'none')};
+  opacity: ${(props) => (props.active ? 1 : 0)};
+  transition: all 0.2s ease-in-out; 
+  animation: ${(props) => (props.active ? 'animateDropdown 0.2s ease' : 'none')};
+  @keyframes animateDropdown {
+    0% {
+      opacity: 0;
+      transform: scale(0.96) translateZ(4px);
+      tranform-origin: 0% 0px;
+  },
+  100% {
+    opacity: 1;
+    transform: scale(1) translateZ(0);
+    transform-origin: 50% 0px;
+  }
+`;
+
+const DropdownItemContainer = styled.div`
+  display: flex;
+  padding: ${theme.spacing.md};
+  border-radius: ${theme.borderRadius};
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background: ${theme.colors.bg3};
+    color: ${theme.colors.fgPrimary};
+  }
+`;
+
+const DropdownItemCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: ${theme.spacing.sm};
+`;
+
+const DropdownTitle = styled.span`
+  font-family: ${theme.fonts.mono};
+  font-size: 0.9rem;
+  color: ${theme.colors.fgPrimary};
 `;

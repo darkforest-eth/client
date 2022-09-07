@@ -68,7 +68,19 @@ export const PortalHeader = () => {
           },
           {
             label: 'Learn',
-            to: `/play/${tutorialLobbyAddress}?create=true`,
+            dropdown: [
+              {
+                label: 'Tutorial',
+                to: `/portal/tutorial/${tutorialLobbyAddress}`,
+                secondary: 'Play a guided tutorial game.',
+              },
+              {
+                label: 'Strategy Guide',
+                to: 'https://www.notion.so/cha0sg0d/Dark-Forest-Player-Guide-59e123fb6cbb43f785d24be035cf95cb',
+                secondary: 'Learn strategies for playing Dark Forest.',
+              },
+            ],
+            to: '',
           },
         ]}
       />

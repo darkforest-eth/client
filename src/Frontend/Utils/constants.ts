@@ -120,41 +120,41 @@ planets(first: ${MAX_ADMIN_PLANETS}) {
 const TEMP_START_TIME = 1597862644;
 const TEMP_END_TIME = 1662588877;
 
-// One hour 
+// One hour
 const WALLBREAKER_BONUS = 0;
 const START_ENGINE_BONUS = 100;
 const SLEEPY_BONUS = 24;
 const TREE_BONUS = 42;
 const NICE_BONUS = 69;
 
-const BADGE_BONUSES: {[type:BadgeType]: {bonus: number, color: string}} = {};
+const BADGE_BONUSES: { [type: BadgeType]: { bonus: number; color: string } } = {};
 
 BADGE_BONUSES[BadgeType.StartYourEngine] = {
   bonus: START_ENGINE_BONUS,
-  color: dfstyles.colors.dfred
-}
+  color: dfstyles.colors.dfred,
+};
 BADGE_BONUSES[BadgeType.Tree] = {
   bonus: TREE_BONUS,
-  color: dfstyles.colors.dfgreen
-}
+  color: dfstyles.colors.dfgreen,
+};
 BADGE_BONUSES[BadgeType.Nice] = {
   bonus: NICE_BONUS,
-  color: dfstyles.colors.dfpurple
-}
+  color: dfstyles.colors.dfpurple,
+};
 BADGE_BONUSES[BadgeType.Sleepy] = {
   bonus: SLEEPY_BONUS,
-  color: dfstyles.colors.dfblue
-}
+  color: dfstyles.colors.dfblue,
+};
 BADGE_BONUSES[BadgeType.Wallbreaker] = {
   bonus: WALLBREAKER_BONUS,
-  color: dfstyles.colors.dfgold
-}
+  color: dfstyles.colors.dfgold,
+};
 
 const DAY_IN_SECONDS = 24 * 60 * 60;
 const EGP = true;
 const DUMMY = false;
-const DEV_CONFIG_HASH_1 = "0xd08bbeb0785370a68369f0a042e33ef2688da6da5e79acbb5688ddbb8ca4a862";
-const DEV_CONFIG_HASH_2 = "0x0d6894ebcd6476be6c4ffe3ae3aaafda48b3b02c438ca481fd8836d16964a80e";
+const DEV_CONFIG_HASH_1 = '0xd08bbeb0785370a68369f0a042e33ef2688da6da5e79acbb5688ddbb8ca4a862';
+const DEV_CONFIG_HASH_2 = '0x0d6894ebcd6476be6c4ffe3ae3aaafda48b3b02c438ca481fd8836d16964a80e';
 
 // startTime and endTime are in UNIX seconds
 const SEASON_GRAND_PRIXS: GrandPrixMetadata[] = [
@@ -163,14 +163,14 @@ const SEASON_GRAND_PRIXS: GrandPrixMetadata[] = [
     configHash: DEV_CONFIG_HASH_1,
     startTime: TEMP_START_TIME,
     endTime: TEMP_END_TIME,
-    parentAddress: address(constants.AddressZero)
+    parentAddress: address(constants.AddressZero),
   },
   {
     seasonId: 1,
-    configHash:DEV_CONFIG_HASH_2,
+    configHash: DEV_CONFIG_HASH_2,
     startTime: TEMP_START_TIME,
     endTime: TEMP_END_TIME,
-    parentAddress: address(constants.AddressZero)
+    parentAddress: address(constants.AddressZero),
   },
 ];
 
@@ -198,7 +198,7 @@ export {
   DUMMY,
   DEV_CONFIG_HASH_1,
   DEV_CONFIG_HASH_2,
-  DAY_IN_SECONDS
+  DAY_IN_SECONDS,
 };
 
 export const enum DFZIndex {
