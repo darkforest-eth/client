@@ -20,13 +20,19 @@ const AL_SERVER_URL = window.location.href.includes('localhost')
   ? 'http://localhost:3011'
   : 'https://darkforest-leaderboard.altresearch.xyz'
 
+// TODO: update this each round, or pull from contract constants
+const roundStartTimestamp = '2022-09-09T12:00:00.000Z';
+const roundEndTimestamp = '2022-09-11T12:00:00.000Z';
+
 export function LeadboardDisplay() {
   const [leaderboard, setLeaderboard] = useState()
   const [error, setError] = useState()
 
+  const roundStartTime = new Date(roundStartTimestamp).getTime()
+  const gameBegin = (new Date().getTime() - roundStartTime >= 0)
+
   useEffect(() => {
     let jobId: number | undefined = undefined
-
     const fetchScores = async() => {
       try {
         const resp = await fetch(`${AL_SERVER_URL}/leaderboard`)
@@ -36,9 +42,11 @@ export function LeadboardDisplay() {
       }
     }
 
-    fetchScores().then(() => {
-      jobId = window.setInterval(fetchScores, SCORE_REFRESH_RATE)
-    })
+    if (gameBegin) {
+      fetchScores().then(() => {
+        jobId = window.setInterval(fetchScores, SCORE_REFRESH_RATE)
+      })
+    }
 
     return (() => {
       jobId && clearInterval(jobId)
@@ -47,13 +55,13 @@ export function LeadboardDisplay() {
 
   const errorMessage = 'Error Loading Leaderboard';
 
-  return (
-    <GenericErrorBoundary errorMessage={errorMessage}>
-      {!leaderboard && !error && <LoadingSpinner initialText={'Loading Leaderboard...'} />}
-      {leaderboard && <LeaderboardBody leaderboard={leaderboard} />}
-      {error && <Red>{errorMessage}</Red>}
-    </GenericErrorBoundary>
-  );
+  return gameBegin
+    ? <GenericErrorBoundary errorMessage={errorMessage}>
+        {!leaderboard && !error && <LoadingSpinner initialText={'Loading Leaderboard...'} />}
+        {leaderboard && <LeaderboardBody leaderboard={leaderboard} />}
+        {error && <Red>{errorMessage}</Red>}
+      </GenericErrorBoundary>
+    : <></>
 }
 
 function scoreToString(score?: number | null) {
@@ -137,12 +145,9 @@ function LeaderboardTable({ rows }: { rows: Array<[string, number | undefined]> 
   };
 }
 
-// TODO: update this each round, or pull from contract constants
-const roundEndTimestamp = '2022-09-11T12:00:00.000Z';
-const roundEndTime = new Date(roundEndTimestamp).getTime();
-
 function CountDown() {
   const [str, setStr] = useState('');
+  const roundEndTime = new Date(roundEndTimestamp).getTime();
 
   const update = () => {
     const timeUntilEndms = roundEndTime - new Date().getTime();
@@ -191,28 +196,26 @@ function LeaderboardBody({ leaderboard }: { leaderboard: Leaderboard }) {
     return [entry.ethAddress, entry.score];
   });
 
-  return (
-    <div>
-      <StatsTableContainer>
-        <StatsTable>
-          <tbody>
-            <tr>
-              <td>Round ends in</td>
-              <td>
-                <CountDown />
-              </td>
-            </tr>
-            <tr>
-              <td>Ranked players</td>
-              <td>{rankedPlayers.length}</td>
-            </tr>
-          </tbody>
-        </StatsTable>
-      </StatsTableContainer>
-      <Spacer height={8} />
-      <LeaderboardTable rows={rows} />
-    </div>
-  );
+  return <div>
+    <StatsTableContainer>
+      <StatsTable>
+        <tbody>
+          <tr>
+            <td>Round ends in</td>
+            <td>
+              <CountDown />
+            </td>
+          </tr>
+          <tr>
+            <td>Ranked players</td>
+            <td>{rankedPlayers.length}</td>
+          </tr>
+        </tbody>
+      </StatsTable>
+    </StatsTableContainer>
+    <Spacer height={8} />
+    <LeaderboardTable rows={rows} />
+  </div>
 }
 
 const Cell = styled.div`
