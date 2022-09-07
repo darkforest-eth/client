@@ -85,6 +85,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
   const useZkWhitelist = params.has('zkWhitelist');
   const selectedAddress = params.get('account');
   const createInstance = params.has('create');
+  const [fromCreate, setFromCreate] = useState(false);
   const isLobby = contractAddress !== address(CONTRACT_ADDRESS);
   const CHUNK_SIZE = 5;
   const defaultAddress = address(CONTRACT_ADDRESS);
@@ -109,6 +110,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
           const { owner, lobby } = await newCreationManager.createAndInitArena(fetchedConfig);
 
           if (owner == playerAddress) {
+            setFromCreate(true);  
             history.push({ pathname: `${lobby}`, state: { contract: lobby } });
             setContractAddress(lobby);
           }
@@ -175,7 +177,7 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
         console.log('loaded config hash', configHash);
         setConfigHash(configHash);
 
-        if (configHash === tutorialConfig) {
+        if (configHash === tutorialConfig || fromCreate) {
           setStep(TerminalPromptStep.PLAYING);
           return;
         }
@@ -183,14 +185,18 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
 
       terminal.current?.println(``);
       terminal.current?.println(
+        fromCreate ?
+        `Would you like to play with this account?`:
         `Would you like to play or spectate this game?`,
         TerminalTextStyle.Sub
       );
 
       terminal.current?.print('(a) ', TerminalTextStyle.Sub);
       terminal.current?.println(`Play.`);
-      terminal.current?.print('(s) ', TerminalTextStyle.Sub);
-      terminal.current?.println(`Spectate.`);
+      if(!fromCreate) {
+        terminal.current?.print('(s) ', TerminalTextStyle.Sub);
+        terminal.current?.println(`Spectate.`);
+      }
       terminal.current?.print(`(d) `, TerminalTextStyle.Sub);
       terminal.current?.println(`Change account.`);
 
