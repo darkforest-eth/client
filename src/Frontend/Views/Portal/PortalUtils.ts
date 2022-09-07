@@ -11,7 +11,7 @@ import {
 } from '@darkforest_eth/types';
 import { SeasonLeaderboardEntry } from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
 import {
-  DAY_IN_SECONDS,
+  HOUR_IN_SECONDS,
   DEV_CONFIG_HASH_1,
   DEV_CONFIG_HASH_2,
   SEASON_GRAND_PRIXS,
@@ -97,7 +97,7 @@ export function createDummySeasonData(nEntries: number): CleanConfigPlayer[] {
       configHash: DEV_CONFIG_HASH_1,
       gamesStarted: Math.floor(Math.random() * 100),
       gamesFinished: Math.floor(Math.random() * 100),
-      score: DAY_IN_SECONDS - (endTime - startTime),
+      score: HOUR_IN_SECONDS - (endTime - startTime),
     };
     const entry2: CleanConfigPlayer = {
       ...entry1,

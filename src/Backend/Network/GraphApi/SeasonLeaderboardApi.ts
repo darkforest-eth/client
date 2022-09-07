@@ -19,7 +19,7 @@ import {
 import { UniquePlayerBadges } from '@darkforest_eth/types/src/grand_prix';
 import {
   // SEASON_GRAND_PRIXS,
-  DAY_IN_SECONDS,
+  HOUR_IN_SECONDS,
   EGP,
   DUMMY,
   BADGE_BONUSES,
@@ -58,6 +58,7 @@ export async function loadWallbreakers(
       }
     }
     `;
+    console.log(`wb query`, QUERY);
     return getGraphQLData(QUERY, process.env.GRAPH_URL || 'localhost:8000');
   });
   const res = await Promise.all(wallbreakerQuery);
@@ -81,7 +82,7 @@ export async function loadWallbreakers(
         arenaAddress: wbr.lobbyAddress,
       } as Wallbreaker;
     });
-
+  console.log(`wallbreakers`, wallBreakers);
   return wallBreakers;
 }
 
@@ -90,7 +91,6 @@ export async function loadWallbreakers(
 export async function loadAllPlayerData(
   SEASON_GRAND_PRIXS: GrandPrixMetadata[]
 ): Promise<CleanConfigPlayer[]> {
-  console.log(`loading player data...`);
   if (DUMMY) return createDummySeasonData(200);
   if (!EGP) return [];
   const stringHashes = SEASON_GRAND_PRIXS.map((season) => `"${season.configHash}"`);
@@ -138,7 +138,7 @@ query
   if (!rawData.data.configPlayers)
     throw new Error(`config players undefined. Make sure query is correct`);
 
-  const configPlayersFinal = await addWallbreakersAndBadges(
+  const configPlayersFinal = await buildCleanConfigPlayer(
     rawData.data.configPlayers,
     SEASON_GRAND_PRIXS
   );
@@ -157,7 +157,8 @@ export function loadSeasonPlayers(
   const seasonConfigPlayers = configPlayers.filter(
     (cp) =>
       seasonConfigHashes.includes(cp.configHash.toLowerCase()) &&
-      isPastOrCurrentRound(cp.configHash, SEASON_GRAND_PRIXS)
+      isPastOrCurrentRound(cp.configHash, SEASON_GRAND_PRIXS) &&
+      cp.gamesFinished > 0
   );
   const seasonPlayers = groupByPlayers(seasonConfigPlayers);
   return seasonPlayers;
@@ -207,6 +208,7 @@ export function loadSeasonLeaderboard(
     };
     leaderboardProps.entries.push(entry);
   }
+  console.log(`szn leaders`, leaderboardProps);
   return leaderboardProps;
 }
 
@@ -263,37 +265,44 @@ export function loadGrandPrixLeaderboard(
   return leaderboard;
 }
 
+function validGrandPrixMatch(configPlayer: ConfigPlayer, SEASON_GRAND_PRIXS: GrandPrixMetadata[]) {
+  const grandPrixs = SEASON_GRAND_PRIXS.filter(gp => gp.configHash == configPlayer.configHash);
+  if(grandPrixs.length == 0) throw new Error('Grand Prix not found');
+  if(!configPlayer.bestTime) return false;
+  const grandPrix = grandPrixs[0];
+  return (configPlayer.bestTime.startTime >= grandPrix.startTime)
+}
+
 // Add wallbreaker badge to ConfigPlayers
-async function addWallbreakersAndBadges(
+async function buildCleanConfigPlayer(
   configPlayers: ConfigPlayer[],
   SEASON_GRAND_PRIXS: GrandPrixMetadata[]
 ): Promise<CleanConfigPlayer[]> {
   const wallBreakers = await loadWallbreakers(SEASON_GRAND_PRIXS);
-  return (
-    configPlayers
-      // .filter(cp => cp.bestTime.gameOver)
-      .map((cfp) => {
-        const isWallBreaker =
-          wallBreakers.length > 0 &&
-          wallBreakers.filter((e) => e.player === cfp.address).length > 0;
-        if (isWallBreaker && cfp.badge) cfp.badge.wallBreaker = true;
-        const duration = cfp.bestTime ? cfp.bestTime.duration : DAY_IN_SECONDS;
-        const cleanConfig: CleanConfigPlayer = {
-          id: cfp.id,
-          address: cfp.address,
-          duration,
-          moves: cfp.bestTime ? cfp.bestTime.winners[0].moves : 0,
-          startTime: cfp.bestTime ? cfp.bestTime.startTime : Math.floor(Date.now() / 1000),
-          endTime: cfp.bestTime ? cfp.bestTime.endTime : Math.floor(Date.now() / 1000),
-          badges: graphBadgeToGrandPrixBadge(cfp.badge, cfp.configHash),
-          configHash: cfp.configHash,
-          gamesStarted: cfp.gamesStarted,
-          gamesFinished: cfp.gamesFinished,
-          score: calcGrandPrixScore(duration), // Doesn't include badges!!
-        };
-        return cleanConfig;
-      })
-  );
+  return configPlayers
+    .filter((cp) => validGrandPrixMatch(cp,SEASON_GRAND_PRIXS))
+    .map((cfp) => {
+      const isWallBreaker =
+        wallBreakers.length > 0 && wallBreakers.filter((e) => e.player === cfp.address && e.configHash === cfp.configHash).length > 0;
+      if (isWallBreaker && cfp.badge) {
+        cfp.badge.wallBreaker = true;
+      }
+      const duration = cfp.bestTime ? cfp.bestTime.duration : HOUR_IN_SECONDS;
+      const cleanConfig: CleanConfigPlayer = {
+        id: cfp.id,
+        address: cfp.address,
+        duration,
+        moves: cfp.bestTime ? cfp.bestTime.winners[0].moves : 0,
+        startTime: cfp.bestTime ? cfp.bestTime.startTime : Math.floor(Date.now() / 1000),
+        endTime: cfp.bestTime ? cfp.bestTime.endTime : Math.floor(Date.now() / 1000),
+        badges: graphBadgeToGrandPrixBadge(cfp.badge, cfp.configHash),
+        configHash: cfp.configHash,
+        gamesStarted: cfp.gamesStarted,
+        gamesFinished: cfp.gamesFinished,
+        score: calcGrandPrixScore(duration), // Doesn't include badges!!
+      };
+      return cleanConfig;
+    });
 }
 
 // Group ConfigPlayers by address to calculate Season Score
@@ -366,11 +375,11 @@ export function calcBadgeTypeScore(badges: BadgeType[]): number {
 
 // Doesn't include badges. Badges just add season points.
 export function calcCleanGrandPrixScore(cleanConfigPlayer: CleanConfigPlayer): number {
-  return DAY_IN_SECONDS - cleanConfigPlayer.duration;
+  return HOUR_IN_SECONDS - cleanConfigPlayer.duration;
 }
 
 export function calcGrandPrixScore(duration: number): number {
-  const timeScore = DAY_IN_SECONDS - duration;
+  const timeScore = HOUR_IN_SECONDS - duration;
   return timeScore;
 }
 
@@ -480,12 +489,18 @@ export function loadUniquePlayerBadges(
   for (const [player, playerGrandPrixs] of Object.entries(seasonPlayers)) {
     const allBadges = playerGrandPrixs.map((pgp) => pgp.badges).flat();
     const uniqueBadgeSet: UniquePlayerBadges = {};
+    const wallBreakers: ConfigBadge[] = [];
     allBadges.forEach((cb) => {
-      uniqueBadgeSet[cb.type] = cb;
+      if(cb.type != BadgeType.Wallbreaker) {
+        uniqueBadgeSet[cb.type] = cb;
+      }
+      else {
+        wallBreakers.push(cb);
+      }
     });
 
     const uniques = Object.values(uniqueBadgeSet) as ConfigBadge[];
-    res[player] = uniques;
+    res[player] = uniques.concat(wallBreakers);
   }
   return res;
 }

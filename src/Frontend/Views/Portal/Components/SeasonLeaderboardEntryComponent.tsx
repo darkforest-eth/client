@@ -33,7 +33,7 @@ export const SeasonLeaderboardEntryComponent: React.FC<{
   const SEASON_GRAND_PRIXS = useSeasonData();
   const twitters = useTwitters();
   return (
-    <div>
+    <div key={index}>
       <Row key={index} onClick={() => setExpanded(!expanded)} expanded={expanded}>
         <Group>
           <span>{index + 1}</span>
@@ -81,7 +81,7 @@ export const SeasonLeaderboardEntryComponent: React.FC<{
                         .filter((cb) => cb.configHash == game.configHash)
                         .map((badge, i) => {
                           if (badge.type == BadgeType.Wallbreaker) {
-                            return goldStar();
+                            return goldStar(i);
                           } else {
                             return (
                               <span style={{ color: BADGE_BONUSES[badge.type].color }} key={i}>

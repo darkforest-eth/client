@@ -32,7 +32,6 @@ export function MapDetails({
   console.log(`leaders`, leaders);
   // 5sec poll if live data
   const { liveMatches, spyError } = useLiveMatches(configHash, !DUMMY ? 5000 : undefined);
-  console.log(`liveMatches`, liveMatches);
   useEffect(() => {
     setLeaderboard(undefined);
     if (configHash) {

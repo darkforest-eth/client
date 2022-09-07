@@ -134,6 +134,5 @@ export async function loadRegistry(
       })
     }
   })
-  console.log(`official grand prixs`, metadata);
   return metadata;
 }
