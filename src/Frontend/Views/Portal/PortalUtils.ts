@@ -42,6 +42,23 @@ export const mockBadges: BadgeType[] = [
 const genRanHex = (size: number) =>
   [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
 
+function getHashCode(text: string) {
+  let hash = 0;
+  if (text.length === 0) return hash;
+  for (let i = 0; i < text.length; i++) {
+    const chr = text.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0;
+  }
+  return hash;
+}
+
+export const addressToColor = (address: EthAddress) => {
+  const colors = ['#FF9D9D', '#FFECA7', '#7DE4A0', '#51C3E8', '#9874FF', '#FC7DFF'];
+  const hashCode = getHashCode((address as string).toLowerCase());
+  return colors[Math.abs(hashCode % colors.length) ?? 0];
+};
+
 export function createDummySeasonData(nEntries: number): CleanConfigPlayer[] {
   let dummy: CleanConfigPlayer[] = [];
   for (let i = 0; i < nEntries; i++) {
