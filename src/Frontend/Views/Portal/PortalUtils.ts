@@ -19,7 +19,7 @@ import {
 import { SeasonHistoryItem } from './PortalHistoryView';
 
 export function truncateAddress(address: EthAddress) {
-  return address.substring(0, 6) + '...' + address.substring(36, 42);
+  return address.substring(0, 4) + '...' + address.substring(38, 42);
 }
 
 export function truncateString(str: string, maxLength: number) {
@@ -205,13 +205,15 @@ export function seasonScoreToSeasonHistoryItem(account: EthAddress, seasonScores
   return history;
 }
 
-export function getCurrentGrandPrix(seasonGrandPrixs: GrandPrixMetadata[]): GrandPrixMetadata | undefined {
-  if(seasonGrandPrixs.length == 0) return undefined;
+export function getCurrentGrandPrix(
+  seasonGrandPrixs: GrandPrixMetadata[]
+): GrandPrixMetadata | undefined {
+  if (seasonGrandPrixs.length == 0) return undefined;
 
   const now = Math.floor(Date.now() / 1000);
   const res = seasonGrandPrixs.find((gp) => now >= gp.startTime && now <= gp.endTime);
   // Return most recent grand prix if none are active
-  if(!res) return seasonGrandPrixs.sort((a,b) => b.startTime - a.startTime)[0]
+  if (!res) return seasonGrandPrixs.sort((a, b) => b.startTime - a.startTime)[0];
   return res;
 }
 

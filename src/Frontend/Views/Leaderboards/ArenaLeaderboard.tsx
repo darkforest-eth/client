@@ -78,14 +78,13 @@ export function EloLeaderboardDisplay({
   );
 }
 
-
-
 // pass in either an address, or a twitter handle. this function will render the appropriate
 // component
 export function compPlayerToEntry(
   playerAddress: string,
   playerTwitter: string | undefined,
-  color: string | undefined = `${dfstyles.colors.text}`
+  color: string | undefined = `${dfstyles.colors.text}`,
+  playerDisplayAddress?: string
 ) {
   return (
     <Link
@@ -96,13 +95,7 @@ export function compPlayerToEntry(
       {playerTwitter ? (
         `@${playerTwitter}`
       ) : (
-        <TextPreview
-          style={{ textDecoration: 'underline' }}
-          disabled
-          text={playerAddress}
-          focusedWidth={'130px'}
-          unFocusedWidth={'130px'}
-        />
+        <span style={{ textDecoration: 'underline' }}>{playerDisplayAddress ?? playerAddress}</span>
       )}
     </Link>
   );
@@ -138,7 +131,6 @@ export function goldStar() {
   const gold =
     'invert(73%) sepia(29%) saturate(957%) hue-rotate(354deg) brightness(100%) contrast(95%)';
   return <Star width={'20px'} height={'20px'} color={gold}></Star>;
-
 }
 
 interface Row {
@@ -294,7 +286,7 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
         ]}
         rows={rows}
         columns={[
-          (row: Row, i) => row.wallBreaker ? goldStar() : <></>, //star
+          (row: Row, i) => (row.wallBreaker ? goldStar() : <></>), //star
           (
             row: Row,
             i //rank
@@ -403,7 +395,7 @@ function ArenaLeaderboardBody({
       time: entry.time,
       moves: entry.moves,
       score: entry.score,
-      wallBreaker: entry?.wallBreaker
+      wallBreaker: entry?.wallBreaker,
     };
   });
 

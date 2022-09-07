@@ -1,34 +1,31 @@
-import { getConfigName } from '@darkforest_eth/procedural';
 import { address } from '@darkforest_eth/serde';
-import { CleanConfigPlayer, CleanMatchEntry, EthAddress, ExtendedMatchEntry, Leaderboard, LeaderboardEntry } from '@darkforest_eth/types';
+import { CleanMatchEntry, EthAddress } from '@darkforest_eth/types';
 import dfstyles from '@darkforest_eth/ui/dist/styles';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Btn } from '../../Components/Btn';
 import { useLiveMatches, useTwitters } from '../../Utils/AppHooks';
 import { DAY_IN_SECONDS, DEV_CONFIG_HASH_1, DUMMY } from '../../Utils/constants';
 import { formatStartTime } from '../../Utils/TimeUtils';
 import { compPlayerToEntry } from '../Leaderboards/ArenaLeaderboard';
-import { Orb } from './Components/FlashingOrb';
 import { PaddedRow } from './Components/PaddedRow';
-import { MatchButton } from './FindMatch';
+import styled from 'styled-components';
 import { scoreToTime, truncateAddress } from './PortalUtils';
+import { theme } from './styleUtils';
 
 export interface MapDetailsProps {
   configHash: string | undefined;
 }
 
 export function getPlayer(entry: CleanMatchEntry): EthAddress {
-  if(entry.players && entry.players.length > 0) return address(entry.players[0]);
-  else return entry.creator
+  if (entry.players && entry.players.length > 0) return address(entry.players[0]);
+  else return entry.creator;
 }
-// TODO: This currently displays the latest scores in a leaderboard (by time)
-// Ideally, it would do something similar to useLiveMatches()
-// because right now it doesn't update live.
 export const GPFeed: React.FC<MapDetailsProps> = ({ configHash }) => {
   const twitters = useTwitters();
-  // Updates every x ms.
+  // Updates every 5s.
   const { liveMatches, spyError } = useLiveMatches(configHash, !DUMMY ? 5000 : undefined);
-  
+
   const latest = liveMatches?.entries
     .map((m) => {
       return {
@@ -65,50 +62,70 @@ export const GPFeed: React.FC<MapDetailsProps> = ({ configHash }) => {
             {latest &&
               latest.map((entry: CleanMatchEntry, i: number) => (
                 <PaddedRow key={`latest-${i}`}>
-                  {/* <Orb /> */}
                   {entry.gameOver ? (
-                    <span>
-                      🎖{' '}
-                      {formatStartTime(entry.startTime)}{' '}
-                      {compPlayerToEntry(getPlayer(entry), twitters[getPlayer(entry)])}  {' '}
-                      <Link
-                        style={{ color: dfstyles.colors.dfgreenlight }}
-                        to={`/play/${entry.lobbyAddress}`}
-                        target='_blank'
-                      >
-                        finished{' '}
+                    <Content>
+                      <span>
+                        🎖 {formatStartTime(entry.startTime)}{' '}
+                        {compPlayerToEntry(
+                          getPlayer(entry),
+                          twitters[getPlayer(entry)],
+                          undefined,
+                          truncateAddress(getPlayer(entry))
+                        )}{' '}
+                        <span style={{ color: dfstyles.colors.dfgreen }}>finished</span> in{' '}
+                        {scoreToTime(entry.duration)} ({DAY_IN_SECONDS - entry.duration} points)
+                      </span>
+                      <Link to={`/play/${entry.lobbyAddress}`} target='_blank'>
+                        <Button>View</Button>
                       </Link>
-                      in {scoreToTime(entry.duration)}{' '}({DAY_IN_SECONDS - entry.duration} points)
-                    </span>
+                    </Content>
                   ) : (
-                    <span>
-                      🚀{' '}
-                      {formatStartTime(entry.startTime)}{' '}
-                      {compPlayerToEntry(getPlayer(entry), twitters[getPlayer(entry)])}  {' '}
-                      <Link
-                        style={{ color: dfstyles.colors.dfgreenlight }}
-                        to={`/play/${entry.lobbyAddress}`}
-                        target='_blank'
-                      >
-                        started{' '}
+                    <Content>
+                      <span>
+                        🚀 {formatStartTime(entry.startTime)}{' '}
+                        {compPlayerToEntry(
+                          getPlayer(entry),
+                          twitters[getPlayer(entry)],
+                          undefined,
+                          truncateAddress(getPlayer(entry))
+                        )}{' '}
+                        started to race
+                      </span>
+                      <Link to={`/play/${entry.lobbyAddress}`} target='_blank'>
+                        <Button>View</Button>
                       </Link>
-                      to race
-                    </span>
+                    </Content>
                   )}
                 </PaddedRow>
               ))}
           </div>
         )}
-        {/* we do this to make sure we always show 3 rows */}
-        {/* {latest &&
-          latest.length < 3 &&
-          [...Array(3 - latest.length)].map((_, i) => (
-            <PaddedRow key={`latest-placeholder-${i}`}>
-              <Orb />
-              <span>Waiting for players...</span>
-            </PaddedRow>
-          ))} */}
       </div>
     </div>
   );
 };
+
+const Content = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const Button = styled.button`
+  background: ${theme.colors.bg2};
+  text-transform: uppercase;
+  font-family: ${theme.fonts.mono};
+  letter-spacing: 0.06em;
+  font-size: 0.8rem;
+  border: none;
+  outline: none;
+  border-radius: ${theme.borderRadius};
+  padding: ${theme.spacing.sm};
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background: ${theme.colors.bg3};
+    color: ${theme.colors.fgPrimary};
+  }
+`;
