@@ -55,31 +55,45 @@ export const SeasonLeaderboardEntryComponent: React.FC<{
                     justifyContent: 'space-between',
                   }}
                 >
-                  <span>
-                    <Link
-                      style={{ color: dfstyles.colors.dfblue }}
-                      to={`/portal/map/${game.configHash}`}
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: theme.spacing.lg,
+                    }}
+                  >
+                    <span>
+                      <Link
+                        style={{ color: dfstyles.colors.dfblue }}
+                        to={`/portal/map/${game.configHash}`}
+                      >
+                        {getConfigName(game.configHash)}
+                      </Link>
+                    </span>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: theme.spacing.md,
+                      }}
                     >
-                      {getConfigName(game.configHash)}
-                    </Link>
-                  </span>
-                  {uniqueBadges[entry.address]
-                    .filter((cb) => cb.configHash == game.configHash)
-                    .map((badge, i) => {
-                        if(badge.type == BadgeType.Wallbreaker) {
-                          return(goldStar())
-                        }
-                        else {
-                          return (
-                            <span style={{ color: BADGE_BONUSES[badge.type].color }} key={i}>
-                            {'[+'}
-                            {BADGE_BONUSES[badge.type].bonus}
-                            {']'}
-                          </span>
-                          )
-                        }
-                      })
-                    }
+                      {uniqueBadges[entry.address]
+                        .filter((cb) => cb.configHash == game.configHash)
+                        .map((badge, i) => {
+                          if (badge.type == BadgeType.Wallbreaker) {
+                            return goldStar();
+                          } else {
+                            return (
+                              <span style={{ color: BADGE_BONUSES[badge.type].color }} key={i}>
+                                {'[+'}
+                                {BADGE_BONUSES[badge.type].bonus}
+                                {']'}
+                              </span>
+                            );
+                          }
+                        })}
+                    </div>
+                  </div>
                   <span>{game.score}</span>
                 </div>
               ))}

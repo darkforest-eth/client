@@ -154,9 +154,10 @@ export function loadSeasonPlayers(
   const seasonConfigHashes = SEASON_GRAND_PRIXS.filter((s) => s.seasonId == seasonId).map((s) =>
     s.configHash.toLowerCase()
   );
-  const seasonConfigPlayers = configPlayers.filter((cp) =>
-    seasonConfigHashes.includes(cp.configHash.toLowerCase())
-    && isPastOrCurrentRound(cp.configHash, SEASON_GRAND_PRIXS)
+  const seasonConfigPlayers = configPlayers.filter(
+    (cp) =>
+      seasonConfigHashes.includes(cp.configHash.toLowerCase()) &&
+      isPastOrCurrentRound(cp.configHash, SEASON_GRAND_PRIXS)
   );
   const seasonPlayers = groupByPlayers(seasonConfigPlayers);
   return seasonPlayers;
@@ -306,14 +307,17 @@ export function groupByPlayers(configPlayers: CleanConfigPlayer[]): SeasonPlayer
 }
 
 // Sum player dictionary to create list of {player, score}
-export function getSeasonScore(seasonPlayers: SeasonPlayers, SEASON_GRAND_PRIXS: GrandPrixMetadata[]): SeasonScore[] {
+export function getSeasonScore(
+  seasonPlayers: SeasonPlayers,
+  SEASON_GRAND_PRIXS: GrandPrixMetadata[]
+): SeasonScore[] {
   const seasonScores: SeasonScore[] = [];
   for (const [player, cleanConfigPlayer] of Object.entries(seasonPlayers)) {
     const badges: ConfigBadge[] = [];
     const seasonScore: SeasonScore = {
       player,
       score: cleanConfigPlayer
-        .filter(ccp => isPastOrCurrentRound(ccp.configHash, SEASON_GRAND_PRIXS))
+        .filter((ccp) => isPastOrCurrentRound(ccp.configHash, SEASON_GRAND_PRIXS))
         .map((result) => {
           badges.concat(result.badges);
           return calcCleanGrandPrixScore(result);
