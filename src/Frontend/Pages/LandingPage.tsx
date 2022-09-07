@@ -158,6 +158,7 @@ export default function LandingPage() {
                 </ButtonWrapper>
               </HeroSection>
             </TextCentered>
+            <LeadboardDisplay />
           </MainContentContainer>
         </OuterWrapper>
       </Page>

@@ -13,8 +13,37 @@ import { formatDuration } from '../Utils/TimeUtils';
 import { GenericErrorBoundary } from './GenericErrorBoundary';
 import { Table } from './Table';
 
+// Refresh every 10s
+const SCORE_REFRESH_RATE = 10000
+
+const AL_SERVER_URL = window.location.href.includes('localhost')
+  ? 'http://localhost:3011'
+  : 'https://darkforest-leaderboard.altresearch.xyz'
+
 export function LeadboardDisplay() {
-  const { leaderboard, error } = useLeaderboard();
+  const [leaderboard, setLeaderboard] = useState()
+  const [error, setError] = useState()
+
+  useEffect(() => {
+    let jobId: number | undefined = undefined
+
+    const fetchScores = async() => {
+      try {
+        const resp = await fetch(`${AL_SERVER_URL}/leaderboard`)
+        setLeaderboard(await resp.json())
+      } catch (err) {
+        setError(err)
+      }
+    }
+
+    fetchScores().then(() => {
+      jobId = window.setInterval(fetchScores, SCORE_REFRESH_RATE)
+    })
+
+    return (() => {
+      jobId && clearInterval(jobId)
+    })
+  }, [])
 
   const errorMessage = 'Error Loading Leaderboard';
 
@@ -59,38 +88,32 @@ function getRankColor([rank, score]: [number, number | undefined]) {
     return RarityColors[ArtifactRarity.Mythic];
   }
 
-  if (rank === 1 || rank === 2) {
+  if (rank >= 1 || rank <= 5) {
     return RarityColors[ArtifactRarity.Legendary];
   }
 
-  if (rank >= 3 && rank <= 6) {
+  if (rank >= 6 && rank <= 10) {
     return RarityColors[ArtifactRarity.Epic];
   }
 
-  if (rank >= 7 && rank <= 14) {
+  if (rank >= 11 && rank <= 20) {
     return RarityColors[ArtifactRarity.Rare];
-  }
-
-  if (rank >= 15 && rank <= 30) {
-    return dfstyles.colors.dfgreen;
-  }
-
-  if (rank >= 31 && rank <= 62) {
-    return 'white';
   }
 
   return dfstyles.colors.subtext;
 }
 
 function LeaderboardTable({ rows }: { rows: Array<[string, number | undefined]> }) {
-  return (
-    <TableContainer>
+  if (rows.length == 0) {
+    return null
+  } else {
+    return <TableContainer>
       <Table
         alignments={['r', 'l', 'r']}
         headers={[
-          <Cell key='place'>place</Cell>,
-          <Cell key='player'>player</Cell>,
-          <Cell key='score'>score</Cell>,
+          <Cell key='place'>Place</Cell>,
+          <Cell key='player'>Player</Cell>,
+          <Cell key='score'>Score</Cell>,
         ]}
         rows={rows}
         columns={[
@@ -111,11 +134,11 @@ function LeaderboardTable({ rows }: { rows: Array<[string, number | undefined]> 
         ]}
       />
     </TableContainer>
-  );
+  };
 }
 
 // TODO: update this each round, or pull from contract constants
-const roundEndTimestamp = '2022-03-01T05:00:00.000Z';
+const roundEndTimestamp = '2022-09-11T12:00:00.000Z';
 const roundEndTime = new Date(roundEndTimestamp).getTime();
 
 function CountDown() {
@@ -148,7 +171,7 @@ function LeaderboardBody({ leaderboard }: { leaderboard: Leaderboard }) {
     (entry) => entry.score !== undefined && entry.score > 0
   );
 
-  leaderboard.entries.sort((a, b) => {
+  rankedPlayers.sort((a, b) => {
     if (typeof a.score !== 'number' && typeof b.score !== 'number') {
       return 0;
     } else if (typeof a.score !== 'number') {
@@ -160,7 +183,7 @@ function LeaderboardBody({ leaderboard }: { leaderboard: Leaderboard }) {
     return b.score - a.score;
   });
 
-  const rows: [string, number | undefined][] = leaderboard.entries.map((entry) => {
+  const rows: [string, number | undefined][] = rankedPlayers.map((entry) => {
     if (typeof entry.twitter === 'string') {
       return [entry.twitter, entry.score];
     }
@@ -174,17 +197,13 @@ function LeaderboardBody({ leaderboard }: { leaderboard: Leaderboard }) {
         <StatsTable>
           <tbody>
             <tr>
-              <td>round complete</td>
+              <td>Round ends in</td>
               <td>
                 <CountDown />
               </td>
             </tr>
             <tr>
-              <td>players</td>
-              <td>{leaderboard.entries.length}</td>
-            </tr>
-            <tr>
-              <td>ranked players</td>
+              <td>Ranked players</td>
               <td>{rankedPlayers.length}</td>
             </tr>
           </tbody>
