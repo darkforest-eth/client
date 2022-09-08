@@ -100,7 +100,9 @@ export function GameWindowLayout({
   }, []);
 
   const [waitingRoomVisible, setWaitingRoomVisible] = useState(
-    !uiManager.gameStarted && uiManager.contractConstants.MANUAL_SPAWN
+    !uiManager.gameStarted &&
+      uiManager.contractConstants.MANUAL_SPAWN &&
+      uiManager.getSpawnPlanets().length !== 1
   );
 
   const isTutorialWorld = uiManager.contractConstants.CONFIG_HASH === tutorialConfig;

@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import { Btn } from '../../Components/Btn';
 import { Bronze, Gold, Green, Silver } from '../../Components/Text';
 import { bronzeTime, goldTime, silverTime } from '../../Utils/constants';
@@ -6,16 +6,14 @@ import { useUIManager } from '../../Utils/AppHooks';
 import { formatDuration } from '../../Utils/TimeUtils';
 import { StyledTutorialPane } from './StyledTutorialPane';
 
-
 export function ArenaBriefingPane() {
   const [open, setOpen] = useState(true);
   const uiManager = useUIManager();
   const spectatorMode = uiManager.getGameManager().getIsSpectator();
-  const isSinglePlayer = uiManager.getSpawnPlanets().length == 1 
+  const isSinglePlayer = uiManager.getSpawnPlanets().length == 1;
   const victoryThreshold = uiManager.contractConstants.CLAIM_VICTORY_ENERGY_PERCENT;
   const numForVictory = uiManager.contractConstants.TARGETS_REQUIRED_FOR_VICTORY;
   const isCompetitive = uiManager.isCompetitive();
-
 
   if (spectatorMode || !open) {
     return null;
@@ -28,7 +26,7 @@ export function ArenaBriefingPane() {
         <br />
         <br />
         <div>
-          {isSinglePlayer? (
+          {isSinglePlayer ? (
             <>
               Race against the clock to capture the Target Planet (it has a big 🎯 floating above
               it) and{' '}
@@ -62,9 +60,12 @@ export function ArenaBriefingPane() {
             </p>
           </div>
         )}
+        <br />
         <div>
           ⏲️ starts {isSinglePlayer ? 'with your first move' : 'when you press ready'}!
-          {isCompetitive && isSinglePlayer && 'The player with the fastest time after 48hrs will win XDAI and a 🏆!'}
+          {isCompetitive &&
+            isSinglePlayer &&
+            'The player with the fastest time after 48hrs will win XDAI and a 🏆!'}
         </div>
         <div style={{ gap: '5px' }}>
           <Btn className='btn' onClick={() => setOpen(false)}>
