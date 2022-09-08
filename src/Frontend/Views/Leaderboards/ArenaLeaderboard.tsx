@@ -14,7 +14,8 @@ import { formatDuration } from '../../Utils/TimeUtils';
 import { GenericErrorBoundary } from '../GenericErrorBoundary';
 import { SortableTable } from '../SortableTable';
 import { Table } from '../Table';
-import { scoreToTime } from '../Portal/PortalUtils';
+import { scoreToTime, truncateAddress } from '../Portal/PortalUtils';
+import { address } from '@darkforest_eth/serde';
 
 const errorMessage = 'Error Loading Leaderboard';
 
@@ -95,7 +96,7 @@ export function compPlayerToEntry(
       {playerTwitter ? (
         `@${playerTwitter}`
       ) : (
-        <span style={{ textDecoration: 'underline' }}>{playerDisplayAddress ?? playerAddress}</span>
+        <span style={{ textDecoration: 'underline' }}>{playerDisplayAddress ?? truncateAddress(address(playerAddress))}</span>
       )}
     </Link>
   );
@@ -141,6 +142,7 @@ interface Row {
   moves: number | undefined;
   score: number | undefined;
   wallBreaker: boolean | undefined;
+  gamesStarted: number;
 }
 
 interface EloRow {
@@ -212,7 +214,7 @@ function ArenasCreated({
     return (
       <tbody style={{ fontSize: '1.25em' }}>
         <tr>
-          <td>Total Matches</td>
+          <td>Total Attempts</td>
           <td>{leaderboard.length}</td>
         </tr>
       </tbody>
@@ -240,7 +242,7 @@ function TotalPlayers({
     return (
       <tbody style={{ fontSize: '1.25em' }}>
         <tr>
-          <td>Total matches</td>
+          <td>Total races</td>
           <td>{leaderboard.length}</td>
         </tr>
       </tbody>
@@ -281,9 +283,11 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
           <Cell key='name'></Cell>,
           <Cell key='twitter'></Cell>,
           <Cell key='gnosis'></Cell>,
-          <Cell key='score'>Score</Cell>,
+          // <Cell key='score'>Score</Cell>,
           <Cell key='time'>Time</Cell>,
           <Cell key='moves'>Moves</Cell>,
+          <Cell key='attempts'>Attempts</Cell>,
+
         ]}
         rows={rows}
         columns={[
@@ -341,16 +345,19 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
               </Cell>
             );
           },
-          (row: Row, i) => {
-            // score
-            return <Cell>{row.score}</Cell>;
-          },
+          // (row: Row, i) => {
+          //   // score
+          //   return <Cell>{row.score}</Cell>;
+          // },
           (row: Row, i) => {
             // score
             return <Cell>{scoreToTime(row.time)}</Cell>;
           },
           (row: Row, i) => {
             return <Cell>{row.moves}</Cell>;
+          },
+          (row: Row, i) => {
+            return <Cell>{row.gamesStarted}</Cell>;
           },
         ]}
       />
@@ -386,7 +393,7 @@ function ArenaLeaderboardBody({
       return -1;
     }
 
-    return b.score - a.score;
+    return a.score - b.score;
   });
 
   const arenaRows: Row[] = leaderboard.entries.map((entry) => {
@@ -396,6 +403,8 @@ function ArenaLeaderboardBody({
       time: entry.time,
       moves: entry.moves,
       score: entry.score,
+      gamesStarted: entry.gamesStarted,
+      gamesFinished: entry.gamesFinished,
       wallBreaker: entry?.wallBreaker,
     };
   });

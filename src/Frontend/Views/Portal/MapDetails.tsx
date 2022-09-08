@@ -35,16 +35,17 @@ export function MapDetails({
   useEffect(() => {
     setLeaderboard(undefined);
     if (configHash) {
-      if (numSpawnPlanets > 1) {
-        loadEloLeaderboard(configHash, numSpawnPlanets > 1)
-          .then((board) => {
-            setLeaderboardError(undefined);
-            setEloLeaderboard(board);
-          })
-          .catch((e) => setLeaderboardError(e));
-      } else {
-        setLeaderboard(leaders);
-      }
+      setLeaderboard(leaders);
+      // if (numSpawnPlanets > 1) {
+      //   loadEloLeaderboard(configHash, numSpawnPlanets > 1)
+      //     .then((board) => {
+      //       setLeaderboardError(undefined);
+      //       setEloLeaderboard(board);
+      //     })
+      //     .catch((e) => setLeaderboardError(e));
+      // } else {
+      //   setLeaderboard(leaders);
+      // }
     }
   }, [configHash]);
 
@@ -80,11 +81,7 @@ export function MapDetails({
         ]}
         tabContents={(i) => {
           if (i === 0) {
-            return numSpawnPlanets > 1 ? (
-              <EloLeaderboardDisplay leaderboard={eloLeaderboard} error={leaderboardError} />
-            ) : (
-              <ArenaLeaderboardDisplay leaderboard={leaderboard} error={leaderboardError} />
-            );
+            return <ArenaLeaderboardDisplay leaderboard={leaderboard} error={leaderboardError} />
           }
           if (i === 1) {
             return (

@@ -16,7 +16,6 @@ import {
   DEV_CONFIG_HASH_2,
   SEASON_GRAND_PRIXS,
 } from '../../Utils/constants';
-import { SeasonHistoryItem } from './PortalHistoryView';
 
 export function truncateAddress(address: EthAddress) {
   return address.substring(0, 4) + '...' + address.substring(38, 42);
@@ -140,87 +139,16 @@ export function createDummyLiveMatches(nEntries: number): LiveMatch {
   return { entries } as LiveMatch;
 }
 
-export const DummySeasons: SeasonHistoryItem[] = [
-  {
-    seasonId: 1,
-    rank: 5,
-    players: 1000,
-    grandPrixHistoryItems: [
-      {
-        configHash: '0xd08bbeb0785370a68369f0a042e33ef2688da6da5e79acbb5688ddbb8ca4a862',
-        startTime: new Date('2022-07-13T00:00:00.000Z').getTime() / 1000,
-        endTime: new Date('2022-07-13T00:00:00.000Z').getTime() / 1000,
-        players: 1000,
-        rank: 5,
-        score: 10000,
-        badges: [BadgeType.StartYourEngine, BadgeType.Tree],
-      },
-      {
-        configHash: '0xd08bbeb0785370a68369f0a042e33ef2688da6da5e79acbb5688ddbb8ca4a862',
-        startTime: new Date('2022-07-13T00:00:00.000Z').getTime() / 1000,
-        endTime: new Date('2022-07-13T00:00:00.000Z').getTime() / 1000,
-        players: 1000,
-        rank: 5,
-        score: 10000,
-        badges: [BadgeType.Nice, BadgeType.Wallbreaker],
-      },
-      {
-        configHash: '0xd08bbeb0785370a68369f0a042e33ef2688da6da5e79acbb5688ddbb8ca4a862',
-        startTime: new Date('2022-07-13T00:00:00.000Z').getTime() / 1000,
-        endTime: new Date('2022-07-13T00:00:00.000Z').getTime() / 1000,
-        players: 1000,
-        rank: 5,
-        score: 10000,
-        badges: [BadgeType.Nice, BadgeType.Wallbreaker],
-      },
-    ],
-  },
-  {
-    seasonId: 2,
-    rank: 5,
-    players: 1000,
-    grandPrixHistoryItems: [
-      {
-        configHash: '0xfe719a3cfccf2bcfa23f71f0af80a931eda4f4197331828d728b7505a6156930',
-        startTime: new Date('2022-07-13T00:00:00.000Z').getTime() / 1000,
-        endTime: new Date('2022-07-13T00:00:00.000Z').getTime() / 1000,
-        players: 1000,
-        rank: 5,
-        score: 10000,
-        badges: [BadgeType.Tree, BadgeType.Nice],
-      },
-      {
-        configHash: '0xfe719a3cfccf2bcfa23f71f0af80a931eda4f4197331828d728b7505a6156930',
-        startTime: new Date('2022-07-13T00:00:00.000Z').getTime() / 1000,
-        endTime: new Date('2022-07-13T00:00:00.000Z').getTime() / 1000,
-        players: 1000,
-        rank: 5,
-        score: 10000,
-        badges: [BadgeType.Nice, BadgeType.Nice],
-      },
-    ],
-  },
-];
-
-// For now, just for season one.
-// But later, you probably need this.
-export function seasonScoreToSeasonHistoryItem(account: EthAddress, seasonScores: SeasonScore[]) {
-  // Sort descending
-  let rank = 0;
-
-  seasonScores
-    .sort((a, b) => b.score - a.score)
-    .map((s, index) => {
-      if (account && s.player == account) rank = index;
-    });
-  const history: SeasonHistoryItem = {
-    seasonId: 1,
-    grandPrixHistoryItems: [],
-    rank,
-    players: seasonScores.length,
-  };
-  return history;
+export function isPastOrCurrentRound(
+  configHash: string,
+  SEASON_GRAND_PRIXS: GrandPrixMetadata[]
+): boolean {
+  const sgp = SEASON_GRAND_PRIXS.find((sgp) => sgp.configHash == configHash);
+  if (!sgp) return false;
+  const startTime = sgp.startTime;
+  return Math.floor(Date.now() / 1000) >= startTime;
 }
+
 
 export function getCurrentGrandPrix(
   seasonGrandPrixs: GrandPrixMetadata[]

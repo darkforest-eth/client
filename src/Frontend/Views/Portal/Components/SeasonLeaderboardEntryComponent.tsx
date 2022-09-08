@@ -10,19 +10,18 @@ import { SeasonLeaderboardEntry } from '../../../../Backend/Network/GraphApi/Sea
 import { Badge } from '../../../Components/Badges';
 import { useSeasonData, useTwitters } from '../../../Utils/AppHooks';
 import { BADGE_BONUSES } from '../../../Utils/constants';
+import { formatDuration } from '../../../Utils/TimeUtils';
 import { goldStar } from '../../Leaderboards/ArenaLeaderboard';
-import { isPastOrCurrentRound } from '../PortalHistoryView';
 import { MinimalButton } from '../PortalMainView';
-import { truncateAddress } from '../PortalUtils';
+import { isPastOrCurrentRound, truncateAddress } from '../PortalUtils';
 import { theme } from '../styleUtils';
 
-const mockBages = [
-  BadgeType.StartYourEngine,
-  BadgeType.Nice,
-  BadgeType.Sleepy,
-  BadgeType.Tree,
-  BadgeType.Wallbreaker,
-];
+function getRankColor(gamesPlayed: number, totalGames: number): string {
+  const baseHsl = 127;
+  const gamePercentage = 1 - gamesPlayed / totalGames;
+  const subtract = Math.floor(baseHsl * gamePercentage);
+  return `hsl(${baseHsl - subtract}, 95%, 62%)`;
+}
 
 export const SeasonLeaderboardEntryComponent: React.FC<{
   entry: SeasonLeaderboardEntry;
@@ -32,88 +31,111 @@ export const SeasonLeaderboardEntryComponent: React.FC<{
   const [expanded, setExpanded] = useState<boolean>(false);
   const SEASON_GRAND_PRIXS = useSeasonData();
   const twitters = useTwitters();
+  const numPastOrCurrent = SEASON_GRAND_PRIXS.filter((sgp) =>
+    isPastOrCurrentRound(sgp.configHash, SEASON_GRAND_PRIXS)
+  ).length;
+  const gamesFinished = entry.games.length;
+  console.log(formatDuration(entry.totalDuration * 1000));
   return (
     <div key={index}>
       <Row key={index} onClick={() => setExpanded(!expanded)} expanded={expanded}>
         <Group>
-          <span>{index + 1}</span>
+          <span>{index + 1}.</span>
           <span>{twitters[entry.address] ?? truncateAddress(address(entry.address))}</span>
         </Group>
-        <span>{entry.score}</span>
+        <Group>
+          <span style={{ color: getRankColor(gamesFinished, numPastOrCurrent) }}>
+            {gamesFinished}/{numPastOrCurrent}{' '}
+          </span>
+          <span style={{ color: getRankColor(gamesFinished, numPastOrCurrent) }}>
+            {formatDuration(entry.totalDuration * 1000)}
+          </span>
+        </Group>
       </Row>
       {expanded && (
-        <ExpandedGames style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {entry.games
-              .filter((game) => isPastOrCurrentRound(game.configHash, SEASON_GRAND_PRIXS))
-              .map((game, index) => (
-                <div
-                  key={index}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
+        <>
+          <ExpandedGames style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {entry.games
+                .filter((game) => isPastOrCurrentRound(game.configHash, SEASON_GRAND_PRIXS))
+                .map((game, index) => (
                   <div
+                    key={index}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: theme.spacing.lg,
+                      justifyContent: 'space-between',
                     }}
                   >
-                    <span>
-                      <Link
-                        style={{ color: dfstyles.colors.dfblue }}
-                        to={`/portal/map/${game.configHash}`}
-                      >
-                        {getConfigName(game.configHash)}
-                      </Link>
-                    </span>
                     <div
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: theme.spacing.md,
+                        gap: theme.spacing.lg,
                       }}
                     >
-                      {uniqueBadges[entry.address]
-                        .filter((cb) => cb.configHash == game.configHash)
-                        .map((badge, i) => {
-                          if (badge.type == BadgeType.Wallbreaker) {
-                            return goldStar(i);
-                          } else {
-                            return (
-                              <span style={{ color: BADGE_BONUSES[badge.type].color }} key={i}>
-                                {'[+'}
-                                {BADGE_BONUSES[badge.type].bonus}
-                                {']'}
-                              </span>
-                            );
-                          }
-                        })}
+                      <span>
+                        <Link
+                          style={{ color: dfstyles.colors.dfblue }}
+                          to={`/portal/map/${game.configHash}`}
+                        >
+                          {getConfigName(game.configHash)}
+                        </Link>
+                      </span>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: theme.spacing.md,
+                        }}
+                      >
+                        {uniqueBadges[entry.address]
+                          .filter((cb) => cb.configHash == game.configHash)
+                          .sort((a, b) => {
+                            if (a.type == BadgeType.Wallbreaker) {
+                              return -1;
+                            } else if (b.type == BadgeType.Wallbreaker) {
+                              return 1;
+                            } else {
+                              return 0;
+                            }
+                          })
+                          .map((badge, i) => {
+                            if (badge.type == BadgeType.Wallbreaker) {
+                              return goldStar(i);
+                            } else {
+                              return (
+                                <span style={{ color: BADGE_BONUSES[badge.type].color }} key={i}>
+                                  {'[-'}
+                                  {BADGE_BONUSES[badge.type].bonus}
+                                  {']'}
+                                </span>
+                              );
+                            }
+                          })}
+                      </div>
                     </div>
+                    <span>{formatDuration(game.duration * 1000)}</span>
                   </div>
-                  <span>{game.score}</span>
-                </div>
-              ))}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginTop: '8px',
-                padding: '8px',
-                borderTop: `1px solid ${dfstyles.colors.borderDarker}`,
-              }}
-            >
-              <Link to={`/portal/history/${entry.address}`}>
-                <MinimalButton>View player</MinimalButton>
-              </Link>
-              <span>{entry.badges} badges this season</span>
+                ))}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginTop: '8px',
+                  padding: '8px',
+                  borderTop: `1px solid ${dfstyles.colors.borderDarker}`,
+                }}
+              >
+                <Link to={`/portal/history/${entry.address}`}>
+                  <MinimalButton>View player</MinimalButton>
+                </Link>
+                <span>{entry.badges} badges this season</span>
+              </div>
             </div>
-          </div>
-        </ExpandedGames>
+          </ExpandedGames>
+        </>
       )}
     </div>
   );
@@ -144,8 +166,14 @@ const ExpandedGames = styled.div`
   font-family: ${theme.fonts.mono};
 `;
 
-const Group = styled.div`
+export const Group = styled.div`
   display: flex;
   gap: 16px;
+  align-items: center;
+`;
+
+export const Group1 = styled.div`
+  display: flex;
+  gap: 32px;
   align-items: center;
 `;

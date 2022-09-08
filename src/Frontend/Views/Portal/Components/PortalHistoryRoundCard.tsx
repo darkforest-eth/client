@@ -9,6 +9,7 @@ import { Minimap } from '../../../Components/Minimap';
 import { LobbyButton } from '../../../Pages/Lobby/LobbyMapEditor';
 import { generateMinimapConfig, MinimapConfig } from '../../../Panes/Lobby/MinimapUtils';
 import { useConfigFromHash } from '../../../Utils/AppHooks';
+import { formatDuration } from '../../../Utils/TimeUtils';
 import { theme } from '../styleUtils';
 
 /**
@@ -76,7 +77,7 @@ export const PortalHistoryRoundCard: React.FC<{ round: GrandPrixHistory; index: 
         <GameTitle>{getConfigName(round.configHash)}</GameTitle>
         <DetailRow>
           <DetailLabel>Score</DetailLabel>
-          <DetailValue>{round.score}</DetailValue>
+          <DetailValue>{formatDuration(round.score * 1000)}</DetailValue>
         </DetailRow>
         <DetailRow>
           <DetailLabel>Rank</DetailLabel>

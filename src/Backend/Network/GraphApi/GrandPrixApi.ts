@@ -92,6 +92,8 @@ async function convertData(arenas: GraphArena[], isCompetitive: boolean): Promis
         startTime: arena.startTime,
         endTime: arena.endTime,
         time: arena.duration,
+        gamesFinished: 0,
+        gamesStarted: 0
       });
     } else if (entry.time && entry.time > arena.duration) {
       entry.time = arena.duration;

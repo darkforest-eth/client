@@ -73,7 +73,7 @@ export const GPFeed: React.FC<MapDetailsProps> = ({ configHash }) => {
                           truncateAddress(getPlayer(entry))
                         )}{' '}
                         <span style={{ color: dfstyles.colors.dfgreen }}>finished</span> in{' '}
-                        {scoreToTime(entry.duration)} ({HOUR_IN_SECONDS - entry.duration} points)
+                        {scoreToTime(entry.duration)} ({entry.duration} points)
                       </span>
                       <Link to={`/play/${entry.lobbyAddress}`} target='_blank'>
                         <Button>View</Button>
@@ -89,7 +89,7 @@ export const GPFeed: React.FC<MapDetailsProps> = ({ configHash }) => {
                           undefined,
                           truncateAddress(getPlayer(entry))
                         )}{' '}
-                        started to race
+                        <span style={{ color: dfstyles.colors.dfpurple }}>started</span> to race
                       </span>
                       <Link to={`/play/${entry.lobbyAddress}`} target='_blank'>
                         <Button>View</Button>
