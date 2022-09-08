@@ -1,8 +1,7 @@
 import { TooltipName } from '@darkforest_eth/types';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { Btn } from '../Components/Btn';
-import { AccountLabel } from '../Components/Labels/Labels';
+import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
 import { Gold, Green, Red } from '../Components/Text';
 import { LobbyButton } from '../Pages/Lobby/LobbyMapEditor';
 import { TooltipTrigger } from '../Panes/Tooltip';
@@ -45,8 +44,16 @@ export function TargetPlanetVictory() {
           </span>
 
           {canClaimVictory && (
-            <LobbyButton primary disabled={claiming} onClick={handleClaimVictory}>
-              {claiming ? 'Claiming...' : 'Claim Victory'}
+            <LobbyButton
+              primary
+              disabled={claiming}
+              onClick={() => {
+                const tutorialManager = TutorialManager.getInstance(this);
+                tutorialManager.acceptInput(TutorialState.HowToGetScore);
+                handleClaimVictory();
+              }}
+            >
+              {claiming ? 'Claiming...' : 'Claim Victory'!}
             </LobbyButton>
           )}
         </TooltipTrigger>

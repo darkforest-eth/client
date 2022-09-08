@@ -28,33 +28,10 @@ export function HelpPane({ visible, onClose }: { visible: boolean; onClose: () =
   return (
     <ModalPane id={ModalName.Help} title='Help' visible={visible} onClose={onClose}>
       <HelpContent>
-        {uiManager.isRoundOver() && (
-          <Section>
-            <SectionHeader>Round 5 Complete</SectionHeader>
-            Dark Forest v0.6 Round 5 is now complete! Scores are being compiled and winners will be
-            announced shortly. Also, Artifacts will no longer be mintable. Thanks for playing!
-          </Section>
-        )}
-
+        Welcome to the help pane! Hopefully you can find answers to your questions here.
         <Section>
-          <SectionHeader>Firstly, Some Links:</SectionHeader>
-          <Link to='https://blog.zkga.me'>Official Info and Announcements</Link>
-          <br />
-          <Link to='https://twitter.com/darkforest_eth'>Official Twitter</Link>
-          <br />
-          <Link to='https://discord.gg/2u2TN6v8r6'>Official Discord Server</Link>
-          <br />
-          <Link to='https://dfwiki.net/'>Community-Run Wiki</Link>
-          <br />
-          <br />
-          Secondly... welcome to
-        </Section>
-
-        <Section>
-          <SectionHeader>Dark Forest v0.6 R5: The Junk Wars</SectionHeader>
-          Dark Forest is a vast universe, obfuscated by zero-knowledge cryptography. Your{' '}
-          <White>explorer</White> (bottom left) explores the universe, searching for{' '}
-          <White>Planets</White> and other players.
+          <SectionHeader>Overview</SectionHeader>
+          Dark Forest is a vast universe, obfuscated by zero-knowledge cryptography.
           <EmSpacer height={1} />
           All planets produce <White>Energy</White>. You can click-drag to move energy from planets
           you own to new planets to conquer them.
@@ -65,65 +42,53 @@ export function HelpPane({ visible, onClose }: { visible: boolean; onClose: () =
           <EmSpacer height={1} /> Some planets contain <White>Artifacts</White> - ERC721 tokens that
           can be traded with other players. Artifacts can be harvested and deposited onto planets,
           buffing their stats.
+          <br /> <br />
+          For more details, check out the{' '}
+          <Link to='https://dfwiki.net'>official Dark Forest Wiki</Link>
         </Section>
-
         <Section>
-          <SectionHeader>Prizes and Scoring</SectionHeader>A snapshot of scores will be taken on{' '}
-          <White>February 28, 2022</White> at 9PM Pacific Time. At that time, the top 63
-          highest-scoring players will be awarded prizes from a pool 63 prize planets. You can see
-          the current rankings by scrolling down on the landing page of the game.
-          <EmSpacer height={1} />
-          Scoring this round is made up of three parts: finding artifacts using you Gear ship,
-          withdrawing silver from Spacetime Rips, and invading and capturing planets inside of
-          Capture Zones. For more information about capture zones, hover over the 'Capture Zones'
-          sections at the top of the screen.
-          <EmSpacer height={1} />
-          The values for each scoring type are provided below:
+          <SectionHeader>If you want to learn more of the basics:</SectionHeader>
+          <Link to='https://www.notion.so/cha0sg0d/Celestial-Bodies-503bb5dc2ad0443ca22891b07e853e55'>
+            Celestial Bodies
+          </Link>
+          <br />
+          <Link to='https://www.notion.so/cha0sg0d/Stats-3e8f0bb8b94a4db5bf9829f75ede219c'>
+            Planet Stats
+          </Link>
+          <br />
+          <Link to='https://www.notion.so/cha0sg0d/Space-Types-4a9db79416fa4cae9c5a1a62f107f053'>
+            Space Types
+          </Link>
+          <br />
+          <Link to='https://www.notion.so/cha0sg0d/Artifacts-c35916760c244cf1ba7e37a3d2003eb3'>
+            Artifacts
+          </Link>
+          <br />
+          <Link to='https://www.notion.so/cha0sg0d/Spaceships-d913314f917d42b0afe28a9b09148689'>
+            Spaceships
+          </Link>
+          <br />
         </Section>
-
         <Section>
-          <SectionHeader>Scoring values</SectionHeader>
-          Each single <Gold>silver</Gold> you withdraw increases your score by{' '}
-          {silverScoreValue / 100}.
-          <EmSpacer height={1} />
-          Discovering an artifact increases your score based on its rarity:
+          <SectionHeader>
+            If you want to improve your skills, try reading ClassicJ's Beginner's Guide!
+          </SectionHeader>
+          <Link to='https://medium.com/@classicjdf/classicjs-dark-forest-101-strategy-guide-part-1-energy-1b80923fee69'>
+            Part 1: Energy
+          </Link>
           <br />
-          <ArtifactRarityLabel rarity={ArtifactRarity.Common} />:{' '}
-          {artifactPointValues[ArtifactRarity.Common]}
+          <Link to='https://medium.com/@classicjdf/classicjs-dark-forest-beginners-guide-part2-defense-ff0fd2fd442e'>
+            Part 2: Defense
+          </Link>
           <br />
-          <ArtifactRarityLabel rarity={ArtifactRarity.Rare} />:{' '}
-          {artifactPointValues[ArtifactRarity.Rare]}
+          <Link to='https://medium.com/@classicjdf/classicjs-dark-forest-beginners-guide-part-3-range-c2f63d7a7ac0'>
+            Part 3: Range
+          </Link>
           <br />
-          <ArtifactRarityLabel rarity={ArtifactRarity.Epic} />:{' '}
-          {artifactPointValues[ArtifactRarity.Epic]}
+          <Link to='https://medium.com/@classicjdf/classicjs-dark-forest-beginners-guide-part-4-speed-b17b8d3d85d5'>
+            Part 4: Speed
+          </Link>
           <br />
-          <ArtifactRarityLabel rarity={ArtifactRarity.Legendary} />:{' '}
-          {artifactPointValues[ArtifactRarity.Legendary]}
-          <br />
-          <ArtifactRarityLabel rarity={ArtifactRarity.Mythic} />:{' '}
-          {artifactPointValues[ArtifactRarity.Mythic]}
-          <EmSpacer height={1} />
-          Capturing an invaded planet increases your score based on its level:
-          <br />
-          Level {PlanetLevel.ZERO}: {captureZonePointValues[PlanetLevel.ZERO]}
-          <br />
-          Level {PlanetLevel.ONE}: {captureZonePointValues[PlanetLevel.ONE]}
-          <br />
-          Level {PlanetLevel.TWO}: {captureZonePointValues[PlanetLevel.TWO]}
-          <br />
-          Level {PlanetLevel.THREE}: {captureZonePointValues[PlanetLevel.THREE]}
-          <br />
-          Level {PlanetLevel.FOUR}: {captureZonePointValues[PlanetLevel.FOUR]}
-          <br />
-          Level {PlanetLevel.FIVE}: {captureZonePointValues[PlanetLevel.FIVE]}
-          <br />
-          Level {PlanetLevel.SIX}: {captureZonePointValues[PlanetLevel.SIX]}
-          <br />
-          Level {PlanetLevel.SEVEN}: {captureZonePointValues[PlanetLevel.SEVEN]}
-          <br />
-          Level {PlanetLevel.EIGHT}: {captureZonePointValues[PlanetLevel.EIGHT]}
-          <br />
-          Level {PlanetLevel.NINE}: {captureZonePointValues[PlanetLevel.NINE]}
         </Section>
       </HelpContent>
     </ModalPane>

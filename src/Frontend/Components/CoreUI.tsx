@@ -89,6 +89,7 @@ export const HeaderText = styled.div`
 export const SectionHeader = styled(HeaderText)`
   margin-bottom: 16px;
   display: block;
+  text-decoration: none;
 `;
 
 export const Section = styled.div`

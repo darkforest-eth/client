@@ -13,6 +13,7 @@ import { ModalHandle } from '../../Views/Game/ModalPane';
 import { PlanetLink } from '../../Views/Game/PlanetLink';
 import { SortableTable } from '../../Views/SortableTable';
 import { TabbedView } from '../../Views/TabbedView';
+import { ArtifactActions } from '../ManagePlanetArtifacts/ArtifactActions';
 
 const ArtifactsBody = styled.div`
   min-height: 200px;
@@ -52,8 +53,8 @@ export function ArtifactsList({
   if (maxRarity !== undefined) {
     nonShipArtifacts = nonShipArtifacts.filter((a) => a.rarity <= maxRarity);
   }
-  const headers = ['Name', 'Location', 'Type', 'Rarity'];
-  const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r', 'r'];
+  const headers = ['Name', 'Location', 'Type', ''];
+  const alignments: Array<'r' | 'c' | 'l'> = ['l', 'r', 'r', 'r', 'c'];
 
   const columns = [
     (artifact: Artifact) => (
@@ -66,7 +67,7 @@ export function ArtifactsList({
       const planetOnName = planetArtifactName(artifact, uiManager);
 
       return (
-        <span>
+        <Truncate maxWidth={'75px'}>
           {planetOnName && planetOn ? (
             <PlanetLink planet={planetOn}>
               <PlanetName>{planetOnName}</PlanetName>
@@ -74,15 +75,16 @@ export function ArtifactsList({
           ) : (
             <Sub>wallet</Sub>
           )}
-        </span>
+        </Truncate>
       );
     },
     (artifact: Artifact) => (
       <Sub>
-        <Truncate maxWidth='75px'>{ArtifactTypeNames[artifact.artifactType]}</Truncate>
+        <ArtifactRarityLabelAnim rarity={artifact.rarity} />{' '}
+        {ArtifactTypeNames[artifact.artifactType]}
       </Sub>
     ),
-    (artifact: Artifact) => <ArtifactRarityLabelAnim rarity={artifact.rarity} />,
+    (artifact: Artifact) => <ArtifactActions artifactId={artifact.id} depositOn={depositOn} />,
   ];
 
   const sortFunctions = [

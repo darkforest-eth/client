@@ -42,7 +42,7 @@ const defaultSettings: Record<Setting, string> = {
   [Setting.MoveNotifications]: 'true',
   [Setting.HasAcceptedPluginRisk]: onlyInDevelopment(),
   [Setting.GasFeeGwei]: AutoGasSetting.Average,
-  [Setting.TerminalVisible]: 'true',
+  [Setting.TerminalVisible]: 'false',
   [Setting.ShowTutorial]: 'false',
   [Setting.ShowSpectatorInfo]: 'true',
   [Setting.ShowArenaBriefing]: 'true',

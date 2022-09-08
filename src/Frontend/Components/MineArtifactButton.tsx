@@ -3,6 +3,7 @@ import { ArtifactType, Planet, PlanetType, TooltipName } from '@darkforest_eth/t
 import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { isFindable } from '../../Backend/GameLogic/ArrivalUtils';
+import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { TooltipTrigger } from '../Panes/Tooltip';
 import { useAddress, useUIManager } from '../Utils/AppHooks';
@@ -70,6 +71,8 @@ export function MineArtifactButton({
   const mine = useCallback(async () => {
     if (!planetWrapper.value) return;
 
+    const tutorialManager = TutorialManager.getInstance(uiManager);
+    tutorialManager.acceptInput(TutorialState.Foundry);
     const tx = await gameManager.prospectPlanet(planetWrapper.value.locationId);
     await tx.confirmedPromise;
     await gameManager.findArtifact(planetWrapper.value.locationId);

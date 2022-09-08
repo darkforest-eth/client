@@ -114,7 +114,12 @@ export function WaitingRoomPane({ visible, onClose }: { visible: boolean; onClos
     const audio = new Audio('../../../public/ready-alert.mp3');
     audio.volume = 0.5;
     const listener = () => {
-      if (started && startTime && Math.abs(startTime - Date.now() / 1000) < 60) {
+      if (
+        started &&
+        startTime &&
+        Math.abs(startTime - Date.now() / 1000) < 60 &&
+        uiManager.getSpawnPlanets.length > 1
+      ) {
         audio.play();
       }
     };

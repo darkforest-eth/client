@@ -1,5 +1,5 @@
 import { address } from '@darkforest_eth/serde';
-import { BadgeType, EthAddress, GrandPrixMetadata, LiveMatch } from '@darkforest_eth/types';
+import { BadgeType, GrandPrixMetadata, WorldCoords } from '@darkforest_eth/types';
 import * as bigInt from 'big-integer';
 import { constants } from 'ethers';
 import dfstyles from '../Styles/dfstyles';
@@ -24,7 +24,11 @@ const LOCATION_ID_UB = bigInt(
 
 const competitiveConfig = '0xfe719a3cfccf2bcfa23f71f0af80a931eda4f4197331828d728b7505a6156930';
 
-const tutorialConfig = '0x2d37631ddc22529de8144f0dbe640b10ea159a2a9e6837686b9fd06a91857ec1';
+const tutorialConfig = '0x0b1ab5e27ab1813701aad3533b0f528c832aa246aa3192c8b86dd60452cbe15b';
+
+const tutorialAsteroidLocation: WorldCoords = { x: -8, y: -10 };
+
+const tutorialFoundryLocation: WorldCoords = { x: 8, y: -10 };
 
 const roundStartTimestamp = '2022-07-13T00:00:00.000Z';
 
@@ -153,8 +157,7 @@ BADGE_BONUSES[BadgeType.Wallbreaker] = {
 const HOUR_IN_SECONDS = 60 * 60 * 2;
 const DAY_IN_SECONDS = 24 * 60 * 60;
 const EGP = true;
-const DUMMY = false; // This should be an env variable
-
+const DUMMY = false;
 const DEV_CONFIG_HASH_1 = '0xd08bbeb0785370a68369f0a042e33ef2688da6da5e79acbb5688ddbb8ca4a862';
 const DEV_CONFIG_HASH_2 = '0x0d6894ebcd6476be6c4ffe3ae3aaafda48b3b02c438ca481fd8836d16964a80e';
 
@@ -185,6 +188,8 @@ export {
   roundStartTimestamp,
   competitiveConfig,
   tutorialConfig,
+  tutorialAsteroidLocation,
+  tutorialFoundryLocation,
   bronzeTime,
   silverTime,
   CONFIG_CONSTANTS,

@@ -2,6 +2,7 @@ import { isUnconfirmedUpgradeTx } from '@darkforest_eth/serde';
 import { LocationId, Planet, PlanetType, UpgradeBranchName } from '@darkforest_eth/types';
 import React from 'react';
 import styled from 'styled-components';
+import TutorialManager, { TutorialState } from '../../../Backend/GameLogic/TutorialManager';
 import {
   getPlanetMaxRank,
   getPlanetRank,
@@ -105,6 +106,8 @@ export function UpgradeDetailsPane({
 
             const doUpgrade = (branch: UpgradeBranchName) => {
               if (canUpgrade) {
+                const tutorialManager = TutorialManager.getInstance(uiManager);
+                tutorialManager.acceptInput(TutorialState.Upgrade);
                 uiManager.upgrade(planet, branch);
               }
             };

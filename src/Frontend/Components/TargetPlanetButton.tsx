@@ -2,6 +2,7 @@ import { isUnconfirmedClaimVictoryTx } from '@darkforest_eth/serde';
 import { Planet, TooltipName } from '@darkforest_eth/types';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
+import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
 import { Wrapper } from '../../Backend/Utils/Wrapper';
 import { TooltipTrigger } from '../Panes/Tooltip';
 import { useAddress, useUIManager } from '../Utils/AppHooks';
@@ -62,6 +63,9 @@ export function TargetPlanetButton({
 
   const claimVictory = () => {
     if (!planet || gameOver) return;
+
+    const tutorialManager = TutorialManager.getInstance(this);
+    tutorialManager.acceptInput(TutorialState.HowToGetScore);
     gameManager.claimVictory();
   };
 

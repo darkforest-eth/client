@@ -130,9 +130,6 @@ export function ExplorePane() {
       const newpattern = new PatternCtor(worldCoords, MIN_CHUNK_SIZE);
       uiManager?.setMiningPattern(newpattern);
       setCoords(worldCoords);
-
-      const tutorialManager = TutorialManager.getInstance(uiManager);
-      tutorialManager.acceptInput(TutorialState.MinerMove);
     };
     const cursorStateChanged = (state: CursorState) => {
       setTargetting(state === CursorState.TargetingExplorer);

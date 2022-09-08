@@ -522,7 +522,7 @@ class GameUIManager extends EventEmitter {
 
         // make it so you leave one force behind
         if (this.isSendingShip(mouseDownPlanet.locationId)) {
-          tutorialManager.acceptInput(TutorialState.Spaceship);
+          tutorialManager.acceptInput(TutorialState.MoveSpaceship);
           forces = 0;
         } else if (forces >= from.energy) {
           forces = from.energy - 1;
@@ -602,7 +602,6 @@ class GameUIManager extends EventEmitter {
   public toggleExplore() {
     if (this.isMining()) {
       this?.stopExplore();
-      TutorialManager.getInstance(this).acceptInput(TutorialState.MinerPause);
     } else {
       this?.startExplore();
     }
@@ -776,11 +775,6 @@ class GameUIManager extends EventEmitter {
   public setSelectedPlanet(planet: LocatablePlanet | undefined): void {
     this.previousSelectedPlanetId = this.selectedPlanetId;
 
-    if (!planet) {
-      const tutorialManager = TutorialManager.getInstance(this);
-      tutorialManager.acceptInput(TutorialState.Deselect);
-    }
-
     const uiEmitter = UIEmitter.getInstance();
     this.selectedPlanetId = planet?.locationId;
     if (!planet) {
@@ -794,7 +788,7 @@ class GameUIManager extends EventEmitter {
 
         if (coordsEqual(loc.coords, this.getHomeCoords())) {
           const tutorialManager = TutorialManager.getInstance(this);
-          tutorialManager.acceptInput(TutorialState.SpawnPlanet);
+          tutorialManager.acceptInput(TutorialState.Welcome);
         }
       }
     }

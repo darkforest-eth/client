@@ -810,14 +810,6 @@ export function GameLandingPage({ match, location }: RouteComponentProps<{ contr
   }, [initRenderState]);
 
   useEffect(() => {
-    const gameUiManager = gameUIManagerRef.current;
-    if (!terminalVisible && gameUiManager) {
-      const tutorialManager = TutorialManager.getInstance(gameUiManager);
-      tutorialManager.acceptInput(TutorialState.Terminal);
-    }
-  }, [terminalVisible]);
-
-  useEffect(() => {
     if (terminalHandle.current && topLevelContainer.current) {
       advanceState(terminalHandle);
     }
