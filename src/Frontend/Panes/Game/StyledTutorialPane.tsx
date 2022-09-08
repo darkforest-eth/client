@@ -9,6 +9,7 @@ export const StyledTutorialPane = styled.div`
   background: ${dfstyles.colors.backgroundlighter};
   color: ${dfstyles.colors.text};
   padding: 8px;
+  padding-top: 16px;
   border-bottom: 1px solid ${dfstyles.colors.border};
   border-right: 1px solid ${dfstyles.colors.border};
 
