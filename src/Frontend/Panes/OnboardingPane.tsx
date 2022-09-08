@@ -48,8 +48,7 @@ const enum OnboardState {
 function OnboardMoney({ advance }: { advance: () => void }) {
   const uiManager = useUIManager();
   const account = useAccount(uiManager);
-
-  const explorerAddressLink = `https://flashlayer-1-explorer.altlayer.io/address/${account}`;
+  const explorerAddressLink = `${process.env.EXPLORER_ADDR_PREFIX as string}/${account}`;
 
   return (
     <StyledOnboardingContent>

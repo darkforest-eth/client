@@ -14,10 +14,6 @@ const reverseOrdering = false;
 
 // ---------------------------------------------------------------
 
-const AL_SERVER_URL = window.location.href.includes('localhost')
-  ? 'http://localhost:3011'
-  : 'https://darkforest-leaderboard.altresearch.xyz'
-
 import { getPlayerColor } from "https://cdn.skypack.dev/@darkforest_eth/procedural";
 import { DateTime } from 'https://cdn.skypack.dev/luxon';
 
@@ -55,7 +51,7 @@ function formatNumber(num, decimalCount = 1) {
 }
 
 async function downloadLeaderboard() {
-  return fetch(`${AL_SERVER_URL}/leaderboard`)
+  return fetch(`${process.env.AL_SERVER_URL}/leaderboard`)
     .then(response => response.json())
 }
 

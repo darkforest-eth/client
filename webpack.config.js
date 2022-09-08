@@ -1,10 +1,8 @@
 const path = require('path');
-const dotenv = require('dotenv');
-
-dotenv.config();
+const dotenvWebpack = require('dotenv-webpack');
 
 const resolvePackage = require('resolve-package-path');
-const { EnvironmentPlugin } = require('webpack');
+const { EnvironmentPlugin, ProvidePlugin } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -112,13 +110,15 @@ module.exports = {
         mode: 'readonly',
       },
     }),
+    new dotenvWebpack(),
     // The string values are fallbacks if the env variable is not set
-    new EnvironmentPlugin({
-      NODE_ENV: 'development',
-      DEFAULT_RPC: 'https://rpc-df.xdaichain.com/',
-      // This must be null to indicate to webpack that this environment variable is optional
-      DF_WEBSERVER_URL: null,
-    }),
+    // note: Using dotenv-webpack instead of environment plugin here
+    // new EnvironmentPlugin({
+    //   NODE_ENV: 'development',
+    //   DEFAULT_RPC: 'https://rpc-df.xdaichain.com/',
+    //   // This must be null to indicate to webpack that this environment variable is optional
+    //   DF_WEBSERVER_URL: null,
+    // }),
     new HtmlWebpackPlugin({
       template: './index.html',
     }),

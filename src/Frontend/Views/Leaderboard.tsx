@@ -15,28 +15,22 @@ import { Table } from './Table';
 
 // Refresh every 10s
 const SCORE_REFRESH_RATE = 10000
-
-const AL_SERVER_URL = window.location.href.includes('localhost')
-  ? 'http://localhost:3011'
-  : 'https://darkforest-leaderboard.altresearch.xyz'
-
-// TODO: update this each round, or pull from contract constants
-const roundStartTimestamp = '2022-09-09T12:00:00.000Z';
-const roundEndTimestamp = '2022-09-11T12:00:00.000Z';
+const roundStartTime = new Date(process.env.ROUND_START_TIMESTAMP as string).getTime()
+const roundEndTime = new Date(process.env.ROUND_END_TIMESTAMP as string).getTime()
 
 export function LeadboardDisplay() {
   const [leaderboard, setLeaderboard] = useState()
   const [error, setError] = useState()
-
-  const roundStartTime = new Date(roundStartTimestamp).getTime()
   const gameBegin = (new Date().getTime() - roundStartTime >= 0)
 
   useEffect(() => {
     let jobId: number | undefined = undefined
+
     const fetchScores = async() => {
       try {
-        const resp = await fetch(`${AL_SERVER_URL}/leaderboard`)
-        setLeaderboard(await resp.json())
+        const resp = await fetch(`${process.env.AL_SERVER_URL}/leaderboard`)
+        const res = await resp.json()
+        setLeaderboard(res)
       } catch (err) {
         setError(err)
       }
@@ -147,7 +141,6 @@ function LeaderboardTable({ rows }: { rows: Array<[string, number | undefined]> 
 
 function CountDown() {
   const [str, setStr] = useState('');
-  const roundEndTime = new Date(roundEndTimestamp).getTime();
 
   const update = () => {
     const timeUntilEndms = roundEndTime - new Date().getTime();
