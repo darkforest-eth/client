@@ -86,10 +86,10 @@ export const PortalHistoryRoundCard: React.FC<{ round: GrandPrixHistory; index: 
           <DetailLabel>Badges</DetailLabel>
           <DetailValue>{round.badges.length}</DetailValue>
         </DetailRow>
-        <Link style={{ minWidth: '250px' }} target='blank' to={`/play/${lobbyAddress}?create=true`}>
+        <Link style={{ minWidth: '250px' }} target='_blank' to={`/play/${lobbyAddress}?create=true`}>
           <LobbyButton primary>Play</LobbyButton>
         </Link>
-        <Link style={{ minWidth: '250px' }} target='blank' to={`/portal/map/${round.configHash}`}>
+        <Link style={{ minWidth: '250px' }} to={`/portal/map/${round.configHash}`}>
           <LobbyButton>Details</LobbyButton>
         </Link>
       </MapDetailsContainer>

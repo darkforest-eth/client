@@ -71,7 +71,7 @@ export const MapGridDetail: React.FC<{
           )}
           <Link
             style={{ minWidth: '250px' }}
-            target='blank'
+            target='_blank'
             to={`/play/${lobbyAddress}?create=true`}
           ></Link>
         </>

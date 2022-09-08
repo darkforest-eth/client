@@ -116,7 +116,7 @@ export const MapOverview: React.FC<{
           </div>
           <Title>{mapName ?? 'Grand Prix Round'}</Title>
           <MapActions>
-            <Link target='blank' to={`/play/${lobbyAddress}?create=true`}>
+            <Link target='_blank' to={`/play/${lobbyAddress}?create=true`}>
               <LobbyButton primary>
                 Play round
               </LobbyButton>
