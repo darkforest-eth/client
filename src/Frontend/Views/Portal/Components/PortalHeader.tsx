@@ -71,7 +71,7 @@ export const PortalHeader = () => {
             dropdown: [
               {
                 label: 'Tutorial',
-                to: `/portal/tutorial/${tutorialLobbyAddress}`,
+                to: `/play/${tutorialLobbyAddress}?create=true`,
                 secondary: 'Play a guided tutorial game.',
               },
               {

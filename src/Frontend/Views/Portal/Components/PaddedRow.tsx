@@ -7,7 +7,7 @@ export const PaddedRow = ({ children }: { children: React.ReactNode }) => {
 };
 
 const Container = styled.div`
-  background: ${theme.colors.bg1};
+  background: ${theme.colors.bg2};
   border-radius: ${theme.borderRadius};
   display: flex;
   align-items: center;

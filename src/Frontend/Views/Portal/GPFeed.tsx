@@ -113,12 +113,11 @@ const Content = styled.div`
 `;
 
 const Button = styled.button`
-  background: ${theme.colors.bg2};
   text-transform: uppercase;
   font-family: ${theme.fonts.mono};
   letter-spacing: 0.06em;
   font-size: 0.8rem;
-  border: none;
+  border: 1px solid ${theme.colors.bg3};
   outline: none;
   border-radius: ${theme.borderRadius};
   padding: ${theme.spacing.sm};

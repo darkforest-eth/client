@@ -27,7 +27,7 @@ export const PortalHomeView: React.FC<{}> = () => {
   const [leaderboard, setLeaderboard] = useState<Leaderboard | undefined>();
   const SEASON_GRAND_PRIXS = useSeasonData();
   const grandPrix = getCurrentGrandPrix(SEASON_GRAND_PRIXS);
-  if(!grandPrix) return <div>No active round</div>
+  if (!grandPrix) return <div>No active round</div>;
   const twitters = useTwitters();
   const allPlayers = useSeasonPlayers();
   const connection = useEthConnection();
@@ -67,8 +67,9 @@ export const PortalHomeView: React.FC<{}> = () => {
           <MapOverview round={grandPrix} config={config} lobbyAddress={lobbyAddress} />
         </div>
         <div className='col w-100'>
-          <Label>Recent Activity</Label>
-          <GPFeed configHash={grandPrix.configHash} />
+          <LabeledPanel label='Recent Activity'>
+            <GPFeed configHash={grandPrix.configHash} />
+          </LabeledPanel>
         </div>
       </div>
       <div className='row w-100' style={{ gap: theme.spacing.xl }}>
@@ -82,7 +83,7 @@ export const PortalHomeView: React.FC<{}> = () => {
             <div className='col' style={{ gap: theme.spacing.md }}>
               {loadSeasonLeaderboard(allPlayers, grandPrix.seasonId, SEASON_GRAND_PRIXS)
                 .entries.sort((a, b) => b.score - a.score)
-                .filter(e => e.score > 0)
+                .filter((e) => e.score > 0)
                 .map((entry, index) => (
                   <SeasonLeaderboardEntryComponent
                     key={index}
