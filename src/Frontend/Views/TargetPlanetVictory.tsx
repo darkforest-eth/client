@@ -1,5 +1,5 @@
 import { TooltipName } from '@darkforest_eth/types';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Btn } from '../Components/Btn';
 import { AccountLabel } from '../Components/Labels/Labels';
@@ -15,6 +15,13 @@ export function TargetPlanetVictory() {
   const gameover = useGameover();
   const requiredPlanets = uiManager.contractConstants.TARGETS_REQUIRED_FOR_VICTORY;
   const requiredEnergy = uiManager.contractConstants.CLAIM_VICTORY_ENERGY_PERCENT;
+  const [claiming, setClaiming] = useState(false);
+
+  async function handleClaimVictory() {
+    setClaiming(true);
+    const tx = await gameManager.claimVictory();
+    const res = await tx.submittedPromise;
+  }
 
   if (gameover) {
     return <></>;
@@ -38,8 +45,8 @@ export function TargetPlanetVictory() {
           </span>
 
           {canClaimVictory && (
-            <LobbyButton primary onClick={() => gameManager.claimVictory()}>
-              Claim Victory!
+            <LobbyButton primary disabled={claiming} onClick={handleClaimVictory}>
+              {claiming ? 'Claiming...' : 'Claim Victory'}
             </LobbyButton>
           )}
         </TooltipTrigger>
