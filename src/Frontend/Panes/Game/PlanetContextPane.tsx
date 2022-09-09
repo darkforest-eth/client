@@ -93,12 +93,12 @@ function PlanetContextPaneContent({
       <VerticalSplit>
         <>
           {upgradeRow}
-          <OpenBroadcastPaneButton modal={modal} planetId={p?.locationId} />
+          {/* <OpenBroadcastPaneButton modal={modal} planetId={p?.locationId} /> */}
           <OpenPlanetInfoButton modal={modal} planetId={p?.locationId} />
         </>
         <>
           <OpenManagePlanetArtifactsButton modal={modal} planetId={p?.locationId} />
-          {hatRow}
+          {/* {hatRow} */}
         </>
       </VerticalSplit>
       {withdrawRow}
