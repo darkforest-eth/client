@@ -1582,7 +1582,7 @@ class GameManager extends EventEmitter {
    * to link a twitter to their account.
    */
   async getSignedTwitter(twitter: string): Promise<string> {
-    return this.ethConnection.signMessage(twitter);
+    return this.ethConnection.signMessage(JSON.stringify({ twitter }));
   }
 
   /**
@@ -2205,7 +2205,6 @@ class GameManager extends EventEmitter {
       throw e;
     }
     this.refreshTwitters();
-
   }
 
   private async getSpaceships() {
@@ -3611,21 +3610,19 @@ class GameManager extends EventEmitter {
     if (!player) return [];
     return [...this.getPlanetMap()].reduce(
       (total, [location, planet]) =>
-          planet.isTargetPlanet && !this.isMoveBlocked(location, player.homePlanetId)
+        planet.isTargetPlanet && !this.isMoveBlocked(location, player.homePlanetId)
           ? [...total, planet]
           : total,
       []
     );
   }
 
-  public getAllBlocks() :{[dest: LocationId]: LocationId[]} {
-    const blocks : {[dest: LocationId]: LocationId[]}= {};
+  public getAllBlocks(): { [dest: LocationId]: LocationId[] } {
+    const blocks: { [dest: LocationId]: LocationId[] } = {};
 
-    [...this.getPlanetMap()].forEach(
-      ([location, planet]) => {
-          if(planet.blockedPlanetIds.length > 0) blocks[location] = planet.blockedPlanetIds
-      }
-    );
+    [...this.getPlanetMap()].forEach(([location, planet]) => {
+      if (planet.blockedPlanetIds.length > 0) blocks[location] = planet.blockedPlanetIds;
+    });
     return blocks;
   }
 

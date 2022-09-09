@@ -39,7 +39,7 @@ export const MatchComponent: React.FC<MatchDetails> = ({
   startTime,
   players,
 }) => {
-  const twitters = useTwitters();
+  const { twitters } = useTwitters();
   const history = useHistory();
 
   return (
@@ -99,9 +99,7 @@ export const FindMatch: React.FC<FindMatchProps> = ({ game }) => {
               style={{ gap: '16px' } as CSSStyleDeclaration & CSSProperties}
             >
               {items
-                .filter(
-                  (entry) => entry.numSpawn > 0
-                )
+                .filter((entry) => entry.numSpawn > 0)
                 .map((entry: CleanMatchEntry) => (
                   <MatchComponent
                     configHash={entry.configHash}

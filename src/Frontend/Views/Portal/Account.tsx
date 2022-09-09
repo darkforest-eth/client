@@ -9,6 +9,7 @@ import { Gnosis, Icon, IconType, Twitter } from '../../Components/Icons';
 import { LobbyButton } from '../../Pages/Lobby/LobbyMapEditor';
 
 import { useDisableScroll, useEthConnection, useTwitters } from '../../Utils/AppHooks';
+import { TwitterVerifier } from './Components/TwitterVerifier';
 import { PortalModal } from './Components/PortalModal';
 import { addressToColor, truncateAddress } from './PortalUtils';
 import { theme } from './styleUtils';
@@ -47,32 +48,24 @@ const AccountModal: React.FC<AccountModalProps> = ({ address, twitter, balance, 
             alignItems: 'center',
             gap: '8px',
             marginTop: theme.spacing.lg,
+            width: '100%',
           }}
         >
-          <Button
+          <SmallButton
             onClick={() => {
               window.open(`https://blockscout.com/xdai/optimism/address/${address}`, '_blank');
             }}
           >
             <Gnosis width='24px' height='24px' />
             Explorer
-          </Button>
-          {twitter && (
-            <Button
-              onClick={() => {
-                window.open(`https://twitter.com/${twitter}`, '_blank');
-              }}
-            >
-              <Twitter width='24px' height='24px' />
-              {twitter ? 'Twitter' : 'Connect'}
-            </Button>
-          )}
+          </SmallButton>
         </div>
+        <TwitterVerifier twitter={twitter} />
       </AccountContent>
       <Footer>
         <Button onClick={logOut}>
           <ExitIcon />
-          Disconnect
+          Log out
         </Button>
       </Footer>
     </PortalModal>
@@ -83,7 +76,7 @@ export function Account() {
   const connection = useEthConnection();
   const address = connection.getAddress();
   const balance = connection.getMyBalance();
-  const twitters = useTwitters();
+  const { twitters } = useTwitters();
   const [blockScroll, allowScroll] = useDisableScroll();
 
   useEffect(() => {
@@ -225,4 +218,8 @@ const Button = styled(LobbyButton)`
   &:hover {
     background: ${theme.colors.bg3} !important;
   }
+`;
+
+const SmallButton = styled(Button)`
+  padding: ${theme.spacing.md};
 `;

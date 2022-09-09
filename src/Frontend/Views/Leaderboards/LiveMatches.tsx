@@ -44,7 +44,7 @@ export function LiveMatches({
 // pass in either an address, or a twitter handle. this function will render the appropriate
 // component
 function playerToEntry(playerAddress: string) {
-  const twitters = useTwitters();
+  const { twitters } = useTwitters();
   const playerTwitter = twitters[playerAddress];
   return (
     <span

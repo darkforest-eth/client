@@ -21,7 +21,7 @@ export const MapGridDetail: React.FC<{
 }> = ({ configHash, creator, lobbyAddress, nGames }) => {
   const { config } = useConfigFromHash(configHash);
   const [minimapConfig, setMinimapConfig] = useState<MinimapConfig | undefined>();
-  const twitters = useTwitters();
+  const { twitters } = useTwitters();
 
   const onMapChange = useMemo(() => {
     return debounce((config: MinimapConfig) => configHash && setMinimapConfig(config), 500);

@@ -22,7 +22,7 @@ export function getPlayer(entry: CleanMatchEntry): EthAddress {
   else return entry.creator;
 }
 export const GPFeed: React.FC<MapDetailsProps> = ({ configHash }) => {
-  const twitters = useTwitters();
+  const { twitters } = useTwitters();
   // Updates every 5s.
   const { liveMatches, spyError } = useLiveMatches(configHash, !DUMMY ? 5000 : undefined);
 

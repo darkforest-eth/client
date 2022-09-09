@@ -42,7 +42,7 @@ export function PortalHistoryView({ match }: RouteComponentProps<{ account: stri
   const [current, setCurrent] = useState<number>(0);
   const account = match.params.account as EthAddress;
   const ethConnection = useEthConnection();
-  const twitters = useTwitters();
+  const { twitters } = useTwitters();
   const currentPlayerAddress = ethConnection.getAddress();
   if (!account) return <div>Loading...</div>;
 

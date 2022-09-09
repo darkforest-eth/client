@@ -50,8 +50,14 @@ export const { useDefinedContext: useUIManager, provider: UIManagerProvider } =
 export const { useDefinedContext: useTopLevelDiv, provider: TopLevelDivProvider } =
   createDefinedContext<HTMLDivElement>();
 
+export type TwitterContextType = {
+  twitters: AddressTwitterMap;
+  // setTwitters: (twitters: AddressTwitterMap) => void;
+  setTwitters: React.Dispatch<React.SetStateAction<AddressTwitterMap>>;
+};
+
 export const { useDefinedContext: useTwitters, provider: TwitterProvider } =
-  createDefinedContext<AddressTwitterMap>();
+  createDefinedContext<TwitterContextType>();
 
 export function useOverlayContainer(): HTMLDivElement | null {
   return useUIManager()?.getOverlayContainer() ?? null;

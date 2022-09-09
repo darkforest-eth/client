@@ -27,9 +27,11 @@ import {
   SeasonDataProvider,
   SeasonPlayerProvider,
   useConfigFromHash,
+  TwitterContextType,
 } from '../Utils/AppHooks';
 import { Incompatibility, unsupportedFeatures } from '../Utils/BrowserChecks';
 import { tutorialConfig } from '../Utils/constants';
+import { createDefinedContext } from '../Utils/createDefinedContext';
 import { TerminalTextStyle } from '../Utils/TerminalTypes';
 import { PortalMainView } from '../Views/Portal/PortalMainView';
 import { Terminal, TerminalHandle } from '../Views/Terminal';
@@ -282,13 +284,16 @@ export function EntryPage() {
   const [loadingStatus, setLoadingStatus] = useState<LoadingStatus>('loading');
   const [controller, setController] = useState<EntryPageTerminal | undefined>();
 
-  const [twitters, setTwitters] = useState<AddressTwitterMap | undefined>();
+  const [twitters, setTwitters] = useState<AddressTwitterMap>({});
+  const twitterContext = { twitters, setTwitters };
+
   const [connection, setConnection] = useState<EthConnection | undefined>();
   const [seasonPlayers, setPlayers] = useState<CleanConfigPlayer[] | undefined>();
   const [seasonData, setSeasonData] = useState<GrandPrixMetadata[] | undefined>();
 
   const { lobbyAddress: tutorialLobbyAddress } = useConfigFromHash(tutorialConfig);
   /* get all twitters on page load */
+
   useEffect(() => {
     getAllTwitters().then((t) => setTwitters(t));
   }, []);
@@ -389,7 +394,7 @@ export function EntryPage() {
   } else
     return (
       <EthConnectionProvider value={connection}>
-        <TwitterProvider value={twitters}>
+        <TwitterProvider value={twitterContext}>
           <SeasonDataProvider value={seasonData!}>
             <SeasonPlayerProvider value={seasonPlayers!}>
               <Router>

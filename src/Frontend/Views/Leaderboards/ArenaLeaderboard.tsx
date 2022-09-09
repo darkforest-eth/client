@@ -123,7 +123,9 @@ function getRankStar(rank: number) {
   const purple =
     'invert(39%) sepia(54%) saturate(6205%) hue-rotate(264deg) brightness(100%) contrast(103%)';
   if (rank < 6) {
-    return <Star index={rank} width={'20px'} height={'20px'} color={rank == 0 ? gold : purple}></Star>;
+    return (
+      <Star index={rank} width={'20px'} height={'20px'} color={rank == 0 ? gold : purple}></Star>
+    );
   }
   return <></>;
 }
@@ -132,7 +134,6 @@ export function goldStar(index: number) {
   const gold =
     'invert(73%) sepia(29%) saturate(957%) hue-rotate(354deg) brightness(100%) contrast(95%)';
   return <Star key={index} index={index} width={'20px'} height={'20px'} color={gold}></Star>;
-
 }
 
 interface Row {
@@ -291,7 +292,7 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
         ]}
         rows={rows}
         columns={[
-          (row: Row, i) => row.wallBreaker ? goldStar(i) : <></>, //star
+          (row: Row, i) => (row.wallBreaker ? goldStar(i) : <></>), //star
           (
             row: Row,
             i //rank
@@ -496,7 +497,7 @@ function EloLeaderboardBody({
   leaderboard: GraphConfigPlayer[] | undefined;
   error: Error | undefined;
 }) {
-  const twitters = useTwitters();
+  const { twitters } = useTwitters();
   if (error) {
     return (
       <LeaderboardContainer>

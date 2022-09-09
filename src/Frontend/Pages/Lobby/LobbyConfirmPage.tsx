@@ -45,7 +45,7 @@ export function LobbyConfirmPage({
   const blockscoutURL = `${BLOCK_EXPLORER_URL}/${lobbyTx}`;
   const url = `${window.location.origin}/play/${arenaCreationManager.getArenaAddress()}`;
   const configHash = arenaCreationManager.getArenaConfigHash();
-  const twitters = useTwitters();
+  const { twitters } = useTwitters();
   const handleEnterUniverse = () => {
     if (config.ADMIN_PLANETS.displayValue && config.ADMIN_PLANETS.displayValue.length > 0) {
       const confirmed = confirm(

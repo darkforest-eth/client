@@ -37,7 +37,7 @@ export const PortalHomeView: React.FC<{}> = () => {
   ).length;
 
   if (!grandPrix) return <div>No active round</div>;
-  const twitters = useTwitters();
+  const { twitters } = useTwitters();
   const allPlayers = useSeasonPlayers();
   const connection = useEthConnection();
   const address = connection.getAddress();

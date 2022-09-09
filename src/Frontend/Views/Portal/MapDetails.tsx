@@ -26,7 +26,7 @@ export function MapDetails({
 
   const numSpawnPlanets = config?.ADMIN_PLANETS.filter((p) => p.isSpawnPlanet).length ?? 0;
   const hasWhitelist = config?.WHITELIST_ENABLED ?? true;
-  const twitters = useTwitters();
+  const { twitters } = useTwitters();
   const allPlayers = useSeasonPlayers();
   const leaders = loadGrandPrixLeaderboard(allPlayers, configHash, twitters);
 

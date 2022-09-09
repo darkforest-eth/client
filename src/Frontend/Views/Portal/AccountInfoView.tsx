@@ -26,7 +26,7 @@ function PlayerOverview({
   playerAddress: EthAddress | undefined;
   playerData: RawAccount | undefined;
 }) {
-  const twitters = useTwitters();
+  const { twitters } = useTwitters();
 
   return (
     <OverviewContainer>

@@ -30,12 +30,11 @@ export const SeasonLeaderboardEntryComponent: React.FC<{
 }> = ({ entry, uniqueBadges, index }) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const SEASON_GRAND_PRIXS = useSeasonData();
-  const twitters = useTwitters();
+  const { twitters } = useTwitters();
   const numPastOrCurrent = SEASON_GRAND_PRIXS.filter((sgp) =>
     isPastOrCurrentRound(sgp.configHash, SEASON_GRAND_PRIXS)
   ).length;
   const gamesFinished = entry.games.length;
-  console.log(formatDuration(entry.totalDuration * 1000));
   return (
     <div key={index}>
       <Row key={index} onClick={() => setExpanded(!expanded)} expanded={expanded}>
