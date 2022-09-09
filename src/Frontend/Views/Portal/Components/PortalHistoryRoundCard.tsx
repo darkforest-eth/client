@@ -34,7 +34,7 @@ export const PortalHistoryRoundCard: React.FC<{ round: GrandPrixHistory; index: 
 
   useEffect(() => {
     if (config) {
-      onMapChange(generateMinimapConfig(config, 4));
+      onMapChange(generateMinimapConfig(config, 12));
     } else {
       setMinimapConfig(undefined);
     }
