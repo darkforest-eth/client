@@ -69,18 +69,13 @@ export default function LandingPage() {
                 style={{ flex: '1' }}
                 onClick={() =>
                   window.open(
-                    'https://medium.com/dfdao/%EF%B8%8F-the-galactic-league-%EF%B8%8F-aa17acc9c7d7',
+                    'https://medium.com/dfdao/dark-forest-grand-prix-season-1-3cfc48a7f9a2',
                     'blank'
                   )
                 }
               >
                 Learn More
               </LobbyButton>
-            </div>
-            <div>
-              Welcome to the Eternal Grand Prix Play Test. <br></br>
-              Fill out this {' '}
-              <Link to='https://forms.gle/zkgeFF15koBopCNC9'>form </Link> to share your feedback and get $5.
             </div>
           </TextContainer>
         </Content>
