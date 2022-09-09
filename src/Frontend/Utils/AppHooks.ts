@@ -333,6 +333,7 @@ export function useConfigFromHash(configHash?: string) {
 }
 
 export function useLiveMatches(
+  seasonData: GrandPrixMetadata[],
   config: string | undefined = undefined,
   poll: number | undefined = undefined
 ): {
@@ -346,7 +347,7 @@ export function useLiveMatches(
       if (DUMMY) {
         setLiveMatches(createDummyLiveMatches(10));
       } else {
-        setLiveMatches(await loadLiveMatches(config));
+        setLiveMatches(await loadLiveMatches(seasonData, config));
       }
     } catch (e) {
       console.log('error loading leaderboard', e);

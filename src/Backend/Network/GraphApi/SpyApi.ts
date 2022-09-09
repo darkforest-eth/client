@@ -1,7 +1,11 @@
-import { CleanMatchEntry, ExtendedMatchEntry, LiveMatch } from '@darkforest_eth/types';
+import { CleanMatchEntry, ExtendedMatchEntry, GrandPrixMetadata, LiveMatch } from '@darkforest_eth/types';
 import { getGraphQLData } from '../GraphApi';
+import { validGrandPrixMatch } from './SeasonLeaderboardApi';
 
-export const loadLiveMatches = async (configHash?: string): Promise<LiveMatch> => {
+export const loadLiveMatches = async (
+  seasonData: GrandPrixMetadata[],
+  configHash?: string
+): Promise<LiveMatch> => {
   // Get last week of data.
   const startTime = Math.round((Date.now() - 1000 * 60 * 60 * 24 * 7) / 1000);
 
@@ -40,18 +44,20 @@ export const loadLiveMatches = async (configHash?: string): Promise<LiveMatch> =
     throw new Error(`error when fetching data, ${JSON.stringify(response)}`);
   }
 
-  return { entries: cleanLiveMatches(arenas as ExtendedMatchEntry[]) };
+  return { entries: cleanLiveMatches(arenas as ExtendedMatchEntry[], seasonData) };
 };
 
 function calcMoves(match: ExtendedMatchEntry) {
-  const players = match.players
-  if(!players || players.length == 0) return 0;
+  const players = match.players;
+  if (!players || players.length == 0) return 0;
   else {
-    return players.map(lm => lm.moves).reduce((a,b) => a + b)
+    return players.map((lm) => lm.moves).reduce((a, b) => a + b);
   }
 }
-export function cleanLiveMatches(liveMatches: ExtendedMatchEntry[]) {
-  return liveMatches.map(lm => {
+export function cleanLiveMatches(liveMatches: ExtendedMatchEntry[], seasonData: GrandPrixMetadata[]) {
+  return liveMatches
+  .filter(lm => validGrandPrixMatch(lm.configHash,lm.startTime,seasonData))
+  .map((lm) => {
     const clean: CleanMatchEntry = {
       creator: lm.creator,
       lobbyAddress: lm.lobbyAddress,
@@ -62,8 +68,8 @@ export function cleanLiveMatches(liveMatches: ExtendedMatchEntry[]) {
       duration: lm.duration,
       startTime: lm.startTime,
       endTime: lm.endTime,
-      players: lm.players ? lm.players.map(p => p.address) : []
-    }
+      players: lm.players ? lm.players.map((p) => p.address) : [],
+    };
     return clean;
-  })
+  });
 }

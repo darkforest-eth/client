@@ -4,7 +4,7 @@ import dfstyles from '@darkforest_eth/ui/dist/styles';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Btn } from '../../Components/Btn';
-import { useLiveMatches, useTwitters } from '../../Utils/AppHooks';
+import { useLiveMatches, useSeasonData, useTwitters } from '../../Utils/AppHooks';
 import { HOUR_IN_SECONDS, DEV_CONFIG_HASH_1, DUMMY } from '../../Utils/constants';
 import { formatStartTime } from '../../Utils/TimeUtils';
 import { compPlayerToEntry } from '../Leaderboards/ArenaLeaderboard';
@@ -12,6 +12,7 @@ import { PaddedRow } from './Components/PaddedRow';
 import styled from 'styled-components';
 import { scoreToTime, truncateAddress } from './PortalUtils';
 import { theme } from './styleUtils';
+import useSWR from 'swr';
 
 export interface MapDetailsProps {
   configHash: string | undefined;
@@ -23,8 +24,9 @@ export function getPlayer(entry: CleanMatchEntry): EthAddress {
 }
 export const GPFeed: React.FC<MapDetailsProps> = ({ configHash }) => {
   const { twitters } = useTwitters();
+  const seasonData = useSeasonData()
   // Updates every 5s.
-  const { liveMatches, spyError } = useLiveMatches(configHash, !DUMMY ? 5000 : undefined);
+  const { liveMatches, spyError } = useLiveMatches(seasonData, configHash, !DUMMY ? 5000 : undefined);
   
   const latest = liveMatches?.entries
     .map((m) => {

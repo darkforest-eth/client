@@ -22,10 +22,6 @@ export interface MatchDisplay extends CleanMatchEntry {
 }
 
 const errorMessage = 'Error Loading Leaderboard';
-export function LiveMatchesDisplay({ config }: { config: string }) {
-  const { liveMatches, spyError } = useLiveMatches(config, 1000);
-  return <LiveMatches game={liveMatches} error={spyError} />;
-}
 
 export function LiveMatches({
   game,

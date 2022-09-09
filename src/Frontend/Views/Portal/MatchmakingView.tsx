@@ -2,14 +2,15 @@ import { LiveMatch } from '@darkforest_eth/types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { loadLiveMatches } from '../../../Backend/Network/GraphApi/SpyApi';
+import { useSeasonData } from '../../Utils/AppHooks';
 import { FindMatch } from './FindMatch';
 
 export function MatchmakingView() {
   const [liveMatches, setLiveMatches] = useState<LiveMatch | undefined>();
   const [liveMatchError, setLiveMatchError] = useState<Error | undefined>();
-
+  const seasonData = useSeasonData()
   useEffect(() => {
-    loadLiveMatches()
+    loadLiveMatches(seasonData)
       .then((matches) => {
         setLiveMatchError(undefined);
         setLiveMatches(matches);

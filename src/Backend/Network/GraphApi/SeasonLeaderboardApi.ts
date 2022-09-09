@@ -271,12 +271,16 @@ export function loadGrandPrixLeaderboard(
 }
 
 // Returns true if a given match has occurred after the Grand Prix start time.
-export function validGrandPrixMatch(cp: ConfigPlayer, SEASON_GRAND_PRIXS: GrandPrixMetadata[]) {
-  const grandPrixs = SEASON_GRAND_PRIXS.filter((gp) => gp.configHash == cp.configHash);
+export function validGrandPrixMatch(
+  configHash: string,
+  startTime: number | undefined,
+  SEASON_GRAND_PRIXS: GrandPrixMetadata[]
+) {
+  const grandPrixs = SEASON_GRAND_PRIXS.filter((gp) => gp.configHash == configHash);
   if (grandPrixs.length == 0) return true; // Match is valid if not an official Grand Prix.
-  if (!cp.bestTime) return false;
+  if (!startTime) return false;
   const grandPrix = grandPrixs[0];
-  return cp.bestTime.startTime >= grandPrix.startTime;
+  return startTime >= grandPrix.startTime;
 }
 
 // Add wallbreaker badge to ConfigPlayers
@@ -286,7 +290,11 @@ async function buildCleanConfigPlayer(
 ): Promise<CleanConfigPlayer[]> {
   const wallBreakers = await loadWallbreakers(SEASON_GRAND_PRIXS);
   return configPlayers
-    .filter((cp) => validGrandPrixMatch(cp,SEASON_GRAND_PRIXS) && cp.gamesFinished > 0)
+    .filter(
+      (cp) =>
+        validGrandPrixMatch(cp.configHash, cp.bestTime?.startTime, SEASON_GRAND_PRIXS) &&
+        cp.gamesFinished > 0
+    )
     .map((cfp) => {
       const isWallBreaker =
         wallBreakers.length > 0 &&
@@ -340,7 +348,7 @@ export function getSeasonScore(
           return calcCleanGrandPrixScore(result);
         })
         .reduce((prev, curr) => prev + curr),
-      grandPrixsFinished: cleanConfigPlayers.length
+      grandPrixsFinished: cleanConfigPlayers.length,
     };
     seasonScore.score -= calcBadgeTypeScore(badges.flat().map((b) => b.type));
     seasonScores.push(seasonScore);
