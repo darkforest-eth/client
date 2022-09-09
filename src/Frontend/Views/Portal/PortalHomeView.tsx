@@ -81,14 +81,28 @@ export const PortalHomeView: React.FC<{}> = () => {
         </div>
         <div className='col w-100'>
           <LabeledPanel label='Recent Activity'>
+          <div
+              style={{
+                overflowY: 'auto',
+                maxHeight: '500px',
+              }}
+            >
             <GPFeed configHash={grandPrix.configHash} />
+          </div>
           </LabeledPanel>
         </div>
       </div>
       <div className='row w-100' style={{ gap: theme.spacing.xl }}>
         <div className='col w-100'>
           <LabeledPanel label='Active Round'>
-            <ArenaLeaderboardDisplay leaderboard={leaderboard} error={undefined} />
+            <div
+              style={{
+                overflowY: 'auto',
+                maxHeight: '500px',
+              }}
+            >
+              <ArenaLeaderboardDisplay leaderboard={leaderboard} error={undefined} />
+            </div>
           </LabeledPanel>
         </div>
         <div className='col w-100'>
@@ -113,7 +127,7 @@ export const PortalHomeView: React.FC<{}> = () => {
               </RefreshBtn>
             )}
           >
-            <div className='col' style={{ gap: theme.spacing.md }}>
+            <div className='col' style={{ gap: theme.spacing.md, overflowY: 'auto', maxHeight: '500px' }}>
               <SeasonLeaderboardHeader>
                 <Group>
                   <span>Rank</span>

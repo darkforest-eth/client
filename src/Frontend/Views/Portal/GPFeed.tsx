@@ -35,8 +35,8 @@ export const GPFeed: React.FC<MapDetailsProps> = ({ configHash }) => {
     })
     .sort((a, b) => {
       return b.time - a.time;
-    })
-    .slice(0, 4);
+    });
+    // .slice(0, 4);
 
   return (
     <div
@@ -56,6 +56,7 @@ export const GPFeed: React.FC<MapDetailsProps> = ({ configHash }) => {
             style={{
               display: 'flex',
               flexDirection: 'column',
+              maxHeight: '200px',
               gap: '1rem',
             }}
           >
