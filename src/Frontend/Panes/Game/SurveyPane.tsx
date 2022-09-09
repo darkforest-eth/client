@@ -34,6 +34,16 @@ function getPlace(leaderboard: Leaderboard, time: number) {
   return entries.length;
 }
 
+function getPlacev2(leaderboard: Leaderboard, time: number) {
+  const entries = leaderboard.entries.sort((a, b) => {
+    return a.time - b.time;
+  });
+  let place = 0;
+  entries.map((e,i) => {
+    if(e.time == time) place = i
+  })
+  return place + 1;
+}
 function getStyledRank(rank: Rank) {
   if (rank === Rank.GOLD) return <Gold>Gold</Gold>;
   if (rank === Rank.SILVER) return <Silver>Silver</Silver>;
@@ -44,9 +54,9 @@ function getStyledRank(rank: Rank) {
 function SurveyPaneContent({ numSpawnPlanets }: { numSpawnPlanets: number }) {
   const uiManager = useUIManager();
   const time = uiManager.getGameDuration();
-  const isCompetitive = uiManager.isCompetitive();
+  // const isCompetitive = uiManager.isCompetitive();
   const config = uiManager.contractConstants.CONFIG_HASH;
-  // const config = '0x8ea5aaee703231d3893553d7c2d287c2da33e2251811dce40cca2d768b3a7950'
+  const lobbyAddress = uiManager.getContractAddress()
   const { arenaLeaderboard, arenaError } = useArenaLeaderboard(false, config);
   const winners = uiManager.getWinners();
   const losers = uiManager
@@ -54,32 +64,18 @@ function SurveyPaneContent({ numSpawnPlanets }: { numSpawnPlanets: number }) {
     .filter((player) => !winners.find((address) => address == player.address));
 
   let arenaStats = undefined;
-  if (isCompetitive) {
-    const rank = getRank(time);
 
-    arenaStats = (
-      <div>
-        <Row>
-          Gold time: <Gold>{formatDuration(goldTime * 1000)}</Gold>
-        </Row>
-        <Row>
-          Silver time: <Silver>{formatDuration(silverTime * 1000)}</Silver>
-        </Row>
-        <Row>
-          Bronze time: <Bronze>{formatDuration(bronzeTime * 1000)}</Bronze>
-        </Row>
-        <hr />
-        <Row>
-          <p>Rank: {getStyledRank(rank)}</p>
-        </Row>
-        <Row>
-          <a style={{ width: '100%' }} target='_blank' href='https://arena.dfdao.xyz/play/'>
-            <Btn size='stretch'>Race again</Btn>
-          </a>
-        </Row>
-      </div>
-    );
-  }
+  const rank = getRank(time);
+
+  arenaStats = (
+    <div>
+      <Row>
+        <Link openInThisTab={true} style={{ width: '100%' }} to={`/play/${lobbyAddress}?create=true`}>
+          <Btn size='stretch'>Race again</Btn>
+        </Link>
+      </Row>
+    </div>
+  );
 
   if (uiManager.getSpawnPlanets().length == 1) {
     return (
@@ -94,14 +90,16 @@ function SurveyPaneContent({ numSpawnPlanets }: { numSpawnPlanets: number }) {
           <Row>
             Place:{' '}
             <White>
-              {getPlace(arenaLeaderboard, time)}/{arenaLeaderboard.entries.length}
+              {getPlacev2(arenaLeaderboard, time)} / {arenaLeaderboard.entries.length}
             </White>
           </Row>
         )}
         {arenaStats}
         <div style={{ textAlign: 'center' }}>
-          <p>Help us improve Grand Prix by </p>
-          <Link to={'https://forms.gle/coFn68RvPrEKaXcKA'}> giving feedback on this survey 😊</Link>
+          Help us improve Grand Prix by {' '}
+          <Link openInThisTab={false} to={'https://forms.gle/coFn68RvPrEKaXcKA'}> giving feedback on this survey</Link>
+          {' 😊'}
+          
         </div>{' '}
       </div>
     );

@@ -29,7 +29,7 @@ import { TransactionLogPane } from '../Panes/Game/TransactionLogPane';
 import { TutorialPane } from '../Panes/Game/TutorialPane';
 import { TwitterVerifyPane } from '../Panes/Game/TwitterVerifyPane';
 import { ZoomPane } from '../Panes/ZoomPane';
-import { useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
+import { useGameover, useSelectedPlanet, useUIManager } from '../Utils/AppHooks';
 import { useOnUp } from '../Utils/KeyEmitters';
 import { useBooleanSetting } from '../Utils/SettingsHooks';
 import { TOGGLE_DIAGNOSTICS_PANE } from '../Utils/ShortcutConstants';
@@ -184,7 +184,7 @@ export function GameWindowLayout({
           visible={diagnosticsVisible}
           onClose={() => setDiagnosticsVisible(false)}
         />
-        <SurveyPane visible={uiManager.getGameover()} onClose={() => {}} />
+        <SurveyPane visible={useGameover()} onClose={() => {}} />
 
         {modalsContainer && (
           <PluginLibraryPane

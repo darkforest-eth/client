@@ -25,7 +25,7 @@ export const GPFeed: React.FC<MapDetailsProps> = ({ configHash }) => {
   const { twitters } = useTwitters();
   // Updates every 5s.
   const { liveMatches, spyError } = useLiveMatches(configHash, !DUMMY ? 5000 : undefined);
-
+  
   const latest = liveMatches?.entries
     .map((m) => {
       return {
@@ -73,7 +73,7 @@ export const GPFeed: React.FC<MapDetailsProps> = ({ configHash }) => {
                           truncateAddress(getPlayer(entry))
                         )}{' '}
                         <span style={{ color: dfstyles.colors.dfgreen }}>finished</span> in{' '}
-                        {scoreToTime(entry.duration)} ({entry.duration} points)
+                        {scoreToTime(entry.duration)}
                       </span>
                       <Link to={`/play/${entry.lobbyAddress}`} target='_blank'>
                         <Button>View</Button>

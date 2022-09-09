@@ -89,7 +89,7 @@ export function compPlayerToEntry(
 ) {
   return (
     <Link
-      to={`/portal/account/${playerAddress}`}
+      to={`/portal/history/${playerAddress}`}
       style={{ color: color, textDecoration: 'underline', fontWeight: 'bolder' }}
       target='_blank'
     >
@@ -283,7 +283,7 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
           <Cell key='rank'></Cell>,
           <Cell key='name'></Cell>,
           <Cell key='twitter'></Cell>,
-          <Cell key='gnosis'></Cell>,
+          // <Cell key='gnosis'></Cell>,
           // <Cell key='score'>Score</Cell>,
           <Cell key='time'>Time</Cell>,
           <Cell key='moves'>Moves</Cell>,
@@ -328,24 +328,24 @@ function ArenaLeaderboardTable({ rows }: { rows: Row[] }) {
               </Cell>
             );
           },
-          (row: Row, i) => {
-            // gnosis
-            // const color = getRankColor([i, row.score]);
-            return (
-              <Cell>
-                {' '}
-                <a
-                  style={{ display: 'flex', alignItems: 'center' }}
-                  target='_blank'
-                  href={`https://blockscout.com/xdai/optimism/address/${row.address}`}
-                >
-                  <GnoButton>
-                    <Gnosis width='24px' height='24px' />
-                  </GnoButton>
-                </a>
-              </Cell>
-            );
-          },
+          // (row: Row, i) => {
+          //   // gnosis
+          //   // const color = getRankColor([i, row.score]);
+          //   return (
+          //     <Cell>
+          //       {' '}
+          //       <a
+          //         style={{ display: 'flex', alignItems: 'center' }}
+          //         target='_blank'
+          //         href={`https://blockscout.com/xdai/optimism/address/${row.address}`}
+          //       >
+          //         <GnoButton>
+          //           <Gnosis width='24px' height='24px' />
+          //         </GnoButton>
+          //       </a>
+          //     </Cell>
+          //   );
+          // },
           // (row: Row, i) => {
           //   // score
           //   return <Cell>{row.score}</Cell>;

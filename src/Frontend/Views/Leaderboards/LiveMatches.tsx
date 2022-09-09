@@ -13,7 +13,9 @@ import { formatDuration, formatStartTime } from '../../Utils/TimeUtils';
 import { GenericErrorBoundary } from '../GenericErrorBoundary';
 import { getPlayer } from '../Portal/GPFeed';
 import { MinimalButton } from '../Portal/PortalMainView';
+import { truncateAddress } from '../Portal/PortalUtils';
 import { Table } from '../Table';
+import { compPlayerToEntry } from './ArenaLeaderboard';
 
 export interface MatchDisplay extends CleanMatchEntry {
   time: number;
@@ -61,9 +63,9 @@ function playerToEntry(playerAddress: string) {
         target='_blank'
         href={`https://blockscout.com/xdai/optimism/address/${playerAddress}`}
       >
-        <GnoButton>
+        {/* <GnoButton>
           <Gnosis height='25px' width='25px' />
-        </GnoButton>
+        </GnoButton> */}
       </a>
     </span>
   );
@@ -76,6 +78,8 @@ type Row = {
 };
 
 function LeaderboardTable({ rows }: { rows: MatchDisplay[] }) {
+  const { twitters } = useTwitters();
+
   if (rows.length == 0) return <Subber>No live games</Subber>;
 
   const [durations, setDurations] = useState<number[]>([]);
@@ -113,7 +117,17 @@ function LeaderboardTable({ rows }: { rows: MatchDisplay[] }) {
             );
           },
           (row: MatchDisplay, i) => {
-            return <Cell>{playerToEntry(getPlayer(row))}</Cell>;
+            return (
+              <Cell>
+                {' '}
+                {compPlayerToEntry(
+                  getPlayer(row),
+                  twitters[getPlayer(row)],
+                  undefined,
+                  truncateAddress(getPlayer(row))
+                )}
+              </Cell>
+            );
           },
 
           (row: MatchDisplay, i) => {

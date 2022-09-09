@@ -10,12 +10,14 @@ import {
 import { IconType } from '@darkforest_eth/ui';
 import { isAddress } from 'ethers/lib/utils';
 import React, { useEffect, useMemo, useState } from 'react';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { calcBadgeTypeScore, loadPlayerSeasonHistoryView } from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
 import { BadgeDetailsRow } from '../../Components/Badges';
+import Button from '../../Components/Button';
 import { Icon } from '../../Components/Icons';
 import { Sub } from '../../Components/Text';
+import { LobbyButton } from '../../Pages/Lobby/LobbyMapEditor';
 import {
   useAccount,
   useEthConnection,
@@ -134,6 +136,10 @@ export function PortalHistoryView({ match }: RouteComponentProps<{ account: stri
 
       <Label>Season rounds</Label>
       <BodyContainer>{mapComponents}</BodyContainer>
+      <Label>All Maps</Label>
+      <Link style={{ maxWidth: '250px' }} to={`/portal/account/${account}`}>
+          <LobbyButton>Details</LobbyButton>
+        </Link>
     </Container>
   );
 }

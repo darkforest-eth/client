@@ -100,9 +100,7 @@ export async function loadAllPlayerData(
 query
   {
     configPlayers(
-      where: {
-        configHash_in: [${stringHashes}],
-      }
+      first: 1000
     ) {
       id
       address
@@ -272,12 +270,13 @@ export function loadGrandPrixLeaderboard(
   return leaderboard;
 }
 
-export function validGrandPrixMatch(configPlayer: ConfigPlayer, SEASON_GRAND_PRIXS: GrandPrixMetadata[]) {
-  const grandPrixs = SEASON_GRAND_PRIXS.filter((gp) => gp.configHash == configPlayer.configHash);
-  if (grandPrixs.length == 0) throw new Error('Grand Prix not found');
-  if (!configPlayer.bestTime) return false;
+// Returns true if a given match has occurred after the Grand Prix start time.
+export function validGrandPrixMatch(cp: ConfigPlayer, SEASON_GRAND_PRIXS: GrandPrixMetadata[]) {
+  const grandPrixs = SEASON_GRAND_PRIXS.filter((gp) => gp.configHash == cp.configHash);
+  if (grandPrixs.length == 0) return true; // Match is valid if not an official Grand Prix.
+  if (!cp.bestTime) return false;
   const grandPrix = grandPrixs[0];
-  return configPlayer.bestTime.startTime >= grandPrix.startTime;
+  return cp.bestTime.startTime >= grandPrix.startTime;
 }
 
 // Add wallbreaker badge to ConfigPlayers
@@ -287,7 +286,7 @@ async function buildCleanConfigPlayer(
 ): Promise<CleanConfigPlayer[]> {
   const wallBreakers = await loadWallbreakers(SEASON_GRAND_PRIXS);
   return configPlayers
-    .filter((cp) => validGrandPrixMatch(cp, SEASON_GRAND_PRIXS))
+    .filter((cp) => validGrandPrixMatch(cp,SEASON_GRAND_PRIXS) && cp.gamesFinished > 0)
     .map((cfp) => {
       const isWallBreaker =
         wallBreakers.length > 0 &&

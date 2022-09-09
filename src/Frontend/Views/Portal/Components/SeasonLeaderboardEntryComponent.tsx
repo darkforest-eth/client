@@ -31,6 +31,7 @@ export const SeasonLeaderboardEntryComponent: React.FC<{
   const [expanded, setExpanded] = useState<boolean>(false);
   const SEASON_GRAND_PRIXS = useSeasonData();
   const { twitters } = useTwitters();
+  const hasTwitter = twitters[entry.address];
   const numPastOrCurrent = SEASON_GRAND_PRIXS.filter((sgp) =>
     isPastOrCurrentRound(sgp.configHash, SEASON_GRAND_PRIXS)
   ).length;
