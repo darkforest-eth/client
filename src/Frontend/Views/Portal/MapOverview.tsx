@@ -35,7 +35,7 @@ export const MapOverview: React.FC<{
     if (config) {
       const name = round.configHash ? getConfigName(round.configHash) : 'No map found';
       setMapName(name);
-      onMapChange(generateMinimapConfig(config, 4));
+      onMapChange(generateMinimapConfig(config, 10));
     } else {
       setMinimapConfig(undefined);
       setMapName('No map found');
