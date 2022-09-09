@@ -303,7 +303,6 @@ export function EntryPage() {
   /* get all season data on page load*/
   useEffect(() => {
     if (connection) {
-      console.log(`loading registry...`);
       loadRegistry(connection)
         .then((t) => {
           setSeasonData(t);
@@ -317,7 +316,6 @@ export function EntryPage() {
 
   useEffect(() => {
     if (seasonData) {
-      console.log(`loading players...`);
       loadAllPlayerData(seasonData).then((t) => setPlayers(t));
     }
   }, [seasonData]);

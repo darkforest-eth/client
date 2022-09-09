@@ -35,9 +35,9 @@ export const TabNav: React.FC<TabNavTypes> = ({ tabs }) => {
   return (
     <Container>
       {tabs.map((tab, i) => (
-        <>
+        <div key={i}>
           {tab.dropdown ? (
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative' }} key={`${tab.label}-${i}`}>
               <Tab
                 key={tab.label}
                 active={false}
@@ -59,7 +59,7 @@ export const TabNav: React.FC<TabNavTypes> = ({ tabs }) => {
                   active={hoveringDropdownTab || hoveringMenu}
                 >
                   {tab.dropdown.map((dropdownTab, j) => (
-                    <DropdownItemContainer>
+                    <DropdownItemContainer key={`dropdownItem-${j}`}>
                       {dropdownTab.to.startsWith('http') ? (
                         <a href={dropdownTab.to} target='_blank' rel='noreferrer'>
                           <DropdownItemCol>
@@ -89,13 +89,13 @@ export const TabNav: React.FC<TabNavTypes> = ({ tabs }) => {
               )}
             </div>
           ) : (
-            <Link key={i} to={tab.to}>
+            <Link key={`${tab.label}-${i}`} to={tab.to}>
               <Tab key={tab.label} active={getTabActive(loc.pathname, tab)}>
                 {tab.label}
               </Tab>
             </Link>
           )}
-        </>
+        </div>
       ))}
     </Container>
   );
