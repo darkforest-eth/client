@@ -52,7 +52,6 @@ export const { useDefinedContext: useTopLevelDiv, provider: TopLevelDivProvider 
 
 export type TwitterContextType = {
   twitters: AddressTwitterMap;
-  // setTwitters: (twitters: AddressTwitterMap) => void;
   setTwitters: React.Dispatch<React.SetStateAction<AddressTwitterMap>>;
 };
 
@@ -63,8 +62,13 @@ export function useOverlayContainer(): HTMLDivElement | null {
   return useUIManager()?.getOverlayContainer() ?? null;
 }
 
+export type SeasonPlayerContextType = {
+  allPlayers: CleanConfigPlayer[];
+  setPlayers: React.Dispatch<React.SetStateAction<CleanConfigPlayer[]>>;
+};
+
 export const { useDefinedContext: useSeasonPlayers, provider: SeasonPlayerProvider } =
-  createDefinedContext<CleanConfigPlayer[]>();
+  createDefinedContext<SeasonPlayerContextType>();
 
 export const { useDefinedContext: useSeasonData, provider: SeasonDataProvider } =
   createDefinedContext<GrandPrixMetadata[]>();

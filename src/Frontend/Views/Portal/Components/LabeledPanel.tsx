@@ -5,13 +5,27 @@ import { theme } from '../styleUtils';
 export interface LabeledPanelProps {
   children: React.ReactNode;
   label: string;
+  headerRight?: () => React.ReactElement;
 }
 
-export const LabeledPanel: React.FC<LabeledPanelProps> = ({ children, label }) => {
+export const LabeledPanel: React.FC<LabeledPanelProps> = ({
+  children,
+  label,
+  headerRight: HeaderRight,
+}) => {
   return (
     <Container>
-      <div style={{ marginBottom: theme.spacing.lg }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          marginBottom: theme.spacing.lg,
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
         <Header>{label}</Header>
+        {HeaderRight && <HeaderRight />}
       </div>
       {children}
     </Container>

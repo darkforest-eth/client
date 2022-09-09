@@ -288,7 +288,9 @@ export function EntryPage() {
   const twitterContext = { twitters, setTwitters };
 
   const [connection, setConnection] = useState<EthConnection | undefined>();
-  const [seasonPlayers, setPlayers] = useState<CleanConfigPlayer[] | undefined>();
+  const [seasonPlayers, setPlayers] = useState<CleanConfigPlayer[]>([]);
+  const seasonPlayerContext = { allPlayers: seasonPlayers, setPlayers };
+
   const [seasonData, setSeasonData] = useState<GrandPrixMetadata[] | undefined>();
 
   const { lobbyAddress: tutorialLobbyAddress } = useConfigFromHash(tutorialConfig);
@@ -396,7 +398,7 @@ export function EntryPage() {
       <EthConnectionProvider value={connection}>
         <TwitterProvider value={twitterContext}>
           <SeasonDataProvider value={seasonData!}>
-            <SeasonPlayerProvider value={seasonPlayers!}>
+            <SeasonPlayerProvider value={seasonPlayerContext}>
               <Router>
                 <Switch>
                   <Redirect path='/play' to={`/play/${defaultAddress}`} push={true} exact={true} />

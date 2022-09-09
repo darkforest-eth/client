@@ -27,7 +27,7 @@ export function MapDetails({
   const numSpawnPlanets = config?.ADMIN_PLANETS.filter((p) => p.isSpawnPlanet).length ?? 0;
   const hasWhitelist = config?.WHITELIST_ENABLED ?? true;
   const { twitters } = useTwitters();
-  const allPlayers = useSeasonPlayers();
+  const { allPlayers } = useSeasonPlayers();
   const leaders = loadGrandPrixLeaderboard(allPlayers, configHash, twitters);
 
   // 5sec poll if live data
@@ -81,7 +81,7 @@ export function MapDetails({
         ]}
         tabContents={(i) => {
           if (i === 0) {
-            return <ArenaLeaderboardDisplay leaderboard={leaderboard} error={leaderboardError} />
+            return <ArenaLeaderboardDisplay leaderboard={leaderboard} error={leaderboardError} />;
           }
           if (i === 1) {
             return (

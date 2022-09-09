@@ -12,7 +12,10 @@ import { isAddress } from 'ethers/lib/utils';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { calcBadgeTypeScore, loadPlayerSeasonHistoryView } from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
+import {
+  calcBadgeTypeScore,
+  loadPlayerSeasonHistoryView,
+} from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
 import { BadgeDetailsRow } from '../../Components/Badges';
 import Button from '../../Components/Button';
 import { Icon } from '../../Components/Icons';
@@ -37,7 +40,6 @@ export interface TimelineProps {
   configHashes: string[];
 }
 
-
 // if Player not found, create dummy history
 
 export function PortalHistoryView({ match }: RouteComponentProps<{ account: string }>) {
@@ -48,7 +50,7 @@ export function PortalHistoryView({ match }: RouteComponentProps<{ account: stri
   const currentPlayerAddress = ethConnection.getAddress();
   if (!account) return <div>Loading...</div>;
 
-  const configPlayers = useSeasonPlayers();
+  const { allPlayers: configPlayers } = useSeasonPlayers();
   const SEASON_GRAND_PRIXS = useSeasonData();
 
   const seasonHistories = loadPlayerSeasonHistoryView(account, configPlayers, SEASON_GRAND_PRIXS);
@@ -59,8 +61,11 @@ export function PortalHistoryView({ match }: RouteComponentProps<{ account: stri
 
   const grandPrixBadges = rounds.map((round) => round.badges).flat(); //mockBadges;
 
-  const seasonScorePreBadge = useMemo(() => rounds.reduce((prev, curr) => curr.score + prev, 0), [rounds]);
-  const seasonScore = seasonScorePreBadge - calcBadgeTypeScore(grandPrixBadges.map(b => b.type));
+  const seasonScorePreBadge = useMemo(
+    () => rounds.reduce((prev, curr) => curr.score + prev, 0),
+    [rounds]
+  );
+  const seasonScore = seasonScorePreBadge - calcBadgeTypeScore(grandPrixBadges.map((b) => b.type));
   const mapComponents = useMemo(
     () =>
       rounds.map((round: GrandPrixHistory, idx: number) => (
@@ -138,8 +143,8 @@ export function PortalHistoryView({ match }: RouteComponentProps<{ account: stri
       <BodyContainer>{mapComponents}</BodyContainer>
       <Label>All Maps</Label>
       <Link style={{ maxWidth: '250px' }} to={`/portal/account/${account}`}>
-          <LobbyButton>Details</LobbyButton>
-        </Link>
+        <LobbyButton>Details</LobbyButton>
+      </Link>
     </Container>
   );
 }
