@@ -18,8 +18,13 @@ export function TargetPlanetVictory() {
 
   async function handleClaimVictory() {
     setClaiming(true);
-    const tx = await gameManager.claimVictory();
-    const res = await tx.submittedPromise;
+    try {
+      const tx = await gameManager.claimVictory();
+      const res = await tx.confirmedPromise;
+    }
+    catch(error) {
+      setClaiming(false);
+    }
   }
 
   if (gameover) {
