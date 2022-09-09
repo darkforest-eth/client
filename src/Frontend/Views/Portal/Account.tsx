@@ -9,6 +9,7 @@ import { Gnosis, Icon, IconType, Twitter } from '../../Components/Icons';
 import { LobbyButton } from '../../Pages/Lobby/LobbyMapEditor';
 
 import { useDisableScroll, useEthConnection, useTwitters } from '../../Utils/AppHooks';
+import { PortalModal } from './Components/PortalModal';
 import { addressToColor, truncateAddress } from './PortalUtils';
 import { theme } from './styleUtils';
 
@@ -23,64 +24,58 @@ const AccountModal: React.FC<AccountModalProps> = ({ address, twitter, balance, 
   if (!address) return <></>;
 
   return (
-    <ModalContainer onClick={() => setOpen(false)}>
-      <AccountDetails
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        <AccountContent>
-          <CloseButton
-            style={{ position: 'absolute', top: '12px', right: '12px' }}
-            onClick={() => setOpen(false)}
-          >
-            <Icon type={IconType.X} />
-          </CloseButton>
-          <Avatar width='3rem' height='3rem' color={addressToColor(address)} />
-          <div style={{ fontSize: '1.5em' }}>
-            {twitter ?? (
-              <Copyable textToCopy={address} onCopyError={() => {}}>
-                <span>{truncateAddress(address)}</span>
-              </Copyable>
-            )}
-          </div>
-          <span style={{ color: theme.colors.fgMuted2 }}>{balance ?? 0} xDAI</span>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              marginTop: theme.spacing.lg,
+    <PortalModal onClick={() => setOpen(false)} width={400}>
+      <AccountContent>
+        <CloseButton
+          style={{ position: 'absolute', top: '12px', right: '12px' }}
+          onClick={() => setOpen(false)}
+        >
+          <Icon type={IconType.X} />
+        </CloseButton>
+        <Avatar width='3rem' height='3rem' color={addressToColor(address)} />
+        <div style={{ fontSize: '1.5em' }}>
+          {twitter ?? (
+            <Copyable textToCopy={address} onCopyError={() => {}}>
+              <span>{truncateAddress(address)}</span>
+            </Copyable>
+          )}
+        </div>
+        <span style={{ color: theme.colors.fgMuted2 }}>{balance ?? 0} xDAI</span>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginTop: theme.spacing.lg,
+          }}
+        >
+          <Button
+            onClick={() => {
+              window.open(`https://blockscout.com/xdai/optimism/address/${address}`, '_blank');
             }}
           >
+            <Gnosis width='24px' height='24px' />
+            Explorer
+          </Button>
+          {twitter && (
             <Button
               onClick={() => {
-                window.open(`https://blockscout.com/xdai/optimism/address/${address}`, '_blank');
+                window.open(`https://twitter.com/${twitter}`, '_blank');
               }}
             >
-              <Gnosis width='24px' height='24px' />
-              Explorer
+              <Twitter width='24px' height='24px' />
+              {twitter ? 'Twitter' : 'Connect'}
             </Button>
-            {twitter && (
-              <Button
-                onClick={() => {
-                  window.open(`https://twitter.com/${twitter}`, '_blank');
-                }}
-              >
-                <Twitter width='24px' height='24px' />
-                {twitter ? 'Twitter' : 'Connect'}
-              </Button>
-            )}
-          </div>
-        </AccountContent>
-        <Footer>
-          <Button onClick={logOut}>
-            <ExitIcon />
-            Disconnect
-          </Button>
-        </Footer>
-      </AccountDetails>
-    </ModalContainer>
+          )}
+        </div>
+      </AccountContent>
+      <Footer>
+        <Button onClick={logOut}>
+          <ExitIcon />
+          Disconnect
+        </Button>
+      </Footer>
+    </PortalModal>
   );
 };
 export function Account() {
@@ -98,7 +93,6 @@ export function Account() {
 
   if (!address) return <></>;
   const twitter = twitters[address];
-  const truncatedAddress = truncateAddress(address);
 
   const formattedBalance = (+formatEther(balance ?? '0')).toFixed(2);
 
@@ -134,32 +128,7 @@ const Avatar = styled.div<{ width: string; height: string; color: string }>`
   border-radius: 100%;
   border: 1px solid ${theme.colors.fgMuted};
 `;
-
-const ModalContainer = styled.div`
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  animation: bgFadeIn 0.15s ease;
-  @keyframes bgFadeIn {
-    0% {
-      opacity: 0;
-    }
-    ,
-    100% {
-      opacity: 1;
-    }
-  }
-`;
-
-const CloseButton = styled.div`
+export const CloseButton = styled.div`
   background: ${theme.colors.bg2};
   padding: ${theme.spacing.sm};
   cursor: pointer;
@@ -180,34 +149,6 @@ const AccountContent = styled.div`
   align-items: center;
   flex-direction: column;
   gap: ${theme.spacing.md};
-`;
-
-const AccountDetails = styled.div`
-  width: 400px;
-  font-family: ${theme.fonts.mono};
-  box-sizing: content-box;
-  min-height: 20%;
-  background: ${theme.colors.bg1};
-  color: ${theme.colors.fgPrimary};
-  display: flex;
-  flex-direction: column;
-  padding: ${theme.spacing.lg};
-  justify-content: space-between;
-  align-items: center;
-  border-radius: ${theme.borderRadius};
-  position: relative;
-  animation: fadeIn 0.15s ease;
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-      transform: translateY(100%);
-    }
-    ,
-    100% {
-      opacity: 1;
-      transform: translateY(0%);
-    }
-  }
 `;
 
 const AccountButton = styled.button`
