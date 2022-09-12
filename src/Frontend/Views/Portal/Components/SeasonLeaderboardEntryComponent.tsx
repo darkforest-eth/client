@@ -111,6 +111,7 @@ export const SeasonLeaderboardEntryComponent: React.FC<{
                             if (badge.type == BadgeType.Wallbreaker) {
                               return (
                                 <PortalTooltipTrigger
+                                  key={i}
                                   name={TooltipName.Empty}
                                   extraContent={`Wallbreaker`}
                                 >
@@ -120,6 +121,7 @@ export const SeasonLeaderboardEntryComponent: React.FC<{
                             } else {
                               return (
                                 <PortalTooltipTrigger
+                                  key={i}
                                   name={TooltipName.Empty}
                                   extraContent={`-${BADGE_BONUSES[badge.type].bonus} seconds!`}
                                 >
@@ -197,6 +199,6 @@ export const Group = styled.div`
 
 export const Group1 = styled.div`
   display: flex;
-  gap: 32px;
+  gap: 42px;
   align-items: center;
 `;

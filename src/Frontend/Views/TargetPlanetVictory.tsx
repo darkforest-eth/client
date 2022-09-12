@@ -1,7 +1,9 @@
+import { address } from '@darkforest_eth/serde';
 import { TooltipName } from '@darkforest_eth/types';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import TutorialManager, { TutorialState } from '../../Backend/GameLogic/TutorialManager';
+import { ContractsAPIEvent } from '../../_types/darkforest/api/ContractsAPITypes';
 import { Gold, Green, Red } from '../Components/Text';
 import { LobbyButton } from '../Pages/Lobby/LobbyMapEditor';
 import { TooltipTrigger } from '../Panes/Tooltip';
@@ -12,6 +14,8 @@ export function TargetPlanetVictory() {
   const gameManager = uiManager.getGameManager();
   const canClaimVictory = uiManager.checkVictoryCondition();
   const gameover = useGameover();
+  const player = uiManager.getAccount()
+  if(!player) return <></>;
   const requiredPlanets = uiManager.contractConstants.TARGETS_REQUIRED_FOR_VICTORY;
   const requiredEnergy = uiManager.contractConstants.CLAIM_VICTORY_ENERGY_PERCENT;
   const [claiming, setClaiming] = useState(false);
@@ -21,6 +25,9 @@ export function TargetPlanetVictory() {
     try {
       const tx = await gameManager.claimVictory();
       const res = await tx.confirmedPromise;
+      // Manual emit just to be sure
+      uiManager.getGameManager().getContractAPI().emit(ContractsAPIEvent.PlayerUpdate, player);
+      uiManager.getGameManager().getContractAPI().emit(ContractsAPIEvent.Gameover);
     }
     catch(error) {
       setClaiming(false);

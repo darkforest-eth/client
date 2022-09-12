@@ -1,14 +1,13 @@
-export function formatDuration(durationMs: number) {
-  if (durationMs < 0) {
-    return '';
-  }
+export function formatDuration(durationMillSec: number) {
+  const negative = durationMillSec < 0;
+  const durationMs = negative ? (durationMillSec * -1) : durationMillSec
 
   const hours = Math.floor(durationMs / 1000 / 60 / 60);
   const minutes = Math.floor((durationMs - hours * 60 * 60 * 1000) / 1000 / 60);
   const seconds = Math.floor((durationMs - hours * 60 * 60 * 1000 - minutes * 60 * 1000) / 1000);
 
   return (
-    timestampSection(hours) + ':' + timestampSection(minutes) + ':' + timestampSection(seconds)
+    (negative ? '-': '') + timestampSection(hours) + ':' + timestampSection(minutes) + ':' + timestampSection(seconds)
   );
 }
 

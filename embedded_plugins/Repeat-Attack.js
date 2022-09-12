@@ -148,6 +148,7 @@ class Repeater {
     }
     this.attacks = []; // attacks already set up
     this.account = df.getAccount();
+    this.configHash = df.contractConstants.CONFIG_HASH;
     this.contractAddress = df.getContractAddress();
     this.loadAttacks();
     this.intervalId = window.setInterval(this.coreLoop.bind(this), 1000);
@@ -155,10 +156,10 @@ class Repeater {
     window.__CORELOOP__.push(this.intervalId);
   }
   saveAttacks() {
-    localStorage.setItem(`repeatAttacks-${this.account}-${this.contractAddress}`, JSON.stringify(this.attacks));
+    localStorage.setItem(`repeatAttacks-${this.account}-${this.configHash}`, JSON.stringify(this.attacks));
   }
   loadAttacks() {
-    const attacksJSON = localStorage.getItem(`repeatAttacks-${this.account}-${this.contractAddress}`);
+    const attacksJSON = localStorage.getItem(`repeatAttacks-${this.account}-${this.configHash}`);
     // @ts-ignore
     if (attacksJSON) this.attacks = JSON.parse(attacksJSON);
   }

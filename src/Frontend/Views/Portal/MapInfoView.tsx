@@ -37,7 +37,7 @@ function MapOverview({
     if (config) {
       const name = configHash ? getConfigName(configHash) : NONE;
       setMapName(name);
-      onMapChange(generateMinimapConfig(config, 4));
+      onMapChange(generateMinimapConfig(config, 10));
     } else {
       setMinimapConfig(undefined);
       setMapName(NONE);
@@ -82,6 +82,9 @@ function MapOverview({
       <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', width: '100%' }}>
         <Link style={{ minWidth: '250px' }} target='_blank' to={`/play/${lobbyAddress}?create=true`}>
           <LobbyButton primary>Play</LobbyButton>
+        </Link>
+        <Link style={{ minWidth: '250px' }} target='_blank' to={`/arena/${lobbyAddress}/settings`}>
+          <LobbyButton>Remix Map</LobbyButton>
         </Link>
       </div>
     </OverviewContainer>

@@ -31,28 +31,34 @@ import { getCurrentGrandPrix } from './PortalUtils';
 import { theme } from './styleUtils';
 
 export const PortalHomeView: React.FC<{}> = () => {
+  console.log(`yolo`);
   const [leaderboard, setLeaderboard] = useState<Leaderboard | undefined>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const SEASON_GRAND_PRIXS = useSeasonData();
   const grandPrix = getCurrentGrandPrix(SEASON_GRAND_PRIXS);
+
   const numPastOrCurrent = SEASON_GRAND_PRIXS.filter((sgp) =>
     isPastOrCurrentRound(sgp.configHash, SEASON_GRAND_PRIXS)
   ).length;
 
+  console.log(`weeee`);
   if (!grandPrix) return <div>No active round</div>;
+  
   const { twitters } = useTwitters();
   const { allPlayers, setPlayers } = useSeasonPlayers();
   const seasonData = useSeasonData();
+
+  const leaders = loadGrandPrixLeaderboard(allPlayers, grandPrix.configHash, twitters);
+
   const connection = useEthConnection();
   const address = connection.getAddress();
   if (!address) return <></>;
-  const leaders = loadGrandPrixLeaderboard(allPlayers, grandPrix.configHash, twitters);
   const { config, lobbyAddress, error } = useConfigFromHash(grandPrix.configHash);
   const uniqueBadges = loadUniquePlayerBadges(allPlayers, grandPrix.seasonId, SEASON_GRAND_PRIXS);
 
   useEffect(() => {
     setLeaderboard(leaders);
-  }, []);
+  }, [allPlayers]);
 
   if (error) {
     return (
@@ -114,7 +120,9 @@ export const PortalHomeView: React.FC<{}> = () => {
                   try {
                     setRefreshing(true);
                     const players = await loadAllPlayerData(seasonData);
+                    const leaders = await loadGrandPrixLeaderboard(allPlayers, grandPrix.configHash, twitters);
                     setPlayers(players);
+                    setLeaderboard(leaders)
                   } catch (e) {
                     console.error(e);
                   } finally {

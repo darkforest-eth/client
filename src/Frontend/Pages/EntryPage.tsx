@@ -378,7 +378,7 @@ export function EntryPage() {
     [connection, controller]
   );
 
-  if (!connection || !twitters || loadingStatus == 'loading') {
+  if (!connection || !twitters || !seasonPlayers || loadingStatus == 'loading') {
     return <LoadingPage />;
   } else if (loadingStatus == 'creating') {
     return (
