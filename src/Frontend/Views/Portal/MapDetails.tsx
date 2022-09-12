@@ -10,7 +10,7 @@ import { ConfigDetails } from './ConfigDetails';
 import { FindMatch } from './FindMatch';
 import { useLiveMatches, useSeasonData, useSeasonPlayers, useTwitters } from '../../Utils/AppHooks';
 import { loadGrandPrixLeaderboard } from '../../../Backend/Network/GraphApi/SeasonLeaderboardApi';
-import { DUMMY } from '../../Utils/constants';
+import { DUMMY, FIRST_CONFIG_HASH_GP1, SECOND_CONFIG_HASH_GP1 } from '../../Utils/constants';
 
 export function MapDetails({
   configHash,
@@ -28,11 +28,13 @@ export function MapDetails({
   const hasWhitelist = config?.WHITELIST_ENABLED ?? true;
   const { twitters } = useTwitters();
   const { allPlayers } = useSeasonPlayers();
-  const leaders = loadGrandPrixLeaderboard(allPlayers, configHash, twitters);
+  const finalConfigHash = configHash == FIRST_CONFIG_HASH_GP1 ? SECOND_CONFIG_HASH_GP1 : configHash
+
+  const leaders = loadGrandPrixLeaderboard(allPlayers, finalConfigHash, twitters);
   const seasonData = useSeasonData();
 
   // 5sec poll if live data
-  const { liveMatches, spyError } = useLiveMatches(seasonData, configHash, !DUMMY ? 5000 : undefined);
+  const { liveMatches, spyError } = useLiveMatches(seasonData, finalConfigHash, !DUMMY ? 5000 : undefined);
   useEffect(() => {
     setLeaderboard(undefined);
     if (configHash) {

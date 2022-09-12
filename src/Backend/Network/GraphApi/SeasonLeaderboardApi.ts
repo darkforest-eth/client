@@ -364,6 +364,7 @@ function mergeGrandPrix(
 }
 
 // Returns true if a given match has occurred after the Grand Prix start time.
+// OR true if match is not a grand Prix match.
 export function validGrandPrixMatch(
   configHash: string,
   startTime: number | undefined,
