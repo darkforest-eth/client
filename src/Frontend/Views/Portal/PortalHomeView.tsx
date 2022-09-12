@@ -31,7 +31,6 @@ import { getCurrentGrandPrix } from './PortalUtils';
 import { theme } from './styleUtils';
 
 export const PortalHomeView: React.FC<{}> = () => {
-  console.log(`yolo`);
   const [leaderboard, setLeaderboard] = useState<Leaderboard | undefined>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const SEASON_GRAND_PRIXS = useSeasonData();
@@ -41,7 +40,6 @@ export const PortalHomeView: React.FC<{}> = () => {
     isPastOrCurrentRound(sgp.configHash, SEASON_GRAND_PRIXS)
   ).length;
 
-  console.log(`weeee`);
   if (!grandPrix) return <div>No active round</div>;
   
   const { twitters } = useTwitters();
