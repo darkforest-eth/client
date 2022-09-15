@@ -68,7 +68,7 @@ export async function loadWallbreakers(
   });
   const res = await Promise.all(wallbreakerQuery);
   if (res && res.length == 0) return [];
-  const wallBreakersRaw = res.map((x) => {
+  const wallBreakersRaw = res.filter(x => x.data.arenas.length > 0).map((x) => {
     if (x.error) {
       throw new Error(x.error);
     } else {
