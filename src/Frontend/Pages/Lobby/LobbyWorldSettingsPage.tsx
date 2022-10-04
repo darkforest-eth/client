@@ -20,6 +20,7 @@ import { SpaceJunkPane } from '../../Panes/Lobby/SpaceJunkPane';
 import { SpaceshipsPane } from '../../Panes/Lobby/SpaceshipsPane';
 import { SpaceTypeBiomePane } from '../../Panes/Lobby/SpaceTypeBiomePane';
 import { TargetPlanetPane } from '../../Panes/Lobby/TargetPlanetPane';
+import { TeamsPane } from '../../Panes/Lobby/TeamsPane';
 import { WorldSizePane } from '../../Panes/Lobby/WorldSizePane';
 
 interface PaneConfig {
@@ -103,6 +104,12 @@ const panes: ReadonlyArray<PaneConfig> = [
     shortcut: `+`,
     path: '/spaceships',
     Pane: (props: LobbiesPaneProps) => <SpaceshipsPane {...props} />,
+  },
+  {
+    title: 'Teams',
+    shortcut: `+`,
+    path: '/teams',
+    Pane: (props: LobbiesPaneProps) => <TeamsPane {...props} />,
   },
 ] as const;
 
