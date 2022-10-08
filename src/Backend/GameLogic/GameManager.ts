@@ -3390,7 +3390,8 @@ class GameManager extends EventEmitter {
     toId: LocationId | undefined,
     distance: number | undefined,
     sentEnergy: number,
-    abandoning: boolean
+    abandoning: boolean,
+    sendingCube: boolean = false
   ) {
     const from = this.getPlanetWithId(fromId);
     const to = this.getPlanetWithId(toId);
@@ -3409,8 +3410,11 @@ class GameManager extends EventEmitter {
         }
       }
     }
+    // calculate
+    let cubeRangeBoost = sendingCube? 0.5 : 1;
+  
+    const range = from.range * this.getRangeBuff(abandoning) * cubeRangeBoost;
 
-    const range = from.range * this.getRangeBuff(abandoning);
     const scale = (1 / 2) ** (dist / range);
     let ret = scale * sentEnergy - 0.05 * from.energyCap;
     if (ret < 0) ret = 0;

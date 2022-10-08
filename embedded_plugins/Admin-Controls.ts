@@ -271,6 +271,7 @@ function artifactOptions() {
   for (let i = MIN_ARTIFACT_TYPE; i < MIN_SPACESHIP_TYPE; i++) {
     options.push(html`<option value=${i}>${ArtifactTypeNames[i]}</option>`);
   }
+  options.push(html`<option value=${15}>AntiMatter Cube</option>`)
   return options;
 }
 

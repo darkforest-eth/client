@@ -168,7 +168,7 @@ export const arrive = (
   const { energyArriving } = arrival;
 
   const onSameTeam = toOwner && arrivalPlayer?.team == toOwner?.team;
-  if (arrival.player !== toPlanet.owner && (!contractConstants.TEAMS_ENABLED || !onSameTeam) ) {
+  if (arrival.player !== toPlanet.owner && (!contractConstants.TEAMS_ENABLED || !onSameTeam)) {
     if (arrival.arrivalType === ArrivalType.Wormhole) {
       // if this is a wormhole arrival to a planet that isn't owned by the initiator of
       // the move, then don't move any energy
@@ -195,8 +195,8 @@ export const arrive = (
     // moving between my own planets
     toPlanet.energy += energyArriving;
   }
-
-  if (toPlanet.planetType === PlanetType.SILVER_BANK || toPlanet.pausers !== 0) {
+  const isCube = arrivingArtifact?.artifactType === ArtifactType.AntiMatterCube;
+  if (toPlanet.planetType === PlanetType.SILVER_BANK || toPlanet.pausers !== 0 || isCube) {
     if (toPlanet.energy > toPlanet.energyCap) {
       toPlanet.energy = toPlanet.energyCap;
     }
@@ -219,7 +219,10 @@ export const arrive = (
       toPlanet.energyGrowth *= 2;
     } else if (arrivingArtifact.artifactType === ArtifactType.ShipWhale) {
       toPlanet.silverGrowth *= 2;
-    } else if (arrivingArtifact.artifactType === ArtifactType.ShipTitan) {
+    } else if (
+      arrivingArtifact.artifactType === ArtifactType.ShipTitan ||
+      arrivingArtifact.artifactType === ArtifactType.AntiMatterCube
+    ) {
       toPlanet.pausers++;
     }
     arrivingArtifact.onPlanetId = toPlanet.locationId;

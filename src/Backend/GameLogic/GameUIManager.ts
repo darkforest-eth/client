@@ -446,7 +446,18 @@ class GameUIManager extends EventEmitter {
     dist: number | undefined,
     energy: number
   ) {
-    return this.gameManager.getEnergyArrivingForMove(from, to, dist, energy, this.abandoning);
+    this.artifactSending;
+    const sendingCube: boolean = !!(
+      this.artifactSending[from]?.artifactType == ArtifactType.AntiMatterCube
+    );
+    return this.gameManager.getEnergyArrivingForMove(
+      from,
+      to,
+      dist,
+      energy,
+      this.abandoning,
+      sendingCube
+    );
   }
 
   getIsChoosingTargetPlanet() {
