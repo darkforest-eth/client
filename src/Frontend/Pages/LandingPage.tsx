@@ -1,18 +1,11 @@
 import { CONTRACT_ADDRESS } from '@darkforest_eth/contracts';
-import { address } from '@darkforest_eth/serde';
 import { IconType } from '@darkforest_eth/ui';
 import React, { CSSProperties, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { createGlobalStyle, CSSObject } from 'styled-components';
-import { isRoundOngoing } from '../../Backend/Utils/Utils';
-import { Btn } from '../Components/Btn';
 import { EmSpacer, Link, Spacer } from '../Components/CoreUI';
-import { EmailCTA, EmailCTAMode } from '../Components/Email';
 import { Icon } from '../Components/Icons';
-import { Modal } from '../Components/Modal';
-import { Red, White, Text, HideSmall } from '../Components/Text';
 import dfstyles from '../Styles/dfstyles';
-import { LobbyButton } from './Lobby/LobbyMapEditor';
 
 export const enum LandingPageZIndex {
   Background = 0,
@@ -20,101 +13,92 @@ export const enum LandingPageZIndex {
   BasePage = 2,
 }
 
-const links = {
-  twitter: 'http://twitter.com/darkforest_eth',
-  email: 'mailto:zeroxhank@gmail.com',
-  blog: 'https://blog.zkga.me/',
-  discord: 'https://discord.gg/WzYuegCh',
-  github: 'https://github.com/darkforest-eth',
-  wiki: 'https://dfwiki.net/wiki/Main_Page',
-  plugins: 'https://plugins.zkga.me/',
-};
-
 export default function LandingPage() {
   const history = useHistory();
-  const [showWallbreakers, setShowWallbreakers] = useState<boolean>(false);
-
   return (
     <>
       <Container>
-        <BackgroundImage />
         <Nav>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <Icon
-              style={{ width: '80px', height: '80px' } as CSSStyleDeclaration & CSSProperties}
-              type={IconType.Dfdao}
-            />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', color: '#000' }}>
+            <img src='/icons/logo-black.svg' style={{ width: '80px', height: '80px' }} />
+            <span style={{ color: '#000', fontFamily: 'sans-serif', fontWeight: 500 }}>
+              Galactic Protection Division
+            </span>
           </div>
-          <LinksContainer>
-            {Object.entries(links).map(([link, href], key) => (
-              <React.Fragment key={key}>
-                <NavLink key={key} to={href}>
-                  {link}
-                </NavLink>
-                {key !== Object.entries(links).length - 1 && <p>{` | `}</p>}
-              </React.Fragment>
-            ))}
-          </LinksContainer>
         </Nav>
         <Content>
-          <TextContainer>
-            <Badge>
-              <HideSmall>Dark Forest Arena</HideSmall> 🏟️
-            </Badge>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <LobbyButton primary style={{ flex: '2' }} onClick={() => history.push('/portal')}>
-                Enter
-              </LobbyButton>
-              <LobbyButton
-                style={{ flex: '1' }}
-                onClick={() =>
-                  window.open(
-                    'https://medium.com/dfdao/dark-forest-grand-prix-season-1-3cfc48a7f9a2',
-                    'blank'
-                  )
-                }
-              >
-                Learn More
-              </LobbyButton>
-            </div>
-          </TextContainer>
+          <Split>
+            <BigHeader style={{ opacity: 0.6 }}>ITEM #149</BigHeader>
+            <BigHeader>ANTIMATTER CUBE</BigHeader>
+            <SmallHeader>DESCRIPTION</SmallHeader>
+            <LongText>
+              The Animatter Cube is an extremely unstable multiversal object that rapidly depletes
+              energy from the planet it is found on. Previous manifestations of the Antimatter Cube
+              have historically been perceived as extremely valuable to intergalactic empires for
+              its use as an interdimensional communication device.
+            </LongText>
+            <SmallHeader>CONTAINMENT PROCEDURE</SmallHeader>
+            <LongText style={{ marginBottom: '1rem' }}>
+              The Antimatter Cube has been discovered in the center of the B-12 universe. The
+              Antimatter Cube is to be contained via extraction from a{' '}
+              <a target='_blank' href='https://dfwiki.net/wiki/Spacetime_Rip'>
+                Spacetime Rip
+              </a>
+              .
+            </LongText>
+            <Button onClick={() => history.push('/portal')}>Accept mission</Button>
+          </Split>
+          <Split>
+            <img src='/img/landing-cube.png' />
+            <Caption>
+              <span>
+                Photograph of an instance of the Antimatter Cube manifesting in Universe E-14.
+                Source unknown.
+              </span>
+            </Caption>
+          </Split>
         </Content>
+        <Footer>
+          <Marquee>
+            <MarqueeGroup>
+              <Label>Confidential</Label>
+              <Label>Confidential</Label>
+              <Label>Confidential</Label>
+              <Label>Confidential</Label>
+              <Label>Confidential</Label>
+              <Label>Confidential</Label>
+              <Label>Confidential</Label>
+              <Label>Confidential</Label>
+              <Label>Confidential</Label>
+              <Label>Confidential</Label>
+            </MarqueeGroup>
+          </Marquee>
+        </Footer>
       </Container>
     </>
   );
 }
 
-const NavLink = styled(Link)`
+const Button = styled.button`
+  background: #8d1a1a;
   color: #fff;
-  font-family: 'Karla', sans-serif;
-  text-transform: uppercase;
-  text-decoration: none;
   font-weight: 500;
-  letter-spacing: 0.06em;
-  transition: color 0.2s ease;
-  &:hover {
-    color: ${dfstyles.colors.dfblue};
-  }
-`;
-
-const Badge = styled.div`
-  font-size: 3rem;
-  // border-radius: 3rem;
-  // background-color: ${dfstyles.colors.backgroundlighter};
-  color: #fff;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 0.5rem 1rem;
-  align-self: flex-start;
-  @media (max-width: 768px) {
-    align-self: center;
+  padding: 1rem 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease-in-out;
+  &:hover {
+    background: #b13131;
   }
 `;
 
 const Container = styled.div`
+  box-sizing: border-box;
   justify-content: center;
-  background: #111;
-  color: #fff;
+  background: #e5e2db;
+  color: #000;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -122,60 +106,76 @@ const Container = styled.div`
   overflow: hidden;
   align-items: center;
   position: relative;
+  --size: clamp(10rem, 1rem + 40vmin, 30rem);
+  --gap: calc(var(--size) / 14);
+  --duration: 60s;
+  --scroll-start: 0;
+  --scroll-end: calc(-100% - var(--gap));
   @media (max-width: 768px) {
     overflow-y: auto;
     margin-bottom: 3rem;
   }
 `;
 
-const Content = styled.div`
-  box-shadow 0px 0px 15px gray;
-  justify-content: center;
-  backdrop-filter: brightness(0.1) blur(5px);
+const Marquee = styled.div`
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  gap: var(--gap);
+  overflow: hidden;
+  mask-image: linear-gradient(
+    var(--mask-direction, to right),
+    hsl(0 0% 0% / 0),
+    hsl(0 0% 0% / 1) 20%,
+    hsl(0 0% 0% / 1) 80%,
+    hsl(0 0% 0% / 0)
+  );
+`;
+
+const MarqueeGroup = styled.div`
+  flex-shrink: 0;
+  display: flex;
   align-items: center;
-  @media (max-width: 768px) {
-    display: flex;
-    flex-direction: column;
-  }
-  z-index: 2;
-  border-radius: 20px;
+  justify-content: space-around;
+  gap: var(--gap);
+  min-width: 100%;
+`;
+
+const Content = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 2rem;
+  align-items: flex-start;
+  margin: 0 2rem;
+  max-width: 1080px;
 `;
 
 const Nav = styled.div`
   position: fixed;
   top: 0;
-  backdrop-filter: brightness(0.2) blur(5px);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  color: #000;
   width: 100%;
-  padding: 1rem 3rem;
+  padding: 1rem 2rem;
   @media (max-width: 768px) {
     flex-direction: column;
   }
 `;
 
-const LinksContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  @media (max-width: 768px) {
-    justify-content: center;
-  }
+const LongText = styled.p`
+  font-size: 1.2rem;
 `;
 
-const TextContainer = styled.div`
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  justify-content: center;
-  padding: 3rem;
-  @media (max-width: 768px) {
-    align-items: center;
-    text-align: center;
-  }
+const SmallHeader = styled.span`
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #000;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
 `;
 
 export const BackgroundImage = styled.img`
@@ -193,17 +193,10 @@ export const BackgroundImage = styled.img`
   // z-index: -1;
 `;
 
-const TRow = styled.tr`
-  & td:first-child {
-    color: ${dfstyles.colors.subtext};
-  }
-  & td:nth-child(2) {
-    padding-left: 12pt;
-  }
-  & td:nth-child(3) {
-    text-align: right;
-    padding-left: 16pt;
-  }
+const Split = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
 `;
 
 export const LinkContainer = styled.div`
@@ -237,4 +230,29 @@ export const LinkContainer = styled.div`
       }
     }
   }
+`;
+
+const BigHeader = styled.span`
+  text-transform: uppercase;
+  font-size: 2.2rem;
+  font-weight: 500;
+`;
+
+const Label = styled.div`
+  opacity: 0.6;
+  text-transform: uppercase;
+  color: #8d1a1a;
+  font-size: 1rem;
+  font-weight: 500;
+`;
+
+const Footer = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  width: 100%;
+`;
+
+const Caption = styled.div`
+  padding: 1rem;
+  border: 1px solid #000;
 `;
